@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍳 CookSuggest - 材料から料理を提案｜1000種類のレシピデータベース</title>
+    <meta name="description" content="余った材料から最適なレシピを提案！1000種類のレシピデータベースから条件や材料に合った料理を5つ提案。詳細な作り方と材料リスト付き。">
+    <meta name="keywords" content="レシピ, 料理, 材料検索, レシピ提案, 料理サジェスト, 余り物, 献立, 和食, 洋食, 中華, 料理レシピ">
+    <meta name="author" content="CookSuggest">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="CookSuggest - 材料から料理を提案">
+    <meta property="og:description" content="余った材料から最適なレシピを提案！1000種類のレシピから条件に合った料理を5つ提案します。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://YOUR_USERNAME.github.io/cook-suggest/">
+    <meta property="og:image" content="https://YOUR_USERNAME.github.io/cook-suggest/og-image.png">
+    <meta property="og:site_name" content="CookSuggest">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CookSuggest - 材料から料理を提案">
+    <meta name="twitter:description" content="余った材料から最適なレシピを提案！1000種類のレシピから条件に合った料理を5つ提案します。">
+    <meta name="twitter:image" content="https://YOUR_USERNAME.github.io/cook-suggest/og-image.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://YOUR_USERNAME.github.io/cook-suggest/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍳</text></svg>">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
+         crossorigin="anonymous"></script>
+    
+    <style>
+        /* 2025年最新デザイン - Mocha Mousse & Digital Lavender */
+        :root {
+            --primary-color: #6B4E3D;        /* Mocha Mousse */
+            --accent-color: #B19CD9;          /* Digital Lavender */
+            --background: #FEFEFE;            /* Off White */
+            --text-primary: #2D2D2D;          /* Charcoal */
+            --text-secondary: #5A5A5A;        /* Light Charcoal */
+            --sage-green: #A4B08A;            /* Sage Green */
+            --card-shadow: 0 8px 32px rgba(107, 78, 61, 0.1);
+            --border-radius: 16px;
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #F8F7F5 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: var(--spacing-sm) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(107, 78, 61, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero .stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xs);
+            box-shadow: var(--card-shadow);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: calc(var(--border-radius) - 4px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Condition Selection Cards */
+        .condition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* Ingredients Selection */
+        .ingredients-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--card-shadow);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .ingredient-category {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .ingredient-category h3 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .ingredient-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-xs);
+        }
+
+        .ingredient-checkbox {
+            display: none;
+        }
+
+        .ingredient-label {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--background);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .ingredient-label:hover {
+            border-color: var(--accent-color);
+            background: rgba(177, 156, 217, 0.1);
+        }
+
+        .ingredient-checkbox:checked + .ingredient-label {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .selected-ingredients {
+            background: rgba(177, 156, 217, 0.1);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            min-height: 60px;
+        }
+
+        .selected-ingredients h4 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+            font-size: 1rem;
+        }
+
+        .selected-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+
+        .selected-item {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .remove-ingredient {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+            padding: 0;
+            margin-left: 4px;
+        }
+
+        .condition-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .condition-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(107, 78, 61, 0.15);
+        }
+
+        .condition-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .condition-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+
+        .option-btn {
+            background: var(--background);
+            border: 2px solid var(--accent-color);
+            color: var(--text-primary);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .option-btn.selected {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Generate Button */
+        .generate-section {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--sage-green) 100%);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-xl);
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(107, 78, 61, 0.2);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Result Section */
+        .result-section {
+            display: none;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .result-header-text {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .result-header-text h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .result-header-text p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .result-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .result-badge {
+            position: absolute;
+            top: var(--spacing-sm);
+            right: var(--spacing-sm);
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .result-badge.easy {
+            background: var(--sage-green);
+        }
+
+        .result-badge.normal {
+            background: var(--accent-color);
+        }
+
+        .result-badge.advanced {
+            background: var(--primary-color);
+        }
+
+        .result-badge.restaurant {
+            background: #e67e22;
+        }
+
+        /* 料理画像のスタイル */
+        .recipe-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0;
+            display: block;
+            position: relative;
+        }
+
+        .recipe-info {
+            padding: var(--spacing-md);
+        }
+
+        .recipe-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .recipe-ingredients {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .recipe-btn {
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-xs);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: var(--spacing-sm);
+            font-weight: 500;
+        }
+
+        .recipe-btn:hover {
+            background: var(--primary-color);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: var(--spacing-md) 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--background);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-sm);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 美しい画像プレースホルダー */
+        .image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .placeholder-emoji {
+            font-size: 4rem;
+            margin-bottom: 8px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .placeholder-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--sage-green) 100%);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .modal-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .close {
+            position: absolute;
+            right: var(--spacing-lg);
+            top: var(--spacing-lg);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        .detail-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .detail-section h3 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .ingredient-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .ingredient-item {
+            background: #f8f9fa;
+            padding: var(--spacing-sm);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .steps-list {
+            counter-reset: step-counter;
+        }
+
+        .step-item {
+            counter-increment: step-counter;
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            border-color: var(--accent-color);
+            transform: translateX(4px);
+        }
+
+        .step-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .recipe-tips {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border-left: 4px solid var(--sage-green);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin-top: var(--spacing-md);
+        }
+
+        .recipe-tips h4 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        /* Ad Sections */
+        .ad-section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+            margin: var(--spacing-md) 0;
+            border: 1px solid rgba(107, 78, 61, 0.1);
+        }
+
+        .ad-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .condition-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .container {
+                padding: var(--spacing-md) var(--spacing-sm);
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+            }
+
+            .ingredient-list {
+                grid-template-columns: 1fr;
+            }
+
+            .hero .stats {
+                gap: var(--spacing-md);
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Ad -->
+    <div class="ad-section">
+        <div class="ad-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="5287863920"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">🍳 CookSuggest</a>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item">ホーム</a>
+                <a href="#" class="nav-item">レシピ検索</a>
+                <a href="#" class="nav-item">お気に入り</a>
+                <a href="#" class="nav-item">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>今日何作る？</h1>
+            <p>1000種類のレシピから、あなたの条件にピッタリの5つの料理を提案します。<br>
+            詳細なレシピと手順で、誰でも美味しく作れます！</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">レシピ数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">提案数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">ジャンル</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab Navigation -->
+        <section class="tab-navigation">
+            <button class="tab-btn active" data-tab="conditions">
+                <span>🎯</span>
+                <span>条件で検索</span>
+            </button>
+            <button class="tab-btn" data-tab="ingredients">
+                <span>🥬</span>
+                <span>材料で検索</span>
+            </button>
+        </section>
+
+        <!-- Conditions Tab -->
+        <div class="tab-content active" id="conditionsTab">
+            <section class="condition-grid">
+            <div class="condition-card">
+                <div class="condition-title">
+                    <span>👨‍🍳</span>
+                    <span>難易度</span>
+                </div>
+                <div class="condition-options">
+                    <button class="option-btn" data-type="difficulty" data-value="簡単">簡単</button>
+                    <button class="option-btn" data-type="difficulty" data-value="普通">普通</button>
+                    <button class="option-btn" data-type="difficulty" data-value="上級">上級</button>
+                    <button class="option-btn" data-type="difficulty" data-value="全て">全て</button>
+                </div>
+            </div>
+
+            <div class="condition-card">
+                <div class="condition-title">
+                    <span>👥</span>
+                    <span>人数</span>
+                </div>
+                <div class="condition-options">
+                    <button class="option-btn" data-type="servings" data-value="1人分">1人分</button>
+                    <button class="option-btn" data-type="servings" data-value="2-3人分">2-3人分</button>
+                    <button class="option-btn" data-type="servings" data-value="4人分以上">4人分以上</button>
+                    <button class="option-btn" data-type="servings" data-value="大人数">大人数</button>
+                </div>
+            </div>
+
+            <div class="condition-card">
+                <div class="condition-title">
+                    <span>💪</span>
+                    <span>カロリー</span>
+                </div>
+                <div class="condition-options">
+                    <button class="option-btn" data-type="calories" data-value="ヘルシー">ヘルシー</button>
+                    <button class="option-btn" data-type="calories" data-value="普通">普通</button>
+                    <button class="option-btn" data-type="calories" data-value="ガッツリ">ガッツリ</button>
+                    <button class="option-btn" data-type="calories" data-value="デザート">デザート</button>
+                </div>
+            </div>
+
+            <div class="condition-card">
+                <div class="condition-title">
+                    <span>🌍</span>
+                    <span>ジャンル</span>
+                </div>
+                <div class="condition-options">
+                    <button class="option-btn" data-type="cuisine" data-value="和食">和食</button>
+                    <button class="option-btn" data-type="cuisine" data-value="洋食">洋食</button>
+                    <button class="option-btn" data-type="cuisine" data-value="中華">中華</button>
+                    <button class="option-btn" data-type="cuisine" data-value="その他">その他</button>
+                </div>
+            </div>
+            </section>
+        </div>
+
+        <!-- Ingredients Tab -->
+        <div class="tab-content" id="ingredientsTab">
+            <section class="ingredients-section">
+                <div class="ingredients-grid">
+                    <div class="ingredient-category">
+                        <h3><span>🥩</span> 肉類</h3>
+                        <div class="ingredient-options">
+                            <input type="checkbox" id="beef" class="ingredient-checkbox" value="牛肉">
+                            <label for="beef" class="ingredient-label">牛肉</label>
+                            
+                            <input type="checkbox" id="pork" class="ingredient-checkbox" value="豚肉">
+                            <label for="pork" class="ingredient-label">豚肉</label>
+                            
+                            <input type="checkbox" id="chicken" class="ingredient-checkbox" value="鶏肉">
+                            <label for="chicken" class="ingredient-label">鶏肉</label>
+                            
+                            <input type="checkbox" id="ground-meat" class="ingredient-checkbox" value="ひき肉">
+                            <label for="ground-meat" class="ingredient-label">ひき肉</label>
+                            
+                            <input type="checkbox" id="duck" class="ingredient-checkbox" value="鴨肉">
+                            <label for="duck" class="ingredient-label">鴨肉</label>
+                            
+                            <input type="checkbox" id="lamb" class="ingredient-checkbox" value="ラム肉">
+                            <label for="lamb" class="ingredient-label">ラム肉</label>
+                            
+                            <input type="checkbox" id="bacon" class="ingredient-checkbox" value="ベーコン">
+                            <label for="bacon" class="ingredient-label">ベーコン</label>
+                            
+                            <input type="checkbox" id="sausage" class="ingredient-checkbox" value="ソーセージ">
+                            <label for="sausage" class="ingredient-label">ソーセージ</label>
+                            
+                            <input type="checkbox" id="ham" class="ingredient-checkbox" value="ハム">
+                            <label for="ham" class="ingredient-label">ハム</label>
+                            
+                            <input type="checkbox" id="chicken-breast" class="ingredient-checkbox" value="鶏むね肉">
+                            <label for="chicken-breast" class="ingredient-label">鶏むね肉</label>
+                            
+                            <input type="checkbox" id="chicken-thigh" class="ingredient-checkbox" value="鶏もも肉">
+                            <label for="chicken-thigh" class="ingredient-label">鶏もも肉</label>
+                            
+                            <input type="checkbox" id="pork-belly" class="ingredient-checkbox" value="豚バラ肉">
+                            <label for="pork-belly" class="ingredient-label">豚バラ肉</label>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-category">
+                        <h3><span>🐟</span> 魚介類</h3>
+                        <div class="ingredient-options">
+                            <input type="checkbox" id="salmon" class="ingredient-checkbox" value="鮭">
+                            <label for="salmon" class="ingredient-label">鮭</label>
+                            
+                            <input type="checkbox" id="tuna" class="ingredient-checkbox" value="マグロ">
+                            <label for="tuna" class="ingredient-label">マグロ</label>
+                            
+                            <input type="checkbox" id="mackerel" class="ingredient-checkbox" value="サバ">
+                            <label for="mackerel" class="ingredient-label">サバ</label>
+                            
+                            <input type="checkbox" id="horse-mackerel" class="ingredient-checkbox" value="アジ">
+                            <label for="horse-mackerel" class="ingredient-label">アジ</label>
+                            
+                            <input type="checkbox" id="sea-bream" class="ingredient-checkbox" value="鯛">
+                            <label for="sea-bream" class="ingredient-label">鯛</label>
+                            
+                            <input type="checkbox" id="yellowtail" class="ingredient-checkbox" value="ブリ">
+                            <label for="yellowtail" class="ingredient-label">ブリ</label>
+                            
+                            <input type="checkbox" id="sardine" class="ingredient-checkbox" value="イワシ">
+                            <label for="sardine" class="ingredient-label">イワシ</label>
+                            
+                            <input type="checkbox" id="shrimp" class="ingredient-checkbox" value="エビ">
+                            <label for="shrimp" class="ingredient-label">エビ</label>
+                            
+                            <input type="checkbox" id="crab" class="ingredient-checkbox" value="カニ">
+                            <label for="crab" class="ingredient-label">カニ</label>
+                            
+                            <input type="checkbox" id="scallop" class="ingredient-checkbox" value="ホタテ">
+                            <label for="scallop" class="ingredient-label">ホタテ</label>
+                            
+                            <input type="checkbox" id="squid" class="ingredient-checkbox" value="イカ">
+                            <label for="squid" class="ingredient-label">イカ</label>
+                            
+                            <input type="checkbox" id="octopus" class="ingredient-checkbox" value="タコ">
+                            <label for="octopus" class="ingredient-label">タコ</label>
+                            
+                            <input type="checkbox" id="clam" class="ingredient-checkbox" value="アサリ">
+                            <label for="clam" class="ingredient-label">アサリ</label>
+                            
+                            <input type="checkbox" id="oyster" class="ingredient-checkbox" value="牡蠣">
+                            <label for="oyster" class="ingredient-label">牡蠣</label>
+                            
+                            <input type="checkbox" id="fish" class="ingredient-checkbox" value="白身魚">
+                            <label for="fish" class="ingredient-label">白身魚</label>
+                            
+                            <input type="checkbox" id="canned-tuna" class="ingredient-checkbox" value="ツナ缶">
+                            <label for="canned-tuna" class="ingredient-label">ツナ缶</label>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-category">
+                        <h3><span>🥚</span> 卵・乳製品</h3>
+                        <div class="ingredient-options">
+                            <input type="checkbox" id="eggs" class="ingredient-checkbox" value="卵">
+                            <label for="eggs" class="ingredient-label">卵</label>
+                            
+                            <input type="checkbox" id="milk" class="ingredient-checkbox" value="牛乳">
+                            <label for="milk" class="ingredient-label">牛乳</label>
+                            
+                            <input type="checkbox" id="cheese" class="ingredient-checkbox" value="チーズ">
+                            <label for="cheese" class="ingredient-label">チーズ</label>
+                            
+                            <input type="checkbox" id="butter" class="ingredient-checkbox" value="バター">
+                            <label for="butter" class="ingredient-label">バター</label>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-category">
+                        <h3><span>🥬</span> 野菜</h3>
+                        <div class="ingredient-options">
+                            <input type="checkbox" id="onion" class="ingredient-checkbox" value="玉ねぎ">
+                            <label for="onion" class="ingredient-label">玉ねぎ</label>
+                            
+                            <input type="checkbox" id="carrot" class="ingredient-checkbox" value="人参">
+                            <label for="carrot" class="ingredient-label">人参</label>
+                            
+                            <input type="checkbox" id="potato" class="ingredient-checkbox" value="じゃがいも">
+                            <label for="potato" class="ingredient-label">じゃがいも</label>
+                            
+                            <input type="checkbox" id="cabbage" class="ingredient-checkbox" value="キャベツ">
+                            <label for="cabbage" class="ingredient-label">キャベツ</label>
+                            
+                            <input type="checkbox" id="tomato" class="ingredient-checkbox" value="トマト">
+                            <label for="tomato" class="ingredient-label">トマト</label>
+                            
+                            <input type="checkbox" id="lettuce" class="ingredient-checkbox" value="レタス">
+                            <label for="lettuce" class="ingredient-label">レタス</label>
+                            
+                            <input type="checkbox" id="cucumber" class="ingredient-checkbox" value="きゅうり">
+                            <label for="cucumber" class="ingredient-label">きゅうり</label>
+                            
+                            <input type="checkbox" id="white-radish" class="ingredient-checkbox" value="大根">
+                            <label for="white-radish" class="ingredient-label">大根</label>
+                            
+                            <input type="checkbox" id="chinese-cabbage" class="ingredient-checkbox" value="白菜">
+                            <label for="chinese-cabbage" class="ingredient-label">白菜</label>
+                            
+                            <input type="checkbox" id="spinach" class="ingredient-checkbox" value="ほうれん草">
+                            <label for="spinach" class="ingredient-label">ほうれん草</label>
+                            
+                            <input type="checkbox" id="komatsuna" class="ingredient-checkbox" value="小松菜">
+                            <label for="komatsuna" class="ingredient-label">小松菜</label>
+                            
+                            <input type="checkbox" id="eggplant" class="ingredient-checkbox" value="なす">
+                            <label for="eggplant" class="ingredient-label">なす</label>
+                            
+                            <input type="checkbox" id="bell-pepper" class="ingredient-checkbox" value="ピーマン">
+                            <label for="bell-pepper" class="ingredient-label">ピーマン</label>
+                            
+                            <input type="checkbox" id="green-pepper" class="ingredient-checkbox" value="青椒">
+                            <label for="green-pepper" class="ingredient-label">青椒</label>
+                            
+                            <input type="checkbox" id="broccoli" class="ingredient-checkbox" value="ブロッコリー">
+                            <label for="broccoli" class="ingredient-label">ブロッコリー</label>
+                            
+                            <input type="checkbox" id="cauliflower" class="ingredient-checkbox" value="カリフラワー">
+                            <label for="cauliflower" class="ingredient-label">カリフラワー</label>
+                            
+                            <input type="checkbox" id="bean-sprouts" class="ingredient-checkbox" value="もやし">
+                            <label for="bean-sprouts" class="ingredient-label">もやし</label>
+                            
+                            <input type="checkbox" id="green-onion" class="ingredient-checkbox" value="ねぎ">
+                            <label for="green-onion" class="ingredient-label">ねぎ</label>
+                            
+                            <input type="checkbox" id="leek" class="ingredient-checkbox" value="長ねぎ">
+                            <label for="leek" class="ingredient-label">長ねぎ</label>
+                            
+                            <input type="checkbox" id="chinese-chives" class="ingredient-checkbox" value="ニラ">
+                            <label for="chinese-chives" class="ingredient-label">ニラ</label>
+                            
+                            <input type="checkbox" id="garlic" class="ingredient-checkbox" value="にんにく">
+                            <label for="garlic" class="ingredient-label">にんにく</label>
+                            
+                            <input type="checkbox" id="ginger" class="ingredient-checkbox" value="生姜">
+                            <label for="ginger" class="ingredient-label">生姜</label>
+                            
+                            <input type="checkbox" id="mushroom" class="ingredient-checkbox" value="きのこ">
+                            <label for="mushroom" class="ingredient-label">きのこ</label>
+                            
+                            <input type="checkbox" id="shiitake" class="ingredient-checkbox" value="しいたけ">
+                            <label for="shiitake" class="ingredient-label">しいたけ</label>
+                            
+                            <input type="checkbox" id="enoki" class="ingredient-checkbox" value="えのき">
+                            <label for="enoki" class="ingredient-label">えのき</label>
+                            
+                            <input type="checkbox" id="shimeji" class="ingredient-checkbox" value="しめじ">
+                            <label for="shimeji" class="ingredient-label">しめじ</label>
+                            
+                            <input type="checkbox" id="corn" class="ingredient-checkbox" value="とうもろこし">
+                            <label for="corn" class="ingredient-label">とうもろこし</label>
+                            
+                            <input type="checkbox" id="sweet-potato" class="ingredient-checkbox" value="さつまいも">
+                            <label for="sweet-potato" class="ingredient-label">さつまいも</label>
+                            
+                            <input type="checkbox" id="lotus-root" class="ingredient-checkbox" value="れんこん">
+                            <label for="lotus-root" class="ingredient-label">れんこん</label>
+                            
+                            <input type="checkbox" id="gobo" class="ingredient-checkbox" value="ごぼう">
+                            <label for="gobo" class="ingredient-label">ごぼう</label>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-category">
+                        <h3><span>🌾</span> 主食・穀物</h3>
+                        <div class="ingredient-options">
+                            <input type="checkbox" id="rice" class="ingredient-checkbox" value="ご飯">
+                            <label for="rice" class="ingredient-label">ご飯</label>
+                            
+                            <input type="checkbox" id="bread" class="ingredient-checkbox" value="パン">
+                            <label for="bread" class="ingredient-label">パン</label>
+                            
+                            <input type="checkbox" id="pasta" class="ingredient-checkbox" value="パスタ">
+                            <label for="pasta" class="ingredient-label">パスタ</label>
+                            
+                            <input type="checkbox" id="noodles" class="ingredient-checkbox" value="麺">
+                            <label for="noodles" class="ingredient-label">麺</label>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-category">
+                        <h3><span>🧂</span> 調味料・香辛料</h3>
+                        <div class="ingredient-options">
+                            <input type="checkbox" id="soy-sauce" class="ingredient-checkbox" value="醤油">
+                            <label for="soy-sauce" class="ingredient-label">醤油</label>
+                            
+                            <input type="checkbox" id="miso" class="ingredient-checkbox" value="味噌">
+                            <label for="miso" class="ingredient-label">味噌</label>
+                            
+                            <input type="checkbox" id="mirin" class="ingredient-checkbox" value="みりん">
+                            <label for="mirin" class="ingredient-label">みりん</label>
+                            
+                            <input type="checkbox" id="sake" class="ingredient-checkbox" value="酒">
+                            <label for="sake" class="ingredient-label">酒</label>
+                            
+                            <input type="checkbox" id="sugar" class="ingredient-checkbox" value="砂糖">
+                            <label for="sugar" class="ingredient-label">砂糖</label>
+                            
+                            <input type="checkbox" id="salt" class="ingredient-checkbox" value="塩">
+                            <label for="salt" class="ingredient-label">塩</label>
+                            
+                            <input type="checkbox" id="pepper" class="ingredient-checkbox" value="こしょう">
+                            <label for="pepper" class="ingredient-label">こしょう</label>
+                            
+                            <input type="checkbox" id="vinegar" class="ingredient-checkbox" value="酢">
+                            <label for="vinegar" class="ingredient-label">酢</label>
+                            
+                            <input type="checkbox" id="sesame-oil" class="ingredient-checkbox" value="ごま油">
+                            <label for="sesame-oil" class="ingredient-label">ごま油</label>
+                            
+                            <input type="checkbox" id="olive-oil" class="ingredient-checkbox" value="オリーブオイル">
+                            <label for="olive-oil" class="ingredient-label">オリーブオイル</label>
+                            
+                            <input type="checkbox" id="vegetable-oil" class="ingredient-checkbox" value="サラダ油">
+                            <label for="vegetable-oil" class="ingredient-label">サラダ油</label>
+                            
+                            <input type="checkbox" id="mayonnaise" class="ingredient-checkbox" value="マヨネーズ">
+                            <label for="mayonnaise" class="ingredient-label">マヨネーズ</label>
+                            
+                            <input type="checkbox" id="ketchup" class="ingredient-checkbox" value="ケチャップ">
+                            <label for="ketchup" class="ingredient-label">ケチャップ</label>
+                            
+                            <input type="checkbox" id="worcestershire" class="ingredient-checkbox" value="ウスターソース">
+                            <label for="worcestershire" class="ingredient-label">ウスターソース</label>
+                            
+                            <input type="checkbox" id="oyster-sauce" class="ingredient-checkbox" value="オイスターソース">
+                            <label for="oyster-sauce" class="ingredient-label">オイスターソース</label>
+                            
+                            <input type="checkbox" id="chicken-stock" class="ingredient-checkbox" value="鶏ガラスープの素">
+                            <label for="chicken-stock" class="ingredient-label">鶏ガラスープの素</label>
+                            
+                            <input type="checkbox" id="dashi" class="ingredient-checkbox" value="だし">
+                            <label for="dashi" class="ingredient-label">だし</label>
+                            
+                            <input type="checkbox" id="mentsugu" class="ingredient-checkbox" value="めんつゆ">
+                            <label for="mentsugu" class="ingredient-label">めんつゆ</label>
+                            
+                            <input type="checkbox" id="ponzu" class="ingredient-checkbox" value="ポン酢">
+                            <label for="ponzu" class="ingredient-label">ポン酢</label>
+                            
+                            <input type="checkbox" id="sesame" class="ingredient-checkbox" value="ごま">
+                            <label for="sesame" class="ingredient-label">ごま</label>
+                            
+                            <input type="checkbox" id="wasabi" class="ingredient-checkbox" value="わさび">
+                            <label for="wasabi" class="ingredient-label">わさび</label>
+                            
+                            <input type="checkbox" id="shichimi" class="ingredient-checkbox" value="七味唐辛子">
+                            <label for="shichimi" class="ingredient-label">七味唐辛子</label>
+                            
+                            <input type="checkbox" id="curry-powder" class="ingredient-checkbox" value="カレー粉">
+                            <label for="curry-powder" class="ingredient-label">カレー粉</label>
+                            
+                            <input type="checkbox" id="paprika" class="ingredient-checkbox" value="パプリカ">
+                            <label for="paprika" class="ingredient-label">パプリカ</label>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-category">
+                        <h3><span>🍱</span> その他の食材</h3>
+                        <div class="ingredient-options">
+                            <input type="checkbox" id="tofu" class="ingredient-checkbox" value="豆腐">
+                            <label for="tofu" class="ingredient-label">豆腐</label>
+                            
+                            <input type="checkbox" id="fried-tofu" class="ingredient-checkbox" value="油揚げ">
+                            <label for="fried-tofu" class="ingredient-label">油揚げ</label>
+                            
+                            <input type="checkbox" id="konjac" class="ingredient-checkbox" value="こんにゃく">
+                            <label for="konjac" class="ingredient-label">こんにゃく</label>
+                            
+                            <input type="checkbox" id="nori" class="ingredient-checkbox" value="海苔">
+                            <label for="nori" class="ingredient-label">海苔</label>
+                            
+                            <input type="checkbox" id="wakame" class="ingredient-checkbox" value="わかめ">
+                            <label for="wakame" class="ingredient-label">わかめ</label>
+                            
+                            <input type="checkbox" id="kelp" class="ingredient-checkbox" value="昆布">
+                            <label for="kelp" class="ingredient-label">昆布</label>
+                            
+                            <input type="checkbox" id="dried-shiitake" class="ingredient-checkbox" value="干ししいたけ">
+                            <label for="dried-shiitake" class="ingredient-label">干ししいたけ</label>
+                            
+                            <input type="checkbox" id="pickled-vegetables" class="ingredient-checkbox" value="漬物">
+                            <label for="pickled-vegetables" class="ingredient-label">漬物</label>
+                            
+                            <input type="checkbox" id="kimchi" class="ingredient-checkbox" value="キムチ">
+                            <label for="kimchi" class="ingredient-label">キムチ</label>
+                            
+                            <input type="checkbox" id="natto" class="ingredient-checkbox" value="納豆">
+                            <label for="natto" class="ingredient-label">納豆</label>
+                            
+                            <input type="checkbox" id="bamboo-shoots" class="ingredient-checkbox" value="たけのこ">
+                            <label for="bamboo-shoots" class="ingredient-label">たけのこ</label>
+                            
+                            <input type="checkbox" id="green-beans" class="ingredient-checkbox" value="いんげん">
+                            <label for="green-beans" class="ingredient-label">いんげん</label>
+                            
+                            <input type="checkbox" id="edamame" class="ingredient-checkbox" value="枝豆">
+                            <label for="edamame" class="ingredient-label">枝豆</label>
+                            
+                            <input type="checkbox" id="soybeans" class="ingredient-checkbox" value="大豆">
+                            <label for="soybeans" class="ingredient-label">大豆</label>
+                            
+                            <input type="checkbox" id="red-beans" class="ingredient-checkbox" value="小豆">
+                            <label for="red-beans" class="ingredient-label">小豆</label>
+                            
+                            <input type="checkbox" id="pumpkin" class="ingredient-checkbox" value="かぼちゃ">
+                            <label for="pumpkin" class="ingredient-label">かぼちゃ</label>
+                            
+                            <input type="checkbox" id="okra" class="ingredient-checkbox" value="オクラ">
+                            <label for="okra" class="ingredient-label">オクラ</label>
+                            
+                            <input type="checkbox" id="avocado" class="ingredient-checkbox" value="アボカド">
+                            <label for="avocado" class="ingredient-label">アボカド</label>
+                            
+                            <input type="checkbox" id="lemon" class="ingredient-checkbox" value="レモン">
+                            <label for="lemon" class="ingredient-label">レモン</label>
+                            
+                            <input type="checkbox" id="lime" class="ingredient-checkbox" value="ライム">
+                            <label for="lime" class="ingredient-label">ライム</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="selected-ingredients">
+                    <h4>🛒 選択中の材料</h4>
+                    <div class="selected-list" id="selectedIngredients">
+                        <span style="color: #666; font-style: italic;">材料を選択してください</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Generate Button -->
+        <section class="generate-section">
+            <button class="generate-btn" id="generateBtn">
+                🎲 5つの料理を提案してもらう
+            </button>
+        </section>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>1000種類のレシピから最適な5つを選んでいます...</p>
+        </div>
+
+        <!-- Sidebar Ad -->
+        <div class="ad-section">
+            <div class="ad-label">広告</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1106158066306697"
+                 data-ad-slot="3889638884"
+                 data-ad-format="vertical"></ins>
+        </div>
+
+        <!-- Result Section -->
+        <section class="result-section" id="resultSection">
+            <div class="result-header-text">
+                <h2>あなたにおすすめの5つの料理</h2>
+                <p>条件に合わせて厳選した料理をご紹介します</p>
+            </div>
+            <div class="result-grid" id="resultGrid">
+                <!-- 5つの料理提案がここに表示 -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Recipe Detail Modal -->
+    <div id="recipeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2 class="modal-title" id="modalTitle">レシピ詳細</h2>
+                <p class="modal-subtitle" id="modalSubtitle">詳細な作り方をご紹介します</p>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- レシピ詳細がここに表示 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Ad -->
+    <div class="ad-section">
+        <div class="ad-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="6171337236"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 CookSuggest. 毎日の料理選びをもっと楽しく。</p>
+    </footer>
+
+    <script>
+        // 条件選択の状態管理
+        let selectedConditions = {
+            difficulty: null,
+            servings: null,
+            calories: null,
+            cuisine: null
+        };
+
+        // 完全なレシピデータベース（材料・手順付き）
+        const completeRecipeDatabase = {
+            '鶏の照り焼き': {
+                name: '鶏の照り焼き',
+                difficulty: '簡単',
+                time: 15,
+                calories: 320,
+                cuisine: '和食',
+                emoji: '🍗',
+                bgColor: '#FFE4B5',
+                description: 'ジューシーな鶏もも肉を甘辛いタレで焼き上げた定番料理。ご飯が進む味付けで家族みんなに人気です。',
+                ingredients: [
+                    { name: '鶏もも肉', amount: '300g' },
+                    { name: '醤油', amount: '大さじ3' },
+                    { name: 'みりん', amount: '大さじ2' },
+                    { name: '砂糖', amount: '大さじ1' },
+                    { name: '酒', amount: '大さじ1' },
+                    { name: 'サラダ油', amount: '適量' }
+                ],
+                steps: [
+                    '鶏もも肉を一口大に切り、軽く塩こしょうをふる',
+                    '醤油、みりん、砂糖、酒を混ぜ合わせてタレを作る',
+                    'フライパンにサラダ油を熱し、鶏肉を皮目から焼く',
+                    '両面がこんがり焼けたら、タレを加える',
+                    'タレを絡めながら煮詰めて完成'
+                ],
+                tips: [
+                    '鶏肉は常温に戻してから調理すると火の通りが均一になります',
+                    'タレは焦げやすいので弱火で煮詰めてください',
+                    '最後に白ごまをふると風味がアップします'
+                ]
+            },
+            '親子丼': {
+                name: '親子丼',
+                difficulty: '簡単',
+                time: 20,
+                calories: 450,
+                cuisine: '和食',
+                emoji: '🍳',
+                bgColor: '#FFFACD',
+                description: 'ふわふわ卵と鶏肉の絶妙なハーモニー。だしの旨味が効いた優しい味わいの丼物です。',
+                ingredients: [
+                    { name: '鶏もも肉', amount: '150g' },
+                    { name: '卵', amount: '3個' },
+                    { name: '玉ねぎ', amount: '1/2個' },
+                    { name: 'だし汁', amount: '150ml' },
+                    { name: '醤油', amount: '大さじ2' },
+                    { name: 'みりん', amount: '大さじ2' },
+                    { name: '砂糖', amount: '小さじ1' },
+                    { name: 'ご飯', amount: '2杯分' }
+                ],
+                steps: [
+                    '鶏肉を一口大に切り、玉ねぎは薄切りにする',
+                    'だし汁、醤油、みりん、砂糖を煮立てる',
+                    '鶏肉と玉ねぎを加えて煮る',
+                    '卵を溶きほぐし、半量を回し入れる',
+                    '半熟状になったら残りの卵を加え、蓋をして火を止める',
+                    'ご飯の上にのせて完成'
+                ],
+                tips: [
+                    '卵は2回に分けて入れることでふわふわ食感になります',
+                    '最後は余熱で仕上げると卵が固くなりません',
+                    '三つ葉や海苔をトッピングすると彩りが良くなります'
+                ]
+            },
+            '肉じゃが': {
+                name: '肉じゃが',
+                difficulty: '普通',
+                time: 30,
+                calories: 280,
+                cuisine: '和食',
+                emoji: '🥔',
+                bgColor: '#FFF8DC',
+                description: '家庭の味を代表する煮物料理の王様。ほっくりしたじゃがいもに染み込んだ甘辛い味が絶品です。',
+                ingredients: [
+                    { name: '豚こま切れ肉', amount: '200g' },
+                    { name: 'じゃがいも', amount: '4個' },
+                    { name: '人参', amount: '1本' },
+                    { name: '玉ねぎ', amount: '1個' },
+                    { name: 'だし汁', amount: '400ml' },
+                    { name: '醤油', amount: '大さじ3' },
+                    { name: 'みりん', amount: '大さじ3' },
+                    { name: '砂糖', amount: '大さじ2' },
+                    { name: 'サラダ油', amount: '大さじ1' }
+                ],
+                steps: [
+                    'じゃがいもは一口大に切り、水にさらす',
+                    '人参は乱切り、玉ねぎはくし切りにする',
+                    '鍋に油を熱し、豚肉を炒める',
+                    '野菜を加えて軽く炒める',
+                    'だし汁と調味料を加えて煮立てる',
+                    '落し蓋をして20分程度煮込む',
+                    'じゃがいもが柔らかくなったら完成'
+                ],
+                tips: [
+                    'じゃがいもは男爵イモを使うとホクホクに仕上がります',
+                    '煮込む際は時々様子を見て、水分が足りなければ足してください',
+                    '一晩置くと味がより染み込んで美味しくなります'
+                ]
+            },
+            'ハンバーグ': {
+                name: 'ハンバーグ',
+                difficulty: '普通',
+                time: 35,
+                calories: 420,
+                cuisine: '洋食',
+                emoji: '🍖',
+                bgColor: '#FFE4E1',
+                description: 'ジューシーで肉汁たっぷりの洋食の定番。デミグラスソースとの相性も抜群です。',
+                ingredients: [
+                    { name: '合挽き肉', amount: '400g' },
+                    { name: '玉ねぎ', amount: '1個' },
+                    { name: 'パン粉', amount: '1カップ' },
+                    { name: '牛乳', amount: '大さじ3' },
+                    { name: '卵', amount: '1個' },
+                    { name: '塩こしょう', amount: '適量' },
+                    { name: 'ナツメグ', amount: '少々' },
+                    { name: 'サラダ油', amount: '大さじ1' }
+                ],
+                steps: [
+                    '玉ねぎはみじん切りにして炒め、冷ましておく',
+                    'パン粉に牛乳を加えてふやかす',
+                    'ボウルに挽き肉、玉ねぎ、パン粉、卵、調味料を入れてよく混ぜる',
+                    '4等分して楕円形に成形する',
+                    'フライパンに油を熱し、中火で焼く',
+                    '両面焼き色がついたら蓋をして弱火で10分蒸し焼きにする',
+                    '竹串を刺して透明な肉汁が出れば完成'
+                ],
+                tips: [
+                    'タネはよく混ぜることで肉汁を閉じ込められます',
+                    '成形時に空気を抜くとひび割れを防げます',
+                    'デミグラスソースやケチャップソースでお好みの味に'
+                ]
+            },
+            'チャーハン': {
+                name: 'チャーハン',
+                difficulty: '簡単',
+                time: 15,
+                calories: 380,
+                cuisine: '中華',
+                emoji: '🍚',
+                bgColor: '#F0FFF0',
+                description: 'パラパラご飯が決め手の中華定番料理。冷蔵庫の残り物でも美味しく作れます。',
+                ingredients: [
+                    { name: 'ご飯', amount: '2杯分' },
+                    { name: '卵', amount: '2個' },
+                    { name: 'ねぎ', amount: '2本' },
+                    { name: 'ハム', amount: '3枚' },
+                    { name: '醤油', amount: '大さじ2' },
+                    { name: '鶏ガラスープの素', amount: '小さじ1' },
+                    { name: '塩こしょう', amount: '適量' },
+                    { name: 'ごま油', amount: '大さじ1' }
+                ],
+                steps: [
+                    'ねぎは小口切り、ハムは1cm角に切る',
+                    '卵は溶きほぐしておく',
+                    'フライパンにごま油を熱し、卵を入れてすぐにご飯を加える',
+                    '強火で炒めながらご飯をパラパラにする',
+                    'ハムとねぎを加えて炒める',
+                    '醤油、鶏ガラスープの素、塩こしょうで味を調える',
+                    '全体がよく混ざったら完成'
+                ],
+                tips: [
+                    'ご飯は冷ご飯を使うとパラパラに仕上がります',
+                    '卵とご飯を同時に入れることで卵がご飯をコーティングします',
+                    '強火で手早く炒めるのがコツです'
+                ]
+            },
+            'カレーライス': {
+                name: 'カレーライス',
+                difficulty: '普通',
+                time: 45,
+                calories: 550,
+                cuisine: '洋食',
+                emoji: '🍛',
+                bgColor: '#FF6347',
+                description: '日本の国民食とも言える洋食の定番。スパイスの香りと野菜の甘みが絶妙です。',
+                ingredients: [
+                    { name: '牛肉', amount: '300g' },
+                    { name: 'じゃがいも', amount: '3個' },
+                    { name: '人参', amount: '1本' },
+                    { name: '玉ねぎ', amount: '2個' },
+                    { name: 'カレールー', amount: '1箱' },
+                    { name: '水', amount: '800ml' },
+                    { name: 'サラダ油', amount: '大さじ2' },
+                    { name: 'ご飯', amount: '4杯分' }
+                ],
+                steps: [
+                    '肉と野菜を一口大に切る',
+                    '鍋に油を熱し、肉を炒める',
+                    '玉ねぎを加えて透明になるまで炒める',
+                    '人参、じゃがいもを加えて軽く炒める',
+                    '水を加えて煮立てる',
+                    'アクを取りながら20分煮込む',
+                    '火を止めてカレールーを溶かし、再び煮込む',
+                    'ご飯と一緒に盛り付けて完成'
+                ],
+                tips: [
+                    '玉ねぎをしっかり炒めることで甘みが出ます',
+                    'ルーを入れる時は火を止めてダマを防ぎましょう',
+                    '一晩寝かせると味がまろやかになります'
+                ]
+            },
+            'ビーフウェリントン': {
+                name: 'ビーフウェリントン',
+                difficulty: '上級',
+                time: 120,
+                calories: 650,
+                cuisine: '洋食',
+                emoji: '🥩',
+                bgColor: '#8B0000',
+                description: 'パイ生地に包まれた高級フレンチの代表格。特別な日にふさわしい豪華な一品です。',
+                ingredients: [
+                    { name: '牛フィレ肉', amount: '600g' },
+                    { name: '冷凍パイシート', amount: '2枚' },
+                    { name: 'マッシュルーム', amount: '300g' },
+                    { name: '生ハム', amount: '100g' },
+                    { name: '卵黄', amount: '1個分' },
+                    { name: 'ディジョンマスタード', amount: '大さじ2' },
+                    { name: 'オリーブオイル', amount: '大さじ2' },
+                    { name: '塩こしょう', amount: '適量' }
+                ],
+                steps: [
+                    '牛フィレ肉に塩こしょうし、フライパンで表面を焼いて冷ます',
+                    '焼いた肉にディジョンマスタードを塗る',
+                    'マッシュルームをみじん切りにして水分が飛ぶまで炒める',
+                    'ラップに生ハムを並べ、マッシュルーム、牛肉の順で包む',
+                    '冷蔵庫で30分休ませる',
+                    'パイシートで肉を包み、卵黄を塗る',
+                    '200℃のオーブンで25-30分焼く',
+                    '10分休ませてからスライスして完成'
+                ],
+                tips: [
+                    '牛肉の表面をしっかり焼くことで肉汁を封じ込められます',
+                    'マッシュルームの水分をしっかり飛ばすことが重要です',
+                    '肉用温度計で内部温度55-60℃を目安にしてください'
+                ]
+            },
+            'エビチリ': {
+                name: 'エビチリ',
+                difficulty: '普通',
+                time: 25,
+                calories: 260,
+                cuisine: '中華',
+                emoji: '🦐',
+                bgColor: '#FFB6C1',
+                description: 'プリプリエビの甘辛い中華料理。程よい辛さがクセになる一品です。',
+                ingredients: [
+                    { name: 'エビ（中サイズ）', amount: '20尾' },
+                    { name: 'ケチャップ', amount: '大さじ4' },
+                    { name: '豆板醤', amount: '小さじ1' },
+                    { name: '鶏ガラスープの素', amount: '小さじ1' },
+                    { name: 'にんにく', amount: '1片' },
+                    { name: '生姜', amount: '1片' },
+                    { name: '長ねぎ', amount: '1本' },
+                    { name: '片栗粉', amount: '大さじ1' },
+                    { name: 'サラダ油', amount: '大さじ2' }
+                ],
+                steps: [
+                    'エビの殻をむき、背わたを取って片栗粉をまぶす',
+                    'にんにく、生姜をみじん切り、長ねぎを小口切りにする',
+                    'ケチャップ、豆板醤、鶏ガラスープの素、水大さじ3を混ぜてタレを作る',
+                    'フライパンに油を熱し、エビを炒める',
+                    'エビの色が変わったら一度取り出す',
+                    'にんにく、生姜を炒めて香りを出す',
+                    'タレを加えて煮立てる',
+                    'エビを戻し入れ、長ねぎを加えて軽く炒めて完成'
+                ],
+                tips: [
+                    'エビは炒めすぎると固くなるので注意してください',
+                    '豆板醤の量で辛さを調整できます',
+                    '最後に香菜を散らすとより本格的になります'
+                ]
+            },
+            '手打ちそば': {
+                name: '手打ちそば',
+                difficulty: '上級',
+                time: 90,
+                calories: 220,
+                cuisine: '和食',
+                emoji: '🍜',
+                bgColor: '#F5DEB3',
+                description: '職人技が光る本格的な手打ちそば。そば粉の香りと弾力のある食感をお楽しみください。',
+                ingredients: [
+                    { name: 'そば粉', amount: '400g' },
+                    { name: '強力粉', amount: '100g' },
+                    { name: '水', amount: '220ml' },
+                    { name: 'だし汁', amount: '600ml' },
+                    { name: '醤油', amount: '大さじ3' },
+                    { name: 'みりん', amount: '大さじ2' },
+                    { name: '砂糖', amount: '小さじ1' },
+                    { name: '長ねぎ', amount: '1本' }
+                ],
+                steps: [
+                    'そば粉と強力粉をボウルで混ぜ合わせる',
+                    '水を少しずつ加えながら手でこねる',
+                    '生地がまとまったら30分寝かせる',
+                    '打ち粉をして麺棒で薄く伸ばす',
+                    '均等な太さに切り分ける',
+                    'たっぷりの湯で2-3分茹でる',
+                    '冷水でしめて水気を切る',
+                    'つゆに長ねぎを添えて完成'
+                ],
+                tips: [
+                    '水回しは慎重に、そば粉と水をなじませることが大切です',
+                    '生地の厚さは1.5-2mmが理想的です',
+                    '茹で時間は麺の太さに合わせて調整してください'
+                ]
+            },
+            '北京ダック': {
+                name: '北京ダック',
+                difficulty: '上級',
+                time: 180,
+                calories: 480,
+                cuisine: '中華',
+                emoji: '🦆',
+                bgColor: '#DDA0DD',
+                description: '皮のパリパリ食感が絶品の中華高級料理。薄餅に包んで食べる本格的な味わいです。',
+                ingredients: [
+                    { name: '鴨肉（丸鶏）', amount: '1羽' },
+                    { name: '薄餅（または春巻きの皮）', amount: '20枚' },
+                    { name: '甜麺醤', amount: '大さじ4' },
+                    { name: 'きゅうり', amount: '2本' },
+                    { name: '長ねぎ（白い部分）', amount: '2本' },
+                    { name: 'はちみつ', amount: '大さじ2' },
+                    { name: '醤油', amount: '大さじ1' },
+                    { name: '紹興酒', amount: '大さじ2' }
+                ],
+                steps: [
+                    '鴨肉を熱湯で下茹でして臭みを取る',
+                    'はちみつ、醤油、紹興酒を混ぜたタレを鴨肉に塗る',
+                    '風通しの良い場所で4-6時間乾燥させる',
+                    '180℃のオーブンで1時間ローストする',
+                    '皮をそぎ切りにして盛り付ける',
+                    'きゅうり、長ねぎは細切りにする',
+                    '薄餅に甜麺醤を塗り、具材を包んで食べる',
+                    '残った肉は炒め物や粥に活用'
+                ],
+                tips: [
+                    '皮をパリパリにするため乾燥時間をしっかり取ってください',
+                    'ローストする際は途中で向きを変えて均等に焼きます',
+                    '薄餅は蒸して温めてから使うと包みやすくなります'
+                ]
+            }
+        };
+
+        // 簡略版レシピデータベース（表示用）
+        const allRecipes = [
+            // 和食
+            { name: '鶏の照り焼き', difficulty: '簡単', time: 15, calories: 320, cuisine: '和食', emoji: '🍗', bgColor: '#FFE4B5' },
+            { name: '親子丼', difficulty: '簡単', time: 20, calories: 450, cuisine: '和食', emoji: '🍳', bgColor: '#FFFACD' },
+            { name: '肉じゃが', difficulty: '普通', time: 30, calories: 280, cuisine: '和食', emoji: '🥔', bgColor: '#FFF8DC' },
+            { name: '卵かけご飯', difficulty: '簡単', time: 3, calories: 280, cuisine: '和食', emoji: '🥚', bgColor: '#FFF8DC' },
+            { name: '納豆ご飯', difficulty: '簡単', time: 5, calories: 250, cuisine: '和食', emoji: '🍚', bgColor: '#F0FFF0' },
+            { name: '焼き魚', difficulty: '簡単', time: 15, calories: 200, cuisine: '和食', emoji: '🐟', bgColor: '#E0F6FF' },
+            { name: '冷奴', difficulty: '簡単', time: 5, calories: 150, cuisine: '和食', emoji: '🧊', bgColor: '#F5FFFA' },
+            { name: 'おにぎり', difficulty: '簡単', time: 10, calories: 180, cuisine: '和食', emoji: '🍙', bgColor: '#F8F8FF' },
+            { name: '味噌汁', difficulty: '簡単', time: 10, calories: 50, cuisine: '和食', emoji: '🥣', bgColor: '#FFF5EE' },
+            { name: '筑前煮', difficulty: '普通', time: 35, calories: 250, cuisine: '和食', emoji: '🥕', bgColor: '#FFEFD5' },
+            { name: '豚の生姜焼き', difficulty: '普通', time: 20, calories: 380, cuisine: '和食', emoji: '🐷', bgColor: '#FFE4E1' },
+            { name: 'かつ丼', difficulty: '普通', time: 25, calories: 650, cuisine: '和食', emoji: '🍖', bgColor: '#FFDAB9' },
+            { name: '天ぷら', difficulty: '普通', time: 30, calories: 400, cuisine: '和食', emoji: '🍤', bgColor: '#FFFAF0' },
+            { name: '寿司', difficulty: '普通', time: 45, calories: 350, cuisine: '和食', emoji: '🍣', bgColor: '#F0FFFF' },
+            { name: 'うどん', difficulty: '普通', time: 15, calories: 300, cuisine: '和食', emoji: '🍜', bgColor: '#FFF8DC' },
+            { name: '懐石料理', difficulty: '上級', time: 120, calories: 400, cuisine: '和食', emoji: '🍱', bgColor: '#FFF0F5' },
+            { name: '手打ちそば', difficulty: '上級', time: 90, calories: 220, cuisine: '和食', emoji: '🍜', bgColor: '#F5DEB3' },
+            
+            // 洋食
+            { name: 'ハンバーグ', difficulty: '普通', time: 35, calories: 420, cuisine: '洋食', emoji: '🍖', bgColor: '#FFE4E1' },
+            { name: 'カレーライス', difficulty: '普通', time: 45, calories: 550, cuisine: '洋食', emoji: '🍛', bgColor: '#FF6347' },
+            { name: 'スクランブルエッグ', difficulty: '簡単', time: 10, calories: 200, cuisine: '洋食', emoji: '🍳', bgColor: '#FFFACD' },
+            { name: 'トースト', difficulty: '簡単', time: 5, calories: 150, cuisine: '洋食', emoji: '🍞', bgColor: '#FFEFD5' },
+            { name: 'サラダ', difficulty: '簡単', time: 10, calories: 80, cuisine: '洋食', emoji: '🥗', bgColor: '#F5FFFA' },
+            { name: 'ベーコンエッグ', difficulty: '簡単', time: 15, calories: 300, cuisine: '洋食', emoji: '🥓', bgColor: '#FFE4E1' },
+            { name: 'サンドイッチ', difficulty: '簡単', time: 10, calories: 280, cuisine: '洋食', emoji: '🥪', bgColor: '#F5F5DC' },
+            { name: 'パスタ（ペペロンチーノ）', difficulty: '簡単', time: 20, calories: 320, cuisine: '洋食', emoji: '🍝', bgColor: '#FFFAF0' },
+            { name: 'オムレツ', difficulty: '簡単', time: 15, calories: 250, cuisine: '洋食', emoji: '🍳', bgColor: '#FFFACD' },
+            { name: 'グリルチキン', difficulty: '簡単', time: 25, calories: 280, cuisine: '洋食', emoji: '🍗', bgColor: '#FFE4B5' },
+            { name: 'オムライス', difficulty: '普通', time: 25, calories: 480, cuisine: '洋食', emoji: '🍳', bgColor: '#FFFACD' },
+            { name: 'グラタン', difficulty: '普通', time: 40, calories: 450, cuisine: '洋食', emoji: '🧀', bgColor: '#FFEFD5' },
+            { name: 'シチュー', difficulty: '普通', time: 50, calories: 350, cuisine: '洋食', emoji: '🍲', bgColor: '#F5F5DC' },
+            { name: 'ピザ', difficulty: '普通', time: 30, calories: 520, cuisine: '洋食', emoji: '🍕', bgColor: '#FFFACD' },
+            { name: 'ステーキ', difficulty: '普通', time: 20, calories: 450, cuisine: '洋食', emoji: '🥩', bgColor: '#8B0000' },
+            { name: 'ビーフウェリントン', difficulty: '上級', time: 120, calories: 650, cuisine: '洋食', emoji: '🥩', bgColor: '#8B0000' },
+            { name: 'ローストビーフ', difficulty: '上級', time: 120, calories: 400, cuisine: '洋食', emoji: '🥩', bgColor: '#8B0000' },
+            
+            // 中華
+            { name: 'チャーハン', difficulty: '簡単', time: 15, calories: 380, cuisine: '中華', emoji: '🍚', bgColor: '#F0FFF0' },
+            { name: '餃子', difficulty: '簡単', time: 30, calories: 320, cuisine: '中華', emoji: '🥟', bgColor: '#FFFACD' },
+            { name: '麻婆豆腐', difficulty: '簡単', time: 20, calories: 260, cuisine: '中華', emoji: '🌶️', bgColor: '#FFB6C1' },
+            { name: '青椒肉絲', difficulty: '簡単', time: 20, calories: 280, cuisine: '中華', emoji: '🫑', bgColor: '#F0FFF0' },
+            { name: '中華スープ', difficulty: '簡単', time: 10, calories: 80, cuisine: '中華', emoji: '🥣', bgColor: '#FFF5EE' },
+            { name: '酢豚', difficulty: '普通', time: 35, calories: 420, cuisine: '中華', emoji: '🐷', bgColor: '#FFE4E1' },
+            { name: 'エビチリ', difficulty: '普通', time: 25, calories: 260, cuisine: '中華', emoji: '🦐', bgColor: '#FFB6C1' },
+            { name: '回鍋肉', difficulty: '普通', time: 25, calories: 350, cuisine: '中華', emoji: '🐷', bgColor: '#FFE4E1' },
+            { name: '春巻き', difficulty: '普通', time: 30, calories: 280, cuisine: '中華', emoji: '🌯', bgColor: '#FFEFD5' },
+            { name: '棒棒鶏', difficulty: '普通', time: 30, calories: 220, cuisine: '中華', emoji: '🍗', bgColor: '#FFE4B5' },
+            { name: '北京ダック', difficulty: '上級', time: 180, calories: 480, cuisine: '中華', emoji: '🦆', bgColor: '#DDA0DD' },
+            { name: '小籠包', difficulty: '上級', time: 90, calories: 300, cuisine: '中華', emoji: '🥟', bgColor: '#FFFACD' },
+            
+            // その他
+            { name: 'カプレーゼ', difficulty: '簡単', time: 10, calories: 180, cuisine: 'その他', emoji: '🍅', bgColor: '#FFB6C1' },
+            { name: 'パッタイ', difficulty: '簡単', time: 20, calories: 350, cuisine: 'その他', emoji: '🍜', bgColor: '#F5DEB3' },
+            { name: 'ガパオライス', difficulty: '簡単', time: 20, calories: 420, cuisine: 'その他', emoji: '🍚', bgColor: '#F0FFF0' },
+            { name: 'ビビンバ', difficulty: '簡単', time: 25, calories: 380, cuisine: 'その他', emoji: '🍚', bgColor: '#F0FFF0' },
+            { name: 'リゾット', difficulty: '普通', time: 35, calories: 350, cuisine: 'その他', emoji: '🍚', bgColor: '#F0FFF0' },
+            { name: 'パエリア', difficulty: '普通', time: 40, calories: 420, cuisine: 'その他', emoji: '🥘', bgColor: '#FF6347' },
+            { name: 'タイカレー', difficulty: '普通', time: 30, calories: 380, cuisine: 'その他', emoji: '🍛', bgColor: '#FF6347' },
+            { name: 'ブイヤベース', difficulty: '上級', time: 90, calories: 320, cuisine: 'その他', emoji: '🐟', bgColor: '#E0F6FF' },
+            
+            // デザート
+            { name: 'フルーツサラダ', difficulty: '簡単', time: 10, calories: 120, cuisine: 'デザート', emoji: '🍓', bgColor: '#FFB6C1' },
+            { name: 'プリン', difficulty: '簡単', time: 30, calories: 200, cuisine: 'デザート', emoji: '🍮', bgColor: '#FFFACD' },
+            { name: 'パンケーキ', difficulty: '簡単', time: 20, calories: 280, cuisine: 'デザート', emoji: '🥞', bgColor: '#FFEFD5' },
+            { name: 'アイスクリーム', difficulty: '簡単', time: 25, calories: 180, cuisine: 'デザート', emoji: '🍦', bgColor: '#E6E6FA' },
+            { name: 'クッキー', difficulty: '簡単', time: 35, calories: 150, cuisine: 'デザート', emoji: '🍪', bgColor: '#FFEFD5' },
+            { name: 'チーズケーキ', difficulty: '普通', time: 60, calories: 350, cuisine: 'デザート', emoji: '🍰', bgColor: '#FFFACD' },
+            { name: 'ショートケーキ', difficulty: '普通', time: 45, calories: 320, cuisine: 'デザート', emoji: '🍰', bgColor: '#FFB6C1' },
+            { name: 'ティラミス', difficulty: '普通', time: 40, calories: 280, cuisine: 'デザート', emoji: '☕', bgColor: '#F5DEB3' },
+            { name: 'マカロン', difficulty: '上級', time: 120, calories: 200, cuisine: 'デザート', emoji: '🍪', bgColor: '#E6E6FA' },
+            { name: 'タルトタタン', difficulty: '上級', time: 90, calories: 250, cuisine: 'デザート', emoji: '🍎', bgColor: '#FFEFD5' }
+        ];
+
+        console.log(`Total recipes loaded: ${allRecipes.length}`);
+
+        // レストランデータ
+        const restaurants = [
+            { 
+                name: '家庭の味 和食処', 
+                genre: '和食', 
+                budget: '1200円', 
+                rating: '4.3', 
+                description: '家庭的な和食が楽しめるアットホームなお店',
+                atmosphere: '個室あり、家族連れ歓迎',
+                specialties: '煮物、焼き魚、季節の天ぷら',
+                emoji: '🏮',
+                bgColor: '#FFE4E1'
+            },
+            { 
+                name: 'Bistro AMORE', 
+                genre: 'イタリアン', 
+                budget: '2000円', 
+                rating: '4.5', 
+                description: '本格イタリアンとワインが自慢のビストロ',
+                atmosphere: 'ロマンチックな雰囲気、デート向け',
+                specialties: 'パスタ、ピザ、リゾット',
+                emoji: '🍕',
+                bgColor: '#FFFACD'
+            },
+            { 
+                name: '中華菜館 福源', 
+                genre: '中華', 
+                budget: '1500円', 
+                rating: '4.1', 
+                description: '本格中華が味わえるボリューム満点のお店',
+                atmosphere: '大人数対応、宴会可能',
+                specialties: '麻婆豆腐、餃子、チャーハン',
+                emoji: '🥢',
+                bgColor: '#F0FFFF'
+            },
+            { 
+                name: 'Café de Paris', 
+                genre: 'フレンチ', 
+                budget: '2500円', 
+                rating: '4.4', 
+                description: '本格フレンチとスイーツが楽しめるカフェ',
+                atmosphere: 'おしゃれな空間、女子会向け',
+                specialties: 'クロワッサン、キッシュ、デザート',
+                emoji: '🥐',
+                bgColor: '#FFF8DC'
+            }
+        ];
+
+        // 美しいプレースホルダー画像を生成
+        function createBeautifulPlaceholder(emoji, bgColor, text) {
+            return `
+                <div class="image-placeholder" 
+                     style="background: linear-gradient(135deg, ${bgColor} 0%, ${adjustColor(bgColor, -20)} 100%);">
+                    <div class="placeholder-emoji">${emoji}</div>
+                    <div class="placeholder-text">${text}</div>
+                </div>
+            `;
+        }
+
+        // 色を調整する関数
+        function adjustColor(color, amount) {
+            return color.replace(/[0-9A-F]{2}/g, match => {
+                const num = parseInt(match, 16);
+                const adjusted = Math.max(0, Math.min(255, num + amount));
+                return adjusted.toString(16).padStart(2, '0');
+            });
+        }
+
+        // 条件に基づいてレシピを検索
+        function searchRecipes(conditions) {
+            let filteredRecipes = [...allRecipes];
+
+            // フィルタリング
+            if (conditions.difficulty && conditions.difficulty !== '全て') {
+                filteredRecipes = filteredRecipes.filter(recipe => recipe.difficulty === conditions.difficulty);
+            }
+
+            if (conditions.cuisine && conditions.cuisine !== 'その他') {
+                filteredRecipes = filteredRecipes.filter(recipe => recipe.cuisine === conditions.cuisine);
+            } else if (conditions.cuisine === 'その他') {
+                filteredRecipes = filteredRecipes.filter(recipe => 
+                    !['和食', '洋食', '中華', 'デザート'].includes(recipe.cuisine)
+                );
+            }
+
+            if (conditions.calories === 'デザート') {
+                filteredRecipes = filteredRecipes.filter(recipe => recipe.cuisine === 'デザート');
+            } else if (conditions.calories === 'ヘルシー') {
+                filteredRecipes = filteredRecipes.filter(recipe => recipe.calories <= 250);
+            } else if (conditions.calories === 'ガッツリ') {
+                filteredRecipes = filteredRecipes.filter(recipe => recipe.calories >= 400);
+            }
+
+            // ランダムに並び替えて4つ選択
+            const shuffled = filteredRecipes.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 4);
+        }
+
+        // モーダル関連
+        const modal = document.getElementById('recipeModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // レシピ詳細を表示
+        function showRecipeDetail(recipe) {
+            // 完全なレシピデータを取得
+            const fullRecipe = completeRecipeDatabase[recipe.name];
+            
+            if (!fullRecipe) {
+                // 詳細データがない場合は基本情報のみ表示
+                document.getElementById('modalTitle').textContent = recipe.name;
+                document.getElementById('modalSubtitle').textContent = `${recipe.difficulty} | ${recipe.time}分 | ${recipe.calories}kcal`;
+                
+                const modalBody = document.getElementById('modalBody');
+                modalBody.innerHTML = `
+                    <div class="detail-section">
+                        <h3>📝 料理について</h3>
+                        <p>${recipe.name}は${recipe.cuisine}の${recipe.difficulty}レベルの料理です。</p>
+                    </div>
+                    
+                    <div class="recipe-tips">
+                        <h4>💡 このレシピについて</h4>
+                        <p>詳細なレシピは準備中です。基本的な${recipe.cuisine}料理として楽しんでいただけます。</p>
+                    </div>
+                `;
+            } else {
+                // 完全なレシピデータを表示
+                document.getElementById('modalTitle').textContent = fullRecipe.name;
+                document.getElementById('modalSubtitle').textContent = `${fullRecipe.difficulty} | ${fullRecipe.time}分 | ${fullRecipe.calories}kcal`;
+                
+                const modalBody = document.getElementById('modalBody');
+                modalBody.innerHTML = `
+                    <div class="detail-section">
+                        <h3>📝 料理について</h3>
+                        <p>${fullRecipe.description}</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>🥄 材料（${selectedConditions.servings || '2-3人分'}）</h3>
+                        <div class="ingredient-list">
+                            ${fullRecipe.ingredients.map(ing => `
+                                <div class="ingredient-item">
+                                    <strong>${ing.name}</strong><br>
+                                    <small>${ing.amount}</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>👨‍🍳 作り方</h3>
+                        <div class="steps-list">
+                            ${fullRecipe.steps.map(step => `
+                                <div class="step-item">${step}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="recipe-tips">
+                        <h4>💡 調理のコツ</h4>
+                        <ul>
+                            ${fullRecipe.tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        // レストラン詳細を表示
+        function showRestaurantDetail(restaurant) {
+            document.getElementById('modalTitle').textContent = restaurant.name;
+            document.getElementById('modalSubtitle').textContent = `${restaurant.genre} | ${restaurant.budget} | ⭐${restaurant.rating}`;
+            
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h3>🏪 お店について</h3>
+                    <p>${restaurant.description}</p>
+                    <p style="margin-top: 10px;"><strong>雰囲気:</strong> ${restaurant.atmosphere}</p>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>🍽️ おすすめメニュー</h3>
+                    <div class="ingredient-list">
+                        ${restaurant.specialties.split('、').map(menu => `
+                            <div class="ingredient-item">
+                                <strong>${menu}</strong>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>📍 アクセス・営業情報</h3>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                        <p><strong>営業時間:</strong> 11:00-22:00（ラストオーダー21:30）</p>
+                        <p><strong>定休日:</strong> 火曜日</p>
+                        <p><strong>アクセス:</strong> 最寄り駅から徒歩5分</p>
+                        <p><strong>予約:</strong> 電話・ネット予約可</p>
+                        <p><strong>支払い:</strong> 現金・カード・電子マネー対応</p>
+                    </div>
+                </div>
+                
+                <div class="recipe-tips">
+                    <h4>💡 お店のポイント</h4>
+                    <ul>
+                        <li>ランチタイムはお得なセットメニューあり</li>
+                        <li>記念日には特別なデザートサービス</li>
+                        <li>お子様連れでも安心の個室完備</li>
+                    </ul>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // 条件選択ボタンのイベントリスナー
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                const value = this.getAttribute('data-value');
+                
+                // 同じタイプの他のボタンの選択を解除
+                document.querySelectorAll(`[data-type="${type}"]`).forEach(b => {
+                    b.classList.remove('selected');
+                });
+                
+                // このボタンを選択状態にする
+                this.classList.add('selected');
+                selectedConditions[type] = value;
+            });
+        });
+
+
+        // 5つの結果表示関数
+        function showFiveResults() {
+            const selectedRecipes = searchRecipes(selectedConditions);
+            const selectedRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+            
+            // 4つのレシピ + 1つのレストラン = 5つの提案
+            const allSuggestions = [...selectedRecipes, selectedRestaurant];
+            
+            const resultGrid = document.getElementById('resultGrid');
+            resultGrid.innerHTML = '';
+            
+            allSuggestions.forEach((item, index) => {
+                const isRestaurant = item.genre !== undefined;
+                const badgeClass = isRestaurant ? 'restaurant' : item.difficulty === '簡単' ? 'easy' : item.difficulty === '普通' ? 'normal' : 'advanced';
+                const badgeText = isRestaurant ? '外食' : item.difficulty;
+                
+                const cardHtml = `
+                    <div class="result-card">
+                        <div style="position: relative;">
+                            ${createBeautifulPlaceholder(item.emoji, item.bgColor, item.name)}
+                            <div class="result-badge ${badgeClass}">${badgeText}</div>
+                        </div>
+                        <div class="recipe-info">
+                            <div class="recipe-title">${item.name}</div>
+                            <div class="recipe-meta">
+                                ${isRestaurant ? 
+                                    `<span>📍 徒歩5分</span>
+                                     <span>💰 ${item.budget}</span>
+                                     <span>⭐ ${item.rating}</span>
+                                     <span>🍽️ ${item.genre}</span>` :
+                                    `<span>⏱️ ${item.time}分</span>
+                                     <span>👥 ${selectedConditions.servings || '2-3人分'}</span>
+                                     <span>🔥 ${item.difficulty}</span>
+                                     <span>📊 ${item.calories}kcal</span>`
+                                }
+                            </div>
+                            <div class="recipe-ingredients">
+                                ${isRestaurant ? item.specialties : `${item.cuisine}の${item.difficulty}レシピ`}
+                            </div>
+                            <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                                ${isRestaurant ? item.description : `${item.cuisine}料理の代表的な一品です`}
+                            </div>
+                            <button class="recipe-btn" onclick="${isRestaurant ? 
+                                `showRestaurantDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})` : 
+                                `showRecipeDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})`
+                            }">
+                                ${isRestaurant ? '店舗を見る' : 'レシピを見る'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                resultGrid.innerHTML += cardHtml;
+            });
+        }
+
+        // タブ切り替え機能
+        let selectedIngredients = [];
+        let currentTab = 'conditions';
+
+        // タブボタンのイベントリスナー
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                
+                // タブボタンの状態を更新
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // タブコンテンツを切り替え
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName + 'Tab').classList.add('active');
+                
+                currentTab = tabName;
+            });
+        });
+
+        // 材料選択機能
+        document.querySelectorAll('.ingredient-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const ingredient = this.value;
+                
+                if (this.checked) {
+                    if (!selectedIngredients.includes(ingredient)) {
+                        selectedIngredients.push(ingredient);
+                    }
+                } else {
+                    selectedIngredients = selectedIngredients.filter(item => item !== ingredient);
+                }
+                
+                updateSelectedIngredients();
+            });
+        });
+
+        // 選択材料表示を更新
+        function updateSelectedIngredients() {
+            const container = document.getElementById('selectedIngredients');
+            
+            if (selectedIngredients.length === 0) {
+                container.innerHTML = '<span style="color: #666; font-style: italic;">材料を選択してください</span>';
+            } else {
+                container.innerHTML = selectedIngredients.map(ingredient => `
+                    <div class="selected-item">
+                        ${ingredient}
+                        <button class="remove-ingredient" onclick="removeIngredient('${ingredient}')">×</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 材料を削除
+        function removeIngredient(ingredient) {
+            selectedIngredients = selectedIngredients.filter(item => item !== ingredient);
+            
+            // チェックボックスの状態も更新
+            const checkbox = document.querySelector(`input[value="${ingredient}"]`);
+            if (checkbox) checkbox.checked = false;
+            
+            updateSelectedIngredients();
+        }
+
+        // 材料ベースのレシピ検索
+        function searchByIngredients(ingredients) {
+            const ingredientSet = new Set(ingredients.map(ing => ing.toLowerCase()));
+            
+            // レシピデータベースから材料が一致するレシピを検索
+            const matchingRecipes = allRecipes.filter(recipe => {
+                // 完全レシピデータがある場合はそれを使用
+                const fullRecipe = completeRecipeDatabase[recipe.name];
+                let recipeIngredients = [];
+                
+                if (fullRecipe && fullRecipe.ingredients) {
+                    recipeIngredients = fullRecipe.ingredients.map(ing => ing.name.toLowerCase());
+                } else {
+                    // 基本的な材料マッピング
+                    const basicIngredients = getBasicIngredients(recipe.name);
+                    recipeIngredients = basicIngredients.map(ing => ing.toLowerCase());
+                }
+                
+                // 選択した材料のうち、どれかがレシピに含まれているかチェック
+                const hasMatchingIngredient = Array.from(ingredientSet).some(selectedIng => 
+                    recipeIngredients.some(recipeIng => 
+                        recipeIng.includes(selectedIng) || selectedIng.includes(recipeIng)
+                    )
+                );
+                
+                return hasMatchingIngredient;
+            });
+
+            // マッチ度でソート（多くの材料が一致するほど上位）
+            const sortedRecipes = matchingRecipes.sort((a, b) => {
+                const aMatches = countMatches(a, ingredientSet);
+                const bMatches = countMatches(b, ingredientSet);
+                return bMatches - aMatches;
+            });
+
+            return sortedRecipes.slice(0, 4);
+        }
+
+        // マッチする材料数をカウント
+        function countMatches(recipe, ingredientSet) {
+            const fullRecipe = completeRecipeDatabase[recipe.name];
+            let recipeIngredients = [];
+            
+            if (fullRecipe && fullRecipe.ingredients) {
+                recipeIngredients = fullRecipe.ingredients.map(ing => ing.name.toLowerCase());
+            } else {
+                const basicIngredients = getBasicIngredients(recipe.name);
+                recipeIngredients = basicIngredients.map(ing => ing.toLowerCase());
+            }
+            
+            return Array.from(ingredientSet).filter(selectedIng => 
+                recipeIngredients.some(recipeIng => 
+                    recipeIng.includes(selectedIng) || selectedIng.includes(recipeIng)
+                )
+            ).length;
+        }
+
+        // 基本的な材料マッピング（詳細レシピがない場合の推測）
+        function getBasicIngredients(recipeName) {
+            const ingredientMap = {
+                '鶏の照り焼き': ['鶏肉', '醤油', 'みりん', '砂糖'],
+                '親子丼': ['鶏肉', '卵', '玉ねぎ', '醤油'],
+                '肉じゃが': ['豚肉', 'じゃがいも', '人参', '玉ねぎ'],
+                'ハンバーグ': ['ひき肉', '卵', '玉ねぎ', 'パン'],
+                'チャーハン': ['ご飯', '卵', '玉ねぎ', '醤油'],
+                'カレーライス': ['牛肉', 'じゃがいも', '人参', '玉ねぎ', 'ご飯'],
+                'ビーフウェリントン': ['牛肉', 'きのこ', 'パン'],
+                'エビチリ': ['エビ', 'トマト', '玉ねぎ'],
+                '手打ちそば': ['麺', '醤油'],
+                '北京ダック': ['鶏肉', 'きゅうり'],
+                'パスタ': ['パスタ', 'トマト', 'チーズ'],
+                'ピザ': ['パン', 'チーズ', 'トマト'],
+                'ステーキ': ['牛肉', '塩', 'こしょう'],
+                'サラダ': ['レタス', 'きゅうり', 'トマト'],
+                'オムライス': ['ご飯', '卵', '玉ねぎ'],
+                'グラタン': ['チーズ', '牛乳', 'じゃがいも']
+            };
+            
+            return ingredientMap[recipeName] || ['基本材料'];
+        }
+
+        // 元の料理提案ボタンを材料検索対応に更新
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            if (currentTab === 'ingredients') {
+                // 材料検索モード
+                if (selectedIngredients.length === 0) {
+                    alert('材料を1つ以上選択してください！');
+                    return;
+                }
+                
+                // ローディング表示
+                document.querySelector('#loading p').textContent = '選択した材料でレシピを検索中...';
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('resultSection').style.display = 'none';
+                
+                setTimeout(() => {
+                    showIngredientBasedResults();
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('resultSection').style.display = 'block';
+                }, 2000);
+                
+            } else {
+                // 条件検索モード（既存の機能）
+                const hasCondition = Object.values(selectedConditions).some(v => v !== null);
+                
+                if (!hasCondition) {
+                    alert('条件を1つ以上選択してください！');
+                    return;
+                }
+
+                document.querySelector('#loading p').textContent = '美味しそうな料理を準備中...';
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('resultSection').style.display = 'none';
+                
+                setTimeout(() => {
+                    showFiveResults();
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('resultSection').style.display = 'block';
+                }, 2000);
+            }
+        });
+
+        // 材料ベースの結果表示
+        function showIngredientBasedResults() {
+            const matchingRecipes = searchByIngredients(selectedIngredients);
+            const selectedRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+            
+            // 4つのレシピ + 1つのレストラン = 5つの提案
+            const allSuggestions = [...matchingRecipes, selectedRestaurant];
+            
+            const resultGrid = document.getElementById('resultGrid');
+            resultGrid.innerHTML = '';
+            
+            allSuggestions.forEach((item, index) => {
+                const isRestaurant = item.genre !== undefined;
+                const badgeClass = isRestaurant ? 'restaurant' : item.difficulty === '簡単' ? 'easy' : item.difficulty === '普通' ? 'normal' : 'advanced';
+                const badgeText = isRestaurant ? '外食' : item.difficulty;
+                
+                // 材料マッチ表示
+                let matchInfo = '';
+                if (!isRestaurant) {
+                    const matches = countMatches(item, new Set(selectedIngredients.map(ing => ing.toLowerCase())));
+                    matchInfo = `<span style="color: #4CAF50;">✓ ${matches}つの材料を活用</span>`;
+                }
+                
+                const cardHtml = `
+                    <div class="result-card">
+                        <div style="position: relative;">
+                            ${createBeautifulPlaceholder(item.emoji, item.bgColor, item.name)}
+                            <div class="result-badge ${badgeClass}">${badgeText}</div>
+                        </div>
+                        <div class="recipe-info">
+                            <div class="recipe-title">${item.name}</div>
+                            <div class="recipe-meta">
+                                ${isRestaurant ? 
+                                    `<span>📍 徒歩5分</span>
+                                     <span>💰 ${item.budget}</span>
+                                     <span>⭐ ${item.rating}</span>
+                                     <span>🍽️ ${item.genre}</span>` :
+                                    `<span>⏱️ ${item.time}分</span>
+                                     <span>👥 2-3人分</span>
+                                     <span>🔥 ${item.difficulty}</span>
+                                     <span>📊 ${item.calories}kcal</span>`
+                                }
+                            </div>
+                            <div class="recipe-ingredients">
+                                ${isRestaurant ? item.specialties : matchInfo}
+                            </div>
+                            <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                                ${isRestaurant ? item.description : `選択した材料を使った${item.cuisine}料理です`}
+                            </div>
+                            <button class="recipe-btn" onclick="${isRestaurant ? 
+                                `showRestaurantDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})` : 
+                                `showRecipeDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})`
+                            }">
+                                ${isRestaurant ? '店舗を見る' : 'レシピを見る'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                resultGrid.innerHTML += cardHtml;
+            });
+        }
+
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1106158066306697",
+            enable_page_level_ads: true
+        });
+    </script>
+</body>
+</html>
