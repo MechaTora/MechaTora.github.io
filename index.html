@@ -28,6 +28,57 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍳</text></svg>">
     
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="cook-suggest-manifest.json">
+    <meta name="theme-color" content="#6B4E3D">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CookSuggest">
+    
+    <!-- Google Analytics 4 -->
+    <!-- Google Site Verification -->
+    <meta name="google-site-verification" content="8NPtpXOjJwJ_OWjPujsdLfYC0L-OzNzuIVeAsYy2Gfs" />
+    
+    <!-- 構造化データ（JSON-LD） -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CookSuggest",
+      "description": "余った材料から最適なレシピを提案するWebアプリケーション。1000種類以上のレシピデータベースから条件や材料に合った料理を提案。",
+      "url": "https://gyogyocat.github.io/cook-suggest/",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "CookSuggest"
+      },
+      "datePublished": "2025-01-07",
+      "inLanguage": "ja",
+      "featureList": [
+        "材料から検索",
+        "条件で検索", 
+        "1000+レシピデータベース",
+        "詳細な調理手順",
+        "レスポンシブデザイン"
+      ]
+    }
+    </script>
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JFRGN7YJYB6');
+    </script>
+    
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
          crossorigin="anonymous"></script>
@@ -314,6 +365,354 @@
             line-height: 1;
             padding: 0;
             margin-left: 4px;
+        }
+
+        /* お気に入り機能 */
+        .favorite-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .favorite-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .favorite-btn.favorited {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .favorite-btn.favorited:hover {
+            background: var(--primary-color);
+        }
+
+        /* お気に入りリストモーダル */
+        .favorites-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .favorites-modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .favorites-modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: var(--spacing-lg);
+            position: relative;
+        }
+
+        .favorites-modal-body {
+            padding: var(--spacing-lg);
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .favorite-item {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            transition: all 0.3s ease;
+        }
+
+        .favorite-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* レシピ評価システム */
+        .rating-section {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .rating-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 3px;
+            margin: 8px 0;
+        }
+
+        .star {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffc107;
+            transform: scale(1.1);
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .average-rating {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .rating-count {
+            color: #888;
+        }
+
+        .rating-summary {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .rating-summary .star {
+            font-size: 1rem;
+            cursor: default;
+        }
+
+        .user-rating-section {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .rating-action {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .rating-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .rating-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .rating-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* ユーザーエンゲージメント機能 */
+        .engagement-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            box-shadow: var(--card-shadow);
+        }
+
+        .engagement-tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .engagement-tab {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .engagement-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .engagement-content {
+            min-height: 200px;
+        }
+
+        .history-item, .recommendation-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover, .recommendation-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        .history-emoji, .recommendation-emoji {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .history-info, .recommendation-info {
+            flex: 1;
+        }
+
+        .history-title, .recommendation-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .history-meta, .recommendation-meta {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .history-date {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .share-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .share-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .share-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .profile-section {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 15px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 4px;
         }
 
         .condition-card {
@@ -815,8 +1214,10 @@
             <nav class="nav-menu">
                 <a href="#" class="nav-item">ホーム</a>
                 <a href="#" class="nav-item">レシピ検索</a>
-                <a href="#" class="nav-item">お気に入り</a>
-                <a href="#" class="nav-item">About</a>
+                <a href="#" class="nav-item" id="favoritesLink" onclick="showFavorites()">💖 お気に入り</a>
+                <a href="#" class="nav-item" onclick="showMyPage()">👤 マイページ</a>
+                <a href="about.html" class="nav-item">About</a>
+                <a href="contact.html" class="nav-item">お問い合わせ</a>
             </nav>
         </div>
     </header>
@@ -1321,8 +1722,31 @@
                 <h2>あなたにおすすめの5つの料理</h2>
                 <p>条件に合わせて厳選した料理をご紹介します</p>
             </div>
+            
+            <!-- 結果表示前の広告 -->
+            <div class="ad-section" style="margin: 20px 0;">
+                <div class="ad-label">広告</div>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1106158066306697"
+                     data-ad-slot="5287863920"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+            
             <div class="result-grid" id="resultGrid">
                 <!-- 5つの料理提案がここに表示 -->
+            </div>
+            
+            <!-- 結果表示後の広告 -->
+            <div class="ad-section" style="margin: 30px 0;">
+                <div class="ad-label">広告</div>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1106158066306697"
+                     data-ad-slot="6171337236"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
             </div>
         </section>
     </div>
@@ -1337,6 +1761,17 @@
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- レシピ詳細がここに表示 -->
+            </div>
+            
+            <!-- モーダル内広告 -->
+            <div class="ad-section" style="margin: 20px 0; border-top: 1px solid #eee; padding-top: 20px;">
+                <div class="ad-label">広告</div>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1106158066306697"
+                     data-ad-slot="3889638884"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
             </div>
         </div>
     </div>
@@ -1355,6 +1790,11 @@
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 CookSuggest. 毎日の料理選びをもっと楽しく。</p>
+        <div style="margin-top: 16px;">
+            <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 12px;">プライバシーポリシー</a>
+            <a href="terms.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 12px;">利用規約</a>
+            <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 12px;">お問い合わせ</a>
+        </div>
     </footer>
 
     <script>
@@ -1924,6 +2364,26 @@
                         <h4>💡 このレシピについて</h4>
                         <p>詳細なレシピは準備中です。基本的な${recipe.cuisine}料理として楽しんでいただけます。</p>
                     </div>
+                    
+                    ${createRatingSection(recipe)}
+                    
+                    <div class="share-section" style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 20px;">
+                        <h4 style="margin-bottom: 15px; color: var(--primary-color);">📤 共有・記録</h4>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="rating-btn" onclick="addToHistory(${JSON.stringify(recipe).replace(/"/g, '&quot;')}); alert('料理履歴に追加しました！');">
+                                ✅ 作ったよ！
+                            </button>
+                            <button class="share-btn" onclick="shareRecipe(${JSON.stringify(recipe).replace(/"/g, '&quot;')}, 'twitter')">
+                                🐦 Twitter
+                            </button>
+                            <button class="share-btn" onclick="shareRecipe(${JSON.stringify(recipe).replace(/"/g, '&quot;')}, 'line')">
+                                💬 LINE
+                            </button>
+                            <button class="share-btn" onclick="shareRecipe(${JSON.stringify(recipe).replace(/"/g, '&quot;')}, 'copy')">
+                                📋 コピー
+                            </button>
+                        </div>
+                    </div>
                 `;
             } else {
                 // 完全なレシピデータを表示
@@ -1963,6 +2423,26 @@
                         <ul>
                             ${fullRecipe.tips.map(tip => `<li>${tip}</li>`).join('')}
                         </ul>
+                    </div>
+                    
+                    ${createRatingSection(recipe)}
+                    
+                    <div class="share-section" style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 20px;">
+                        <h4 style="margin-bottom: 15px; color: var(--primary-color);">📤 共有・記録</h4>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="rating-btn" onclick="addToHistory(${JSON.stringify(recipe).replace(/"/g, '&quot;')}); alert('料理履歴に追加しました！');">
+                                ✅ 作ったよ！
+                            </button>
+                            <button class="share-btn" onclick="shareRecipe(${JSON.stringify(recipe).replace(/"/g, '&quot;')}, 'twitter')">
+                                🐦 Twitter
+                            </button>
+                            <button class="share-btn" onclick="shareRecipe(${JSON.stringify(recipe).replace(/"/g, '&quot;')}, 'line')">
+                                💬 LINE
+                            </button>
+                            <button class="share-btn" onclick="shareRecipe(${JSON.stringify(recipe).replace(/"/g, '&quot;')}, 'copy')">
+                                📋 コピー
+                            </button>
+                        </div>
                     </div>
                 `;
             }
@@ -2052,11 +2532,38 @@
                 const badgeClass = isRestaurant ? 'restaurant' : item.difficulty === '簡単' ? 'easy' : item.difficulty === '普通' ? 'normal' : 'advanced';
                 const badgeText = isRestaurant ? '外食' : item.difficulty;
                 
+                // お気に入りボタンの状態を確認
+                let favoriteButtonHtml = '';
+                let ratingDisplayHtml = '';
+                if (!isRestaurant) {
+                    const recipeId = item.name + '-' + item.cuisine;
+                    const isFavorited = favorites.some(fav => (fav.name + '-' + fav.cuisine) === recipeId);
+                    favoriteButtonHtml = `
+                        <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" 
+                                onclick="toggleFavorite(${JSON.stringify(item).replace(/"/g, '&quot;')}, this)">
+                            ${isFavorited ? '❤️' : '🤍'}
+                        </button>
+                    `;
+                    
+                    // 評価表示を追加
+                    if (recipeRatings[recipeId]) {
+                        const rating = parseFloat(recipeRatings[recipeId].average);
+                        ratingDisplayHtml = `
+                            <div style="font-size: 0.85rem; color: #666; margin-top: 8px; display: flex; align-items: center; gap: 4px;">
+                                <span style="color: #ffc107;">★</span>
+                                <span>${rating}</span>
+                                <span>(${recipeRatings[recipeId].total})</span>
+                            </div>
+                        `;
+                    }
+                }
+
                 const cardHtml = `
                     <div class="result-card">
                         <div style="position: relative;">
                             ${createBeautifulPlaceholder(item.emoji, item.bgColor, item.name)}
                             <div class="result-badge ${badgeClass}">${badgeText}</div>
+                            ${favoriteButtonHtml}
                         </div>
                         <div class="recipe-info">
                             <div class="recipe-title">${item.name}</div>
@@ -2078,6 +2585,7 @@
                             <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
                                 ${isRestaurant ? item.description : `${item.cuisine}料理の代表的な一品です`}
                             </div>
+                            ${ratingDisplayHtml}
                             <button class="recipe-btn" onclick="${isRestaurant ? 
                                 `showRestaurantDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})` : 
                                 `showRecipeDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})`
@@ -2304,11 +2812,38 @@
                     matchInfo = `<span style="color: #4CAF50;">✓ ${matches}つの材料を活用</span>`;
                 }
                 
+                // お気に入りボタンの状態を確認
+                let favoriteButtonHtml = '';
+                let ratingDisplayHtml = '';
+                if (!isRestaurant) {
+                    const recipeId = item.name + '-' + item.cuisine;
+                    const isFavorited = favorites.some(fav => (fav.name + '-' + fav.cuisine) === recipeId);
+                    favoriteButtonHtml = `
+                        <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" 
+                                onclick="toggleFavorite(${JSON.stringify(item).replace(/"/g, '&quot;')}, this)">
+                            ${isFavorited ? '❤️' : '🤍'}
+                        </button>
+                    `;
+                    
+                    // 評価表示を追加
+                    if (recipeRatings[recipeId]) {
+                        const rating = parseFloat(recipeRatings[recipeId].average);
+                        ratingDisplayHtml = `
+                            <div style="font-size: 0.85rem; color: #666; margin-top: 8px; display: flex; align-items: center; gap: 4px;">
+                                <span style="color: #ffc107;">★</span>
+                                <span>${rating}</span>
+                                <span>(${recipeRatings[recipeId].total})</span>
+                            </div>
+                        `;
+                    }
+                }
+                
                 const cardHtml = `
                     <div class="result-card">
                         <div style="position: relative;">
                             ${createBeautifulPlaceholder(item.emoji, item.bgColor, item.name)}
                             <div class="result-badge ${badgeClass}">${badgeText}</div>
+                            ${favoriteButtonHtml}
                         </div>
                         <div class="recipe-info">
                             <div class="recipe-title">${item.name}</div>
@@ -2330,6 +2865,7 @@
                             <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
                                 ${isRestaurant ? item.description : `選択した材料を使った${item.cuisine}料理です`}
                             </div>
+                            ${ratingDisplayHtml}
                             <button class="recipe-btn" onclick="${isRestaurant ? 
                                 `showRestaurantDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})` : 
                                 `showRecipeDetail(${JSON.stringify(item).replace(/"/g, '&quot;')})`
@@ -2344,11 +2880,607 @@
             });
         }
 
+        // Service Worker登録（PWA対応）
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/cook-suggest/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // お気に入り機能
+        let favorites = JSON.parse(localStorage.getItem('cookSuggestFavorites') || '[]');
+
+        function toggleFavorite(recipe, button) {
+            const recipeId = recipe.name + '-' + recipe.cuisine;
+            const existingIndex = favorites.findIndex(fav => (fav.name + '-' + fav.cuisine) === recipeId);
+            
+            if (existingIndex > -1) {
+                // お気に入りから削除
+                favorites.splice(existingIndex, 1);
+                button.innerHTML = '🤍';
+                button.classList.remove('favorited');
+            } else {
+                // お気に入りに追加
+                favorites.push(recipe);
+                button.innerHTML = '❤️';
+                button.classList.add('favorited');
+            }
+            
+            localStorage.setItem('cookSuggestFavorites', JSON.stringify(favorites));
+            updateFavoritesCount();
+        }
+
+        function updateFavoritesCount() {
+            const favoritesLink = document.getElementById('favoritesLink');
+            if (favoritesLink) {
+                favoritesLink.innerHTML = `💖 お気に入り (${favorites.length})`;
+            }
+        }
+
+        function showFavorites() {
+            const modal = document.getElementById('favoritesModal');
+            const favoritesList = document.getElementById('favoritesList');
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <p style="font-size: 1.2rem; margin-bottom: 16px;">🍳</p>
+                        <p>お気に入りのレシピはまだありません</p>
+                        <p style="font-size: 0.9rem; margin-top: 8px;">気になるレシピを見つけたら♡ボタンで保存しましょう！</p>
+                    </div>
+                `;
+            } else {
+                favoritesList.innerHTML = favorites.map(recipe => `
+                    <div class="favorite-item">
+                        <div style="position: relative;">
+                            ${createBeautifulPlaceholder(recipe.emoji, recipe.bgColor, recipe.name)}
+                        </div>
+                        <div class="favorite-info">
+                            <div class="favorite-title">${recipe.name}</div>
+                            <div class="favorite-meta">
+                                <span>⏱️ ${recipe.time}分</span>
+                                <span>🔥 ${recipe.difficulty}</span>
+                                <span>📊 ${recipe.calories}kcal</span>
+                            </div>
+                            <div class="favorite-actions">
+                                <button class="favorite-btn" onclick="showRecipeDetail(${JSON.stringify(recipe).replace(/"/g, '&quot;')})">
+                                    レシピを見る
+                                </button>
+                                <button class="favorite-remove-btn" onclick="removeFavorite('${recipe.name}', '${recipe.cuisine}')">
+                                    削除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function removeFavorite(recipeName, cuisine) {
+            const recipeId = recipeName + '-' + cuisine;
+            favorites = favorites.filter(fav => (fav.name + '-' + fav.cuisine) !== recipeId);
+            localStorage.setItem('cookSuggestFavorites', JSON.stringify(favorites));
+            updateFavoritesCount();
+            showFavorites(); // リストを更新
+        }
+
+        function closeFavorites() {
+            document.getElementById('favoritesModal').style.display = 'none';
+        }
+
+        // レシピ評価システム
+        let recipeRatings = JSON.parse(localStorage.getItem('cookSuggestRatings') || '{}');
+
+        function initializeRatings() {
+            // 各レシピにデフォルト評価を設定（評価がない場合）
+            allRecipes.forEach(recipe => {
+                const recipeId = recipe.name + '-' + recipe.cuisine;
+                if (!recipeRatings[recipeId]) {
+                    recipeRatings[recipeId] = {
+                        total: Math.floor(Math.random() * 20) + 10, // 10-30のランダム評価数
+                        average: (Math.random() * 2 + 3).toFixed(1), // 3.0-5.0のランダム平均値
+                        userRating: null
+                    };
+                }
+            });
+            localStorage.setItem('cookSuggestRatings', JSON.stringify(recipeRatings));
+        }
+
+        function getRatingStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating - fullStars >= 0.5;
+            let starsHtml = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                starsHtml += '<span class="star active">★</span>';
+            }
+            
+            if (hasHalfStar) {
+                starsHtml += '<span class="star active">☆</span>';
+            }
+            
+            const remainingStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < remainingStars; i++) {
+                starsHtml += '<span class="star">☆</span>';
+            }
+            
+            return starsHtml;
+        }
+
+        function createRatingSection(recipe) {
+            const recipeId = recipe.name + '-' + recipe.cuisine;
+            const ratingData = recipeRatings[recipeId];
+            
+            if (!ratingData) return '';
+            
+            const userRating = ratingData.userRating;
+            const hasUserRated = userRating !== null;
+            
+            return `
+                <div class="rating-section">
+                    <div class="rating-title">
+                        ⭐ レシピ評価
+                    </div>
+                    <div class="rating-display">
+                        <div class="rating-summary">
+                            ${getRatingStars(parseFloat(ratingData.average))}
+                            <span class="average-rating">${ratingData.average}</span>
+                            <span class="rating-count">(${ratingData.total}件)</span>
+                        </div>
+                    </div>
+                    <div class="user-rating-section">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            ${hasUserRated ? 'あなたの評価:' : 'このレシピを評価してください:'}
+                        </div>
+                        <div class="star-rating" data-recipe-id="${recipeId}">
+                            ${[1,2,3,4,5].map(star => `
+                                <span class="star ${hasUserRated && star <= userRating ? 'active' : ''}" 
+                                      data-rating="${star}" 
+                                      onclick="setRating('${recipeId}', ${star})">★</span>
+                            `).join('')}
+                        </div>
+                        ${hasUserRated ? 
+                            `<div class="rating-action">
+                                <span style="font-size: 0.85rem; color: #666;">評価済み: ${userRating}つ星</span>
+                                <button class="rating-btn" onclick="clearRating('${recipeId}')">評価をクリア</button>
+                            </div>` : 
+                            `<div class="rating-action">
+                                <button class="rating-btn" onclick="submitRating('${recipeId}')" disabled>
+                                    評価を送信
+                                </button>
+                            </div>`
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        let tempRating = null;
+
+        function setRating(recipeId, rating) {
+            tempRating = { recipeId, rating };
+            
+            // 星の表示を更新
+            const starContainer = document.querySelector(`[data-recipe-id="${recipeId}"]`);
+            if (starContainer) {
+                const stars = starContainer.querySelectorAll('.star');
+                stars.forEach((star, index) => {
+                    star.classList.toggle('active', index < rating);
+                });
+                
+                // 送信ボタンを有効化
+                const submitBtn = starContainer.parentElement.querySelector('.rating-btn');
+                if (submitBtn && !submitBtn.textContent.includes('クリア')) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = `${rating}つ星で評価`;
+                }
+            }
+        }
+
+        function submitRating(recipeId) {
+            if (!tempRating || tempRating.recipeId !== recipeId) return;
+            
+            const rating = tempRating.rating;
+            
+            // 評価を保存
+            recipeRatings[recipeId].userRating = rating;
+            
+            // 平均値を再計算
+            const currentAverage = parseFloat(recipeRatings[recipeId].average);
+            const currentTotal = recipeRatings[recipeId].total;
+            const newAverage = ((currentAverage * currentTotal) + rating) / (currentTotal + 1);
+            
+            recipeRatings[recipeId].average = newAverage.toFixed(1);
+            recipeRatings[recipeId].total = currentTotal + 1;
+            
+            localStorage.setItem('cookSuggestRatings', JSON.stringify(recipeRatings));
+            
+            // モーダルを更新
+            const recipe = allRecipes.find(r => (r.name + '-' + r.cuisine) === recipeId);
+            if (recipe) {
+                showRecipeDetail(recipe);
+            }
+            
+            tempRating = null;
+        }
+
+        function clearRating(recipeId) {
+            if (recipeRatings[recipeId].userRating === null) return;
+            
+            const userRating = recipeRatings[recipeId].userRating;
+            
+            // 平均値を再計算
+            const currentAverage = parseFloat(recipeRatings[recipeId].average);
+            const currentTotal = recipeRatings[recipeId].total;
+            const newAverage = ((currentAverage * currentTotal) - userRating) / (currentTotal - 1);
+            
+            recipeRatings[recipeId].average = newAverage.toFixed(1);
+            recipeRatings[recipeId].total = currentTotal - 1;
+            recipeRatings[recipeId].userRating = null;
+            
+            localStorage.setItem('cookSuggestRatings', JSON.stringify(recipeRatings));
+            
+            // モーダルを更新
+            const recipe = allRecipes.find(r => (r.name + '-' + r.cuisine) === recipeId);
+            if (recipe) {
+                showRecipeDetail(recipe);
+            }
+        }
+
+        // ユーザーエンゲージメント機能
+        let cookingHistory = JSON.parse(localStorage.getItem('cookSuggestHistory') || '[]');
+        let userProfile = JSON.parse(localStorage.getItem('cookSuggestProfile') || '{"name": "料理好きさん", "joinDate": "' + new Date().toISOString().split('T')[0] + '"}');
+
+        function addToHistory(recipe) {
+            const historyItem = {
+                ...recipe,
+                cookedDate: new Date().toISOString(),
+                dateDisplay: new Date().toLocaleDateString('ja-JP')
+            };
+            
+            // 重複を防ぐ
+            cookingHistory = cookingHistory.filter(item => item.name !== recipe.name);
+            cookingHistory.unshift(historyItem);
+            
+            // 最大50件まで保持
+            if (cookingHistory.length > 50) {
+                cookingHistory = cookingHistory.slice(0, 50);
+            }
+            
+            localStorage.setItem('cookSuggestHistory', JSON.stringify(cookingHistory));
+        }
+
+        function getRecommendations() {
+            // ユーザーの好みを分析してレコメンド
+            const favoriteCuisines = {};
+            const favoriteRecipes = favorites;
+            const history = cookingHistory;
+            
+            // お気に入りと履歴から好みを分析
+            [...favoriteRecipes, ...history].forEach(recipe => {
+                favoriteCuisines[recipe.cuisine] = (favoriteCuisines[recipe.cuisine] || 0) + 1;
+            });
+            
+            // 最も好きな料理ジャンルを特定
+            const topCuisine = Object.keys(favoriteCuisines).reduce((a, b) => 
+                favoriteCuisines[a] > favoriteCuisines[b] ? a : b, '和食');
+            
+            // 高評価で未体験のレシピを推奨
+            const recommendations = allRecipes
+                .filter(recipe => {
+                    const recipeId = recipe.name + '-' + recipe.cuisine;
+                    const isNotInFavorites = !favorites.some(fav => (fav.name + '-' + fav.cuisine) === recipeId);
+                    const isNotInHistory = !history.some(hist => hist.name === recipe.name);
+                    const hasGoodRating = recipeRatings[recipeId] && parseFloat(recipeRatings[recipeId].average) >= 4.0;
+                    const isPreferredCuisine = recipe.cuisine === topCuisine;
+                    
+                    return isNotInFavorites && isNotInHistory && (hasGoodRating || isPreferredCuisine);
+                })
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 5);
+            
+            return recommendations;
+        }
+
+        function shareRecipe(recipe, platform) {
+            const shareUrl = window.location.href;
+            const shareText = `${recipe.name}のレシピをCookSuggestで見つけました！${recipe.difficulty}レベルで${recipe.time}分で作れます。`;
+            
+            switch(platform) {
+                case 'twitter':
+                    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+                    window.open(twitterUrl, '_blank');
+                    break;
+                case 'line':
+                    const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+                    window.open(lineUrl, '_blank');
+                    break;
+                case 'copy':
+                    navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+                        alert('リンクをコピーしました！');
+                    });
+                    break;
+            }
+        }
+
+        function showMyPage() {
+            const modal = document.getElementById('myPageModal');
+            const content = document.getElementById('myPageContent');
+            
+            // 統計を計算
+            const totalRecipes = cookingHistory.length;
+            const totalFavorites = favorites.length;
+            const totalRatings = Object.values(recipeRatings).filter(r => r.userRating !== null).length;
+            
+            content.innerHTML = `
+                <div class="engagement-tabs">
+                    <button class="engagement-tab active" onclick="switchTab('profile')">プロフィール</button>
+                    <button class="engagement-tab" onclick="switchTab('history')">料理履歴</button>
+                    <button class="engagement-tab" onclick="switchTab('recommendations')">おすすめ</button>
+                </div>
+                
+                <div class="engagement-content" id="engagementContent">
+                    ${renderProfileTab(totalRecipes, totalFavorites, totalRatings)}
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        function switchTab(tabName) {
+            // タブボタンの状態を更新
+            document.querySelectorAll('.engagement-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // コンテンツを更新
+            const content = document.getElementById('engagementContent');
+            
+            switch(tabName) {
+                case 'profile':
+                    const totalRecipes = cookingHistory.length;
+                    const totalFavorites = favorites.length;
+                    const totalRatings = Object.values(recipeRatings).filter(r => r.userRating !== null).length;
+                    content.innerHTML = renderProfileTab(totalRecipes, totalFavorites, totalRatings);
+                    break;
+                case 'history':
+                    content.innerHTML = renderHistoryTab();
+                    break;
+                case 'recommendations':
+                    content.innerHTML = renderRecommendationsTab();
+                    break;
+            }
+        }
+
+        function renderProfileTab(totalRecipes, totalFavorites, totalRatings) {
+            const joinDate = new Date(userProfile.joinDate).toLocaleDateString('ja-JP');
+            const daysSinceJoin = Math.floor((new Date() - new Date(userProfile.joinDate)) / (1000 * 60 * 60 * 24));
+            
+            return `
+                <div class="profile-section">
+                    <div class="profile-avatar">👨‍🍳</div>
+                    <h3>${userProfile.name}</h3>
+                    <p style="color: #666; font-size: 0.9rem;">CookSuggest利用開始: ${joinDate} (${daysSinceJoin}日目)</p>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">${totalRecipes}</div>
+                            <div class="stat-label">料理した回数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${totalFavorites}</div>
+                            <div class="stat-label">お気に入り</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${totalRatings}</div>
+                            <div class="stat-label">評価した数</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: left;">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">🏆 実績</h4>
+                        <div style="font-size: 0.9rem; line-height: 1.6;">
+                            ${totalRecipes >= 10 ? '✅ 料理マスター (10回以上調理)' : '⭕ 料理マスター (10回以上調理)'}<br>
+                            ${totalFavorites >= 5 ? '✅ お気に入りコレクター (5つ以上保存)' : '⭕ お気に入りコレクター (5つ以上保存)'}<br>
+                            ${totalRatings >= 5 ? '✅ レビュアー (5つ以上評価)' : '⭕ レビュアー (5つ以上評価)'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHistoryTab() {
+            if (cookingHistory.length === 0) {
+                return `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <p style="font-size: 1.2rem; margin-bottom: 16px;">📖</p>
+                        <p>まだ料理履歴がありません</p>
+                        <p style="font-size: 0.9rem; margin-top: 8px;">レシピを見て「作ったよ！」ボタンを押すと履歴に記録されます</p>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div style="max-height: 400px; overflow-y: auto;">
+                    ${cookingHistory.map(item => `
+                        <div class="history-item">
+                            <div class="history-emoji">${item.emoji}</div>
+                            <div class="history-info">
+                                <div class="history-title">${item.name}</div>
+                                <div class="history-meta">
+                                    <span>🍽️ ${item.cuisine}</span>
+                                    <span>⏱️ ${item.time}分</span>
+                                    <span>🔥 ${item.difficulty}</span>
+                                </div>
+                                <div class="history-date">作った日: ${item.dateDisplay}</div>
+                            </div>
+                            <div class="share-section">
+                                <button class="share-btn" onclick="shareRecipe(${JSON.stringify(item).replace(/"/g, '&quot;')}, 'twitter')">
+                                    🐦 Twitter
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderRecommendationsTab() {
+            const recommendations = getRecommendations();
+            
+            if (recommendations.length === 0) {
+                return `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <p style="font-size: 1.2rem; margin-bottom: 16px;">🤔</p>
+                        <p>おすすめできるレシピがありません</p>
+                        <p style="font-size: 0.9rem; margin-top: 8px;">もう少し料理を試してみると、あなた好みのレシピをおすすめできます！</p>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">
+                        あなたの好みを分析して、おすすめのレシピを選びました ✨
+                    </p>
+                    ${recommendations.map(recipe => {
+                        const recipeId = recipe.name + '-' + recipe.cuisine;
+                        const rating = recipeRatings[recipeId] ? parseFloat(recipeRatings[recipeId].average) : 0;
+                        return `
+                            <div class="recommendation-item">
+                                <div class="recommendation-emoji">${recipe.emoji}</div>
+                                <div class="recommendation-info">
+                                    <div class="recommendation-title">${recipe.name}</div>
+                                    <div class="recommendation-meta">
+                                        <span>🍽️ ${recipe.cuisine}</span>
+                                        <span>⏱️ ${recipe.time}分</span>
+                                        <span>⭐ ${rating.toFixed(1)}</span>
+                                    </div>
+                                </div>
+                                <button class="recipe-btn" onclick="showRecipeDetail(${JSON.stringify(recipe).replace(/"/g, '&quot;')})">
+                                    詳細を見る
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function closeMyPage() {
+            document.getElementById('myPageModal').style.display = 'none';
+        }
+
+        // 初期化時にお気に入り数を更新
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFavoritesCount();
+            initializeRatings();
+        });
+
         // AdSense初期化
         (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "ca-pub-1106158066306697",
             enable_page_level_ads: true
         });
+        
+        // 全ての広告を初期化
+        function initializeAds() {
+            const ads = document.querySelectorAll('.adsbygoogle');
+            ads.forEach(ad => {
+                if (!ad.dataset.adsbygoogleStatus) {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                }
+            });
+        }
+        
+        // ページ読み込み完了後に広告を初期化
+        window.addEventListener('load', initializeAds);
     </script>
+
+    <!-- お気に入りモーダル -->
+    <div id="favoritesModal" class="modal">
+        <div class="modal-content favorites-modal">
+            <div class="modal-header">
+                <h2>💖 お気に入りレシピ</h2>
+                <button class="close-btn" onclick="closeFavorites()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="favoritesList"></div>
+                
+                <!-- お気に入りモーダル内広告 -->
+                <div class="ad-section" style="margin: 20px 0; border-top: 1px solid #eee; padding-top: 20px;">
+                    <div class="ad-label">広告</div>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1106158066306697"
+                         data-ad-slot="3889638884"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- マイページモーダル -->
+    <div id="myPageModal" class="modal">
+        <div class="modal-content favorites-modal">
+            <div class="modal-header">
+                <h2>👤 マイページ</h2>
+                <button class="close-btn" onclick="closeMyPage()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="myPageContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 他のアプリ紹介フッター -->
+    <footer style="background: var(--primary-color); color: white; padding: 40px 0; margin-top: 50px;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h3 style="margin-bottom: 10px;">🐱 GYOGYOCAT の他のアプリ</h3>
+                <p style="opacity: 0.8;">日常生活を便利にするWebアプリケーション</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <a href="https://gyogyocat.github.io/" style="display: block; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; text-decoration: none; color: white; transition: background 0.3s;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">📚</div>
+                    <h4 style="margin-bottom: 5px;">Smart Flashcard</h4>
+                    <p style="opacity: 0.8; font-size: 0.9em;">忘却曲線を活用した効率的な暗記学習</p>
+                </a>
+                
+                <a href="https://gyogyocat.github.io/earthquake-monitor/" style="display: block; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; text-decoration: none; color: white; transition: background 0.3s;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🌏</div>
+                    <h4 style="margin-bottom: 5px;">地震モニター</h4>
+                    <p style="opacity: 0.8; font-size: 0.9em;">直近の地震情報と発生傾向を分析</p>
+                </a>
+                
+                <a href="https://gyogyocat.github.io/x-buzz-simulator/" style="display: block; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; text-decoration: none; color: white; transition: background 0.3s;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🚀</div>
+                    <h4 style="margin-bottom: 5px;">X Buzz Simulator</h4>
+                    <p style="opacity: 0.8; font-size: 0.9em;">Xでインフルエンサー体験をシミュレート</p>
+                </a>
+                
+                <a href="https://gyogyocat.github.io/fireplace-app/" style="display: block; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; text-decoration: none; color: white; transition: background 0.3s;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🔥</div>
+                    <h4 style="margin-bottom: 5px;">バーチャル暖炉</h4>
+                    <p style="opacity: 0.8; font-size: 0.9em;">焚火の音でリラックス・作業用BGM</p>
+                </a>
+            </div>
+            
+            <div style="text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <p style="opacity: 0.7; font-size: 0.9em;">&copy; 2025 GYOGYOCAT. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
