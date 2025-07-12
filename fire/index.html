@@ -50,153 +50,95 @@
             align-items: center;
             justify-content: center;
             background: radial-gradient(circle at center, #1a0f0a 0%, #000000 100%);
-        }
-
-        /* 焚火ベース */
-        .fireplace {
-            position: relative;
-            width: 600px;
-            height: 400px;
-            background: linear-gradient(180deg, transparent 0%, #2a1810 70%, #1a0f0a 100%);
-            border-radius: 50% 50% 0 0;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
             overflow: hidden;
         }
 
-        /* 炎エフェクト */
-        .flame {
-            position: absolute;
-            bottom: 0;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            transform-origin: bottom center;
-            animation: flicker 1.5s ease-in-out infinite alternate;
-        }
-
-        .flame:nth-child(1) {
-            width: 120px;
-            height: 200px;
-            background: radial-gradient(circle at center bottom, #ffd700 0%, #ff8c00 30%, #ff4500 60%, #cc3300 90%, transparent 100%);
-            left: 50%;
-            transform: translateX(-50%);
-            animation-delay: 0s;
-            z-index: 3;
-        }
-
-        .flame:nth-child(2) {
-            width: 100px;
-            height: 180px;
-            background: radial-gradient(circle at center bottom, #ffd700 0%, #ff8c00 40%, #ff6600 70%, transparent 100%);
-            left: 35%;
-            transform: translateX(-50%);
-            animation-delay: 0.3s;
-            z-index: 2;
-        }
-
-        .flame:nth-child(3) {
-            width: 90px;
-            height: 160px;
-            background: radial-gradient(circle at center bottom, #ffd700 0%, #ff8c00 40%, #ff6600 70%, transparent 100%);
-            right: 35%;
-            transform: translateX(50%);
-            animation-delay: 0.6s;
-            z-index: 2;
-        }
-
-        .flame:nth-child(4) {
-            width: 70px;
-            height: 140px;
-            background: radial-gradient(circle at center bottom, #ffff00 0%, #ffd700 30%, #ff8c00 60%, transparent 100%);
-            left: 20%;
-            transform: translateX(-50%);
-            animation-delay: 0.9s;
-            z-index: 1;
-        }
-
-        .flame:nth-child(5) {
-            width: 70px;
-            height: 140px;
-            background: radial-gradient(circle at center bottom, #ffff00 0%, #ffd700 30%, #ff8c00 60%, transparent 100%);
-            right: 20%;
-            transform: translateX(50%);
-            animation-delay: 1.2s;
-            z-index: 1;
-        }
-
-        @keyframes flicker {
-            0% {
-                transform: translateX(-50%) scale(1) rotate(-2deg);
-                opacity: 0.9;
-            }
-            25% {
-                transform: translateX(-50%) scale(1.05) rotate(1deg);
-                opacity: 1;
-            }
-            50% {
-                transform: translateX(-50%) scale(0.95) rotate(-1deg);
-                opacity: 0.95;
-            }
-            75% {
-                transform: translateX(-50%) scale(1.02) rotate(2deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(-50%) scale(0.98) rotate(-1deg);
-                opacity: 0.9;
-            }
-        }
-
-        /* 薪 */
-        .logs {
-            position: absolute;
-            bottom: -20px;
-            width: 100%;
-            height: 60px;
+        /* 焚火ベース（簡素化） */
+        .fireplace {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            background: linear-gradient(180deg, #ff4500 0%, #cc3300 50%, #2a1810 100%);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 4;
+            box-shadow: 0 0 100px #ff4500, 0 0 200px #ff8c00;
+            animation: fireGlow 2s ease-in-out infinite alternate;
         }
 
-        .log {
-            width: 80px;
-            height: 12px;
-            background: linear-gradient(180deg, #4a3728 0%, #2a1810 100%);
-            border-radius: 6px;
-            margin: 0 5px;
-            position: relative;
-            transform-origin: center;
+        @keyframes fireGlow {
+            0% {
+                box-shadow: 0 0 50px #ff4500, 0 0 100px #ff8c00;
+                transform: scale(1);
+            }
+            100% {
+                box-shadow: 0 0 100px #ff4500, 0 0 200px #ff8c00;
+                transform: scale(1.05);
+            }
         }
 
-        .log:nth-child(1) { transform: rotate(5deg); }
-        .log:nth-child(2) { transform: rotate(-8deg); margin-top: 5px; }
-        .log:nth-child(3) { transform: rotate(3deg); margin-top: -2px; }
-
-        /* 火花エフェクト */
+        /* 火花エフェクト（強化版） */
         .sparks {
             position: absolute;
             width: 100%;
             height: 100%;
             pointer-events: none;
+            top: 0;
+            left: 0;
         }
 
         .spark {
             position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #ffd700;
             border-radius: 50%;
-            animation: sparkle 2s linear infinite;
+            pointer-events: none;
+        }
+
+        .spark.small {
+            width: 2px;
+            height: 2px;
+            background: #ffd700;
+            box-shadow: 0 0 4px #ffd700;
+        }
+
+        .spark.medium {
+            width: 4px;
+            height: 4px;
+            background: #ff8c00;
+            box-shadow: 0 0 6px #ff8c00;
+        }
+
+        .spark.large {
+            width: 6px;
+            height: 6px;
+            background: #ff4500;
+            box-shadow: 0 0 8px #ff4500;
         }
 
         @keyframes sparkle {
             0% {
-                transform: translateY(0) scale(1);
+                transform: translateY(0) translateX(0) scale(1);
                 opacity: 1;
             }
+            50% {
+                opacity: 0.8;
+            }
             100% {
-                transform: translateY(-200px) scale(0);
+                transform: translateY(-300px) translateX(var(--spark-drift)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sparkleRotate {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-400px) translateX(var(--spark-drift)) rotate(360deg) scale(0);
                 opacity: 0;
             }
         }
@@ -358,25 +300,11 @@
     </div>
 
     <div class="fireplace-container" id="fireplaceContainer">
-        <!-- 焚火本体 -->
-        <div class="fireplace">
-            <!-- 炎エフェクト -->
-            <div class="flame"></div>
-            <div class="flame"></div>
-            <div class="flame"></div>
-            <div class="flame"></div>
-            <div class="flame"></div>
-            
-            <!-- 薪 -->
-            <div class="logs">
-                <div class="log"></div>
-                <div class="log"></div>
-                <div class="log"></div>
-            </div>
-            
-            <!-- 火花エフェクト -->
-            <div class="sparks" id="sparks"></div>
-        </div>
+        <!-- 焚火本体（簡素化） -->
+        <div class="fireplace"></div>
+        
+        <!-- 火花エフェクト -->
+        <div class="sparks" id="sparks"></div>
         
         <!-- 情報パネル -->
         <div class="info-panel">
@@ -419,103 +347,100 @@
     </audio>
 
     <script>
-        // 音声生成とコントロール
-        class FireplaceAudio {
+        // パチパチ音声生成クラス
+        class CracklingAudio {
             constructor() {
                 this.audioContext = null;
-                this.oscillators = [];
-                this.gainNodes = [];
+                this.masterGain = null;
                 this.isPlaying = true;
                 this.volume = 0.5;
+                this.crackleInterval = null;
                 this.init();
             }
 
             async init() {
                 try {
                     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    this.createFireSound();
-                    this.startAudio();
+                    this.masterGain = this.audioContext.createGain();
+                    this.masterGain.connect(this.audioContext.destination);
+                    this.masterGain.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
+                    this.startCrackling();
                 } catch (error) {
                     console.log('Audio context initialization failed:', error);
                 }
             }
 
-            createFireSound() {
-                // 焚火音の複数の成分を生成
-                const frequencies = [
-                    { freq: 80, type: 'sawtooth', gain: 0.3 },   // 低音の基本音
-                    { freq: 120, type: 'brown', gain: 0.2 },     // ノイズ成分
-                    { freq: 200, type: 'sawtooth', gain: 0.15 }, // 中音域
-                    { freq: 400, type: 'brown', gain: 0.1 },     // 高音ノイズ
-                ];
+            createCrackleSound() {
+                if (!this.audioContext || !this.isPlaying) return;
 
-                frequencies.forEach((sound, index) => {
-                    const oscillator = this.audioContext.createOscillator();
-                    const gainNode = this.audioContext.createGain();
-                    
-                    // ノイズ生成
-                    if (sound.type === 'brown') {
-                        const bufferSize = this.audioContext.sampleRate * 2;
-                        const noiseBuffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
-                        const output = noiseBuffer.getChannelData(0);
-                        
-                        // ブラウンノイズ生成
-                        let lastOut = 0;
-                        for (let i = 0; i < bufferSize; i++) {
-                            const white = Math.random() * 2 - 1;
-                            output[i] = (lastOut + (0.02 * white)) / 1.02;
-                            lastOut = output[i];
-                            output[i] *= 3.5;
-                        }
-                        
-                        const whiteNoise = this.audioContext.createBufferSource();
-                        whiteNoise.buffer = noiseBuffer;
-                        whiteNoise.loop = true;
-                        whiteNoise.connect(gainNode);
-                        whiteNoise.start();
-                        
-                        this.oscillators.push(whiteNoise);
-                    } else {
-                        oscillator.type = sound.type;
-                        oscillator.frequency.setValueAtTime(sound.freq, this.audioContext.currentTime);
-                        oscillator.connect(gainNode);
-                        oscillator.start();
-                        this.oscillators.push(oscillator);
-                    }
-                    
-                    gainNode.gain.setValueAtTime(sound.gain * this.volume, this.audioContext.currentTime);
-                    gainNode.connect(this.audioContext.destination);
-                    this.gainNodes.push(gainNode);
-                    
-                    // ランダムな変調でリアルな焚火音を演出
-                    this.addVariation(gainNode, index);
-                });
+                // パチパチ音の生成
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                const filterNode = this.audioContext.createBiquadFilter();
+
+                // 周波数をランダムに設定（パチパチ音らしく）
+                const frequency = 800 + Math.random() * 1200;
+                oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                oscillator.type = 'triangle';
+
+                // フィルターでパチパチ感を演出
+                filterNode.type = 'bandpass';
+                filterNode.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                filterNode.Q.setValueAtTime(30, this.audioContext.currentTime);
+
+                // エンベロープ（急激な立ち上がりと減衰でパチッという音を作る）
+                const attackTime = 0.001;
+                const releaseTime = 0.05 + Math.random() * 0.1;
+                const now = this.audioContext.currentTime;
+
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.3 * this.volume, now + attackTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + attackTime + releaseTime);
+
+                // 接続
+                oscillator.connect(filterNode);
+                filterNode.connect(gainNode);
+                gainNode.connect(this.masterGain);
+
+                // 再生
+                oscillator.start(now);
+                oscillator.stop(now + attackTime + releaseTime);
             }
 
-            addVariation(gainNode, index) {
-                const vary = () => {
-                    if (this.isPlaying && gainNode.gain) {
-                        const variation = 0.5 + Math.random() * 0.5;
-                        const duration = 0.5 + Math.random() * 2;
-                        gainNode.gain.setTargetAtTime(
-                            variation * this.volume * 0.3, 
-                            this.audioContext.currentTime, 
-                            duration
-                        );
+            startCrackling() {
+                if (this.crackleInterval) {
+                    clearInterval(this.crackleInterval);
+                }
+
+                const crackle = () => {
+                    if (this.isPlaying) {
+                        // 複数のパチ音を短時間で生成
+                        const burstSize = 1 + Math.floor(Math.random() * 3);
+                        for (let i = 0; i < burstSize; i++) {
+                            setTimeout(() => this.createCrackleSound(), i * 20);
+                        }
                     }
-                    setTimeout(vary, 200 + Math.random() * 800);
                 };
-                setTimeout(vary, index * 100);
+
+                // 不規則な間隔でパチパチ音を生成
+                const scheduleNext = () => {
+                    const delay = 100 + Math.random() * 800; // 0.1秒から0.9秒の間隔
+                    setTimeout(() => {
+                        if (this.isPlaying) {
+                            crackle();
+                            scheduleNext();
+                        }
+                    }, delay);
+                };
+
+                scheduleNext();
             }
 
             setVolume(volume) {
                 this.volume = volume;
-                this.gainNodes.forEach((gainNode, index) => {
-                    if (gainNode.gain) {
-                        const baseGain = [0.3, 0.2, 0.15, 0.1][index] || 0.1;
-                        gainNode.gain.setValueAtTime(baseGain * volume, this.audioContext.currentTime);
-                    }
-                });
+                if (this.masterGain) {
+                    this.masterGain.gain.setValueAtTime(volume, this.audioContext.currentTime);
+                }
             }
 
             async startAudio() {
@@ -523,48 +448,73 @@
                     await this.audioContext.resume();
                 }
                 this.isPlaying = true;
+                this.startCrackling();
             }
 
             stopAudio() {
                 this.isPlaying = false;
-                this.gainNodes.forEach(gainNode => {
-                    if (gainNode.gain) {
-                        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-                    }
-                });
+                if (this.crackleInterval) {
+                    clearInterval(this.crackleInterval);
+                }
             }
         }
 
-        // 火花エフェクト
+        // 火の粉エフェクト（強化版）
         function createSpark() {
             const sparksContainer = document.getElementById('sparks');
             const spark = document.createElement('div');
-            spark.className = 'spark';
             
-            // ランダムな位置と動き
-            spark.style.left = (30 + Math.random() * 40) + '%';
-            spark.style.animationDuration = (1.5 + Math.random() * 1) + 's';
-            spark.style.animationDelay = Math.random() * 0.5 + 's';
+            // 火の粉のサイズをランダムに選択
+            const sparkTypes = ['small', 'medium', 'large'];
+            const sparkType = sparkTypes[Math.floor(Math.random() * sparkTypes.length)];
+            spark.className = `spark ${sparkType}`;
+            
+            // 画面全体からランダムな位置で発生
+            const startX = Math.random() * 100;
+            const startY = 80 + Math.random() * 20; // 画面下部から発生
+            
+            spark.style.left = startX + '%';
+            spark.style.top = startY + '%';
+            
+            // 火の粉の動きをカスタマイズ
+            const driftDirection = (Math.random() - 0.5) * 100; // 左右のドリフト
+            spark.style.setProperty('--spark-drift', driftDirection + 'px');
+            
+            // アニメーションの種類をランダムに選択
+            const animations = ['sparkle', 'sparkleRotate'];
+            const animation = animations[Math.floor(Math.random() * animations.length)];
+            spark.style.animation = `${animation} ${1.5 + Math.random() * 2}s linear`;
             
             sparksContainer.appendChild(spark);
             
+            // 火の粉を削除
             setTimeout(() => {
-                spark.remove();
-            }, 3000);
+                if (spark.parentNode) {
+                    spark.remove();
+                }
+            }, 4000);
+        }
+
+        // 複数の火の粉を同時に生成
+        function createSparkBurst() {
+            const burstSize = 3 + Math.floor(Math.random() * 5); // 3-7個の火の粉
+            for (let i = 0; i < burstSize; i++) {
+                setTimeout(() => createSpark(), i * 50);
+            }
         }
 
         // UI コントロール
-        let fireplaceAudio = null;
+        let cracklingAudio = null;
         let isPlaying = true;
         let sparkInterval;
 
         // 初期化
         document.addEventListener('DOMContentLoaded', async () => {
-            // 音声初期化
-            fireplaceAudio = new FireplaceAudio();
+            // パチパチ音声初期化
+            cracklingAudio = new CracklingAudio();
             
-            // 火花エフェクト開始
-            sparkInterval = setInterval(createSpark, 800);
+            // 火の粉エフェクト開始
+            sparkInterval = setInterval(createSparkBurst, 400);
             
             // コントロールイベント
             setupControls();
@@ -582,13 +532,13 @@
             // 再生/停止
             playBtn.addEventListener('click', () => {
                 if (isPlaying) {
-                    fireplaceAudio.stopAudio();
+                    cracklingAudio.stopAudio();
                     clearInterval(sparkInterval);
                     playBtn.textContent = '▶️';
                     playBtn.classList.remove('active');
                 } else {
-                    fireplaceAudio.startAudio();
-                    sparkInterval = setInterval(createSpark, 800);
+                    cracklingAudio.startAudio();
+                    sparkInterval = setInterval(createSparkBurst, 400);
                     playBtn.textContent = '⏸️';
                     playBtn.classList.add('active');
                 }
@@ -598,7 +548,7 @@
             // 音量調整
             volumeSlider.addEventListener('input', (e) => {
                 const volume = e.target.value / 100;
-                fireplaceAudio.setVolume(volume);
+                cracklingAudio.setVolume(volume);
             });
 
             // フルスクリーン
@@ -620,8 +570,8 @@
 
         // ユーザーインタラクション後に音声開始
         document.addEventListener('click', () => {
-            if (fireplaceAudio && fireplaceAudio.audioContext) {
-                fireplaceAudio.startAudio();
+            if (cracklingAudio && cracklingAudio.audioContext) {
+                cracklingAudio.startAudio();
             }
         }, { once: true });
     </script>
