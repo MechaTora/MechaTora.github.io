@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌏 直近の地震情報と傾向分析｜日本地震リアルタイムモニター</title>
+    <meta name="keywords" content="直近地震,地震傾向,地震情報,地震モニター,日本地震,リアルタイム地震,震度,マグニチュード,地震マップ,防災情報,地震速報,地震監視,地震アラート,P2P地震情報,地震発生頻度,地震統計">
+    <meta name="description" content="直近24時間の地震情報と発生傾向を分析！日本全国の地震データをリアルタイムで監視し、震度・マグニチュード別に色分け表示。地震の発生パターンや頻度傾向を把握して防災対策に活用。無料で最新の地震速報と統計データを提供。">
+    
+    <!-- SEO Meta Tags -->
+    <meta property="og:title" content="日本地震情報リアルタイムモニター｜震度・マグニチュード別地震マップ">
+    <meta property="og:description" content="日本の最新地震情報をリアルタイムで監視。震度・マグニチュード別色分け地震マップ、地震速報、防災情報を無料提供。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.github.io/earthquake-monitor/">
+    <meta property="og:site_name" content="MechaTora">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="日本地震情報リアルタイムモニター">
+    <meta name="twitter:description" content="日本の最新地震情報をリアルタイムで監視。震度・マグニチュード別色分け地震マップ。">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.github.io/earthquake-monitor/">
+    
+    <!-- 構造化データ（JSON-LD） -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "日本地震情報リアルタイムモニター",
+      "description": "日本の最新地震情報をリアルタイムで監視。震度・マグニチュード別色分け地震マップ、地震速報、防災情報を無料で提供。",
+      "url": "https://mechatora.github.io/earthquake-monitor/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "MechaTora"
+      },
+      "datePublished": "2025-07-09",
+      "inLanguage": "ja",
+      "featureList": [
+        "リアルタイム地震情報",
+        "震度・マグニチュード別表示",
+        "地震マップ表示",
+        "自動更新機能",
+        "防災情報提供"
+      ],
+      "keywords": "地震情報,地震モニター,日本地震,リアルタイム地震,震度,マグニチュード,地震マップ,防災情報"
+    }
+    </script>
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JFRGN7YJYB6');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
+         crossorigin="anonymous"></script>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .map-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .update-time {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .auto-update-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #27ae60;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stats-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stats-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .intensity-legend {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .earthquake-list {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .earthquake-item {
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .earthquake-item.intensity-high {
+            border-left-color: #e74c3c;
+        }
+
+        .earthquake-item.intensity-medium {
+            border-left-color: #f39c12;
+        }
+
+        .earthquake-time {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .earthquake-magnitude {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .ad-section {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .ad-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Ad -->
+    <div class="ad-section" style="margin: 20px;">
+        <div class="ad-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="header">
+        <h1>🌏 地震情報モニター</h1>
+        <p>日本の地震情報をリアルタイムで表示 | 直近3日間のデータ</p>
+    </div>
+
+    <div class="container">
+        <div class="map-container">
+            <div class="map-header">
+                <h3>地震分布マップ</h3>
+                <div class="auto-update-status">
+                    <div class="status-indicator"></div>
+                    <span>自動更新中</span>
+                </div>
+                <div class="update-time" id="updateTime">
+                    最終更新: --:--
+                </div>
+            </div>
+            <div id="map"></div>
+        </div>
+
+        <div class="sidebar">
+            <!-- 防災情報リンク -->
+            <div class="stats-panel" style="background: #fff3cd; border-left: 4px solid #f39c12;">
+                <h3>🚨 防災情報</h3>
+                <div style="text-align: center; margin: 15px 0;">
+                    <a href="checklist.html" style="display: inline-block; padding: 10px 20px; background: #e74c3c; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        📋 防災備品チェックリスト
+                    </a>
+                </div>
+                <p style="font-size: 0.9em; color: #7f8c8d; text-align: center;">
+                    地震に備える必需品をチェック
+                </p>
+            </div>
+
+            <!-- 統計パネル -->
+            <div class="stats-panel">
+                <h3>📊 直近3日間の統計</h3>
+                <div class="stat-item">
+                    <span>総地震回数</span>
+                    <span id="totalCount">-</span>
+                </div>
+                <div class="stat-item">
+                    <span>最大震度</span>
+                    <span id="maxIntensity">-</span>
+                </div>
+                <div class="stat-item">
+                    <span>最大マグニチュード</span>
+                    <span id="maxMagnitude">-</span>
+                </div>
+                <div class="stat-item">
+                    <span>震度3以上</span>
+                    <span id="intensity3Plus">-</span>
+                </div>
+            </div>
+
+            <!-- 震度凡例 -->
+            <div class="intensity-legend">
+                <h3>震度・マグニチュード凡例</h3>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #27ae60;"></div>
+                    <span>震度1-2 / M3.0未満</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f39c12;"></div>
+                    <span>震度3-4 / M3.0-4.9</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e67e22;"></div>
+                    <span>震度5弱-5強 / M5.0-5.9</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e74c3c;"></div>
+                    <span>震度6弱以上 / M6.0以上</span>
+                </div>
+            </div>
+
+            <!-- 広告 -->
+            <div class="ad-section">
+                <div class="ad-label">広告</div>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1106158066306697"
+                     data-ad-slot="3889638884"
+                     data-ad-format="vertical"></ins>
+            </div>
+
+            <!-- 最新地震リスト -->
+            <div class="earthquake-list">
+                <h3>🕒 最新の地震情報</h3>
+                <div id="earthquakeList">
+                    <div class="earthquake-item">
+                        <div class="earthquake-time">データを読み込み中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Ad -->
+    <div class="ad-section" style="margin: 20px;">
+        <div class="ad-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- MechaTora Footer -->
+    <footer style="background: rgba(0,0,0,0.8); color: white; padding: 20px; text-align: center; margin-top: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h3 style="margin-bottom: 15px;">🛠️ MechaTora - 便利なWebアプリ集</h3>
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+                <a href="https://mechatora.github.io/" style="color: #3498db; text-decoration: none; padding: 5px 10px; border-radius: 5px; background: rgba(52, 152, 219, 0.1);">🏠 ホーム</a>
+                <a href="https://mechatora.github.io/cook-suggest/" style="color: #e67e22; text-decoration: none; padding: 5px 10px; border-radius: 5px; background: rgba(230, 126, 34, 0.1);">🍳 CookSuggest</a>
+                <a href="https://mechatora.github.io/earthquake-monitor/" style="color: #e74c3c; text-decoration: none; padding: 5px 10px; border-radius: 5px; background: rgba(231, 76, 60, 0.1);">🌍 地震情報</a>
+                <a href="https://mechatora.github.io/x-buzz-simulator/" style="color: #9b59b6; text-decoration: none; padding: 5px 10px; border-radius: 5px; background: rgba(155, 89, 182, 0.1);">🚀 Xバズシミュレーター</a>
+            </div>
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; font-size: 0.9em;">
+                <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">プライバシーポリシー</a>
+                <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">利用規約</a>
+                <a href="contact.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">お問い合わせ</a>
+            </div>
+            <p style="font-size: 0.8em; color: rgba(255,255,255,0.6);">© 2025 MechaTora. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        let map;
+        let earthquakeMarkers = [];
+        let earthquakeData = [];
+
+        // マップ初期化
+        function initMap() {
+            map = L.map('map').setView([35.6762, 139.6503], 6);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // 震度・マグニチュードに応じた色を取得
+        function getIntensityColor(intensity, magnitude) {
+            if (intensity >= 6 || magnitude >= 6.0) return '#e74c3c';
+            if (intensity >= 5 || magnitude >= 5.0) return '#e67e22';
+            if (intensity >= 3 || magnitude >= 3.0) return '#f39c12';
+            return '#27ae60';
+        }
+
+        // 震度・マグニチュードに応じたサイズを取得
+        function getMarkerSize(intensity, magnitude) {
+            if (intensity >= 6 || magnitude >= 6.0) return 20;
+            if (intensity >= 5 || magnitude >= 5.0) return 15;
+            if (intensity >= 3 || magnitude >= 3.0) return 12;
+            return 8;
+        }
+
+        // P2P地震情報APIからデータを取得
+        async function fetchP2PEarthquakeData() {
+            try {
+                const response = await fetch('https://api.p2pquake.net/v2/history?codes=551&limit=100');
+                const data = await response.json();
+                
+                return data.map(item => {
+                    const earthquake = item.earthquake;
+                    if (!earthquake) return null;
+                    
+                    // P2P地震情報の震度コード変換
+                    // 10:震度1, 20:震度2, 30:震度3, 40:震度4, 45:震度5弱, 50:震度5強, 55:震度6弱, 60:震度6強, 70:震度7
+                    let intensity = 0;
+                    const maxScale = earthquake.maxScale || 0;
+                    
+                    if (maxScale >= 70) intensity = 7;
+                    else if (maxScale >= 60) intensity = 6; // 6強
+                    else if (maxScale >= 55) intensity = 6; // 6弱
+                    else if (maxScale >= 50) intensity = 5; // 5強
+                    else if (maxScale >= 45) intensity = 5; // 5弱
+                    else if (maxScale >= 40) intensity = 4;
+                    else if (maxScale >= 30) intensity = 3;
+                    else if (maxScale >= 20) intensity = 2;
+                    else if (maxScale >= 10) intensity = 1;
+                    else intensity = 0;
+                    
+                    return {
+                        time: new Date(item.time),
+                        location: earthquake.hypocenter?.name || '不明',
+                        latitude: earthquake.hypocenter?.latitude || 35.6762,
+                        longitude: earthquake.hypocenter?.longitude || 139.6503,
+                        magnitude: earthquake.hypocenter?.magnitude || 0,
+                        intensity: intensity,
+                        depth: earthquake.hypocenter?.depth || 0,
+                        source: 'P2P'
+                    };
+                }).filter(item => item !== null);
+            } catch (error) {
+                console.error('P2P地震情報APIエラー:', error);
+                return [];
+            }
+        }
+
+        // USGS地震情報APIからデータを取得（M4.5以上、過去3日間）
+        async function fetchUSGSEarthquakeData() {
+            try {
+                const endTime = new Date();
+                const startTime = new Date(endTime.getTime() - 3 * 24 * 60 * 60 * 1000);
+                
+                const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${startTime.toISOString()}&endtime=${endTime.toISOString()}&minmagnitude=4.5&limit=100`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                return data.features.map(feature => {
+                    const props = feature.properties;
+                    const coords = feature.geometry.coordinates;
+                    
+                    // マグニチュードから震度を推定（簡易計算）
+                    const estimatedIntensity = Math.min(Math.max(Math.floor(props.mag - 2), 1), 7);
+                    
+                    return {
+                        time: new Date(props.time),
+                        location: props.place || 'Unknown',
+                        latitude: coords[1],
+                        longitude: coords[0],
+                        magnitude: props.mag,
+                        intensity: estimatedIntensity,
+                        depth: coords[2] || 0,
+                        source: 'USGS'
+                    };
+                });
+            } catch (error) {
+                console.error('USGS地震情報APIエラー:', error);
+                return [];
+            }
+        }
+
+        // 統合された地震データを取得
+        async function fetchEarthquakeData() {
+            try {
+                const [p2pData, usgsData] = await Promise.all([
+                    fetchP2PEarthquakeData(),
+                    fetchUSGSEarthquakeData()
+                ]);
+                
+                // データを結合してソート
+                const combinedData = [...p2pData, ...usgsData];
+                return combinedData.sort((a, b) => b.time - a.time);
+            } catch (error) {
+                console.error('地震データ取得エラー:', error);
+                // エラー時はサンプルデータを生成
+                return generateSampleData();
+            }
+        }
+
+        // サンプル地震データ（フォールバック用）
+        function generateSampleData() {
+            const sampleData = [];
+            const locations = [
+                {name: "東京都", lat: 35.6762, lng: 139.6503},
+                {name: "大阪府", lat: 34.6937, lng: 135.5023},
+                {name: "宮城県", lat: 38.2682, lng: 140.8694},
+                {name: "福岡県", lat: 33.6064, lng: 130.4183},
+                {name: "愛知県", lat: 35.1802, lng: 136.9066},
+                {name: "北海道", lat: 43.0642, lng: 141.3469}
+            ];
+
+            for (let i = 0; i < 20; i++) {
+                const location = locations[Math.floor(Math.random() * locations.length)];
+                const magnitude = (Math.random() * 4 + 2).toFixed(1);
+                const intensity = Math.floor(Math.random() * 7) + 1;
+                const time = new Date(Date.now() - Math.random() * 3 * 24 * 60 * 60 * 1000);
+                
+                sampleData.push({
+                    time: time,
+                    location: location.name,
+                    latitude: location.lat + (Math.random() - 0.5) * 2,
+                    longitude: location.lng + (Math.random() - 0.5) * 2,
+                    magnitude: parseFloat(magnitude),
+                    intensity: intensity,
+                    depth: Math.floor(Math.random() * 100 + 10),
+                    source: 'Sample'
+                });
+            }
+
+            return sampleData.sort((a, b) => b.time - a.time);
+        }
+
+        // 地域別の地震データをグループ化
+        function groupEarthquakesByRegion(data) {
+            const regionGroups = {};
+            
+            data.forEach(eq => {
+                // 緯度経度を基に近い地震をグループ化（約50km圏内）
+                const key = `${Math.round(eq.latitude * 2) / 2}_${Math.round(eq.longitude * 2) / 2}`;
+                
+                if (!regionGroups[key]) {
+                    regionGroups[key] = {
+                        earthquakes: [],
+                        centerLat: eq.latitude,
+                        centerLng: eq.longitude,
+                        location: eq.location
+                    };
+                }
+                regionGroups[key].earthquakes.push(eq);
+            });
+            
+            return regionGroups;
+        }
+
+        // 地震マーカーを地図に追加（地域別グループ化対応）
+        function addEarthquakeMarkers(data) {
+            // 既存のマーカーをクリア
+            earthquakeMarkers.forEach(marker => map.removeLayer(marker));
+            earthquakeMarkers = [];
+
+            const regionGroups = groupEarthquakesByRegion(data);
+
+            Object.values(regionGroups).forEach(group => {
+                const earthquakes = group.earthquakes;
+                const count = earthquakes.length;
+                const maxIntensity = Math.max(...earthquakes.map(eq => eq.intensity));
+                const maxMagnitude = Math.max(...earthquakes.map(eq => eq.magnitude));
+                
+                const color = getIntensityColor(maxIntensity, maxMagnitude);
+                const baseSize = getMarkerSize(maxIntensity, maxMagnitude);
+                
+                // 地震回数に応じてサイズを調整（最大2倍）
+                const size = Math.min(baseSize + (count - 1) * 2, baseSize * 2);
+                
+                const marker = L.circleMarker([group.centerLat, group.centerLng], {
+                    radius: size,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+
+                // 複数地震がある場合は数字を表示
+                if (count > 1) {
+                    const countLabel = L.divIcon({
+                        className: 'earthquake-count-label',
+                        html: `<div style="
+                            background: rgba(0,0,0,0.7);
+                            color: white;
+                            border-radius: 10px;
+                            padding: 2px 6px;
+                            font-size: 12px;
+                            font-weight: bold;
+                            text-align: center;
+                            min-width: 20px;
+                        ">${count}</div>`,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+                    
+                    L.marker([group.centerLat, group.centerLng], {
+                        icon: countLabel
+                    }).addTo(map);
+                }
+
+                // ポップアップ内容を地域別に整理
+                const sortedEarthquakes = earthquakes.sort((a, b) => b.intensity - a.intensity);
+                const intensityStats = {};
+                
+                earthquakes.forEach(eq => {
+                    if (!intensityStats[eq.intensity]) {
+                        intensityStats[eq.intensity] = 0;
+                    }
+                    intensityStats[eq.intensity]++;
+                });
+
+                const popupContent = `
+                    <div style="font-size: 14px; max-width: 250px;">
+                        <strong>${group.location} 地域</strong><br>
+                        <div style="margin: 10px 0; padding: 8px; background: #f8f9fa; border-radius: 5px;">
+                            <strong>📊 地震統計 (${count}回)</strong><br>
+                            ${Object.entries(intensityStats)
+                                .sort((a, b) => b[0] - a[0])
+                                .map(([intensity, count]) => `震度${intensity}: ${count}回`)
+                                .join('<br>')}
+                        </div>
+                        <div style="margin: 10px 0;">
+                            <strong>最大震度:</strong> ${maxIntensity}<br>
+                            <strong>最大マグニチュード:</strong> ${maxMagnitude.toFixed(1)}<br>
+                            <strong>データソース:</strong> ${earthquakes[0].source || 'Unknown'}
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                            <strong>最新の地震:</strong><br>
+                            ${sortedEarthquakes.slice(0, 3).map(eq => 
+                                `${eq.time.toLocaleString('ja-JP').split(' ')[1]} M${eq.magnitude} 震度${eq.intensity}`
+                            ).join('<br>')}
+                            ${count > 3 ? `<br>他${count - 3}件...` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent);
+                earthquakeMarkers.push(marker);
+            });
+        }
+
+        // 統計情報を更新
+        function updateStats(data) {
+            const totalCount = data.length;
+            const maxIntensity = Math.max(...data.map(eq => eq.intensity));
+            const maxMagnitude = Math.max(...data.map(eq => eq.magnitude)).toFixed(1);
+            const intensity3Plus = data.filter(eq => eq.intensity >= 3).length;
+
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('maxIntensity').textContent = maxIntensity;
+            document.getElementById('maxMagnitude').textContent = maxMagnitude;
+            document.getElementById('intensity3Plus').textContent = intensity3Plus;
+        }
+
+        // 地震リストを更新
+        function updateEarthquakeList(data) {
+            const listContainer = document.getElementById('earthquakeList');
+            const recentEarthquakes = data.slice(0, 10);
+            
+            listContainer.innerHTML = recentEarthquakes.map(eq => {
+                const intensityClass = eq.intensity >= 5 ? 'intensity-high' : 
+                                     eq.intensity >= 3 ? 'intensity-medium' : '';
+                
+                return `
+                    <div class="earthquake-item ${intensityClass}">
+                        <div class="earthquake-time">
+                            ${eq.time.toLocaleString('ja-JP')}
+                        </div>
+                        <div>
+                            <span class="earthquake-magnitude">M${eq.magnitude}</span>
+                            震度${eq.intensity} ${eq.location}
+                            <span style="font-size: 0.8em; color: #7f8c8d;">(${eq.source})</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // データを更新
+        async function updateData() {
+            try {
+                // リアルタイム地震データを取得
+                earthquakeData = await fetchEarthquakeData();
+                
+                addEarthquakeMarkers(earthquakeData);
+                updateStats(earthquakeData);
+                updateEarthquakeList(earthquakeData);
+                
+                // 更新時刻を表示
+                document.getElementById('updateTime').textContent = 
+                    `最終更新: ${new Date().toLocaleTimeString('ja-JP')}`;
+                
+                console.log(`地震データ更新完了: ${earthquakeData.length}件`);
+            } catch (error) {
+                console.error('データ更新エラー:', error);
+                
+                // エラー時はサンプルデータを使用
+                earthquakeData = generateSampleData();
+                addEarthquakeMarkers(earthquakeData);
+                updateStats(earthquakeData);
+                updateEarthquakeList(earthquakeData);
+                
+                document.getElementById('updateTime').textContent = 
+                    `最終更新: ${new Date().toLocaleTimeString('ja-JP')} (サンプルデータ)`;
+            }
+        }
+
+        // 初期化
+        async function init() {
+            initMap();
+            await updateData();
+            
+            // 5分間隔で自動更新
+            setInterval(updateData, 5 * 60 * 1000);
+        }
+
+        // ページ読み込み完了後に初期化
+        document.addEventListener('DOMContentLoaded', init);
+
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1106158066306697",
+            enable_page_level_ads: true
+        });
+    </script>
+</body>
+</html>

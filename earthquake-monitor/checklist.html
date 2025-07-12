@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防災備品チェックリスト | 地震情報モニター</title>
+    <meta name="description" content="地震・災害に備える防災備品のチェックリスト。家庭や職場で準備すべき必需品をカテゴリ別に整理。">
+    <meta name="keywords" content="防災備品,防災グッズ,地震対策,災害対策,非常用品,防災チェックリスト">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JFRGN7YJYB6');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
+         crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .header h1 {
+            color: #e74c3c;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .checklist-intro {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #f39c12;
+        }
+
+        .category {
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .category-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .category-content {
+            padding: 20px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .checklist-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .checklist-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .checklist-item.checked {
+            background: #d4edda;
+            border-color: #27ae60;
+        }
+
+        .item-checkbox {
+            margin-right: 10px;
+        }
+
+        .item-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .item-description {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .progress-section {
+            background: #e8f6fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .tips-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .tip-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-link:hover {
+            background: #2980b9;
+        }
+
+        .print-button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+
+        .print-button:hover {
+            background: #229954;
+        }
+
+        .ad-section {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .ad-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .item-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                margin: 0;
+            }
+            .ad-section, .back-link, .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Ad -->
+    <div class="ad-section">
+        <div class="ad-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🚨 防災備品チェックリスト</h1>
+            <p>地震・災害に備える必需品をチェックして、安心・安全な生活を</p>
+            <button class="print-button" onclick="window.print()">📄 印刷用表示</button>
+        </div>
+
+        <div class="checklist-intro">
+            <h3>💡 使い方</h3>
+            <p>各アイテムをクリックしてチェックを入れてください。進捗状況が自動的に更新されます。定期的に見直して、常に最新の備えを維持しましょう。</p>
+        </div>
+
+        <div class="progress-section">
+            <h3>📊 備蓄完了率</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">0 / 0 アイテム完了 (0%)</p>
+        </div>
+
+        <!-- 水・食料 -->
+        <div class="category">
+            <div class="category-header">💧 水・食料（3日分以上）</div>
+            <div class="category-content">
+                <p>災害時は水道・電気・ガスが止まる可能性があります。最低3日分、できれば1週間分の備蓄を。</p>
+                <div class="item-grid">
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">飲料水（1人1日3L）</div>
+                        <div class="item-description">4人家族なら36L以上。ペットボトルで保存</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">非常食・保存食</div>
+                        <div class="item-description">レトルト食品、缶詰、乾パン、アルファ米など</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">カセットコンロ・ボンベ</div>
+                        <div class="item-description">停電・ガス停止時の調理用。ボンベは多めに</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">使い捨て食器</div>
+                        <div class="item-description">紙皿、紙コップ、割り箸、プラスチックスプーン</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 照明・通信 -->
+        <div class="category">
+            <div class="category-header">🔦 照明・通信・情報収集</div>
+            <div class="category-content">
+                <p>停電時の照明確保と、外部との連絡・情報収集手段は生命線です。</p>
+                <div class="item-grid">
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">懐中電灯（人数分）</div>
+                        <div class="item-description">LEDタイプがおすすめ。各部屋に1つずつ</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">電池（予備分含む）</div>
+                        <div class="item-description">単1〜単4まで各種。アルカリ電池推奨</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">ラジオ（手回し充電式）</div>
+                        <div class="item-description">災害情報収集の要。スマホ充電機能付きが理想</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">モバイルバッテリー</div>
+                        <div class="item-description">大容量タイプ。複数台あると安心</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 医療・衛生 -->
+        <div class="category">
+            <div class="category-header">🏥 医療・衛生用品</div>
+            <div class="category-content">
+                <p>けがの応急処置と、避難生活での衛生維持に必要な用品です。</p>
+                <div class="item-grid">
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">救急セット</div>
+                        <div class="item-description">絆創膏、包帯、消毒液、痛み止め、胃腸薬</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">処方薬（常用薬）</div>
+                        <div class="item-description">持病の薬は1週間分以上。お薬手帳も</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">マスク</div>
+                        <div class="item-description">感染症対策、粉塵対策。不織布マスク推奨</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">手指消毒液</div>
+                        <div class="item-description">アルコール系消毒液。ウェットティッシュも</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">生理用品</div>
+                        <div class="item-description">女性用。多めに備蓄しておくことが重要</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">トイレットペーパー</div>
+                        <div class="item-description">水に流せるタイプ。ティッシュペーパーも</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 生活用品 -->
+        <div class="category">
+            <div class="category-header">🏠 生活用品・工具</div>
+            <div class="category-content">
+                <p>避難生活や復旧作業で必要になる基本的な生活用品と工具類です。</p>
+                <div class="item-grid">
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">毛布・寝袋</div>
+                        <div class="item-description">防寒対策。アルミブランケットも軽量でおすすめ</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">着替え・下着</div>
+                        <div class="item-description">3日分程度。圧縮袋で保存すると場所を取らない</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">タオル</div>
+                        <div class="item-description">速乾性のあるマイクロファイバータオル推奨</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">軍手・作業用手袋</div>
+                        <div class="item-description">がれき撤去作業用。滑り止め付きが理想</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">ロープ・ガムテープ</div>
+                        <div class="item-description">応急修理、避難時の固定作業に必須</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">ナイフ・缶切り</div>
+                        <div class="item-description">万能ナイフやマルチツールが便利</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 貴重品・書類 -->
+        <div class="category">
+            <div class="category-header">📄 貴重品・重要書類</div>
+            <div class="category-content">
+                <p>避難時に持ち出す貴重品と、復旧時に必要な重要書類のコピーを準備。</p>
+                <div class="item-grid">
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">現金（小銭含む）</div>
+                        <div class="item-description">ATMが使えない場合に備えて。公衆電話用に10円玉も</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">身分証明書のコピー</div>
+                        <div class="item-description">運転免許証、保険証、パスポートなど</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">預金通帳のコピー</div>
+                        <div class="item-description">銀行口座情報。印鑑登録証明書も</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">保険証券のコピー</div>
+                        <div class="item-description">火災保険、地震保険、生命保険など</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 特別な配慮 -->
+        <div class="category">
+            <div class="category-header">👶 特別な配慮が必要な方</div>
+            <div class="category-content">
+                <p>乳幼児、高齢者、ペットなど、特別な配慮が必要な家族のための備品。</p>
+                <div class="item-grid">
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">粉ミルク・哺乳瓶</div>
+                        <div class="item-description">乳児用。液体ミルクも便利</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">おむつ・おしりふき</div>
+                        <div class="item-description">乳幼児用。大人用おむつが必要な場合も</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">ペットフード・水</div>
+                        <div class="item-description">ペット用。ケージやリードも忘れずに</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleItem(this)">
+                        <input type="checkbox" class="item-checkbox">
+                        <div class="item-name">義歯・補聴器</div>
+                        <div class="item-description">高齢者用。予備や電池も準備</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-section">
+            <div class="ad-label">広告</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1106158066306697"
+                 data-ad-slot="3889638884"
+                 data-ad-format="auto"></ins>
+        </div>
+
+        <div class="tips-section">
+            <h3>💡 防災備蓄のコツ</h3>
+            <div class="tip-item">
+                <strong>🔄 ローリングストック法：</strong>
+                日常的に使う食品を多めに買い置きし、古いものから使って新しいものを補充する方法。期限切れを防げます。
+            </div>
+            <div class="tip-item">
+                <strong>📦 分散備蓄：</strong>
+                自宅、職場、車など複数の場所に備品を分散配置。どこにいても対応できるように。
+            </div>
+            <div class="tip-item">
+                <strong>🗓 定期点検：</strong>
+                年2回（春と秋）に備品の点検を実施。期限切れのチェックと動作確認を忘れずに。
+            </div>
+            <div class="tip-item">
+                <strong>👨‍👩‍👧‍👦 家族会議：</strong>
+                避難場所、連絡方法を家族で共有。子どもにも分かりやすく説明しておくことが大切。
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">🌏 地震情報モニターに戻る</a>
+    </div>
+
+    <script>
+        // チェックリスト機能
+        function toggleItem(element) {
+            const checkbox = element.querySelector('.item-checkbox');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('checked');
+            } else {
+                element.classList.remove('checked');
+            }
+            
+            updateProgress();
+            saveProgress();
+        }
+
+        // 進捗更新
+        function updateProgress() {
+            const allItems = document.querySelectorAll('.checklist-item');
+            const checkedItems = document.querySelectorAll('.checklist-item.checked');
+            const progress = Math.round((checkedItems.length / allItems.length) * 100);
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = 
+                `${checkedItems.length} / ${allItems.length} アイテム完了 (${progress}%)`;
+        }
+
+        // 進捗保存
+        function saveProgress() {
+            const checkedItems = [];
+            document.querySelectorAll('.checklist-item.checked').forEach((item, index) => {
+                const itemName = item.querySelector('.item-name').textContent;
+                checkedItems.push(itemName);
+            });
+            localStorage.setItem('disasterChecklist', JSON.stringify(checkedItems));
+        }
+
+        // 進捗読み込み
+        function loadProgress() {
+            const saved = localStorage.getItem('disasterChecklist');
+            if (saved) {
+                const checkedItems = JSON.parse(saved);
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    const itemName = item.querySelector('.item-name').textContent;
+                    if (checkedItems.includes(itemName)) {
+                        item.querySelector('.item-checkbox').checked = true;
+                        item.classList.add('checked');
+                    }
+                });
+                updateProgress();
+            }
+        }
+
+        // ページ読み込み時に進捗を復元
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            
+            // AdSense初期化
+            (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-1106158066306697",
+                enable_page_level_ads: true
+            });
+        });
+    </script>
+</body>
+</html>

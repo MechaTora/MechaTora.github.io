@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# サイトマップの場所
+Sitemap: https://mechatora.github.io/earthquake-monitor/sitemap.xml
+
+# 主要ページの明示
+Allow: /index.html
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /contact.html
+
+# AdSense ads.txt
+Allow: /ads.txt
+
+# クロール促進のためのディレクティブ
+Crawl-delay: 1
