@@ -1,0 +1,30 @@
+# CSV画像検索ツール - スタンドアロンアプリ用
+# 必要なライブラリ一覧
+
+# 非同期HTTP通信
+aiohttp>=3.8.0
+
+# 非同期ファイルI/O
+aiofiles>=23.0.0
+
+# 文字エンコーディング検出
+chardet>=5.0.0
+
+# EXE化用（開発環境のみ）
+pyinstaller>=5.13.0
+
+# SSL証明書（HTTPSアクセス用）
+certifi>=2023.0.0
+
+# 標準ライブラリ（Pythonに同梱）
+# tkinter - GUI
+# asyncio - 非同期処理
+# csv - CSV読み込み
+# json - ログ出力
+# pathlib - ファイルパス操作
+# datetime - 日時処理
+# urllib.parse - URL処理
+# threading - マルチスレッド
+# time - 時間制御
+# platform - OS判定
+# re - 正規表現

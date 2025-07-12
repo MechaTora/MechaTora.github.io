@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐱 GYOGYOCAT アプリハブ｜日常生活を便利にするWebアプリ集</title>
+    <meta name="description" content="GYOGYOCATが提供する5つの便利なWebアプリ。料理レシピ提案、忘却曲線暗記、地震モニター、Xバズ体験、バーチャル暖炉でリラックス。すべて無料で利用可能。">
+    <meta name="keywords" content="GYOGYOCAT,Webアプリ,料理レシピ,暗記アプリ,地震情報,Xシミュレーター,バーチャル暖炉,無料アプリ,便利ツール">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="GYOGYOCAT アプリハブ｜便利なWebアプリ集">
+    <meta property="og:description" content="日常生活を便利にする5つのWebアプリを無料提供。料理レシピ、学習、情報収集、エンターテイメント、リラクゼーションまで幅広くカバー。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gyogyocat.github.io/hub.html">
+    <meta property="og:site_name" content="GYOGYOCAT">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GYOGYOCAT アプリハブ｜便利なWebアプリ集">
+    <meta name="twitter:description" content="日常生活を便利にする5つのWebアプリを無料提供。">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://gyogyocat.github.io/hub.html">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JFRGN7YJYB6');
+    </script>
+    
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
+         crossorigin="anonymous"></script>
+    
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "GYOGYOCAT アプリハブ",
+      "description": "日常生活を便利にする無料Webアプリケーション集。料理レシピ提案、暗記学習、地震情報、エンターテイメント、リラクゼーションアプリを提供。",
+      "url": "https://gyogyocat.github.io/hub.html",
+      "author": {
+        "@type": "Organization",
+        "name": "GYOGYOCAT"
+      },
+      "datePublished": "2025-07-09",
+      "inLanguage": "ja"
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .app-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .app-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .app-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .app-features {
+            list-style: none;
+        }
+        
+        .app-features li {
+            padding: 5px 0;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .app-features li:before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .cook-suggest { border-left: 5px solid #6B4E3D; }
+        .smart-flashcard { border-left: 5px solid #667eea; }
+        .earthquake-monitor { border-left: 5px solid #1e3c72; }
+        .x-buzz-simulator { border-left: 5px solid #1da1f2; }
+        .virtual-fireplace { border-left: 5px solid #ff8c00; }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+        
+        .ad-container {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .apps-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .app-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🐱 GYOGYOCAT アプリハブ</h1>
+            <p>日常生活を便利にするWebアプリケーション集<br>すべて無料でご利用いただけます</p>
+        </header>
+        
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1106158066306697"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <div class="apps-grid">
+            <a href="/" class="app-card cook-suggest">
+                <div class="app-icon">🍳</div>
+                <div class="app-title">CookSuggest</div>
+                <div class="app-description">
+                    余った材料から最適なレシピを提案！1000種類以上のレシピデータベースから条件に合った料理を見つけられます。
+                </div>
+                <ul class="app-features">
+                    <li>材料から検索</li>
+                    <li>条件指定機能</li>
+                    <li>詳細な調理手順</li>
+                    <li>栄養情報表示</li>
+                </ul>
+            </a>
+            
+            <a href="/FlashcardApp/web-app/flashcard-app/" class="app-card smart-flashcard">
+                <div class="app-icon">📚</div>
+                <div class="app-title">Smart Flashcard</div>
+                <div class="app-description">
+                    忘却曲線の原理を活用した科学的暗記アプリ。隙間時間で効率的に記憶定着できます。
+                </div>
+                <ul class="app-features">
+                    <li>間隔反復学習</li>
+                    <li>学習進捗分析</li>
+                    <li>カスタムカード作成</li>
+                    <li>音声読み上げ対応</li>
+                </ul>
+            </a>
+            
+            <a href="/earthquake-monitor/" class="app-card earthquake-monitor">
+                <div class="app-icon">🌏</div>
+                <div class="app-title">地震モニター</div>
+                <div class="app-description">
+                    直近24時間の地震情報をリアルタイムで監視。震度・マグニチュード別に色分け表示で傾向を把握できます。
+                </div>
+                <ul class="app-features">
+                    <li>リアルタイム更新</li>
+                    <li>震度別色分け</li>
+                    <li>地震マップ表示</li>
+                    <li>発生傾向分析</li>
+                </ul>
+            </a>
+            
+            <a href="/FlashcardApp/web-app/x-buzz-simulator/" class="app-card x-buzz-simulator">
+                <div class="app-icon">🚀</div>
+                <div class="app-title">X Buzz Simulator</div>
+                <div class="app-description">
+                    Xでインフルエンサーになった感覚を体験！フォロワー数の急増やバイラル投稿をリアルにシミュレートします。
+                </div>
+                <ul class="app-features">
+                    <li>リアルなUI再現</li>
+                    <li>フォロワー数増加</li>
+                    <li>バイラル体験</li>
+                    <li>エンゲージメント表示</li>
+                </ul>
+            </a>
+            
+            <a href="/FlashcardApp/web-app/fireplace-app/fireplace-index.html" class="app-card virtual-fireplace">
+                <div class="app-icon">🔥</div>
+                <div class="app-title">バーチャル暖炉</div>
+                <div class="app-description">
+                    リアルな焚火の炎と音で究極のリラックス体験。作業用BGM、瞑想、睡眠サポートに最適です。
+                </div>
+                <ul class="app-features">
+                    <li>リアルな炎表現</li>
+                    <li>焚火の音響効果</li>
+                    <li>音量調整機能</li>
+                    <li>フルスクリーン対応</li>
+                </ul>
+            </a>
+        </div>
+        
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1106158066306697"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <footer class="footer">
+            <p>&copy; 2025 GYOGYOCAT. すべてのアプリは無料でご利用いただけます。</p>
+        </footer>
+    </div>
+</body>
+</html>

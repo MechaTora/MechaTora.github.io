@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍳 CookSuggest - 料理サジェストサイト（写真対応版）</title>
+    <meta name="description" content="800種類のレシピから条件に合った料理を提案。美味しそうな写真と一緒にご紹介。">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
+         crossorigin="anonymous"></script>
+    
+    <style>
+        /* 2025年最新デザイン - Mocha Mousse & Digital Lavender */
+        :root {
+            --primary-color: #6B4E3D;        /* Mocha Mousse */
+            --accent-color: #B19CD9;          /* Digital Lavender */
+            --background: #FEFEFE;            /* Off White */
+            --text-primary: #2D2D2D;          /* Charcoal */
+            --text-secondary: #5A5A5A;        /* Light Charcoal */
+            --sage-green: #A4B08A;            /* Sage Green */
+            --card-shadow: 0 8px 32px rgba(107, 78, 61, 0.1);
+            --border-radius: 16px;
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #F8F7F5 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: var(--spacing-sm) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(107, 78, 61, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Condition Selection Cards */
+        .condition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .condition-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .condition-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(107, 78, 61, 0.15);
+        }
+
+        .condition-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .condition-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+
+        .option-btn {
+            background: var(--background);
+            border: 2px solid var(--accent-color);
+            color: var(--text-primary);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .option-btn.selected {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Generate Button */
+        .generate-section {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--sage-green) 100%);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-xl);
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(107, 78, 61, 0.2);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Result Section */
+        .result-section {
+            display: none;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .result-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .result-header {
+            padding: var(--spacing-sm);
+            text-align: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .result-header.home-cooking {
+            background: var(--sage-green);
+        }
+
+        .result-header.pro-cooking {
+            background: var(--accent-color);
+        }
+
+        .result-header.restaurant {
+            background: var(--primary-color);
+        }
+
+        .result-content {
+            padding: 0;
+        }
+
+        /* 料理写真のスタイル */
+        .recipe-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .recipe-info {
+            padding: var(--spacing-md);
+        }
+
+        .recipe-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .recipe-ingredients {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .recipe-btn {
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-xs);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: var(--spacing-sm);
+        }
+
+        .recipe-btn:hover {
+            background: var(--primary-color);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: var(--spacing-md) 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--background);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-sm);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Ad Sections */
+        .ad-section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+            margin: var(--spacing-md) 0;
+            border: 1px solid rgba(107, 78, 61, 0.1);
+        }
+
+        .ad-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Image placeholder */
+        .image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #999;
+            border-radius: 0;
+        }
+
+        .restaurant-placeholder {
+            height: 160px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .condition-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .container {
+                padding: var(--spacing-md) var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Ad -->
+    <div class="ad-section">
+        <div class="ad-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="5287863920"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">🍳 CookSuggest</a>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item">ホーム</a>
+                <a href="#" class="nav-item">レシピ検索</a>
+                <a href="#" class="nav-item">お気に入り</a>
+                <a href="#" class="nav-item">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>今日何作る？</h1>
+            <p>800種類のレシピから、あなたの条件にピッタリの料理を提案します。<br>
+            美味しそうな写真と一緒にご紹介！</p>
+        </section>
+
+        <!-- Condition Selection -->
+        <section class="condition-grid">
+            <div class="condition-card">
+                <div class="condition-title">
+                    <span>👨‍🍳</span>
+                    <span>難易度</span>
+                </div>
+                <div class="condition-options">
+                    <button class="option-btn" data-type="difficulty" data-value="簡単">簡単</button>
+                    <button class="option-btn" data-type="difficulty" data-value="普通">普通</button>
+                    <button class="option-btn" data-type="difficulty" data-value="上級">上級</button>
+                </div>
+            </div>
+
+            <div class="condition-card">
+                <div class="condition-title">
+                    <span>👥</span>
+                    <span>人数</span>
+                </div>
+                <div class="condition-options">
+                    <button class="option-btn" data-type="servings" data-value="1人分">1人分</button>
+                    <button class="option-btn" data-type="servings" data-value="2-3人分">2-3人分</button>
+                    <button class="option-btn" data-type="servings" data-value="4人分以上">4人分以上</button>
+                </div>
+            </div>
+
+            <div class="condition-card">
+                <div class="condition-title">
+                    <span>💪</span>
+                    <span>カロリー</span>
+                </div>
+                <div class="condition-options">
+                    <button class="option-btn" data-type="calories" data-value="ヘルシー">ヘルシー</button>
+                    <button class="option-btn" data-type="calories" data-value="普通">普通</button>
+                    <button class="option-btn" data-type="calories" data-value="ガッツリ">ガッツリ</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Generate Button -->
+        <section class="generate-section">
+            <button class="generate-btn" id="generateBtn">
+                🎲 料理を提案してもらう
+            </button>
+        </section>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>美味しそうな料理の写真を準備中...</p>
+        </div>
+
+        <!-- Sidebar Ad -->
+        <div class="ad-section">
+            <div class="ad-label">広告</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1106158066306697"
+                 data-ad-slot="3889638884"
+                 data-ad-format="vertical"></ins>
+        </div>
+
+        <!-- Result Section -->
+        <section class="result-section" id="resultSection">
+            <div class="result-grid">
+                <!-- Home Cooking -->
+                <div class="result-card">
+                    <div class="result-header home-cooking">
+                        🏠 家で作る（簡単）
+                    </div>
+                    <div class="result-content" id="homeCooking">
+                        <!-- レシピ内容がここに表示 -->
+                    </div>
+                </div>
+
+                <!-- Pro Cooking -->
+                <div class="result-card">
+                    <div class="result-header pro-cooking">
+                        👨‍🍳 家で作る（本格）
+                    </div>
+                    <div class="result-content" id="proCooking">
+                        <!-- レシピ内容がここに表示 -->
+                    </div>
+                </div>
+
+                <!-- Restaurant -->
+                <div class="result-card">
+                    <div class="result-header restaurant">
+                        🍽️ 外で食べる
+                    </div>
+                    <div class="result-content" id="restaurant">
+                        <!-- レストラン情報がここに表示 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer Ad -->
+    <div class="ad-section">
+        <div class="ad-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="6171337236"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 CookSuggest. 毎日の料理選びをもっと楽しく。</p>
+    </footer>
+
+    <script>
+        // 条件選択の状態管理
+        let selectedConditions = {
+            difficulty: null,
+            servings: null,
+            calories: null
+        };
+
+        // 料理画像データベース（Unsplash API使用）
+        class RecipeImageService {
+            constructor() {
+                this.baseUrl = 'https://source.unsplash.com';
+                this.imageCache = new Map();
+            }
+
+            // 料理名から適切な検索キーワードを生成
+            getSearchKeyword(recipeName) {
+                const keywordMap = {
+                    '鶏の照り焼き': 'teriyaki chicken',
+                    '親子丼': 'oyakodon japanese',
+                    'チャーハン': 'fried rice',
+                    '肉じゃが': 'nikujaga japanese',
+                    'ハンバーグ': 'hamburger steak',
+                    'エビチリ': 'shrimp chili',
+                    'ビーフウェリントン': 'beef wellington',
+                    '手打ちそば': 'handmade soba',
+                    '北京ダック': 'peking duck',
+                    'カレーライス': 'japanese curry',
+                    'オムライス': 'omurice',
+                    'ラーメン': 'ramen',
+                    'お寿司': 'sushi',
+                    'うどん': 'udon',
+                    'そば': 'soba noodles',
+                    'パスタ': 'pasta',
+                    'ピザ': 'pizza',
+                    'ステーキ': 'steak'
+                };
+
+                return keywordMap[recipeName] || 'japanese food';
+            }
+
+            // 料理画像のURLを取得
+            getRecipeImageUrl(recipeName, width = 400, height = 300) {
+                const keyword = this.getSearchKeyword(recipeName);
+                const cacheKey = `${recipeName}_${width}_${height}`;
+                
+                if (this.imageCache.has(cacheKey)) {
+                    return this.imageCache.get(cacheKey);
+                }
+
+                const url = `${this.baseUrl}/${width}x${height}/?${keyword}&auto=format&fit=crop&w=${width}&h=${height}&q=80`;
+                this.imageCache.set(cacheKey, url);
+                return url;
+            }
+
+            // レストラン画像のURLを取得
+            getRestaurantImageUrl(restaurantType = 'restaurant', width = 400, height = 250) {
+                const typeMap = {
+                    '和食': 'japanese restaurant interior',
+                    'イタリアン': 'italian restaurant',
+                    '中華': 'chinese restaurant',
+                    'フレンチ': 'french restaurant',
+                    'カフェ': 'cozy cafe interior'
+                };
+
+                const keyword = typeMap[restaurantType] || 'restaurant interior';
+                return `${this.baseUrl}/${width}x${height}/?${keyword}&auto=format&fit=crop&w=${width}&h=${height}&q=80`;
+            }
+
+            // 画像読み込みエラー時のフォールバック
+            createFallbackImage(type, recipeName) {
+                const fallbackEmojis = {
+                    'japanese': '🍱',
+                    'chinese': '🥟',
+                    'italian': '🍝',
+                    'western': '🍖',
+                    'dessert': '🍰',
+                    'restaurant': '🏪'
+                };
+
+                return `data:image/svg+xml;base64,${btoa(`
+                    <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#f0f0f0"/>
+                        <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="60" fill="#999">
+                            ${fallbackEmojis[type] || '🍽️'}
+                        </text>
+                        <text x="50%" y="75%" text-anchor="middle" dy=".3em" font-size="16" fill="#666">
+                            ${recipeName || '料理画像'}
+                        </text>
+                    </svg>
+                `)}`;
+            }
+        }
+
+        const imageService = new RecipeImageService();
+
+        // レシピデータベース（写真付き）
+        const recipesWithImages = {
+            easy: [
+                { 
+                    name: '鶏の照り焼き', 
+                    ingredients: ['鶏もも肉', '醤油', 'みりん', '砂糖'], 
+                    time: 15, 
+                    difficulty: '簡単',
+                    description: 'ジューシーな鶏もも肉を甘辛いタレで焼き上げた定番料理'
+                },
+                { 
+                    name: '親子丼', 
+                    ingredients: ['鶏肉', '卵', '玉ねぎ', 'だし'], 
+                    time: 20, 
+                    difficulty: '簡単',
+                    description: 'ふわふわ卵と鶏肉の絶妙なハーモニー'
+                },
+                { 
+                    name: 'チャーハン', 
+                    ingredients: ['ご飯', '卵', 'ねぎ', '醤油'], 
+                    time: 15, 
+                    difficulty: '簡単',
+                    description: 'パラパラご飯が決め手の中華定番料理'
+                }
+            ],
+            normal: [
+                { 
+                    name: '肉じゃが', 
+                    ingredients: ['豚肉', 'じゃがいも', '人参', '玉ねぎ'], 
+                    time: 30, 
+                    difficulty: '普通',
+                    description: '家庭の味を代表する煮物料理の王様'
+                },
+                { 
+                    name: 'ハンバーグ', 
+                    ingredients: ['合挽き肉', 'パン粉', '卵', '玉ねぎ'], 
+                    time: 35, 
+                    difficulty: '普通',
+                    description: 'ジューシーで肉汁たっぷりの洋食の定番'
+                },
+                { 
+                    name: 'エビチリ', 
+                    ingredients: ['エビ', 'トマトソース', '豆板醤'], 
+                    time: 25, 
+                    difficulty: '普通',
+                    description: 'プリプリエビの甘辛い中華料理'
+                }
+            ],
+            advanced: [
+                { 
+                    name: 'ビーフウェリントン', 
+                    ingredients: ['牛フィレ', 'パイ生地', 'マッシュルーム'], 
+                    time: 120, 
+                    difficulty: '上級',
+                    description: 'パイ生地に包まれた高級フレンチの代表格'
+                },
+                { 
+                    name: '手打ちそば', 
+                    ingredients: ['そば粉', '水', 'つゆ'], 
+                    time: 90, 
+                    difficulty: '上級',
+                    description: '職人技が光る本格的な手打ちそば'
+                },
+                { 
+                    name: '北京ダック', 
+                    ingredients: ['鴨肉', '甜麺醤', 'きゅうり'], 
+                    time: 180, 
+                    difficulty: '上級',
+                    description: '皮のパリパリ食感が絶品の中華高級料理'
+                }
+            ]
+        };
+
+        const restaurants = [
+            { 
+                name: '家庭の味 和食処', 
+                genre: '和食', 
+                budget: '1200円', 
+                rating: '4.3', 
+                description: '家庭的な和食が楽しめるアットホームなお店',
+                atmosphere: '個室あり、家族連れ歓迎'
+            },
+            { 
+                name: 'Bistro AMORE', 
+                genre: 'イタリアン', 
+                budget: '2000円', 
+                rating: '4.5', 
+                description: '本格イタリアンとワインが自慢のビストロ',
+                atmosphere: 'ロマンチックな雰囲気、デート向け'
+            },
+            { 
+                name: '中華菜館 福源', 
+                genre: '中華', 
+                budget: '1500円', 
+                rating: '4.1', 
+                description: '本格中華が味わえるボリューム満点のお店',
+                atmosphere: '大人数対応、宴会可能'
+            }
+        ];
+
+        // 条件選択ボタンのイベントリスナー
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                const value = this.getAttribute('data-value');
+                
+                // 同じタイプの他のボタンの選択を解除
+                document.querySelectorAll(`[data-type="${type}"]`).forEach(b => {
+                    b.classList.remove('selected');
+                });
+                
+                // このボタンを選択状態にする
+                this.classList.add('selected');
+                selectedConditions[type] = value;
+            });
+        });
+
+        // 料理提案ボタンのイベントリスナー
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            // 最低1つの条件が選択されているかチェック
+            const hasCondition = Object.values(selectedConditions).some(v => v !== null);
+            
+            if (!hasCondition) {
+                alert('条件を1つ以上選択してください！');
+                return;
+            }
+
+            // ローディング表示
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            
+            // 画像付き結果を表示
+            setTimeout(async () => {
+                await showResultsWithImages();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('resultSection').style.display = 'block';
+            }, 2000);
+        });
+
+        // 画像付き結果表示関数
+        async function showResultsWithImages() {
+            // レシピ選択
+            const easyRecipe = recipesWithImages.easy[Math.floor(Math.random() * recipesWithImages.easy.length)];
+            const normalRecipe = recipesWithImages.normal[Math.floor(Math.random() * recipesWithImages.normal.length)];
+            const advancedRecipe = recipesWithImages.advanced[Math.floor(Math.random() * recipesWithImages.advanced.length)];
+            const restaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+
+            // 家庭料理（簡単）
+            const easyImageUrl = imageService.getRecipeImageUrl(easyRecipe.name);
+            const easyFallback = imageService.createFallbackImage('japanese', easyRecipe.name);
+            
+            document.getElementById('homeCooking').innerHTML = `
+                <img src="${easyImageUrl}" 
+                     alt="${easyRecipe.name}" 
+                     class="recipe-image"
+                     onerror="this.src='${easyFallback}'">
+                <div class="recipe-info">
+                    <div class="recipe-title">${easyRecipe.name}</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ ${easyRecipe.time}分</span>
+                        <span>👥 ${selectedConditions.servings || '2-3人分'}</span>
+                        <span>🔥 ${easyRecipe.difficulty}</span>
+                    </div>
+                    <div class="recipe-ingredients">
+                        ${easyRecipe.ingredients.join('、')}
+                    </div>
+                    <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                        ${easyRecipe.description}
+                    </div>
+                    <button class="recipe-btn">レシピを見る</button>
+                </div>
+            `;
+
+            // 本格料理
+            const proRecipe = selectedConditions.difficulty === '上級' ? advancedRecipe : normalRecipe;
+            const proImageUrl = imageService.getRecipeImageUrl(proRecipe.name);
+            const proFallback = imageService.createFallbackImage('western', proRecipe.name);
+            
+            document.getElementById('proCooking').innerHTML = `
+                <img src="${proImageUrl}" 
+                     alt="${proRecipe.name}" 
+                     class="recipe-image"
+                     onerror="this.src='${proFallback}'">
+                <div class="recipe-info">
+                    <div class="recipe-title">${proRecipe.name}</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ ${proRecipe.time}分</span>
+                        <span>👥 ${selectedConditions.servings || '2-3人分'}</span>
+                        <span>🔥 ${proRecipe.difficulty}</span>
+                    </div>
+                    <div class="recipe-ingredients">
+                        ${proRecipe.ingredients.join('、')}
+                    </div>
+                    <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                        ${proRecipe.description}
+                    </div>
+                    <button class="recipe-btn">レシピを見る</button>
+                </div>
+            `;
+
+            // レストラン情報
+            const restaurantImageUrl = imageService.getRestaurantImageUrl(restaurant.genre);
+            const restaurantFallback = imageService.createFallbackImage('restaurant', restaurant.name);
+            
+            document.getElementById('restaurant').innerHTML = `
+                <img src="${restaurantImageUrl}" 
+                     alt="${restaurant.name}" 
+                     class="restaurant-image"
+                     onerror="this.src='${restaurantFallback}'">
+                <div class="recipe-info">
+                    <div class="recipe-title">${restaurant.name}</div>
+                    <div class="recipe-meta">
+                        <span>📍 徒歩5分</span>
+                        <span>💰 ${restaurant.budget}</span>
+                        <span>⭐ ${restaurant.rating}</span>
+                    </div>
+                    <div class="recipe-ingredients">
+                        ${restaurant.description}
+                    </div>
+                    <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                        ${restaurant.atmosphere}
+                    </div>
+                    <button class="recipe-btn">店舗を見る</button>
+                </div>
+            `;
+        }
+
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1106158066306697",
+            enable_page_level_ads: true
+        });
+    </script>
+</body>
+</html>

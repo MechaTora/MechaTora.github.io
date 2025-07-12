@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高度な錯視画像ジェネレーター</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .controls-panel {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 25px;
+            width: 350px;
+            height: fit-content;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .canvas-wrapper {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        #illusionCanvas {
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: white;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group h3 {
+            color: #4ecdc4;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid rgba(78, 205, 196, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .pattern-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .pattern-btn {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .pattern-btn:hover {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.3) 0%, rgba(69, 183, 209, 0.3) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .pattern-btn.active {
+            background: linear-gradient(135deg, #4ecdc4 0%, #45b7d1 100%);
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #b8c5d1;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(78, 205, 196, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 10px rgba(78, 205, 196, 0.4);
+        }
+
+        .color-input {
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(135deg, #96ceb4 0%, #45b7d1 100%);
+            box-shadow: 0 5px 15px rgba(150, 206, 180, 0.3);
+        }
+
+        .action-btn.secondary:hover {
+            box-shadow: 0 8px 25px rgba(150, 206, 180, 0.5);
+        }
+
+        .info-panel {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #b8c5d1;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: #4ecdc4;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .controls-panel {
+                width: 100%;
+                order: 2;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            #illusionCanvas {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pattern-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .controls-panel {
+                padding: 20px;
+            }
+        }
+
+        /* アニメーション効果 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌀 高度な錯視画像ジェネレーター</h1>
+        <p>様々な錯視パターンを生成・カスタマイズできます</p>
+    </div>
+
+    <div class="container">
+        <div class="controls-panel">
+            <div class="control-group">
+                <h3>🎨 錯視パターン</h3>
+                <div class="pattern-buttons">
+                    <button class="pattern-btn active" onclick="setPattern('fraser')">フレーザー螺旋</button>
+                    <button class="pattern-btn" onclick="setPattern('hermann')">ヘルマン格子</button>
+                    <button class="pattern-btn" onclick="setPattern('kanizsa')">カニッツァの三角形</button>
+                    <button class="pattern-btn" onclick="setPattern('moire')">モアレパターン</button>
+                    <button class="pattern-btn" onclick="setPattern('rotating')">回転錯視</button>
+                    <button class="pattern-btn" onclick="setPattern('cafe')">カフェウォール</button>
+                    <button class="pattern-btn" onclick="setPattern('zollner')">ツェルナー錯視</button>
+                    <button class="pattern-btn" onclick="setPattern('checker')">チェッカーシャドウ</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>⚙️ パラメータ調整</h3>
+                
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>サイズ</span>
+                        <span id="sizeValue">20</span>
+                    </div>
+                    <input type="range" class="slider" id="sizeSlider" min="5" max="100" value="20" oninput="updateParameter('size', this.value)">
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>密度</span>
+                        <span id="densityValue">50</span>
+                    </div>
+                    <input type="range" class="slider" id="densitySlider" min="10" max="100" value="50" oninput="updateParameter('density', this.value)">
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>角度</span>
+                        <span id="angleValue">0°</span>
+                    </div>
+                    <input type="range" class="slider" id="angleSlider" min="0" max="360" value="0" oninput="updateParameter('angle', this.value)">
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>コントラスト</span>
+                        <span id="contrastValue">100%</span>
+                    </div>
+                    <input type="range" class="slider" id="contrastSlider" min="20" max="200" value="100" oninput="updateParameter('contrast', this.value)">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>🎨 カラー設定</h3>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>メインカラー</span>
+                    </div>
+                    <input type="color" class="color-input" id="mainColor" value="#000000" onchange="updateColor('main', this.value)">
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>サブカラー</span>
+                    </div>
+                    <input type="color" class="color-input" id="subColor" value="#ffffff" onchange="updateColor('sub', this.value)">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>🔧 オプション</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="animationCheck" onchange="toggleAnimation(this.checked)">
+                    <label for="animationCheck">アニメーション有効</label>
+                </div>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="gridCheck" onchange="toggleGrid(this.checked)">
+                    <label for="gridCheck">グリッド表示</label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn" onclick="generateIllusion()">🎯 錯視を生成</button>
+                <button class="action-btn secondary" onclick="randomizeParameters()">🎲 ランダム生成</button>
+                <button class="action-btn secondary" onclick="saveImage()">💾 画像を保存</button>
+                <button class="action-btn secondary" onclick="resetParameters()">🔄 リセット</button>
+            </div>
+
+            <div class="info-panel">
+                <h4>💡 現在の錯視について</h4>
+                <p id="illusionInfo">フレーザー螺旋: 同心円が螺旋に見える有名な錯視です。</p>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <div class="canvas-wrapper">
+                <canvas id="illusionCanvas" width="600" height="600"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class OpticalIllusionGenerator {
+            constructor() {
+                this.canvas = document.getElementById('illusionCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.currentPattern = 'fraser';
+                this.isAnimating = false;
+                this.animationId = null;
+                
+                // パラメータ
+                this.parameters = {
+                    size: 20,
+                    density: 50,
+                    angle: 0,
+                    contrast: 100,
+                    mainColor: '#000000',
+                    subColor: '#ffffff',
+                    showGrid: false
+                };
+
+                // 錯視パターンの説明
+                this.illusionDescriptions = {
+                    fraser: 'フレーザー螺旋: 同心円が螺旋に見える有名な錯視です。',
+                    hermann: 'ヘルマン格子: 格子の交点に灰色の点が見える錯視です。',
+                    kanizsa: 'カニッツァの三角形: 存在しない三角形が見える主観的輪郭の錯視です。',
+                    moire: 'モアレパターン: 重なった格子が波模様を作る干渉パターンです。',
+                    rotating: '回転錯視: 静止画像が回転して見える運動錯視です。',
+                    cafe: 'カフェウォール錯視: 平行な線が傾いて見える幾何学的錯視です。',
+                    zollner: 'ツェルナー錯視: 平行線が曲がって見える角度錯視です。',
+                    checker: 'チェッカーシャドウ錯視: 同じ色が異なって見える明度錯視です。'
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.generateIllusion();
+            }
+
+            setPattern(pattern) {
+                this.currentPattern = pattern;
+                
+                // ボタンのアクティブ状態を更新
+                document.querySelectorAll('.pattern-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                // 説明を更新
+                document.getElementById('illusionInfo').textContent = this.illusionDescriptions[pattern];
+                
+                this.generateIllusion();
+            }
+
+            updateParameter(param, value) {
+                this.parameters[param] = parseFloat(value);
+                document.getElementById(param + 'Value').textContent = 
+                    param === 'angle' ? value + '°' :
+                    param === 'contrast' ? value + '%' : value;
+                
+                if (!this.isAnimating) {
+                    this.generateIllusion();
+                }
+            }
+
+            updateColor(type, value) {
+                if (type === 'main') {
+                    this.parameters.mainColor = value;
+                } else {
+                    this.parameters.subColor = value;
+                }
+                
+                if (!this.isAnimating) {
+                    this.generateIllusion();
+                }
+            }
+
+            toggleAnimation(enabled) {
+                this.isAnimating = enabled;
+                
+                if (enabled) {
+                    this.startAnimation();
+                } else {
+                    this.stopAnimation();
+                    this.generateIllusion();
+                }
+            }
+
+            toggleGrid(enabled) {
+                this.parameters.showGrid = enabled;
+                this.generateIllusion();
+            }
+
+            startAnimation() {
+                let startTime = Date.now();
+                
+                const animate = () => {
+                    if (!this.isAnimating) return;
+                    
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    this.parameters.angle = (elapsed * 30) % 360;
+                    
+                    this.generateIllusion();
+                    this.animationId = requestAnimationFrame(animate);
+                };
+                
+                animate();
+            }
+
+            stopAnimation() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+            }
+
+            generateIllusion() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                switch (this.currentPattern) {
+                    case 'fraser':
+                        this.drawFraserSpiral();
+                        break;
+                    case 'hermann':
+                        this.drawHermannGrid();
+                        break;
+                    case 'kanizsa':
+                        this.drawKanizsaTriangle();
+                        break;
+                    case 'moire':
+                        this.drawMoirePattern();
+                        break;
+                    case 'rotating':
+                        this.drawRotatingIllusion();
+                        break;
+                    case 'cafe':
+                        this.drawCafeWall();
+                        break;
+                    case 'zollner':
+                        this.drawZollnerIllusion();
+                        break;
+                    case 'checker':
+                        this.drawCheckerShadow();
+                        break;
+                }
+                
+                if (this.parameters.showGrid) {
+                    this.drawGrid();
+                }
+            }
+
+            drawFraserSpiral() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const maxRadius = Math.min(centerX, centerY) - 20;
+                
+                for (let r = 10; r < maxRadius; r += this.parameters.size) {
+                    const segments = Math.floor(r * this.parameters.density / 100);
+                    
+                    for (let i = 0; i < segments; i++) {
+                        const angle = (i / segments) * 2 * Math.PI + this.parameters.angle * Math.PI / 180;
+                        const nextAngle = ((i + 1) / segments) * 2 * Math.PI + this.parameters.angle * Math.PI / 180;
+                        
+                        this.ctx.beginPath();
+                        this.ctx.arc(centerX, centerY, r, angle, nextAngle);
+                        this.ctx.lineWidth = this.parameters.size / 2;
+                        this.ctx.strokeStyle = i % 2 === 0 ? this.parameters.mainColor : this.parameters.subColor;
+                        this.ctx.stroke();
+                    }
+                }
+            }
+
+            drawHermannGrid() {
+                const gridSize = this.parameters.size * 2;
+                const lineWidth = gridSize / 3;
+                
+                this.ctx.fillStyle = this.parameters.subColor;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.fillStyle = this.parameters.mainColor;
+                
+                // 縦線
+                for (let x = 0; x < this.canvas.width; x += gridSize) {
+                    this.ctx.fillRect(x, 0, lineWidth, this.canvas.height);
+                }
+                
+                // 横線
+                for (let y = 0; y < this.canvas.height; y += gridSize) {
+                    this.ctx.fillRect(0, y, this.canvas.width, lineWidth);
+                }
+            }
+
+            drawKanizsaTriangle() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const radius = this.parameters.size * 5;
+                
+                this.ctx.fillStyle = this.parameters.subColor;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // 3つの"パックマン"を描画
+                const angles = [0, 120, 240];
+                angles.forEach((baseAngle, index) => {
+                    const angle = (baseAngle + this.parameters.angle) * Math.PI / 180;
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+                    
+                    this.ctx.fillStyle = this.parameters.mainColor;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, this.parameters.size * 2, 0, 2 * Math.PI);
+                    this.ctx.fill();
+                    
+                    // 切り取り部分
+                    this.ctx.fillStyle = this.parameters.subColor;
+                    this.ctx.beginPath();
+                    const triangleAngle = angle + Math.PI;
+                    this.ctx.moveTo(x, y);
+                    this.ctx.lineTo(x + Math.cos(triangleAngle - 0.5) * this.parameters.size * 3, 
+                                   y + Math.sin(triangleAngle - 0.5) * this.parameters.size * 3);
+                    this.ctx.lineTo(x + Math.cos(triangleAngle + 0.5) * this.parameters.size * 3, 
+                                   y + Math.sin(triangleAngle + 0.5) * this.parameters.size * 3);
+                    this.ctx.closePath();
+                    this.ctx.fill();
+                });
+            }
+
+            drawMoirePattern() {
+                const spacing = this.parameters.size;
+                
+                // 最初の格子
+                this.ctx.strokeStyle = this.parameters.mainColor;
+                this.ctx.lineWidth = 2;
+                
+                for (let i = 0; i < this.canvas.width; i += spacing) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(i, 0);
+                    this.ctx.lineTo(i, this.canvas.height);
+                    this.ctx.stroke();
+                }
+                
+                // 回転した格子
+                this.ctx.save();
+                this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+                this.ctx.rotate(this.parameters.angle * Math.PI / 180);
+                this.ctx.translate(-this.canvas.width / 2, -this.canvas.height / 2);
+                
+                this.ctx.strokeStyle = this.parameters.subColor;
+                
+                for (let i = -this.canvas.width; i < this.canvas.width * 2; i += spacing) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(i, -this.canvas.height);
+                    this.ctx.lineTo(i, this.canvas.height * 2);
+                    this.ctx.stroke();
+                }
+                
+                this.ctx.restore();
+            }
+
+            drawRotatingIllusion() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const maxRadius = Math.min(centerX, centerY) - 20;
+                
+                for (let r = 20; r < maxRadius; r += this.parameters.size) {
+                    const segments = Math.floor(r / 10) * 2;
+                    
+                    for (let i = 0; i < segments; i++) {
+                        const angle = (i / segments) * 2 * Math.PI + (r / 50) + this.parameters.angle * Math.PI / 180;
+                        const nextAngle = ((i + 1) / segments) * 2 * Math.PI + (r / 50) + this.parameters.angle * Math.PI / 180;
+                        
+                        this.ctx.fillStyle = i % 2 === 0 ? this.parameters.mainColor : this.parameters.subColor;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(centerX, centerY);
+                        this.ctx.arc(centerX, centerY, r, angle, nextAngle);
+                        this.ctx.closePath();
+                        this.ctx.fill();
+                    }
+                }
+            }
+
+            drawCafeWall() {
+                const brickWidth = this.parameters.size * 3;
+                const brickHeight = this.parameters.size * 2;
+                const mortarWidth = 4;
+                
+                this.ctx.fillStyle = '#808080'; // モルタル色
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                for (let row = 0; row < this.canvas.height / brickHeight; row++) {
+                    const offset = (row % 2) * (brickWidth / 2);
+                    
+                    for (let col = 0; col < (this.canvas.width + brickWidth) / brickWidth; col++) {
+                        const x = col * brickWidth - offset;
+                        const y = row * brickHeight;
+                        
+                        this.ctx.fillStyle = (row + col) % 2 === 0 ? this.parameters.mainColor : this.parameters.subColor;
+                        this.ctx.fillRect(x, y, brickWidth - mortarWidth, brickHeight - mortarWidth);
+                    }
+                }
+            }
+
+            drawZollnerIllusion() {
+                const lineSpacing = this.parameters.size * 2;
+                const hatching = this.parameters.density / 10;
+                
+                this.ctx.fillStyle = this.parameters.subColor;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // 平行線を描画
+                this.ctx.strokeStyle = this.parameters.mainColor;
+                this.ctx.lineWidth = 3;
+                
+                for (let y = 0; y < this.canvas.height; y += lineSpacing) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, y);
+                    this.ctx.lineTo(this.canvas.width, y);
+                    this.ctx.stroke();
+                    
+                    // ハッチング
+                    for (let x = 0; x < this.canvas.width; x += hatching) {
+                        const direction = Math.floor(x / (hatching * 4)) % 2;
+                        const angle = direction === 0 ? 45 : -45;
+                        const rad = angle * Math.PI / 180;
+                        
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(x, y - 10);
+                        this.ctx.lineTo(x + Math.cos(rad) * 20, y - 10 + Math.sin(rad) * 20);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+
+            drawCheckerShadow() {
+                const squareSize = this.parameters.size * 2;
+                const shadowHeight = this.canvas.height / 3;
+                
+                // チェッカーボード
+                for (let x = 0; x < this.canvas.width; x += squareSize) {
+                    for (let y = 0; y < this.canvas.height; y += squareSize) {
+                        const isEven = (Math.floor(x / squareSize) + Math.floor(y / squareSize)) % 2 === 0;
+                        this.ctx.fillStyle = isEven ? this.parameters.subColor : this.parameters.mainColor;
+                        this.ctx.fillRect(x, y, squareSize, squareSize);
+                    }
+                }
+                
+                // 影の効果
+                const gradient = this.ctx.createLinearGradient(0, shadowHeight, 0, shadowHeight * 2);
+                gradient.addColorStop(0, 'rgba(0,0,0,0.5)');
+                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, shadowHeight, this.canvas.width, shadowHeight);
+            }
+
+            drawGrid() {
+                this.ctx.strokeStyle = 'rgba(255,0,0,0.3)';
+                this.ctx.lineWidth = 1;
+                
+                for (let x = 0; x < this.canvas.width; x += 50) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x, 0);
+                    this.ctx.lineTo(x, this.canvas.height);
+                    this.ctx.stroke();
+                }
+                
+                for (let y = 0; y < this.canvas.height; y += 50) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, y);
+                    this.ctx.lineTo(this.canvas.width, y);
+                    this.ctx.stroke();
+                }
+            }
+
+            randomizeParameters() {
+                this.parameters.size = Math.floor(Math.random() * 50) + 10;
+                this.parameters.density = Math.floor(Math.random() * 80) + 20;
+                this.parameters.angle = Math.floor(Math.random() * 360);
+                this.parameters.contrast = Math.floor(Math.random() * 150) + 50;
+                
+                // UIを更新
+                document.getElementById('sizeSlider').value = this.parameters.size;
+                document.getElementById('densitySlider').value = this.parameters.density;
+                document.getElementById('angleSlider').value = this.parameters.angle;
+                document.getElementById('contrastSlider').value = this.parameters.contrast;
+                
+                document.getElementById('sizeValue').textContent = this.parameters.size;
+                document.getElementById('densityValue').textContent = this.parameters.density;
+                document.getElementById('angleValue').textContent = this.parameters.angle + '°';
+                document.getElementById('contrastValue').textContent = this.parameters.contrast + '%';
+                
+                this.generateIllusion();
+            }
+
+            resetParameters() {
+                this.parameters = {
+                    size: 20,
+                    density: 50,
+                    angle: 0,
+                    contrast: 100,
+                    mainColor: '#000000',
+                    subColor: '#ffffff',
+                    showGrid: false
+                };
+                
+                // UIをリセット
+                document.getElementById('sizeSlider').value = 20;
+                document.getElementById('densitySlider').value = 50;
+                document.getElementById('angleSlider').value = 0;
+                document.getElementById('contrastSlider').value = 100;
+                document.getElementById('mainColor').value = '#000000';
+                document.getElementById('subColor').value = '#ffffff';
+                document.getElementById('animationCheck').checked = false;
+                document.getElementById('gridCheck').checked = false;
+                
+                document.getElementById('sizeValue').textContent = '20';
+                document.getElementById('densityValue').textContent = '50';
+                document.getElementById('angleValue').textContent = '0°';
+                document.getElementById('contrastValue').textContent = '100%';
+                
+                this.isAnimating = false;
+                this.stopAnimation();
+                this.generateIllusion();
+            }
+
+            saveImage() {
+                const link = document.createElement('a');
+                link.download = `illusion_${this.currentPattern}_${Date.now()}.png`;
+                link.href = this.canvas.toDataURL();
+                link.click();
+            }
+        }
+
+        // グローバル変数とイベントハンドラー
+        let generator;
+
+        window.onload = function() {
+            generator = new OpticalIllusionGenerator();
+        };
+
+        function setPattern(pattern) {
+            generator.setPattern(pattern);
+        }
+
+        function updateParameter(param, value) {
+            generator.updateParameter(param, value);
+        }
+
+        function updateColor(type, value) {
+            generator.updateColor(type, value);
+        }
+
+        function toggleAnimation(enabled) {
+            generator.toggleAnimation(enabled);
+        }
+
+        function toggleGrid(enabled) {
+            generator.toggleGrid(enabled);
+        }
+
+        function generateIllusion() {
+            generator.generateIllusion();
+        }
+
+        function randomizeParameters() {
+            generator.randomizeParameters();
+        }
+
+        function resetParameters() {
+            generator.resetParameters();
+        }
+
+        function saveImage() {
+            generator.saveImage();
+        }
+    </script>
+</body>
+</html>

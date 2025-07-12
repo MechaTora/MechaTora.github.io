@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X Lock Screen Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1da1f2, #14171a);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #1da1f2;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #8899a6;
+        }
+        
+        .challenge-container {
+            background: #192734;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .challenge-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .captcha-image {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.1) 2px,
+                    rgba(255, 255, 255, 0.1) 4px
+                );
+        }
+        
+        .captcha-text {
+            transform: rotate(-5deg) skew(5deg);
+            display: inline-block;
+            letter-spacing: 8px;
+            text-decoration: line-through;
+            text-decoration-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .option-btn {
+            background: #192734;
+            border: 2px solid #1da1f2;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn:hover {
+            background: #1da1f2;
+            transform: scale(1.05);
+        }
+        
+        .option-btn.selected {
+            background: #1da1f2;
+            box-shadow: 0 0 20px rgba(29, 161, 242, 0.5);
+        }
+        
+        .option-btn.correct {
+            background: #17bf63;
+            border-color: #17bf63;
+        }
+        
+        .option-btn.incorrect {
+            background: #e0245e;
+            border-color: #e0245e;
+        }
+        
+        .submit-btn {
+            background: #1da1f2;
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            background: #1991db;
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn:disabled {
+            background: #8899a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .result.success {
+            background: rgba(23, 191, 99, 0.2);
+            border: 1px solid #17bf63;
+            color: #17bf63;
+        }
+        
+        .result.error {
+            background: rgba(224, 36, 94, 0.2);
+            border: 1px solid #e0245e;
+            color: #e0245e;
+        }
+        
+        .retry-btn {
+            background: transparent;
+            border: 2px solid #1da1f2;
+            color: #1da1f2;
+            padding: 10px 30px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .retry-btn:hover {
+            background: #1da1f2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🔒 X セキュリティチャレンジ</h1>
+        <p class="subtitle">アカウントのセキュリティを確認するため、以下の認証を完了してください</p>
+        
+        <div class="challenge-container">
+            <div class="challenge-text">表示されている文字を正しく選択してください</div>
+            
+            <div class="captcha-image">
+                <div class="captcha-text" id="captcha-display">7A4K9</div>
+            </div>
+            
+            <div class="options-grid" id="options-grid">
+                <!-- Options will be generated by JavaScript -->
+            </div>
+        </div>
+        
+        <button class="submit-btn" id="submit-btn" onclick="checkAnswer()">認証</button>
+        
+        <div class="result" id="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        let currentCaptcha = '';
+        let correctAnswer = '';
+        let selectedOption = null;
+        
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        
+        function generateCaptcha() {
+            currentCaptcha = '';
+            for (let i = 0; i < 5; i++) {
+                currentCaptcha += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            
+            correctAnswer = currentCaptcha.charAt(Math.floor(Math.random() * 5));
+            
+            document.getElementById('captcha-display').textContent = currentCaptcha;
+            generateOptions();
+        }
+        
+        function generateOptions() {
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
+            
+            const options = [correctAnswer];
+            
+            while (options.length < 6) {
+                const randomChar = characters.charAt(Math.floor(Math.random() * characters.length));
+                if (!options.includes(randomChar)) {
+                    options.push(randomChar);
+                }
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => selectOption(btn, option);
+                optionsGrid.appendChild(btn);
+            });
+        }
+        
+        function selectOption(button, option) {
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            button.classList.add('selected');
+            selectedOption = option;
+            document.getElementById('submit-btn').disabled = false;
+        }
+        
+        function checkAnswer() {
+            if (!selectedOption) return;
+            
+            const resultDiv = document.getElementById('result');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                if (selectedOption === correctAnswer) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = '✅ 認証に成功しました！<br><button class="retry-btn" onclick="resetGame()">新しいチャレンジ</button>';
+                    
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        if (btn.textContent === correctAnswer) {
+                            btn.classList.add('correct');
+                        }
+                    });
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = '❌ 認証に失敗しました。もう一度お試しください。<br><button class="retry-btn" onclick="resetGame()">リトライ</button>';
+                    
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        if (btn.textContent === selectedOption) {
+                            btn.classList.add('incorrect');
+                        } else if (btn.textContent === correctAnswer) {
+                            btn.classList.add('correct');
+                        }
+                    });
+                }
+                
+                resultDiv.style.display = 'block';
+            }, 500);
+        }
+        
+        function resetGame() {
+            selectedOption = null;
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('submit-btn').disabled = true;
+            generateCaptcha();
+        }
+        
+        // Initialize game
+        generateCaptcha();
+        document.getElementById('submit-btn').disabled = true;
+    </script>
+</body>
+</html>

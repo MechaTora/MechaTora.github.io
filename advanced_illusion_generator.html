@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌀 Advanced Optical Illusion Generator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .canvas-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .illusion-title {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .illusion-title h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .illusion-title p {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .canvas-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        #illusionCanvas {
+            width: 100%;
+            max-width: 600px;
+            height: 600px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            height: fit-content;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-section {
+            margin-bottom: 30px;
+        }
+
+        .control-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #4ecdc4;
+        }
+
+        .illusion-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .illusion-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .illusion-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .illusion-card.active {
+            background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+            color: #1a1a2e;
+        }
+
+        .illusion-card .emoji {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .illusion-card .name {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .parameter-group {
+            margin-bottom: 20px;
+        }
+
+        .parameter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .parameter-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .parameter-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(78, 205, 196, 0.4);
+        }
+
+        .parameter-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 8px rgba(78, 205, 196, 0.4);
+        }
+
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .color-picker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .color-input {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 8px;
+        }
+
+        .randomize-section {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 36, 0.2));
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .randomize-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            width: 100%;
+        }
+
+        .randomize-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6);
+        }
+
+        .auto-generate {
+            margin-top: 15px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #4ecdc4;
+        }
+
+        .stats-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4ecdc4;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* アニメーション */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .controls-panel {
+                order: -1;
+            }
+
+            .illusion-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .illusion-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            #illusionCanvas {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span style="font-size: 2rem;">🌀</span>
+                    <h1>Illusion Lab</h1>
+                </div>
+                <div class="main-controls">
+                    <button class="btn btn-primary" onclick="generateRandomIllusion()">🎲 ランダム生成</button>
+                    <button class="btn btn-secondary" onclick="saveCurrentIllusion()">💾 保存</button>
+                    <button class="btn btn-secondary" onclick="shareIllusion()">📤 共有</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <section class="canvas-section">
+                <div class="illusion-title">
+                    <h2 id="currentIllusionName">ミュラー・リヤー錯視</h2>
+                    <p id="currentIllusionDescription">矢羽根の方向により線の長さが異なって見える古典的な錯視です。</p>
+                </div>
+                
+                <div class="canvas-container floating">
+                    <canvas id="illusionCanvas" width="600" height="600"></canvas>
+                </div>
+            </section>
+
+            <aside class="controls-panel">
+                <div class="control-section">
+                    <h3>🎨 錯視の種類</h3>
+                    <div class="illusion-grid">
+                        <div class="illusion-card active" data-type="muller-lyer">
+                            <span class="emoji">📏</span>
+                            <div class="name">ミュラー・リヤー</div>
+                        </div>
+                        <div class="illusion-card" data-type="ebbinghaus">
+                            <span class="emoji">⭕</span>
+                            <div class="name">エビングハウス</div>
+                        </div>
+                        <div class="illusion-card" data-type="delboeuf">
+                            <span class="emoji">🎯</span>
+                            <div class="name">デルブーフ</div>
+                        </div>
+                        <div class="illusion-card" data-type="ponzo">
+                            <span class="emoji">🛤️</span>
+                            <div class="name">ポンゾ</div>
+                        </div>
+                        <div class="illusion-card" data-type="poggendorff">
+                            <span class="emoji">↗️</span>
+                            <div class="name">ポッゲンドルフ</div>
+                        </div>
+                        <div class="illusion-card" data-type="brightness">
+                            <span class="emoji">💡</span>
+                            <div class="name">明るさ対比</div>
+                        </div>
+                        <div class="illusion-card" data-type="mach-bands">
+                            <span class="emoji">🌈</span>
+                            <div class="name">マッハの帯</div>
+                        </div>
+                        <div class="illusion-card" data-type="color-contrast">
+                            <span class="emoji">🎨</span>
+                            <div class="name">色彩対比</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>⚙️ パラメータ</h3>
+                    
+                    <div class="parameter-group">
+                        <div class="parameter-label">
+                            <span>サイズ</span>
+                            <span id="sizeValue">50</span>
+                        </div>
+                        <input type="range" class="parameter-slider" id="sizeSlider" min="20" max="100" value="50">
+                    </div>
+
+                    <div class="parameter-group">
+                        <div class="parameter-label">
+                            <span>強度</span>
+                            <span id="intensityValue">75</span>
+                        </div>
+                        <input type="range" class="parameter-slider" id="intensitySlider" min="0" max="100" value="75">
+                    </div>
+
+                    <div class="parameter-group">
+                        <div class="parameter-label">
+                            <span>角度</span>
+                            <span id="angleValue">0°</span>
+                        </div>
+                        <input type="range" class="parameter-slider" id="angleSlider" min="0" max="360" value="0">
+                    </div>
+
+                    <div class="parameter-group">
+                        <div class="parameter-label">
+                            <span>間隔</span>
+                            <span id="spacingValue">30</span>
+                        </div>
+                        <input type="range" class="parameter-slider" id="spacingSlider" min="10" max="80" value="30">
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>🎨 カラー</h3>
+                    <div class="color-picker-group">
+                        <div class="color-picker">
+                            <input type="color" class="color-input" id="primaryColor" value="#000000">
+                            <span>メイン</span>
+                        </div>
+                        <div class="color-picker">
+                            <input type="color" class="color-input" id="secondaryColor" value="#ffffff">
+                            <span>サブ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="randomize-section">
+                    <h3>🎲 自動生成</h3>
+                    <button class="randomize-btn" onclick="generateRandomIllusion()">
+                        新しい錯視を生成
+                    </button>
+                    <div class="auto-generate">
+                        <div class="checkbox-container">
+                            <input type="checkbox" class="checkbox" id="autoGenerate">
+                            <label for="autoGenerate">5秒ごとに自動生成</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+                    <h3>📊 統計</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="generatedCount">1</div>
+                            <div class="stat-label">生成数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="currentType">幾何学</div>
+                            <div class="stat-label">タイプ</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script>
+        class AdvancedIllusionGenerator {
+            constructor() {
+                this.canvas = document.getElementById('illusionCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.currentIllusion = 'muller-lyer';
+                this.generatedCount = 0;
+                this.autoGenerateTimer = null;
+                
+                this.parameters = {
+                    size: 50,
+                    intensity: 75,
+                    angle: 0,
+                    spacing: 30,
+                    primaryColor: '#000000',
+                    secondaryColor: '#ffffff'
+                };
+
+                this.illusions = {
+                    'muller-lyer': {
+                        name: 'ミュラー・リヤー錯視',
+                        description: '矢羽根の方向により線の長さが異なって見える古典的な錯視です。',
+                        type: '幾何学',
+                        generator: this.drawMullerLyer.bind(this)
+                    },
+                    'ebbinghaus': {
+                        name: 'エビングハウス錯視',
+                        description: '周囲の円の大きさにより中央の円の大きさが異なって見える錯視です。',
+                        type: '幾何学',
+                        generator: this.drawEbbinghaus.bind(this)
+                    },
+                    'delboeuf': {
+                        name: 'デルブーフ錯視',
+                        description: '外側の円により内側の円の大きさの知覚が変化する錯視です。',
+                        type: '幾何学',
+                        generator: this.drawDelboeuf.bind(this)
+                    },
+                    'ponzo': {
+                        name: 'ポンゾ錯視',
+                        description: '収束する線により物体の大きさが異なって見える錯視です。',
+                        type: '幾何学',
+                        generator: this.drawPonzo.bind(this)
+                    },
+                    'poggendorff': {
+                        name: 'ポッゲンドルフ錯視',
+                        description: '斜線が遮断されることで線の延長が誤って知覚される錯視です。',
+                        type: '幾何学',
+                        generator: this.drawPoggendorff.bind(this)
+                    },
+                    'brightness': {
+                        name: '明るさ対比錯視',
+                        description: '周囲の明るさにより同じ灰色が異なって見える明度錯視です。',
+                        type: '明度',
+                        generator: this.drawBrightnessContrast.bind(this)
+                    },
+                    'mach-bands': {
+                        name: 'マッハの帯',
+                        description: 'グラデーションの境界部分で明度の変化が強調されて見える錯視です。',
+                        type: '明度',
+                        generator: this.drawMachBands.bind(this)
+                    },
+                    'color-contrast': {
+                        name: '色彩対比錯視',
+                        description: '周囲の色により同じ色が異なって見える色彩錯視です。',
+                        type: '色彩',
+                        generator: this.drawColorContrast.bind(this)
+                    }
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.generateIllusion();
+                this.updateStats();
+            }
+
+            setupEventListeners() {
+                // 錯視カード選択
+                document.querySelectorAll('.illusion-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        document.querySelectorAll('.illusion-card').forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                        this.currentIllusion = card.dataset.type;
+                        this.generateIllusion();
+                    });
+                });
+
+                // パラメータスライダー
+                ['size', 'intensity', 'angle', 'spacing'].forEach(param => {
+                    const slider = document.getElementById(param + 'Slider');
+                    slider.addEventListener('input', (e) => {
+                        this.parameters[param] = parseInt(e.target.value);
+                        document.getElementById(param + 'Value').textContent = 
+                            param === 'angle' ? e.target.value + '°' : e.target.value;
+                        this.generateIllusion();
+                    });
+                });
+
+                // カラーピッカー
+                ['primaryColor', 'secondaryColor'].forEach(color => {
+                    document.getElementById(color).addEventListener('change', (e) => {
+                        this.parameters[color] = e.target.value;
+                        this.generateIllusion();
+                    });
+                });
+
+                // 自動生成チェックボックス
+                document.getElementById('autoGenerate').addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        this.startAutoGenerate();
+                    } else {
+                        this.stopAutoGenerate();
+                    }
+                });
+            }
+
+            generateIllusion() {
+                const illusion = this.illusions[this.currentIllusion];
+                
+                // UIを更新
+                document.getElementById('currentIllusionName').textContent = illusion.name;
+                document.getElementById('currentIllusionDescription').textContent = illusion.description;
+                
+                // キャンバスをクリア
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = '#f8f9fa';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // 錯視を描画
+                illusion.generator();
+                
+                this.generatedCount++;
+                this.updateStats();
+            }
+
+            generateRandomIllusion() {
+                // ランダムな錯視を選択
+                const illusionKeys = Object.keys(this.illusions);
+                const randomIllusion = illusionKeys[Math.floor(Math.random() * illusionKeys.length)];
+                
+                // ランダムなパラメータを設定
+                this.parameters.size = Math.floor(Math.random() * 60) + 20;
+                this.parameters.intensity = Math.floor(Math.random() * 80) + 20;
+                this.parameters.angle = Math.floor(Math.random() * 360);
+                this.parameters.spacing = Math.floor(Math.random() * 50) + 15;
+                
+                // ランダムな色を生成
+                this.parameters.primaryColor = this.generateRandomColor();
+                this.parameters.secondaryColor = this.generateRandomColor();
+                
+                // UIを更新
+                document.getElementById('sizeSlider').value = this.parameters.size;
+                document.getElementById('intensitySlider').value = this.parameters.intensity;
+                document.getElementById('angleSlider').value = this.parameters.angle;
+                document.getElementById('spacingSlider').value = this.parameters.spacing;
+                document.getElementById('primaryColor').value = this.parameters.primaryColor;
+                document.getElementById('secondaryColor').value = this.parameters.secondaryColor;
+                
+                document.getElementById('sizeValue').textContent = this.parameters.size;
+                document.getElementById('intensityValue').textContent = this.parameters.intensity;
+                document.getElementById('angleValue').textContent = this.parameters.angle + '°';
+                document.getElementById('spacingValue').textContent = this.parameters.spacing;
+                
+                // 錯視カードを更新
+                document.querySelectorAll('.illusion-card').forEach(card => {
+                    card.classList.remove('active');
+                    if (card.dataset.type === randomIllusion) {
+                        card.classList.add('active');
+                    }
+                });
+                
+                this.currentIllusion = randomIllusion;
+                this.generateIllusion();
+                
+                // エフェクト追加
+                this.addGenerationEffect();
+            }
+
+            generateRandomColor() {
+                const colors = [
+                    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
+                    '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
+                    '#C44569', '#F8B500', '#6C5CE7', '#A29BFE', '#FD79A8'
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            addGenerationEffect() {
+                const canvas = document.getElementById('illusionCanvas');
+                canvas.classList.add('shimmer');
+                setTimeout(() => {
+                    canvas.classList.remove('shimmer');
+                }, 1000);
+            }
+
+            startAutoGenerate() {
+                this.autoGenerateTimer = setInterval(() => {
+                    this.generateRandomIllusion();
+                }, 5000);
+            }
+
+            stopAutoGenerate() {
+                if (this.autoGenerateTimer) {
+                    clearInterval(this.autoGenerateTimer);
+                    this.autoGenerateTimer = null;
+                }
+            }
+
+            updateStats() {
+                document.getElementById('generatedCount').textContent = this.generatedCount;
+                document.getElementById('currentType').textContent = this.illusions[this.currentIllusion].type;
+            }
+
+            // 錯視描画メソッド
+            drawMullerLyer() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const lineLength = this.parameters.size * 4;
+                const arrowSize = this.parameters.intensity / 3;
+                
+                this.ctx.strokeStyle = this.parameters.primaryColor;
+                this.ctx.lineWidth = 3;
+                
+                // 上の線（外向き矢印）
+                const y1 = centerY - this.parameters.spacing;
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - lineLength/2, y1);
+                this.ctx.lineTo(centerX + lineLength/2, y1);
+                this.ctx.stroke();
+                
+                // 外向き矢印
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - lineLength/2, y1);
+                this.ctx.lineTo(centerX - lineLength/2 + arrowSize, y1 - arrowSize);
+                this.ctx.moveTo(centerX - lineLength/2, y1);
+                this.ctx.lineTo(centerX - lineLength/2 + arrowSize, y1 + arrowSize);
+                
+                this.ctx.moveTo(centerX + lineLength/2, y1);
+                this.ctx.lineTo(centerX + lineLength/2 - arrowSize, y1 - arrowSize);
+                this.ctx.moveTo(centerX + lineLength/2, y1);
+                this.ctx.lineTo(centerX + lineLength/2 - arrowSize, y1 + arrowSize);
+                this.ctx.stroke();
+                
+                // 下の線（内向き矢印）
+                const y2 = centerY + this.parameters.spacing;
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - lineLength/2, y2);
+                this.ctx.lineTo(centerX + lineLength/2, y2);
+                this.ctx.stroke();
+                
+                // 内向き矢印
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - lineLength/2, y2);
+                this.ctx.lineTo(centerX - lineLength/2 - arrowSize, y2 - arrowSize);
+                this.ctx.moveTo(centerX - lineLength/2, y2);
+                this.ctx.lineTo(centerX - lineLength/2 - arrowSize, y2 + arrowSize);
+                
+                this.ctx.moveTo(centerX + lineLength/2, y2);
+                this.ctx.lineTo(centerX + lineLength/2 + arrowSize, y2 - arrowSize);
+                this.ctx.moveTo(centerX + lineLength/2, y2);
+                this.ctx.lineTo(centerX + lineLength/2 + arrowSize, y2 + arrowSize);
+                this.ctx.stroke();
+            }
+
+            drawEbbinghaus() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const centralRadius = this.parameters.size / 2;
+                const surroundRadius = this.parameters.intensity;
+                const distance = this.parameters.spacing * 3;
+                
+                // 左側（小さい円に囲まれた中央円）
+                this.ctx.fillStyle = this.parameters.primaryColor;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX - distance, centerY, centralRadius, 0, 2 * Math.PI);
+                this.ctx.fill();
+                
+                // 周囲の小さい円
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i / 6) * 2 * Math.PI;
+                    const x = centerX - distance + Math.cos(angle) * (centralRadius + surroundRadius/2 + 10);
+                    const y = centerY + Math.sin(angle) * (centralRadius + surroundRadius/2 + 10);
+                    
+                    this.ctx.fillStyle = this.parameters.secondaryColor;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, surroundRadius/3, 0, 2 * Math.PI);
+                    this.ctx.fill();
+                }
+                
+                // 右側（大きい円に囲まれた中央円）
+                this.ctx.fillStyle = this.parameters.primaryColor;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX + distance, centerY, centralRadius, 0, 2 * Math.PI);
+                this.ctx.fill();
+                
+                // 周囲の大きい円
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i / 6) * 2 * Math.PI;
+                    const x = centerX + distance + Math.cos(angle) * (centralRadius + surroundRadius + 20);
+                    const y = centerY + Math.sin(angle) * (centralRadius + surroundRadius + 20);
+                    
+                    this.ctx.fillStyle = this.parameters.secondaryColor;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, surroundRadius, 0, 2 * Math.PI);
+                    this.ctx.fill();
+                }
+            }
+
+            drawDelboeuf() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const innerRadius = this.parameters.size;
+                const distance = this.parameters.spacing * 4;
+                
+                // 左側（内側の円のみ）
+                this.ctx.strokeStyle = this.parameters.primaryColor;
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX - distance, centerY, innerRadius, 0, 2 * Math.PI);
+                this.ctx.stroke();
+                
+                // 右側（内側の円 + 外側の円）
+                this.ctx.beginPath();
+                this.ctx.arc(centerX + distance, centerY, innerRadius, 0, 2 * Math.PI);
+                this.ctx.stroke();
+                
+                // 外側の円
+                const outerRadius = innerRadius + this.parameters.intensity / 2;
+                this.ctx.strokeStyle = this.parameters.secondaryColor;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX + distance, centerY, outerRadius, 0, 2 * Math.PI);
+                this.ctx.stroke();
+            }
+
+            drawPonzo() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const lineLength = this.parameters.size * 2;
+                
+                // 収束線
+                this.ctx.strokeStyle = this.parameters.secondaryColor;
+                this.ctx.lineWidth = 2;
+                
+                const convergencePoint = centerY - this.parameters.intensity * 2;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - 150, this.canvas.height - 50);
+                this.ctx.lineTo(centerX - 50, convergencePoint);
+                this.ctx.stroke();
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX + 150, this.canvas.height - 50);
+                this.ctx.lineTo(centerX + 50, convergencePoint);
+                this.ctx.stroke();
+                
+                // 水平線
+                this.ctx.strokeStyle = this.parameters.primaryColor;
+                this.ctx.lineWidth = 4;
+                
+                const y1 = centerY + this.parameters.spacing;
+                const y2 = centerY - this.parameters.spacing;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - lineLength/2, y1);
+                this.ctx.lineTo(centerX + lineLength/2, y1);
+                this.ctx.stroke();
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - lineLength/2, y2);
+                this.ctx.lineTo(centerX + lineLength/2, y2);
+                this.ctx.stroke();
+            }
+
+            drawPoggendorff() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const lineLength = this.parameters.size * 3;
+                const blockWidth = this.parameters.spacing * 2;
+                
+                // 遮断する矩形
+                this.ctx.fillStyle = this.parameters.secondaryColor;
+                this.ctx.fillRect(centerX - blockWidth/2, centerY - lineLength, blockWidth, lineLength * 2);
+                
+                // 斜線
+                this.ctx.strokeStyle = this.parameters.primaryColor;
+                this.ctx.lineWidth = 4;
+                
+                const angle = this.parameters.angle * Math.PI / 180;
+                const slope = Math.tan(angle);
+                
+                // 左側の線
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX - blockWidth/2 - lineLength, centerY - slope * lineLength);
+                this.ctx.lineTo(centerX - blockWidth/2, centerY);
+                this.ctx.stroke();
+                
+                // 右側の線
+                this.ctx.beginPath();
+                this.ctx.moveTo(centerX + blockWidth/2, centerY);
+                this.ctx.lineTo(centerX + blockWidth/2 + lineLength, centerY + slope * lineLength);
+                this.ctx.stroke();
+            }
+
+            drawBrightnessContrast() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const squareSize = this.parameters.size * 2;
+                
+                // 背景の異なる明度
+                this.ctx.fillStyle = `rgba(0,0,0,${0.8 - this.parameters.intensity/200})`;
+                this.ctx.fillRect(0, 0, centerX, this.canvas.height);
+                
+                this.ctx.fillStyle = `rgba(0,0,0,${0.2 + this.parameters.intensity/200})`;
+                this.ctx.fillRect(centerX, 0, centerX, this.canvas.height);
+                
+                // 同じ灰色の正方形
+                const grayLevel = 0.5;
+                this.ctx.fillStyle = `rgba(128,128,128,${grayLevel})`;
+                
+                this.ctx.fillRect(centerX/2 - squareSize/2, centerY - squareSize/2, squareSize, squareSize);
+                this.ctx.fillRect(centerX + centerX/2 - squareSize/2, centerY - squareSize/2, squareSize, squareSize);
+            }
+
+            drawMachBands() {
+                const centerX = this.canvas.width / 2;
+                const bandWidth = this.parameters.size;
+                const steps = this.parameters.intensity / 10;
+                
+                for (let i = 0; i < steps; i++) {
+                    const x = (i / steps) * this.canvas.width;
+                    const brightness = i / steps;
+                    
+                    this.ctx.fillStyle = `rgb(${brightness * 255}, ${brightness * 255}, ${brightness * 255})`;
+                    this.ctx.fillRect(x, 0, this.canvas.width / steps, this.canvas.height);
+                }
+            }
+
+            drawColorContrast() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const squareSize = this.parameters.size * 2;
+                
+                // 背景色
+                this.ctx.fillStyle = this.parameters.primaryColor;
+                this.ctx.fillRect(0, 0, centerX, this.canvas.height);
+                
+                this.ctx.fillStyle = this.parameters.secondaryColor;
+                this.ctx.fillRect(centerX, 0, centerX, this.canvas.height);
+                
+                // 同じ色の正方形
+                const neutralColor = '#808080';
+                this.ctx.fillStyle = neutralColor;
+                
+                this.ctx.fillRect(centerX/2 - squareSize/2, centerY - squareSize/2, squareSize, squareSize);
+                this.ctx.fillRect(centerX + centerX/2 - squareSize/2, centerY - squareSize/2, squareSize, squareSize);
+            }
+
+            saveCurrentIllusion() {
+                const link = document.createElement('a');
+                link.download = `illusion_${this.currentIllusion}_${Date.now()}.png`;
+                link.href = this.canvas.toDataURL();
+                link.click();
+            }
+
+            shareIllusion() {
+                if (navigator.share) {
+                    this.canvas.toBlob(blob => {
+                        const file = new File([blob], 'illusion.png', { type: 'image/png' });
+                        navigator.share({
+                            title: `${this.illusions[this.currentIllusion].name}`,
+                            text: this.illusions[this.currentIllusion].description,
+                            files: [file]
+                        });
+                    });
+                } else {
+                    // フォールバック: URLをコピー
+                    navigator.clipboard.writeText(window.location.href);
+                    alert('URLがクリップボードにコピーされました！');
+                }
+            }
+        }
+
+        // アプリケーション初期化
+        let illusionGenerator;
+
+        window.addEventListener('load', () => {
+            illusionGenerator = new AdvancedIllusionGenerator();
+        });
+
+        // グローバル関数
+        function generateRandomIllusion() {
+            illusionGenerator.generateRandomIllusion();
+        }
+
+        function saveCurrentIllusion() {
+            illusionGenerator.saveCurrentIllusion();
+        }
+
+        function shareIllusion() {
+            illusionGenerator.shareIllusion();
+        }
+    </script>
+</body>
+</html>
