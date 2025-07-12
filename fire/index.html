@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 バーチャル焚火 | リラックス・作業用BGM・睡眠サポート - MechaTora</title>
+    <meta name="description" content="無料バーチャル焚火でリラックス！リアルな焚火の炎と音で究極の癒し体験。作業用BGM、瞑想、睡眠サポートに最適。ストレス解消、集中力向上に効果的。">
+    <meta name="keywords" content="焚火,リラックス,癒し,作業用BGM,睡眠,瞑想,ASMR,環境音,ストレス解消,MechaTora">
+    
+    <!-- SEO -->
+    <meta property="og:title" content="バーチャル焚火 - 究極のリラックス空間 | MechaTora">
+    <meta property="og:description" content="永遠に続く焚火の炎と音で究極のリラックス体験。作業、瞑想、睡眠に最適な無料アプリ。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.github.io/fire/">
+    <meta property="og:site_name" content="MechaTora">
+    
+    <link rel="canonical" href="https://mechatora.github.io/fire/">
+    
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
+         crossorigin="anonymous"></script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff8c00">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* メイン焚火コンテナ */
+        .fireplace-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1a0f0a 0%, #000000 100%);
+        }
+
+        /* 焚火ベース */
+        .fireplace {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            background: linear-gradient(180deg, transparent 0%, #2a1810 70%, #1a0f0a 100%);
+            border-radius: 50% 50% 0 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* 炎エフェクト */
+        .flame {
+            position: absolute;
+            bottom: 0;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform-origin: bottom center;
+            animation: flicker 1.5s ease-in-out infinite alternate;
+        }
+
+        .flame:nth-child(1) {
+            width: 120px;
+            height: 200px;
+            background: radial-gradient(circle at center bottom, #ffd700 0%, #ff8c00 30%, #ff4500 60%, #cc3300 90%, transparent 100%);
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 0s;
+            z-index: 3;
+        }
+
+        .flame:nth-child(2) {
+            width: 100px;
+            height: 180px;
+            background: radial-gradient(circle at center bottom, #ffd700 0%, #ff8c00 40%, #ff6600 70%, transparent 100%);
+            left: 35%;
+            transform: translateX(-50%);
+            animation-delay: 0.3s;
+            z-index: 2;
+        }
+
+        .flame:nth-child(3) {
+            width: 90px;
+            height: 160px;
+            background: radial-gradient(circle at center bottom, #ffd700 0%, #ff8c00 40%, #ff6600 70%, transparent 100%);
+            right: 35%;
+            transform: translateX(50%);
+            animation-delay: 0.6s;
+            z-index: 2;
+        }
+
+        .flame:nth-child(4) {
+            width: 70px;
+            height: 140px;
+            background: radial-gradient(circle at center bottom, #ffff00 0%, #ffd700 30%, #ff8c00 60%, transparent 100%);
+            left: 20%;
+            transform: translateX(-50%);
+            animation-delay: 0.9s;
+            z-index: 1;
+        }
+
+        .flame:nth-child(5) {
+            width: 70px;
+            height: 140px;
+            background: radial-gradient(circle at center bottom, #ffff00 0%, #ffd700 30%, #ff8c00 60%, transparent 100%);
+            right: 20%;
+            transform: translateX(50%);
+            animation-delay: 1.2s;
+            z-index: 1;
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: translateX(-50%) scale(1) rotate(-2deg);
+                opacity: 0.9;
+            }
+            25% {
+                transform: translateX(-50%) scale(1.05) rotate(1deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(-50%) scale(0.95) rotate(-1deg);
+                opacity: 0.95;
+            }
+            75% {
+                transform: translateX(-50%) scale(1.02) rotate(2deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(0.98) rotate(-1deg);
+                opacity: 0.9;
+            }
+        }
+
+        /* 薪 */
+        .logs {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+        }
+
+        .log {
+            width: 80px;
+            height: 12px;
+            background: linear-gradient(180deg, #4a3728 0%, #2a1810 100%);
+            border-radius: 6px;
+            margin: 0 5px;
+            position: relative;
+            transform-origin: center;
+        }
+
+        .log:nth-child(1) { transform: rotate(5deg); }
+        .log:nth-child(2) { transform: rotate(-8deg); margin-top: 5px; }
+        .log:nth-child(3) { transform: rotate(3deg); margin-top: -2px; }
+
+        /* 火花エフェクト */
+        .sparks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .spark {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* コントロールパネル */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            z-index: 100;
+        }
+
+        .control-btn {
+            background: rgba(255, 140, 0, 0.2);
+            border: 1px solid rgba(255, 140, 0, 0.5);
+            color: #ff8c00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 140, 0, 0.4);
+            transform: scale(1.1);
+        }
+
+        .control-btn.active {
+            background: rgba(255, 140, 0, 0.6);
+            color: #ffffff;
+        }
+
+        /* 音量スライダー */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ff8c00;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 140, 0, 0.3);
+            border-radius: 2px;
+            appearance: none;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #ff8c00;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* 情報パネル */
+        .info-panel {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            max-width: 250px;
+            z-index: 100;
+        }
+
+        .info-title {
+            color: #ff8c00;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .info-text {
+            color: #cccccc;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .fireplace {
+                width: 90vw;
+                height: 300px;
+            }
+            
+            .info-panel {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+            }
+            
+            .controls {
+                bottom: 20px;
+                padding: 10px 20px;
+                gap: 10px;
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1em;
+            }
+        }
+
+        /* フルスクリーンモード */
+        .fullscreen-mode .info-panel,
+        .fullscreen-mode .controls {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .fullscreen-mode:hover .info-panel,
+        .fullscreen-mode:hover .controls {
+            opacity: 1;
+        }
+
+        /* AdSense広告エリア */
+        .ad-overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            z-index: 50;
+        }
+    </style>
+</head>
+<body>
+    <!-- AdSense広告 -->
+    <div class="ad-overlay">
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:200px;height:200px"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="1234567890"></ins>
+    </div>
+
+    <div class="fireplace-container" id="fireplaceContainer">
+        <!-- 焚火本体 -->
+        <div class="fireplace">
+            <!-- 炎エフェクト -->
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+            
+            <!-- 薪 -->
+            <div class="logs">
+                <div class="log"></div>
+                <div class="log"></div>
+                <div class="log"></div>
+            </div>
+            
+            <!-- 火花エフェクト -->
+            <div class="sparks" id="sparks"></div>
+        </div>
+        
+        <!-- 情報パネル -->
+        <div class="info-panel">
+            <div class="info-title">🔥 バーチャル焚火</div>
+            <div class="info-text">
+                リラックス効果抜群の焚火シミュレーター。<br>
+                癒しの炎と音で心を落ち着かせます。<br>
+                <br>
+                🎵 音量調整可能<br>
+                📱 フルスクリーン対応<br>
+                ♾️ 永続再生
+            </div>
+        </div>
+        
+        <!-- コントロールパネル -->
+        <div class="controls">
+            <button class="control-btn" id="playBtn" title="再生/一時停止">
+                ⏸️
+            </button>
+            
+            <div class="volume-control">
+                🔊
+                <input type="range" class="volume-slider" id="volumeSlider" 
+                       min="0" max="100" value="50" title="音量調整">
+            </div>
+            
+            <button class="control-btn" id="fullscreenBtn" title="フルスクリーン">
+                ⛶
+            </button>
+            
+            <button class="control-btn" id="homeBtn" title="ホームに戻る">
+                🏠
+            </button>
+        </div>
+    </div>
+
+    <!-- 音声ファイル -->
+    <audio id="fireplaceAudio" loop preload="auto">
+        <!-- プログラム生成した焚火音声を再生 -->
+    </audio>
+
+    <script>
+        // 音声生成とコントロール
+        class FireplaceAudio {
+            constructor() {
+                this.audioContext = null;
+                this.oscillators = [];
+                this.gainNodes = [];
+                this.isPlaying = true;
+                this.volume = 0.5;
+                this.init();
+            }
+
+            async init() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.createFireSound();
+                    this.startAudio();
+                } catch (error) {
+                    console.log('Audio context initialization failed:', error);
+                }
+            }
+
+            createFireSound() {
+                // 焚火音の複数の成分を生成
+                const frequencies = [
+                    { freq: 80, type: 'sawtooth', gain: 0.3 },   // 低音の基本音
+                    { freq: 120, type: 'brown', gain: 0.2 },     // ノイズ成分
+                    { freq: 200, type: 'sawtooth', gain: 0.15 }, // 中音域
+                    { freq: 400, type: 'brown', gain: 0.1 },     // 高音ノイズ
+                ];
+
+                frequencies.forEach((sound, index) => {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    // ノイズ生成
+                    if (sound.type === 'brown') {
+                        const bufferSize = this.audioContext.sampleRate * 2;
+                        const noiseBuffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+                        const output = noiseBuffer.getChannelData(0);
+                        
+                        // ブラウンノイズ生成
+                        let lastOut = 0;
+                        for (let i = 0; i < bufferSize; i++) {
+                            const white = Math.random() * 2 - 1;
+                            output[i] = (lastOut + (0.02 * white)) / 1.02;
+                            lastOut = output[i];
+                            output[i] *= 3.5;
+                        }
+                        
+                        const whiteNoise = this.audioContext.createBufferSource();
+                        whiteNoise.buffer = noiseBuffer;
+                        whiteNoise.loop = true;
+                        whiteNoise.connect(gainNode);
+                        whiteNoise.start();
+                        
+                        this.oscillators.push(whiteNoise);
+                    } else {
+                        oscillator.type = sound.type;
+                        oscillator.frequency.setValueAtTime(sound.freq, this.audioContext.currentTime);
+                        oscillator.connect(gainNode);
+                        oscillator.start();
+                        this.oscillators.push(oscillator);
+                    }
+                    
+                    gainNode.gain.setValueAtTime(sound.gain * this.volume, this.audioContext.currentTime);
+                    gainNode.connect(this.audioContext.destination);
+                    this.gainNodes.push(gainNode);
+                    
+                    // ランダムな変調でリアルな焚火音を演出
+                    this.addVariation(gainNode, index);
+                });
+            }
+
+            addVariation(gainNode, index) {
+                const vary = () => {
+                    if (this.isPlaying && gainNode.gain) {
+                        const variation = 0.5 + Math.random() * 0.5;
+                        const duration = 0.5 + Math.random() * 2;
+                        gainNode.gain.setTargetAtTime(
+                            variation * this.volume * 0.3, 
+                            this.audioContext.currentTime, 
+                            duration
+                        );
+                    }
+                    setTimeout(vary, 200 + Math.random() * 800);
+                };
+                setTimeout(vary, index * 100);
+            }
+
+            setVolume(volume) {
+                this.volume = volume;
+                this.gainNodes.forEach((gainNode, index) => {
+                    if (gainNode.gain) {
+                        const baseGain = [0.3, 0.2, 0.15, 0.1][index] || 0.1;
+                        gainNode.gain.setValueAtTime(baseGain * volume, this.audioContext.currentTime);
+                    }
+                });
+            }
+
+            async startAudio() {
+                if (this.audioContext && this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+                this.isPlaying = true;
+            }
+
+            stopAudio() {
+                this.isPlaying = false;
+                this.gainNodes.forEach(gainNode => {
+                    if (gainNode.gain) {
+                        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                    }
+                });
+            }
+        }
+
+        // 火花エフェクト
+        function createSpark() {
+            const sparksContainer = document.getElementById('sparks');
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            
+            // ランダムな位置と動き
+            spark.style.left = (30 + Math.random() * 40) + '%';
+            spark.style.animationDuration = (1.5 + Math.random() * 1) + 's';
+            spark.style.animationDelay = Math.random() * 0.5 + 's';
+            
+            sparksContainer.appendChild(spark);
+            
+            setTimeout(() => {
+                spark.remove();
+            }, 3000);
+        }
+
+        // UI コントロール
+        let fireplaceAudio = null;
+        let isPlaying = true;
+        let sparkInterval;
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 音声初期化
+            fireplaceAudio = new FireplaceAudio();
+            
+            // 火花エフェクト開始
+            sparkInterval = setInterval(createSpark, 800);
+            
+            // コントロールイベント
+            setupControls();
+            
+            // AdSense初期化
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        });
+
+        function setupControls() {
+            const playBtn = document.getElementById('playBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const homeBtn = document.getElementById('homeBtn');
+
+            // 再生/停止
+            playBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    fireplaceAudio.stopAudio();
+                    clearInterval(sparkInterval);
+                    playBtn.textContent = '▶️';
+                    playBtn.classList.remove('active');
+                } else {
+                    fireplaceAudio.startAudio();
+                    sparkInterval = setInterval(createSpark, 800);
+                    playBtn.textContent = '⏸️';
+                    playBtn.classList.add('active');
+                }
+                isPlaying = !isPlaying;
+            });
+
+            // 音量調整
+            volumeSlider.addEventListener('input', (e) => {
+                const volume = e.target.value / 100;
+                fireplaceAudio.setVolume(volume);
+            });
+
+            // フルスクリーン
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                    document.body.classList.add('fullscreen-mode');
+                } else {
+                    document.exitFullscreen();
+                    document.body.classList.remove('fullscreen-mode');
+                }
+            });
+
+            // ホームボタン
+            homeBtn.addEventListener('click', () => {
+                window.location.href = 'https://mechatora.github.io/';
+            });
+        }
+
+        // ユーザーインタラクション後に音声開始
+        document.addEventListener('click', () => {
+            if (fireplaceAudio && fireplaceAudio.audioContext) {
+                fireplaceAudio.startAudio();
+            }
+        }, { once: true });
+    </script>
+
+    <!-- MechaTora Footer -->
+    <footer style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); color: white; padding: 10px; text-align: center; font-size: 0.8em; opacity: 0.7;">
+        <a href="https://mechatora.github.io/" style="color: #ff8c00; text-decoration: none;">🛠️ MechaTora</a> | 
+        <a href="https://mechatora.github.io/cook-suggest/" style="color: #e67e22; text-decoration: none;">🍳 CookSuggest</a> | 
+        <a href="https://mechatora.github.io/MechaTora.github.io-earthquake-monitor/" style="color: #e74c3c; text-decoration: none;">🌍 地震情報</a> | 
+        <a href="https://mechatora.github.io/x-buzz-simulator/" style="color: #9b59b6; text-decoration: none;">🚀 Xバズ</a>
+    </footer>
+</body>
+</html>
