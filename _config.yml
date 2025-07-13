@@ -1,19 +1,67 @@
-# GitHub Pages Jekyll Configuration
+# Site settings
 title: "便利なWebアプリ集 - MechaTora"
 description: "無料で使える便利なWebアプリを多数公開しているサイトです。学習、情報収集、娯楽など様々な用途に対応。"
-url: "https://mechatora.github.io"
-baseurl: ""
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://mechatora.github.io" # the base hostname & protocol for your site
 
-# プラグイン設定
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Plugin settings
 plugins:
   - jekyll-sitemap
   - jekyll-feed
+  - jekyll-seo-tag
 
-# SEO設定
+# SEO settings
 lang: ja
-author: MechaTora
+author:
+  name: MechaTora
+  email: noreply@mechatora.github.io
 
-# サイトマップから除外するファイル
-sitemap:
-  exclude:
-    - "/404.html"
+# Site verification
+google_site_verification: 35cb593e78741a94
+
+# Social settings
+social:
+  name: MechaTora
+  links:
+    - https://mechatora.github.io
+
+# Collections and pages to include
+include:
+  - _pages
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Sitemap settings
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+      sitemap: true
+
+# Custom site configuration
+timezone: Asia/Tokyo
+future: false
+show_drafts: false
+limit_posts: 10
+
+# Permalink structure
+permalink: /:title/
+
+# Sass settings
+sass:
+  style: compressed
