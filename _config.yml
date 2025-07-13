@@ -47,6 +47,14 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
 
+# Custom URLs for sitemap (external subapps)
+external_urls:
+  - https://mechatora.github.io/fire/
+  - https://mechatora.github.io/flashcard-web-app/
+  - https://mechatora.github.io/cook-suggest/
+  - https://mechatora.github.io/x-buzz-simulator/
+  - https://mechatora.github.io/MechaTora.github.io-earthquake-monitor/
+
 # Sitemap settings
 defaults:
   - scope:
