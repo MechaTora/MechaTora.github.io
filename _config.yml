@@ -1,0 +1,19 @@
+# GitHub Pages Jekyll Configuration
+title: "便利なWebアプリ集 - MechaTora"
+description: "無料で使える便利なWebアプリを多数公開しているサイトです。学習、情報収集、娯楽など様々な用途に対応。"
+url: "https://mechatora.github.io"
+baseurl: ""
+
+# プラグイン設定
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+
+# SEO設定
+lang: ja
+author: MechaTora
+
+# サイトマップから除外するファイル
+sitemap:
+  exclude:
+    - "/404.html"
