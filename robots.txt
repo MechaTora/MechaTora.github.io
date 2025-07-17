@@ -1,15 +1,26 @@
 User-agent: *
 Allow: /
 
+<<<<<<< HEAD
 # サイトマップの場所
+=======
+>>>>>>> 06a8a3d2b2269cac8d9a5ea77523e0e0bc7555f1
 Sitemap: https://mechatora.github.io/sitemap.xml
 
 # 主要ページの明示
 Allow: /index.html
+<<<<<<< HEAD
 Allow: /cook-suggest/
 Allow: /earthquake-monitor/
 Allow: /x-buzz-simulator/
 Allow: /fireplace-app/
+=======
+Allow: /flashcard-web-app/
+Allow: /cook-suggest/
+Allow: /MechaTora.github.io-earthquake-monitor/
+Allow: /x-buzz-simulator/
+Allow: /fire/
+>>>>>>> 06a8a3d2b2269cac8d9a5ea77523e0e0bc7555f1
 
 # AdSense ads.txt
 Allow: /ads.txt
