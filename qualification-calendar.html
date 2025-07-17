@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資格試験カウントダウンカレンダー | 試験日・勉強時間・カウントダウン</title>
+    <meta name="description" content="日本の主要資格試験の試験日カレンダーとカウントダウン。人事系・経理系・データサイエンス系・IT系資格の平均勉強時間も表示。">
+    <meta name="keywords" content="資格試験,カレンダー,試験日,カウントダウン,勉強時間,簿記,社労士,基本情報,統計検定">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="資格試験カウントダウンカレンダー | 試験日・勉強時間・カウントダウン">
+    <meta property="og:description" content="日本の主要資格試験の試験日とカウントダウン、平均勉強時間を一覧表示">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.github.io/qualification-calendar/">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Modern Gray-Based Stylish Palette */
+            --primary-blue: #2563EB;
+            --primary-green: #059669;
+            --primary-orange: #EA580C;
+            --primary-purple: #7C3AED;
+            --primary-indigo: #4F46E5;
+            --primary-pink: #DB2777;
+            --primary-cyan: #0891B2;
+            --primary-emerald: #10B981;
+            
+            /* Sophisticated Gray Backgrounds */
+            --bg-primary: #F1F5F9;
+            --bg-secondary: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F1F5F9;
+            --bg-accent: #E2E8F0;
+            --bg-glass: rgba(248, 250, 252, 0.85);
+            --bg-overlay: rgba(15, 23, 42, 0.1);
+            
+            /* Dark Mode Compatible */
+            --surface-primary: #FFFFFF;
+            --surface-secondary: #F8FAFC;
+            --surface-tertiary: #F1F5F9;
+            --surface-elevated: #FFFFFF;
+            
+            /* Advanced Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-colored: 0 8px 25px rgba(37, 99, 235, 0.15);
+            --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            
+            /* Refined Typography */
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-tertiary: #64748B;
+            --text-muted: #94A3B8;
+            --text-disabled: #CBD5E1;
+            --text-white: #FFFFFF;
+            --text-inverse: #F8FAFC;
+            
+            /* Borders & Dividers */
+            --border-light: #E2E8F0;
+            --border-medium: #CBD5E1;
+            --border-strong: #94A3B8;
+            --border-accent: #2563EB;
+            --divider: #F1F5F9;
+            
+            /* Premium Gradients */
+            --gradient-primary: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+            --gradient-green: linear-gradient(135deg, #059669 0%, #10B981 100%);
+            --gradient-orange: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
+            --gradient-purple: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%);
+            --gradient-pink: linear-gradient(135deg, #DB2777 0%, #EC4899 100%);
+            --gradient-surface: linear-gradient(135deg, rgba(248,250,252,0.9) 0%, rgba(241,245,249,0.8) 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.8) 100%);
+            
+            /* Modern Title Gradients */
+            --gradient-cosmic: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-aurora: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%);
+            --gradient-sunset: linear-gradient(135deg, #fa709a 0%, #fee140 50%, #ffecd2 100%);
+            --gradient-ocean: linear-gradient(135deg, #2193b0 0%, #6dd5ed 50%, #c471ed 100%);
+            
+            /* Modern Border Radius */
+            --radius-xs: 0.25rem;
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-3xl: 2rem;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Sophisticated Gray Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 4rem 0;
+            background: var(--surface-elevated);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-surface);
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        .title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--gradient-cosmic);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.05;
+            text-align: center;
+            position: relative;
+        }
+        
+        .title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-cosmic);
+            opacity: 0.1;
+            border-radius: var(--radius-2xl);
+            filter: blur(20px);
+            z-index: -1;
+            transform: scale(1.1);
+        }
+
+        .subtitle {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+            letter-spacing: 0.2px;
+            opacity: 0.9;
+        }
+
+        /* Modern Gray Filter Section */
+        .filter-section {
+            margin-bottom: 3rem;
+            background: var(--surface-elevated);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+
+        .filter-btn {
+            font-family: 'Manrope', sans-serif;
+            padding: 0.875rem 1.75rem;
+            border: 2px solid var(--border-medium);
+            background: var(--surface-secondary);
+            color: var(--text-primary);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: none;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .filter-btn:hover {
+            background: var(--surface-tertiary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--border-accent);
+        }
+
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            border-color: var(--primary-blue);
+            color: var(--text-white);
+            box-shadow: var(--shadow-colored);
+        }
+
+        .filter-btn.active::before {
+            left: 0;
+        }
+
+        .filter-btn.hr { border-color: var(--primary-green); }
+        .filter-btn.hr.active { background: var(--gradient-green); border-color: var(--primary-green); }
+        .filter-btn.finance { border-color: var(--primary-orange); }
+        .filter-btn.finance.active { background: var(--gradient-orange); border-color: var(--primary-orange); }
+        .filter-btn.data { border-color: var(--primary-purple); }
+        .filter-btn.data.active { background: var(--gradient-purple); border-color: var(--primary-purple); }
+        .filter-btn.it { border-color: var(--primary-blue); }
+        .filter-btn.it.active { background: var(--gradient-primary); border-color: var(--primary-blue); }
+        .filter-btn.business { border-color: var(--primary-indigo); }
+        .filter-btn.business.active { background: var(--gradient-pink); border-color: var(--primary-pink); }
+
+        .save-filter-btn, .reset-filter-btn {
+            font-family: 'Manrope', sans-serif;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .save-filter-btn {
+            background: var(--gradient-green);
+            color: var(--text-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .save-filter-btn:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .reset-filter-btn {
+            background: var(--gradient-orange);
+            color: var(--text-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .reset-filter-btn:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* 資格カードグリッド */
+        .qualification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .qualification-card {
+            background: var(--surface-elevated);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .qualification-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--category-gradient);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        .qualification-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--category-gradient);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .qualification-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+            background: var(--surface-secondary);
+            border-color: var(--category-border);
+        }
+
+        .qualification-card:hover::after {
+            opacity: 0.03;
+        }
+
+        .qualification-card.hr {
+            --category-gradient: var(--gradient-green);
+            --category-border: var(--primary-green);
+        }
+        .qualification-card.finance {
+            --category-gradient: var(--gradient-orange);
+            --category-border: var(--primary-orange);
+        }
+        .qualification-card.data {
+            --category-gradient: var(--gradient-purple);
+            --category-border: var(--primary-purple);
+        }
+        .qualification-card.it {
+            --category-gradient: var(--gradient-primary);
+            --category-border: var(--primary-blue);
+        }
+        .qualification-card.business {
+            --category-gradient: var(--gradient-pink);
+            --category-border: var(--primary-pink);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+
+        .qualification-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            letter-spacing: -0.2px;
+        }
+
+        /* Responsive font sizing for qualification names */
+        @media (min-width: 768px) {
+            .qualification-name {
+                font-size: 1.15rem;
+                white-space: normal;
+                overflow: visible;
+                text-overflow: initial;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .qualification-name {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .qualification-name {
+                font-size: 1.25rem;
+            }
+        }
+
+        .category-badge {
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-lg);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: var(--category-gradient);
+            color: var(--text-white);
+            border: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .exam-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .next-exam-date {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .study-hours {
+            background: var(--gradient-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .exam-pending {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .countdown {
+            background: var(--surface-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow-inner);
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .countdown-title {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .countdown-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: var(--category-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+            line-height: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .countdown-unit {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* カレンダーセクション */
+        .calendar-section {
+            margin-top: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .calendar-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 0.5rem;
+            }
+
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .ipa-guide-title {
+                font-size: 2rem;
+            }
+
+            .qualification-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .qualification-card {
+                padding: 1.5rem;
+            }
+
+            .exam-info {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .filter-section {
+                padding: 1.5rem;
+            }
+
+            .filter-controls {
+                margin-bottom: 1rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .save-filter-btn, .reset-filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+            }
+
+            .ipa-guide-section {
+                margin: 2rem 0;
+                padding: 2rem 0;
+            }
+
+            .ipa-guide-container {
+                padding: 0 1rem;
+            }
+
+            .ipa-overview {
+                padding: 1.5rem;
+            }
+
+            .ipa-qualifications-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .ipa-qualification-card {
+                padding: 1.5rem;
+            }
+
+            .ipa-benefits {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .detail-modal-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .detail-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .detail-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .ipa-guide-title {
+                font-size: 1.8rem;
+            }
+
+            .ipa-guide-container {
+                padding: 0 0.5rem;
+            }
+
+            .ipa-overview {
+                padding: 1rem;
+            }
+
+            .ipa-qualification-card {
+                padding: 1rem;
+            }
+
+            .ipa-study-tips {
+                padding: 1.5rem;
+            }
+
+            .detail-modal-overlay {
+                padding: 1rem;
+            }
+
+            .detail-modal-content {
+                padding: 1.5rem;
+            }
+
+            .notification {
+                right: 1rem;
+                max-width: 250px;
+                padding: 1rem;
+            }
+
+            .notification-title {
+                font-size: 0.8rem;
+            }
+
+            .notification-message {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .qualification-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .qualification-card:nth-child(1) { animation-delay: 0.1s; }
+        .qualification-card:nth-child(2) { animation-delay: 0.2s; }
+        .qualification-card:nth-child(3) { animation-delay: 0.3s; }
+        .qualification-card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Modern Gray IPA Guide Section */
+        .ipa-guide-section {
+            margin: 3rem 0;
+            padding: 3rem 0;
+            background: var(--surface-elevated);
+            border-radius: var(--radius-2xl);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-md);
+        }
+
+        .ipa-guide-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-surface);
+            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        }
+
+        .ipa-guide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .ipa-guide-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .ipa-guide-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-aurora);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.8px;
+        }
+
+        .ipa-guide-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .ipa-overview {
+            background: var(--surface-secondary);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .overview-content h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .overview-content p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .ipa-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .benefit-text h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .benefit-text p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .ipa-qualifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .ipa-qualification-card {
+            background: var(--surface-elevated);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .ipa-qualification-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--level-color);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        .ipa-qualification-card[data-level="entry"] {
+            --level-color: var(--primary-green);
+        }
+        .ipa-qualification-card[data-level="basic"] {
+            --level-color: var(--primary-blue);
+        }
+        .ipa-qualification-card[data-level="applied"] {
+            --level-color: var(--primary-orange);
+        }
+        .ipa-qualification-card[data-level="advanced"] {
+            --level-color: var(--primary-purple);
+        }
+
+        .ipa-qualification-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .ipa-card-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .ipa-level-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-lg);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--level-color);
+            color: var(--text-white);
+            margin-bottom: 1rem;
+        }
+
+        .ipa-card-header h4 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .ipa-card-content p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .ipa-card-details {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .ipa-detail-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--level-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ipa-detail-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .ipa-study-tips {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .ipa-study-tips h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s ease;
+        }
+
+        .tip-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .tip-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .tip-item h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .tip-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* 詳細モーダル */
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+        }
+
+        .detail-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .detail-modal-content {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .detail-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .detail-modal-close:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-header h2 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .detail-level-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--gradient-electric);
+            color: white;
+        }
+
+        .detail-description {
+            margin-bottom: 2rem;
+        }
+
+        .detail-description p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .detail-section {
+            background: var(--glass-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .detail-section.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .detail-section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .detail-section li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .detail-section li::before {
+            content: '•';
+            color: var(--primary-electric);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .detail-info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row span:first-child {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .info-row span:last-child {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .study-tips-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .study-tips-list li {
+            background: var(--bg-secondary);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .study-tips-list li::before {
+            content: '💡';
+            margin-right: 0.5rem;
+        }
+
+        .ipa-icon {
+            color: var(--primary-electric);
+            margin-left: 0.5rem;
+        }
+
+        .qualification-card {
+            cursor: pointer;
+        }
+
+        .qualification-card[data-category="it"]:hover {
+            border-color: var(--primary-electric);
+        }
+
+        .qualification-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .qual-item {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .qual-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 通知スタイル */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--primary-neon);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--primary-electric);
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">資格試験カウントダウンカレンダー</h1>
+            <p class="subtitle">
+                日本の主要資格試験の試験日程・カウントダウン・平均勉強時間を一覧表示<br>
+                効率的な学習計画で合格を目指しましょう
+            </p>
+        </header>
+
+        <div class="filter-section">
+            <div class="filter-controls">
+                <button class="filter-btn active" data-category="all">すべて</button>
+                <button class="filter-btn hr" data-category="hr">👥 人事系</button>
+                <button class="filter-btn finance" data-category="finance">💰 経理系</button>
+                <button class="filter-btn data" data-category="data">📊 データサイエンス</button>
+                <button class="filter-btn it" data-category="it">💻 IT系</button>
+                <button class="filter-btn business" data-category="business">📈 経営・コンサル系</button>
+            </div>
+        </div>
+
+        <div class="qualification-grid" id="qualificationGrid">
+            <!-- 資格カードがJavaScriptで生成される -->
+        </div>
+
+        <!-- 難易度別資格まとめセクション -->
+        <section class="ipa-guide-section">
+            <div class="ipa-guide-container">
+                <div class="ipa-guide-header">
+                    <h2 class="ipa-guide-title">📊 難易度別資格まとめ</h2>
+                    <p class="ipa-guide-subtitle">資格の難易度を理解して効率的な学習計画を立てよう</p>
+                </div>
+                
+                <div class="ipa-qualifications-grid">
+                    <div class="ipa-qualification-card" data-level="entry">
+                        <div class="ipa-card-header">
+                            <span class="ipa-level-badge entry">🌟 エントリーレベル</span>
+                            <h4>入門・基礎資格</h4>
+                        </div>
+                        <div class="ipa-card-content">
+                            <p>IT業界への第一歩。基礎知識を身につけたい方におすすめの資格群です。</p>
+                            <div class="ipa-card-details">
+                                <div class="qualification-list">
+                                    <div class="qual-item">🎓 ITパスポート</div>
+                                    <div class="qual-item">📊 G検定</div>
+                                    <div class="qual-item">📈 日商簿記3級</div>
+                                    <div class="qual-item">💚 メンタルヘルス検定</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ipa-qualification-card" data-level="basic">
+                        <div class="ipa-card-header">
+                            <span class="ipa-level-badge basic">⭐⭐ ベーシックレベル</span>
+                            <h4>中級・実践資格</h4>
+                        </div>
+                        <div class="ipa-card-content">
+                            <p>実務で役立つ専門知識を証明。キャリアアップの基盤となる資格群です。</p>
+                            <div class="ipa-card-details">
+                                <div class="qualification-list">
+                                    <div class="qual-item">🎓 基本情報技術者</div>
+                                    <div class="qual-item">🔒 情報セキュリティマネジメント</div>
+                                    <div class="qual-item">📊 統計検定2級</div>
+                                    <div class="qual-item">📈 日商簿記2級</div>
+                                    <div class="qual-item">💰 FP技能検定2級</div>
+                                    <div class="qual-item">👥 キャリアコンサルタント</div>
+                                    <div class="qual-item">🏥 衛生管理者</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ipa-qualification-card" data-level="applied">
+                        <div class="ipa-card-header">
+                            <span class="ipa-level-badge applied">⭐⭐⭐ アドバンスレベル</span>
+                            <h4>上級・専門資格</h4>
+                        </div>
+                        <div class="ipa-card-content">
+                            <p>高度な専門性を要求される資格。管理職・専門職を目指す方向けです。</p>
+                            <div class="ipa-card-details">
+                                <div class="qualification-list">
+                                    <div class="qual-item">🎓 応用情報技術者</div>
+                                    <div class="qual-item">🔒 情報処理安全確保支援士</div>
+                                    <div class="qual-item">🌐 ネットワークスペシャリスト</div>
+                                    <div class="qual-item">🗄️ データベーススペシャリスト</div>
+                                    <div class="qual-item">📊 統計検定1級</div>
+                                    <div class="qual-item">📈 日商簿記1級</div>
+                                    <div class="qual-item">💰 証券アナリスト</div>
+                                    <div class="qual-item">📊 データサイエンティスト検定</div>
+                                    <div class="qual-item">🤖 E資格</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ipa-qualification-card" data-level="advanced">
+                        <div class="ipa-card-header">
+                            <span class="ipa-level-badge advanced">⭐⭐⭐⭐ エキスパートレベル</span>
+                            <h4>最高難易度資格</h4>
+                        </div>
+                        <div class="ipa-card-content">
+                            <p>業界のトップエキスパートを目指す最高峰の資格群です。</p>
+                            <div class="ipa-card-details">
+                                <div class="qualification-list">
+                                    <div class="qual-item">📋 プロジェクトマネージャ</div>
+                                    <div class="qual-item">🏗️ システムアーキテクト</div>
+                                    <div class="qual-item">💼 ITストラテジスト</div>
+                                    <div class="qual-item">📊 公認会計士</div>
+                                    <div class="qual-item">💰 税理士</div>
+                                    <div class="qual-item">👥 社会保険労務士</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="calendar-section">
+            <h2 class="section-title">📅 年間試験スケジュール</h2>
+            <div class="calendar-container" id="calendarContainer">
+                <!-- カレンダーがJavaScriptで生成される -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 資格データ
+        const qualifications = [
+            // 人事系
+            {
+                id: 'sharoushi',
+                name: '社会保険労務士',
+                category: 'hr',
+                frequency: '年1回',
+                examDates: ['2025-08-24'],
+                studyHours: '800-1000時間',
+                difficulty: 'S'
+            },
+            {
+                id: 'career-consultant',
+                name: 'キャリアコンサルタント',
+                category: 'hr',
+                frequency: '年3回',
+                examDates: ['2025-03-09', '2025-07-13', '2025-11-16'],
+                studyHours: '150-300時間',
+                difficulty: 'B'
+            },
+            {
+                id: 'mental-health',
+                name: 'メンタルヘルス・マネジメント検定',
+                category: 'hr',
+                frequency: '年2回',
+                examDates: ['2025-03-16', '2025-11-09'],
+                studyHours: '50-150時間',
+                difficulty: 'C'
+            },
+            {
+                id: 'hr-exam',
+                name: '人事総務検定',
+                category: 'hr',
+                frequency: '年2回',
+                examDates: ['2025-10-19', '2026-03-01'],
+                studyHours: '100-200時間',
+                difficulty: 'B'
+            },
+            {
+                id: 'hygiene-manager',
+                name: '衛生管理者',
+                category: 'hr',
+                frequency: '毎月',
+                examDates: ['2025-02-20', '2025-03-20', '2025-04-17', '2025-05-15', '2025-06-19', '2025-07-17'],
+                studyHours: '100-150時間',
+                difficulty: 'B'
+            },
+
+            // 経理系
+            {
+                id: 'cpa',
+                name: '公認会計士',
+                category: 'finance',
+                frequency: '年2回',
+                examDates: ['2025-05-25', '2025-12-14'],
+                studyHours: '3000-4000時間',
+                difficulty: 'S+'
+            },
+            {
+                id: 'tax-accountant',
+                name: '税理士',
+                category: 'finance',
+                frequency: '年1回',
+                examDates: ['2025-08-05'],
+                studyHours: '2500-3500時間',
+                difficulty: 'S+'
+            },
+            {
+                id: 'boki-1',
+                name: '日商簿記検定1級',
+                category: 'finance',
+                frequency: '年2回',
+                examDates: ['2025-06-08', '2025-11-16'],
+                studyHours: '500-700時間',
+                difficulty: 'A'
+            },
+            {
+                id: 'boki-2',
+                name: '日商簿記検定2級',
+                category: 'finance',
+                frequency: '年3回',
+                examDates: ['2025-02-23', '2025-06-08', '2025-11-16'],
+                studyHours: '200-300時間',
+                difficulty: 'B'
+            },
+            {
+                id: 'boki-3',
+                name: '日商簿記検定3級',
+                category: 'finance',
+                frequency: '年3回',
+                examDates: ['2025-02-23', '2025-06-08', '2025-11-16'],
+                studyHours: '100-150時間',
+                difficulty: 'C'
+            },
+            {
+                id: 'fp-2',
+                name: 'FP技能検定2級',
+                category: 'finance',
+                frequency: '年3回',
+                examDates: ['2025-05-25', '2025-09-14', '2026-01-25'],
+                studyHours: '150-300時間',
+                difficulty: 'B'
+            },
+            {
+                id: 'securities-analyst',
+                name: '証券アナリスト',
+                category: 'finance',
+                frequency: '年2回',
+                examDates: ['2025-04-20', '2025-10-19'],
+                studyHours: '300-500時間',
+                difficulty: 'A'
+            },
+
+            // 経営・コンサルタント系
+            {
+                id: 'sme-consultant',
+                name: '中小企業診断士',
+                category: 'business',
+                frequency: '年1回',
+                examDates: ['2025-08-03'],
+                studyHours: '1000-1500時間',
+                difficulty: 'A+'
+            },
+            {
+                id: 'business-manager',
+                name: 'ビジネスマネジャー検定',
+                category: 'business',
+                frequency: '年2回',
+                examDates: ['2025-06-19', '2025-10-23'],
+                studyHours: '100-200時間',
+                difficulty: 'B'
+            },
+            {
+                id: 'project-manager-pmp',
+                name: 'PMP（Project Management Professional）',
+                category: 'business',
+                frequency: '随時',
+                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
+                studyHours: '200-300時間',
+                difficulty: 'A'
+            },
+            {
+                id: 'itil',
+                name: 'ITIL Foundation',
+                category: 'business',
+                frequency: '随時',
+                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
+                studyHours: '50-100時間',
+                difficulty: 'C'
+            },
+            {
+                id: 'marketing',
+                name: 'マーケティング・ビジネス実務検定',
+                category: 'business',
+                frequency: '年4回',
+                examDates: ['2025-06-08', '2025-08-03', '2025-11-02', '2026-02-08'],
+                studyHours: '100-200時間',
+                difficulty: 'B'
+            },
+
+            // データサイエンス系
+            {
+                id: 'statistics-1',
+                name: '統計検定1級',
+                category: 'data',
+                frequency: '年1回',
+                examDates: ['2025-06-22'],
+                studyHours: '400-600時間',
+                difficulty: 'A'
+            },
+            {
+                id: 'statistics-2',
+                name: '統計検定2級',
+                category: 'data',
+                frequency: '年2回',
+                examDates: ['2025-06-22', '2025-11-30'],
+                studyHours: '150-250時間',
+                difficulty: 'B'
+            },
+            {
+                id: 'data-scientist',
+                name: 'データサイエンティスト検定',
+                category: 'data',
+                frequency: '年2回',
+                examDates: ['2025-06-14', '2025-12-13'],
+                studyHours: '100-200時間',
+                difficulty: 'B'
+            },
+            {
+                id: 'g-test',
+                name: 'G検定（ディープラーニング）',
+                category: 'data',
+                frequency: '年3回',
+                examDates: ['2025-03-08', '2025-07-05', '2025-11-08'],
+                studyHours: '50-100時間',
+                difficulty: 'C'
+            },
+            {
+                id: 'e-test',
+                name: 'E資格（ディープラーニング）',
+                category: 'data',
+                frequency: '年2回',
+                examDates: ['2025-02-22', '2025-08-30'],
+                studyHours: '200-400時間',
+                difficulty: 'A'
+            },
+
+            // IT系
+            {
+                id: 'itpassport',
+                name: 'ITパスポート',
+                category: 'it',
+                frequency: '随時',
+                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
+                studyHours: '100-150時間',
+                difficulty: 'C',
+                isIPA: true
+            },
+            {
+                id: 'fe',
+                name: '基本情報技術者',
+                category: 'it',
+                frequency: '随時',
+                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
+                studyHours: '200-300時間',
+                difficulty: 'B',
+                isIPA: true
+            },
+            {
+                id: 'ap',
+                name: '応用情報技術者',
+                category: 'it',
+                frequency: '年2回',
+                examDates: ['2025-04-20', '2025-10-19'],
+                studyHours: '300-500時間',
+                difficulty: 'A',
+                isIPA: true
+            },
+            {
+                id: 'sg',
+                name: '情報セキュリティマネジメント',
+                category: 'it',
+                frequency: '随時',
+                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
+                studyHours: '150-250時間',
+                difficulty: 'B',
+                isIPA: true
+            },
+            {
+                id: 'sc',
+                name: '情報処理安全確保支援士',
+                category: 'it',
+                frequency: '年2回',
+                examDates: ['2025-04-20', '2025-10-19'],
+                studyHours: '400-600時間',
+                difficulty: 'A+',
+                isIPA: true
+            },
+            {
+                id: 'nw',
+                name: 'ネットワークスペシャリスト',
+                category: 'it',
+                frequency: '年1回',
+                examDates: ['2025-10-12'],
+                studyHours: '300-500時間',
+                difficulty: 'A',
+                isIPA: true
+            },
+            {
+                id: 'db',
+                name: 'データベーススペシャリスト',
+                category: 'it',
+                frequency: '年1回',
+                examDates: ['2025-04-20'],
+                studyHours: '300-500時間',
+                difficulty: 'A',
+                isIPA: true
+            },
+            {
+                id: 'pm',
+                name: 'プロジェクトマネージャ',
+                category: 'it',
+                frequency: '年1回',
+                examDates: ['2025-10-12'],
+                studyHours: '300-500時間',
+                difficulty: 'A',
+                isIPA: true
+            },
+            {
+                id: 'st',
+                name: 'ITストラテジスト',
+                category: 'it',
+                frequency: '年1回',
+                examDates: ['2025-10-12'],
+                studyHours: '400-600時間',
+                difficulty: 'A+',
+                isIPA: true
+            },
+            {
+                id: 'sa',
+                name: 'システムアーキテクト',
+                category: 'it',
+                frequency: '年1回',
+                examDates: ['2025-10-12'],
+                studyHours: '400-600時間',
+                difficulty: 'A+',
+                isIPA: true
+            }
+        ];
+
+        // カテゴリー設定
+        const categories = {
+            hr: { name: '人事系', color: '#10b981', icon: '👥' },
+            finance: { name: '経理系', color: '#f59e0b', icon: '💰' },
+            data: { name: 'データサイエンス', color: '#8b5cf6', icon: '📊' },
+            it: { name: 'IT系', color: '#3b82f6', icon: '💻' },
+            business: { name: '経営・コンサル系', color: '#ec4899', icon: '📈' }
+        };
+
+        // 現在の日付
+        const today = new Date();
+
+        // 未来の試験日を取得
+        function getNextExamDate(examDates) {
+            if (!examDates || examDates.length === 0) {
+                return null; // 未発表
+            }
+            
+            const futureDates = examDates
+                .map(date => new Date(date))
+                .filter(date => date >= today)
+                .sort((a, b) => a - b);
+            
+            return futureDates.length > 0 ? futureDates[0] : null;
+        }
+
+        // 日数計算
+        function calculateDaysUntil(examDate) {
+            if (!examDate) return null;
+            const diffTime = examDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        // 資格カード生成
+        function createQualificationCard(qual) {
+            const nextExam = getNextExamDate(qual.examDates);
+            const daysUntil = calculateDaysUntil(nextExam);
+            
+            let examDateDisplay, countdownDisplay, countdownValue, countdownUnit;
+            
+            if (nextExam) {
+                examDateDisplay = nextExam.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                countdownDisplay = 'next-exam-date';
+                countdownValue = daysUntil;
+                countdownUnit = '日';
+            } else {
+                examDateDisplay = '未定';
+                countdownDisplay = 'exam-pending';
+                countdownValue = '未定';
+                countdownUnit = '';
+            }
+
+            const ipaIcon = qual.isIPA ? '<span class="ipa-icon">🎓</span>' : '';
+
+            return `
+                <div class="qualification-card ${qual.category}" data-category="${qual.category}" data-qualification-id="${qual.id}">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="qualification-name">${qual.name} ${ipaIcon}</h3>
+                        </div>
+                        <div class="card-controls">
+                            <span class="category-badge ${qual.category}">
+                                ${categories[qual.category].icon} ${categories[qual.category].name}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-info">
+                        <div class="info-item">
+                            <div class="info-label">次回試験日</div>
+                            <div class="info-value ${countdownDisplay}">${examDateDisplay}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">平均勉強時間</div>
+                            <div class="info-value study-hours">${qual.studyHours}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="countdown">
+                        <div class="countdown-title">試験まで</div>
+                        <div class="countdown-value">${countdownValue}</div>
+                        <div class="countdown-unit">${countdownUnit}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // IPA資格詳細データ
+        const ipaDetails = {
+            itpassport: {
+                title: 'ITパスポート試験',
+                level: 'エントリー',
+                description: 'IT基礎知識を証明する入門資格',
+                targetAudience: ['IT初心者', 'ビジネスパーソン', '学生'],
+                examFormat: 'CBT（Computer Based Testing）',
+                examTime: '120分',
+                questionCount: '100問',
+                passingScore: '600点/1000点',
+                fee: '5,700円',
+                studyTips: [
+                    'IT全般の基礎知識を幅広く学習',
+                    '経営戦略・マネジメント・IT技術の3分野をバランス良く',
+                    'CBT対策として模擬試験を活用',
+                    '実務経験がなくても暗記中心で合格可能'
+                ]
+            },
+            fe: {
+                title: '基本情報技術者試験',
+                level: 'ベーシック',
+                description: 'プログラマー・SEの登竜門',
+                targetAudience: ['プログラマー志望', 'SE志望', 'IT業界新人'],
+                examFormat: 'CBT（科目A・科目B）',
+                examTime: '科目A: 90分、科目B: 100分',
+                questionCount: '科目A: 60問、科目B: 20問',
+                passingScore: '科目A・B共に600点/1000点',
+                fee: '5,700円',
+                studyTips: [
+                    'アルゴリズムとプログラミングを重点的に',
+                    '科目Bは疑似言語の理解が必須',
+                    '午前問題は過去問の反復学習',
+                    'プログラミング経験があると有利'
+                ]
+            },
+            ap: {
+                title: '応用情報技術者試験',
+                level: 'ミドル',
+                description: 'IT技術者としての実力を証明',
+                targetAudience: ['中級SE', 'プロジェクトリーダー', 'ITコンサルタント'],
+                examFormat: '筆記試験（午前・午後）',
+                examTime: '午前: 150分、午後: 150分',
+                questionCount: '午前: 80問、午後: 11問中5問選択',
+                passingScore: '午前・午後共に600点/1000点',
+                fee: '5,700円',
+                studyTips: [
+                    '幅広い技術知識が必要',
+                    '午後問題は記述式で論理的思考力が重要',
+                    '実務経験と関連付けて学習',
+                    '経営戦略・マネジメント分野も出題'
+                ]
+            },
+            sc: {
+                title: '情報処理安全確保支援士',
+                level: 'エキスパート',
+                description: 'サイバーセキュリティの専門家',
+                targetAudience: ['セキュリティエンジニア', 'CISO', 'セキュリティコンサルタント'],
+                examFormat: '筆記試験（午前I・II、午後I・II）',
+                examTime: '午前I: 50分、午前II: 40分、午後I・II: 各90分',
+                questionCount: '午前I: 30問、午前II: 25問、午後I: 3問中2問、午後II: 2問中1問',
+                passingScore: '各試験区分で600点/1000点',
+                fee: '5,700円',
+                studyTips: [
+                    'セキュリティ技術の深い理解が必要',
+                    '最新の脅威やトレンドを把握',
+                    '午後問題は実務的なケーススタディ',
+                    '継続的な学習（CPE単位）が必要'
+                ]
+            }
+        };
+
+        // 資格詳細モーダルを開く
+        function openQualificationDetail(qualId) {
+            const qual = qualifications.find(q => q.id === qualId);
+            if (!qual || !qual.isIPA) return;
+            
+            const detail = ipaDetails[qualId];
+            if (!detail) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'detail-modal';
+            modal.innerHTML = `
+                <div class="detail-modal-overlay" onclick="closeModal()">
+                    <div class="detail-modal-content" onclick="event.stopPropagation()">
+                        <button class="detail-modal-close" onclick="closeModal()">×</button>
+                        
+                        <div class="detail-header">
+                            <h2>${detail.title}</h2>
+                            <span class="detail-level-badge">${detail.level}</span>
+                        </div>
+                        
+                        <div class="detail-description">
+                            <p>${detail.description}</p>
+                        </div>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-section">
+                                <h3>🎯 対象者</h3>
+                                <ul>
+                                    ${detail.targetAudience.map(target => `<li>${target}</li>`).join('')}
+                                </ul>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>📝 試験概要</h3>
+                                <div class="detail-info-grid">
+                                    <div class="info-row">
+                                        <span>試験形式</span>
+                                        <span>${detail.examFormat}</span>
+                                    </div>
+                                    <div class="info-row">
+                                        <span>試験時間</span>
+                                        <span>${detail.examTime}</span>
+                                    </div>
+                                    <div class="info-row">
+                                        <span>問題数</span>
+                                        <span>${detail.questionCount}</span>
+                                    </div>
+                                    <div class="info-row">
+                                        <span>合格基準</span>
+                                        <span>${detail.passingScore}</span>
+                                    </div>
+                                    <div class="info-row">
+                                        <span>受験料</span>
+                                        <span>${detail.fee}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section full-width">
+                                <h3>💡 勉強のコツ</h3>
+                                <ul class="study-tips-list">
+                                    ${detail.studyTips.map(tip => `<li>${tip}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // IPA詳細モーダルを開く（ガイドセクション用）
+        function openIPADetail(qualId) {
+            openQualificationDetail(qualId);
+        }
+
+        // モーダルを閉じる
+        function closeModal() {
+            const modal = document.querySelector('.detail-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // フィルター機能
+        function filterQualifications(category) {
+            const cards = document.querySelectorAll('.qualification-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+
+        // 通知表示機能
+        function showNotification(type, title, message) {
+            // 既存の通知があれば削除
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // 新しい通知を作成
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-title">${title}</div>
+                <div class="notification-message">${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // アニメーションで表示
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 3秒後に自動で非表示
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 初期化
+        function init() {
+            const grid = document.getElementById('qualificationGrid');
+            
+            // 次回試験日順にソート（未定は後ろ）
+            qualifications.sort((a, b) => {
+                const nextA = getNextExamDate(a.examDates);
+                const nextB = getNextExamDate(b.examDates);
+                
+                if (!nextA && !nextB) return 0;
+                if (!nextA) return 1;
+                if (!nextB) return -1;
+                
+                return nextA - nextB;
+            });
+            
+            // カード生成
+            grid.innerHTML = qualifications.map(qual => createQualificationCard(qual)).join('');
+
+            // フィルターイベント
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    filterQualifications(btn.dataset.category);
+                });
+            });
+
+            // カウントダウンの定期更新（1時間ごと）
+            setInterval(updateCountdowns, 3600000);
+        }
+
+        // カウントダウン更新
+        function updateCountdowns() {
+            const cards = document.querySelectorAll('.qualification-card');
+            cards.forEach((card, index) => {
+                const qual = qualifications[index];
+                const nextExam = getNextExamDate(qual.examDates);
+                const daysUntil = calculateDaysUntil(nextExam);
+                
+                const countdownValue = card.querySelector('.countdown-value');
+                const countdownUnit = card.querySelector('.countdown-unit');
+                
+                if (nextExam && daysUntil !== null) {
+                    countdownValue.textContent = daysUntil;
+                    countdownUnit.textContent = '日';
+                } else {
+                    countdownValue.textContent = '未定';
+                    countdownUnit.textContent = '';
+                }
+            });
+        }
+
+        
+        // ページ読み込み時に初期化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
