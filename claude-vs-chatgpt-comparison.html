@@ -1536,6 +1536,64 @@
             color: var(--accent-red);
         }
 
+        /* Auto-generated Notice */
+        .auto-generated-notice {
+            position: absolute;
+            top: -80px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .notice-bubble {
+            background: rgba(255, 107, 53, 0.9);
+            color: var(--bg-dark);
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .notice-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid rgba(255, 107, 53, 0.9);
+        }
+
+        .notice-icon {
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        .notice-text {
+            white-space: nowrap;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-8px);
+            }
+            60% {
+                transform: translateY(-4px);
+            }
+        }
+
         /* Responsive updates */
         @media (max-width: 768px) {
             .data-visualization {
@@ -1558,6 +1616,22 @@
             
             .security-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .auto-generated-notice {
+                position: static;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .notice-bubble {
+                display: inline-flex;
+                font-size: 0.8rem;
+                padding: 10px 16px;
+            }
+
+            .notice-text {
+                white-space: normal;
             }
         }
     </style>
@@ -1582,6 +1656,12 @@
     <section class="hero" id="hero">
         <div class="container">
             <div class="hero-content">
+                <div class="auto-generated-notice">
+                    <div class="notice-bubble">
+                        <span class="notice-icon">🤖</span>
+                        <span class="notice-text">※ この比較レポートはClaude AIによる自動生成です</span>
+                    </div>
+                </div>
                 <h1 class="glitch">Claude vs ChatGPT-4o</h1>
                 <p class="subtitle">開発者が選ぶべき真のAIパートナー</p>
                 <p class="tagline">🚀 圧倒的な開発体験の差異を徹底比較</p>
