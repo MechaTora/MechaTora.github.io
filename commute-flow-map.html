@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全国都市圏通勤流動マップ | Japan Commuter Flow Map - 人の流れを可視化 | Visualizing Human Flow</title>
+    <meta name="description" content="関東・中部・関西・福岡圏の通勤流動を可視化したインタラクティブマップ。Interactive map visualizing commuter flows in Kanto, Chubu, Kansai, and Fukuoka regions. どこからどこへ人が移動しているかを直感的に把握できます。">
+    <meta name="keywords" content="通勤,流動,首都圏,可視化,マップ,人口移動,国勢調査,commute,flow,metropolitan,visualization,map,population,movement,Japan">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="全国都市圏通勤流動マップ | Japan Commuter Flow Map">
+    <meta property="og:description" content="関東・中部・関西・福岡圏の通勤流動を可視化 | Interactive visualization of commuter flows in major Japanese metropolitan areas">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.github.io/commute-flow-map.html">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        .map-container {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            height: 600px;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .control-panel {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .control-section {
+            margin-bottom: 2rem;
+        }
+
+        .control-section h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.25rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        
+        .btn:focus {
+            outline: 3px solid #4f46e5;
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .info-panel {
+            background: var(--background);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 2px solid var(--border);
+        }
+
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .info-content {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .legend {
+            margin-top: 1.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            margin-right: 0.75rem;
+            border-radius: 2px;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            z-index: 1000;
+            max-width: 90vw;
+            box-sizing: border-box;
+        }
+        
+        @media (max-width: 640px) {
+            .loading {
+                padding: 1.5rem;
+                border-radius: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* タブレット対応 */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1.5rem;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+                line-height: 1.3;
+            }
+            
+            .header p {
+                font-size: 1rem;
+                padding: 0 2rem;
+            }
+            
+            .map-container {
+                height: 500px;
+                order: 2;
+            }
+            
+            .control-panel {
+                order: 1;
+                padding: 1.25rem;
+            }
+            
+            .button-group {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+            }
+            
+            .btn {
+                padding: 1rem;
+                font-size: 0.85rem;
+                text-align: center;
+            }
+        }
+
+        /* スマートフォン対応 */
+        @media (max-width: 640px) {
+            .header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+                line-height: 1.4;
+            }
+            
+            .header p {
+                font-size: 0.95rem;
+                padding: 0 1rem;
+            }
+            
+            .main-container {
+                padding: 0.75rem;
+                gap: 1rem;
+            }
+            
+            .map-container {
+                height: 350px;
+                border-radius: 15px;
+            }
+            
+            .control-panel {
+                padding: 1rem;
+                border-radius: 15px;
+            }
+            
+            .control-section {
+                margin-bottom: 1.5rem;
+            }
+            
+            .control-section h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .button-group {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.875rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 10px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .stat-item {
+                padding: 0.875rem;
+            }
+            
+            .stat-value {
+                font-size: 1.3rem;
+            }
+            
+            .stat-label {
+                font-size: 0.75rem;
+            }
+            
+            .info-panel {
+                padding: 1rem;
+            }
+            
+            .info-title {
+                font-size: 0.95rem;
+                line-height: 1.4;
+            }
+            
+            .info-content {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+            
+            .legend {
+                margin-top: 1rem;
+            }
+            
+            .legend h3 {
+                font-size: 1rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .legend-item {
+                font-size: 0.8rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .congestion-ranking {
+                max-height: 250px;
+            }
+            
+            .congestion-item {
+                padding: 0.6rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .congestion-rank {
+                font-size: 1rem;
+                width: 25px;
+            }
+            
+            .congestion-line {
+                font-size: 0.8rem;
+            }
+            
+            .congestion-section {
+                font-size: 0.75rem;
+            }
+            
+            .congestion-stats {
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* 小さなスマートフォン対応 */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .map-container {
+                height: 300px;
+            }
+            
+            .control-panel {
+                padding: 0.875rem;
+            }
+            
+            .btn {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+            
+            .legend-item {
+                font-size: 0.75rem;
+            }
+            
+            .congestion-ranking {
+                max-height: 200px;
+            }
+        }
+        
+        /* タッチデバイス用の最適化 */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 44px; /* タッチターゲットの最小サイズ */
+                padding: 1rem;
+            }
+            
+            .congestion-item {
+                min-height: 44px;
+                padding: 0.75rem;
+            }
+            
+            .stat-item {
+                min-height: 60px;
+                padding: 1rem;
+            }
+            
+            /* ホバー効果をタップ効果に変更 */
+            .btn:active {
+                transform: translateY(-1px);
+                box-shadow: var(--shadow);
+            }
+            
+            .congestion-item:active {
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+        }
+        
+        /* 混雑ランキング表示 */
+        .congestion-ranking {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .congestion-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--background);
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .congestion-item:hover {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .congestion-rank {
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 30px;
+            text-align: center;
+            margin-right: 0.75rem;
+        }
+        
+        .congestion-info {
+            flex: 1;
+        }
+        
+        .congestion-line {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .congestion-section {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+        }
+        
+        .congestion-stats {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .congestion-rate {
+            background: #ef4444;
+            color: white;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .congestion-passengers {
+            color: var(--text-secondary);
+        }
+        
+        /* 混雑度による色分け */
+        .congestion-item.extreme { border-left-color: #dc2626; }
+        .congestion-item.high { border-left-color: #ea580c; }
+        .congestion-item.medium { border-left-color: #d97706; }
+        .congestion-item.low { border-left-color: #16a34a; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🗺️ 全国都市圏通勤流動マップ<br><span style="font-size: 0.7em; font-weight: 400; opacity: 0.9;">Japan Commuter Flow Map</span></h1>
+        <p>関東・中部・関西・福岡圏の人の流れを可視化<br><span style="font-size: 0.9em; opacity: 0.8;">Visualizing commuter flows in Kanto, Chubu, Kansai & Fukuoka regions</span></p>
+    </header>
+
+    <div class="main-container">
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>データを読み込み中...<br><span style="font-size: 0.9em; opacity: 0.8;">Loading data...</span></p>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="control-section">
+                <h3>🗾 地域選択 | Region Selection</h3>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="switchRegion('kanto')" id="btn-kanto" 
+             aria-label="関東圏を表示 - Display Kanto region" tabindex="0">
+                        🗼 関東圏<br><span style="font-size: 0.8em; opacity: 0.8;">Kanto</span>
+                    </button>
+                    <button class="btn" style="background: #059669; color: white;" onclick="switchRegion('chubu')" id="btn-chubu"
+             aria-label="中部圏を表示 - Display Chubu region" tabindex="0">
+                        🏯 中部圏<br><span style="font-size: 0.8em; opacity: 0.8;">Chubu</span>
+                    </button>
+                    <button class="btn" style="background: #dc2626; color: white;" onclick="switchRegion('kansai')" id="btn-kansai">
+                        🏰 関西圏<br><span style="font-size: 0.8em; opacity: 0.8;">Kansai</span>
+                    </button>
+                    <button class="btn" style="background: #7c3aed; color: white;" onclick="switchRegion('fukuoka')" id="btn-fukuoka">
+                        🏮 福岡圏<br><span style="font-size: 0.8em; opacity: 0.8;">Fukuoka</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h3>⚡ アニメーション | Animation</h3>
+                <div class="button-group">
+                    <button class="btn" style="background: #10b981; color: white;" onclick="toggleAnimation()">
+                        <span id="animToggleText">⏸️ アニメーション停止<br><span style="font-size: 0.8em; opacity: 0.8;">Stop Animation</span></span>
+                    </button>
+                    <button class="btn" style="background: #8b5cf6; color: white;" onclick="resetView()">
+                        🎯 全体表示にリセット<br><span style="font-size: 0.8em; opacity: 0.8;">Reset View</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-title" id="regionTitle">関東圏への流入統計</div>
+                <div class="info-content" id="areaInfo">
+                    郊外から主要都市部への通勤流動を可視化しています。
+                </div>
+                
+                <div class="stats-grid" id="totalStatsGrid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalInFlow">197万</div>
+                        <div class="stat-label" id="totalLabel">総流入</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="activeFlows">10</div>
+                        <div class="stat-label">活発な流動</div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid" id="statsGrid" style="display: none;">
+                    <div class="stat-item">
+                        <div class="stat-value" id="inFlow">-</div>
+                        <div class="stat-label">流入人口</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="outFlow">-</div>
+                        <div class="stat-label">流出人口</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h3 id="congestionTitle">🚇 関東圏 混雑路線ランキング</h3>
+                <div id="congestionRanking" class="congestion-ranking">
+                    <!-- ランキングがここに動的に表示される -->
+                </div>
+            </div>
+
+            <div class="legend">
+                <h3>🎨 都市圏流入レベル</h3>
+                <div style="margin-bottom: 1.5rem;">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444; height: 10px; box-shadow: 0 0 8px #ef4444;"></div>
+                        <span><strong>🔥 超大規模受け入れ</strong><br>30万人以上</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f97316; height: 8px; box-shadow: 0 0 6px #f97316;"></div>
+                        <span><strong>🔴 大規模受け入れ</strong><br>20〜30万人</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #eab308; height: 6px; box-shadow: 0 0 4px #eab308;"></div>
+                        <span><strong>🟡 中規模受け入れ</strong><br>10〜20万人</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #22c55e; height: 4px; box-shadow: 0 0 3px #22c55e;"></div>
+                        <span><strong>🟢 小規模受け入れ</strong><br>10万人未満</span>
+                    </div>
+                </div>
+                
+                <h4 style="margin-bottom: 0.5rem;">郊外→都市部流入</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444; height: 3px; opacity: 0.7;"></div>
+                    <span>4万人以上</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f97316; height: 3px; opacity: 0.7;"></div>
+                    <span>3〜4万人</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #eab308; height: 3px; opacity: 0.7;"></div>
+                    <span>2〜3万人</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #22c55e; height: 3px; opacity: 0.7;"></div>
+                    <span>1〜2万人</span>
+                </div>
+                
+                <div style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <div style="font-size: 0.9em; margin-bottom: 0.5rem;"><strong>📍 表示内容</strong></div>
+                    <div style="font-size: 0.8em; color: #666;">
+                        ⚪ 円：受け入れ規模<br>
+                        〰️ 曲線：郊外からの流入<br>
+                        🔺 矢印：流動方向<br>
+                        ⚪ 点：人の動き<br>
+                        💬 クリック：詳細情報
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // 地図の初期化
+        let map;
+        let currentLayer = null;
+        
+        // 全国主要都市圏の通勤流動データ
+        const regionalData = {
+            // 関東圏（東京23区中心）
+            kanto: {
+                name: "関東圏",
+                center: [35.6762, 139.6503],
+                zoom: 9,
+                boundary: [
+                    [35.5397, 139.4576], [35.5397, 139.8701], [35.7885, 139.8701], [35.7885, 139.4576], [35.5397, 139.4576]
+                ],
+                mainAreas: [
+                    { name: "千代田区", center: [35.6939, 139.7030], totalInflow: 420000 },
+                    { name: "港区", center: [35.6581, 139.7414], totalInflow: 350000 },
+                    { name: "新宿区", center: [35.6895, 139.6917], totalInflow: 285000 },
+                    { name: "渋谷区", center: [35.6762, 139.6503], totalInflow: 220000 },
+                    { name: "中央区", center: [35.6762, 139.7731], totalInflow: 190000 },
+                    { name: "豊島区", center: [35.7295, 139.7109], totalInflow: 180000 },
+                    { name: "品川区", center: [35.6284, 139.7387], totalInflow: 160000 },
+                    { name: "江東区", center: [35.6682, 139.8171], totalInflow: 140000 }
+                ],
+                inflowData: [
+                    { from: [35.8617, 139.6455], fromName: "埼玉県さいたま市", toArea: "新宿区", volume: 45000 },
+                    { from: [35.7065, 140.1032], fromName: "千葉県船橋市", toArea: "千代田区", volume: 48000 },
+                    { from: [35.4437, 139.6380], fromName: "神奈川県川崎市", toArea: "品川区", volume: 42000 },
+                    { from: [35.4508, 139.6425], fromName: "神奈川県横浜市", toArea: "渋谷区", volume: 28000 },
+                    { from: [35.7595, 139.4778], fromName: "東京都立川市", toArea: "新宿区", volume: 35000 },
+                    { from: [36.0834, 140.1167], fromName: "茨城県つくば市", toArea: "千代田区", volume: 25000 },
+                    { from: [35.8617, 139.6455], fromName: "埼玉県さいたま市", toArea: "豊島区", volume: 38000 },
+                    { from: [35.4437, 139.6380], fromName: "神奈川県川崎市", toArea: "港区", volume: 35000 },
+                    { from: [35.7065, 140.1032], fromName: "千葉県船橋市", toArea: "中央区", volume: 35000 },
+                    { from: [35.6587, 139.5466], fromName: "東京都三鷹市", toArea: "新宿区", volume: 18000 }
+                ],
+                congestionRanking: [
+                    { rank: 1, line: "JR東海道線", section: "川崎→品川", congestion: 197, passengers: "85万人" },
+                    { rank: 2, line: "JR中央線快速", section: "中野→新宿", congestion: 193, passengers: "75万人" },
+                    { rank: 3, line: "JR総武線各停", section: "錦糸町→両国", congestion: 192, passengers: "68万人" },
+                    { rank: 4, line: "JR京浜東北線", section: "大井町→品川", congestion: 188, passengers: "72万人" },
+                    { rank: 5, line: "東京メトロ東西線", section: "木場→門前仲町", congestion: 186, passengers: "64万人" },
+                    { rank: 6, line: "JR山手線", section: "上野→御徒町", congestion: 184, passengers: "58万人" },
+                    { rank: 7, line: "小田急線", section: "世田谷代田→下北沢", congestion: 182, passengers: "52万人" },
+                    { rank: 8, line: "東急田園都市線", section: "池尻大橋→渋谷", congestion: 181, passengers: "61万人" }
+                ]
+            },
+            
+            // 中部圏（名古屋中心）
+            chubu: {
+                name: "中部圏",
+                center: [35.1815, 136.9066],
+                zoom: 11,
+                boundary: [
+                    [35.0500, 136.7500], [35.0500, 137.0500], [35.3000, 137.0500], [35.3000, 136.7500], [35.0500, 136.7500]
+                ],
+                mainAreas: [
+                    { name: "中区", center: [35.1681, 136.9066], totalInflow: 180000 },
+                    { name: "中村区", center: [35.1698, 136.8704], totalInflow: 150000 },
+                    { name: "東区", center: [35.1794, 136.9239], totalInflow: 120000 },
+                    { name: "西区", center: [35.1894, 136.8739], totalInflow: 110000 },
+                    { name: "千種区", center: [35.1649, 136.9422], totalInflow: 95000 },
+                    { name: "熱田区", center: [35.1282, 136.9095], totalInflow: 85000 }
+                ],
+                inflowData: [
+                    { from: [35.0275, 136.9709], fromName: "愛知県豊田市", toArea: "中区", volume: 25000 },
+                    { from: [34.8872, 136.8791], fromName: "愛知県岡崎市", toArea: "中区", volume: 18000 },
+                    { from: [35.1043, 136.8551], fromName: "愛知県一宮市", toArea: "中村区", volume: 22000 },
+                    { from: [35.2431, 136.9716], fromName: "愛知県春日井市", toArea: "東区", volume: 20000 },
+                    { from: [35.3273, 136.8738], fromName: "岐阜県岐阜市", toArea: "中村区", volume: 15000 },
+                    { from: [34.9767, 137.0380], fromName: "三重県四日市市", toArea: "中区", volume: 12000 },
+                    { from: [35.2273, 136.8610], fromName: "愛知県小牧市", toArea: "西区", volume: 14000 },
+                    { from: [35.1435, 136.7754], fromName: "愛知県稲沢市", toArea: "千種区", volume: 10000 }
+                ],
+                congestionRanking: [
+                    { rank: 1, line: "JR東海道線", section: "金山→名古屋", congestion: 168, passengers: "45万人" },
+                    { rank: 2, line: "名鉄名古屋線", section: "神宮前→金山", congestion: 165, passengers: "38万人" },
+                    { rank: 3, line: "JR中央線", section: "鶴舞→名古屋", congestion: 162, passengers: "35万人" },
+                    { rank: 4, line: "地下鉄東山線", section: "今池→栄", congestion: 158, passengers: "42万人" },
+                    { rank: 5, line: "名鉄豊田線", section: "赤池→伏見", congestion: 155, passengers: "28万人" },
+                    { rank: 6, line: "地下鉄名城線", section: "矢場町→栄", congestion: 152, passengers: "32万人" }
+                ]
+            },
+            
+            // 関西圏（大阪中心）
+            kansai: {
+                name: "関西圏",
+                center: [34.6937, 135.5023],
+                zoom: 11,
+                boundary: [
+                    [34.5500, 135.3500], [34.5500, 135.7500], [34.8500, 135.7500], [34.8500, 135.3500], [34.5500, 135.3500]
+                ],
+                mainAreas: [
+                    { name: "梅田・北区", center: [34.7024, 135.4959], totalInflow: 280000 },
+                    { name: "難波・中央区", center: [34.6741, 135.5007], totalInflow: 250000 },
+                    { name: "天王寺・天王寺区", center: [34.6460, 135.5066], totalInflow: 180000 },
+                    { name: "本町・西区", center: [34.6826, 135.4932], totalInflow: 160000 },
+                    { name: "新大阪・淀川区", center: [34.7326, 135.5009], totalInflow: 140000 },
+                    { name: "住吉・住吉区", center: [34.6138, 135.4951], totalInflow: 120000 }
+                ],
+                inflowData: [
+                    { from: [34.8113, 135.4669], fromName: "兵庫県尼崎市", toArea: "梅田・北区", volume: 35000 },
+                    { from: [34.8456, 135.6303], fromName: "兵庫県西宮市", toArea: "梅田・北区", volume: 28000 },
+                    { from: [34.5706, 135.4769], fromName: "奈良県奈良市", toArea: "難波・中央区", volume: 22000 },
+                    { from: [34.7305, 135.3439], fromName: "兵庫県神戸市", toArea: "梅田・北区", volume: 45000 },
+                    { from: [34.8034, 135.7728], fromName: "京都府京都市", toArea: "梅田・北区", volume: 32000 },
+                    { from: [34.5708, 135.6383], fromName: "和歌山県和歌山市", toArea: "天王寺・天王寺区", volume: 18000 },
+                    { from: [34.6760, 135.8361], fromName: "京都府宇治市", toArea: "本町・西区", volume: 16000 },
+                    { from: [34.8859, 135.5394], fromName: "兵庫県宝塚市", toArea: "新大阪・淀川区", volume: 12000 }
+                ],
+                congestionRanking: [
+                    { rank: 1, line: "JR大阪環状線", section: "西九条→大阪", congestion: 175, passengers: "58万人" },
+                    { rank: 2, line: "阪急神戸線", section: "十三→梅田", congestion: 172, passengers: "52万人" },
+                    { rank: 3, line: "JR東海道線", section: "新大阪→大阪", congestion: 169, passengers: "48万人" },
+                    { rank: 4, line: "地下鉄御堂筋線", section: "淀屋橋→梅田", congestion: 166, passengers: "65万人" },
+                    { rank: 5, line: "阪急宝塚線", section: "十三→梅田", congestion: 163, passengers: "42万人" },
+                    { rank: 6, line: "京阪本線", section: "京橋→淀屋橋", congestion: 160, passengers: "38万人" },
+                    { rank: 7, line: "近鉄奈良線", section: "鶴橋→大阪難波", congestion: 158, passengers: "35万人" }
+                ]
+            },
+            
+            // 福岡圏
+            fukuoka: {
+                name: "福岡圏",
+                center: [33.5904, 130.4017],
+                zoom: 12,
+                boundary: [
+                    [33.4500, 130.2500], [33.4500, 130.5500], [33.7500, 130.5500], [33.7500, 130.2500], [33.4500, 130.2500]
+                ],
+                mainAreas: [
+                    { name: "博多区", center: [33.5906, 130.4137], totalInflow: 180000 },
+                    { name: "中央区", center: [33.5858, 130.3947], totalInflow: 160000 },
+                    { name: "早良区", center: [33.5669, 130.3541], totalInflow: 120000 },
+                    { name: "南区", center: [33.5544, 130.4180], totalInflow: 110000 },
+                    { name: "西区", center: [33.5638, 130.3257], totalInflow: 95000 },
+                    { name: "東区", center: [33.6153, 130.4214], totalInflow: 85000 }
+                ],
+                inflowData: [
+                    { from: [33.6068, 130.5186], fromName: "福岡県久留米市", toArea: "博多区", volume: 25000 },
+                    { from: [33.7295, 130.4479], fromName: "福岡県飯塚市", toArea: "博多区", volume: 18000 },
+                    { from: [33.5127, 130.5590], fromName: "福岡県大野城市", toArea: "中央区", volume: 22000 },
+                    { from: [33.8141, 130.7181], fromName: "福岡県北九州市", toArea: "博多区", volume: 35000 },
+                    { from: [33.2197, 130.2985], fromName: "佐賀県佐賀市", toArea: "博多区", volume: 15000 },
+                    { from: [32.7898, 130.7417], fromName: "熊本県熊本市", toArea: "博多区", volume: 12000 },
+                    { from: [33.5802, 130.2432], fromName: "福岡県糸島市", toArea: "西区", volume: 14000 },
+                    { from: [33.6501, 130.4408], fromName: "福岡県春日市", toArea: "南区", volume: 16000 }
+                ],
+                congestionRanking: [
+                    { rank: 1, line: "JR鹿児島線", section: "南福岡→博多", congestion: 152, passengers: "32万人" },
+                    { rank: 2, line: "西鉄天神大牟田線", section: "西鉄福岡→薬院", congestion: 148, passengers: "28万人" },
+                    { rank: 3, line: "地下鉄空港線", section: "博多→天神", congestion: 145, passengers: "35万人" },
+                    { rank: 4, line: "JR福北ゆたか線", section: "吉塚→博多", congestion: 142, passengers: "22万人" },
+                    { rank: 5, line: "地下鉄箱崎線", section: "呉服町→中洲川端", congestion: 138, passengers: "18万人" }
+                ]
+            }
+        };
+        
+        // 現在表示中の地域データ
+        let currentRegion = 'kanto';
+        let commuteData = regionalData[currentRegion];
+
+        function initMap() {
+            // 地図の作成（現在の地域中心）
+            map = L.map('map').setView(commuteData.center, commuteData.zoom);
+
+            // OpenStreetMap タイルレイヤーを追加
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // ローディング非表示
+            document.getElementById('loading').style.display = 'none';
+            
+            // 初期表示は通勤流動
+            showCommuteFlow();
+        }
+
+        function showCommuteFlow() {
+            clearLayer();
+            
+            const flowLayer = L.layerGroup();
+            
+            // 主要受け入れエリアを円で表示（流入数に応じてサイズ変更）
+            commuteData.mainAreas.forEach(area => {
+                const radius = Math.sqrt(area.totalInflow) * 12; // 流入数に応じたサイズ
+                let color;
+                
+                if (area.totalInflow >= 300000) color = '#ef4444'; // 超大規模
+                else if (area.totalInflow >= 200000) color = '#f97316'; // 大規模
+                else if (area.totalInflow >= 100000) color = '#eab308'; // 中規模
+                else color = '#22c55e'; // 小規模
+                
+                const circle = L.circle(area.center, {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.3,
+                    radius: radius,
+                    weight: 3
+                }).addTo(flowLayer);
+                
+                // 流入数を表示するラベル
+                const labelIcon = L.divIcon({
+                    html: `<div style="
+                        background: white;
+                        border: 3px solid ${color};
+                        color: ${color};
+                        padding: 8px 12px;
+                        border-radius: 20px;
+                        font-size: 14px;
+                        font-weight: 900;
+                        text-align: center;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                        white-space: nowrap;
+                    ">${area.name}<br>${(area.totalInflow / 10000).toFixed(1)}万人</div>`,
+                    className: 'area-label',
+                    iconSize: [80, 40],
+                    iconAnchor: [40, 20]
+                });
+                
+                L.marker(area.center, { icon: labelIcon }).addTo(flowLayer)
+                    .bindPopup(`
+                        <div class="responsive-popup" style="text-align: center; padding: 12px; max-width: 280px;">
+                            <h3 style="margin: 0 0 8px 0; color: ${color}; font-size: 1.1rem;">🏢 ${area.name}</h3>
+                            <div style="background: ${color}; color: white; padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 1.6em; font-weight: bold; margin-bottom: 4px;">
+                                    ${area.totalInflow.toLocaleString()}人
+                                </div>
+                                <div style="font-size: 0.9em;">毎日の流入人口<br><span style="font-size: 0.85em; opacity: 0.9;">Daily Inflow Population</span></div>
+                            </div>
+                            <div style="margin: 8px 0; font-size: 0.85em; color: #666; line-height: 1.3;">
+                                ${area.totalInflow >= 400000 ? '🔥 超大規模受け入れ地域 | Ultra-large Reception Area' : 
+                                  area.totalInflow >= 300000 ? '🔴 大規模受け入れ地域 | Large Reception Area' : 
+                                  area.totalInflow >= 200000 ? '🟡 中規模受け入れ地域 | Medium Reception Area' : '🟢 小規模受け入れ地域 | Small Reception Area'}
+                            </div>
+                        </div>
+                    `);
+                
+                circle.on('click', () => {
+                    updateAreaInfo({ name: area.name, inFlow: area.totalInflow, outFlow: 0 });
+                });
+            });
+            
+            // 郊外から主要都市部への流入線を描画（重複を避けるためシンプルに）
+            commuteData.inflowData.forEach((flow, index) => {
+                const volume = flow.volume;
+                let color, weight;
+                
+                if (volume >= 40000) {
+                    color = '#ef4444';
+                    weight = 6;
+                } else if (volume >= 30000) {
+                    color = '#f97316';
+                    weight = 4;
+                } else if (volume >= 20000) {
+                    color = '#eab308';
+                    weight = 3;
+                } else {
+                    color = '#22c55e';
+                    weight = 2;
+                }
+                
+                // 到着地の座標を取得
+                const toArea = commuteData.mainAreas.find(area => area.name === flow.toArea);
+                if (!toArea) {
+                    console.log(`流動データエラー: ${flow.toArea} が mainAreas で見つかりません`, flow);
+                    return;
+                }
+                
+                // 曲線状のパス（アニメーション用）
+                const midPoint = [
+                    (flow.from[0] + toArea.center[0]) / 2 + (Math.random() - 0.5) * 0.02,
+                    (flow.from[1] + toArea.center[1]) / 2 + (Math.random() - 0.5) * 0.02
+                ];
+                
+                const curve = L.polyline([flow.from, midPoint, toArea.center], {
+                    color: color,
+                    weight: weight,
+                    opacity: 0.7,
+                    className: `flow-line flow-${index}`
+                }).addTo(flowLayer);
+                
+                // 流動アニメーション（動く点）を追加
+                createFlowingDots(flow.from, midPoint, toArea.center, color, flowLayer, index, weight);
+                
+                // 方向を示す矢印
+                const angle = calculateAngle(midPoint, toArea.center);
+                const arrowSize = Math.max(16, weight + 8);
+                const arrowIcon = L.divIcon({
+                    html: `<div style="
+                        transform: rotate(${angle}deg);
+                        font-size: ${arrowSize}px;
+                        color: ${color};
+                        font-weight: 900;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+                        filter: drop-shadow(0 0 6px ${color});
+                        animation: arrowPulse 2s infinite;
+                    ">🔺</div>`,
+                    className: 'flow-arrow',
+                    iconSize: [arrowSize + 4, arrowSize + 4],
+                    iconAnchor: [arrowSize/2 + 2, arrowSize/2 + 2]
+                });
+                
+                L.marker(toArea.center, { icon: arrowIcon }).addTo(flowLayer);
+                
+                // 流動量を数字で表示（線の中央付近）
+                const labelPosition = [
+                    (flow.from[0] + midPoint[0]) / 2,
+                    (flow.from[1] + midPoint[1]) / 2
+                ];
+                
+                const labelSize = Math.max(10, weight * 1.2);
+                const labelIcon = L.divIcon({
+                    html: `<div style="
+                        background: ${color};
+                        color: white;
+                        padding: 3px 6px;
+                        border-radius: 12px;
+                        font-size: ${labelSize}px;
+                        font-weight: 900;
+                        text-align: center;
+                        border: 2px solid white;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+                        white-space: nowrap;
+                        animation: numberPulse 3s infinite;
+                    ">${(flow.volume / 10000).toFixed(1)}万</div>`,
+                    className: 'flow-number',
+                    iconSize: [labelSize * 3, labelSize + 6],
+                    iconAnchor: [labelSize * 1.5, labelSize/2 + 3]
+                });
+                
+                L.marker(labelPosition, { icon: labelIcon }).addTo(flowLayer);
+                
+                // シンプルなポップアップ
+                curve.bindPopup(`
+                    <div class="responsive-popup" style="text-align: center; padding: 10px; min-width: 180px; max-width: 250px;">
+                        <h3 style="margin: 0 0 8px 0; color: ${color}; font-size: 1rem; line-height: 1.3;">
+                            ${flow.fromName} → ${flow.toArea}
+                        </h3>
+                        <div style="background: ${color}; color: white; padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 2px;">
+                                ${flow.volume.toLocaleString()}人/日
+                            </div>
+                            <div style="font-size: 0.8em; opacity: 0.9;">
+                                ${flow.volume.toLocaleString()} people/day
+                            </div>
+                        </div>
+                        <div style="margin: 8px 0; font-size: 0.8em; color: #666; line-height: 1.3;">
+                            ${volume >= 40000 ? '🔥 超大規模流入 | Ultra-large Flow' : 
+                              volume >= 30000 ? '🔴 大規模流入 | Large Flow' : 
+                              volume >= 20000 ? '🟡 中規模流入 | Medium Flow' : '🟢 小規模流入 | Small Flow'}
+                        </div>
+                    </div>
+                `);
+                
+                // 出発地の簡単なマーカー
+                const startIcon = L.divIcon({
+                    html: `<div style="
+                        background: ${color};
+                        width: 12px;
+                        height: 12px;
+                        border-radius: 50%;
+                        border: 2px solid white;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                    "></div>`,
+                    className: 'simple-start-marker',
+                    iconSize: [16, 16],
+                    iconAnchor: [8, 8]
+                });
+                
+                L.marker(flow.from, { icon: startIcon }).addTo(flowLayer)
+                    .bindPopup(`
+                        <div class="responsive-popup" style="text-align: center; padding: 8px; max-width: 200px;">
+                            <strong style="font-size: 0.9rem;">${flow.fromName}</strong><br>
+                            <div style="color: #666; font-size: 0.8em; line-height: 1.3; margin-top: 4px;">
+                                ${flow.toArea}へ ${flow.volume.toLocaleString()}人が通勤<br>
+                                <span style="font-size: 0.85em;">Daily commuters to ${flow.toArea}: ${flow.volume.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    `);
+            });
+            
+            // 地域全体エリアの可視化
+            addRegionBoundaryVisualization(flowLayer);
+            
+            // 地域全体の流入統計を計算・更新
+            updateTotalInflowStats();
+            
+            currentLayer = flowLayer;
+            flowLayer.addTo(map);
+        }
+        
+        function updateTotalInflowStats() {
+            // 地域全体の総流入数を計算
+            const totalInflow = commuteData.mainAreas.reduce((sum, area) => sum + area.totalInflow, 0);
+            // 活発な流動数（個別流入データの数）
+            const activeFlowCount = commuteData.inflowData.length;
+            
+            // 統計表示を更新
+            document.getElementById('totalInFlow').textContent = (totalInflow / 10000).toFixed(0) + '万';
+            document.getElementById('activeFlows').textContent = activeFlowCount;
+            
+            // 地域名を更新
+            document.getElementById('regionTitle').textContent = commuteData.name + 'への流入統計';
+            
+            // 混雑ランキングを更新
+            updateCongestionRanking();
+        }
+        
+        function updateCongestionRanking() {
+            const rankingContainer = document.getElementById('congestionRanking');
+            const titleElement = document.getElementById('congestionTitle');
+            
+            // 地域ごのアイコンとタイトル更新
+            const regionIcons = {
+                kanto: '🗼',
+                chubu: '🏯', 
+                kansai: '🏰',
+                fukuoka: '🏮'
+            };
+            
+            titleElement.textContent = `🚇 ${commuteData.name} 混雑路線ランキング`;
+            
+            if (!commuteData.congestionRanking) {
+                rankingContainer.innerHTML = '<div style="padding: 1rem; text-align: center; color: #666;">この地域の混雑データは準備中です</div>';
+                return;
+            }
+            
+            let html = '';
+            commuteData.congestionRanking.forEach(item => {
+                // 混雑度による分類
+                let congestionClass = 'low';
+                if (item.congestion >= 180) congestionClass = 'extreme';
+                else if (item.congestion >= 170) congestionClass = 'high';
+                else if (item.congestion >= 160) congestionClass = 'medium';
+                
+                // ランキングアイコン
+                let rankIcon = item.rank;
+                if (item.rank === 1) rankIcon = '🥇';
+                else if (item.rank === 2) rankIcon = '🥈';
+                else if (item.rank === 3) rankIcon = '🥉';
+                
+                html += `
+                    <div class="congestion-item ${congestionClass}">
+                        <div class="congestion-rank">${rankIcon}</div>
+                        <div class="congestion-info">
+                            <div class="congestion-line">${item.line}</div>
+                            <div class="congestion-section">${item.section}</div>
+                            <div class="congestion-stats">
+                                <span class="congestion-rate">${item.congestion}%</span>
+                                <span class="congestion-passengers">${item.passengers}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            rankingContainer.innerHTML = html;
+        }
+        
+        function addRegionBoundaryVisualization(layer) {
+            // 地域の境界を表示
+            const boundaryPolygon = L.polygon(commuteData.boundary, {
+                color: '#667eea',
+                weight: 3,
+                opacity: 0.8,
+                fillColor: '#667eea',
+                fillOpacity: 0.1,
+                dashArray: '15,10'
+            }).addTo(layer);
+            
+            // 地域中央に総流入数を表示（関東の場合は重複を避けるため位置調整）
+            let centralPoint = commuteData.center;
+            if (currentRegion === 'kanto') {
+                centralPoint = [35.7600, 139.5500]; // 関東は北西の空いているエリアに配置
+            }
+            const totalInflow = commuteData.mainAreas.reduce((sum, area) => sum + area.totalInflow, 0);
+            
+            // 地域ごとのアイコン
+            const regionIcons = {
+                kanto: '🗼',
+                chubu: '🏯', 
+                kansai: '🏰',
+                fukuoka: '🏮'
+            };
+            
+            const centralIcon = L.divIcon({
+                html: `<div style="
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 12px 16px;
+                    border-radius: 25px;
+                    font-size: 16px;
+                    font-weight: 900;
+                    text-align: center;
+                    border: 4px solid white;
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+                    white-space: nowrap;
+                    animation: megaPulse 4s infinite;
+                ">${regionIcons[currentRegion]} ${commuteData.name}<br>総流入 ${(totalInflow / 10000).toFixed(0)}万人/日</div>`,
+                className: 'central-total-label',
+                iconSize: [160, 50],
+                iconAnchor: [80, 25]
+            });
+            
+            // 地域の主要エリア名（最大3つ）
+            const topAreas = commuteData.mainAreas
+                .sort((a, b) => b.totalInflow - a.totalInflow)
+                .slice(0, 3)
+                .map(area => `${area.name} (${(area.totalInflow / 10000).toFixed(1)}万)`)
+                .join(' • ');
+            
+            L.marker(centralPoint, { icon: centralIcon }).addTo(layer)
+                .bindPopup(`
+                    <div style="text-align: center; padding: 15px;">
+                        <h2 style="margin: 0 0 15px 0; color: #667eea;">${regionIcons[currentRegion]} ${commuteData.name} 全体統計</h2>
+                        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2.5em; font-weight: bold; margin-bottom: 8px;">
+                                ${(totalInflow / 10000).toFixed(0)}万人
+                            </div>
+                            <div style="font-size: 1.1em; opacity: 0.9;">毎日の総流入人口<br><span style="font-size: 0.9em;">Daily Total Inflow Population</span></div>
+                        </div>
+                        <div style="margin: 15px 0; padding: 10px; background: #f3f4f6; border-radius: 8px;">
+                            <div style="font-size: 0.9em; color: #666;">
+                                <strong>主要受け入れ地域 | Major Reception Areas:</strong><br>
+                                ${topAreas}
+                            </div>
+                        </div>
+                        <div style="font-size: 0.85em; color: #888;">
+                            💡 各エリアをクリックで詳細表示<br>
+                            <span style="font-size: 0.9em;">Click each area for details</span>
+                        </div>
+                    </div>
+                `);
+            
+            boundaryPolygon.bindPopup(`
+                <div style="text-align: center; padding: 12px;">
+                    <h3 style="margin: 0 0 10px 0; color: #667eea;">🗺️ ${commuteData.name}エリア</h3>
+                    <div style="background: #667eea; color: white; padding: 12px; border-radius: 8px;">
+                        <div><strong>毎日の流入: ${(totalInflow / 10000).toFixed(0)}万人 | Daily Inflow: ${(totalInflow / 10000).toFixed(0)}0K</strong></div>
+                        <div>活発な流動: ${commuteData.inflowData.length}ルート | Active Flows: ${commuteData.inflowData.length} routes</div>
+                    </div>
+                </div>
+            `);
+        }
+        
+        function switchRegion(region) {
+            currentRegion = region;
+            commuteData = regionalData[region];
+            
+            // ボタンの状態を更新
+            document.querySelectorAll('[id^="btn-"]').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn');
+            });
+            document.getElementById(`btn-${region}`).classList.add('btn-primary');
+            
+            // 地図の表示を更新
+            map.setView(commuteData.center, commuteData.zoom);
+            showCommuteFlow();
+        }
+
+
+        function updateAreaInfo(area) {
+            document.getElementById('areaInfo').innerHTML = `
+                <strong>${area.name}の通勤流動</strong><br>
+                この地域の詳細な人の流れデータを表示しています。<br>
+                <span style="font-size: 0.9em; opacity: 0.8;">Displaying detailed commuter flow data for this area.</span>
+            `;
+            
+            document.getElementById('inFlow').textContent = area.inFlow.toLocaleString();
+            document.getElementById('outFlow').textContent = area.outFlow.toLocaleString();
+            document.getElementById('statsGrid').style.display = 'grid';
+        }
+
+        function clearLayer() {
+            if (currentLayer) {
+                // アニメーションを停止
+                stopAllAnimations();
+                
+                // レイヤーを削除
+                map.removeLayer(currentLayer);
+                currentLayer = null;
+            }
+        }
+
+        // 角度計算関数
+        function calculateAngle(from, to) {
+            const dx = to[1] - from[1];
+            const dy = to[0] - from[0];
+            return Math.atan2(dy, dx) * 180 / Math.PI;
+        }
+
+        // 流れる点のアニメーション（最適化版）
+        function createFlowingDots(start, mid, end, color, layer, index, weight) {
+            if (!animationEnabled) return;
+            
+            const dots = [];
+            const numDots = Math.min(Math.max(2, Math.floor(weight / 2)), 4); // 点の数を制限
+            const dotSize = Math.max(6, Math.min(weight, 12)); // サイズを制限
+            
+            for (let i = 0; i < numDots; i++) {
+                const dotIcon = L.divIcon({
+                    html: `<div class="optimized-dot" style="
+                        width: ${dotSize}px;
+                        height: ${dotSize}px;
+                        background: ${color};
+                        border: 1px solid white;
+                        border-radius: 50%;
+                        box-shadow: 0 0 8px ${color}66;
+                        position: relative;
+                    ">
+                        <div style="
+                            width: ${Math.max(2, dotSize/4)}px;
+                            height: ${Math.max(2, dotSize/4)}px;
+                            background: white;
+                            border-radius: 50%;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        "></div>
+                    </div>`,
+                    className: 'optimized-flowing-dot',
+                    iconSize: [dotSize + 2, dotSize + 2],
+                    iconAnchor: [dotSize/2 + 1, dotSize/2 + 1]
+                });
+                
+                const dot = L.marker(start, { icon: dotIcon }).addTo(layer);
+                dots.push(dot);
+                
+                // アニメーションの開始を最適化
+                setTimeout(() => {
+                    animateDotOptimized(dot, start, mid, end, 3000 + (index % 3) * 500, i * 600);
+                }, i * 400);
+            }
+        }
+
+        // 最適化された点のアニメーション
+        function animateDotOptimized(marker, start, mid, end, duration, delay) {
+            let startTime = null;
+            let animationId = null;
+            
+            function animate(timestamp) {
+                if (!animationEnabled) return; // アニメーションが停止された場合は終了
+                
+                if (!startTime) startTime = timestamp + delay;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                if (progress >= 0 && progress <= 1) {
+                    // 最適化されたベジエ曲線で滑らかな移動
+                    const t = progress;
+                    const t2 = t * t;
+                    const t1 = 1 - t;
+                    const t1_2 = t1 * t1;
+                    
+                    const x = t1_2 * start[0] + 2 * t1 * t * mid[0] + t2 * end[0];
+                    const y = t1_2 * start[1] + 2 * t1 * t * mid[1] + t2 * end[1];
+                    
+                    marker.setLatLng([x, y]);
+                }
+                
+                if (progress < 1) {
+                    animationId = requestAnimationFrame(animate);
+                } else {
+                    // アニメーション完了後、適度な遅延で繰り返し
+                    const restartDelay = 800 + Math.random() * 400; // ランダムな遅延で自然な動き
+                    setTimeout(() => {
+                        if (animationEnabled) {
+                            animateDotOptimized(marker, start, mid, end, duration, 0);
+                        }
+                    }, restartDelay);
+                }
+            }
+            
+            animationId = requestAnimationFrame(animate);
+            
+            // アニメーションIDをマーカーに保存（後でキャンセルできるように）
+            marker._animationId = animationId;
+        }
+
+        // CSS for enhanced animations
+        const style = document.createElement('style');
+        style.textContent = `
+            .flow-arrow {
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+                z-index: 1000;
+            }
+            
+            .flowing-dot {
+                z-index: 999;
+            }
+            
+            .start-marker, .end-marker {
+                z-index: 1001;
+            }
+            
+            @keyframes megaPulse {
+                0%, 100% { 
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% { 
+                    transform: scale(1.4);
+                    opacity: 0.7;
+                }
+            }
+            
+            /* 最適化されたアニメーション */
+            .optimized-dot {
+                transition: transform 0.2s ease-out;
+            }
+            
+            .optimized-flowing-dot {
+                will-change: transform;
+                backface-visibility: hidden;
+                transform: translateZ(0);
+            }
+            
+            @keyframes arrowPulse {
+                0%, 100% { 
+                    transform: scale(1) rotate(var(--rotation, 0deg));
+                    opacity: 1;
+                }
+                50% { 
+                    transform: scale(1.3) rotate(var(--rotation, 0deg));
+                    opacity: 0.8;
+                }
+            }
+            
+            @keyframes startPulse {
+                0%, 100% { 
+                    transform: scale(1);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+                }
+                50% { 
+                    transform: scale(1.2);
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+                }
+            }
+            
+            @keyframes endPulse {
+                0%, 100% { 
+                    transform: scale(1);
+                    box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+                }
+                50% { 
+                    transform: scale(1.15);
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+                }
+            }
+            
+            @keyframes numberPulse {
+                0%, 100% { 
+                    transform: scale(1);
+                    opacity: 1;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+                }
+                33% { 
+                    transform: scale(1.1);
+                    opacity: 0.9;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+                }
+                66% { 
+                    transform: scale(1.05);
+                    opacity: 0.95;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.55);
+                }
+            }
+            
+            .flow-line {
+                filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
+            }
+            
+            .leaflet-popup-content {
+                border-radius: 8px !important;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // アニメーション制御（最適化版）
+        let animationEnabled = true;
+        let currentAnimations = [];
+        
+        function toggleAnimation() {
+            animationEnabled = !animationEnabled;
+            const toggleText = document.getElementById('animToggleText');
+            
+            if (animationEnabled) {
+                toggleText.innerHTML = '⏸️ アニメーション停止<br><span style="font-size: 0.8em; opacity: 0.8;">Stop Animation</span>';
+                showCommuteFlow(); // 再描画
+            } else {
+                toggleText.innerHTML = '▶️ アニメーション開始<br><span style="font-size: 0.8em; opacity: 0.8;">Start Animation</span>';
+                // 実行中のアニメーションを停止
+                stopAllAnimations();
+                clearLayer();
+                showStaticFlow();
+            }
+        }
+        
+        function stopAllAnimations() {
+            // 実行中のアニメーションをすべて停止
+            currentAnimations.forEach(id => {
+                if (id) cancelAnimationFrame(id);
+            });
+            currentAnimations = [];
+        }
+        
+        function resetView() {
+            map.setView(commuteData.center, commuteData.zoom);
+        }
+        
+        function showStaticFlow() {
+            const flowLayer = L.layerGroup();
+            
+            // 静的表示では inflowData を使用
+            commuteData.inflowData.forEach((flow, index) => {
+                const volume = flow.volume;
+                let color, weight;
+                
+                if (volume >= 40000) {
+                    color = '#ef4444';
+                    weight = 6;
+                } else if (volume >= 30000) {
+                    color = '#f97316';
+                    weight = 4;
+                } else if (volume >= 20000) {
+                    color = '#eab308';
+                    weight = 3;
+                } else {
+                    color = '#22c55e';
+                    weight = 2;
+                }
+                
+                // 到着地の座標を取得
+                const toArea = commuteData.mainAreas.find(area => area.name === flow.toArea);
+                if (!toArea) return;
+                
+                // シンプルな直線
+                const line = L.polyline([flow.from, toArea.center], {
+                    color: color,
+                    weight: weight,
+                    opacity: 0.8
+                }).addTo(flowLayer);
+                
+                // 方向を示す矢印
+                const angle = calculateAngle(flow.from, toArea.center);
+                const arrowIcon = L.divIcon({
+                    html: `<div style="
+                        transform: rotate(${angle}deg);
+                        font-size: ${Math.max(14, weight + 2)}px;
+                        color: ${color};
+                        font-weight: bold;
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                    ">→</div>`,
+                    className: 'static-arrow',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+                
+                L.marker(toArea.center, { icon: arrowIcon }).addTo(flowLayer);
+                
+                // 出発地マーカー
+                const startIcon = L.divIcon({
+                    html: `<div style="
+                        background: ${color};
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        border: 2px solid white;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                    "></div>`,
+                    className: 'static-start-marker',
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7]
+                });
+                
+                L.marker(flow.from, { icon: startIcon }).addTo(flowLayer);
+                
+                line.bindPopup(`
+                    <div style="text-align: center; padding: 10px; min-width: 200px;">
+                        <h3 style="margin: 0 0 8px 0; color: ${color};">
+                            ${flow.fromName} → ${flow.toArea}
+                        </h3>
+                        <div style="background: ${color}; color: white; padding: 10px; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="font-size: 1.4em; font-weight: bold;">
+                                ${flow.volume.toLocaleString()}人/日
+                            </div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">
+                                ${flow.volume.toLocaleString()} people/day
+                            </div>
+                        </div>
+                        <div style="font-size: 0.9em; color: #666;">
+                            ${volume >= 40000 ? '🔥 超大規模流入 | Ultra-large Flow' : 
+                              volume >= 30000 ? '🔴 大規模流入 | Large Flow' : 
+                              volume >= 20000 ? '🟡 中規模流入 | Medium Flow' : '🟢 小規模流入 | Small Flow'}
+                        </div>
+                    </div>
+                `);
+            });
+            
+            // 主要受け入れエリアを簡素な円で表示
+            commuteData.mainAreas.forEach(area => {
+                const radius = Math.sqrt(area.totalInflow) * 8; // 静的表示では小さめ
+                let color;
+                
+                if (area.totalInflow >= 300000) color = '#ef4444';
+                else if (area.totalInflow >= 200000) color = '#f97316';
+                else if (area.totalInflow >= 100000) color = '#eab308';
+                else color = '#22c55e';
+                
+                const circle = L.circle(area.center, {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.2,
+                    radius: radius,
+                    weight: 2
+                }).addTo(flowLayer);
+                
+                circle.bindPopup(`
+                    <div style="text-align: center; padding: 8px;">
+                        <h3 style="margin: 0 0 8px 0; color: ${color};">🏢 ${area.name}</h3>
+                        <div style="background: ${color}; color: white; padding: 8px; border-radius: 6px;">
+                            <div style="font-size: 1.2em; font-weight: bold;">
+                                ${(area.totalInflow / 10000).toFixed(1)}万人
+                            </div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">
+                                毎日の流入人口 | Daily Inflow
+                            </div>
+                        </div>
+                    </div>
+                `);
+            });
+            
+            currentLayer = flowLayer;
+            flowLayer.addTo(map);
+        }
+
+        // 地図初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            setupKeyboardNavigation();
+        });
+        
+        function setupKeyboardNavigation() {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

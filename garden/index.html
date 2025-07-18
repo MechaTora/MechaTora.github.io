@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本庭園 - Japanese Garden | 心を癒す日本の美</title>
+    <meta name="description" content="美しい日本庭園の映像と自然音で心を癒します。鳥のさえずりと水の流れる音でリラックス効果抜群。 | Beautiful Japanese garden videos and natural sounds for relaxation.">
+    <meta name="keywords" content="日本庭園,Japanese Garden,癒し,リラックス,自然音,瞑想,ストレス解消,healing,relaxation">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="日本庭園 - Japanese Garden | 心を癒す日本の美">
+    <meta property="og:description" content="美しい日本庭園の映像と自然音で心を癒します。鳥のさえずりと水の流れる音でリラックス効果抜群。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.github.io/garden/">
+    <meta property="og:image" content="https://mechatora.github.io/garden/40531-425837151_small.mp4">
+    <meta property="og:image:type" content="video/mp4">
+    <meta property="og:image:width" content="854">
+    <meta property="og:image:height" content="480">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="日本庭園 - Japanese Garden | 心を癒す日本の美">
+    <meta name="twitter:description" content="美しい日本庭園の映像と自然音で心を癒します。">
+    <meta name="twitter:image" content="https://mechatora.github.io/garden/40531-425837151_small.mp4">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.github.io/garden/">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6NJKWS2RJ8');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+            crossorigin="anonymous"></script>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <!-- Google Fonts - 2025年トレンドフォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+JP:wght@300;400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "日本庭園 - Japanese Garden",
+        "url": "https://mechatora.github.io/garden/",
+        "description": "美しい日本庭園の映像と自然音で心を癒すリラクゼーションアプリ",
+        "applicationCategory": "EntertainmentApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+        }
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Zen Kaku Gothic New', 'Noto Serif JP', 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro W3', Meiryo, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 20, 10, 0.3) 0%,
+                rgba(10, 30, 20, 0.2) 50%,
+                rgba(0, 15, 5, 0.3) 100%
+            );
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .title {
+            font-family: 'Noto Serif JP', 'Zen Kaku Gothic New', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            text-shadow: 3px 3px 12px rgba(0,0,0,0.9);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, 
+                #ffffff 0%, 
+                #f8f9fa 20%, 
+                #e9ecef 40%, 
+                #d4af37 60%, 
+                #ffd700 80%, 
+                #ffed4e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.05em;
+            position: relative;
+        }
+
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            font-family: 'Inter', 'Zen Kaku Gothic New', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+            opacity: 0.95;
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .description {
+            font-family: 'Inter', 'Zen Kaku Gothic New', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+            opacity: 0.85;
+            max-width: 700px;
+            line-height: 1.8;
+            letter-spacing: 0.01em;
+        }
+
+        .footer {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .home-link {
+            color: #d4af37;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .home-link:hover {
+            opacity: 0.8;
+        }
+
+        /* 季節エフェクト */
+        .season-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .season-effect.active {
+            opacity: 1;
+        }
+
+        .snow-flake {
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            animation: snow 12s linear infinite;
+        }
+
+        @keyframes snow {
+            0% {
+                transform: translateY(-100px) translateX(0px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* AdSense広告エリア */
+        .ad-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* 右上コントロールボタン */
+        .top-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 6;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            font-family: 'Inter', 'Zen Kaku Gothic New', sans-serif;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            min-width: 70px;
+            letter-spacing: 0.01em;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* マップ表示ボタン */
+        .map-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 6;
+            background: rgba(212, 175, 55, 0.9);
+            color: #000;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .map-toggle:hover {
+            background: rgba(212, 175, 55, 1);
+            transform: translateY(-2px);
+        }
+
+        /* Leaflet地図スタイル */
+        .leaflet-map-container {
+            flex: 1;
+            min-width: 350px;
+            max-width: 500px;
+            height: 300px;
+        }
+
+        .leaflet-map {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .description {
+                font-size: 0.9rem;
+                padding: 0 1rem;
+            }
+            
+            .ad-container {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin: 1rem;
+            }
+
+            .top-controls {
+                top: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+
+            .control-btn {
+                padding: 6px 10px;
+                font-size: 0.7rem;
+                min-width: 60px;
+            }
+
+            .leaflet-map-container {
+                min-width: 280px;
+                height: 250px;
+            }
+
+            .map-toggle {
+                bottom: 10px;
+                left: 10px;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* 金閣寺位置マップ */
+        .location-map {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 5;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+            padding: 1rem;
+        }
+
+        .location-map.show {
+            transform: translateY(0);
+        }
+
+        .map-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .map-title {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            width: 100%;
+            text-align: center;
+        }
+
+        .map-info {
+            flex: 1;
+            min-width: 250px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .location-text {
+            color: #fff;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .location-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        /* PWA対応 */
+        .pwa-install {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 6;
+            display: none;
+        }
+
+        .install-btn {
+            background: rgba(212, 175, 55, 0.9);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video class="video-bg" id="bgVideo" autoplay loop muted playsinline>
+            <source src="40531-425837151_small.mp4" type="video/mp4">
+            ご利用のブラウザは動画をサポートしていません。
+        </video>
+    </div>
+
+    <div class="overlay"></div>
+    
+    <div class="season-effect" id="seasonEffect"></div>
+
+    <div class="content">
+        <div class="header">
+            <h1 class="title">🌸 日本庭園 🍃<br><span style="font-size: 0.6em; opacity: 0.8;">Japanese Garden</span></h1>
+            <p class="subtitle">心を癒す日本の美 | The Beauty of Japan that Heals the Heart</p>
+            <p class="description">美しい日本庭園の映像と自然音で、日常の疲れを癒してください。鳥のさえずりと水の流れる音が心に平安をもたらします。<br>
+            <span style="opacity: 0.7; font-size: 0.9em;">Beautiful Japanese garden videos and natural sounds to heal your daily fatigue. The chirping of birds and the sound of flowing water bring peace to your heart.</span></p>
+        </div>
+
+        <!-- 右上コントロールボタン -->
+        <div class="top-controls">
+            <button class="control-btn" id="seasonBtn">❄️ 冬 Winter</button>
+            <button class="control-btn" id="muteBtn">🔇 ミュート Mute</button>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <a href="../メイン/index.html" class="home-link">🏠 ホームに戻る Back to Home</a> | 
+                日本の伝統美で心のリフレッシュを Refresh your mind with traditional Japanese beauty
+            </p>
+        </div>
+    </div>
+
+    <!-- 金閣寺位置マップ -->
+    <div class="location-map" id="locationMap">
+        <div class="map-container">
+            <h3 class="map-title">🏛️ 金閣寺の位置 | Kinkaku-ji Temple Location</h3>
+            <div class="leaflet-map-container">
+                <div id="map" class="leaflet-map"></div>
+            </div>
+            <div class="map-info">
+                <p class="location-text">
+                    <span class="location-icon">📍</span>
+                    <strong>金閣寺（鹿苑寺）</strong><br>
+                    <strong>Kinkaku-ji Temple (Rokuon-ji)</strong><br>
+                    京都府京都市北区金閣寺町1<br>
+                    Kyoto, Japan<br>
+                    <small>正式名称: 鹿苑寺 | Official Name: Rokuon-ji</small><br>
+                    <small>建立: 1397年 | Founded: 1397</small>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AdSense広告 -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block; width:300px; height:250px;"
+             data-ad-client="ca-pub-1184134440246706"
+             data-ad-slot="1234567890"></ins>
+    </div>
+
+    <!-- PWAインストール -->
+    <div class="pwa-install" id="pwaInstall">
+        <button class="install-btn" id="installBtn">📱 アプリとして追加</button>
+    </div>
+
+    <!-- マップ表示ボタン -->
+    <button class="map-toggle" id="mapToggle">🗾 金閣寺の位置 Kinkaku-ji Location</button>
+
+    <!-- Audio elements -->
+    <audio id="birdAudio" loop>
+        <source src="11L-Birds_chirping-1752447995738.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="waterAudio" loop>
+        <source src="11L-water-1752448769504.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        class JapaneseGarden {
+            constructor() {
+                this.isPlaying = false;
+                this.currentSeason = 'summer';
+                this.seasons = ['summer', 'winter'];
+                this.seasonNames = ['🌿 夏 Summer', '❄️ 冬 Winter'];
+                this.videoFiles = {
+                    'summer': '40531-425837151_small.mp4',
+                    'winter': '151806-801662161_small.mp4'
+                };
+                this.isMuted = false;
+                
+                this.setupElements();
+                this.setupEventListeners();
+                this.setupPWA();
+                this.loadMediaFiles();
+                this.setupMapToggle();
+                this.initializeMap();
+            }
+
+            setupElements() {
+                this.bgVideo = document.getElementById('bgVideo');
+                this.birdAudio = document.getElementById('birdAudio');
+                this.waterAudio = document.getElementById('waterAudio');
+                
+                this.seasonBtn = document.getElementById('seasonBtn');
+                this.muteBtn = document.getElementById('muteBtn');
+                
+                this.seasonEffect = document.getElementById('seasonEffect');
+                this.locationMap = document.getElementById('locationMap');
+                this.mapToggle = document.getElementById('mapToggle');
+            }
+
+            setupEventListeners() {
+                this.seasonBtn.addEventListener('click', () => this.changeSeason());
+                this.muteBtn.addEventListener('click', () => this.toggleMute());
+                
+                // ユーザー操作で自動再生を有効化
+                document.addEventListener('click', () => this.enableAutoplay(), { once: true });
+            }
+
+            loadMediaFiles() {
+                // デフォルトは夏の動画
+                this.bgVideo.src = this.videoFiles[this.currentSeason];
+                // 鳥の音と水の音
+                this.birdAudio.src = '11L-Birds_chirping-1752447995738.mp3';
+                this.waterAudio.src = '11L-water-1752448769504.mp3';
+                
+                // 各音声の初期音量を調整
+                this.birdAudio.volume = 0.7;   // 鳥の音
+                this.waterAudio.volume = 0.4;  // 水の音（低音量）
+            }
+
+            async enableAutoplay() {
+                try {
+                    await this.bgVideo.play();
+                    if (!this.isMuted) {
+                        await this.birdAudio.play();
+                        await this.waterAudio.play();
+                    }
+                    this.isPlaying = true;
+                } catch (e) {
+                    console.log('動画の自動再生はユーザー操作が必要です');
+                }
+            }
+
+            changeSeason() {
+                const currentIndex = this.seasons.indexOf(this.currentSeason);
+                const nextIndex = (currentIndex + 1) % this.seasons.length;
+                this.currentSeason = this.seasons[nextIndex];
+                this.seasonBtn.textContent = this.seasonNames[nextIndex];
+                
+                // 動画を切り替え
+                this.bgVideo.src = this.videoFiles[this.currentSeason];
+                
+                // 再生中なら継続
+                if (this.isPlaying) {
+                    setTimeout(() => {
+                        this.bgVideo.play();
+                    }, 200);
+                }
+                
+                this.createSeasonEffect();
+            }
+
+            createSeasonEffect() {
+                this.seasonEffect.innerHTML = '';
+                this.seasonEffect.classList.add('active');
+                
+                const effectCount = 15;
+                
+                for (let i = 0; i < effectCount; i++) {
+                    setTimeout(() => {
+                        const effect = document.createElement('div');
+                        
+                        switch (this.currentSeason) {
+                            case 'winter':
+                                effect.className = 'snow-flake';
+                                effect.textContent = '❄';
+                                break;
+                            default:
+                                return; // 夏は特にエフェクトなし
+                        }
+                        
+                        effect.style.left = Math.random() * window.innerWidth + 'px';
+                        effect.style.animationDelay = Math.random() * 2 + 's';
+                        effect.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                        
+                        this.seasonEffect.appendChild(effect);
+                        
+                        setTimeout(() => {
+                            if (effect.parentNode) {
+                                effect.remove();
+                            }
+                        }, 15000);
+                    }, i * 200);
+                }
+                
+                setTimeout(() => {
+                    this.seasonEffect.classList.remove('active');
+                }, 3000);
+            }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                
+                if (this.isMuted) {
+                    this.birdAudio.pause();
+                    this.waterAudio.pause();
+                    this.muteBtn.textContent = '🔊 音声ON Sound ON';
+                } else {
+                    if (this.isPlaying) {
+                        this.birdAudio.play();
+                        this.waterAudio.play();
+                    }
+                    this.muteBtn.textContent = '🔇 ミュート Mute';
+                }
+            }
+
+            initializeMap() {
+                // 地図が表示される時まで初期化を遅延
+                setTimeout(() => {
+                    if (!this.map) {
+                        // 金閣寺の座標
+                        const kinkakujiLat = 35.0394;
+                        const kinkakujiLng = 135.7292;
+                        
+                        // 地図の初期化（京都を中心に）
+                        this.map = L.map('map').setView([35.0116, 135.7681], 10);
+                        
+                        // OpenStreetMapタイルレイヤーを追加
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '© OpenStreetMap contributors'
+                        }).addTo(this.map);
+                        
+                        // 金閣寺のカスタムアイコンを作成
+                        const kinkakujiIcon = L.divIcon({
+                            html: '<div style="background: gold; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid #000; box-shadow: 0 2px 10px rgba(255,215,0,0.8);">⛩️</div>',
+                            className: 'custom-icon',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        });
+                        
+                        // 金閣寺にマーカーを追加
+                        const marker = L.marker([kinkakujiLat, kinkakujiLng], { icon: kinkakujiIcon })
+                            .addTo(this.map)
+                            .bindPopup(`
+                                <div style="text-align: center;">
+                                    <strong>🏛️ 金閣寺（鹿苑寺）</strong><br>
+                                    <small>京都府京都市北区金閣寺町1</small><br>
+                                    <small>建立: 1397年</small>
+                                </div>
+                            `);
+                        
+                        // 京都市の境界を示す円を追加
+                        L.circle([35.0116, 135.7681], {
+                            color: '#d4af37',
+                            fillColor: '#d4af37',
+                            fillOpacity: 0.1,
+                            radius: 8000
+                        }).addTo(this.map);
+                    }
+                }, 1000);
+            }
+
+            setupPWA() {
+                let deferredPrompt;
+                const installBtn = document.getElementById('installBtn');
+                const pwaInstall = document.getElementById('pwaInstall');
+
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    pwaInstall.style.display = 'block';
+                });
+
+                installBtn.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        deferredPrompt = null;
+                        pwaInstall.style.display = 'none';
+                    }
+                });
+            }
+
+            setupMapToggle() {
+                let mapVisible = false;
+                
+                this.mapToggle.addEventListener('click', () => {
+                    mapVisible = !mapVisible;
+                    
+                    if (mapVisible) {
+                        this.locationMap.classList.add('show');
+                        this.mapToggle.textContent = '❌ 地図を閉じる Close Map';
+                        
+                        // 地図を初期化（まだされていない場合）
+                        setTimeout(() => {
+                            if (!this.map) {
+                                this.initializeMap();
+                            }
+                            // 地図のサイズを再計算
+                            if (this.map) {
+                                this.map.invalidateSize();
+                            }
+                        }, 300);
+                    } else {
+                        this.locationMap.classList.remove('show');
+                        this.mapToggle.textContent = '🗾 金閣寺の位置 Kinkaku-ji Location';
+                    }
+                });
+
+                // 初期状態で地図は非表示
+                setTimeout(() => {
+                    this.locationMap.classList.add('show');
+                    setTimeout(() => {
+                        this.locationMap.classList.remove('show');
+                    }, 3000);
+                }, 2000);
+            }
+        }
+
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+        // アプリ開始
+        document.addEventListener('DOMContentLoaded', () => {
+            new JapaneseGarden();
+        });
+
+        // Google Analytics イベント
+        function trackEvent(action, category = 'Japanese Garden') {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', action, {
+                    'event_category': category,
+                    'event_label': 'User Interaction'
+                });
+            }
+        }
+
+        // 使用状況追跡
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn')) {
+                trackEvent('button_click', 'Japanese Garden');
+            }
+        });
+    </script>
+</body>
+</html>
