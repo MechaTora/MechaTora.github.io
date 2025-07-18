@@ -1,170 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- 作成アプリ一覧 メインページ -->
-  <url>
-    <loc>https://mechatora.github.io/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  
-  <!-- 重要ページ -->
-  <url>
-    <loc>https://mechatora.github.io/privacy.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/terms.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/contact.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/about.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- メインアプリケーション -->
-  <url>
-    <loc>https://mechatora.github.io/flashcard-web-app/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/fire/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/earthquake-monitor/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/x-buzz-simulator/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/cook-suggest/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/qualification-calendar.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- 新規追加アプリ -->
-  <url>
-    <loc>https://mechatora.github.io/commute-flow-map.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/garden/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/jellyfish/</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- サブページ - Earthquake Monitor -->
-  <url>
-    <loc>https://mechatora.github.io/earthquake-monitor/privacy.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/earthquake-monitor/terms.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/earthquake-monitor/contact.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <!-- サブページ - CookSuggest -->
-  <url>
-    <loc>https://mechatora.github.io/cook-suggest/privacy.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/cook-suggest/terms.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/cook-suggest/contact.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <!-- サブページ - X Buzz Simulator -->
-  <url>
-    <loc>https://mechatora.github.io/x-buzz-simulator/privacy.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/x-buzz-simulator/terms.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mechatora.github.io/x-buzz-simulator/contact.html</loc>
-    <lastmod>2025-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+<url>
+<loc>https://mechatora.github.io/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>weekly</changefreq>
+<priority>1.0</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/flashcard-web-app/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/fire/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/earthquake-monitor/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/x-buzz-simulator/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/cook-suggest/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/qualification-calendar.html</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/commute-flow-map.html</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/garden/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://mechatora.github.io/jellyfish/</loc>
+<lastmod>2025-07-18T00:00:00+00:00</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.8</priority>
+</url>
 </urlset>
