@@ -1,0 +1,62 @@
+{
+  "name": "Cat Healing Station",
+  "short_name": "Cat Healing",
+  "description": "Heal your heart with adorable cat images",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffeaa7",
+  "theme_color": "#e17055",
+  "orientation": "portrait-primary",
+  "categories": ["entertainment", "lifestyle", "health"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23fd79a8'/%3E%3Ctext x='50' y='65' font-size='60' text-anchor='middle'%3E🐱%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23fd79a8'/%3E%3Ctext x='50' y='65' font-size='60' text-anchor='middle'%3E🐱%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 800'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffeaa7'/%3E%3Cstop offset='100%25' style='stop-color:%23fd79a8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='800' fill='url(%23bg)'/%3E%3Ctext x='200' y='100' font-size='40' text-anchor='middle' fill='%23e17055'%3E🐱 にゃんこ癒し%3C/text%3E%3Crect x='50' y='150' width='300' height='200' rx='20' fill='white' opacity='0.9'/%3E%3Ctext x='200' y='200' font-size='80' text-anchor='middle'%3E😸%3C/text%3E%3Ctext x='200' y='240' font-size='16' text-anchor='middle' fill='%23636e72'%3E可愛い猫ちゃん%3C/text%3E%3Crect x='100' y='400' width='200' height='40' rx='20' fill='%23e17055'/%3E%3Ctext x='200' y='425' font-size='16' text-anchor='middle' fill='white'%3E新しい猫ちゃん%3C/text%3E%3C/svg%3E",
+      "sizes": "400x800",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Cat",
+      "short_name": "New Cat",
+      "description": "Display a random new cat image",
+      "url": "./index.html?action=new",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2374b9ff'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle'%3E🆕%3C/text%3E%3C/svg%3E",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "short_name": "Favorites",
+      "description": "View saved cats",
+      "url": "./index.html?action=favorites",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23fd79a8'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle'%3E💕%3C/text%3E%3C/svg%3E",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

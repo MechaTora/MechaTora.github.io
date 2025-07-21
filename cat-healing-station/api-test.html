@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐱 Cat API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9ff3, #f368e0, #ff6b9d);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        h1 {
+            color: #e91e63;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .api-test {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.8);
+        }
+        .api-test h3 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        .api-test img {
+            max-width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            margin: 10px 0;
+        }
+        .success {
+            border-color: green !important;
+        }
+        .error {
+            border-color: red !important;
+        }
+        button {
+            background: linear-gradient(45deg, #e91e63, #f06292);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status.loading { background: #fff3cd; color: #856404; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐱 Cat API Testing Station</h1>
+        
+        <div class="api-test">
+            <h3>The Cat API</h3>
+            <div id="thecatapi-status" class="status">Click button to test</div>
+            <button onclick="testTheCatAPI()">Test The Cat API</button>
+            <img id="thecatapi-img" style="display: none;" alt="The Cat API">
+        </div>
+        
+        <div class="api-test">
+            <h3>Cat as a Service (CATAAS)</h3>
+            <div id="cataas-status" class="status">Click button to test</div>
+            <button onclick="testCATAAS()">Test CATAAS</button>
+            <img id="cataas-img" style="display: none;" alt="CATAAS">
+        </div>
+        
+        <div class="api-test">
+            <h3>HTTP Cats</h3>
+            <div id="httpcat-status" class="status">Click button to test</div>
+            <button onclick="testHTTPCat()">Test HTTP Cat</button>
+            <img id="httpcat-img" style="display: none;" alt="HTTP Cat">
+        </div>
+        
+        <!-- PlaceKitten removed due to connectivity issues -->
+        
+        <div class="api-test">
+            <h3>Comprehensive Test</h3>
+            <button onclick="testAllAPIs()">🚀 Test All APIs</button>
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+        
+        <div class="log" id="logOutput">
+            Ready to test APIs...
+        </div>
+    </div>
+
+    <script>
+        const log = document.getElementById('logOutput');
+        
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML += `[${timestamp}] ${message}<br>`;
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+        
+        function clearLog() {
+            log.innerHTML = 'Log cleared...<br>';
+        }
+        
+        function updateStatus(apiId, status, message) {
+            const statusDiv = document.getElementById(`${apiId}-status`);
+            statusDiv.className = `status ${status}`;
+            statusDiv.textContent = message;
+        }
+        
+        function showImage(apiId, success) {
+            const img = document.getElementById(`${apiId}-img`);
+            img.style.display = 'block';
+            img.className = success ? 'success' : 'error';
+        }
+        
+        async function testTheCatAPI() {
+            const apiId = 'thecatapi';
+            addLog('Testing The Cat API...');
+            updateStatus(apiId, 'loading', 'Loading...');
+            
+            try {
+                const response = await fetch('https://api.thecatapi.com/v1/images/search', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                const imageUrl = data[0].url;
+                
+                const img = document.getElementById(`${apiId}-img`);
+                img.onload = () => {
+                    updateStatus(apiId, 'success', '✅ Image loaded successfully');
+                    addLog(`✅ The Cat API: Success - ${imageUrl}`);
+                    showImage(apiId, true);
+                };
+                img.onerror = () => {
+                    updateStatus(apiId, 'error', '❌ Image failed to load');
+                    addLog(`❌ The Cat API: Image load failed - ${imageUrl}`);
+                    showImage(apiId, false);
+                };
+                
+                img.src = imageUrl;
+                
+            } catch (error) {
+                updateStatus(apiId, 'error', `❌ API Error: ${error.message}`);
+                addLog(`❌ The Cat API: Error - ${error.message}`);
+            }
+        }
+        
+        async function testCATAAS() {
+            const apiId = 'cataas';
+            addLog('Testing CATAAS...');
+            updateStatus(apiId, 'loading', 'Loading...');
+            
+            try {
+                // Direct image approach for CATAAS
+                const timestamp = Date.now();
+                const imageUrl = `https://cataas.com/cat?${timestamp}`;
+                
+                const img = document.getElementById(`${apiId}-img`);
+                img.onload = () => {
+                    updateStatus(apiId, 'success', '✅ Image loaded successfully');
+                    addLog(`✅ CATAAS: Success - ${imageUrl}`);
+                    showImage(apiId, true);
+                };
+                img.onerror = () => {
+                    updateStatus(apiId, 'error', '❌ Image failed to load');
+                    addLog(`❌ CATAAS: Image load failed - ${imageUrl}`);
+                    showImage(apiId, false);
+                };
+                
+                img.src = imageUrl;
+                
+            } catch (error) {
+                updateStatus(apiId, 'error', `❌ Error: ${error.message}`);
+                addLog(`❌ CATAAS: Error - ${error.message}`);
+            }
+        }
+        
+        function testHTTPCat() {
+            const apiId = 'httpcat';
+            addLog('Testing HTTP Cat...');
+            updateStatus(apiId, 'loading', 'Loading...');
+            
+            const codes = [200, 201, 404, 418, 500];
+            const randomCode = codes[Math.floor(Math.random() * codes.length)];
+            const imageUrl = `https://http.cat/${randomCode}`;
+            
+            const img = document.getElementById(`${apiId}-img`);
+            img.onload = () => {
+                updateStatus(apiId, 'success', `✅ HTTP ${randomCode} cat loaded`);
+                addLog(`✅ HTTP Cat: Success - ${imageUrl}`);
+                showImage(apiId, true);
+            };
+            img.onerror = () => {
+                updateStatus(apiId, 'error', '❌ Image failed to load');
+                addLog(`❌ HTTP Cat: Image load failed - ${imageUrl}`);
+                showImage(apiId, false);
+            };
+            
+            img.src = imageUrl;
+        }
+        
+        // PlaceKitten function removed due to connectivity issues
+        
+        async function testAllAPIs() {
+            addLog('🚀 Starting comprehensive API test...');
+            
+            await testTheCatAPI();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testCATAAS();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            testHTTPCat();
+            
+            addLog('🏁 All API tests completed!');
+        }
+        
+        // Initialize
+        addLog('Cat API Testing Station loaded. Click buttons to test APIs.');
+    </script>
+</body>
+</html>
