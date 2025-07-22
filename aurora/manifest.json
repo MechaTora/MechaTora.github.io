@@ -1,0 +1,66 @@
+{
+  "name": "オーロラ観賞 - Aurora Viewing Experience",
+  "short_name": "Aurora",
+  "description": "美しいオーロラ映像と自然音で極北の神秘を体験",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00ff88",
+  "orientation": "landscape-primary",
+  "categories": ["entertainment", "lifestyle", "wellness"],
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-narrow.png", 
+      "sizes": "640x1136",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "オーロラ観賞を開始",
+      "short_name": "観賞開始", 
+      "description": "すぐにオーロラ体験を始める",
+      "url": "./index.html",
+      "icons": [
+        {
+          "src": "shortcut-aurora.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "全画面モード",
+      "short_name": "全画面",
+      "description": "没入感のある全画面でオーロラを楽しむ", 
+      "url": "./index.html?fullscreen=true",
+      "icons": [
+        {
+          "src": "shortcut-fullscreen.png", 
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

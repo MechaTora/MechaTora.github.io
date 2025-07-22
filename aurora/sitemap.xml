@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  
+  <url>
+    <loc>https://mechatora.github.io/aurora/</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    
+    <image:image>
+      <image:loc>https://mechatora.github.io/aurora/aurora-hero-image.jpg</image:loc>
+      <image:title>オーロラ観賞 - 神秘の光を楽しむ癒しの空間</image:title>
+      <image:caption>美しいオーロラ映像で極北の神秘を体験</image:caption>
+    </image:image>
+    
+    <video:video>
+      <video:thumbnail_loc>https://mechatora.github.io/aurora/aurora-thumbnail.jpg</video:thumbnail_loc>
+      <video:title>北極圏の神秘的なオーロラ</video:title>
+      <video:description>極夜の空に踊る緑と青の光のカーテン。自然が織りなす最も美しい光のショーを体験</video:description>
+      <video:content_loc>https://mechatora.github.io/aurora/aurora-video.mp4</video:content_loc>
+      <video:duration>1800</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+  
+</urlset>
