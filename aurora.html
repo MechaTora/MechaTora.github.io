@@ -463,7 +463,7 @@ layout: null
         <section class="video-section">
             <div class="video-container">
                 <video id="auroraVideo" muted loop>
-                    <source src="aurora-video.mp4" type="video/mp4">
+                    <source src="aurora/90875-629483572_small.mp4" type="video/mp4">
                     <p>お使いのブラウザは動画をサポートしていません。</p>
                 </video>
                 <div class="video-overlay">
@@ -488,9 +488,7 @@ layout: null
             </div>
             <div class="control-row">
                 <div class="control-group">
-                    <button class="control-button" id="ambientBtn">🎵 環境音ON</button>
-                    <button class="control-button" id="windBtn">💨 風音ON</button>
-                    <button class="control-button" id="musicBtn">🎶 BGM ON</button>
+                    <button class="control-button" id="ambientBtn">🎵 癒しの自然音 ON</button>
                 </div>
             </div>
         </section>
@@ -543,13 +541,7 @@ layout: null
     
     <!-- Hidden Audio Elements -->
     <audio id="ambientAudio" loop>
-        <source src="aurora-ambient.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="windAudio" loop>
-        <source src="aurora-wind.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="musicAudio" loop>
-        <source src="aurora-music.mp3" type="audio/mpeg">
+        <source src="aurora/11L-オーロラを見る穏やかな私を癒す自然の音-1753191402987.mp3" type="audio/mpeg">
     </audio>
     
     <!-- JavaScript -->
@@ -558,22 +550,16 @@ layout: null
             constructor() {
                 this.video = document.getElementById('auroraVideo');
                 this.ambientAudio = document.getElementById('ambientAudio');
-                this.windAudio = document.getElementById('windAudio');
-                this.musicAudio = document.getElementById('musicAudio');
                 
                 this.playPauseBtn = document.getElementById('playPauseBtn');
                 this.fullscreenBtn = document.getElementById('fullscreenBtn');
                 this.volumeSlider = document.getElementById('volumeSlider');
                 this.volumeDisplay = document.getElementById('volumeDisplay');
                 this.ambientBtn = document.getElementById('ambientBtn');
-                this.windBtn = document.getElementById('windBtn');
-                this.musicBtn = document.getElementById('musicBtn');
                 
                 this.isPlaying = false;
                 this.audioStates = {
-                    ambient: false,
-                    wind: false,
-                    music: false
+                    ambient: false
                 };
                 
                 this.initializeEventListeners();
@@ -590,8 +576,6 @@ layout: null
                 
                 // Audio controls
                 this.ambientBtn.addEventListener('click', () => this.toggleAudio('ambient'));
-                this.windBtn.addEventListener('click', () => this.toggleAudio('wind'));
-                this.musicBtn.addEventListener('click', () => this.toggleAudio('music'));
                 
                 // Auto-play on user interaction
                 document.addEventListener('click', () => this.startExperience(), { once: true });
@@ -601,15 +585,11 @@ layout: null
             }
             
             initializeAudio() {
-                // Set initial volumes
+                // Set initial volume
                 this.ambientAudio.volume = 0.7;
-                this.windAudio.volume = 0.5;
-                this.musicAudio.volume = 0.6;
                 
                 // Preload audio
                 this.ambientAudio.preload = 'metadata';
-                this.windAudio.preload = 'metadata';
-                this.musicAudio.preload = 'metadata';
             }
             
             startExperience() {
@@ -648,32 +628,20 @@ layout: null
             updateVolume(value) {
                 const volume = value / 100;
                 this.ambientAudio.volume = volume * 0.7;
-                this.windAudio.volume = volume * 0.5;
-                this.musicAudio.volume = volume * 0.6;
                 this.volumeDisplay.textContent = value + '%';
             }
             
             toggleAudio(type) {
-                const audio = {
-                    'ambient': this.ambientAudio,
-                    'wind': this.windAudio,
-                    'music': this.musicAudio
-                }[type];
-                
-                const button = {
-                    'ambient': this.ambientBtn,
-                    'wind': this.windBtn,
-                    'music': this.musicBtn
-                }[type];
-                
-                if (this.audioStates[type]) {
-                    audio.pause();
-                    button.textContent = button.textContent.replace('OFF', 'ON');
-                    this.audioStates[type] = false;
-                } else {
-                    audio.play();
-                    button.textContent = button.textContent.replace('ON', 'OFF');
-                    this.audioStates[type] = true;
+                if (type === 'ambient') {
+                    if (this.audioStates.ambient) {
+                        this.ambientAudio.pause();
+                        this.ambientBtn.textContent = '🎵 癒しの自然音 ON';
+                        this.audioStates.ambient = false;
+                    } else {
+                        this.ambientAudio.play();
+                        this.ambientBtn.textContent = '🎵 癒しの自然音 OFF';
+                        this.audioStates.ambient = true;
+                    }
                 }
             }
             
@@ -688,12 +656,6 @@ layout: null
                         break;
                     case 'KeyA':
                         this.toggleAudio('ambient');
-                        break;
-                    case 'KeyW':
-                        this.toggleAudio('wind');
-                        break;
-                    case 'KeyM':
-                        this.toggleAudio('music');
                         break;
                 }
             }
