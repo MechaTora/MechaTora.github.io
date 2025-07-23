@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Main Japanese Page -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    
+    <!-- Language alternatives -->
+    <xhtml:link rel="alternate" hreflang="ja" href="https://mechatora.github.io/knowhow/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://mechatora.github.io/knowhow/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mechatora.github.io/knowhow/" />
+    
+    <!-- Hero image -->
+    <image:image>
+      <image:loc>https://mechatora.github.io/knowhow/knowhow-hero-image.jpg</image:loc>
+      <image:title>Webアプリ開発ノウハウ集 | Web Development Knowledge Base</image:title>
+      <image:caption>実践的なWeb開発ノウハウを日英併記で学べる総合ガイド</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Frontend Development Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#frontend</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    
+    <image:image>
+      <image:loc>https://mechatora.github.io/knowhow/frontend-development.jpg</image:loc>
+      <image:title>フロントエンド開発 | Frontend Development</image:title>
+      <image:caption>React、Vue.js、CSS設計手法などモダンフロントエンド開発技術</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Backend Development Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#backend</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    
+    <image:image>
+      <image:loc>https://mechatora.github.io/knowhow/backend-architecture.jpg</image:loc>
+      <image:title>バックエンド開発 | Backend Development</image:title>
+      <image:caption>Node.js、API設計、データベース最適化などサーバーサイド技術</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- SEO Optimization Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#seo</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    
+    <image:image>
+      <image:loc>https://mechatora.github.io/knowhow/seo-optimization.jpg</image:loc>
+      <image:title>SEO最適化 | SEO Optimization</image:title>
+      <image:caption>Core Web Vitals、構造化データ、検索エンジン最適化手法</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Monetization Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#monetization</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    
+    <image:image>
+      <image:loc>https://mechatora.github.io/knowhow/monetization-strategies.jpg</image:loc>
+      <image:title>収益化戦略 | Monetization Strategies</image:title>
+      <image:caption>AdSense最適化、サブスクリプションモデル、収益最大化手法</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Performance Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#performance</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Security Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#security</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Deployment Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#deployment</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Tools Section -->
+  <url>
+    <loc>https://mechatora.github.io/knowhow/#tools</loc>
+    <lastmod>2025-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

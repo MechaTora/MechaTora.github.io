@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://mechatora.github.io/aurora/sitemap.xml
+
+# Allow search engines to crawl media files
+Allow: /aurora-video.mp4
+Allow: /aurora-ambient.mp3
+Allow: /aurora-wind.mp3
+Allow: /aurora-music.mp3

@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://mechatora.github.io/knowhow/sitemap.xml
+
+# Language-specific sitemaps
+Sitemap: https://mechatora.github.io/knowhow/sitemap-ja.xml
+Sitemap: https://mechatora.github.io/knowhow/sitemap-en.xml
+
+# Allow crawling of all development resources
+Allow: *.css
+Allow: *.js
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.png
+Allow: *.gif
+Allow: *.svg
+Allow: *.webp
+Allow: *.pdf
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
