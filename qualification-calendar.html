@@ -13,6 +13,10 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mechatora.github.io/qualification-calendar/">
     
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+         crossorigin="anonymous"></script>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,6 +120,32 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem 1rem;
+        }
+
+        /* AdSense Ad Styles */
+        .ad-container {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--surface-secondary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+        }
+
+        .ad-header {
+            text-align: center;
+            margin: 3rem 0 2rem 0;
+        }
+
+        .ad-middle {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .ad-footer {
+            text-align: center;
+            margin: 2rem 0 3rem 0;
         }
 
         /* Sophisticated Gray Header */
@@ -649,6 +679,11 @@
 
             .detail-header h2 {
                 font-size: 1.5rem;
+            }
+
+            .ad-container {
+                margin: 1rem 0;
+                padding: 0.5rem;
             }
         }
 
@@ -1261,6 +1296,18 @@
 </head>
 <body>
     <div class="container">
+        <!-- Header Ad -->
+        <div class="ad-header">
+            <div class="ad-container">
+                <!-- Google AdSense Header Ad -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                     data-ad-slot="YOUR_AD_SLOT_ID"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </div>
         <header class="header">
             <h1 class="title">資格試験カウントダウンカレンダー</h1>
             <p class="subtitle">
@@ -1282,6 +1329,19 @@
 
         <div class="qualification-grid" id="qualificationGrid">
             <!-- 資格カードがJavaScriptで生成される -->
+        </div>
+
+        <!-- Middle Ad -->
+        <div class="ad-middle">
+            <div class="ad-container">
+                <!-- Google AdSense Middle Ad -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                     data-ad-slot="YOUR_AD_SLOT_ID"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
         </div>
 
         <!-- 難易度別資格まとめセクション -->
@@ -1378,6 +1438,19 @@
             </div>
         </section>
 
+        <!-- Footer Ad -->
+        <div class="ad-footer">
+            <div class="ad-container">
+                <!-- Google AdSense Footer Ad -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                     data-ad-slot="YOUR_AD_SLOT_ID"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </div>
+
         <section class="calendar-section">
             <h2 class="section-title">📅 年間試験スケジュール</h2>
             <div class="calendar-container" id="calendarContainer">
@@ -1387,6 +1460,11 @@
     </div>
 
     <script>
+        // AdSense initialization
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
         // 資格データ
         const qualifications = [
             // 人事系
