@@ -28,3 +28,5 @@
       import traceback
       traceback.print_exc()
       exit(1)
+      traceback.print_exc()
+      exit(1)
