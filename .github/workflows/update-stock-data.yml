@@ -1,0 +1,42 @@
+name: Update Stock Data
+
+on:
+  schedule:
+    # 市場開始前、昼休み、終了後に実行 (UTC時間)
+    - cron: '0 0 * * 1-5'    # 09:00 JST (月-金)
+    - cron: '30 2 * * 1-5'   # 11:30 JST (昼休み前)
+    - cron: '0 4 * * 1-5'    # 13:00 JST (後場開始前)
+    - cron: '30 6 * * 1-5'   # 15:30 JST (終了後)
+  workflow_dispatch: # 手動実行可能
+
+env:
+  ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+
+jobs:
+  update-stock-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install requests
+        
+    - name: Generate stock data
+      run: |
+        python generate_stock_data.py
+        
+    - name: Commit and push if changed
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add stock-monitor-pro/data/stocks.json
+        git diff --staged --quiet || git commit -m "📊 Update stock data - $(date '+%Y-%m-%d %H:%M')"
+        git push

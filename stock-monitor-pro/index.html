@@ -1033,54 +1033,80 @@
         // API Configuration
         const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 
             'http://localhost:5000/api' : 
-            'https://your-proxy-server.com/api'; // プロダクション環境では実際のプロキシサーバーURLに変更
+            'https://YOUR_RAILWAY_APP_NAME.up.railway.app/api'; // Railway.appのURLに変更してください
 
-        // Stock Data Loading from API
+        // Stock Data Loading (GitHub Actions Generated)
         async function loadStockData() {
-            console.log('Loading stock data from API...');
+            console.log('Loading stock data...');
             
             try {
                 updateServerStatus('warning', '接続中...');
                 
-                // Fetch data from proxy server
-                const response = await fetch(`${API_BASE_URL}/stocks`);
+                // Try to load from GitHub Actions generated data first
+                const staticResponse = await fetch('./data/stocks.json');
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.success && result.data) {
-                    allStocks = result.data.map(stock => ({
-                        symbol: stock.symbol,
-                        name: stock.name,
-                        category: stock.category,
-                        price: stock.price,
-                        change: stock.change,
-                        changePercent: stock.changePercent,
-                        lastUpdate: stock.lastUpdate,
-                        country: stock.country,
-                        volume: Math.floor(Math.random() * 1000000 + 50000), // Mock volume for now
-                        session: getCurrentSession()
-                    }));
+                if (staticResponse.ok) {
+                    const result = await staticResponse.json();
                     
-                    updateServerStatus('active', 'オンライン');
-                    document.getElementById('validDataCount').textContent = allStocks.filter(s => s.price).length;
-                } else {
-                    throw new Error(result.error || 'Invalid API response');
+                    if (result.success && result.data) {
+                        allStocks = result.data.map(stock => ({
+                            symbol: stock.symbol,
+                            name: stock.name,
+                            category: stock.category,
+                            price: stock.price,
+                            change: stock.change,
+                            changePercent: stock.changePercent,
+                            lastUpdate: stock.lastUpdate,
+                            country: stock.country,
+                            volume: stock.volume || Math.floor(Math.random() * 1000000 + 50000),
+                            session: getCurrentSession()
+                        }));
+                        
+                        updateServerStatus('active', '静的データ');
+                        document.getElementById('validDataCount').textContent = allStocks.filter(s => s.price).length;
+                        console.log('✅ Loaded GitHub Actions generated data');
+                        return;
+                    }
                 }
+                
+                // Fallback: Try proxy server API
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    const response = await fetch(`${API_BASE_URL}/stocks`);
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        
+                        if (result.success && result.data) {
+                            allStocks = result.data.map(stock => ({
+                                symbol: stock.symbol,
+                                name: stock.name,
+                                category: stock.category,
+                                price: stock.price,
+                                change: stock.change,
+                                changePercent: stock.changePercent,
+                                lastUpdate: stock.lastUpdate,
+                                country: stock.country,
+                                volume: Math.floor(Math.random() * 1000000 + 50000),
+                                session: getCurrentSession()
+                            }));
+                            
+                            updateServerStatus('active', 'オンライン');
+                            document.getElementById('validDataCount').textContent = allStocks.filter(s => s.price).length;
+                            console.log('✅ Loaded from proxy server');
+                            return;
+                        }
+                    }
+                }
+                
+                throw new Error('No data sources available');
                 
             } catch (error) {
                 console.error('Error loading stock data:', error);
-                updateServerStatus('error', 'API接続エラー');
-                showMessage(`❌ データ取得エラー: ${error.message}`, 'error');
+                updateServerStatus('warning', 'モックデータ');
                 
-                // Fallback to mock data if API fails
-                if (allStocks.length === 0) {
-                    console.log('Falling back to mock data...');
-                    initializeMockData();
-                }
+                // Final fallback to mock data
+                console.log('Falling back to mock data...');
+                initializeMockData();
             }
             
             // Update market status and UI
