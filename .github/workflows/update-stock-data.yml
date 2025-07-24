@@ -1,6 +1,7 @@
- name: Update Stock Data
+  name: Update Stock Data
 
-  on: [workflow_dispatch]
+  on:
+    workflow_dispatch: {}
 
   jobs:
     test:
