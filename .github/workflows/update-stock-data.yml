@@ -9,8 +9,8 @@
       permissions:
         contents: write
       steps:
-      - uses: actions/checkout@v4
-      - run: python generate_stock_data.py
-      - run: ls -la stock-monitor-pro/data/
-      - run: cat stock-monitor-pro/data/stocks.json
-      - run: echo "Script completed successfully"
+        - uses: actions/checkout@v4
+        - run: python generate_stock_data.py
+        - run: ls -la stock-monitor-pro/data/
+        - run: cat stock-monitor-pro/data/stocks.json
+        - run: echo "Script completed successfully"
