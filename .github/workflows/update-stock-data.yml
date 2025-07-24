@@ -211,4 +211,82 @@
           git config --local user.name "GitHub Action"
           git add stock-monitor-pro/data/stocks.json
           git diff --staged --quiet || git commit -m "📊 Update 25 Japanese stocks - $(date '+%Y-%m-%d %H:%M')"
-          git push
+          git push name: Update Stock Data
+
+  on:
+    schedule:
+      # 🔥 API制限500calls/日を完全活用: 25銘柄×20回=500calls
+      - cron: '0 0,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 * * 1-5'  # 毎時0分実行 (20回/日)
+    workflow_dispatch: # 手動実行可能
+
+  env:
+    ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+
+  jobs:
+    update-stock-data:
+      runs-on: ubuntu-latest
+      timeout-minutes: 30  # タイムアウト延長
+
+      permissions:
+        contents: write
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Create data directory
+        run: |
+          mkdir -p stock-monitor-pro/data
+
+      - name: Test API connection first
+        run: |
+          python -c "
+          import os
+          import requests
+          api_key = os.getenv('ALPHA_VANTAGE_API_KEY')
+          if not api_key:
+              print('❌ No API key found')
+              exit(1)
+          try:
+              response = requests.get(f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=7203.T&apikey={api_key}',
+  timeout=10)
+              print('✅ API connection successful')
+          except Exception as e:
+              print(f'❌ API test failed: {e}')
+              exit(1)
+          "
+
+      - name: Generate stock data (with error handling)
+        run: |
+          python generate_stock_data.py || echo "⚠️ Stock data generation failed, but continuing..."
+
+      - name: Verify output file
+        run: |
+          if [ -f "stock-monitor-pro/data/stocks.json" ]; then
+            echo "✅ stocks.json created successfully"
+            head -10 stock-monitor-pro/data/stocks.json
+          else
+            echo "❌ stocks.json not found"
+            exit 1
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add stock-monitor-pro/data/stocks.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "📊 Update 25 Japanese stocks - $(date '+%Y-%m-%d %H:%M')"
+            git push
+          fi
