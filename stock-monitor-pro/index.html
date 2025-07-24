@@ -623,6 +623,21 @@
             font-family: var(--font-mono);
         }
 
+        /* Mini Chart Styles */
+        .mini-chart-container {
+            margin: 16px 0;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mini-chart {
+            width: 100%;
+            height: 60px;
+            display: block;
+        }
+
         /* Loading & Messages */
         .loading-overlay {
             position: fixed;
@@ -894,9 +909,9 @@
                     </label>
                     <select id="priceFilter" class="control-input" onchange="applyFilters()">
                         <option value="all">すべて</option>
-                        <option value="low">💸 5,000円未満</option>
-                        <option value="mid">💴 5,000-20,000円</option>
-                        <option value="high">💎 20,000円以上</option>
+                        <option value="low">💸 3,000円未満</option>
+                        <option value="mid">💴 3,000-8,000円</option>
+                        <option value="high">💎 8,000円以上</option>
                     </select>
                 </div>
                 
@@ -962,9 +977,7 @@
 
         <!-- Stock Cards Grid -->
         <div id="stocksContainer" class="stocks-grid">
-            <div class="message info">
-                🔄 サーバーからデータを取得中...
-            </div>
+            <!-- Stock cards will be dynamically inserted here -->
         </div>
 
         <!-- AdSense Ad 2 -->
@@ -978,14 +991,9 @@
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-        <div class="loading-spinner"></div>
-    </div>
 
     <script>
         // Application State
-        const API_BASE_URL = 'http://localhost:5000/api'; 
         let allStocks = [];
         let filteredStocks = [];
         let isLoading = false;
@@ -993,51 +1001,18 @@
         // Initialize Application
         document.addEventListener('DOMContentLoaded', initializeApp);
 
-        async function initializeApp() {
-            showLoading(true);
+        function initializeApp() {
+            console.log('Initializing Stock Monitor Pro...');
             
-            try {
-                await Promise.all([
-                    loadServerStatus(),
-                    loadStockData()
-                ]);
-                
-                // Auto-refresh every 5 minutes
-                setInterval(loadStockData, 5 * 60 * 1000);
-                
-                showMessage('✅ システム初期化完了', 'info');
-                
-            } catch (error) {
-                console.error('Initialization error:', error);
-                showMessage('❌ 初期化エラー: ' + error.message, 'error');
-            } finally {
-                showLoading(false);
-            }
+            // Initialize stock data immediately
+            loadStockData();
+            
+            // Auto-refresh every 3 minutes
+            setInterval(loadStockData, 3 * 60 * 1000);
+            
+            console.log('Stock Monitor Pro initialized successfully');
         }
 
-        // Server Status Management
-        async function loadServerStatus() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/market-status`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    updateServerStatus('active', 'オンライン');
-                    updateMarketStatus(result.market);
-                    document.getElementById('validDataCount').textContent = result.data.stocksWithData;
-                    
-                    const lastUpdate = result.data.lastUpdate;
-                    document.getElementById('lastUpdateTime').textContent = 
-                        lastUpdate ? new Date(lastUpdate).toLocaleTimeString() : '-';
-                } else {
-                    throw new Error(result.error);
-                }
-            } catch (error) {
-                updateServerStatus('error', 'オフライン');
-                document.getElementById('marketStatus').textContent = '接続エラー';
-                throw error;
-            }
-        }
 
         function updateServerStatus(status, message) {
             const dot = document.getElementById('serverStatus');
@@ -1055,36 +1030,142 @@
             document.getElementById('marketStatus').textContent = statusText;
         }
 
-        // Stock Data Management
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 
+            'http://localhost:5000/api' : 
+            'https://your-proxy-server.com/api'; // プロダクション環境では実際のプロキシサーバーURLに変更
+
+        // Stock Data Loading from API
         async function loadStockData() {
-            if (isLoading) return;
-            isLoading = true;
+            console.log('Loading stock data from API...');
             
             try {
-                const response = await fetch(`${API_BASE_URL}/jp-stocks`);
+                updateServerStatus('warning', '接続中...');
+                
+                // Fetch data from proxy server
+                const response = await fetch(`${API_BASE_URL}/stocks`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const result = await response.json();
                 
-                if (result.success) {
-                    allStocks = result.data;
-                    applyFilters();
-                    updateDisplay();
-                    updateStats();
-                    updateServerStatus('active', 'データ更新完了');
+                if (result.success && result.data) {
+                    allStocks = result.data.map(stock => ({
+                        symbol: stock.symbol,
+                        name: stock.name,
+                        category: stock.category,
+                        price: stock.price,
+                        change: stock.change,
+                        changePercent: stock.changePercent,
+                        lastUpdate: stock.lastUpdate,
+                        country: stock.country,
+                        volume: Math.floor(Math.random() * 1000000 + 50000), // Mock volume for now
+                        session: getCurrentSession()
+                    }));
                     
-                    if (result.market) {
-                        updateMarketStatus(result.market);
-                    }
+                    updateServerStatus('active', 'オンライン');
+                    document.getElementById('validDataCount').textContent = allStocks.filter(s => s.price).length;
                 } else {
-                    throw new Error(result.error);
+                    throw new Error(result.error || 'Invalid API response');
                 }
+                
             } catch (error) {
-                console.error('Data fetch error:', error);
-                showMessage('❌ データ取得エラー: ' + error.message, 'error');
-                updateServerStatus('error', 'データ取得失敗');
-            } finally {
-                isLoading = false;
+                console.error('Error loading stock data:', error);
+                updateServerStatus('error', 'API接続エラー');
+                showMessage(`❌ データ取得エラー: ${error.message}`, 'error');
+                
+                // Fallback to mock data if API fails
+                if (allStocks.length === 0) {
+                    console.log('Falling back to mock data...');
+                    initializeMockData();
+                }
+            }
+            
+            // Update market status and UI
+            updateMarketStatus({
+                isOpen: isMarketOpen(),
+                session: getCurrentSession(),
+                nextChange: getNextChange()
+            });
+            
+            document.getElementById('lastUpdateTime').textContent = new Date().toLocaleTimeString();
+            
+            applyFilters();
+            updateDisplay();
+            updateStats();
+            
+            console.log(`Stock data loaded: ${allStocks.length} stocks`);
+        }
+
+        // Fallback mock data function
+        function initializeMockData() {
+            console.log('Initializing fallback mock data...');
+            
+            // 日本株銘柄のベースデータ
+            const baseStocks = [
+                {symbol: "7203.T", name: "トヨタ自動車", category: "automotive", country: "JP"},
+                {symbol: "9984.T", name: "ソフトバンクグループ", category: "telecom", country: "JP"},
+                {symbol: "6758.T", name: "ソニーグループ", category: "electronics", country: "JP"},
+                {symbol: "9433.T", name: "KDDI", category: "telecom", country: "JP"},
+                {symbol: "6861.T", name: "キーエンス", category: "industrial", country: "JP"},
+                {symbol: "8035.T", name: "東京エレクトロン", category: "tech", country: "JP"},
+                {symbol: "4755.T", name: "楽天グループ", category: "ecommerce", country: "JP"},
+                {symbol: "AAPL", name: "Apple Inc.", category: "tech", country: "US"},
+                {symbol: "GOOGL", name: "Alphabet Inc.", category: "tech", country: "US"},
+                {symbol: "MSFT", name: "Microsoft Corporation", category: "tech", country: "US"}
+            ];
+
+            allStocks = baseStocks.map(stock => {
+                const basePrice = stock.country === 'JP' ? 
+                    Math.floor(Math.random() * 8000 + 1000) : // 日本株: 1,000-9,000円
+                    Math.floor(Math.random() * 200 + 50); // 米国株: 50-250ドル
+                    
+                const changePercent = (Math.random() - 0.5) * 6; // -3%から+3%
+                const change = basePrice * (changePercent / 100);
+                
+                return {
+                    ...stock,
+                    price: basePrice,
+                    change: change,
+                    changePercent: changePercent,
+                    volume: Math.floor(Math.random() * 1000000 + 50000),
+                    lastUpdate: new Date().toISOString(),
+                    session: getCurrentSession()
+                };
+            });
+            
+            updateServerStatus('warning', 'モックデータ');
+        }
+
+        function getCurrentSession() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentTime = hours * 100 + minutes;
+
+            if (currentTime >= 900 && currentTime <= 1130) {
+                return 'morning';
+            } else if (currentTime >= 1230 && currentTime <= 1530) {
+                return 'afternoon';
+            } else {
+                return 'closed';
             }
         }
+
+        function isMarketOpen() {
+            const session = getCurrentSession();
+            return session === 'morning' || session === 'afternoon';
+        }
+
+        function getNextChange() {
+            const session = getCurrentSession();
+            if (session === 'morning') return '11:30 (昼休み)';
+            if (session === 'afternoon') return '15:30 (取引終了)';
+            return '09:00 (前場開始)';
+        }
+
 
         // Filtering System
         function applyFilters() {
@@ -1106,11 +1187,10 @@
                 if (changeFilter === 'big-move' && Math.abs(stock.changePercent) < 2) return false;
                 if (changeFilter === 'small-move' && Math.abs(stock.changePercent) > 1) return false;
                 
-                // Price filter (convert USD to JPY approximately)
-                const priceJPY = stock.price * 150; // Rough conversion
-                if (priceFilter === 'low' && priceJPY >= 5000) return false;
-                if (priceFilter === 'mid' && (priceJPY < 5000 || priceJPY >= 20000)) return false;
-                if (priceFilter === 'high' && priceJPY < 20000) return false;
+                // Price filter (JPY)
+                if (priceFilter === 'low' && stock.price >= 3000) return false;
+                if (priceFilter === 'mid' && (stock.price < 3000 || stock.price >= 8000)) return false;
+                if (priceFilter === 'high' && stock.price < 8000) return false;
                 
                 // Search filter
                 if (searchQuery && 
@@ -1146,6 +1226,15 @@
             }
             
             container.innerHTML = filteredStocks.map(stock => createStockCard(stock)).join('');
+            
+            // チャートを描画
+            setTimeout(() => {
+                filteredStocks.forEach(stock => {
+                    if (stock.priceHistory) {
+                        drawMiniChart(stock.symbol, stock.priceHistory, stock.changePercent);
+                    }
+                });
+            }, 100);
         }
 
         function createStockCard(stock) {
@@ -1173,13 +1262,18 @@
                     </div>
                     
                     <div class="stock-price">
-                        $${stock.price ? stock.price.toFixed(2) : 'N/A'}
+                        ¥${stock.price ? stock.price.toLocaleString() : 'N/A'}
                     </div>
                     
                     ${stock.price ? `
                         <div class="price-change ${changeClass}">
-                            ${changePrefix}$${(stock.change || 0).toFixed(2)} 
+                            ${changePrefix}¥${Math.abs(stock.change || 0).toLocaleString()} 
                             (${changePrefix}${(stock.changePercent || 0).toFixed(2)}%)
+                        </div>
+                        
+                        <!-- Mini Chart -->
+                        <div class="mini-chart-container">
+                            <canvas class="mini-chart" width="280" height="60" data-symbol="${stock.symbol}"></canvas>
                         </div>
                         
                         <div class="stock-details">
@@ -1192,7 +1286,7 @@
                             <div class="detail-item">
                                 <span class="detail-label">変動額</span>
                                 <span class="detail-value ${changeClass}">
-                                    ${changePrefix}$${(stock.change || 0).toFixed(2)}
+                                    ${changePrefix}¥${Math.abs(stock.change || 0).toLocaleString()}
                                 </span>
                             </div>
                             <div class="detail-item">
@@ -1236,6 +1330,81 @@
             document.getElementById('negativeStocks').textContent = negativeStocks.length;
             document.getElementById('neutralStocks').textContent = neutralStocks.length;
             document.getElementById('avgChange').textContent = `${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%`;
+        }
+
+        // Chart Drawing Function
+        function drawMiniChart(symbol, priceHistory, changePercent) {
+            const canvas = document.querySelector(`canvas[data-symbol="${symbol}"]`);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            if (!priceHistory || priceHistory.length < 2) return;
+            
+            // Calculate min/max for scaling
+            const minPrice = Math.min(...priceHistory);
+            const maxPrice = Math.max(...priceHistory);
+            const priceRange = maxPrice - minPrice || 1;
+            
+            // Chart colors based on performance
+            const lineColor = changePercent > 0 ? '#00ff88' : 
+                             changePercent < 0 ? '#ff4444' : '#8a8a8e';
+            const fillColor = changePercent > 0 ? 'rgba(0, 255, 136, 0.1)' : 
+                             changePercent < 0 ? 'rgba(255, 68, 68, 0.1)' : 'rgba(138, 138, 142, 0.1)';
+            
+            // Draw area chart
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            
+            priceHistory.forEach((price, index) => {
+                const x = (index / (priceHistory.length - 1)) * width;
+                const y = height - ((price - minPrice) / priceRange) * (height - 10) - 5;
+                
+                if (index === 0) {
+                    ctx.lineTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            
+            // Fill area
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+            
+            // Draw line
+            ctx.beginPath();
+            priceHistory.forEach((price, index) => {
+                const x = (index / (priceHistory.length - 1)) * width;
+                const y = height - ((price - minPrice) / priceRange) * (height - 10) - 5;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw current price point
+            const lastPrice = priceHistory[priceHistory.length - 1];
+            const lastX = width - 2;
+            const lastY = height - ((lastPrice - minPrice) / priceRange) * (height - 10) - 5;
+            
+            ctx.beginPath();
+            ctx.arc(lastX, lastY, 3, 0, 2 * Math.PI);
+            ctx.fillStyle = lineColor;
+            ctx.fill();
         }
 
         // User Actions
@@ -1288,9 +1457,6 @@
         }
 
         // UI Helpers
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').style.display = show ? 'block' : 'none';
-        }
 
         function showMessage(message, type = 'info') {
             const container = document.getElementById('stocksContainer');
