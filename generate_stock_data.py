@@ -126,8 +126,8 @@ def main():
                     'lastUpdate': stock_data['last_update']
                 })
                 
-                # API制限対策: 12秒間隔
-                time.sleep(12)
+                # API制限対策: ギリギリ速度 (5 API calls/minute = 12秒間隔)
+                time.sleep(12.1)
             else:
                 print(f"  Failed to fetch {symbol}, skipping...")
     
