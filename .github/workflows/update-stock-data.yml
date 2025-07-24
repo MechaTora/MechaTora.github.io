@@ -3,25 +3,14 @@
   on:
     workflow_dispatch:
 
-  env:
-    ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
-
   jobs:
-    update-stock-data:
+    test:
       runs-on: ubuntu-latest
-
       permissions:
         contents: write
-
       steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
       - run: python generate_stock_data.py
-      - run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "📊 Update stocks" || exit 0
-          git push
+      - run: ls -la stock-monitor-pro/data/
+      - run: cat stock-monitor-pro/data/stocks.json
+      - run: echo "Script completed successfully"
