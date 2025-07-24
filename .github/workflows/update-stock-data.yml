@@ -1,0 +1,33 @@
+ name: Update Stock Data
+
+  on:
+    schedule:
+      # 🔥 API制限500calls/日を完全活用: 20銘柄×25回=500calls (約13分間隔)
+      - cron: '0,13,26,39,52 0 * * 1-5'     # 09:00-09:52 JST (5回)
+      - cron: '5,18,31,44,57 1 * * 1-5'     # 10:05-10:57 JST (5回)
+      - cron: '10,23 2 * * 1-5'             # 11:10, 11:23 JST (2回)
+      - cron: '0,13,26,39,52 4 * * 1-5'     # 13:00-13:52 JST (5回)
+      - cron: '5,18,31,44,57 5 * * 1-5'     # 14:05-14:57 JST (5回)
+      - cron: '10,23,36 6 * * 1-5'          # 15:10, 15:23, 15:36 JST (3回)
+    workflow_dispatch:
+
+  env:
+    ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+
+  jobs:
+    update-stock-data:
+      runs-on: ubuntu-latest
+
+      steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python generate_stock_data.py
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add stock-monitor-pro/data/stocks.json
+          git diff --staged --quiet || git commit -m "📊 Update stock data"
+          git push
