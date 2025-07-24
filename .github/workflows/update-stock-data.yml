@@ -1,4 +1,4 @@
- name: Update Stock Data
+  name: Update Stock Data
 
   on:
     schedule:
@@ -9,7 +9,8 @@
       - cron: '0,13,26,39,52 4 * * 1-5'     # 13:00-13:52 JST (5回)
       - cron: '5,18,31,44,57 5 * * 1-5'     # 14:05-14:57 JST (5回)
       - cron: '10,23,36 6 * * 1-5'          # 15:10, 15:23, 15:36 JST (3回)
-    workflow_dispatch:
+      # 合計: 5+5+2+5+5+3 = 25回/日
+    workflow_dispatch: # 手動実行可能
 
   env:
     ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
@@ -18,16 +19,34 @@
     update-stock-data:
       runs-on: ubuntu-latest
 
+      permissions:
+        contents: write
+
       steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - run: pip install requests
-      - run: python generate_stock_data.py
-      - run: |
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Create data directory
+        run: |
+          mkdir -p stock-monitor-pro/data
+
+      - name: Generate stock data
+        run: |
+          python generate_stock_data.py
+
+      - name: Commit and push if changed
+        run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add stock-monitor-pro/data/stocks.json
-          git diff --staged --quiet || git commit -m "📊 Update stock data"
+          git diff --staged --quiet || git commit -m "📊 Update stock data - $(date '+%Y-%m-%d %H:%M')"
           git push
