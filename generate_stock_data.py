@@ -1,4 +1,4 @@
- #!/usr/bin/env python3
+  #!/usr/bin/env python3
   import json
   import os
 
@@ -21,12 +21,7 @@
           json.dump(data, f)
 
       print("File written successfully")
-      print("Script completed without errors")
 
   except Exception as e:
-      print(f"Error occurred: {e}")
-      import traceback
-      traceback.print_exc()
-      exit(1)
-      traceback.print_exc()
+      print(f"Error: {e}")
       exit(1)
