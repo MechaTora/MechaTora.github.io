@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="ja" prefix="og: https://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO Meta Tags -->
+    <title>📊 Stock Monitor Pro - 日本株リアルタイム監視システム | 無料株価分析ツール</title>
+    <meta name="description" content="日本株25銘柄をリアルタイム監視。トヨタ、ソフトバンク、ソニーなど人気銘柄の株価変動を無料で追跡。取引時間限定の効率的な株価分析ツール。モバイル対応。">
+    <meta name="keywords" content="日本株,株価,リアルタイム,株式監視,投資ツール,無料,トヨタ,ソフトバンク,ソニー,KDDI,キーエンス,楽天,任天堂,株価分析,投資情報">
+    <meta name="author" content="Stock Monitor Pro">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.github.io/stock-monitor-pro/">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="📊 Stock Monitor Pro - 日本株リアルタイム監視システム">
+    <meta property="og:description" content="日本株25銘柄をリアルタイム監視。無料で使える高機能株価分析ツール。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.github.io/stock-monitor-pro/">
+    <meta property="og:site_name" content="Stock Monitor Pro">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="📊 Stock Monitor Pro - 日本株リアルタイム監視">
+    <meta name="twitter:description" content="日本株25銘柄をリアルタイム監視。無料で使える高機能株価分析ツール。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6NJKWS2RJ8');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+            crossorigin="anonymous"></script>
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Stock Monitor Pro",
+        "description": "日本株25銘柄をリアルタイム監視する無料の株価分析ツール",
+        "url": "https://mechatora.github.io/stock-monitor-pro/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+        },
+        "featureList": [
+            "リアルタイム株価監視",
+            "25銘柄対応",
+            "高度フィルタリング",
+            "モバイル対応",
+            "取引時間限定更新"
+        ]
+    }
+    </script>
+    
+    <style>
+        /* CSS Custom Properties */
+        :root {
+            --primary-color: #00ff88;
+            --primary-dark: #00cc6a;
+            --secondary-color: #ff0088;
+            --accent-color: #00d4ff;
+            --warning-color: #ffaa00;
+            --danger-color: #ff4444;
+            
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #1a1a1c;
+            --bg-tertiary: #2a2a2d;
+            --bg-card: #1e1e21;
+            --bg-hover: #252529;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #b4b4b8;
+            --text-muted: #8a8a8e;
+            
+            --border-color: #333338;
+            --border-hover: #444449;
+            
+            --gradient-primary: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            --gradient-dark: linear-gradient(135deg, #1a1a1c 0%, #2a2a2d 100%);
+            --gradient-card: linear-gradient(135deg, #1e1e21 0%, #252529 100%);
+            
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 0, 136, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundPulse 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Container & Layout */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Header Styles */
+        .hero-header {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin: 20px 0 40px 0;
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-primary);
+            opacity: 0.1;
+            animation: heroRotate 30s linear infinite;
+        }
+
+        @keyframes heroRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .hero-description {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.active { background: var(--primary-color); }
+        .status-dot.warning { background: var(--warning-color); }
+        .status-dot.error { background: var(--danger-color); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .control-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .control-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .control-input:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 12px 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            user-select: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-hover);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Stock Cards Grid */
+        .stocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stock-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stock-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stock-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .stock-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stock-card.hidden {
+            display: none;
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .stock-info {
+            flex: 1;
+        }
+
+        .stock-symbol {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .stock-name {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .stock-category {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .country-flag {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .stock-price {
+            font-size: 2.25rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .price-change {
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .price-change::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .price-change.positive {
+            color: var(--primary-color);
+        }
+
+        .price-change.positive::before {
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 8px solid var(--primary-color);
+        }
+
+        .price-change.negative {
+            color: var(--danger-color);
+        }
+
+        .price-change.negative::before {
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid var(--danger-color);
+        }
+
+        .price-change.neutral {
+            color: var(--text-muted);
+        }
+
+        .price-change.neutral::before {
+            width: 8px;
+            height: 2px;
+            background: var(--text-muted);
+            border: none;
+        }
+
+        .stock-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 0.875rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .last-update {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: var(--font-mono);
+        }
+
+        /* Loading & Messages */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 11, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .message.error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: var(--danger-color);
+        }
+
+        .message.info {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--primary-color);
+        }
+
+        .message.warning {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            color: var(--warning-color);
+        }
+
+        /* AdSense Integration */
+        .ad-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center;
+            margin: 32px 0;
+            position: relative;
+        }
+
+        .ad-container::before {
+            content: '広告';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ad-container ins {
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .hero-header {
+                padding: 24px 20px;
+                margin: 16px 0 24px 0;
+            }
+
+            .control-panel {
+                padding: 20px 16px;
+            }
+
+            .control-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .stocks-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .stock-card {
+                padding: 20px 16px;
+            }
+
+            .stock-details {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-header {
+                padding: 20px 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 16px 12px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --border-color: #666;
+                --text-muted: #ccc;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .ad-container,
+            .control-panel,
+            .loading-overlay {
+                display: none !important;
+            }
+            
+            .stock-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #333;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-hover);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Hero Header -->
+        <header class="hero-header">
+            <div class="hero-content">
+                <h1 class="hero-title">📊 Stock Monitor Pro</h1>
+                <p class="hero-subtitle">日本株リアルタイム監視システム</p>
+                <p class="hero-description">25銘柄の人気日本株を効率的に監視。取引時間内のみ更新でAPI使用量を最適化。</p>
+            </div>
+        </header>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span id="serverStatus" class="status-dot warning"></span>
+                <span>サーバー: <span id="serverStatusText">接続中...</span></span>
+            </div>
+            <div class="status-item">
+                <span>最終更新: <span id="lastUpdateTime">-</span></span>
+            </div>
+            <div class="status-item">
+                <span>有効データ: <span id="validDataCount">0</span>銘柄</span>
+            </div>
+            <div class="status-item">
+                <span>市場状況: <span id="marketStatus">確認中</span></span>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="control-header">
+                <span>⚙️</span>
+                <h2 class="control-title">フィルター & 制御</h2>
+            </div>
+            
+            <div class="control-grid">
+                <div class="control-group">
+                    <label class="control-label">
+                        🏷️ カテゴリ選択
+                    </label>
+                    <select id="categoryFilter" class="control-input" onchange="applyFilters()">
+                        <option value="all">すべて表示</option>
+                        <option value="automotive">🚗 自動車</option>
+                        <option value="tech">💻 テクノロジー</option>
+                        <option value="telecom">📡 通信</option>
+                        <option value="finance">💰 金融</option>
+                        <option value="electronics">🔌 電機</option>
+                        <option value="industrial">🏭 工業</option>
+                        <option value="pharma">💊 製薬</option>
+                        <option value="ecommerce">🛒 Eコマース</option>
+                        <option value="gaming">🎮 ゲーム</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">
+                        📈 変動率フィルター
+                    </label>
+                    <select id="changeFilter" class="control-input" onchange="applyFilters()">
+                        <option value="all">すべて表示</option>
+                        <option value="positive">📈 上昇のみ</option>
+                        <option value="negative">📉 下落のみ</option>
+                        <option value="big-move">🚀 大幅変動 (±2%以上)</option>
+                        <option value="small-move">😴 小幅変動 (±1%以内)</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">
+                        💰 株価帯フィルター
+                    </label>
+                    <select id="priceFilter" class="control-input" onchange="applyFilters()">
+                        <option value="all">すべて</option>
+                        <option value="low">💸 5,000円未満</option>
+                        <option value="mid">💴 5,000-20,000円</option>
+                        <option value="high">💎 20,000円以上</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">
+                        🔍 銘柄検索
+                    </label>
+                    <input type="text" id="searchInput" class="control-input" 
+                           placeholder="銘柄名/シンボル検索" onkeyup="applyFilters()">
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+                <button onclick="refreshData()" class="btn" id="refreshBtn">
+                    🔄 データ更新
+                </button>
+                <button onclick="resetFilters()" class="btn btn-secondary">
+                    🗑️ フィルターリセット
+                </button>
+                <button onclick="exportVisibleData()" class="btn btn-secondary">
+                    📁 データエクスポート
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalStocks">0</div>
+                <div class="stat-label">総銘柄数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="visibleStocks">0</div>
+                <div class="stat-label">表示中</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="positiveStocks">0</div>
+                <div class="stat-label">上昇銘柄</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="negativeStocks">0</div>
+                <div class="stat-label">下落銘柄</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="neutralStocks">0</div>
+                <div class="stat-label">変動なし</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgChange">0.0%</div>
+                <div class="stat-label">平均変動率</div>
+            </div>
+        </div>
+
+        <!-- AdSense Ad 1 -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="4192012905"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <!-- Stock Cards Grid -->
+        <div id="stocksContainer" class="stocks-grid">
+            <div class="message info">
+                🔄 サーバーからデータを取得中...
+            </div>
+        </div>
+
+        <!-- AdSense Ad 2 -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="6105883891"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Application State
+        const API_BASE_URL = 'http://localhost:5000/api'; 
+        let allStocks = [];
+        let filteredStocks = [];
+        let isLoading = false;
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        async function initializeApp() {
+            showLoading(true);
+            
+            try {
+                await Promise.all([
+                    loadServerStatus(),
+                    loadStockData()
+                ]);
+                
+                // Auto-refresh every 5 minutes
+                setInterval(loadStockData, 5 * 60 * 1000);
+                
+                showMessage('✅ システム初期化完了', 'info');
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showMessage('❌ 初期化エラー: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Server Status Management
+        async function loadServerStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/market-status`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    updateServerStatus('active', 'オンライン');
+                    updateMarketStatus(result.market);
+                    document.getElementById('validDataCount').textContent = result.data.stocksWithData;
+                    
+                    const lastUpdate = result.data.lastUpdate;
+                    document.getElementById('lastUpdateTime').textContent = 
+                        lastUpdate ? new Date(lastUpdate).toLocaleTimeString() : '-';
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                updateServerStatus('error', 'オフライン');
+                document.getElementById('marketStatus').textContent = '接続エラー';
+                throw error;
+            }
+        }
+
+        function updateServerStatus(status, message) {
+            const dot = document.getElementById('serverStatus');
+            const text = document.getElementById('serverStatusText');
+            
+            dot.className = `status-dot ${status}`;
+            text.textContent = message;
+        }
+
+        function updateMarketStatus(market) {
+            const statusText = market.isOpen ? 
+                `🟢 ${market.session === 'morning' ? '前場' : '後場'}取引中` : 
+                `🔴 取引時間外 (${market.nextChange})`;
+            
+            document.getElementById('marketStatus').textContent = statusText;
+        }
+
+        // Stock Data Management
+        async function loadStockData() {
+            if (isLoading) return;
+            isLoading = true;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/jp-stocks`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allStocks = result.data;
+                    applyFilters();
+                    updateDisplay();
+                    updateStats();
+                    updateServerStatus('active', 'データ更新完了');
+                    
+                    if (result.market) {
+                        updateMarketStatus(result.market);
+                    }
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Data fetch error:', error);
+                showMessage('❌ データ取得エラー: ' + error.message, 'error');
+                updateServerStatus('error', 'データ取得失敗');
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        // Filtering System
+        function applyFilters() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const changeFilter = document.getElementById('changeFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredStocks = allStocks.filter(stock => {
+                // Category filter
+                if (categoryFilter !== 'all' && stock.category !== categoryFilter) return false;
+                
+                // Skip stocks without price data
+                if (!stock.price) return false;
+                
+                // Change filter
+                if (changeFilter === 'positive' && stock.changePercent <= 0) return false;
+                if (changeFilter === 'negative' && stock.changePercent >= 0) return false;
+                if (changeFilter === 'big-move' && Math.abs(stock.changePercent) < 2) return false;
+                if (changeFilter === 'small-move' && Math.abs(stock.changePercent) > 1) return false;
+                
+                // Price filter (convert USD to JPY approximately)
+                const priceJPY = stock.price * 150; // Rough conversion
+                if (priceFilter === 'low' && priceJPY >= 5000) return false;
+                if (priceFilter === 'mid' && (priceJPY < 5000 || priceJPY >= 20000)) return false;
+                if (priceFilter === 'high' && priceJPY < 20000) return false;
+                
+                // Search filter
+                if (searchQuery && 
+                    !stock.symbol.toLowerCase().includes(searchQuery) && 
+                    !stock.name.toLowerCase().includes(searchQuery)) return false;
+                
+                return true;
+            });
+            
+            updateDisplay();
+            updateStats();
+        }
+
+        function resetFilters() {
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('changeFilter').value = 'all';
+            document.getElementById('priceFilter').value = 'all';
+            document.getElementById('searchInput').value = '';
+            applyFilters();
+        }
+
+        // Display Management
+        function updateDisplay() {
+            const container = document.getElementById('stocksContainer');
+            
+            if (filteredStocks.length === 0) {
+                container.innerHTML = `
+                    <div class="message warning" style="grid-column: 1 / -1;">
+                        📊 フィルター条件に一致する銘柄がありません
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredStocks.map(stock => createStockCard(stock)).join('');
+        }
+
+        function createStockCard(stock) {
+            const changeClass = stock.changePercent > 0 ? 'positive' : 
+                               stock.changePercent < 0 ? 'negative' : 'neutral';
+            const changePrefix = stock.changePercent > 0 ? '+' : '';
+            
+            const categoryDisplayNames = {
+                'automotive': '自動車', 'tech': 'テック', 'telecom': '通信',
+                'finance': '金融', 'electronics': '電機', 'industrial': '工業',
+                'pharma': '製薬', 'ecommerce': 'EC', 'gaming': 'ゲーム',
+                'trading': '商社', 'chemical': '化学', 'conglomerate': '総合',
+                'retail': '小売', 'internet': 'ネット'
+            };
+            
+            return `
+                <div class="stock-card">
+                    <div class="stock-header">
+                        <div class="stock-info">
+                            <div class="stock-symbol">${stock.symbol}</div>
+                            <div class="stock-name">${stock.name}</div>
+                            <div class="stock-category">${categoryDisplayNames[stock.category] || stock.category}</div>
+                        </div>
+                        <div class="country-flag">🇯🇵</div>
+                    </div>
+                    
+                    <div class="stock-price">
+                        $${stock.price ? stock.price.toFixed(2) : 'N/A'}
+                    </div>
+                    
+                    ${stock.price ? `
+                        <div class="price-change ${changeClass}">
+                            ${changePrefix}$${(stock.change || 0).toFixed(2)} 
+                            (${changePrefix}${(stock.changePercent || 0).toFixed(2)}%)
+                        </div>
+                        
+                        <div class="stock-details">
+                            <div class="detail-item">
+                                <span class="detail-label">変動率</span>
+                                <span class="detail-value ${changeClass}">
+                                    ${changePrefix}${(stock.changePercent || 0).toFixed(2)}%
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">変動額</span>
+                                <span class="detail-value ${changeClass}">
+                                    ${changePrefix}$${(stock.change || 0).toFixed(2)}
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">出来高</span>
+                                <span class="detail-value">
+                                    ${stock.volume ? stock.volume.toLocaleString() : 'N/A'}
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">セッション</span>
+                                <span class="detail-value">
+                                    ${stock.session === 'morning' ? '前場' : 
+                                      stock.session === 'afternoon' ? '後場' : 'N/A'}
+                                </span>
+                            </div>
+                            
+                            <div class="last-update">
+                                最終更新: ${stock.lastUpdate ? 
+                                    new Date(stock.lastUpdate).toLocaleString() : 
+                                    'データなし'}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Statistics Management
+        function updateStats() {
+            const validStocks = allStocks.filter(s => s.price);
+            const positiveStocks = validStocks.filter(s => s.changePercent > 0);
+            const negativeStocks = validStocks.filter(s => s.changePercent < 0);
+            const neutralStocks = validStocks.filter(s => s.changePercent === 0);
+            
+            const avgChange = validStocks.length > 0 ? 
+                validStocks.reduce((sum, s) => sum + (s.changePercent || 0), 0) / validStocks.length : 0;
+            
+            document.getElementById('totalStocks').textContent = allStocks.length;
+            document.getElementById('visibleStocks').textContent = filteredStocks.length;
+            document.getElementById('positiveStocks').textContent = positiveStocks.length;
+            document.getElementById('negativeStocks').textContent = negativeStocks.length;
+            document.getElementById('neutralStocks').textContent = neutralStocks.length;
+            document.getElementById('avgChange').textContent = `${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%`;
+        }
+
+        // User Actions
+        async function refreshData() {
+            const btn = document.getElementById('refreshBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '🔄 更新中...';
+            
+            try {
+                await loadStockData();
+                showMessage('✅ データを更新しました', 'info');
+            } catch (error) {
+                showMessage('❌ 更新に失敗しました: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        function exportVisibleData() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                filters: {
+                    category: document.getElementById('categoryFilter').value,
+                    change: document.getElementById('changeFilter').value,
+                    price: document.getElementById('priceFilter').value,
+                    search: document.getElementById('searchInput').value
+                },
+                stats: {
+                    total: allStocks.length,
+                    visible: filteredStocks.length,
+                    positive: filteredStocks.filter(s => s.changePercent > 0).length,
+                    negative: filteredStocks.filter(s => s.changePercent < 0).length
+                },
+                stocks: filteredStocks
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `stock-monitor-pro-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showMessage('📁 データをエクスポートしました', 'info');
+        }
+
+        // UI Helpers
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'block' : 'none';
+        }
+
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('stocksContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.gridColumn = '1 / -1';
+            messageDiv.textContent = message;
+            
+            container.insertBefore(messageDiv, container.firstChild);
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        // SEO & Analytics Enhancement
+        function trackUserInteraction(action, category = 'UI') {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', action, {
+                    event_category: category,
+                    event_label: window.location.pathname
+                });
+            }
+        }
+
+        // Track filter usage
+        document.getElementById('categoryFilter').addEventListener('change', () => {
+            trackUserInteraction('filter_category', 'Filtering');
+        });
+
+        document.getElementById('changeFilter').addEventListener('change', () => {
+            trackUserInteraction('filter_change', 'Filtering');
+        });
+
+        document.getElementById('searchInput').addEventListener('input', () => {
+            trackUserInteraction('search', 'Search');
+        });
+    </script>
+
+    <!-- Google AdSense Script -->
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>
