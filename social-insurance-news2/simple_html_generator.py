@@ -282,7 +282,7 @@ body {
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <h1>🏛️ 社会保険ニュース</h1>
+            <h1>🏛️ 社会保険ニュース <span style="font-size: 0.6em; color: rgba(255,255,255,0.8); font-weight: 400;">毎朝4時に更新</span></h1>
             <p>厚生労働省・年金機構・ニュースサイトからの最新情報を自動収集・要約</p>
             <div class="last-updated">
                 最終更新: {current_time}
