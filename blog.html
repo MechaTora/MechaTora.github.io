@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開発ブログ - GYOGYOCAT | Webアプリ開発日記</title>
+    <meta name="description" content="GYOGYOCAT（ギョギョキャット）の開発ブログ。Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
+    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="開発ブログ - GYOGYOCAT">
+    <meta property="og:description" content="Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
+    <meta property="og:type" content="blog">
+    <meta property="og:url" content="https://mechatora.github.io/blog.html">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --accent-color: #764ba2;
+            --text-color: #2d3748;
+            --background: #f7fafc;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--background);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 20px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .header .blog-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: white;
+            color: var(--primary-color);
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-back:hover {
+            transform: translateY(-2px);
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .blog-post {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .blog-post:hover {
+            transform: translateY(-5px);
+        }
+        
+        .post-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .post-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-date {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .post-content {
+            padding: 25px;
+        }
+        
+        .post-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .post-excerpt {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tag {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .read-more {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+        
+        .read-more:hover {
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .featured-post {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin-bottom: 30px;
+        }
+        
+        .featured-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+        }
+        
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .category-button {
+            background: white;
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .category-button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-post {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="nav-back">← メインページに戻る</a>
+        
+        <div class="header">
+            <div class="blog-icon">📝</div>
+            <h1>開発ブログ</h1>
+            <p>Webアプリ開発の舞台裏をお届け</p>
+        </div>
+        
+        <!-- AdSense Header -->
+        <div style="text-align: center; margin: 20px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="5863584162"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+        
+        <div class="categories">
+            <a href="#" class="category-button">全記事</a>
+            <a href="#" class="category-button">技術解説</a>
+            <a href="#" class="category-button">開発日記</a>
+            <a href="#" class="category-button">アップデート</a>
+            <a href="#" class="category-button">Tips</a>
+        </div>
+        
+        <div class="blog-grid">
+            <!-- Featured Post -->
+            <article class="blog-post featured-post">
+                <div class="featured-image">🚀</div>
+                <div class="featured-content">
+                    <div class="post-date">2024年7月25日</div>
+                    <h2 class="post-title">PWA対応で実現した「ネイティブアプリ並み」の体験</h2>
+                    <p class="post-excerpt">
+                        スマート暗記カードをProgressive Web App（PWA）として開発した経験と、ユーザー体験向上のための技術的工夫について詳しく解説します。オフライン対応、プッシュ通知、ホーム画面追加など、PWAの実装ノウハウを公開。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">PWA</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Service Worker</span>
+                        <span class="tag">UX</span>
+                    </div>
+                    <a href="#" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+            
+            <!-- Regular Posts -->
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🧠</div>
+                    <div class="post-date">2024年7月20日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">記憶科学に基づく学習アルゴリズムの実装</h3>
+                    <p class="post-excerpt">
+                        エビングハウスの忘却曲線理論をもとに、最適な復習タイミングを計算するアルゴリズムを開発しました。SM-2アルゴリズムの改良版を使用した実装方法を詳しく解説。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">アルゴリズム</span>
+                        <span class="tag">学習理論</span>
+                        <span class="tag">JavaScript</span>
+                    </div>
+                    <a href="#" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+            
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🌍</div>
+                    <div class="post-date">2024年7月15日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">リアルタイム地震情報アプリの開発秘話</h3>
+                    <p class="post-excerpt">
+                        気象庁APIとWebSocket通信を活用したリアルタイム地震情報システムの構築過程。パフォーマンス最適化とユーザビリティ向上のための工夫を紹介します。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">API</span>
+                        <span class="tag">WebSocket</span>
+                        <span class="tag">防災</span>
+                        <span class="tag">パフォーマンス</span>
+                    </div>
+                    <a href="#" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+            
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🎨</div>
+                    <div class="post-date">2024年7月10日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">CSS Grid で実現するレスポンシブレイアウト設計</h3>
+                    <p class="post-excerpt">
+                        現代的なWebデザインに不可欠なCSS Gridを使ったレスポンシブレイアウトの実装方法。Flexboxとの使い分けや、実際のコード例を交えて詳しく解説します。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">CSS</span>
+                        <span class="tag">Grid</span>
+                        <span class="tag">レスポンシブ</span>
+                        <span class="tag">デザイン</span>
+                    </div>
+                    <a href="#" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+            
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🐦</div>
+                    <div class="post-date">2024年7月5日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">ゲーミフィケーションで学習意欲向上：Xバズシミュレーター開発記</h3>
+                    <p class="post-excerpt">
+                        SNSのバズ体験をゲーム化することで、ユーザーエンゲージメントを向上させるアプローチ。心理学的要素を取り入れたUI/UX設計のポイントを解説します。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">ゲーミフィケーション</span>
+                        <span class="tag">UX</span>
+                        <span class="tag">エンゲージメント</span>
+                    </div>
+                    <a href="#" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+            
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🔧</div>
+                    <div class="post-date">2024年6月30日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">Webアプリのパフォーマンス最適化テクニック集</h3>
+                    <p class="post-excerpt">
+                        読み込み速度改善からメモリ使用量削減まで、実践的なパフォーマンス最適化手法をまとめました。計測ツールの使い方から具体的な改善案まで網羅的に紹介。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">パフォーマンス</span>
+                        <span class="tag">最適化</span>
+                        <span class="tag">ベストプラクティス</span>
+                    </div>
+                    <a href="#" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+        </div>
+        
+        <!-- AdSense Middle -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="8547296385"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+        
+        <div style="text-align: center; margin: 40px 0; padding: 30px; background: white; border-radius: 15px; box-shadow: var(--card-shadow);">
+            <h3>📧 開発情報をお届け</h3>
+            <p>新しいアプリのリリース情報や技術記事の更新をお知らせします。</p>
+            <p><small>※現在、メール配信機能を準備中です</small></p>
+        </div>
+        
+        <!-- AdSense Footer -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="9102618057"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+    
+    <!-- AdSense 初期化 -->
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>
