@@ -3,383 +3,1009 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作成アプリ一覧 - 無料で使える実用的なツール</title>
-    <meta name="description" content="無料で使える便利なWebアプリ集。暗記カード、焚火アプリ、地震情報、Xバズシミュレーター、料理サジェストなど実用的なツールを多数公開しています。">    
-    <meta name="keywords" content="Webアプリ,無料ツール,暗記カード,焚火アプリ,地震情報,料理レシピ,便利ツール,オンラインアプリ">
-    <meta name="author" content="Webアプリ集">
-    <meta name="robots" content="index, follow">
+    <title>社会保険ニュース - 最新情報まとめ</title>
+    <meta name="description" content="社会保険に関する最新ニュースを自動収集・要約してお届けします。健康保険、厚生年金、雇用保険などの重要な変更情報をわかりやすく整理。">
     
-    <!-- Open Graph -->
-    <meta property="og:title" content="作成アプリ一覧 - 無料で使える実用的なツール">
-    <meta property="og:description" content="無料で使える便利なWebアプリを多数公開しているサイトです。学習、情報収集、娯楽など様々な用途に対応。">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mechatora.github.io/">
-    <meta property="og:site_name" content="作成アプリ一覧"
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="作成アプリ一覧 - 無料で使える実用的なツール">
-    <meta name="twitter:description" content="無料で使える便利なWebアプリを多数公開しているサイトです。学習、情報収集、娯楽など様々な用途に対応。">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://mechatora.github.io/">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-6NJKWS2RJ8');
-    </script>
-    
-    <!-- Google AdSense -->
+    <!-- AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
             crossorigin="anonymous"></script>
     
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "作成アプリ一覧",
-        "url": "https://mechatora.github.io/",
-        "description": "無料で使える便利なWebアプリケーション集",
-        "applicationCategory": "UtilityApplication",
-        "operatingSystem": "Any",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "JPY"
-        }
-    }
-    </script>
-    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-        }
-        
-        .logo {
-            font-size: 3rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 1rem;
-        }
-        
-        .tagline {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 0.5rem;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.8);
-        }
-        
-        .intro-section {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 3rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .intro-section h2 {
-            color: #4a5568;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-        
-        .intro-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #666;
-        }
-        
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .app-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        
-        .app-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        
-        .app-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-        
-        .app-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: #4a5568;
-        }
-        
-        .app-description {
-            color: #666;
-            line-height: 1.6;
-        }
-        
-        .coming-soon {
-            opacity: 0.6;
-            position: relative;
-        }
-        
-        .coming-soon::after {
-            content: "近日公開";
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: #ff6b6b;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-        }
-        
-        .footer-links {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            background: rgba(255,255,255,0.2);
-            transition: background 0.3s ease;
-            display: inline-block;
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer-links a:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 2.5rem;
-            }
-            
-            .tagline {
-                font-size: 1.1rem;
-            }
-            
-            .apps-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-links a {
-                display: block;
-                margin: 0.5rem 0;
-            }
-        }
-        
-        /* AdSense対応のレスポンシブ広告エリア */
-        .ad-container {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 1rem;
-        }
-        
-        .ad-container ins {
-            display: block;
-            margin: 0 auto;
-        }
+:root {
+    --primary-color: #4A90E2;
+    --accent-color: #FF8C42;
+    --background: #F7F9FC;
+    --surface: #FFFFFF;
+    --text-primary: #2C3E50;
+    --text-secondary: #7B8794;
+    --border-color: #E1E8ED;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --radius-lg: 12px;
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--background);
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2E5A87 100%);
+    color: white;
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+.last-updated {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: var(--radius-lg);
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.stat-card {
+    background: var(--surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.news-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-2px);
+}
+
+.news-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.news-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.category-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.category-健康保険 { background: #E6F7FF; color: #1890FF; }
+.category-厚生年金 { background: #F6FFED; color: #52C41A; }
+.category-雇用保険 { background: #FFF7E6; color: #FA8C16; }
+.category-労災保険 { background: #FFF1F0; color: #FF4D4F; }
+.category-介護保険 { background: #F9F0FF; color: #722ED1; }
+.category-社会保険全般 { background: #F0F0F0; color: #595959; }
+.category-その他 { background: #F0F0F0; color: #8C8C8C; }
+
+.importance-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.importance-高 { background: #FFE7E7; color: #FF4D4F; }
+.importance-中 { background: #FFF7E6; color: #FA8C16; }
+.importance-低 { background: #F6FFED; color: #52C41A; }
+
+.source-tag {
+    background: var(--background);
+    color: var(--text-secondary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.news-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.news-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.news-title a:hover {
+    color: var(--primary-color);
+}
+
+.news-body {
+    padding: var(--spacing-md);
+}
+
+.news-summary {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.news-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: var(--spacing-md);
+}
+
+.keyword-tag {
+    background: var(--background);
+    color: var(--text-secondary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: 1px solid var(--border-color);
+}
+
+.news-footer {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--background);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.read-more-btn {
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.read-more-btn:hover {
+    background: #2E5A87;
+}
+
+.published-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    .container {
+        padding: var(--spacing-lg);
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .news-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .news-footer {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: flex-start;
+    }
+}
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 class="logo">🛠️ 作成アプリ一覧</h1>
-            <p class="tagline">無料で使える実用的なツール</p>
-            <p class="subtitle">学習・情報収集・娯楽に役立つアプリを公開中</p>
-        </header>
-        
-        <section class="intro-section">
-            <h2>ようこそ！作成アプリ一覧へ</h2>
-            <div class="intro-text">
-                <p>日常生活を便利にしたり、楽しくしたりするWebアプリケーションを無料で公開しています。</p>
-                <p>学習支援、情報収集、娯楽など様々な用途に対応したアプリを制作しており、どなたでも無料でご利用いただけます。ブラウザがあればすぐに使えるシンプルなツールばかりです。</p>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🏛️ 社会保険ニュース</h1>
+            <p>厚生労働省・年金機構・ニュースサイトからの最新情報を自動収集・要約</p>
+            <div class="last-updated">
+                最終更新: 2025年07月25日 11:58
+            </div>
+        </div>
+    </header>
+
+    <!-- AdSense Header -->
+    <div style="text-align: center; margin: 16px 0;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1184134440246706"
+             data-ad-slot="5863584162"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Statistics -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">56</div>
+                <div class="stat-label">総ニュース数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">重要ニュース</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">7</div>
+                <div class="stat-label">カテゴリ数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">本日更新</div>
             </div>
         </section>
+
+        <!-- News Grid -->
+        <section class="news-grid">
+            
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-高">
+                            🚨 高
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/cdd8b46fd1602b586a3b83ae8fb407240f0a2610" target="_blank" rel="noopener">
+                            給付も減税も「無しの可能性」 各党バラバラの減税案を「野田代表がまとめるのは困難では？」 年収の壁、ガソリン暫定税率、社会保険料などほかの案は？専門家らが予想す...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 給付も減税も「無しの可能性」 各党バラバラの減税案を「野田代... (6万円, 2万円, 4万円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">6万円</span><span class="keyword-tag">2万円</span><span class="keyword-tag">4万円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/cdd8b46fd1602b586a3b83ae8fb407240f0a2610" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
         
-        <!-- AdSense広告エリア1 -->
-        <div class="ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="4192012905"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-        </div>
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-中">
+                            ⚠️ 中
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/35b84a196e5e164d35bccde13f91de72bfffeca9" target="_blank" rel="noopener">
+                            働いている場合じゃない!?株価は上がっているのに賃金が目減りする理由…します。 例えば、手取りを増やそうと給与明細をまじまじと見ていれば、社会保険料が近年“増税...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 働いている場合じゃない!?株価は上がっているのに賃金が目減り... (1800万円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">1800万円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/35b84a196e5e164d35bccde13f91de72bfffeca9" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
         
-        <section class="apps-grid">
-            <a href="https://mechatora.github.io/flashcard-web-app/" class="app-card">
-                <span class="app-icon">📚</span>
-                <h3 class="app-title">スマート暗記カード</h3>
-                <p class="app-description">効率的な学習をサポートする高機能な暗記カードアプリ。科学的間隔反復学習で記憶定着率90%以上を実現。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/fire/" class="app-card">
-                <span class="app-icon">🔥</span>
-                <h3 class="app-title">バーチャル焚火</h3>
-                <p class="app-description">リラックス効果抜群の焚火シミュレーター。リアルな炎の揺らぎと癒しの音で心を落ち着かせます。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/earthquake-monitor/" class="app-card">
-                <span class="app-icon">🌍</span>
-                <h3 class="app-title">リアルタイム地震情報</h3>
-                <p class="app-description">最新の地震情報をリアルタイムで取得・表示。防災意識向上のための情報提供アプリ。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/x-buzz-simulator/" class="app-card">
-                <span class="app-icon">🚀</span>
-                <h3 class="app-title">Xバズシミュレーター</h3>
-                <p class="app-description">Xでインフルエンサーになった感覚を体験！フォロワー数の急増、バイラル投稿をリアルにシミュレート。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/cook-suggest/" class="app-card">
-                <span class="app-icon">🍳</span>
-                <h3 class="app-title">CookSuggest - 料理サジェスト</h3>
-                <p class="app-description">余った材料から最適なレシピを提案！1000種類のレシピデータベースから条件に合った料理を5つ提案。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/qualification-calendar.html" class="app-card">
-                <span class="app-icon">📊</span>
-                <h3 class="app-title">資格試験カウントダウンカレンダー</h3>
-                <p class="app-description">日本の主要資格試験40種以上をカバー！試験日までのカウントダウンと勉強時間目安で効率的な学習計画をサポート。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/cat-healing-station/" class="app-card">
-                <span class="app-icon">🐱</span>
-                <h3 class="app-title">Cat Healing Station</h3>
-                <p class="app-description">可愛い猫の写真でストレス解消！リアルタイムAPI連携で毎回新しい猫と出会えます。お気に入り保存や猫の豆知識も満載。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/commute-flow-map.html" class="app-card">
-                <span class="app-icon">🗺️</span>
-                <h3 class="app-title">全国通勤流動マップ</h3>
-                <p class="app-description">関東・中部・関西・福岡圏の通勤流動を可視化。インタラクティブマップで人の流れを直感的に把握。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/garden/" class="app-card">
-                <span class="app-icon">🌸</span>
-                <h3 class="app-title">日本庭園 - 癒しの空間</h3>
-                <p class="app-description">美しい日本庭園の映像と自然音でリラックス。鳥のさえずりと水の流れる音で心を癒します。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/jellyfish/" class="app-card">
-                <span class="app-icon">🌊</span>
-                <h3 class="app-title">クラゲ瞑想 - 深海の癒し</h3>
-                <p class="app-description">美しいクラゲの映像と深海の環境音で瞑想体験。没入感のある癒し空間で心を落ち着かせます。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/aurora/" class="app-card">
-                <span class="app-icon">🌌</span>
-                <h3 class="app-title">オーロラ観賞 - 極北の癒し</h3>
-                <p class="app-description">美しいオーロラ映像と自然音で神秘的な極北体験。没入感溢れる映像と癒しの音響で心を深くリラックス。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/knowhow/" class="app-card">
-                <span class="app-icon">💡</span>
-                <h3 class="app-title">Webアプリ開発ノウハウ集</h3>
-                <p class="app-description">実践的なWeb開発ノウハウを日英併記で紹介。フロントエンド・バックエンド・SEO・収益化を網羅した開発者向け知識ベース。</p>
-            </a>
-            
-            <a href="stock-monitor-pro/" class="app-card">
-                <span class="app-icon">📊</span>
-                <h3 class="app-title">Stock Monitor Pro</h3>
-                <p class="app-description">日本株25銘柄をリアルタイム監視。IT系プロ仕様のダークテーマで効率的な株価分析。取引時間限定更新でAPI使用量最適化。</p>
-            </a>
-            
-            <a href="#" class="app-card coming-soon">
-                <span class="app-icon">🎮</span>
-                <h3 class="app-title">その他のアプリ</h3>
-                <p class="app-description">随時新しいWebアプリを開発中！ユーザーの皆様のご要望もお聞かせください。</p>
-            </a>
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-中">
+                            ⚠️ 中
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/3015d9f240dc54883ed8a635b45b11f5f3b7c073" target="_blank" rel="noopener">
+                            「103万円の壁」問題 年収330万円以下では年金生活者が“相当恵まれている”…。 なお現役時代に支払った年金保険料については支払い時点で本人負担分は社会保険料...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 「103万円の壁」問題 年収330万円以下では年金生活者が“... (103万円, 330万円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">103万円</span><span class="keyword-tag">330万円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/3015d9f240dc54883ed8a635b45b11f5f3b7c073" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/c6f950e79d3474f6237e38f8a1d3dae6432f23a5" target="_blank" rel="noopener">
+                            「安倍政権はなぜ“勝ちすぎ”が可能だったのか」 政治状況を一変させてしまった参政党の地上戦…たという面もある。 「現役世代をあたかもATMであるかのようにとらえ...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 「安倍政権はなぜ“勝ちすぎ”が可能だったのか」 政治状況を一......</p>
+                    
+                    <div class="news-keywords">
+                        
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/c6f950e79d3474f6237e38f8a1d3dae6432f23a5" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/e1ef9572ae7dcad7b4854348fc7eda24de1314c9" target="_blank" rel="noopener">
+                            生活保護制度に迫る危機 貧困高齢者を救うのは誰か？日本で本当に起きている対立構造とは 上図が示すように、日本の高齢者を対象とする社会保障（セーフティーネット）は...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 生活保護制度に迫る危機 貧困高齢者を救うのは誰か？日本で本当... (25年3月)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">25年3月</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/e1ef9572ae7dcad7b4854348fc7eda24de1314c9" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/b1839347832377d08cad7923c623e44b1ed56880" target="_blank" rel="noopener">
+                            たかまつなな、参院選で“過激”動画アップしていた候補とは？「凄くビックリしちゃって…」…」と語っていた。 音喜多氏は「手取りを減らしているのは湿布です。」「社会...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 たかまつなな、参院選で“過激”動画アップしていた候補とは？「......</p>
+                    
+                    <div class="news-keywords">
+                        
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/b1839347832377d08cad7923c623e44b1ed56880" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-健康保険">
+                            🏥 健康保険
+                        </span>
+                        <span class="importance-badge importance-高">
+                            🚨 高
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/50f0e3e153ea4e287bfd8ca384d767e9da626359" target="_blank" rel="noopener">
+                            「独身税」論争が過熱、過去の失敗から学ばないのはなぜか…します。 支援金は、医療・介護の徹底した歳出改革と賃上げによる実質的な社会保険負担軽減効果の範囲内で導入...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【健康保険】 「独身税」論争が過熱、過去の失敗から学ばないのはなぜか…しま... (10万円, 2026年4月, 400円) [2026年4月]...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">10万円</span><span class="keyword-tag">2026年4月</span><span class="keyword-tag">400円</span><span class="keyword-tag">500円</span><span class="keyword-tag">協会けんぽ</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/50f0e3e153ea4e287bfd8ca384d767e9da626359" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-中">
+                            ⚠️ 中
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/920e7742cf68c60b7caecffad4bf58399cf05ce5" target="_blank" rel="noopener">
+                            薬代が年3万→82万に OTC類似薬の保険適用見直し検討、難病患者らに広がる不安…■「自己判断使用でリスク」 OTC類似薬の保険適用見直しは、医療費削減や社会保...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 薬代が年3万→82万に OTC類似薬の保険適用見直し検討、難... (3万円, 82万円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">厚生労働省</span><span class="keyword-tag">3万円</span><span class="keyword-tag">82万円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/920e7742cf68c60b7caecffad4bf58399cf05ce5" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/452adfd546f59b33aeb9f6f71b0fbdd4529d6b22" target="_blank" rel="noopener">
+                            英総合ＰＭＩ、7月51.0に低下 コスト増で雇用削減加速…ロイター調査による予想は５１．８だった。 雇用指数は４５．１と２月以来の低水準。４月から社会保険料の事...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 英総合ＰＭＩ、7月51.0に低下 コスト増で雇用削減加速…ロ... [７月２４日]...</p>
+                    
+                    <div class="news-keywords">
+                        
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/452adfd546f59b33aeb9f6f71b0fbdd4529d6b22" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-社会保険全般">
+                            📋 社会保険全般
+                        </span>
+                        <span class="importance-badge importance-中">
+                            ⚠️ 中
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/5fb2d844f3be252b8caf01b5b9891815bd673dc9" target="_blank" rel="noopener">
+                            「日本人ファースト」と「排外主義反対」参院選でぶつかる 政府が避けてきた「移民政策」突きつけられた現実…や不公平を感じる状況も生じている」とあいさつ。出入国在留...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【社会保険全般】 「日本人ファースト」と「排外主義反対」参院選でぶつかる 政府... (2025年7月, 2024年5月, 2025年6月) [2025年6月]...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">2025年7月</span><span class="keyword-tag">2024年5月</span><span class="keyword-tag">2025年6月</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/5fb2d844f3be252b8caf01b5b9891815bd673dc9" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/524a9d5002dd8e7086093c1e52843c0bb2d82c60" target="_blank" rel="noopener">
+                            【働きたい高齢者】65歳の父が月5万円稼ぎたいと希望しています。シルバー人材センターでそれって“現実的な数字”ですか？…さい。 また、収入が増えることで年金に影...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 【働きたい高齢者】65歳の父が月5万円稼ぎたいと希望していま... (5万円, 1000円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">5万円</span><span class="keyword-tag">1000円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/524a9d5002dd8e7086093c1e52843c0bb2d82c60" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/52f3310ccf854028b806d521213107dde974dba6" target="_blank" rel="noopener">
+                            定年後「月に10万円」稼げるのはどんな仕事？ 老後2000万円問題の不安を解消する「小さな仕事」…い、緊張感……。「定年後の仕事」をどう選ぶか、また、厚生年金に...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 定年後「月に10万円」稼げるのはどんな仕事？ 老後2000万... (10万円, 2000万円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">10万円</span><span class="keyword-tag">2000万円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/52f3310ccf854028b806d521213107dde974dba6" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/60f1fd78ace765b72fe7df504f9d7f012c2f6ff3" target="_blank" rel="noopener">
+                            〈年金月34万円〉〈貯金3,000万円〉共働きだった70歳「年金パワーカップル」の後悔…溺愛していた43歳娘の帰省に“ビクビク怯える”ワケ【CFPの助言】…退職...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 〈年金月34万円〉〈貯金3,000万円〉共働きだった70歳「... (000万円, 34万円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">000万円</span><span class="keyword-tag">34万円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/60f1fd78ace765b72fe7df504f9d7f012c2f6ff3" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-その他">
+                            📄 その他
+                        </span>
+                        <span class="importance-badge importance-高">
+                            🚨 高
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/e8d5d76eb958a632e29a6de5adce2e31170ba2b2" target="_blank" rel="noopener">
+                            “減税政党”躍進による経済への影響は エコノミストが指摘する“日本売り”のリスク2つ 「消費減税は小手先の話」…利益を円に換算すると、輸出企業の利益が大きくなっ...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【その他】 “減税政党”躍進による経済への影響は エコノミストが指摘する......</p>
+                    
+                    <div class="news-keywords">
+                        
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/e8d5d76eb958a632e29a6de5adce2e31170ba2b2" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">Yahoo!ニュース</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://news.yahoo.co.jp/articles/dfac2f12a7b55f8bfda14199cba188638e769011" target="_blank" rel="noopener">
+                            「800万円のタンス預金」はどこへ…父の遺産を貯め込んだ年金月18万円・90歳母の死後、実家を大捜索→「奇想天外な隠し場所」に63歳娘が思わず笑ったワケ【FPが...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 「800万円のタンス預金」はどこへ…父の遺産を貯め込んだ年金... (800万円, 18万円)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">800万円</span><span class="keyword-tag">18万円</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">None</span>
+                    <a href="https://news.yahoo.co.jp/articles/dfac2f12a7b55f8bfda14199cba188638e769011" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">厚生労働省</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://www.mhlw.go.jp/stf/houdou/newpage_00189.html" target="_blank" rel="noopener">
+                            国民年金保険料の月次納付率について（令和６年11月末現在）...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 国民年金保険料の月次納付率について（令和６年11月末現在）... (６年11月)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">６年11月</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">2025年1月31日</span>
+                    <a href="https://www.mhlw.go.jp/stf/houdou/newpage_00189.html" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-高">
+                            🚨 高
+                        </span>
+                        <span class="source-tag">厚生労働省</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://www.mhlw.go.jp/stf/houdou/newpage_00187.html" target="_blank" rel="noopener">
+                            厚生年金保険の保険給付及び保険料の納付の特例等に関する法律の施行状況に関する報告（第34回）...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 厚生年金保険の保険給付及び保険料の納付の特例等に関する法律の......</p>
+                    
+                    <div class="news-keywords">
+                        
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">2025年1月28日</span>
+                    <a href="https://www.mhlw.go.jp/stf/houdou/newpage_00187.html" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">厚生労働省</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://www.mhlw.go.jp/stf/houdou/0000190457_00018.html" target="_blank" rel="noopener">
+                            令和７年度における国民年金保険料の前納額について...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 令和７年度における国民年金保険料の前納額...</p>
+                    
+                    <div class="news-keywords">
+                        
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">2025年1月24日</span>
+                    <a href="https://www.mhlw.go.jp/stf/houdou/0000190457_00018.html" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-その他">
+                            📄 その他
+                        </span>
+                        <span class="importance-badge importance-中">
+                            ⚠️ 中
+                        </span>
+                        <span class="source-tag">厚生労働省</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://www.mhlw.go.jp/stf/houdou/0000191631_00019.html" target="_blank" rel="noopener">
+                            令和７年度の年金額改定について...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【その他】 令和７年度の年金額改定 (７年１月, 2025年1月) [2025年1月]...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">厚生労働省</span><span class="keyword-tag">７年１月</span><span class="keyword-tag">2025年1月</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">2025年１月24日</span>
+                    <a href="https://www.mhlw.go.jp/stf/houdou/0000191631_00019.html" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
+            <article class="news-card">
+                <header class="news-header">
+                    <div class="news-meta">
+                        <span class="category-badge category-厚生年金">
+                            💰 厚生年金
+                        </span>
+                        <span class="importance-badge importance-低">
+                            ℹ️ 低
+                        </span>
+                        <span class="source-tag">厚生労働省</span>
+                    </div>
+                    <h2 class="news-title">
+                        <a href="https://www.mhlw.go.jp/stf/houdou/newpage_00185.html" target="_blank" rel="noopener">
+                            国民年金保険料の月次納付率について（令和６年10月末現在）...
+                        </a>
+                    </h2>
+                </header>
+                
+                <div class="news-body">
+                    <p class="news-summary">【厚生年金】 国民年金保険料の月次納付率について（令和６年10月末現在）... (６年10月)...</p>
+                    
+                    <div class="news-keywords">
+                        <span class="keyword-tag">６年10月</span>
+                    </div>
+                </div>
+                
+                <footer class="news-footer">
+                    <span class="published-date">2024年12月20日</span>
+                    <a href="https://www.mhlw.go.jp/stf/houdou/newpage_00185.html" target="_blank" rel="noopener" class="read-more-btn">
+                        元記事を読む
+                    </a>
+                </footer>
+            </article>
+        
         </section>
-        
-        <!-- AdSense広告エリア2 -->
-        <div class="ad-container">
+
+        <!-- AdSense Middle -->
+        <div style="text-align: center; margin: 32px 0;">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="6105883891"
+                 data-ad-slot="8547296385"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
-        
-        <footer class="footer-links">
-            <a href="privacy.html">プライバシーポリシー</a>
-            <a href="terms.html">利用規約</a>
-            <a href="contact.html">お問い合わせ</a>
-            <a href="about.html">このサイトについて</a>
-            <a href="my/">自己紹介 | About Me</a>
-        </footer>
-    </div>
-    
-    <!-- Google AdSense Script -->
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: var(--surface); border-top: 1px solid var(--border-color); margin-top: 32px; padding: 32px; text-align: center; color: var(--text-secondary);">
+        <p>&copy; 2025 社会保険ニュース. データソース: 厚生労働省・日本年金機構・Yahoo!ニュース</p>
+        <p style="margin-top: 8px; font-size: 0.9rem;">
+            このサイトは公的機関・ニュースサイトの発表情報を自動収集・要約したものです。詳細は元記事をご確認ください。
+        </p>
+    </footer>
+
+    <!-- AdSense 初期化 -->
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-    
-    <!-- Google Analytics (AdSense審査で有利) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-    </script> -->
 </body>
 </html>
