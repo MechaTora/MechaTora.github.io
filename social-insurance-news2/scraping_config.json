@@ -1,0 +1,20 @@
+{
+  "rate_limits": {
+    "mhlw.go.jp": 2.0,
+    "nenkin.go.jp": 2.0,
+    "kyoukaikenpo.or.jp": 3.0
+  },
+  "retry_config": {
+    "max_retries": 3,
+    "retry_delay": 5,
+    "backoff_factor": 2
+  },
+  "timeout_config": {
+    "connect_timeout": 10,
+    "read_timeout": 30
+  },
+  "error_thresholds": {
+    "max_errors_per_site": 5,
+    "max_total_errors": 15
+  }
+}
