@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作成アプリ一覧 - 無料で使える実用的なツール</title>
-    <meta name="description" content="無料で使える便利なWebアプリ集。暗記カード、焚火アプリ、地震情報、Xバズシミュレーター、料理サジェストなど実用的なツールを多数公開しています。">    
-    <meta name="keywords" content="Webアプリ,無料ツール,暗記カード,焚火アプリ,地震情報,料理レシピ,便利ツール,オンラインアプリ">
-    <meta name="author" content="Webアプリ集">
+    <title>MechaTora - 便利なWebアプリケーション開発者</title>
+    <meta name="description" content="料理提案、地震監視、学習アプリなど、日常生活を便利にするWebアプリケーションを開発・提供しています。">    
+    <meta name="keywords" content="Webアプリ, 料理アプリ, 地震情報, 学習アプリ, PWA, 無料ツール">
+    <meta name="author" content="MechaTora">
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph -->
-    <meta property="og:title" content="作成アプリ一覧 - 無料で使える実用的なツール">
-    <meta property="og:description" content="無料で使える便利なWebアプリを多数公開しているサイトです。学習、情報収集、娯楽など様々な用途に対応。">
+    <meta property="og:title" content="MechaTora - 便利なWebアプリケーション開発者">
+    <meta property="og:description" content="料理提案、地震監視、学習アプリなど、日常生活を便利にするWebアプリケーションを開発・提供しています。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mechatora.github.io/">
-    <meta property="og:site_name" content="作成アプリ一覧"
+    <meta property="og:site_name" content="MechaTora">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="作成アプリ一覧 - 無料で使える実用的なツール">
-    <meta name="twitter:description" content="無料で使える便利なWebアプリを多数公開しているサイトです。学習、情報収集、娯楽など様々な用途に対応。">
+    <meta name="twitter:title" content="MechaTora - 便利なWebアプリケーション開発者">
+    <meta name="twitter:description" content="料理提案、地震監視、学習アプリなど、日常生活を便利にするWebアプリケーションを開発・提供しています。">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://mechatora.github.io/">
@@ -28,12 +28,12 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-6NJKWS2RJ8');
+      gtag('config', 'G-JFRGN7YJYB6');
     </script>
     
     <!-- Google AdSense -->
@@ -45,9 +45,9 @@
     {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "作成アプリ一覧",
+        "name": "MechaTora",
         "url": "https://mechatora.github.io/",
-        "description": "無料で使える便利なWebアプリケーション集",
+        "description": "日常生活を便利にするWebアプリケーション開発者",
         "applicationCategory": "UtilityApplication",
         "operatingSystem": "Any",
         "offers": {
@@ -122,6 +122,129 @@
             font-size: 1.1rem;
             line-height: 1.8;
             color: #666;
+        }
+        
+        /* フィルター機能のスタイル */
+        .filter-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-title {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-btn {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .filter-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+        }
+        
+        .reset-btn:hover {
+            box-shadow: 0 5px 15px rgba(245, 101, 101, 0.4);
+        }
+        
+        /* アプリカードの隠し表示 */
+        .app-card {
+            transition: all 0.5s ease;
+        }
+        
+        .app-card.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            margin: 0;
+            height: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        /* カテゴリータグ */
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .category-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .stats-display {
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+            font-size: 0.9rem;
         }
         
         .apps-grid {
@@ -222,6 +345,39 @@
                 display: block;
                 margin: 0.5rem 0;
             }
+            
+            .filter-section {
+                padding: 1.5rem;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-btn {
+                width: 80%;
+                max-width: 200px;
+                text-align: center;
+            }
+            
+            .filter-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 80%;
+                max-width: 200px;
+            }
+            
+            /* ナビゲーションメニューのモバイル対応 */
+            nav a {
+                display: block !important;
+                margin: 5px auto !important;
+                max-width: 200px;
+                text-align: center;
+            }
         }
         
         /* AdSense対応のレスポンシブ広告エリア */
@@ -240,113 +396,219 @@
 <body>
     <div class="container">
         <header>
-            <h1 class="logo">🛠️ 作成アプリ一覧</h1>
-            <p class="tagline">無料で使える実用的なツール</p>
+            <h1 class="logo">🤖 MechaTora</h1>
+            <p class="tagline">日常生活を便利にするWebアプリケーション開発者</p>
             <p class="subtitle">学習・情報収集・娯楽に役立つアプリを公開中</p>
+            
+            <!-- ナビゲーションメニュー -->
+            <nav style="margin-top: 2rem;">
+                <a href="about.html" style="color: white; text-decoration: none; margin: 0 10px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease; display: inline-block; margin-bottom: 10px;">📖 About</a>
+                <a href="blog.html" style="color: white; text-decoration: none; margin: 0 10px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease; display: inline-block; margin-bottom: 10px;">📝 Blog</a>
+                <a href="https://mechatora.github.io/my/" style="color: white; text-decoration: none; margin: 0 10px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease; display: inline-block; margin-bottom: 10px;">👤 自己紹介</a>
+                <a href="privacy-policy.html" style="color: white; text-decoration: none; margin: 0 10px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease; display: inline-block; margin-bottom: 10px;">🔒 Privacy</a>
+            </nav>
         </header>
         
         <section class="intro-section">
-            <h2>ようこそ！作成アプリ一覧へ</h2>
+            <h2>ようこそ！MechaToraへ</h2>
             <div class="intro-text">
                 <p>日常生活を便利にしたり、楽しくしたりするWebアプリケーションを無料で公開しています。</p>
                 <p>学習支援、情報収集、娯楽など様々な用途に対応したアプリを制作しており、どなたでも無料でご利用いただけます。ブラウザがあればすぐに使えるシンプルなツールばかりです。</p>
             </div>
         </section>
         
+        <!-- フィルター機能 -->
+        <section class="filter-section">
+            <h2 class="filter-title">🎯 お気に入りアプリを見つけよう</h2>
+            <div class="filter-controls">
+                <button class="filter-btn active" data-category="all">すべて</button>
+                <button class="filter-btn" data-category="study">学習</button>
+                <button class="filter-btn" data-category="relax">癒し・リラックス</button>
+                <button class="filter-btn" data-category="game">ゲーム</button>
+                <button class="filter-btn" data-category="tools">実用ツール</button>
+                <button class="filter-btn" data-category="info">情報</button>
+                <button class="filter-btn" data-category="entertainment">エンターテイメント</button>
+            </div>
+            <div class="stats-display" id="statsDisplay">
+                表示中: <span id="visibleCount">9</span> / <span id="totalCount">9</span> アプリ
+            </div>
+        </section>
+
         <!-- AdSense広告エリア1 -->
         <div class="ad-container">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="4192012905"
+                 data-ad-slot="5287863920"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
         
-        <section class="apps-grid">
-            <a href="https://mechatora.github.io/flashcard-web-app/" class="app-card">
-                <span class="app-icon">📚</span>
-                <h3 class="app-title">スマート暗記カード</h3>
-                <p class="app-description">効率的な学習をサポートする高機能な暗記カードアプリ。科学的間隔反復学習で記憶定着率90%以上を実現。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/fire/" class="app-card">
-                <span class="app-icon">🔥</span>
-                <h3 class="app-title">バーチャル焚火</h3>
-                <p class="app-description">リラックス効果抜群の焚火シミュレーター。リアルな炎の揺らぎと癒しの音で心を落ち着かせます。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/earthquake-monitor/" class="app-card">
-                <span class="app-icon">🌍</span>
-                <h3 class="app-title">リアルタイム地震情報</h3>
-                <p class="app-description">最新の地震情報をリアルタイムで取得・表示。防災意識向上のための情報提供アプリ。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/x-buzz-simulator/" class="app-card">
-                <span class="app-icon">🚀</span>
-                <h3 class="app-title">Xバズシミュレーター</h3>
-                <p class="app-description">Xでインフルエンサーになった感覚を体験！フォロワー数の急増、バイラル投稿をリアルにシミュレート。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/cook-suggest/" class="app-card">
-                <span class="app-icon">🍳</span>
-                <h3 class="app-title">CookSuggest - 料理サジェスト</h3>
-                <p class="app-description">余った材料から最適なレシピを提案！1000種類のレシピデータベースから条件に合った料理を5つ提案。</p>
-            </a>
-            
-            <a href="https://mechatora.github.io/qualification-calendar.html" class="app-card">
+        <section class="apps-grid" id="appsGrid">
+            <!-- メインアプリケーション -->
+            <a href="https://mechatora.github.io/qualification-calendar.html" class="app-card" data-categories="study,info,tools">
                 <span class="app-icon">📊</span>
                 <h3 class="app-title">資格試験カウントダウンカレンダー</h3>
                 <p class="app-description">日本の主要資格試験40種以上をカバー！試験日までのカウントダウンと勉強時間目安で効率的な学習計画をサポート。</p>
+                <div class="category-tags">
+                    <span class="category-tag">学習</span>
+                    <span class="category-tag">情報</span>
+                    <span class="category-tag">実用ツール</span>
+                </div>
             </a>
             
-            <a href="https://mechatora.github.io/cat-healing-station/" class="app-card">
-                <span class="app-icon">🐱</span>
-                <h3 class="app-title">Cat Healing Station</h3>
-                <p class="app-description">可愛い猫の写真でストレス解消！リアルタイムAPI連携で毎回新しい猫と出会えます。お気に入り保存や猫の豆知識も満載。</p>
+            <a href="https://mechatora.github.io/social-insurance-news2/" class="app-card" data-categories="info,tools">
+                <span class="app-icon">📰</span>
+                <h3 class="app-title">社会保険ニュース</h3>
+                <p class="app-description">労災、雇用保険、健康保険、厚生年金の重要ニュースを自動収集・整理。社会保険労務士や人事担当者向けの最新情報サイト。</p>
+                <div class="category-tags">
+                    <span class="category-tag">情報</span>
+                    <span class="category-tag">実用ツール</span>
+                </div>
             </a>
             
-            <a href="https://mechatora.github.io/commute-flow-map.html" class="app-card">
-                <span class="app-icon">🗺️</span>
-                <h3 class="app-title">全国通勤流動マップ</h3>
-                <p class="app-description">関東・中部・関西・福岡圏の通勤流動を可視化。インタラクティブマップで人の流れを直感的に把握。</p>
+            <a href="https://mechatora.github.io/flashcard-web-app/" class="app-card" data-categories="study,tools">
+                <span class="app-icon">📚</span>
+                <h3 class="app-title">スマート暗記カード</h3>
+                <p class="app-description">効率的な学習をサポートする高機能な暗記カードアプリ。科学的間隔反復学習で記憶定着率90%以上を実現。</p>
+                <div class="category-tags">
+                    <span class="category-tag">学習</span>
+                    <span class="category-tag">実用ツール</span>
+                </div>
             </a>
             
-            <a href="https://mechatora.github.io/garden/" class="app-card">
-                <span class="app-icon">🌸</span>
-                <h3 class="app-title">日本庭園 - 癒しの空間</h3>
-                <p class="app-description">美しい日本庭園の映像と自然音でリラックス。鳥のさえずりと水の流れる音で心を癒します。</p>
+            <a href="https://mechatora.github.io/cook-suggest/" class="app-card" data-categories="tools,info">
+                <span class="app-icon">🍳</span>
+                <h3 class="app-title">CookSuggest - 料理サジェスト</h3>
+                <p class="app-description">余った材料から最適なレシピを提案！1000種類のレシピデータベースから条件に合った料理を5つ提案。</p>
+                <div class="category-tags">
+                    <span class="category-tag">実用ツール</span>
+                    <span class="category-tag">情報</span>
+                </div>
             </a>
             
-            <a href="https://mechatora.github.io/jellyfish/" class="app-card">
-                <span class="app-icon">🌊</span>
-                <h3 class="app-title">クラゲ瞑想 - 深海の癒し</h3>
-                <p class="app-description">美しいクラゲの映像と深海の環境音で瞑想体験。没入感のある癒し空間で心を落ち着かせます。</p>
+            <a href="https://mechatora.github.io/x-buzz-simulator/" class="app-card" data-categories="entertainment,game">
+                <span class="app-icon">🚀</span>
+                <h3 class="app-title">Xバズシミュレーター</h3>
+                <p class="app-description">Xでインフルエンサーになった感覚を体験！フォロワー数の急増、バイラル投稿をリアルにシミュレート。</p>
+                <div class="category-tags">
+                    <span class="category-tag">エンターテイメント</span>
+                    <span class="category-tag">ゲーム</span>
+                </div>
             </a>
             
-            <a href="https://mechatora.github.io/aurora/" class="app-card">
-                <span class="app-icon">🌌</span>
-                <h3 class="app-title">オーロラ観賞 - 極北の癒し</h3>
-                <p class="app-description">美しいオーロラ映像と自然音で神秘的な極北体験。没入感溢れる映像と癒しの音響で心を深くリラックス。</p>
+            <a href="https://mechatora.github.io/earthquake-monitor/" class="app-card" data-categories="info,tools">
+                <span class="app-icon">🌍</span>
+                <h3 class="app-title">リアルタイム地震情報</h3>
+                <p class="app-description">最新の地震情報をリアルタイムで取得・表示。防災意識向上のための情報提供アプリ。</p>
+                <div class="category-tags">
+                    <span class="category-tag">情報</span>
+                    <span class="category-tag">実用ツール</span>
+                </div>
             </a>
             
-            <a href="https://mechatora.github.io/knowhow/" class="app-card">
+            <a href="https://mechatora.github.io/commute-flow-map.html" class="app-card" data-categories="info,tools">
+                <span class="app-icon">🚊</span>
+                <h3 class="app-title">通勤流動マップ</h3>
+                <p class="app-description">日本の通勤・通学流動データを可視化。都市間の人の移動パターンを美しいマップで表示する情報アプリ。</p>
+                <div class="category-tags">
+                    <span class="category-tag">情報</span>
+                    <span class="category-tag">実用ツール</span>
+                </div>
+            </a>
+            
+            <a href="https://mechatora.github.io/knowhow/" class="app-card" data-categories="study,info,tools">
                 <span class="app-icon">💡</span>
                 <h3 class="app-title">Webアプリ開発ノウハウ集</h3>
                 <p class="app-description">実践的なWeb開発ノウハウを日英併記で紹介。フロントエンド・バックエンド・SEO・収益化を網羅した開発者向け知識ベース。</p>
+                <div class="category-tags">
+                    <span class="category-tag">学習</span>
+                    <span class="category-tag">情報</span>
+                    <span class="category-tag">実用ツール</span>
+                </div>
             </a>
-            
-            <a href="stock-monitor-pro/" class="app-card">
-                <span class="app-icon">📊</span>
-                <h3 class="app-title">Stock Monitor Pro</h3>
-                <p class="app-description">日本株25銘柄をリアルタイム監視。IT系プロ仕様のダークテーマで効率的な株価分析。取引時間限定更新でAPI使用量最適化。</p>
-            </a>
-            
-            <a href="#" class="app-card coming-soon">
-                <span class="app-icon">🎮</span>
-                <h3 class="app-title">その他のアプリ</h3>
-                <p class="app-description">随時新しいWebアプリを開発中！ユーザーの皆様のご要望もお聞かせください。</p>
-            </a>
+        </section>
+
+            <!-- ワンテーマサイト集（統合ウィジェット） -->
+            <div class="app-card" data-categories="relax,entertainment" style="cursor: pointer;" onclick="toggleOneThemeSites()">
+                <span class="app-icon">🎨</span>
+                <h3 class="app-title">ワンテーマサイト集</h3>
+                <p class="app-description">癒しをテーマにした5つの特別なサイトコレクション。クリックして全サイトを表示。</p>
+                <div class="category-tags">
+                    <span class="category-tag">癒し・リラックス</span>
+                    <span class="category-tag">エンターテイメント</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px; color: #667eea; font-weight: 600;">
+                    <span id="toggleText">▼ クリックして展開</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 展開可能なワンテーマサイト集 -->
+        <section id="oneThemeSites" style="display: none; margin-top: 2rem;">
+            <h2 style="text-align: center; color: #4a5568; margin-bottom: 2rem; font-size: 1.8rem;">🎨 ワンテーマサイト集</h2>
+            <div class="apps-grid">
+                <a href="https://mechatora.github.io/fire/" class="app-card" data-categories="relax,entertainment">
+                    <span class="app-icon">🔥</span>
+                    <h3 class="app-title">バーチャル焚火</h3>
+                    <p class="app-description">リラックス効果抜群の焚火シミュレーター。リアルな炎の揺らぎと癒しの音で心を落ち着かせます。</p>
+                    <div class="category-tags">
+                        <span class="category-tag">癒し・リラックス</span>
+                        <span class="category-tag">エンターテイメント</span>
+                    </div>
+                </a>
+                
+                <a href="https://mechatora.github.io/aurora" class="app-card" data-categories="relax,entertainment">
+                    <span class="app-icon">🌌</span>
+                    <h3 class="app-title">オーロラ観賞</h3>
+                    <p class="app-description">美しいオーロラ映像と自然音で神秘的な極北体験。没入感溢れる映像と癒しの音響で心を深くリラックス。</p>
+                    <div class="category-tags">
+                        <span class="category-tag">癒し・リラックス</span>
+                        <span class="category-tag">エンターテイメント</span>
+                    </div>
+                </a>
+                
+                <a href="https://mechatora.github.io/cat-healing-station/" class="app-card" data-categories="relax,entertainment">
+                    <span class="app-icon">🐱</span>
+                    <h3 class="app-title">Cat Healing Station</h3>
+                    <p class="app-description">可愛い猫の写真でストレス解消！リアルタイムAPI連携で毎回新しい猫と出会えます。お気に入り保存や猫の豆知識も満載。</p>
+                    <div class="category-tags">
+                        <span class="category-tag">癒し・リラックス</span>
+                        <span class="category-tag">エンターテイメント</span>
+                    </div>
+                </a>
+                
+                <a href="https://mechatora.github.io/garden/" class="app-card" data-categories="relax,entertainment">
+                    <span class="app-icon">🌸</span>
+                    <h3 class="app-title">和風庭園</h3>
+                    <p class="app-description">美しい和風庭園の映像と自然音で心を癒します。竹の水音、風の音、鳥のさえずりでリラックス効果抜群。</p>
+                    <div class="category-tags">
+                        <span class="category-tag">癒し・リラックス</span>
+                        <span class="category-tag">エンターテイメント</span>
+                    </div>
+                </a>
+                
+                <a href="https://mechatora.github.io/jellyfish/" class="app-card" data-categories="relax,entertainment">
+                    <span class="app-icon">🪼</span>
+                    <h3 class="app-title">クラゲ水族館</h3>
+                    <p class="app-description">幻想的なクラゲの映像で心を癒す。美しく浮遊するクラゲたちの神秘的な世界で究極のリラクゼーション体験。</p>
+                    <div class="category-tags">
+                        <span class="category-tag">癒し・リラックス</span>
+                        <span class="category-tag">エンターテイメント</span>
+                    </div>
+                </a>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="toggleOneThemeSites()" style="
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    border: none;
+                    padding: 10px 30px;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    font-weight: 600;
+                ">▲ 閉じる</button>
+            </div>
         </section>
         
         <!-- AdSense広告エリア2 -->
@@ -354,23 +616,388 @@
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="6105883891"
+                 data-ad-slot="3889638884"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
         
         <footer class="footer-links">
-            <a href="privacy.html">プライバシーポリシー</a>
-            <a href="terms.html">利用規約</a>
-            <a href="contact.html">お問い合わせ</a>
-            <a href="about.html">このサイトについて</a>
-            <a href="my/">自己紹介 | About Me</a>
+            <a href="privacy-policy.html">プライバシーポリシー</a>
+            <a href="https://mechatora.github.io/terms.html">利用規約</a>
+            <a href="https://mechatora.github.io/contact.html">お問い合わせ</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="https://mechatora.github.io/my/">自己紹介</a>
         </footer>
     </div>
     
     <!-- Google AdSense Script -->
     <script>
+        // 複数広告の初期化
         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    
+    <!-- 追加のAdSense初期化 -->
+    <script>
+        window.addEventListener('load', function() {
+            const ads = document.querySelectorAll('.adsbygoogle');
+            ads.forEach(ad => {
+                // 既に初期化されていない場合のみ追加
+                if (!ad.dataset.adsbygoogleStatus) {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                }
+            });
+        });
+    </script>
+    
+    <!-- フィルター機能のJavaScript -->
+    <script>
+        // アプリフィルターシステム
+        class AppFilter {
+            constructor() {
+                this.activeFilters = new Set(['all']);
+                this.allApps = document.querySelectorAll('.app-card');
+                this.totalCount = this.allApps.length;
+                this.init();
+                this.loadSavedFilters();
+            }
+            
+            init() {
+                // フィルターボタンのイベントリスナー
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.toggleFilter(e.target));
+                });
+                
+                this.updateDisplay();
+            }
+            
+            toggleFilter(button) {
+                const category = button.dataset.category;
+                
+                if (category === 'all') {
+                    // すべて選択時は他のフィルターをクリア
+                    this.activeFilters.clear();
+                    this.activeFilters.add('all');
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+                } else {
+                    // 個別カテゴリーの切り替え
+                    this.activeFilters.delete('all');
+                    document.querySelector('[data-category="all"]').classList.remove('active');
+                    
+                    if (this.activeFilters.has(category)) {
+                        this.activeFilters.delete(category);
+                        button.classList.remove('active');
+                    } else {
+                        this.activeFilters.add(category);
+                        button.classList.add('active');
+                    }
+                    
+                    // 何も選択されていない場合は「すべて」に戻す
+                    if (this.activeFilters.size === 0) {
+                        this.activeFilters.add('all');
+                        document.querySelector('[data-category="all"]').classList.add('active');
+                    }
+                }
+                
+                this.updateDisplay();
+                this.animateCards();
+            }
+            
+            updateDisplay() {
+                let visibleCount = 0;
+                
+                this.allApps.forEach(app => {
+                    const categories = app.dataset.categories.split(',');
+                    const shouldShow = this.activeFilters.has('all') || 
+                                     categories.some(cat => this.activeFilters.has(cat));
+                    
+                    if (shouldShow) {
+                        app.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        app.classList.add('hidden');
+                    }
+                });
+                
+                // 統計表示を更新
+                document.getElementById('visibleCount').textContent = visibleCount;
+                document.getElementById('totalCount').textContent = this.totalCount;
+                
+                // グリッドの再配置をトリガー
+                setTimeout(() => {
+                    this.reLayoutGrid();
+                }, 100);
+            }
+            
+            animateCards() {
+                const visibleCards = document.querySelectorAll('.app-card:not(.hidden)');
+                visibleCards.forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    card.style.animation = 'none';
+                    setTimeout(() => {
+                        card.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                    }, 10);
+                });
+            }
+            
+            reLayoutGrid() {
+                const grid = document.getElementById('appsGrid');
+                const hiddenCards = grid.querySelectorAll('.app-card.hidden');
+                hiddenCards.forEach(card => {
+                    card.style.display = 'none';
+                });
+                
+                const visibleCards = grid.querySelectorAll('.app-card:not(.hidden)');
+                visibleCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+            }
+            
+            saveFilters() {
+                const filterData = {
+                    activeFilters: Array.from(this.activeFilters),
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('appFilters', JSON.stringify(filterData));
+                
+                // 保存成功の視覚的フィードバック
+                this.showSaveNotification();
+            }
+            
+            loadSavedFilters() {
+                try {
+                    const saved = localStorage.getItem('appFilters');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        // 永続保存：期限チェックなし
+                        this.activeFilters = new Set(data.activeFilters);
+                        this.restoreFilterButtons();
+                        this.updateDisplay();
+                        
+                        // 保存済み設定があることを表示
+                        this.showLoadNotification();
+                    }
+                } catch (error) {
+                    console.log('フィルター設定の読み込みに失敗しました');
+                }
+            }
+            
+            restoreFilterButtons() {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    const category = btn.dataset.category;
+                    if (this.activeFilters.has(category)) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+            
+            reset() {
+                this.activeFilters.clear();
+                this.activeFilters.add('all');
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector('[data-category="all"]').classList.add('active');
+                this.updateDisplay();
+                this.animateCards();
+                localStorage.removeItem('appFilters');
+            }
+            
+            showSaveNotification() {
+                this.showNotification('✅ お気に入り設定を保存しました！', '#48bb78');
+            }
+            
+            showLoadNotification() {
+                this.showNotification('🔄 保存済みの設定を復元しました', '#667eea');
+            }
+            
+            showNotification(message, color) {
+                // 通知要素を作成
+                const notification = document.createElement('div');
+                notification.innerHTML = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, ${color}, ${color}dd);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 10px;
+                    box-shadow: 0 10px 25px ${color}33;
+                    z-index: 1000;
+                    font-weight: 500;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                    max-width: 300px;
+                    word-wrap: break-word;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // アニメーション
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+        
+        // アプリフィルターを初期化
+        let appFilter;
+        document.addEventListener('DOMContentLoaded', () => {
+            appFilter = new AppFilter();
+        });
+        
+        // グローバル関数
+        function saveMyFavorites() {
+            if (appFilter) {
+                appFilter.saveFilters();
+            }
+        }
+        
+        function resetFilters() {
+            if (appFilter) {
+                appFilter.reset();
+            }
+        }
+        
+        function showFilterInfo() {
+            const infoModal = document.createElement('div');
+            infoModal.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 2000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                " onclick="this.remove()">
+                    <div style="
+                        background: white;
+                        border-radius: 15px;
+                        padding: 2rem;
+                        max-width: 500px;
+                        width: 100%;
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                        position: relative;
+                    " onclick="event.stopPropagation()">
+                        <button onclick="this.closest('div').parentElement.remove()" style="
+                            position: absolute;
+                            top: 15px;
+                            right: 15px;
+                            background: none;
+                            border: none;
+                            font-size: 1.5rem;
+                            cursor: pointer;
+                            color: #666;
+                        ">×</button>
+                        
+                        <h3 style="color: #2b6cb0; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            🎯 フィルター機能の使い方
+                        </h3>
+                        
+                        <div style="color: #4a5568; line-height: 1.6;">
+                            <p style="margin-bottom: 1rem;"><strong>📱 基本操作：</strong></p>
+                            <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+                                <li>カテゴリーボタンをクリックして絞り込み</li>
+                                <li>複数のカテゴリーを同時選択可能</li>
+                                <li>「すべて」ボタンで全アプリを表示</li>
+                            </ul>
+                            
+                            <p style="margin-bottom: 1rem;"><strong>💾 永続保存：</strong></p>
+                            <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+                                <li>「📌 お気に入りを保存」で設定を永続保存</li>
+                                <li>次回アクセス時に自動で設定復元</li>
+                                <li>「🔄 設定をリセット」で初期状態に戻る</li>
+                            </ul>
+                            
+                            <p style="margin-bottom: 1rem;"><strong>✨ 便利機能：</strong></p>
+                            <ul style="margin-left: 1.5rem;">
+                                <li>リアルタイム統計表示</li>
+                                <li>スムーズなアニメーション</li>
+                                <li>スマホ・タブレット完全対応</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 2rem;">
+                            <button onclick="this.closest('div').parentElement.remove()" style="
+                                background: linear-gradient(135deg, #667eea, #764ba2);
+                                color: white;
+                                border: none;
+                                padding: 0.8rem 2rem;
+                                border-radius: 25px;
+                                font-weight: 500;
+                                cursor: pointer;
+                            ">理解しました</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(infoModal);
+        }
+        
+        // ワンテーマサイト集の展開/閉じる機能
+        function toggleOneThemeSites() {
+            const section = document.getElementById('oneThemeSites');
+            const toggleText = document.getElementById('toggleText');
+            
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                toggleText.textContent = '▼ クリックして展開';
+                
+                // スムーズスクロール
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                section.style.display = 'none';
+                toggleText.textContent = '▼ クリックして展開';
+            }
+        }
+
+        // 追加のアニメーション効果
+        document.addEventListener('DOMContentLoaded', () => {
+            // ページロード時のアニメーション
+            const cards = document.querySelectorAll('.app-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // パララックス効果を無効化（動作が不安定なため）
+            // window.addEventListener('scroll', () => {
+            //     const scrolled = window.pageYOffset;
+            //     const parallaxElements = document.querySelectorAll('.filter-section');
+            //     parallaxElements.forEach(element => {
+            //         const speed = 0.5;
+            //         element.style.transform = `translateY(${scrolled * speed}px)`;
+            //     });
+            // });
+        });
     </script>
     
     <!-- Google Analytics (AdSense審査で有利) -->
