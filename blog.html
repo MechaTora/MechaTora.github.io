@@ -3,26 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>開発ブログ - MechaTora</title>
-    <meta name="description" content="MechaToraの開発ブログ。Webアプリ開発の技術情報、ノウハウ、プロジェクトの裏話を発信しています。">
-    <meta name="keywords" content="Web開発, プログラミング, JavaScript, HTML, CSS, PWA, 技術ブログ">
-    <meta name="author" content="MechaTora">
+    <title>開発ブログ - MechaTora | Webアプリ開発日記</title>
+    <meta name="description" content="MechaTora（メカトラ）の開発ブログ。Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
+    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事">
     
-    <!-- Open Graph Tags -->
+    <!-- Open Graph -->
     <meta property="og:title" content="開発ブログ - MechaTora">
-    <meta property="og:description" content="Webアプリ開発の技術情報、ノウハウ、プロジェクトの裏話を発信しています。">
-    <meta property="og:type" content="website">
+    <meta property="og:description" content="Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
+    <meta property="og:type" content="blog">
     <meta property="og:url" content="https://mechatora.github.io/blog.html">
-    <meta property="og:site_name" content="MechaTora">
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-JFRGN7YJYB6');
-    </script>
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
@@ -30,10 +19,11 @@
     
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --text-color: #34495e;
-            --background: #f8f9fa;
+            --primary-color: #667eea;
+            --accent-color: #764ba2;
+            --text-color: #2d3748;
+            --background: #f7fafc;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
         * {
@@ -44,155 +34,200 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.7;
+            line-height: 1.6;
             color: var(--text-color);
             background: var(--background);
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
         
         .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            padding: 40px 0;
             text-align: center;
             margin-bottom: 40px;
-            border-radius: 10px;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 20px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .header .blog-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
         }
         
         .nav-back {
             display: inline-block;
             margin-bottom: 20px;
+            background: white;
             color: var(--primary-color);
+            padding: 12px 24px;
             text-decoration: none;
+            border-radius: 25px;
             font-weight: bold;
-            padding: 10px 20px;
-            border: 2px solid var(--primary-color);
-            border-radius: 5px;
-            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
         }
         
         .nav-back:hover {
-            background: var(--primary-color);
-            color: white;
+            transform: translateY(-2px);
         }
         
-        .content {
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .blog-post {
             background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
         
-        h1 {
+        .blog-post:hover {
+            transform: translateY(-5px);
+        }
+        
+        .post-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .post-icon {
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
         
-        h2 {
-            color: var(--primary-color);
-            margin: 30px 0 15px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent-color);
-        }
-        
-        h3 {
-            color: var(--primary-color);
-            margin: 25px 0 10px 0;
-        }
-        
-        .blog-intro {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .article-grid {
-            display: grid;
-            gap: 2rem;
-            margin: 30px 0;
-        }
-        
-        .article-card {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-color);
-            transition: transform 0.3s ease;
-        }
-        
-        .article-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        .article-title {
-            color: var(--primary-color);
-            font-size: 1.3rem;
-            font-weight: 600;
+        .post-date {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
             margin-bottom: 10px;
         }
         
-        .article-meta {
+        .post-content {
+            padding: 25px;
+        }
+        
+        .post-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .post-excerpt {
             color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            line-height: 1.7;
         }
         
-        .article-excerpt {
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        
-        .article-tags {
+        .post-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            margin-bottom: 20px;
         }
         
         .tag {
-            background: var(--accent-color);
-            color: white;
+            background: #e2e8f0;
+            color: #4a5568;
             padding: 4px 12px;
             border-radius: 15px;
             font-size: 0.8rem;
-            font-weight: 500;
         }
         
-        .coming-soon {
-            text-align: center;
+        .read-more {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+        
+        .read-more:hover {
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .featured-post {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin-bottom: 30px;
+        }
+        
+        .featured-content {
             padding: 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-radius: 10px;
-            margin: 30px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
-        .ad-container {
-            text-align: center;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 10px;
+        .featured-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+        }
+        
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .category-button {
+            background: white;
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .category-button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
         }
         
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
+            .blog-grid {
+                grid-template-columns: 1fr;
             }
             
-            .content {
-                padding: 20px;
+            .featured-post {
+                grid-template-columns: 1fr;
             }
             
-            h1 {
-                font-size: 2rem;
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .categories {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -202,53 +237,167 @@
         <a href="index.html" class="nav-back">← メインページに戻る</a>
         
         <div class="header">
-            <h1>📝 開発ブログ</h1>
-            <p>技術情報・開発ノウハウ・プロジェクトの裏話</p>
+            <div class="blog-icon">📝</div>
+            <h1>開発ブログ</h1>
+            <p>Webアプリ開発の舞台裏をお届け</p>
         </div>
         
-        <div class="content">
-            <div class="blog-intro">
-                <h2>🚀 MechaTora開発ブログへようこそ</h2>
-                <p>Webアプリケーション開発の技術情報、ノウハウ、そして各プロジェクトの開発裏話をお届けします。</p>
-            </div>
+        <!-- AdSense Header -->
+        <div style="text-align: center; margin: 20px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="5863584162"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+        
+        <div class="categories">
+            <a href="#" class="category-button">全記事</a>
+            <a href="#" class="category-button">技術解説</a>
+            <a href="#" class="category-button">開発日記</a>
+            <a href="#" class="category-button">アップデート</a>
+            <a href="#" class="category-button">Tips</a>
+        </div>
+        
+        <div class="blog-grid">
+            <!-- Regular Posts -->
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">📝</div>
+                    <div class="post-date">2025年7月11日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">非エンジニアがWebベースのコンテンツを作ってみる</h3>
+                    <p class="post-excerpt">
+                        ふだんコードを書かない私が、Webアプリっぽいものを作ってみたら…思ったより楽しかった！
+                        HTMLとCSSをちょっと触るだけで、まるでプロのブログみたいな見た目に。MechaTora風のブログレイアウトも真似してみたら、思った以上に「それっぽく」なってちょっと感動。
+                        いまやノーコード・ローコードの時代。非エンジニアだって、やりたいことは意外とカタチにできるんだなと実感。最初の一歩さえ踏み出せば、世界がひらける。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">非エンジニア</span>
+                        <span class="tag">Web制作</span>
+                        <span class="tag">初心者</span>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        Xアカウント → <a href="https://twitter.com/xORMRha7Ck16551" target="_blank" style="color: var(--primary-color);">@xORMRha7Ck16551</a>
+                    </p>
+                </div>
+            </article>
             
-            <!-- AdSense広告 -->
-            <div class="ad-container">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1184134440246706"
-                     data-ad-slot="6171337236"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🧠</div>
+                    <div class="post-date">2025年7月15日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">ClaudeCodeでバイブコーディングしてみる</h3>
+                    <p class="post-excerpt">
+                        最近、話題のClaudeのコード支援機能（ClaudeCode）を試してみた。非エンジニアの私でも、自然文で「こんなの作りたい」と伝えるだけで、実行可能なHTMLやJSがスッと出てくる。
+                        特に驚いたのは、スタイルまで提案してくれること。たとえば「柔らかい雰囲気にして」「iPhoneで見やすくして」みたいな曖昧な要望にも、それっぽいコードで返してくれる。<br><br>
+                        しかも、単にコードを書く手伝いというより、「一緒に創る感覚」が強い。思わず「これって、もはやバイブスでコーディングじゃん」と感じた。命名するなら "バイブコーディング"。<br><br>
+                        「なんとなくこうしたい」を尊重してくれる相棒。エディタいらず、エラー地獄なし、検索地獄も回避。これはもう、非エンジニアにとって革命だ。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">ClaudeCode</span>
+                        <span class="tag">AI開発</span>
+                        <span class="tag">バイブコーディング</span>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        Xアカウント → <a href="https://twitter.com/xORMRha7Ck16551" target="_blank" style="color: var(--primary-color);">@xORMRha7Ck16551</a>
+                    </p>
+                </div>
+            </article>
             
-            <div class="coming-soon">
-                <h2>🔧 ブログ記事準備中</h2>
-                <p>技術記事、開発体験記、ノウハウ記事を準備中です。<br>
-                近日中に公開予定です。お楽しみに！</p>
-            </div>
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">💻</div>
+                    <div class="post-date">2025年7月20日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">ClaudeCode on WSL環境で複数WEBサービス開発してみた結果</h3>
+                    <p class="post-excerpt">
+                        WSL（Windows Subsystem for Linux）環境にClaudeCodeを構築し、本格的にWebサービス開発に挑戦してみた。レシピ提案アプリ、地震情報モニター、暗記カードアプリなど、複数のサービスを短期間で形にできた。<br><br>
+                        特に印象的だったのは、WSLとClaudeCodeの組み合わせの快適さ。Windowsの使い慣れた環境を保ちながら、Linux系のツールチェーンが使えるのは革新的だ。ファイル管理もシームレスで、開発効率が格段に向上した。<br><br>
+                        ただし、思わぬ落とし穴が料金面。最初は20ドル課金で十分だと思っていたが、複数サービスを並行開発していると、あっという間にリミットに到達。特にコード生成とデバッグのやり取りを繰り返すと、使用量が予想以上に増える。<br><br>
+                        結果として100ドル課金がちらつく状況に。本格的な開発には、それなりの投資が必要だと実感した。とはいえ、この投資で得られる開発速度と品質を考えると、十分にペイする価値がある。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">ClaudeCode</span>
+                        <span class="tag">WSL</span>
+                        <span class="tag">開発環境</span>
+                        <span class="tag">料金</span>
+                    </div>
+                </div>
+            </article>
             
-            <!-- 予定記事のプレビュー -->
-            <h2>📚 公開予定の記事</h2>
-            <div class="article-grid">
-                <!-- 記事内容はここに追加予定 -->
-            </div>
-            
-            <!-- AdSense広告 -->
-            <div class="ad-container">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1184134440246706"
-                     data-ad-slot="9102618057"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🔐</div>
+                    <div class="post-date">2025年7月26日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">BoltNewで認証を作り、SUPABASEでDBも楽々構築</h3>
+                    <p class="post-excerpt">
+                        Webサービスを作るうえで避けられないのが「認証」と「データベース管理」。
+                        正直、ここが一番つまづきやすい。そんな中、見つけたのが BoltNew（←仮称プロトタイプ）。これは認証周りを爆速で構築できる新ツール。LINE風のUXでサインインが作れる上に、デザインも整ってる。<br><br>
+                        さらに、SUPABASEを併用すると、DB設計もGUIで完結。SQLが苦手でも、テーブル作成からレコード挿入、認可設定まで一気通貫。Firebaseの代替にもなる柔軟さがある。<br><br>
+                        この2つの組み合わせだけで、「ログインして、ユーザーごとのデータを表示するWebアプリ」が形になる。しかも、学習コストは控えめ。<br><br>
+                        ゼロから全部作らなくても、アイデア次第でWebサービスは作れる。非エンジニアだからこそ、こうしたツールを武器にすべきだと感じた。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">BoltNew</span>
+                        <span class="tag">SUPABASE</span>
+                        <span class="tag">認証</span>
+                        <span class="tag">データベース</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+        
+        <!-- AdSense Middle -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="8547296385"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+        
+        <div style="text-align: center; margin: 40px 0; padding: 30px; background: white; border-radius: 15px; box-shadow: var(--card-shadow);">
+            <h3>📧 開発情報をお届け</h3>
+            <p>新しいアプリのリリース情報や技術記事の更新をお知らせします。</p>
+            <p><small>※現在、メール配信機能を準備中です</small></p>
+        </div>
+        
+        <!-- AdSense Footer -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="9102618057"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
         </div>
     </div>
     
-    <!-- AdSense初期化 -->
+    <!-- AdSense 初期化 -->
     <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        window.addEventListener('load', function() {
+            try {
+                if (typeof adsbygoogle !== 'undefined') {
+                    const ads = document.querySelectorAll('.adsbygoogle');
+                    ads.forEach(ad => {
+                        if (!ad.dataset.adsbygoogleStatus) {
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log('AdSense initialization skipped:', error.message);
+            }
+        });
     </script>
 </body>
 </html>
