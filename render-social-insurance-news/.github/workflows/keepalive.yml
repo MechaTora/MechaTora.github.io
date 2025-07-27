@@ -1,0 +1,21 @@
+name: Keep Render Service Alive
+
+on:
+  schedule:
+    # 毎10分間実行（UTC時間）
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep service alive
+        run: |
+          curl -f -s -o /dev/null "https://social-insurance-news-render-1.onrender.com/health" || exit 0
+          echo "✅ Service pinged successfully at $(date)"
+      
+      - name: Ping main page
+        run: |
+          curl -f -s -o /dev/null "https://social-insurance-news-render-1.onrender.com" || exit 0
+          echo "✅ Main page pinged at $(date)"
