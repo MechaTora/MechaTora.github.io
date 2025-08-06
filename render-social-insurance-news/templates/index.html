@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>社会保険ニュース - 最新情報まとめ（スマホ版）</title>
     <meta name="description" content="社会保険に関する最新ニュースを自動収集・要約してお届け。健康保険、厚生年金、雇用保険などの重要な変更情報をスマホで手軽にチェック。">
     <meta name="keywords" content="社会保険,ニュース,健康保険,厚生年金,雇用保険,労災保険,介護保険,年金,スマホ">
@@ -19,13 +19,14 @@
         gtag('config', 'G-LZ096BMEQX');
     </script>
     
-    <!-- 広告表示確保のためのCSP設定 -->
+    <!-- A8.net広告表示のためのCSP設定 -->
     <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self' 'unsafe-inline';
-        img-src 'self' data: https: http:;
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com;
-        frame-src 'self' https:;
-        connect-src 'self' https:;
+        default-src 'self' 'unsafe-inline' 'unsafe-eval';
+        img-src 'self' data: https: http: *.a8.net *.a8ads.net *.rakuten.co.jp;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https: *.a8.net *.a8ads.net *.googletagmanager.com *.google-analytics.com;
+        frame-src 'self' https: *.a8.net *.a8ads.net;
+        connect-src 'self' https: *.a8.net *.a8ads.net;
+        style-src 'self' 'unsafe-inline' https:;
     ">
     
     <!-- PWA対応 -->
@@ -113,7 +114,58 @@
             max-width: 200px;
         }
         
-        /* 広告エリア - スマホサイズ */
+        /* スマホ専用広告セクション */
+        .mobile-ad-section {
+            background: var(--surface);
+            margin: 12px 8px;
+            padding: 16px 8px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        
+        .mobile-ad-container {
+            background: #fff;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mobile-ad-container:before {
+            content: "PR";
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #999;
+            color: white;
+            font-size: 10px;
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+        
+        .mobile-ad-small {
+            max-width: 150px;
+            margin: 12px auto;
+        }
+        
+        .mobile-ad-container img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+            border: none;
+        }
+        
+        .mobile-ad-container a {
+            display: block;
+            text-decoration: none;
+        }
+        
+        /* 旧広告エリア - 互換性のため残す */
         .ad-container {
             background: var(--surface);
             margin: 8px;
@@ -381,23 +433,45 @@
             touch-action: manipulation;
         }
         
+        /* スマホ専用広告の追加スタイル */
+        .mobile-ad-large {
+            max-width: 300px;
+            margin: 16px auto;
+        }
+        
+        .mobile-ad-square {
+            max-width: 120px;
+            margin: 12px auto;
+        }
+        
         /* スマホ向け追加最適化 */
         @media screen and (max-width: 768px) {
+            .mobile-ad-section {
+                margin: 8px 4px;
+                padding: 12px 4px;
+            }
+            
+            .mobile-ad-container {
+                margin: 6px 0;
+                padding: 8px;
+            }
+            
+            .mobile-ad-large {
+                max-width: min(280px, 90vw);
+            }
+            
+            .mobile-ad-square {
+                max-width: min(100px, 30vw);
+            }
+            
+            .mobile-ad-small {
+                max-width: min(120px, 40vw);
+            }
+            
+            /* 旧スタイル */
             .ad-container {
                 margin: 6px 4px;
                 padding: 8px 4px;
-            }
-            
-            /* 大型広告をスマホで縮小 */
-            .ad-container div[id*="large"] img {
-                max-width: min(280px, 85vw);
-                max-height: 180px;
-            }
-            
-            /* 正方形広告のサイズ調整 */
-            .ad-container div[id*="square"] img {
-                max-width: min(80px, 20vw);
-                max-height: min(80px, 20vw);
             }
         }
         
@@ -441,21 +515,22 @@
         </div>
     </header>
     
-    <!-- ヘッダー広告 -->
-    <div class="ad-container">
-        <div id="header-ad">
-            <a href="https://px.a8.net/svt/ejp?a8mat=459YIV+20MWKY+2PEO+O4P5D" rel="nofollow">
-            <img border="0" width="320" height="50" alt="" src="https://www24.a8.net/svt/bgt?aid=250727431122&wid=001&eno=01&mid=s00000012624004053000&mc=1"></a>
-            <img border="0" width="1" height="1" src="https://www11.a8.net/0.gif?a8mat=459YIV+20MWKY+2PEO+O4P5D" alt="">
+    <!-- スマホ専用A8.net広告エリア -->
+    <div class="mobile-ad-section">
+        <!-- メイン横長広告 -->
+        <div class="mobile-ad-container">
+            <a href="https://px.a8.net/svt/ejp?a8mat=459YIV+20MWKY+2PEO+O4P5D" rel="nofollow" target="_blank">
+                <img src="https://www24.a8.net/svt/bgt?aid=250727431122&wid=001&eno=01&mid=s00000012624004053000&mc=1" alt="広告" style="max-width:100%; height:auto; display:block; margin:0 auto;">
+            </a>
+            <img src="https://www11.a8.net/0.gif?a8mat=459YIV+20MWKY+2PEO+O4P5D" width="1" height="1" style="border:none; position:absolute; left:-9999px;">
         </div>
-    </div>
-    
-    <!-- 追加広告1 - 小型バナー -->
-    <div class="ad-container">
-        <div id="header-ad2">
-            <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DT4YWI+14CS+6C9LD" rel="nofollow">
-            <img border="0" width="120" height="60" alt="" src="https://www21.a8.net/svt/bgt?aid=250806496835&wid=001&eno=01&mid=s00000005230001065000&mc=1"></a>
-            <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=45BNJ4+DT4YWI+14CS+6C9LD" alt="">
+        
+        <!-- 小型バナー広告 -->
+        <div class="mobile-ad-container mobile-ad-small">
+            <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DT4YWI+14CS+6C9LD" rel="nofollow" target="_blank">
+                <img src="https://www21.a8.net/svt/bgt?aid=250806496835&wid=001&eno=01&mid=s00000005230001065000&mc=1" alt="広告" style="max-width:100%; height:auto; display:block; margin:0 auto;">
+            </a>
+            <img src="https://www14.a8.net/0.gif?a8mat=45BNJ4+DT4YWI+14CS+6C9LD" width="1" height="1" style="border:none; position:absolute; left:-9999px;">
         </div>
     </div>
     
@@ -541,29 +616,32 @@
             </footer>
         </article>
         
-        <!-- 中間広告（3件ごと） -->
+        <!-- スマホ専用中間広告（3件ごと） -->
         {% if loop.index % 3 == 0 %}
-        <div class="ad-container">
+        <div class="mobile-ad-section">
             {% if loop.index % 6 == 0 %}
             <!-- 大型広告（6件ごと） -->
-            <div id="middle-ad-large-{{ loop.index }}">
-                <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DKSWFM+5QLS+BZ0Z5" rel="nofollow">
-                <img border="0" width="300" height="250" alt="" src="https://www22.a8.net/svt/bgt?aid=250806496821&wid=001&eno=01&mid=s00000026776002011000&mc=1"></a>
-                <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=45BNJ4+DKSWFM+5QLS+BZ0Z5" alt="">
+            <div class="mobile-ad-container mobile-ad-large">
+                <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DKSWFM+5QLS+BZ0Z5" rel="nofollow" target="_blank">
+                    <img src="https://www22.a8.net/svt/bgt?aid=250806496821&wid=001&eno=01&mid=s00000026776002011000&mc=1" alt="広告" style="max-width:100%; height:auto; display:block; margin:0 auto;">
+                </a>
+                <img src="https://www14.a8.net/0.gif?a8mat=45BNJ4+DKSWFM+5QLS+BZ0Z5" width="1" height="1" style="border:none; position:absolute; left:-9999px;">
             </div>
             {% elif loop.index % 9 == 0 %}
             <!-- 正方形広告（9件ごと） -->
-            <div id="middle-ad-square-{{ loop.index }}">
-                <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" rel="nofollow">
-                <img border="0" width="100" height="100" alt="" src="https://www29.a8.net/svt/bgt?aid=250806496829&wid=002&eno=01&mid=s00000026867001004000&mc=1"></a>
-                <img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" alt="">
+            <div class="mobile-ad-container mobile-ad-square">
+                <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" rel="nofollow" target="_blank">
+                    <img src="https://www29.a8.net/svt/bgt?aid=250806496829&wid=002&eno=01&mid=s00000026867001004000&mc=1" alt="広告" style="max-width:100%; height:auto; display:block; margin:0 auto;">
+                </a>
+                <img src="https://www16.a8.net/0.gif?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" width="1" height="1" style="border:none; position:absolute; left:-9999px;">
             </div>
             {% else %}
             <!-- 通常の横長広告（3件ごと） -->
-            <div id="middle-ad-{{ loop.index }}">
-                <a href="https://px.a8.net/svt/ejp?a8mat=459YIV+1Y965U+0K+11HG8X" rel="nofollow">
-                <img border="0" width="320" height="50" alt="" src="https://www26.a8.net/svt/bgt?aid=250727431118&wid=001&eno=01&mid=s00000000002006296000&mc=1"></a>
-                <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=459YIV+1Y965U+0K+11HG8X" alt="">
+            <div class="mobile-ad-container">
+                <a href="https://px.a8.net/svt/ejp?a8mat=459YIV+1Y965U+0K+11HG8X" rel="nofollow" target="_blank">
+                    <img src="https://www26.a8.net/svt/bgt?aid=250727431118&wid=001&eno=01&mid=s00000000002006296000&mc=1" alt="広告" style="max-width:100%; height:auto; display:block; margin:0 auto;">
+                </a>
+                <img src="https://www15.a8.net/0.gif?a8mat=459YIV+1Y965U+0K+11HG8X" width="1" height="1" style="border:none; position:absolute; left:-9999px;">
             </div>
             {% endif %}
         </div>
@@ -578,12 +656,13 @@
         {% endif %}
     </main>
     
-    <!-- フッター広告 -->
-    <div class="ad-container">
-        <div id="footer-ad">
-            <a href="https://rpx.a8.net/svt/ejp?a8mat=459YIV+1ZG1DE+2HOM+67JU9&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa25072799744_459YIV_1ZG1DE_2HOM_67JU9%3Fpc%3Dhttps%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttps%253A%252F%252Fm.rakuten.co.jp%252F" rel="nofollow">
-            <img src="https://hbb.afl.rakuten.co.jp/hsb/0ec09ba3.bc2429d5.0eb4bbaa.95151395/" border="0"></a>
-            <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=459YIV+1ZG1DE+2HOM+67JU9" alt="">
+    <!-- フッター広告 - スマホ専用 -->
+    <div class="mobile-ad-section">
+        <div class="mobile-ad-container">
+            <a href="https://rpx.a8.net/svt/ejp?a8mat=459YIV+1ZG1DE+2HOM+67JU9&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa25072799744_459YIV_1ZG1DE_2HOM_67JU9%3Fpc%3Dhttps%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttps%253A%252F%252Fm.rakuten.co.jp%252F" rel="nofollow" target="_blank">
+                <img src="https://hbb.afl.rakuten.co.jp/hsb/0ec09ba3.bc2429d5.0eb4bbaa.95151395/" alt="楽天市場" style="max-width:100%; height:auto; display:block; margin:0 auto;">
+            </a>
+            <img src="https://www14.a8.net/0.gif?a8mat=459YIV+1ZG1DE+2HOM+67JU9" width="1" height="1" style="border:none; position:absolute; left:-9999px;">
         </div>
     </div>
     
