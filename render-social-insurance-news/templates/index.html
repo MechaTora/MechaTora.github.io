@@ -19,6 +19,15 @@
         gtag('config', 'G-LZ096BMEQX');
     </script>
     
+    <!-- 広告表示確保のためのCSP設定 -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' 'unsafe-inline';
+        img-src 'self' data: https: http:;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com;
+        frame-src 'self' https:;
+        connect-src 'self' https:;
+    ">
+    
     <!-- PWA対応 -->
     <meta name="theme-color" content="#4A90E2">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -572,12 +581,18 @@
     <!-- フッター広告 -->
     <div class="ad-container">
         <div id="footer-ad">
-            <a href="https://rpx.a8.net/svt/ejp?a8mat=459YIV+1ZG1DE+2HOM+67JU9&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa25072799744_459YIV_1ZG1DE_2HOM_67JU9%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F" rel="nofollow">
-            <img src="http://hbb.afl.rakuten.co.jp/hsb/0ec09ba3.bc2429d5.0eb4bbaa.95151395/" border="0"></a>
+            <a href="https://rpx.a8.net/svt/ejp?a8mat=459YIV+1ZG1DE+2HOM+67JU9&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa25072799744_459YIV_1ZG1DE_2HOM_67JU9%3Fpc%3Dhttps%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttps%253A%252F%252Fm.rakuten.co.jp%252F" rel="nofollow">
+            <img src="https://hbb.afl.rakuten.co.jp/hsb/0ec09ba3.bc2429d5.0eb4bbaa.95151395/" border="0"></a>
             <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=459YIV+1ZG1DE+2HOM+67JU9" alt="">
         </div>
     </div>
     
+    <!-- A8.net広告確認用セクション -->
+    <div style="background: var(--bg); padding: 16px; text-align: center; border: 1px solid var(--border); margin: 16px 8px;">
+        <p style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 8px;">📢 A8.net パートナーサイト</p>
+        <p style="font-size: 0.7rem; color: var(--text-light);">当サイトはA8.netの審査に合格したアフィリエイトプログラムに参加しています</p>
+    </div>
+
     <!-- SEOキーワードセクション -->
     <section style="background: var(--bg); padding: 30px 16px; border-top: 1px solid var(--border);">
         <div style="max-width: 800px; margin: 0 auto;">
@@ -660,14 +675,40 @@
         });
         
         function loadAds() {
-            // 実際の広告実装時にここを更新
-            // i-mobile または Zucks の広告スクリプトを実行
-            console.log('広告読み込み準備完了');
+            console.log('A8.net広告読み込み開始');
             
-            // 例: i-mobile広告の実装
-            // if (window.adConfig.provider === 'i-mobile') {
-            //     // i-mobile広告コード
-            // }
+            // 広告の読み込み確認
+            const ads = document.querySelectorAll('.ad-container img[src*="a8.net"]');
+            let loadedAds = 0;
+            
+            ads.forEach((img, index) => {
+                // 画像読み込み完了を監視
+                if (img.complete) {
+                    loadedAds++;
+                } else {
+                    img.onload = function() {
+                        loadedAds++;
+                        console.log(`A8.net広告 ${index + 1} 読み込み完了`);
+                    };
+                    
+                    img.onerror = function() {
+                        console.warn(`A8.net広告 ${index + 1} 読み込み失敗 - フォールバック表示`);
+                        // フォールバック表示
+                        this.style.display = 'none';
+                        const fallback = document.createElement('div');
+                        fallback.innerHTML = '<div style="background: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #666;">広告</div>';
+                        this.parentNode.appendChild(fallback);
+                    };
+                }
+            });
+            
+            // 3秒後に読み込み状況をチェック
+            setTimeout(() => {
+                console.log(`A8.net広告読み込み状況: ${loadedAds}/${ads.length}`);
+                if (loadedAds === 0) {
+                    console.warn('広告ブロッカーまたはネットワーク問題の可能性があります');
+                }
+            }, 3000);
         }
         
         // PWA対応 - Service Worker登録
