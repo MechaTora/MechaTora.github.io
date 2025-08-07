@@ -313,6 +313,19 @@
             border-radius: 8px;
         }
         
+        /* 社会保険ニュース統合ウィジェット用スタイル */
+        .social-insurance-unified .app-button {
+            display: none; /* 元のボタンを非表示 */
+        }
+        
+        .social-insurance-unified a[style*="background: #3498db"]:hover {
+            background: #2980b9 !important;
+        }
+        
+        .social-insurance-unified a[style*="background: #2980b9"]:hover {
+            background: #1e6091 !important;
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2rem;
@@ -320,6 +333,10 @@
             
             .apps-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .social-insurance-unified div[style*="display: flex"] {
+                justify-content: center;
             }
         }
     </style>
@@ -379,25 +396,26 @@
                         <span class="app-button">アプリを開く</span>
                     </a>
 
-                    <a href="https://social-insurance-news-render-1.onrender.com/" class="app-card" target="_blank" rel="noopener">
-                        <span class="app-icon">📱</span>
-                        <h3 class="app-title">社会保険ニュース（スマホ版）</h3>
-                        <p class="app-description">
-                            社会保険に関する最新ニュースを自動収集・要約。厚生年金、健康保険、雇用保険などの重要な変更情報をスマホで手軽にチェック。毎朝4時自動更新。
-                        </p>
-                        <p class="app-tech">Render.com・自動更新・スマホ最適化・A8.net広告対応</p>
-                        <span class="app-button">スマホ版を開く</span>
-                    </a>
-
-                    <a href="/social-insurance-news2/" class="app-card">
+                    <div class="app-card social-insurance-unified">
                         <span class="app-icon">🏛️</span>
-                        <h3 class="app-title">社会保険ニュース（通常版）</h3>
+                        <h3 class="app-title">社会保険ニュース</h3>
                         <p class="app-description">
-                            社会保険に関する最新ニュースを自動収集・要約。PC・デスクトップでの閲覧に最適化。詳細な分析とカテゴリ別表示で情報を整理。
+                            社会保険に関する最新ニュースを自動収集・要約。厚生年金、健康保険、雇用保険などの重要な変更情報をチェック。用途に応じて2つのバージョンから選択可能。
                         </p>
-                        <p class="app-tech">GitHub Pages・PC最適化・詳細分析・カテゴリ別表示</p>
-                        <span class="app-button">通常版を開く</span>
-                    </a>
+                        <p class="app-tech">自動ニュース収集・AI要約・カテゴリ別分類</p>
+                        
+                        <!-- 並列リンクボタン -->
+                        <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
+                            <a href="https://social-insurance-news-render-1.onrender.com/" target="_blank" rel="noopener" 
+                               style="background: #3498db; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: background 0.3s ease;">
+                                📱 スマホ版
+                            </a>
+                            <a href="/social-insurance-news2/" 
+                               style="background: #2980b9; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: background 0.3s ease;">
+                                💻 PC版
+                            </a>
+                        </div>
+                    </div>
 
                     <a href="/flashcard-web-app/" class="app-card">
                         <span class="app-icon">🧠</span>
