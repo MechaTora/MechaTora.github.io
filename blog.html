@@ -353,6 +353,97 @@
                     </div>
                 </div>
             </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🍳</div>
+                    <div class="post-date">2025年8月1日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">CookSuggestアプリ開発秘話：1000レシピDBをどう構築したか</h3>
+                    <p class="post-excerpt">
+                        料理レシピ提案アプリ「CookSuggest」の最大の特徴は、1000種類以上のレシピデータベース。この膨大なデータをどう集めて、どう構造化したかをお話しします。<br><br>
+                        まず直面したのが「レシピの標準化」問題。醤油大さじ1杯は15ml、でも「少々」「適量」をどう数値化する？材料名も「玉ねぎ」「タマネギ」「玉葱」の表記揺れをどう統一する？<br><br>
+                        結果的に、独自の材料マスターテーブルを作成し、シソーラス辞書で表記揺れを吸収。調味料は3段階（少・中・多）に分類して検索精度を向上させました。<br><br>
+                        PWA化では、オフライン検索機能が最大のチャレンジでした。1000レシピをローカルストレージに効率保存し、検索アルゴリズムも最適化。結果、3秒以内で最適レシピを5つ提案できるシステムが完成しました。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">CookSuggest</span>
+                        <span class="tag">レシピDB</span>
+                        <span class="tag">PWA</span>
+                        <span class="tag">データ構造化</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🌏</div>
+                    <div class="post-date">2025年8月3日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">地震モニターアプリ：リアルタイム更新の技術的仕組み</h3>
+                    <p class="post-excerpt">
+                        地震情報をリアルタイム表示する「地震モニター」アプリ。気象庁のAPIを活用した更新システムの裏側を技術解説します。<br><br>
+                        最大の技術課題は「リアルタイム性とサーバー負荷のバランス」でした。地震発生時は瞬間的にアクセスが集中するため、通常のポーリング方式では限界があります。<br><br>
+                        解決策として採用したのが「プログレッシブ更新システム」。平時は30秒間隔、地震発生時は自動で5秒間隔に切り替わり、沈静化後は段階的に元の間隔に戻します。<br><br>
+                        また、PWA機能を活用した通知システムも実装。ユーザーが設定した震度以上の地震発生時に、ブラウザプッシュ通知で即座にお知らせします。バックグラウンドでも動作するため、常時監視が可能です。<br><br>
+                        結果として、地震発生から平均15秒以内での情報表示を実現。防災意識向上に貢献できるアプリに仕上がりました。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">地震モニター</span>
+                        <span class="tag">リアルタイム</span>
+                        <span class="tag">気象庁API</span>
+                        <span class="tag">防災</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🧠</div>
+                    <div class="post-date">2025年8月5日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">科学的暗記アプリ：間隔反復学習アルゴリズムの実装</h3>
+                    <p class="post-excerpt">
+                        記憶の科学に基づいた「科学的暗記アプリ」では、エビングハウスの忘却曲線理論を実装。どのように学習効率を最大化したかを解説します。<br><br>
+                        核心は「SuperMemo SM-2アルゴリズム」の応用です。ユーザーの回答品質（完璧・良好・困難・失敗）に基づいて、次回復習のタイミングを動的計算。個人の記憶特性に最適化されます。<br><br>
+                        実装で工夫したのは「学習継続のモチベーション設計」。進捗を可視化するプログレスバー、連続学習日数の記録、難易度別の達成バッジシステムを導入しました。<br><br>
+                        結果、従来の一律復習サイクルと比較して、記憶定着率が約40%向上。特に長期記憶への定着効果が顕著に改善されました。<br><br>
+                        現在、1000人以上のユーザーに愛用されており、医学部受験生や資格試験学習者から高い評価をいただいています。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">科学的暗記</span>
+                        <span class="tag">間隔反復</span>
+                        <span class="tag">学習アルゴリズム</span>
+                        <span class="tag">記憶科学</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🏛️</div>
+                    <div class="post-date">2025年8月7日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">社会保険ニュース自動化システム：AI要約×自動更新の舞台裏</h3>
+                    <p class="post-excerpt">
+                        毎朝4時に自動更新される「社会保険ニュース」。厚生労働省、年金機構、Yahoo!ニュースから情報を収集し、AIで要約・分類する完全自動化システムの開発プロセスを公開します。<br><br>
+                        システム構成は3層構造：①ニュース収集層（Web Scraping）、②AI処理層（要約・カテゴリ分類）、③Web生成層（HTML出力・デプロイ）。全て自動実行されます。<br><br>
+                        技術的ハイライトは「コンテンツ重複排除アルゴリズム」。異なるソースから同じニュースが収集された場合、自動で統合し、最も詳細な情報を保持します。<br><br>
+                        AI要約では、専門用語解説付きサマリーを生成。「厚生年金」「雇用保険」などの制度変更を、一般の方にも分かりやすく説明します。<br><br>
+                        現在、スマホ版（Render.com）とPC版（GitHub Pages）の2バージョンを運用。用途に応じた最適なUXを提供しています。
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">社会保険ニュース</span>
+                        <span class="tag">AI要約</span>
+                        <span class="tag">自動化</span>
+                        <span class="tag">Render.com</span>
+                    </div>
+                </div>
+            </article>
         </div>
         
         <!-- AdSense Middle -->
