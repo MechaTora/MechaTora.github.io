@@ -45,6 +45,40 @@ jobs:
         echo "📋 生成されたファイル一覧:"
         ls -la social-insurance-news2/*.html social-insurance-news2/*.json 2>/dev/null || echo "No files generated"
     
+    - name: Render用ディレクトリにデータ同期
+      run: |
+        echo "🔄 Render用ディレクトリにデータを同期中..."
+        
+        # render-social-insurance-newsディレクトリの存在確認
+        if [ -d "render-social-insurance-news" ]; then
+          echo "📁 render-social-insurance-news ディレクトリが見つかりました"
+          
+          # templatesディレクトリがない場合は作成
+          mkdir -p render-social-insurance-news/templates
+          mkdir -p render-social-insurance-news/data
+          
+          # index.htmlをtemplatesにコピー
+          if [ -f "social-insurance-news2/index.html" ]; then
+            cp social-insurance-news2/index.html render-social-insurance-news/templates/index.html
+            echo "✅ index.html をコピーしました"
+          fi
+          
+          # JSONファイルをdataディレクトリにコピー
+          if ls social-insurance-news2/*.json 1> /dev/null 2>&1; then
+            cp social-insurance-news2/*.json render-social-insurance-news/data/
+            echo "✅ JSONファイルをコピーしました"
+          fi
+          
+          # 静的ファイル（画像等）があればコピー
+          if [ -d "social-insurance-news2/static" ]; then
+            cp -r social-insurance-news2/static/* render-social-insurance-news/static/ 2>/dev/null || echo "静的ファイルなし"
+          fi
+          
+          echo "🎯 Render用データ同期完了"
+        else
+          echo "⚠️ render-social-insurance-news ディレクトリが見つかりません"
+        fi
+    
     - name: 変更をコミット
       run: |
         git config --local user.email "action@github.com"
@@ -55,9 +89,15 @@ jobs:
           echo "📝 変更を検出、コミット実行"
           git add social-insurance-news2/*.html social-insurance-news2/*.json
           
+          # render-social-insurance-newsの変更も追加
+          git add render-social-insurance-news/templates/ render-social-insurance-news/data/ 2>/dev/null || echo "render用ファイル追加なし"
+          
           # 日時情報でコミットメッセージ作成
           CURRENT_TIME=$(TZ='Asia/Tokyo' date '+%Y年%m月%d日 %H:%M')
-          git commit -m "🔄 社会保険ニュース自動更新 - ${CURRENT_TIME}" \
+          git commit -m "🔄 社会保険ニュース自動更新 + Render同期 - ${CURRENT_TIME}" \
+                     -m "- social-insurance-news2でデータ処理・生成" \
+                     -m "- render-social-insurance-newsに結果を同期" \
+                     -m "- Render自動デプロイをトリガー" \
                      -m "🤖 Generated with [Claude Code](https://claude.ai/code)" \
                      -m "Co-Authored-By: Claude <noreply@anthropic.com>"
           
