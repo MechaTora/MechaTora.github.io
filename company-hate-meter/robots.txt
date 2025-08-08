@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+
+# 主要ページ
+Allow: /index.html
+Allow: /privacy-policy.html
+Allow: /terms-of-service.html
+Allow: /contact.html
+Allow: /about.html
+Allow: /how-to-use.html
+Allow: /faq.html
+
+# 静的ファイル
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+Allow: /*.json
+
+# サイトマップ
+Sitemap: https://company-hate-meter.github.io/sitemap.xml
+
+# クローリング頻度の調整
+Crawl-delay: 1

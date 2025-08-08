@@ -1,0 +1,55 @@
+{
+    "name": "会社行きたくないメーター",
+    "short_name": "行きたくないメーター",
+    "description": "全国の「会社行きたくない」気持ちをリアルタイム共有",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1a1a2e",
+    "theme_color": "#00f5ff",
+    "orientation": "portrait-primary",
+    "categories": ["lifestyle", "social", "entertainment"],
+    "lang": "ja",
+    "dir": "ltr",
+    "icons": [
+        {
+            "src": "icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshot-desktop.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "screenshot-mobile.png",
+            "sizes": "360x640",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "投稿する",
+            "short_name": "投稿",
+            "description": "今の気持ちを投稿する",
+            "url": "/?action=post",
+            "icons": [
+                {
+                    "src": "icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ]
+}

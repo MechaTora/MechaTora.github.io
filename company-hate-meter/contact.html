@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ | 会社行きたくないメーター</title>
+    <meta name="description" content="会社行きたくないメーターに関するお問い合わせはこちらから。ご質問、ご意見、不具合報告をお受けしています。">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --cyber-blue: #00f5ff;
+            --cyber-pink: #ff006e;
+            --dark-glass: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-gradient);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--cyber-blue);
+            text-decoration: none;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+        }
+
+        .content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: var(--dark-glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--cyber-blue);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-pink));
+            color: var(--text-primary);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 245, 255, 0.3);
+        }
+
+        .info-section {
+            background: var(--dark-glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: var(--cyber-blue);
+            margin-bottom: 15px;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .contact-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyber-blue);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .content, .info-section {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-link">← トップページに戻る</a>
+            <h1>📧 お問い合わせ</h1>
+        </div>
+
+        <div class="info-section">
+            <h3>📋 お問い合わせについて</h3>
+            <p>以下の内容についてお気軽にお問い合わせください：</p>
+            <ul style="margin-top: 15px; padding-left: 20px;">
+                <li>サービスの使い方に関するご質問</li>
+                <li>不具合やエラーの報告</li>
+                <li>機能改善のご提案</li>
+                <li>プライバシーに関するお問い合わせ</li>
+                <li>広告掲載に関するお問い合わせ</li>
+                <li>その他ご意見・ご要望</li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="category">お問い合わせ種類 *</label>
+                    <select id="category" name="category" required>
+                        <option value="">選択してください</option>
+                        <option value="question">使い方・ご質問</option>
+                        <option value="bug">不具合報告</option>
+                        <option value="suggestion">機能改善提案</option>
+                        <option value="privacy">プライバシーについて</option>
+                        <option value="advertising">広告掲載について</option>
+                        <option value="other">その他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">メールアドレス（任意）</label>
+                    <input type="email" id="email" name="email" placeholder="返信が必要な場合はご入力ください">
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">件名 *</label>
+                    <input type="text" id="subject" name="subject" required placeholder="お問い合わせの件名を入力してください">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">お問い合わせ内容 *</label>
+                    <textarea id="message" name="message" required placeholder="詳細な内容をご記入ください"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">📧 送信する</button>
+            </form>
+        </div>
+
+        <div class="contact-methods">
+            <div class="contact-card">
+                <span class="contact-icon">⚡</span>
+                <h4>迅速対応</h4>
+                <p>お問い合わせは24時間以内にご返信いたします</p>
+            </div>
+            
+            <div class="contact-card">
+                <span class="contact-icon">🔒</span>
+                <h4>プライバシー保護</h4>
+                <p>お預かりした情報は適切に管理いたします</p>
+            </div>
+            
+            <div class="contact-card">
+                <span class="contact-icon">🤝</span>
+                <h4>改善への反映</h4>
+                <p>いただいたご意見はサービス改善に活用いたします</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // 実際の実装では、ここでサーバーにデータを送信
+            console.log('お問い合わせデータ:', data);
+            
+            // 仮の送信完了処理
+            alert('お問い合わせを受け付けました。ありがとうございます！\n\n※現在はデモ版のため、実際には送信されていません。');
+            
+            // フォームをリセット
+            this.reset();
+        });
+    </script>
+</body>
+</html>

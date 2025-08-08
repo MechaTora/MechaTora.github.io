@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会社行きたくないメーター | 全国のネガティブ感情をリアルタイム共有</title>
+    <meta name="description" content="全国の「会社行きたくない」気持ちを地図で可視化。休み明けの憂鬱な気持ちを匿名で共有し、みんなで支え合おう。24時間データ追跡、都道府県別ランキング機能搭載。">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="会社,行きたくない,憂鬱,休み明け,ストレス,共有,匿名,地図,可視化,日本,統計">
+    <meta name="author" content="会社行きたくないメーター開発チーム">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://company-hate-meter.github.io/">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="会社行きたくないメーター | 全国のネガティブ感情をリアルタイム共有">
+    <meta property="og:description" content="休み明けの憂鬱な気持ちをみんなで共有。全国の「行きたくない」をリアルタイム地図で可視化。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://company-hate-meter.github.io/">
+    <meta property="og:image" content="https://company-hate-meter.github.io/og-image.png">
+    <meta property="og:site_name" content="会社行きたくないメーター">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="会社行きたくないメーター">
+    <meta name="twitter:description" content="全国の「行きたくない」気持ちをリアルタイム共有">
+    <meta name="twitter:image" content="https://company-hate-meter.github.io/twitter-card.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --dark-glass: rgba(0, 0, 0, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --cyber-blue: #00f5ff;
+            --cyber-pink: #ff006e;
+            --cyber-green: #39ff14;
+            --shadow-soft: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --shadow-hard: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-gradient);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            33% { transform: translateX(-20px) translateY(-20px); }
+            66% { transform: translateX(20px) translateY(20px); }
+        }
+
+        .header {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 30px 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+        }
+
+        .header .emoji {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 25px;
+        }
+
+        .concept-message {
+            background: var(--dark-glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin: 25px auto 0 auto;
+            max-width: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 119, 198, 0.6), transparent);
+        }
+
+        .concept-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .concept-icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+
+        .global-note {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        .main-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyber-blue), transparent);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .map-container {
+            position: relative;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        .map-legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--dark-glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 200px;
+            z-index: 1000;
+        }
+
+        .map-legend h4 {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .legend-color {
+            display: block;
+            width: 20px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .legend-color.high {
+            background: rgba(255, 0, 110, 0.7);
+        }
+
+        .legend-color.medium {
+            background: rgba(255, 133, 0, 0.7);
+        }
+
+        .legend-color.low {
+            background: rgba(0, 245, 255, 0.7);
+        }
+
+        .legend-color.very-low {
+            background: rgba(57, 255, 20, 0.7);
+        }
+
+        .legend-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .map-rankings {
+            margin-top: 30px;
+            padding: 0 25px 30px 25px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-primary), var(--cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-item {
+            background: var(--dark-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,245,255,0.1), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .stat-item:hover::before {
+            left: 100%;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyber-blue);
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hate-button {
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+            border: none;
+            padding: 20px 35px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hate-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .hate-button:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .hate-button:hover:not(:disabled) {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.6);
+            filter: brightness(1.1);
+        }
+
+        .hate-button:disabled {
+            background: rgba(255,255,255,0.1);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            filter: grayscale(1);
+        }
+
+        .location-info {
+            background: var(--dark-glass);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            backdrop-filter: blur(10px);
+        }
+
+        .manual-location-select {
+            background: var(--dark-glass);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .select-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .prefecture-select {
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prefecture-select:focus {
+            outline: none;
+            border-color: var(--cyber-blue);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+
+        .prefecture-select option {
+            background: #1a1a2e;
+            color: var(--text-primary);
+            padding: 8px;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: var(--dark-gradient);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 50px;
+            padding: 40px 0 20px 0;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 5px 0;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyber-blue);
+            transform: translateX(5px);
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 30px auto 0 auto;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .footer-note {
+            font-size: 0.85rem !important;
+            line-height: 1.5;
+            color: var(--text-muted) !important;
+        }
+
+        .chart-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow-soft);
+            height: 350px;
+            position: relative;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        .error {
+            background: rgba(255, 0, 110, 0.1);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            color: var(--cyber-pink);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Ad Spaces */
+        .ad-space {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .ad-space:hover {
+            border-color: var(--cyber-blue);
+            background: rgba(0, 245, 255, 0.05);
+        }
+
+        /* Rankings Styles */
+        .ranking-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .ranking-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .ranking-section.best {
+            border-left: 4px solid var(--cyber-pink);
+        }
+
+        .ranking-section.worst {
+            border-left: 4px solid var(--cyber-green);
+        }
+
+        .ranking-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .ranking-title.best {
+            color: var(--cyber-pink);
+        }
+
+        .ranking-title.worst {
+            color: var(--cyber-green);
+        }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: var(--dark-glass);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .ranking-item:hover {
+            border-color: var(--cyber-blue);
+            transform: translateX(5px);
+        }
+
+        .ranking-rank {
+            font-weight: 700;
+            font-size: 1.1rem;
+            min-width: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ranking-prefecture {
+            flex: 1;
+            margin-left: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .ranking-count {
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .mobile-tabs {
+            display: none;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tab-buttons {
+            display: flex;
+        }
+
+        .tab-button {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 15px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab-button:last-child {
+            border-right: none;
+        }
+
+        .tab-button.active {
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 15px 10px;
+                gap: 20px;
+            }
+            
+            .header {
+                padding: 20px 0;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            
+            .header .emoji {
+                font-size: 2.5rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+                padding: 0 15px;
+            }
+            
+            .hate-button {
+                font-size: 1rem;
+                padding: 16px 20px;
+                letter-spacing: 0.5px;
+            }
+            
+            #map {
+                height: 350px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .glass-panel {
+                padding: 18px;
+            }
+            
+            .panel-title {
+                font-size: 1.1rem;
+            }
+            
+            .stat-item {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .stat-label {
+                font-size: 0.85rem;
+            }
+            
+            /* Mobile Rankings */
+            .ranking-container {
+                display: none;
+            }
+            
+            .mobile-tabs {
+                display: block;
+            }
+            
+            .ranking-item {
+                padding: 10px 12px;
+            }
+            
+            .ranking-rank {
+                font-size: 1rem;
+                min-width: 25px;
+            }
+            
+            .ranking-prefecture {
+                font-size: 0.95rem;
+                margin-left: 10px;
+            }
+            
+            .ranking-count {
+                font-size: 0.85rem;
+                padding: 3px 8px;
+            }
+            
+            .ad-space {
+                padding: 15px;
+                font-size: 0.85rem;
+            }
+            
+            /* Mobile Concept Message */
+            .concept-message {
+                margin: 20px 15px 0 15px;
+                padding: 18px 20px;
+                max-width: none;
+            }
+            
+            .concept-text {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+            
+            .global-note {
+                font-size: 0.85rem;
+                display: block;
+                margin-top: 12px;
+            }
+
+            /* Mobile Map Legend */
+            .map-legend {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 15px;
+                min-width: auto;
+            }
+
+            .map-legend h4 {
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+            }
+
+            .legend-text {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="emoji">😫</span>
+        <h1>会社行きたくないメーター</h1>
+        <p>全国の「行きたくない」気持ちをリアルタイム共有</p>
+        
+        <div class="concept-message">
+            <div class="concept-text">
+                <span class="concept-icon">💭</span>
+                みんなでネガティブな気持ちを共有して、少しでも楽になろう。<br>
+                休み明けは辛いよね。でも、あなただけじゃない。<br>
+                <span class="global-note">🌏 まずは日本から始めて、徐々に全世界に展開予定</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Ad Space -->
+    <div class="ad-space" style="margin: 0;">
+        📢 広告スペース (728x90)
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="map-legend">
+                    <h4>📊 投稿数レベル</h4>
+                    <div class="legend-item">
+                        <span class="legend-color high"></span>
+                        <span class="legend-text">100件以上（激戦区）</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color medium"></span>
+                        <span class="legend-text">50-99件（標準）</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color low"></span>
+                        <span class="legend-text">20-49件（平和）</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color very-low"></span>
+                        <span class="legend-text">20件未満（超平和）</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 地図下のランキング -->
+            <div class="map-rankings">
+                <!-- PC版都道府県ランキング -->
+                <div class="ranking-container">
+                    <div class="ranking-section best">
+                        <h4 class="ranking-title best">😫 ベスト5（行きたくない度）</h4>
+                        <ul id="bestRanking" class="ranking-list">
+                            <!-- JavaScript で動的生成 -->
+                        </ul>
+                    </div>
+                    
+                    <div class="ranking-section worst">
+                        <h4 class="ranking-title worst">😊 ワースト5（平和度）</h4>
+                        <ul id="worstRanking" class="ranking-list">
+                            <!-- JavaScript で動的生成 -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- スマホ版都道府県ランキング -->
+                <div class="mobile-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="mobile-best">😫 ベスト5</button>
+                        <button class="tab-button" data-tab="mobile-worst">😊 ワースト5</button>
+                    </div>
+                    
+                    <div id="mobile-best" class="tab-content active">
+                        <ul id="mobileBestRanking" class="ranking-list">
+                            <!-- JavaScript で動的生成 -->
+                        </ul>
+                    </div>
+                    
+                    <div id="mobile-worst" class="tab-content">
+                        <ul id="mobileWorstRanking" class="ranking-list">
+                            <!-- JavaScript で動的生成 -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="glass-panel">
+                <h3 class="panel-title">😤 気持ちを共有</h3>
+                <button id="hateButton" class="hate-button">
+                    会社行きたくない！
+                </button>
+                <div id="locationInfo" class="location-info">
+                    <div class="loading">📍 位置情報を取得中...</div>
+                </div>
+                <div id="manualLocationSelect" class="manual-location-select" style="display: none;">
+                    <label for="prefectureSelect" class="select-label">都道府県を選択してください：</label>
+                    <select id="prefectureSelect" class="prefecture-select">
+                        <option value="">選択してください</option>
+                        <option value="北海道">北海道</option>
+                        <option value="青森県">青森県</option>
+                        <option value="岩手県">岩手県</option>
+                        <option value="宮城県">宮城県</option>
+                        <option value="秋田県">秋田県</option>
+                        <option value="山形県">山形県</option>
+                        <option value="福島県">福島県</option>
+                        <option value="茨城県">茨城県</option>
+                        <option value="栃木県">栃木県</option>
+                        <option value="群馬県">群馬県</option>
+                        <option value="埼玉県">埼玉県</option>
+                        <option value="千葉県">千葉県</option>
+                        <option value="東京都">東京都</option>
+                        <option value="神奈川県">神奈川県</option>
+                        <option value="新潟県">新潟県</option>
+                        <option value="富山県">富山県</option>
+                        <option value="石川県">石川県</option>
+                        <option value="福井県">福井県</option>
+                        <option value="山梨県">山梨県</option>
+                        <option value="長野県">長野県</option>
+                        <option value="岐阜県">岐阜県</option>
+                        <option value="静岡県">静岡県</option>
+                        <option value="愛知県">愛知県</option>
+                        <option value="三重県">三重県</option>
+                        <option value="滋賀県">滋賀県</option>
+                        <option value="京都府">京都府</option>
+                        <option value="大阪府">大阪府</option>
+                        <option value="兵庫県">兵庫県</option>
+                        <option value="奈良県">奈良県</option>
+                        <option value="和歌山県">和歌山県</option>
+                        <option value="鳥取県">鳥取県</option>
+                        <option value="島根県">島根県</option>
+                        <option value="岡山県">岡山県</option>
+                        <option value="広島県">広島県</option>
+                        <option value="山口県">山口県</option>
+                        <option value="徳島県">徳島県</option>
+                        <option value="香川県">香川県</option>
+                        <option value="愛媛県">愛媛県</option>
+                        <option value="高知県">高知県</option>
+                        <option value="福岡県">福岡県</option>
+                        <option value="佐賀県">佐賀県</option>
+                        <option value="長崎県">長崎県</option>
+                        <option value="熊本県">熊本県</option>
+                        <option value="大分県">大分県</option>
+                        <option value="宮崎県">宮崎県</option>
+                        <option value="鹿児島県">鹿児島県</option>
+                        <option value="沖縄県">沖縄県</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Sidebar Ad Space -->
+            <div class="ad-space">
+                📢 広告スペース (300x250)
+            </div>
+
+            <div class="glass-panel">
+                <h3 class="panel-title">📊 リアルタイム統計</h3>
+                <div class="stat-item">
+                    <span id="total24h" class="stat-number">-</span>
+                    <span class="stat-label">過去24時間</span>
+                </div>
+                <div class="stat-item">
+                    <span id="totalToday" class="stat-number">-</span>
+                    <span class="stat-label">本日の投稿</span>
+                </div>
+                <div class="stat-item">
+                    <span id="totalThisMonth" class="stat-number">-</span>
+                    <span class="stat-label">今月の総数</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Ad Space -->
+    <div class="ad-space">
+        📢 広告スペース (728x90)
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>📋 重要なページ</h4>
+                <ul class="footer-links">
+                    <li><a href="privacy-policy.html">プライバシーポリシー</a></li>
+                    <li><a href="terms-of-service.html">利用規約</a></li>
+                    <li><a href="contact.html">お問い合わせ</a></li>
+                    <li><a href="about.html">このサイトについて</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>🌐 サービス情報</h4>
+                <ul class="footer-links">
+                    <li><a href="how-to-use.html">使い方ガイド</a></li>
+                    <li><a href="faq.html">よくある質問</a></li>
+                    <li><a href="statistics.html">統計データ</a></li>
+                    <li><a href="sitemap.xml">サイトマップ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>📱 SNS・共有</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="shareToTwitter()">Twitterで共有</a></li>
+                    <li><a href="#" onclick="shareToLine()">LINEで共有</a></li>
+                    <li><a href="blog.html">開発ブログ</a></li>
+                    <li><a href="updates.html">更新情報</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 会社行きたくないメーター. All rights reserved.</p>
+            <p class="footer-note">
+                このサービスは完全匿名です。個人を特定する情報は収集していません。<br>
+                投稿データは統計目的のみに使用され、24時間後に自動削除されます。
+            </p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    
+    <!-- Firebase設定 -->
+    <script src="firebase-config.js"></script>
+    
+    <script src="app.js"></script>
+</body>
+</html>
