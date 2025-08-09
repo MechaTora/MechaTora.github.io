@@ -356,15 +356,6 @@ body {
         </div>
     </header>
 
-    <!-- AdSense Header -->
-    <div style="text-align: center; margin: 16px 0;">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1184134440246706"
-             data-ad-slot="5863584162"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-    </div>
 
     <!-- A8.net広告 位置1: ヘッダー下（左右並び） -->
     <div class="ads-row">
@@ -408,29 +399,20 @@ body {
             {news_cards}
         </section>
 
-        <!-- A8.net広告 位置3: ニュース中間 -->
+    </main>
+
+    <!-- A8.net広告 位置3&4: 下部（左右並び） -->
+    <div class="ads-row">
         <div class="a8-ad-banner">
             <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" rel="nofollow">
             <img border="0" width="100" height="100" alt="" src="https://www28.a8.net/svt/bgt?aid=250806496829&wid=002&eno=01&mid=s00000026867001004000&mc=1"></a>
             <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" alt="">
         </div>
-
-        <!-- AdSense Middle -->
-        <div style="text-align: center; margin: 32px 0;">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="8547296385"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
+        <div class="a8-ad-banner">
+            <a href="https://rpx.a8.net/svt/ejp?a8mat=459YIV+1ZG1DE+2HOM+656YP&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa25072799744_459YIV_1ZG1DE_2HOM_656YP%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F" rel="nofollow">
+            <img src="http://hbb.afl.rakuten.co.jp/hsb/0ec09ba3.bc2429d5.0eb4bbaa.95151395/" border="0"></a>
+            <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=459YIV+1ZG1DE+2HOM+656YP" alt="">
         </div>
-    </main>
-
-    <!-- A8.net広告 位置4: フッター上 -->
-    <div class="a8-ad-banner">
-        <a href="https://rpx.a8.net/svt/ejp?a8mat=459YIV+1ZG1DE+2HOM+656YP&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa25072799744_459YIV_1ZG1DE_2HOM_656YP%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F" rel="nofollow">
-        <img src="http://hbb.afl.rakuten.co.jp/hsb/0ec09ba3.bc2429d5.0eb4bbaa.95151395/" border="0"></a>
-        <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=459YIV+1ZG1DE+2HOM+656YP" alt="">
     </div>
 
     <!-- Footer -->
@@ -441,10 +423,6 @@ body {
         </p>
     </footer>
 
-    <!-- AdSense 初期化 -->
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
 </body>
 </html>'''
     
