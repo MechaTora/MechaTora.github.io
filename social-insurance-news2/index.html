@@ -11,6 +11,31 @@
             crossorigin="anonymous"></script>
     
     <style>
+/* A8.net広告スタイル */
+.a8-ad-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 16px auto;
+    padding: 12px;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.a8-ad-banner img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .a8-ad-banner {
+        margin: 12px auto;
+        padding: 8px;
+    }
+}
+
 :root {
     --primary-color: #4A90E2;
     --accent-color: #FF8C42;
@@ -44,8 +69,14 @@ body {
 }
 
 .header h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
 }
 
 .last-updated {
@@ -59,7 +90,13 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--spacing-xl) var(--spacing-lg);
+    padding: 16px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 12px;
+    }
 }
 
 .stats-grid {
@@ -78,10 +115,16 @@ body {
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-color);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+}
+
+@media (max-width: 768px) {
+    .stat-number {
+        font-size: 1.2rem;
+    }
 }
 
 .stat-label {
@@ -262,7 +305,7 @@ body {
             <h1>🏛️ 社会保険ニュース <span style="font-size: 0.6em; color: rgba(255,255,255,0.8); font-weight: 400;">毎朝4時に更新</span></h1>
             <p>厚生労働省・年金機構・ニュースサイトからの最新情報を自動収集・要約</p>
             <div class="last-updated">
-                最終更新: 2025年08月09日 08:40
+                最終更新: 2025年08月09日 14:30
             </div>
         </div>
     </header>
@@ -275,6 +318,13 @@ body {
              data-ad-slot="5863584162"
              data-ad-format="auto"
              data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- A8.net広告 位置1: ヘッダー下 -->
+    <div class="a8-ad-banner">
+        <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DTQEIA+5Q4K+5ZMCH" rel="nofollow">
+        <img border="0" width="120" height="60" alt="" src="https://www23.a8.net/svt/bgt?aid=250806496836&wid=001&eno=01&mid=s00000026714001006000&mc=1"></a>
+        <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=45BNJ4+DTQEIA+5Q4K+5ZMCH" alt="">
     </div>
 
     <!-- Main Content -->
@@ -298,6 +348,13 @@ body {
                 <div class="stat-label">本日更新</div>
             </div>
         </section>
+
+        <!-- A8.net広告 位置2: 統計情報下 -->
+        <div class="a8-ad-banner">
+            <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DT4YWI+14CS+65ME9" rel="nofollow">
+            <img border="0" width="120" height="60" alt="" src="https://www21.a8.net/svt/bgt?aid=250806496835&wid=001&eno=01&mid=s00000005230001034000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=45BNJ4+DT4YWI+14CS+65ME9" alt="">
+        </div>
 
         <!-- News Grid -->
         <section class="news-grid">
@@ -984,6 +1041,13 @@ body {
         
         </section>
 
+        <!-- A8.net広告 位置3: ニュース中間 -->
+        <div class="a8-ad-banner">
+            <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" rel="nofollow">
+            <img border="0" width="100" height="100" alt="" src="https://www28.a8.net/svt/bgt?aid=250806496829&wid=002&eno=01&mid=s00000026867001004000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" alt="">
+        </div>
+
         <!-- AdSense Middle -->
         <div style="text-align: center; margin: 32px 0;">
             <ins class="adsbygoogle"
@@ -994,6 +1058,13 @@ body {
                  data-full-width-responsive="true"></ins>
         </div>
     </main>
+
+    <!-- A8.net広告 位置4: フッター上 -->
+    <div class="a8-ad-banner">
+        <a href="https://rpx.a8.net/svt/ejp?a8mat=459YIV+1ZG1DE+2HOM+656YP&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa25072799744_459YIV_1ZG1DE_2HOM_656YP%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F" rel="nofollow">
+        <img src="http://hbb.afl.rakuten.co.jp/hsb/0ec09ba3.bc2429d5.0eb4bbaa.95151395/" border="0"></a>
+        <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=459YIV+1ZG1DE+2HOM+656YP" alt="">
+    </div>
 
     <!-- Footer -->
     <footer style="background: var(--surface); border-top: 1px solid var(--border-color); margin-top: 32px; padding: 32px; text-align: center; color: var(--text-secondary);">
