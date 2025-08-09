@@ -70,12 +70,22 @@ def index():
     """メインページ - A8広告付き静的HTML配信"""
     try:
         # A8広告付きHTMLファイルを直接読み込み
-        html_file = 'templates/index.html'
+        # 絶対パスで指定してRender環境で確実に読み込み
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        html_file = os.path.join(base_dir, 'templates', 'index.html')
+        
+        print(f"🔍 ファイルパス: {html_file}")
+        print(f"🔍 ファイル存在: {os.path.exists(html_file)}")
+        
         if os.path.exists(html_file):
             with open(html_file, 'r', encoding='utf-8') as f:
-                return f.read()
+                content = f.read()
+                print(f"✅ HTMLファイル読み込み成功: {len(content)} bytes")
+                print(f"🎯 A8広告コード含有: {'A8.net' in content}")
+                return content
         else:
-            return "<h1>ニュースサイト準備中...</h1><p>A8広告付きサイトを準備中です。</p>", 503
+            print(f"❌ HTMLファイルが見つかりません: {html_file}")
+            return "<h1>🚧 ニュースサイト準備中...</h1><p>A8広告付きサイトを準備中です。</p>", 503
     except Exception as e:
         print(f"HTMLファイル読み込みエラー: {e}")
         return "<h1>サーバーエラー</h1><p>しばらくお待ちください。</p>", 500
