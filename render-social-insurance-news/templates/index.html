@@ -16,9 +16,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px 0;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.8);
+    margin: 16px auto;
+    padding: 12px;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -30,8 +31,8 @@
 
 @media (max-width: 768px) {
     .a8-ad-banner {
-        margin: 16px 0;
-        padding: 12px;
+        margin: 12px auto;
+        padding: 8px;
     }
 }
 
@@ -68,8 +69,14 @@ body {
 }
 
 .header h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
 }
 
 .last-updated {
@@ -83,7 +90,13 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--spacing-xl) var(--spacing-lg);
+    padding: 16px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 12px;
+    }
 }
 
 .stats-grid {
@@ -102,10 +115,16 @@ body {
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-color);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+}
+
+@media (max-width: 768px) {
+    .stat-number {
+        font-size: 1.2rem;
+    }
 }
 
 .stat-label {
@@ -286,7 +305,7 @@ body {
             <h1>🏛️ 社会保険ニュース <span style="font-size: 0.6em; color: rgba(255,255,255,0.8); font-weight: 400;">毎朝4時に更新</span></h1>
             <p>厚生労働省・年金機構・ニュースサイトからの最新情報を自動収集・要約</p>
             <div class="last-updated">
-                最終更新: 2025年08月09日 08:40
+                最終更新: 2025年08月09日 14:30
             </div>
         </div>
     </header>
@@ -1020,14 +1039,14 @@ body {
                 </footer>
             </article>
         
-            <!-- A8.net広告 位置3: ニュース中間 -->
-            <div class="a8-ad-banner">
-                <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" rel="nofollow">
-                <img border="0" width="100" height="100" alt="" src="https://www28.a8.net/svt/bgt?aid=250806496829&wid=002&eno=01&mid=s00000026867001004000&mc=1"></a>
-                <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" alt="">
-            </div>
-        
         </section>
+
+        <!-- A8.net広告 位置3: ニュース中間 -->
+        <div class="a8-ad-banner">
+            <a href="https://px.a8.net/svt/ejp?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" rel="nofollow">
+            <img border="0" width="100" height="100" alt="" src="https://www28.a8.net/svt/bgt?aid=250806496829&wid=002&eno=01&mid=s00000026867001004000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=45BNJ4+DPKE1M+5RB2+5Z6WX" alt="">
+        </div>
 
         <!-- AdSense Middle -->
         <div style="text-align: center; margin: 32px 0;">
