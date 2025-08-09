@@ -115,7 +115,8 @@ body {
 
 .header h1 {
     font-size: 1.5rem;
-    margin: 0 0 4px 0;
+    margin: 0;
+    white-space: nowrap;
 }
 
 @media (max-width: 768px) {
@@ -320,8 +321,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    .header {
+        padding: 12px 0;
+    }
     .header h1 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     .container {
         padding: 12px;
@@ -351,6 +355,12 @@ body {
 }
 
 @media (max-width: 480px) {
+    .header {
+        padding: 8px 0;
+    }
+    .header h1 {
+        font-size: 1rem;
+    }
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
@@ -371,8 +381,8 @@ body {
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <h1>🏛️ 社会保険ニュース <span style="font-size: 0.6em; color: rgba(255,255,255,0.8); font-weight: 400;">毎朝4時に更新</span></h1>
-            <p>厚生労働省・年金機構・ニュースサイトからの最新情報を自動収集・要約</p>
+            <h1>🏛️ 社会保険ニュース</h1>
+            <p style="font-size: 0.9rem; margin: 4px 0;">毎朝4時自動更新・厚労省/年金機構/ニュースサイト</p>
             <div class="last-updated">
                 最終更新: {current_time}
             </div>
