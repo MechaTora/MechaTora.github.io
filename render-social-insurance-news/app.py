@@ -67,24 +67,18 @@ news_app = SocialInsuranceNewsApp()
 
 @app.route('/')
 def index():
-    """メインページ"""
-    news_data = news_app.load_news_data()
-    report_data = news_app.load_report_data()
-    
-    # スマホ特化のコンテキスト準備
-    context = {
-        'news': news_data.get('news', [])[:20],  # スマホ表示用に20件に制限
-        'total_count': news_data.get('total_count', 0),
-        'categories': news_data.get('categories', {}),
-        'high_importance': report_data.get('summary', {}).get('high_importance', 0),
-        'category_count': len(news_data.get('categories', {})),
-        'top_keywords': report_data.get('summary', {}).get('top_keywords', [])[:5],
-        'last_updated': datetime.now().strftime('%Y年%m月%d日 %H:%M'),
-        'today_count': len([n for n in news_data.get('news', []) 
-                           if n.get('published_date', '').startswith(datetime.now().strftime('%Y'))]),
-    }
-    
-    return render_template('index.html', **context)
+    """メインページ - A8広告付き静的HTML配信"""
+    try:
+        # A8広告付きHTMLファイルを直接読み込み
+        html_file = 'templates/index.html'
+        if os.path.exists(html_file):
+            with open(html_file, 'r', encoding='utf-8') as f:
+                return f.read()
+        else:
+            return "<h1>ニュースサイト準備中...</h1><p>A8広告付きサイトを準備中です。</p>", 503
+    except Exception as e:
+        print(f"HTMLファイル読み込みエラー: {e}")
+        return "<h1>サーバーエラー</h1><p>しばらくお待ちください。</p>", 500
 
 @app.route('/privacy')
 def privacy():
