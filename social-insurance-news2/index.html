@@ -294,20 +294,27 @@ body {
     .news-grid {
         grid-template-columns: 1fr;
     }
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 @media (max-width: 768px) {
     .header h1 {
-        font-size: 2rem;
+        font-size: 1.2rem;
     }
     .container {
-        padding: var(--spacing-lg);
+        padding: 12px;
     }
     .stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .stat-card {
+        padding: 8px;
+    }
+    .stat-number {
+        font-size: 1rem;
+    }
+    .stat-label {
+        font-size: 0.75rem;
     }
     .news-meta {
         flex-direction: column;
@@ -319,6 +326,22 @@ body {
         align-items: flex-start;
     }
 }
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    .stat-card {
+        padding: 6px;
+    }
+    .stat-number {
+        font-size: 0.9rem;
+    }
+    .stat-label {
+        font-size: 0.7rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -328,7 +351,7 @@ body {
             <h1>🏛️ 社会保険ニュース <span style="font-size: 0.6em; color: rgba(255,255,255,0.8); font-weight: 400;">毎朝4時に更新</span></h1>
             <p>厚生労働省・年金機構・ニュースサイトからの最新情報を自動収集・要約</p>
             <div class="last-updated">
-                最終更新: 2025年08月09日 22:03
+                最終更新: 2025年08月09日 22:28
             </div>
         </div>
     </header>
