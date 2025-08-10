@@ -5,6 +5,7 @@
 
 import json
 from datetime import datetime
+import pytz
 
 def generate_html():
     # データ読み込み
@@ -527,8 +528,9 @@ body {
         '''
         news_cards += news_card
     
-    # HTML生成
-    current_time = datetime.now().strftime('%Y年%m月%d日 %H:%M')
+    # HTML生成（日本時間で表示）
+    jst = pytz.timezone('Asia/Tokyo')
+    current_time = datetime.now(jst).strftime('%Y年%m月%d日 %H:%M')
     
     html_content = html_template.replace('{current_time}', current_time)\
                                       .replace('{total_news}', str(total_news))\
