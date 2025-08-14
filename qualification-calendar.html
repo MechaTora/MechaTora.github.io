@@ -9,18 +9,74 @@
     
     <!-- Open Graph -->
     <meta property="og:title" content="資格試験カウントダウンカレンダー | 試験日・勉強時間・カウントダウン">
-    <meta property="og:description" content="日本の主要資格試験の試験日とカウントダウン、平均勉強時間を一覧表示">
+    <meta property="og:description" content="日本の主要資格試験の試験日とカウントダウン、平均勉強時間を一覧表示。IT系・経理系・人事系・データサイエンス系資格の学習計画に最適。">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mechatora.github.io/qualification-calendar/">
+    <meta property="og:url" content="https://mechatora.github.io/qualification-calendar.html">
+    <meta property="og:image" content="https://mechatora.github.io/favicon-192x192.png">
+    <meta property="og:site_name" content="MechaTora">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="資格試験カウントダウンカレンダー | 試験日・勉強時間・カウントダウン">
+    <meta name="twitter:description" content="日本の主要資格試験の試験日とカウントダウン、平均勉強時間を一覧表示。学習計画の最適化に活用。">
+    <meta name="twitter:image" content="https://mechatora.github.io/favicon-192x192.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.github.io/qualification-calendar.html">
+    
+    <!-- Favicon - 複数サイズ・高品質対応 -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64x64.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
+    
+    <!-- Google Search Console認証 -->
+    <meta name="google-site-verification" content="8NPtpXOjJwJ_OWjPujsdLfYC0L-OzNzuIVeAsYy2Gfs" />
+    
+    <!-- 構造化データ - 教育コンテンツ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "資格試験カウントダウンカレンダー",
+        "description": "日本の主要資格試験の試験日程・カウントダウン・平均勉強時間を提供する学習支援ツール",
+        "url": "https://mechatora.github.io/qualification-calendar.html",
+        "image": "https://mechatora.github.io/favicon-192x192.png",
+        "educationalCredentialAwarded": [
+            "ITパスポート",
+            "基本情報技術者",
+            "応用情報技術者",
+            "日商簿記検定",
+            "社会保険労務士",
+            "統計検定",
+            "G検定",
+            "FP技能検定"
+        ],
+        "provider": {
+            "@type": "Organization",
+            "name": "MechaTora",
+            "url": "https://mechatora.github.io"
+        },
+        "inLanguage": "ja",
+        "audience": {
+            "@type": "EducationalAudience",
+            "educationalRole": "学習者"
+        }
+    }
+    </script>
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
          crossorigin="anonymous"></script>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts - 最適化されたsubsetとfont-display -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600&family=Poppins:wght@400;600;700&family=Outfit:wght@600;700;800&family=Fira+Code:wght@400;500&display=swap&subset=latin" rel="stylesheet">
     
     <style>
         :root {
@@ -1460,10 +1516,13 @@
     </div>
 
     <script>
-        // AdSense initialization
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        // AdSenseの非同期初期化 - パフォーマンス最適化
+        window.addEventListener('load', function() {
+            const ads = document.querySelectorAll('.adsbygoogle');
+            ads.forEach(function() {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            });
+        });
 
         // 資格データ
         const qualifications = [
