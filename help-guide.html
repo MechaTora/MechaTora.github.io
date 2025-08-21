@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザーガイド・ヘルプ | MechaTora - Webアプリの使い方</title>
+    <meta name="description" content="MechaTora提供の各Webアプリケーションの詳しい使い方、トラブルシューティング、よくある質問を分かりやすく解説します。">
+    <meta name="keywords" content="使い方, ヘルプ, ガイド, トラブルシューティング, FAQ, PWA, Webアプリ">
+    <link rel="canonical" href="https://mechatora.github.io/help-guide.html">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JFRGN7YJYB6');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --background: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .navbar{position:fixed;top:0;width:100%;background:#e53e3e;box-shadow:0 2px 10px rgba(0,0,0,0.1);z-index:1000}.nav-container{max-width:1200px;margin:0 auto;padding:0 1rem;display:flex;justify-content:space-between;align-items:center}.nav-logo{color:white;text-decoration:none;font-size:1.5rem;font-weight:bold;padding:1rem 0}.nav-menu{display:flex;list-style:none;margin:0;padding:0}.nav-item{position:relative}.nav-link{color:white;text-decoration:none;padding:1rem 1.5rem;display:block;transition:background-color 0.3s ease}.nav-link:hover{background-color:rgba(255,255,255,0.1)}.nav-dropdown{position:absolute;top:100%;left:0;background:white;min-width:200px;box-shadow:var(--shadow);border-radius:var(--border-radius);opacity:0;visibility:hidden;transform:translateY(-10px);transition:all 0.3s ease}.nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateY(0)}.nav-dropdown a{color:var(--text-primary);text-decoration:none;padding:0.75rem 1rem;display:block;transition:background-color 0.3s ease}.nav-dropdown a:hover{background-color:#f8f9fa}.nav-toggle{display:none;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer}.breadcrumb{background:rgba(255,255,255,0.9);padding:0.5rem 1rem;margin-top:60px;font-size:0.9rem}.breadcrumb a{color:var(--secondary-color);text-decoration:none}.breadcrumb a:hover{text-decoration:underline}@media(max-width:768px){.nav-toggle{display:block}.nav-menu{position:fixed;top:60px;left:-100%;width:100%;height:calc(100vh - 60px);background:#e53e3e;flex-direction:column;transition:left 0.3s ease}.nav-menu.active{left:0}.nav-item{width:100%}.nav-dropdown{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;background:rgba(255,255,255,0.1);border-radius:0;margin-left:1rem;display:none}.nav-item.active .nav-dropdown{display:block}.nav-dropdown a{color:white;padding-left:2rem}.breadcrumb{margin-top:120px}}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .help-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 24px;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .back-link:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .guide-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .nav-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .nav-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section {
+            background: var(--card-bg);
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .app-guide {
+            margin-bottom: 3rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .app-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .app-header h3 {
+            font-size: 1.5rem;
+        }
+
+        .app-content {
+            padding: 2rem;
+        }
+
+        .step-guide {
+            margin: 2rem 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .step-number {
+            background: var(--success-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .tip-box {
+            background: #e8f5e8;
+            border: 2px solid var(--success-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tip-box h4 {
+            color: var(--success-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid var(--warning-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box h4 {
+            color: var(--warning-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .faq-item {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+
+        .faq-answer {
+            padding: 1.5rem;
+            display: none;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .faq-answer.show {
+            display: block;
+        }
+
+        .troubleshooting {
+            background: #fff5f5;
+            border: 2px solid var(--accent-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .troubleshooting h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-support {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .support-button {
+            display: inline-block;
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .support-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .guide-nav {
+                grid-template-columns: 1fr;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step-number {
+                margin-bottom: 1rem;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar"><div class="nav-container"><a href="index.html" class="nav-logo">🐱 MechaTora</a><ul class="nav-menu"><li class="nav-item"><a href="#" class="nav-link">Webアプリ</a><div class="nav-dropdown"><a href="cook-suggest/">🍳 料理提案アプリ</a><a href="earthquake-monitor/">🌏 地震モニター</a><a href="flashcard-web-app/">📚 フラッシュカード</a><a href="qualification-calendar.html">📅 資格試験カレンダー</a><a href="fire/">🔥 暖炉シミュレータ</a><a href="x-buzz-simulator/">📱 X投稿バズ予測</a></div></li><li class="nav-item"><a href="#" class="nav-link">防災情報</a><div class="nav-dropdown"><a href="earthquake-prevention-guide.html">🏠 地震対策ガイド</a><a href="earthquake-action-manual.html">🚨 緊急時行動マニュアル</a><a href="emergency-supplies-guide.html">🎒 防災グッズガイド</a><a href="earthquake-monitor/">🌍 リアルタイム地震情報</a></div></li><li class="nav-item"><a href="#" class="nav-link">癒し系</a><div class="nav-dropdown"><a href="cat-healing-station/">🐱 猫カフェ</a><a href="aurora/">🌌 オーロラ</a><a href="jellyfish-simulation/">🎐 クラゲ水族館</a></div></li><li class="nav-item"><a href="#" class="nav-link">ゲーム</a><div class="nav-dropdown"><a href="beer-quiz/">🍺 ビールクイズ</a><a href="unreasonable-othello/">⚫ 理不尽オセロ</a></div></li><li class="nav-item"><a href="blog.html" class="nav-link">ブログ</a></li><li class="nav-item"><a href="#" class="nav-link">サイト情報</a><div class="nav-dropdown"><a href="about.html">📋 運営者について</a><a href="contact.html">📧 お問い合わせ</a><a href="help-guide.html" style="background-color: rgba(0,0,0,0.1);">❓ ヘルプ</a><a href="privacy.html">🔒 プライバシーポリシー</a></div></li></ul><button class="nav-toggle">☰</button></div></nav><div class="breadcrumb"><a href="index.html">ホーム</a> &gt; <span>ヘルプガイド</span></div>
+    <div class="container">
+        <a href="index.html" class="back-link">← メインページに戻る</a>
+        
+        <div class="header">
+            <div class="help-icon">💡</div>
+            <h1>ユーザーガイド・ヘルプ</h1>
+            <p>Webアプリの使い方から困った時の解決方法まで</p>
+        </div>
+
+        <!-- AdSense Header -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="5287863920"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <div class="guide-nav">
+            <div class="nav-card" onclick="scrollToSection('getting-started')">
+                <span class="nav-icon">🚀</span>
+                <h3>はじめに</h3>
+                <p>初回利用時の準備</p>
+            </div>
+            
+            <div class="nav-card" onclick="scrollToSection('app-guides')">
+                <span class="nav-icon">📱</span>
+                <h3>アプリ別ガイド</h3>
+                <p>各アプリの使い方</p>
+            </div>
+            
+            <div class="nav-card" onclick="scrollToSection('troubleshooting')">
+                <span class="nav-icon">🔧</span>
+                <h3>トラブル解決</h3>
+                <p>よくある問題と対処法</p>
+            </div>
+            
+            <div class="nav-card" onclick="scrollToSection('faq')">
+                <span class="nav-icon">❓</span>
+                <h3>よくある質問</h3>
+                <p>FAQ・Q&A</p>
+            </div>
+        </div>
+
+        <section id="getting-started" class="section">
+            <h2>🚀 はじめに</h2>
+            
+            <div class="step-guide">
+                <h3>初回利用時の準備</h3>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>推奨ブラウザの確認</h4>
+                        <p>Chrome 90+、Firefox 88+、Safari 14+、Edge 90+ での利用を推奨します。最新版にアップデートしてください。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>JavaScript有効化の確認</h4>
+                        <p>すべてのアプリでJavaScriptが必要です。ブラウザ設定でJavaScriptが有効になっていることを確認してください。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>PWAアプリのインストール</h4>
+                        <p>対応アプリではPWA（Progressive Web App）として端末にインストール可能です。ブラウザのアドレスバーに表示される「インストール」ボタンをクリックしてください。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <h4>💡 Pro Tip</h4>
+                <p>PWAとしてインストールすると、ネイティブアプリのような快適な操作性で利用できます。オフライン機能も利用可能になります。</p>
+            </div>
+        </section>
+
+        <section id="app-guides" class="section">
+            <h2>📱 アプリ別利用ガイド</h2>
+            
+            <div class="app-guide">
+                <div class="app-header">
+                    <span style="font-size: 2rem;">🍳</span>
+                    <h3>CookSuggest - 料理提案アプリ</h3>
+                </div>
+                <div class="app-content">
+                    <div class="step-guide">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>食材を入力</h4>
+                                <p>冷蔵庫にある食材を検索ボックスに入力します。「玉ねぎ」「肉」「卵」など、思いつくままに追加してください。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>条件を設定</h4>
+                                <p>調理時間（15分/30分/60分）、難易度（簡単/普通/上級）、ジャンル（和洋中）を選択します。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>レシピを確認</h4>
+                                <p>AIが最適な5つのレシピを提案します。栄養価情報や所要時間も一緒に表示されます。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <h4>🍅 おすすめの使い方</h4>
+                        <p>アレルギー食材がある場合は、除外設定を忘れずに。お気に入り機能で気に入ったレシピを保存できます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-guide">
+                <div class="app-header">
+                    <span style="font-size: 2rem;">🌏</span>
+                    <h3>地震モニター - 地震情報アプリ</h3>
+                </div>
+                <div class="app-content">
+                    <div class="step-guide">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>位置情報の許可</h4>
+                                <p>より詳細な情報表示のため、ブラウザの位置情報アクセスを許可してください（任意）。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>通知設定</h4>
+                                <p>希望する震度以上の地震発生時に通知を受け取る設定ができます。プッシュ通知を有効にしてください。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>情報の確認</h4>
+                                <p>地震発生時刻、震源地、マグニチュード、各地の震度が地図と一覧で確認できます。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <h4>⚠️ 重要な注意</h4>
+                        <p>緊急時は公式の気象庁発表を必ず確認してください。本アプリは補助的な情報源として利用してください。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-guide">
+                <div class="app-header">
+                    <span style="font-size: 2rem;">🧠</span>
+                    <h3>科学的暗記アプリ - 学習支援アプリ</h3>
+                </div>
+                <div class="app-content">
+                    <div class="step-guide">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>カードの作成</h4>
+                                <p>「新しいカード」から問題文と答えを入力します。画像の添付も可能です。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>学習開始</h4>
+                                <p>「学習開始」ボタンで復習を開始。問題を見て答えを思い出し、自己評価（覚えた/難しい/忘れた）を選択します。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>継続学習</h4>
+                                <p>システムが自動的に最適な復習タイミングを計算。毎日数分の学習で効果的に記憶に定着させます。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <h4>📚 効果的な学習法</h4>
+                        <p>1日10-15分の継続学習が最も効果的です。大量に詰め込むより、毎日少しずつ続けることを重視してください。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Middle Ad -->
+        <div style="text-align: center; margin: 3rem 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="3889638884"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <section id="troubleshooting" class="section">
+            <h2>🔧 トラブルシューティング</h2>
+            
+            <div class="troubleshooting">
+                <h4>🚫 アプリが起動しない・表示されない</h4>
+                <p><strong>原因:</strong> JavaScript無効化、古いブラウザ、キャッシュ問題</p>
+                <p><strong>解決方法:</strong></p>
+                <ul>
+                    <li>ブラウザでJavaScriptが有効になっているか確認</li>
+                    <li>ブラウザを最新版にアップデート</li>
+                    <li>Ctrl+F5（Mac: Cmd+Shift+R）でページを強制再読み込み</li>
+                    <li>ブラウザのキャッシュとCookieをクリア</li>
+                </ul>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>⚡ 動作が遅い・反応しない</h4>
+                <p><strong>原因:</strong> メモリ不足、多数のタブ、重いデータ</p>
+                <p><strong>解決方法:</strong></p>
+                <ul>
+                    <li>他のタブを閉じてメモリを解放</li>
+                    <li>ブラウザを再起動</li>
+                    <li>不要なブラウザ拡張機能を無効化</li>
+                    <li>データ量の多いアプリは段階的に利用</li>
+                </ul>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>🔕 通知が来ない</h4>
+                <p><strong>原因:</strong> 通知許可未設定、ブラウザ設定</p>
+                <p><strong>解決方法:</strong></p>
+                <ul>
+                    <li>ブラウザで通知許可を確認（アドレスバー左の鍵マーク）</li>
+                    <li>OS設定でブラウザの通知が有効になっているか確認</li>
+                    <li>サイレントモード・集中モードが無効になっているか確認</li>
+                </ul>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>💾 データが保存されない</h4>
+                <p><strong>原因:</strong> ブラウザのストレージ制限、プライベートモード</p>
+                <p><strong>解決方法:</strong></p>
+                <ul>
+                    <li>通常モード（非プライベート）でアクセス</li>
+                    <li>ブラウザのストレージ設定を確認</li>
+                    <li>十分な空き容量があることを確認</li>
+                    <li>定期的なデータエクスポートを推奨</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <h2>❓ よくある質問（FAQ）</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>利用料金はかかりますか？</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>すべてのWebアプリは完全無料でご利用いただけます。課金・サブスクリプション・会員登録は一切不要です。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>オフラインでも使えますか？</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>PWA対応アプリ（CookSuggest、暗記アプリ等）は、初回読み込み後はオフラインでも基本機能をご利用いただけます。地震モニターなどリアルタイム情報が必要なアプリはインターネット接続が必要です。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>スマートフォンでも使えますか？</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>はい。すべてのアプリはレスポンシブデザインを採用しており、スマートフォン・タブレット・PCで快適にご利用いただけます。iOS Safari、Android Chromeを推奨します。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>個人情報は収集されますか？</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>個人を特定できる情報（名前、住所、電話番号等）は一切収集しておりません。利用状況の統計データとGoogle Analytics/AdSenseによる匿名情報のみ収集しています。詳細は<a href="privacy.html">プライバシーポリシー</a>をご確認ください。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>データのバックアップはできますか？</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>暗記アプリ等では、設定画面からデータのエクスポート・インポート機能をご利用いただけます。定期的なバックアップを推奨いたします。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>不具合を見つけた場合はどうすれば？</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>お手数ですが、発生した不具合の詳細（ブラウザ種類、操作手順、エラーメッセージ等）をGitHubのIssuesまたはお問い合わせフォームからご報告ください。迅速に対応いたします。</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="contact-support">
+            <h2>📞 サポートが必要ですか？</h2>
+            <p>このガイドで解決しない問題がございましたら、お気軽にお問い合わせください。</p>
+            <a href="contact.html" class="support-button">
+                お問い合わせフォーム →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const arrow = element.querySelector('span:last-child');
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                arrow.textContent = '▼';
+            } else {
+                answer.classList.add('show');
+                arrow.textContent = '▲';
+            }
+        }
+
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        document.querySelector('.nav-toggle').addEventListener('click',function(){document.querySelector('.nav-menu').classList.toggle('active')});document.querySelectorAll('.nav-item').forEach(item=>{const link=item.querySelector('.nav-link');const dropdown=item.querySelector('.nav-dropdown');if(dropdown){link.addEventListener('click',function(e){if(window.innerWidth<=768){e.preventDefault();item.classList.toggle('active')}})}});
+    </script>
+</body>
+</html>

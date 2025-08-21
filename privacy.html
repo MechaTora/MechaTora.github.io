@@ -33,6 +33,24 @@
             --spacing-lg: 32px;
         }
 
+        /* Global Navigation */
+        .navbar { position: fixed; top: 0; width: 100%; background: #e53e3e; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { color: white; text-decoration: none; font-size: 1.5rem; font-weight: bold; padding: 1rem 0; }
+        .nav-menu { display: flex; list-style: none; margin: 0; padding: 0; }
+        .nav-item { position: relative; }
+        .nav-link { color: white; text-decoration: none; padding: 1rem 1.5rem; display: block; transition: background-color 0.3s ease; }
+        .nav-link:hover { background-color: rgba(255,255,255,0.1); }
+        .nav-dropdown { position: absolute; top: 100%; left: 0; background: white; min-width: 200px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: var(--border-radius); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; }
+        .nav-item:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-dropdown a { color: var(--text-primary); text-decoration: none; padding: 0.75rem 1rem; display: block; transition: background-color 0.3s ease; }
+        .nav-dropdown a:hover { background-color: #f8f9fa; }
+        .nav-toggle { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        .breadcrumb { background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; margin-top: 60px; font-size: 0.9rem; }
+        .breadcrumb a { color: var(--primary-color); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        @media (max-width: 768px) { .nav-toggle { display: block; } .nav-menu { position: fixed; top: 60px; left: -100%; width: 100%; height: calc(100vh - 60px); background: #e53e3e; flex-direction: column; transition: left 0.3s ease; } .nav-menu.active { left: 0; } .nav-item { width: 100%; } .nav-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; background: rgba(255,255,255,0.1); border-radius: 0; margin-left: 1rem; display: none; } .nav-item.active .nav-dropdown { display: block; } .nav-dropdown a { color: white; padding-left: 2rem; } .breadcrumb { margin-top: 120px; } }
+
         * {
             margin: 0;
             padding: 0;
@@ -134,6 +152,7 @@
     </style>
 </head>
 <body>
+    <nav class="navbar"><div class="nav-container"><a href="index.html" class="nav-logo">🐱 MechaTora</a><ul class="nav-menu"><li class="nav-item"><a href="#" class="nav-link">Webアプリ</a><div class="nav-dropdown"><a href="cook-suggest/">🍳 料理提案アプリ</a><a href="earthquake-monitor/">🌏 地震モニター</a><a href="flashcard-web-app/">📚 フラッシュカード</a><a href="qualification-calendar.html">📅 資格試験カレンダー</a><a href="fire/">🔥 暖炉シミュレータ</a><a href="x-buzz-simulator/">📱 X投稿バズ予測</a></div></li><li class="nav-item"><a href="#" class="nav-link">防災情報</a><div class="nav-dropdown"><a href="earthquake-prevention-guide.html">🏠 地震対策ガイド</a><a href="earthquake-action-manual.html">🚨 緊急時行動マニュアル</a><a href="emergency-supplies-guide.html">🎒 防災グッズガイド</a><a href="earthquake-monitor/">🌍 リアルタイム地震情報</a></div></li><li class="nav-item"><a href="#" class="nav-link">癒し系</a><div class="nav-dropdown"><a href="cat-healing-station/">🐱 猫カフェ</a><a href="aurora/">🌌 オーロラ</a><a href="jellyfish-simulation/">🎐 クラゲ水族館</a></div></li><li class="nav-item"><a href="#" class="nav-link">ゲーム</a><div class="nav-dropdown"><a href="beer-quiz/">🍺 ビールクイズ</a><a href="unreasonable-othello/">⚫ 理不尽オセロ</a></div></li><li class="nav-item"><a href="blog.html" class="nav-link">ブログ</a></li><li class="nav-item"><a href="#" class="nav-link">サイト情報</a><div class="nav-dropdown"><a href="about.html">📋 運営者について</a><a href="contact.html">📧 お問い合わせ</a><a href="help-guide.html">❓ ヘルプ</a><a href="privacy.html" style="background-color: rgba(0,0,0,0.1);">🔒 プライバシーポリシー</a></div></li></ul><button class="nav-toggle">☰</button></div></nav><div class="breadcrumb"><a href="index.html">ホーム</a> &gt; <span>プライバシーポリシー</span></div>
     <div class="container">
         <a href="index.html" class="back-link">← ホームに戻る</a>
         
@@ -153,12 +172,14 @@
                 <h2>2. 収集する情報</h2>
                 <p>当サイトでは以下の情報を収集する場合があります：</p>
                 <ul>
-                    <li>ウェブサイトの利用状況（アクセス解析）</li>
-                    <li>各Webアプリの利用履歴</li>
-                    <li>デバイス情報（ブラウザの種類、OS等）</li>
-                    <li>IPアドレス</li>
-                    <li>Cookieおよび類似技術による情報</li>
+                    <li><strong>アクセスログ情報:</strong> IPアドレス、アクセス時刻、参照元URL、ユーザーエージェント</li>
+                    <li><strong>利用状況データ:</strong> 閲覧ページ、滞在時間、クリック行動、検索クエリ</li>
+                    <li><strong>デバイス情報:</strong> ブラウザ種類・バージョン、OS、画面解像度、言語設定</li>
+                    <li><strong>アプリ利用データ:</strong> 使用機能、設定内容、パフォーマンス情報（匿名化済み）</li>
+                    <li><strong>Cookie情報:</strong> 識別子、設定情報、広告表示履歴</li>
+                    <li><strong>Local Storage データ:</strong> PWAアプリの設定、学習履歴（ローカル保存のみ）</li>
                 </ul>
+                <p><strong>重要:</strong> 当サイトでは、名前、住所、電話番号、メールアドレスなどの個人を直接特定できる情報は一切収集しておりません。</p>
             </div>
 
             <div class="section">
@@ -226,5 +247,6 @@
             </div>
         </div>
     </div>
+    <script>document.querySelector('.nav-toggle').addEventListener('click',function(){document.querySelector('.nav-menu').classList.toggle('active')});document.querySelectorAll('.nav-item').forEach(item=>{const link=item.querySelector('.nav-link');const dropdown=item.querySelector('.nav-dropdown');if(dropdown){link.addEventListener('click',function(e){if(window.innerWidth<=768){e.preventDefault();item.classList.toggle('active')}})}});</script>
 </body>
 </html>

@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震発生時の正しい行動マニュアル | 命を守る緊急時対応ガイド</title>
+    <meta name="description" content="地震発生の瞬間から避難完了まで、時系列で解説する実践的行動マニュアル。屋内・屋外・乗り物内など場所別の対応方法と、してはいけない危険行動を詳しく説明します。">
+    <meta name="keywords" content="地震対応, 緊急時行動, 避難方法, 地震発生時, 安全確保, 初期行動, 避難行動">
+    <link rel="canonical" href="https://mechatora.github.io/earthquake-action-manual.html">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JFRGN7YJYB6');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "地震発生時の正しい行動マニュアル",
+      "description": "地震発生の瞬間から避難完了まで、時系列で解説する実践的行動マニュアル。",
+      "datePublished": "2025-08-21T15:00:00+09:00",
+      "author": {
+        "@type": "Person",
+        "name": "MechaTora開発者",
+        "jobTitle": "防災士・Web開発者"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "MechaTora"
+      },
+      "articleSection": "防災・緊急時対応",
+      "keywords": ["地震対応", "緊急時行動", "避難方法", "防災士監修"]
+    }
+    </script>
+    
+    <style>
+        :root {
+            --primary-color: #e53e3e;
+            --secondary-color: #3182ce;
+            --accent-color: #38a169;
+            --warning-color: #dd6b20;
+            --danger-color: #c53030;
+            --text-primary: #1a202c;
+            --text-secondary: #718096;
+            --background: #f7fafc;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Global Navigation Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1rem 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-dropdown a:hover {
+            background-color: var(--background);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .breadcrumb {
+            background: rgba(255,255,255,0.9);
+            padding: 0.5rem 1rem;
+            margin-top: 60px;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background: var(--primary-color);
+                flex-direction: column;
+                transition: left 0.3s ease;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+            }
+
+            .nav-dropdown {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(255,255,255,0.1);
+                border-radius: 0;
+                margin-left: 1rem;
+                display: none;
+            }
+
+            .nav-item.active .nav-dropdown {
+                display: block;
+            }
+
+            .nav-dropdown a {
+                color: white;
+                padding-left: 2rem;
+            }
+
+            .breadcrumb {
+                margin-top: 120px;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--danger-color));
+            color: white;
+            border-radius: var(--border-radius);
+        }
+
+        .article-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .article-header .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .back-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .back-link:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .emergency-alert {
+            background: linear-gradient(135deg, #feb2b2, #fc8181);
+            border: 3px solid var(--danger-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(229, 62, 62, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0); }
+        }
+
+        .emergency-alert h2 {
+            color: var(--danger-color);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--secondary-color);
+        }
+
+        .timeline-item.critical::before {
+            background: var(--danger-color);
+            box-shadow: 0 0 0 3px var(--danger-color);
+        }
+
+        .timeline-item.important::before {
+            background: var(--warning-color);
+            box-shadow: 0 0 0 3px var(--warning-color);
+        }
+
+        .timeline-item.safe::before {
+            background: var(--accent-color);
+            box-shadow: 0 0 0 3px var(--accent-color);
+        }
+
+        .time-badge {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .time-badge.critical {
+            background: var(--danger-color);
+        }
+
+        .time-badge.important {
+            background: var(--warning-color);
+        }
+
+        .time-badge.safe {
+            background: var(--accent-color);
+        }
+
+        .section {
+            background: var(--card-bg);
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .location-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 1rem 1.5rem;
+            background: #e2e8f0;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .do-dont {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .do-box {
+            background: #f0fff4;
+            border: 2px solid var(--accent-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        .do-box h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .dont-box {
+            background: #fff5f5;
+            border: 2px solid var(--danger-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        .dont-box h4 {
+            color: var(--danger-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .action-steps {
+            margin: 2rem 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .danger-step {
+            border-left-color: var(--danger-color);
+        }
+
+        .danger-step .step-number {
+            background: var(--danger-color);
+        }
+
+        .warning-box {
+            background: #fffbeb;
+            border: 2px solid var(--warning-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .warning-box h4 {
+            color: var(--warning-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .critical-box {
+            background: #fff5f5;
+            border: 2px solid var(--danger-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .critical-box h4 {
+            color: var(--danger-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-reference {
+            background: linear-gradient(135deg, #bee3f8, #90cdf4);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin: 3rem 0;
+        }
+
+        .quick-reference h3 {
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .reference-item {
+            background: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .article-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .do-dont {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline {
+                padding-left: 1rem;
+            }
+            
+            .timeline-item {
+                margin-left: 1rem;
+            }
+            
+            .location-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🐱 MechaTora</a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Webアプリ</a>
+                    <div class="nav-dropdown">
+                        <a href="cook-suggest/">🍳 料理提案アプリ</a>
+                        <a href="earthquake-monitor/">🌏 地震モニター</a>
+                        <a href="flashcard-web-app/">📚 フラッシュカード</a>
+                        <a href="qualification-calendar.html">📅 資格試験カレンダー</a>
+                        <a href="fire/">🔥 暖炉シミュレータ</a>
+                        <a href="x-buzz-simulator/">📱 X投稿バズ予測</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">防災情報</a>
+                    <div class="nav-dropdown">
+                        <a href="earthquake-prevention-guide.html">🏠 地震対策ガイド</a>
+                        <a href="earthquake-action-manual.html">🚨 緊急時行動マニュアル</a>
+                        <a href="emergency-supplies-guide.html">🎒 防災グッズガイド</a>
+                        <a href="earthquake-monitor/">🌍 リアルタイム地震情報</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">癒し系</a>
+                    <div class="nav-dropdown">
+                        <a href="cat-healing-station/">🐱 猫カフェ</a>
+                        <a href="aurora/">🌌 オーロラ</a>
+                        <a href="jellyfish-simulation/">🎐 クラゲ水族館</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">ゲーム</a>
+                    <div class="nav-dropdown">
+                        <a href="beer-quiz/">🍺 ビールクイズ</a>
+                        <a href="unreasonable-othello/">⚫ 理不尽オセロ</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="blog.html" class="nav-link">ブログ</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">サイト情報</a>
+                    <div class="nav-dropdown">
+                        <a href="about.html">📋 運営者について</a>
+                        <a href="contact.html">📧 お問い合わせ</a>
+                        <a href="help-guide.html">❓ ヘルプ</a>
+                        <a href="privacy.html">🔒 プライバシーポリシー</a>
+                    </div>
+                </li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="index.html">ホーム</a> &gt; 
+        <a href="earthquake-prevention-guide.html">防災情報</a> &gt; 
+        <span>地震発生時の行動マニュアル</span>
+    </div>
+
+    <div class="container">
+        <div class="back-nav">
+            <a href="index.html" class="back-link">← メインページ</a>
+            <a href="disaster-guide-hub.html" class="back-link">🛡️ 防災ガイド総合</a>
+            <a href="earthquake-prevention-guide.html" class="back-link">🏠 地震対策ガイド</a>
+            <a href="earthquake-monitor/" class="back-link">🌏 地震モニター</a>
+        </div>
+        
+        <div class="article-header">
+            <div class="icon">🚨</div>
+            <h1>地震発生時の正しい行動マニュアル</h1>
+            <p>命を守る緊急時対応ガイド - 瞬間から避難まで完全解説</p>
+        </div>
+
+        <!-- AdSense Header -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="5287863920"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <div class="emergency-alert">
+            <h2>⚡ 緊急時行動の基本原則</h2>
+            <p><strong>「まず身の安全」→「安全確認」→「情報収集」→「避難判断」</strong></p>
+            <p>慌てずに、冷静に、段階的に行動することが最も重要です</p>
+        </div>
+
+        <div class="section">
+            <h2>⏰ 地震発生から避難までの時系列行動</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item critical">
+                    <div class="time-badge critical">地震発生直後（0〜1分）</div>
+                    <h3>🛡️ 身の安全確保（最優先）</h3>
+                    <div class="action-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>「ドロップ・カバー・ホールドオン」</h4>
+                                <p><strong>ドロップ：</strong>その場で身を低くする<br>
+                                <strong>カバー：</strong>机の下などに頭を守って隠れる<br>
+                                <strong>ホールドオン：</strong>机の脚をつかんで離さない</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>火の始末（可能な場合のみ）</h4>
+                                <p>調理中の場合は火を止める。ただし、身の安全が最優先で、無理は禁物。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="critical-box">
+                        <h4>🚫 絶対にしてはいけないこと</h4>
+                        <ul>
+                            <li>慌てて外に飛び出す（落下物の危険）</li>
+                            <li>エレベーターを使用する</li>
+                            <li>ガラス窓の近くに居続ける</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item important">
+                    <div class="time-badge important">揺れが収まった直後（1〜3分）</div>
+                    <h3>🔍 安全確認と初期対応</h3>
+                    <div class="action-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>怪我の確認</h4>
+                                <p>自分と家族の怪我を確認。出血している場合は応急処置を実施。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>火災・ガス漏れの確認</h4>
+                                <p>ガスの元栓を閉め、電気のブレーカーを落とす。異臭がした場合は換気を行う。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>避難経路の確保</h4>
+                                <p>扉や窓を開けて、避難経路を確保。家具で塞がれていないか確認。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item important">
+                    <div class="time-badge important">地震後3〜10分</div>
+                    <h3>📱 情報収集と状況把握</h3>
+                    <div class="action-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>地震情報の確認</h4>
+                                <p>ラジオ、テレビ、スマートフォンで震度、震源、津波の有無を確認。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>家族・近隣の安否確認</h4>
+                                <p>家族の安否を確認し、近隣住民とも安否確認を行う。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>建物の被害確認</h4>
+                                <p>建物に亀裂や傾きがないか、居住可能かを判断。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item safe">
+                    <div class="time-badge safe">地震後10分以降</div>
+                    <h3>🚶‍♂️ 避難判断と行動</h3>
+                    <div class="action-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>避難の必要性判断</h4>
+                                <p>建物被害、火災発生、津波警報発令時は避難を決断。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>避難準備</h4>
+                                <p>非常用持ち出し袋を持参し、動きやすい服装に着替える。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>避難実行</h4>
+                                <p>事前に決めた避難経路で避難所へ向かう。車は使用せず徒歩で移動。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📍 場所別行動マニュアル</h2>
+            
+            <div class="location-tabs">
+                <button class="tab-button active" onclick="showTab('indoor')">🏠 屋内</button>
+                <button class="tab-button" onclick="showTab('outdoor')">🌳 屋外</button>
+                <button class="tab-button" onclick="showTab('vehicle')">🚗 乗り物内</button>
+                <button class="tab-button" onclick="showTab('crowded')">👥 人混み</button>
+            </div>
+
+            <div id="indoor" class="tab-content active">
+                <h3>🏠 屋内にいる場合</h3>
+                
+                <div class="do-dont">
+                    <div class="do-box">
+                        <h4>✅ するべき行動</h4>
+                        <ul>
+                            <li>机の下に潜り込み頭を守る</li>
+                            <li>ドアを開けて避難経路を確保</li>
+                            <li>揺れが収まってから火の始末</li>
+                            <li>スリッパや靴を履いて足を保護</li>
+                            <li>ガラス片に注意しながら移動</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dont-box">
+                        <h4>❌ してはいけない行動</h4>
+                        <ul>
+                            <li>慌てて外に飛び出す</li>
+                            <li>エレベーターを使用する</li>
+                            <li>揺れている最中に火を消そうとする</li>
+                            <li>窓ガラスの近くに留まる</li>
+                            <li>裸足で歩き回る</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ 特に注意が必要な場所</h4>
+                    <p><strong>キッチン：</strong>包丁などの刃物、熱湯に注意<br>
+                    <strong>浴室：</strong>裸足でガラス片を踏む危険、溺れる可能性<br>
+                    <strong>寝室：</strong>家具の転倒、窓ガラスの飛散に注意</p>
+                </div>
+            </div>
+
+            <div id="outdoor" class="tab-content">
+                <h3>🌳 屋外にいる場合</h3>
+                
+                <div class="do-dont">
+                    <div class="do-box">
+                        <h4>✅ するべき行動</h4>
+                        <ul>
+                            <li>建物から離れて広い場所へ移動</li>
+                            <li>カバンなどで頭を守る</li>
+                            <li>ブロック塀から離れる</li>
+                            <li>電柱・看板から離れる</li>
+                            <li>その場にしゃがんで揺れが収まるのを待つ</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dont-box">
+                        <h4>❌ してはいけない行動</h4>
+                        <ul>
+                            <li>建物の近くに留まる</li>
+                            <li>慌てて走り回る</li>
+                            <li>自動販売機に近づく</li>
+                            <li>電線の下に立つ</li>
+                            <li>崖や斜面に近づく</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="critical-box">
+                    <h4>🚨 特に危険な屋外の場所</h4>
+                    <p><strong>繁華街：</strong>看板・ガラスの落下物が多数<br>
+                    <strong>住宅街：</strong>ブロック塀の倒壊、瓦の落下<br>
+                    <strong>海岸・川沿い：</strong>津波の危険性、液状化現象</p>
+                </div>
+            </div>
+
+            <div id="vehicle" class="tab-content">
+                <h3>🚗 乗り物内にいる場合</h3>
+                
+                <h4>🚙 自動車運転中</h4>
+                <div class="action-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>急ブレーキを避け、徐々に減速</h4>
+                            <p>ハザードランプを点灯し、他の車に注意を促しながら安全に停車。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>道路の左側に停車</h4>
+                            <p>エンジンを切り、キーは付けたまま、ドアはロックしない。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>ラジオで情報収集</h4>
+                            <p>カーラジオで交通情報や地震情報を確認し、避難の必要性を判断。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>🚃 電車内</h4>
+                <div class="do-dont">
+                    <div class="do-box">
+                        <h4>✅ するべき行動</h4>
+                        <ul>
+                            <li>つり革や手すりにしっかりつかまる</li>
+                            <li>低い姿勢を保つ</li>
+                            <li>乗務員の指示に従う</li>
+                            <li>勝手にドアを開けない</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dont-box">
+                        <h4>❌ してはいけない行動</h4>
+                        <ul>
+                            <li>勝手に窓から飛び降りる</li>
+                            <li>非常コックを無断で操作</li>
+                            <li>パニックになって騒ぐ</li>
+                            <li>出口に殺到する</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="crowded" class="tab-content">
+                <h3>👥 人混みにいる場合</h3>
+                
+                <div class="critical-box">
+                    <h4>🚨 群衆パニックの危険性</h4>
+                    <p>地震発生時、人混みでは<strong>群衆パニック</strong>が発生し、将棋倒しや圧死の危険があります。冷静な行動が最も重要です。</p>
+                </div>
+
+                <div class="action-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>その場で身を守る</h4>
+                            <p>出口に向かわず、その場で姿勢を低くして頭を守る。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>群衆の流れに注意</h4>
+                            <p>人の流れに逆らわず、壁際や柱の近くで身を守る。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>係員の指示に従う</h4>
+                            <p>施設の係員や警備員の指示に従い、秩序ある避難を心がける。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Ad -->
+        <div style="text-align: center; margin: 3rem 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="3889638884"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <div class="quick-reference">
+            <h3>📋 緊急時クイックリファレンス</h3>
+            <div class="reference-grid">
+                <div class="reference-item">
+                    <h4>🆘 救急要請</h4>
+                    <p><strong>119番</strong><br>消防・救急</p>
+                </div>
+                <div class="reference-item">
+                    <h4>🚓 警察要請</h4>
+                    <p><strong>110番</strong><br>警察・事件</p>
+                </div>
+                <div class="reference-item">
+                    <h4>📞 災害用伝言ダイヤル</h4>
+                    <p><strong>171</strong><br>安否確認</p>
+                </div>
+                <div class="reference-item">
+                    <h4>🌐 災害用伝言板</h4>
+                    <p><strong>web171.jp</strong><br>ネット安否確認</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ よくある間違った行動</h2>
+            
+            <div class="warning-box">
+                <h4>🚫 地震時の危険な行動例</h4>
+                <div style="margin-top: 1rem;">
+                    <h5>1. 慌てて外に飛び出す</h5>
+                    <p><strong>危険性：</strong>落下物による負傷、転倒による怪我<br>
+                    <strong>正しい行動：</strong>まずその場で身を守り、揺れが収まってから安全を確認</p>
+                    
+                    <h5>2. エレベーターを使い続ける</h5>
+                    <p><strong>危険性：</strong>停電で閉じ込められる可能性<br>
+                    <strong>正しい行動：</strong>最寄り階で降りて階段を使用</p>
+                    
+                    <h5>3. 火を消すことを最優先にする</h5>
+                    <p><strong>危険性：</strong>転倒してやけどを負う可能性<br>
+                    <strong>正しい行動：</strong>身の安全確保が最優先、火の始末は揺れが収まってから</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧠 心理的対処法</h2>
+            
+            <p>地震発生時は恐怖や不安で正常な判断ができなくなることがあります。心理的な対処法も重要です。</p>
+            
+            <div class="tip-box" style="background: #e8f5e9; border: 2px solid #4caf50;">
+                <h4 style="color: #2e7d32;">💡 事前準備で心の余裕を</h4>
+                <p>心理的な余裕は事前の準備から生まれます。<a href="earthquake-prevention-guide.html" style="color: #2e7d32; font-weight: bold;">地震対策完全ガイド</a>で家庭の備えを整え、<a href="emergency-supplies-guide.html" style="color: #2e7d32; font-weight: bold;">防災グッズガイド</a>で必要な用品を準備しておくことで、いざという時の不安を大幅に軽減できます。</p>
+            </div>
+
+            <div class="action-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>深呼吸をして冷静になる</h4>
+                        <p>パニックになりそうな時は、深く息を吸って数秒間止め、ゆっくりと吐く。これを数回繰り返す。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>現在の状況を声に出して確認</h4>
+                        <p>「今私は○○にいる」「怪我はない」「建物は倒壊していない」など、状況を声に出して整理する。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>事前に学んだ行動を思い出す</h4>
+                        <p>防災訓練や事前学習の内容を思い出し、順序立てて行動する。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="related-articles">
+            <h3>🔗 関連記事</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--border-radius); border-left: 4px solid var(--secondary-color);">
+                    <a href="earthquake-prevention-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">家庭でできる地震対策完全ガイド</a>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">事前準備から家具固定まで詳しく解説</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--border-radius); border-left: 4px solid var(--secondary-color);">
+                    <a href="emergency-supplies-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">防災グッズの選び方と準備リスト</a>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">コスパ最高の防災グッズを厳選紹介</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--border-radius); border-left: 4px solid var(--secondary-color);">
+                    <a href="earthquake-monitor/" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">🌏 地震モニターアプリ</a>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">リアルタイム地震情報をプッシュ通知</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+        // Mobile Navigation Toggle
+        document.querySelector('.nav-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Mobile Dropdown Toggle
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const link = item.querySelector('.nav-link');
+            const dropdown = item.querySelector('.nav-dropdown');
+            
+            if (dropdown) {
+                link.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        item.classList.toggle('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

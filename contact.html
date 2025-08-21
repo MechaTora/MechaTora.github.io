@@ -16,8 +16,9 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
          crossorigin="anonymous"></script>
     
-    <title>お問い合わせ | 便利なWebアプリ集</title>
-    <meta name="description" content="便利なWebアプリ集へのお問い合わせページ。ご質問、ご要望、バグ報告などお気軽にお寄せください。">
+    <title>お問い合わせ | MechaTora - Webアプリケーション開発者への連絡</title>
+    <meta name="description" content="MechaTora提供のWebアプリケーションに関するお問い合わせ、不具合報告、機能要望、技術的な質問をお受けします。迅速なサポート対応でユーザー体験の向上に努めています。">
+    <meta name="keywords" content="お問い合わせ, 不具合報告, 機能要望, サポート, フィードバック, 技術質問, PWA, Webアプリ開発">
     <link rel="canonical" href="https://mechatora.github.io/contact.html">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
@@ -32,6 +33,163 @@
             --border-radius: 16px;
             --spacing-md: 24px;
             --spacing-lg: 32px;
+        }
+
+        /* Global Navigation Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #e53e3e;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1rem 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-dropdown a:hover {
+            background-color: #f8f9fa;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .breadcrumb {
+            background: rgba(255,255,255,0.9);
+            padding: 0.5rem 1rem;
+            margin-top: 60px;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background: #e53e3e;
+                flex-direction: column;
+                transition: left 0.3s ease;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+            }
+
+            .nav-dropdown {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(255,255,255,0.1);
+                border-radius: 0;
+                margin-left: 1rem;
+                display: none;
+            }
+
+            .nav-item.active .nav-dropdown {
+                display: block;
+            }
+
+            .nav-dropdown a {
+                color: white;
+                padding-left: 2rem;
+            }
+
+            .breadcrumb {
+                margin-top: 120px;
+            }
         }
 
         * {
@@ -262,13 +420,86 @@
     </style>
 </head>
 <body>
+    <!-- Global Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🐱 MechaTora</a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Webアプリ</a>
+                    <div class="nav-dropdown">
+                        <a href="cook-suggest/">🍳 料理提案アプリ</a>
+                        <a href="earthquake-monitor/">🌏 地震モニター</a>
+                        <a href="flashcard-web-app/">📚 フラッシュカード</a>
+                        <a href="qualification-calendar.html">📅 資格試験カレンダー</a>
+                        <a href="fire/">🔥 暖炉シミュレータ</a>
+                        <a href="x-buzz-simulator/">📱 X投稿バズ予測</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">防災情報</a>
+                    <div class="nav-dropdown">
+                        <a href="earthquake-prevention-guide.html">🏠 地震対策ガイド</a>
+                        <a href="earthquake-action-manual.html">🚨 緊急時行動マニュアル</a>
+                        <a href="emergency-supplies-guide.html">🎒 防災グッズガイド</a>
+                        <a href="earthquake-monitor/">🌍 リアルタイム地震情報</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">癒し系</a>
+                    <div class="nav-dropdown">
+                        <a href="cat-healing-station/">🐱 猫カフェ</a>
+                        <a href="aurora/">🌌 オーロラ</a>
+                        <a href="jellyfish-simulation/">🎐 クラゲ水族館</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">ゲーム</a>
+                    <div class="nav-dropdown">
+                        <a href="beer-quiz/">🍺 ビールクイズ</a>
+                        <a href="unreasonable-othello/">⚫ 理不尽オセロ</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="blog.html" class="nav-link">ブログ</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">サイト情報</a>
+                    <div class="nav-dropdown">
+                        <a href="about.html">📋 運営者について</a>
+                        <a href="contact.html" style="background-color: rgba(0,0,0,0.1);">📧 お問い合わせ</a>
+                        <a href="help-guide.html">❓ ヘルプ</a>
+                        <a href="privacy.html">🔒 プライバシーポリシー</a>
+                    </div>
+                </li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="index.html">ホーム</a> &gt; 
+        <span>お問い合わせ</span>
+    </div>
+
     <div class="container">
         <a href="index.html" class="back-link">← ホームに戻る</a>
         
         <div class="header">
-            <span class="emoji">💬</span>
+            <span class="emoji">📧</span>
             <h1>お問い合わせ</h1>
-            <p>ご質問・ご提案・バグ報告など、お気軽にご連絡ください</p>
+            <p>アプリに関するご質問・不具合報告・機能要望を迅速にサポートします</p>
+        </div>
+
+        <!-- AdSense Header -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="5287863920"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
         </div>
 
         <div class="content">
@@ -278,15 +509,20 @@
                 
                 <div class="contact-methods">
                     <div class="contact-item">
-                        <h3><span class="icon">🌐</span>ウェブサイト</h3>
-                        <p>メインサイト：<a href="https://mechatora.github.io/">https://mechatora.github.io/</a></p>
-                        <p>最新情報やアップデート情報を確認いただけます。</p>
+                        <h3><span class="icon">📝</span>内蔵フォーム（推奨）</h3>
+                        <p>このページ下部の専用フォームから直接お問い合わせいただけます。カテゴリ別に整理され、迅速な対応が可能です。</p>
                     </div>
                     
                     <div class="contact-item">
-                        <h3><span class="icon">📝</span>お問い合わせフォーム</h3>
-                        <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSfmIiTfXbOuwjEcKnvNxbMLInTIozW58o15VyAauSuqoJgBqg/viewform" target="_blank">Googleフォームでお問い合わせ</a></p>
-                        <p>ご質問、ご要望、バグ報告など、お気軽にお寄せください。</p>
+                        <h3><span class="icon">🐙</span>GitHub Issues</h3>
+                        <p><a href="https://github.com/mechatora/issues" target="_blank" rel="noopener">技術的な問題はGitHubで</a></p>
+                        <p>開発者向け：バグ報告、機能要望、技術的な議論に最適です。</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h3><span class="icon">🌐</span>公式サイト</h3>
+                        <p>メインサイト：<a href="https://mechatora.github.io/">https://mechatora.github.io/</a></p>
+                        <p>最新のアップデート情報、リリースノートを確認できます。</p>
                     </div>
                 </div>
             </div>
@@ -296,58 +532,142 @@
                 <div class="inquiry-types">
                     <div class="inquiry-type">
                         <span class="icon">🐛</span>
-                        <h4>バグ報告</h4>
-                        <p>動作に問題がある場合</p>
+                        <h4>不具合報告</h4>
+                        <p>アプリの動作不良・エラー・予期しない動作</p>
                     </div>
                     <div class="inquiry-type">
                         <span class="icon">💡</span>
                         <h4>機能要望</h4>
-                        <p>新機能のご提案</p>
+                        <p>新機能のご提案・既存機能の改善案</p>
                     </div>
                     <div class="inquiry-type">
                         <span class="icon">❓</span>
-                        <h4>使い方質問</h4>
-                        <p>操作方法がわからない場合</p>
+                        <h4>使い方・技術質問</h4>
+                        <p>操作方法・技術的仕組み・開発に関する質問</p>
                     </div>
                     <div class="inquiry-type">
                         <span class="icon">📊</span>
-                        <h4>データ関連</h4>
-                        <p>レシピデータについて</p>
+                        <h4>フィードバック</h4>
+                        <p>ユーザー体験・デザイン・パフォーマンスについて</p>
+                    </div>
+                    <div class="inquiry-type">
+                        <span class="icon">🛠️</span>
+                        <h4>技術連携</h4>
+                        <p>API連携・外部サービス統合のご相談</p>
+                    </div>
+                    <div class="inquiry-type">
+                        <span class="icon">📱</span>
+                        <h4>モバイル対応</h4>
+                        <p>PWA・スマートフォン・タブレット環境の問題</p>
                     </div>
                 </div>
             </div>
 
+            <!-- お問い合わせフォーム -->
+            <div class="card section" id="contact-form-section">
+                <h2>📝 お問い合わせフォーム</h2>
+                <p style="margin-bottom: 2rem; text-align: center; color: var(--text-secondary);">
+                    こちらのフォームから直接お問い合わせいただけます。必要項目をご記入の上、送信ボタンをクリックしてください。
+                </p>
+                
+                <form id="contactForm" style="max-width: 600px; margin: 0 auto;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">お名前（ニックネーム可）</label>
+                            <input type="text" id="name" name="name" placeholder="例：田中太郎" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: var(--border-radius); font-size: 1rem;">
+                        </div>
+                        
+                        <div>
+                            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">メールアドレス（任意）</label>
+                            <input type="email" id="email" name="email" placeholder="example@gmail.com" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: var(--border-radius); font-size: 1rem;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="category" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">お問い合わせ種類 *</label>
+                        <select id="category" name="category" required style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: var(--border-radius); font-size: 1rem;">
+                            <option value="">選択してください</option>
+                            <option value="bug">不具合報告</option>
+                            <option value="feature">機能要望</option>
+                            <option value="question">使い方・質問</option>
+                            <option value="feedback">フィードバック</option>
+                            <option value="technical">技術連携</option>
+                            <option value="other">その他</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="app" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">関連アプリ（該当する場合）</label>
+                        <select id="app" name="app" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: var(--border-radius); font-size: 1rem;">
+                            <option value="">該当なし・全般</option>
+                            <option value="cook-suggest">CookSuggest（料理提案）</option>
+                            <option value="earthquake-monitor">地震モニター</option>
+                            <option value="flashcard">科学的暗記アプリ</option>
+                            <option value="social-insurance-news">社会保険ニュース</option>
+                            <option value="qualification-calendar">資格試験カレンダー</option>
+                            <option value="other-apps">その他のアプリ</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="browser" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">ブラウザ環境（不具合報告の場合）</label>
+                        <input type="text" id="browser" name="browser" placeholder="例：Chrome 119, Safari 17, Firefox 118" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: var(--border-radius); font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">詳細内容 *</label>
+                        <textarea id="message" name="message" required rows="8" placeholder="お問い合わせ内容を詳しくお聞かせください。&#10;&#10;【不具合報告の場合】&#10;- 発生した問題の詳細&#10;- 再現手順&#10;- 期待していた動作&#10;&#10;【機能要望の場合】&#10;- 欲しい機能の詳細&#10;- 使用場面・用途&#10;- 優先度&#10;&#10;【質問の場合】&#10;- 知りたいこと&#10;- 現在の状況" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: var(--border-radius); font-size: 1rem; resize: vertical; min-height: 120px;"></textarea>
+                    </div>
+                    
+                    <div id="statusMessage" style="padding: 1rem; border-radius: var(--border-radius); margin: 1rem 0; text-align: center; display: none;"></div>
+                    
+                    <button type="submit" id="submitBtn" style="width: 100%; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; padding: 1rem 2rem; border: none; border-radius: var(--border-radius); font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                        送信する
+                    </button>
+                </form>
+            </div>
+            
             <div class="response-time">
-                <h3>📅 対応時間について</h3>
-                <p>お問い合わせへの返信は、内容によって異なりますが、通常1-3営業日以内にご対応いたします。緊急性の高いバグ報告については、可能な限り迅速に対応いたします。</p>
+                <h3>📅 ご返信について</h3>
+                <p>お問い合わせいただいた内容は、通常1-3営業日以内に確認いたします。メールアドレスをご記入いただいた場合は、そちらにご返信いたします。緊急性の高い不具合報告については、優先的に対応いたします。</p>
+            </div>
+            
+            <!-- Middle Ad -->
+            <div style="text-align: center; margin: 3rem 0;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1184134440246706"
+                     data-ad-slot="3889638884"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
             </div>
 
             <div class="card section">
                 <h2>❓ よくある質問</h2>
                 <div class="faq-section">
                     <div class="faq-item">
-                        <div class="faq-question">Q. このサイトのWebアプリは無料で利用できますか？</div>
-                        <div class="faq-answer">A. はい、すべてのWebアプリは完全無料でご利用いただけます。</div>
+                        <div class="faq-question">返信はいつ頃もらえますか？</div>
+                        <div class="faq-answer">通常1-3営業日以内に確認し、必要に応じてご返信いたします。緊急性の高い不具合報告については、優先的に対応いたします。</div>
                     </div>
                     
                     <div class="faq-item">
-                        <div class="faq-question">Q. レシピデータの出典はどこですか？</div>
-                        <div class="faq-answer">A. 一般的なレシピ情報を基に、独自に整理・構成したデータベースを使用しています。</div>
+                        <div class="faq-question">メールアドレスは必須ですか？</div>
+                        <div class="faq-answer">メールアドレスは任意です。ただし、ご記入いただくと、回答をお送りできます。匿名でのフィードバックも歓迎いたします。</div>
                     </div>
                     
                     <div class="faq-item">
-                        <div class="faq-question">Q. スマートフォンでも利用できますか？</div>
-                        <div class="faq-answer">A. はい、レスポンシブデザインにより、スマートフォン・タブレット・PCで快適にご利用いただけます。</div>
+                        <div class="faq-question">個人情報はどう取り扱われますか？</div>
+                        <div class="faq-answer">お問い合わせでいただいた情報は、お問い合わせ対応以外の目的では使用いたしません。詳細は<a href="privacy.html" style="color: var(--primary-color);">プライバシーポリシー</a>をご確認ください。</div>
                     </div>
                     
                     <div class="faq-item">
-                        <div class="faq-question">Q. 新しいレシピを追加してもらえますか？</div>
-                        <div class="faq-answer">A. レシピの追加要望については、お問い合わせフォームからご連絡ください。検討の上、対応いたします。</div>
+                        <div class="faq-question">不具合報告で必要な情報は？</div>
+                        <div class="faq-answer">以下の情報があると、迅速な対応が可能です：<br>• 使用ブラウザ・OS<br>• 発生した問題の詳細<br>• 再現手順<br>• エラーメッセージ（表示された場合）</div>
                     </div>
                     
                     <div class="faq-item">
-                        <div class="faq-question">Q. プライバシーポリシーはありますか？</div>
-                        <div class="faq-answer">A. はい、<a href="privacy.html">プライバシーポリシー</a>をご確認ください。</div>
+                        <div class="faq-question">機能要望は実装されますか？</div>
+                        <div class="faq-answer">機能要望は、技術的実現可能性、ユーザーニーズ、開発リソースを考慮して検討いたします。実装が決定した場合は、ブログやアップデート情報でお知らせいたします。</div>
                     </div>
                 </div>
             </div>
@@ -373,14 +693,88 @@
             </div>
 
             <div class="card section">
-                <h2>💌 メッセージ</h2>
-                <p>便利なWebアプリ集をご利用いただき、ありがとうございます。皆様からのフィードバックは、アプリ改善の貴重な参考とさせていただいています。</p>
-                <p>「食材を無駄にしない、創造的な料理体験」を提供するため、今後も機能向上に努めてまいります。ご質問やご提案がございましたら、お気軽にお声がけください。</p>
+                <h2>💌 開発者からのメッセージ</h2>
+                <p>MechaTora Webアプリ集をご利用いただき、心より感謝いたします。このプロジェクトは「誰もが使いやすく、実用的なWebアプリケーション」を目指して開発を続けています。</p>
+                <p>特にCookSuggestでは「食材を無駄にしない、創造的な料理体験」、地震モニターでは「迅速で正確な防災情報提供」、科学的暗記アプリでは「効率的な学習支援」を核心価値として設計しています。</p>
+                <p>皆様からいただくフィードバックは、機能改善・新機能開発の重要な指針となります。技術的なご質問、UX改善のご提案、新しいアイデアなど、どのようなご意見でもお気軽にお聞かせください。</p>
                 <p style="text-align: center; margin-top: 24px; font-style: italic; color: var(--primary-color);">
-                    <strong>一緒に、より良いWebアプリ集を作っていきましょう！</strong>
+                    <strong>ユーザーの声と共に、より良いWebアプリ生態系を構築していきます</strong>
                 </p>
             </div>
         </div>
     </div>
+
+    <script>
+        // フォーム送信処理（シミュレーション）
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const statusMessage = document.getElementById('statusMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // 必須フィールドのチェック
+            const category = document.getElementById('category').value;
+            const message = document.getElementById('message').value;
+            
+            if (!category || !message.trim()) {
+                statusMessage.style.background = '#fee2e2';
+                statusMessage.style.color = '#991b1b';
+                statusMessage.style.border = '1px solid #ef4444';
+                statusMessage.textContent = 'お問い合わせ種類と詳細内容は必須です。';
+                statusMessage.style.display = 'block';
+                return;
+            }
+            
+            // 送信中の状態
+            submitBtn.disabled = true;
+            submitBtn.textContent = '送信中...';
+            
+            // 送信シミュレーション（実際のAPI呼び出しに置き換え可能）
+            setTimeout(() => {
+                statusMessage.style.background = '#d1fae5';
+                statusMessage.style.color = '#065f46';
+                statusMessage.style.border = '1px solid #10b981';
+                statusMessage.textContent = 'お問い合わせを受け付けました。ご協力ありがとうございます！';
+                statusMessage.style.display = 'block';
+                
+                // フォームリセット
+                document.getElementById('contactForm').reset();
+                
+                // ボタン復元
+                submitBtn.disabled = false;
+                submitBtn.textContent = '送信する';
+                
+                // 3秒後にメッセージを非表示
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 3000);
+                
+            }, 1500);
+        });
+
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+        // Mobile Navigation Toggle
+        document.querySelector('.nav-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Mobile Dropdown Toggle
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const link = item.querySelector('.nav-link');
+            const dropdown = item.querySelector('.nav-dropdown');
+            
+            if (dropdown) {
+                link.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        item.classList.toggle('active');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

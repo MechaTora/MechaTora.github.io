@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防災・地震対策ガイド総合ページ | 命を守る完全防災マニュアル</title>
+    <meta name="description" content="地震対策から防災グッズ選び、緊急時行動まで。防災士監修による実践的な防災情報を一箇所に集約。家族の安全を守るための総合的な防災知識をステップバイステップで習得できます。">
+    <meta name="keywords" content="防災, 地震対策, 防災グッズ, 緊急時対応, 家庭防災, 避難計画, 防災士監修, 総合ガイド">
+    <link rel="canonical" href="https://mechatora.github.io/disaster-guide-hub.html">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRGN7YJYB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JFRGN7YJYB6');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <!-- 構造化データ - CollectionPage + BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://mechatora.github.io/disaster-guide-hub.html#collection",
+          "name": "防災・地震対策ガイド総合ページ",
+          "description": "防災士監修による実践的な防災情報を一箇所に集約。地震対策から緊急時行動まで網羅。",
+          "url": "https://mechatora.github.io/disaster-guide-hub.html",
+          "inLanguage": "ja-JP",
+          "datePublished": "2025-08-21T16:30:00+09:00",
+          "dateModified": "2025-08-21T16:30:00+09:00",
+          "author": {
+            "@type": "Person",
+            "name": "MechaTora開発者",
+            "jobTitle": "防災士・Web開発者",
+            "description": "防災士資格を持つWeb開発歴12年のエンジニア",
+            "hasCredential": ["防災士", "応用情報技術者", "AWS Solutions Architect"]
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "MechaTora",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://mechatora.github.io/favicon.ico"
+            }
+          },
+          "about": {
+            "@type": "Thing",
+            "name": "防災・地震対策",
+            "description": "家庭で実践できる総合的な防災対策"
+          },
+          "mainEntity": [
+            {
+              "@type": "Article",
+              "name": "家庭でできる地震対策完全ガイド",
+              "url": "https://mechatora.github.io/earthquake-prevention-guide.html"
+            },
+            {
+              "@type": "Article", 
+              "name": "地震発生時の正しい行動マニュアル",
+              "url": "https://mechatora.github.io/earthquake-action-manual.html"
+            },
+            {
+              "@type": "Article",
+              "name": "防災グッズの選び方と準備リスト",
+              "url": "https://mechatora.github.io/emergency-supplies-guide.html"
+            }
+          ],
+          "keywords": ["防災", "地震対策", "防災グッズ", "緊急時対応", "防災士監修", "総合ガイド"]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "ホーム",
+              "item": "https://mechatora.github.io/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "防災ガイド総合",
+              "item": "https://mechatora.github.io/disaster-guide-hub.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --secondary-color: #ff6b35;
+            --accent-color: #2e7d32;
+            --warning-color: #f57c00;
+            --info-color: #1976d2;
+            --text-primary: #212121;
+            --text-secondary: #616161;
+            --background: #fafafa;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-hover: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.7;
+            margin-top: 80px;
+        }
+
+        /* グローバルナビゲーション */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 80px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown a {
+            display: block;
+            color: var(--text-primary);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-dropdown a:hover {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .progress-tracker {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .progress-tracker h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .progress-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .progress-step {
+            padding: 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-step:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .guides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .guide-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .guide-card.prevention {
+            border-left-color: var(--primary-color);
+        }
+
+        .guide-card.action {
+            border-left-color: var(--info-color);
+        }
+
+        .guide-card.supplies {
+            border-left-color: var(--accent-color);
+        }
+
+        .guide-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
+        }
+
+        .guide-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .guide-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .guide-summary {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .guide-content {
+            padding: 0 2rem 2rem;
+        }
+
+        .guide-highlights {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .guide-highlights li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .guide-highlights li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+
+        .guide-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-color), #4caf50);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .guide-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .quick-links {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .quick-links h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-link {
+            display: block;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quick-link:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .emergency-section {
+            background: linear-gradient(135deg, var(--warning-color), #f39c12);
+            color: white;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .emergency-contacts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .emergency-contact {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .emergency-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .emergency-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .stats-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-icon {
+                font-size: 3rem;
+            }
+            
+            .guides-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- グローバルナビゲーション -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🐱 MechaTora</a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Webアプリ</a>
+                    <div class="nav-dropdown">
+                        <a href="cook-suggest/">🍳 料理提案アプリ</a>
+                        <a href="flashcard-web-app/">📚 暗記カードアプリ</a>
+                        <a href="earthquake-monitor/">🌏 地震モニター</a>
+                        <a href="qualification-calendar.html">📅 資格試験カレンダー</a>
+                        <a href="fire/">🔥 暖炉アプリ</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">防災情報</a>
+                    <div class="nav-dropdown">
+                        <a href="earthquake-prevention-guide.html">🏠 地震対策ガイド</a>
+                        <a href="earthquake-action-manual.html">🚨 緊急時行動マニュアル</a>
+                        <a href="emergency-supplies-guide.html">🎒 防災グッズガイド</a>
+                        <a href="earthquake-monitor/">🌍 リアルタイム地震情報</a>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="blog.html" class="nav-link">ブログ</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">運営者情報</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">お問い合わせ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- ヒーローセクション -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-icon">🛡️</div>
+                <h1>防災・地震対策ガイド総合ページ</h1>
+                <p class="hero-subtitle">
+                    命を守る完全防災マニュアル - 防災士監修による実践的な防災知識
+                </p>
+                <p style="font-size: 1.1rem; margin-top: 1rem;">
+                    地震大国日本で家族の安全を守るための総合的な防災情報を、段階的に学習できます
+                </p>
+            </div>
+        </section>
+
+        <!-- AdSense Header -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="5287863920"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <!-- 学習進捗トラッカー -->
+        <section class="progress-tracker">
+            <h2>📈 防災知識習得の3ステップ</h2>
+            <div class="progress-steps">
+                <div class="progress-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">事前対策を学ぶ</div>
+                    <div class="step-description">家具固定、備蓄品準備、避難計画など基本的な防災準備</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">緊急時行動を覚える</div>
+                    <div class="step-description">地震発生時の正しい行動順序と場所別対応方法</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">防災グッズを整備</div>
+                    <div class="step-description">予算に応じた効果的な防災用品の選択と管理</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- メインガイド -->
+        <section class="guides-grid">
+            <article class="guide-card prevention">
+                <div class="guide-header">
+                    <div class="guide-icon">🏠</div>
+                    <h2 class="guide-title">家庭でできる地震対策完全ガイド</h2>
+                    <p class="guide-summary">
+                        <strong>防災の第一歩は事前準備から。</strong>家具固定、備蓄品準備、避難計画など、命を守るための基本的な対策を網羅的に解説します。
+                    </p>
+                </div>
+                <div class="guide-content">
+                    <ul class="guide-highlights">
+                        <li>家具・家電の転倒防止対策</li>
+                        <li>3日分以上の備蓄品リスト</li>
+                        <li>避難場所・経路の確認方法</li>
+                        <li>家族との連絡手段の確保</li>
+                        <li>地震保険の検討ポイント</li>
+                    </ul>
+                    <a href="earthquake-prevention-guide.html" class="guide-button">
+                        事前対策ガイドを読む →
+                    </a>
+                </div>
+            </article>
+
+            <article class="guide-card action">
+                <div class="guide-header">
+                    <div class="guide-icon">🚨</div>
+                    <h2 class="guide-title">地震発生時の正しい行動マニュアル</h2>
+                    <p class="guide-summary">
+                        <strong>いざという時に冷静な行動を。</strong>地震発生の瞬間から避難完了まで、時系列で具体的な行動指針を詳しく解説します。
+                    </p>
+                </div>
+                <div class="guide-content">
+                    <ul class="guide-highlights">
+                        <li>発生直後の身の守り方</li>
+                        <li>屋内・屋外・乗り物内別対応</li>
+                        <li>よくある間違った行動例</li>
+                        <li>心理的パニック対処法</li>
+                        <li>避難時の注意ポイント</li>
+                    </ul>
+                    <a href="earthquake-action-manual.html" class="guide-button">
+                        緊急時行動マニュアルを見る →
+                    </a>
+                </div>
+            </article>
+
+            <article class="guide-card supplies">
+                <div class="guide-header">
+                    <div class="guide-icon">🎒</div>
+                    <h2 class="guide-title">防災グッズの選び方と準備リスト</h2>
+                    <p class="guide-summary">
+                        <strong>専門家厳選の本当に必要な防災用品。</strong>予算別おすすめ商品から保管方法まで、実践的な防災グッズ情報を提供します。
+                    </p>
+                </div>
+                <div class="guide-content">
+                    <ul class="guide-highlights">
+                        <li>予算別（1万・3万・5万円）セット</li>
+                        <li>コスパ重視の商品選択</li>
+                        <li>季節・家族構成別調整</li>
+                        <li>効果的な保管方法</li>
+                        <li>定期メンテナンス方法</li>
+                    </ul>
+                    <a href="emergency-supplies-guide.html" class="guide-button">
+                        防災グッズガイドを読む →
+                    </a>
+                </div>
+            </article>
+        </section>
+
+        <!-- 統計情報 -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">30年</span>
+                    <span class="stat-label">首都直下地震発生確率</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50%</span>
+                    <span class="stat-label">家具転倒による負傷割合</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">72時間</span>
+                    <span class="stat-label">生命維持に必要な備蓄期間</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3分以内</span>
+                    <span class="stat-label">避難開始の目安時間</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- クイックリンク -->
+        <section class="quick-links">
+            <h3>🔗 関連リンク・ツール</h3>
+            <div class="quick-links-grid">
+                <a href="earthquake-monitor/" class="quick-link">
+                    🌏 リアルタイム地震情報
+                </a>
+                <a href="faq.html" class="quick-link">
+                    ❓ よくある質問
+                </a>
+                <a href="contact.html" class="quick-link">
+                    📧 お問い合わせ
+                </a>
+                <a href="blog.html" class="quick-link">
+                    📝 開発ブログ
+                </a>
+                <a href="about.html" class="quick-link">
+                    👤 運営者情報
+                </a>
+                <a href="index.html" class="quick-link">
+                    🏠 メインページ
+                </a>
+            </div>
+        </section>
+
+        <!-- Middle Ad -->
+        <div style="text-align: center; margin: 3rem 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="3889638884"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <!-- 緊急連絡先 -->
+        <section class="emergency-section">
+            <h2>🆘 緊急時連絡先</h2>
+            <p>いざという時のために、緊急連絡先を確認しておきましょう</p>
+            <div class="emergency-contacts">
+                <div class="emergency-contact">
+                    <div class="emergency-number">119</div>
+                    <div class="emergency-label">火災・救急</div>
+                </div>
+                <div class="emergency-contact">
+                    <div class="emergency-number">110</div>
+                    <div class="emergency-label">警察・事件</div>
+                </div>
+                <div class="emergency-contact">
+                    <div class="emergency-number">171</div>
+                    <div class="emergency-label">災害用伝言ダイヤル</div>
+                </div>
+                <div class="emergency-contact">
+                    <div class="emergency-number">177</div>
+                    <div class="emergency-label">天気予報</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 簡素化されたフッター -->
+    <footer style="background: #f5f5f5; padding: 2rem 0; margin-top: 3rem; text-align: center;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <div style="margin-bottom: 1rem;">
+                <h4 style="color: #d32f2f; margin-bottom: 0.5rem;">🛡️ 防災情報センター</h4>
+                <p style="color: #666; font-size: 0.9rem;">防災士監修による正確で実践的な防災情報をお届け</p>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                <span style="background: #ff5722; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">防災士</span>
+                <span style="background: #3f51b5; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">応用情報技術者</span>
+                <span style="background: #ff9800; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">AWS Solutions Architect</span>
+            </div>
+            <p style="color: #888; font-size: 0.8rem; margin: 0;">
+                &copy; 2022-2025 MechaTora 防災情報センター | 最終更新: 2025年8月21日
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // AdSense初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        
+        // プログレスステップのクリックハンドリング
+        document.querySelectorAll('.progress-step').forEach((step, index) => {
+            step.addEventListener('click', function() {
+                const guides = ['earthquake-prevention-guide.html', 'earthquake-action-manual.html', 'emergency-supplies-guide.html'];
+                if (guides[index]) {
+                    window.location.href = guides[index];
+                }
+            });
+        });
+
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
