@@ -475,6 +475,158 @@
             }
         }
         
+        /* 動画選択メニュー */
+        .video-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 15;
+            opacity: 0;
+            animation: fade-in 2s ease 3s forwards;
+        }
+        
+        .selector-toggle {
+            background: rgba(0,0,0,0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            min-width: 90px;
+        }
+        
+        .selector-toggle:hover {
+            background: rgba(0,0,0,0.2);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+        
+        .selector-icon {
+            font-size: 16px;
+            animation: float-gentle 3s ease-in-out infinite;
+        }
+        
+        .selector-text {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            text-transform: lowercase;
+        }
+        
+        .selector-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: rgba(0,10,20,0.95);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        
+        .selector-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .selector-title {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.8rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 0.1em;
+            text-transform: lowercase;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 8px;
+        }
+        
+        .video-options {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .video-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        
+        .video-option:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+        
+        .video-option.active {
+            background: rgba(100,200,255,0.15);
+            border-color: rgba(100,200,255,0.3);
+        }
+        
+        .option-preview {
+            width: 32px;
+            height: 24px;
+            background: rgba(100,200,255,0.2);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .option-preview::before {
+            content: "🪼";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            opacity: 0.6;
+        }
+        
+        .option-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .option-name {
+            color: rgba(255,255,255,0.95);
+            font-size: 0.75rem;
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+        
+        .option-species {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.6rem;
+            font-weight: 200;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+        
+        /* 動画切り替えエフェクト */
+        .video-transition {
+            opacity: 0.3;
+            filter: blur(2px);
+            transition: opacity 0.5s ease, filter 0.5s ease;
+        }
+
         /* クラゲ投票ボタン */
         .vote-container {
             position: fixed;
@@ -668,6 +820,25 @@
         
         /* レスポンシブ調整 */
         @media (max-width: 768px) {
+            .video-selector {
+                top: 15px;
+                right: 15px;
+            }
+            
+            .selector-toggle {
+                padding: 8px 12px;
+                min-width: 80px;
+            }
+            
+            .selector-text {
+                font-size: 0.7rem;
+            }
+            
+            .selector-menu {
+                min-width: 260px;
+                right: -10px;
+            }
+            
             .vote-container {
                 left: 35px;
                 top: auto;
@@ -895,6 +1066,54 @@
                 <div>
                     <div class="jellyfish-animation">🪼</div>
                     <p>preparing meditation space...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 動画選択メニュー -->
+        <div class="video-selector">
+            <div class="selector-toggle" id="selectorToggle">
+                <span class="selector-icon">🪼</span>
+                <span class="selector-text">species</span>
+            </div>
+            <div class="selector-menu" id="selectorMenu">
+                <div class="selector-title">choose your jellyfish</div>
+                <div class="video-options">
+                    <div class="video-option active" data-video="./213616_medium.mp4" data-name="Moon Jellyfish">
+                        <div class="option-preview"></div>
+                        <div class="option-info">
+                            <div class="option-name">Moon Jelly</div>
+                            <div class="option-species">Aurelia aurita</div>
+                        </div>
+                    </div>
+                    <div class="video-option" data-video="./PXL_20250824_022552960.TS.mp4" data-name="Deep Sea Drifter">
+                        <div class="option-preview"></div>
+                        <div class="option-info">
+                            <div class="option-name">Crystal Drift</div>
+                            <div class="option-species">Specimen α</div>
+                        </div>
+                    </div>
+                    <div class="video-option" data-video="./PXL_20250824_022630179.TS.mp4" data-name="Ethereal Dancer">
+                        <div class="option-preview"></div>
+                        <div class="option-info">
+                            <div class="option-name">Ethereal Dance</div>
+                            <div class="option-species">Specimen β</div>
+                        </div>
+                    </div>
+                    <div class="video-option" data-video="./PXL_20250824_022701371.TS.mp4" data-name="Luminous Flow">
+                        <div class="option-preview"></div>
+                        <div class="option-info">
+                            <div class="option-name">Luminous Flow</div>
+                            <div class="option-species">Specimen γ</div>
+                        </div>
+                    </div>
+                    <div class="video-option" data-video="./PXL_20250824_022753408.TS.mp4" data-name="Gentle Pulse">
+                        <div class="option-preview"></div>
+                        <div class="option-info">
+                            <div class="option-name">Gentle Pulse</div>
+                            <div class="option-species">Specimen δ</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1323,6 +1542,92 @@
         // スクロールイベント追加
         window.addEventListener('scroll', handleScroll);
         
+        // ビデオ選択機能
+        function setupVideoSelector() {
+            const selectorToggle = document.getElementById('selectorToggle');
+            const selectorMenu = document.getElementById('selectorMenu');
+            const videoOptions = document.querySelectorAll('.video-option');
+            
+            // セレクターの開閉
+            selectorToggle.addEventListener('click', function() {
+                selectorMenu.classList.toggle('show');
+            });
+            
+            // 外部クリックでメニューを閉じる
+            document.addEventListener('click', function(e) {
+                if (!selectorToggle.contains(e.target) && !selectorMenu.contains(e.target)) {
+                    selectorMenu.classList.remove('show');
+                }
+            });
+            
+            // ビデオオプションのクリック処理
+            videoOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const videoPath = this.getAttribute('data-video');
+                    const videoName = this.getAttribute('data-name');
+                    
+                    if (videoPath) {
+                        switchVideo(videoPath, videoName);
+                        
+                        // アクティブ状態を更新
+                        videoOptions.forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // メニューを閉じる
+                        selectorMenu.classList.remove('show');
+                    }
+                });
+            });
+        }
+        
+        // ビデオ切り替え機能
+        function switchVideo(videoPath, videoName) {
+            const video = elements.video;
+            
+            if (video) {
+                // 切り替えエフェクトを開始
+                video.classList.add('video-transition');
+                
+                // 少し遅延してからビデオを切り替え
+                setTimeout(() => {
+                    // 現在の再生時間と状態を保存
+                    const wasPlaying = !video.paused;
+                    
+                    // 新しいビデオソースを設定
+                    video.src = videoPath;
+                    video.load();
+                    
+                    // ビデオが読み込まれたら再生
+                    video.addEventListener('loadeddata', function onLoad() {
+                        if (wasPlaying) {
+                            video.play().catch(() => {
+                                console.log('Video autoplay blocked');
+                            });
+                        }
+                        
+                        // エフェクトを解除
+                        video.classList.remove('video-transition');
+                        
+                        // イベントリスナーを削除
+                        video.removeEventListener('loadeddata', onLoad);
+                        
+                        console.log(`Switched to video: ${videoName}`);
+                    });
+                }, 200);
+            }
+        }
+        
+        // 初期化
+        function init() {
+            setupAudio();
+            setupVideo();
+            setupControls();
+            setupVoting();
+            setupMouseTrail();
+            setupVideoSelector();
+            hideLoading();
+        }
+
         // 開始
         document.addEventListener('DOMContentLoaded', init);
         
