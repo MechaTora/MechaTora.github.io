@@ -47,6 +47,7 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  - jellyfish/
 
 # Custom URLs for sitemap (external subapps)
 external_urls:
