@@ -475,418 +475,89 @@
             }
         }
         
-        /* 動画選択メニュー */
-        .video-selector {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 15;
-            opacity: 0;
-            animation: fade-in 2s ease 3s forwards;
+        /* 追加動画セクション */
+        .additional-videos {
+            min-height: 100vh;
+            padding: 100px 0 60px;
+            position: relative;
+            z-index: 2;
         }
         
-        .selector-toggle {
-            background: rgba(0,0,0,0.15);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 10px 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            min-width: 90px;
+        .video-item {
+            margin-bottom: 100px;
+            position: relative;
         }
         
-        .selector-toggle:hover {
-            background: rgba(0,0,0,0.2);
-            border-color: rgba(255,255,255,0.15);
-            transform: translateY(-1px);
+        .video-item:last-child {
+            margin-bottom: 0;
         }
         
-        .selector-icon {
-            font-size: 16px;
-            animation: float-gentle 3s ease-in-out infinite;
-        }
-        
-        .selector-text {
-            color: rgba(255,255,255,0.8);
-            font-size: 0.75rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            text-transform: lowercase;
-        }
-        
-        .selector-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 10px;
-            background: rgba(0,10,20,0.95);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 16px;
-            min-width: 280px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-        
-        .selector-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .selector-title {
-            color: rgba(255,255,255,0.9);
-            font-size: 0.8rem;
-            font-weight: 300;
+        .video-title {
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fade-in 2s ease forwards;
+        }
+        
+        .video-title h3 {
+            color: rgba(255,255,255,0.95);
+            font-size: 2rem;
+            font-weight: 300;
             letter-spacing: 0.1em;
             text-transform: lowercase;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding-bottom: 8px;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
-        .video-options {
-            display: grid;
-            gap: 8px;
-        }
-        
-        .video-option {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-        
-        .video-option:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.1);
-        }
-        
-        .video-option.active {
-            background: rgba(100,200,255,0.15);
-            border-color: rgba(100,200,255,0.3);
-        }
-        
-        .option-preview {
-            width: 32px;
-            height: 24px;
-            background: rgba(100,200,255,0.2);
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        
-        .option-preview::before {
-            content: "🪼";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 12px;
-            opacity: 0.6;
-        }
-        
-        .option-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .option-name {
-            color: rgba(255,255,255,0.95);
-            font-size: 0.75rem;
-            font-weight: 400;
-            margin-bottom: 2px;
-        }
-        
-        .option-species {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.6rem;
+        .species-name {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
             font-weight: 200;
             font-style: italic;
             letter-spacing: 0.05em;
         }
         
-        /* 動画切り替えエフェクト */
-        .video-transition {
-            opacity: 0.3;
-            filter: blur(2px);
-            transition: opacity 0.5s ease, filter 0.5s ease;
+        .video-container.secondary {
+            width: 75vw;
+            height: 55vh;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* スクロール時の動画制御 */
+        .video-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+        
+        .video-item.in-view {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* クラゲ投票ボタン */
-        .vote-container {
-            position: fixed;
-            left: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-            opacity: 0;
-            animation: fade-in 2s ease 4s forwards;
-        }
-        
-        .vote-button {
-            background: rgba(0,0,0,0.12);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 18px 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            min-width: 120px;
-            max-width: 140px;
-        }
-        
-        .vote-button:hover {
-            background: rgba(0,0,0,0.15);
-            border-color: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
-        }
-        
-        .vote-button:active {
-            transform: translateY(0px) scale(0.95);
-        }
-        
-        .vote-icon {
-            width: 32px;
-            height: 32px;
-            margin-bottom: 6px;
-            position: relative;
-            animation: float-gentle 3s ease-in-out infinite;
-        }
-        
-        .jellyfish-svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 2px 8px rgba(100,200,255,0.3));
-        }
-        
-        .jellyfish-body {
-            fill: rgba(100,200,255,0.8);
-            stroke: rgba(255,255,255,0.4);
-            stroke-width: 0.5;
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-        
-        .jellyfish-tentacle {
-            stroke: rgba(150,220,255,0.7);
-            stroke-width: 1;
-            fill: none;
-            stroke-linecap: round;
-            animation: tentacle-wave 3s ease-in-out infinite;
-        }
-        
-        .jellyfish-tentacle:nth-child(2) { animation-delay: 0.2s; }
-        .jellyfish-tentacle:nth-child(3) { animation-delay: 0.4s; }
-        .jellyfish-tentacle:nth-child(4) { animation-delay: 0.6s; }
-        .jellyfish-tentacle:nth-child(5) { animation-delay: 0.8s; }
-        
-        @keyframes pulse-glow {
-            0%, 100% { 
-                fill: rgba(100,200,255,0.8);
-                filter: drop-shadow(0 0 4px rgba(100,200,255,0.4));
-            }
-            50% { 
-                fill: rgba(120,220,255,0.9);
-                filter: drop-shadow(0 0 8px rgba(120,220,255,0.6));
-            }
-        }
-        
-        @keyframes tentacle-wave {
-            0%, 100% { 
-                transform: translateX(0px) rotate(0deg);
-            }
-            25% { 
-                transform: translateX(1px) rotate(1deg);
-            }
-            75% { 
-                transform: translateX(-1px) rotate(-1deg);
-            }
-        }
-        
-        @keyframes float-gentle {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-3px); }
-        }
-        
-        .vote-text {
-            text-align: center;
-            line-height: 1.3;
-        }
-        
-        .vote-text-main {
-            font-family: 'Source Sans Pro', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 2px;
-        }
-        
-        .vote-text-sub {
-            font-family: 'Source Sans Pro', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 200;
-            color: rgba(255,255,255,0.6);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-        
-        .vote-count {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            font-weight: 300;
-            color: rgba(255,255,255,0.9);
-            margin-top: 4px;
-        }
-        
-        .vote-label {
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.5);
-            margin-top: 2px;
-        }
-        
-        /* 投票エフェクト */
-        .vote-effect {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 11;
-        }
-        
-        .vote-particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(100,200,255,0.8);
-            border-radius: 50%;
-            animation: particle-burst 1s ease-out forwards;
-        }
-        
-        @keyframes particle-burst {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--dx), var(--dy)) scale(0);
-            }
-        }
-        
-        /* 投票数マイルストーン表示 */
-        .milestone-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,20,40,0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 15px;
-            padding: 20px 30px;
-            color: rgba(255,255,255,0.9);
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            text-align: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-        
-        .milestone-popup.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1.05);
-        }
         
         /* レスポンシブ調整 */
         @media (max-width: 768px) {
-            .video-selector {
-                top: 15px;
-                right: 15px;
+            .video-title h3 {
+                font-size: 1.5rem;
             }
             
-            .selector-toggle {
-                padding: 8px 12px;
-                min-width: 80px;
+            .species-name {
+                font-size: 0.8rem;
             }
             
-            .selector-text {
-                font-size: 0.7rem;
+            .video-container.secondary {
+                width: 90vw;
+                height: 50vh;
             }
             
-            .selector-menu {
-                min-width: 260px;
-                right: -10px;
+            .additional-videos {
+                padding: 80px 0 40px;
             }
             
-            .vote-container {
-                left: 35px;
-                top: auto;
-                bottom: 130px;
-                transform: none;
-            }
-            
-            .vote-button {
-                padding: 14px 12px;
-                min-width: 100px;
-                max-width: 110px;
-            }
-            
-            .vote-icon {
-                font-size: 20px;
-            }
-            
-            .vote-text-main {
-                font-size: 0.7rem;
-            }
-            
-            .vote-text-sub {
-                font-size: 0.55rem;
-            }
-            
-            .vote-count {
-                font-size: 1rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .vote-container {
-                left: 25px;
-                bottom: 110px;
-            }
-            
-            .vote-button {
-                padding: 12px 10px;
-                min-width: 90px;
-                max-width: 100px;
-            }
-            
-            .vote-text-main {
-                font-size: 0.65rem;
-            }
-            
-            .vote-text-sub {
-                font-size: 0.5rem;
+            .video-item {
+                margin-bottom: 80px;
             }
         }
         
@@ -1070,53 +741,56 @@
             </div>
         </div>
         
-        <!-- 動画選択メニュー -->
-        <div class="video-selector">
-            <div class="selector-toggle" id="selectorToggle">
-                <span class="selector-icon">🪼</span>
-                <span class="selector-text">species</span>
-            </div>
-            <div class="selector-menu" id="selectorMenu">
-                <div class="selector-title">choose your jellyfish</div>
-                <div class="video-options">
-                    <div class="video-option active" data-video="./213616_medium.mp4" data-name="Moon Jellyfish">
-                        <div class="option-preview"></div>
-                        <div class="option-info">
-                            <div class="option-name">Moon Jelly</div>
-                            <div class="option-species">Aurelia aurita</div>
-                        </div>
-                    </div>
-                    <div class="video-option" data-video="./PXL_20250824_022552960.TS.mp4" data-name="Deep Sea Drifter">
-                        <div class="option-preview"></div>
-                        <div class="option-info">
-                            <div class="option-name">Crystal Drift</div>
-                            <div class="option-species">Specimen α</div>
-                        </div>
-                    </div>
-                    <div class="video-option" data-video="./PXL_20250824_022630179.TS.mp4" data-name="Ethereal Dancer">
-                        <div class="option-preview"></div>
-                        <div class="option-info">
-                            <div class="option-name">Ethereal Dance</div>
-                            <div class="option-species">Specimen β</div>
-                        </div>
-                    </div>
-                    <div class="video-option" data-video="./PXL_20250824_022701371.TS.mp4" data-name="Luminous Flow">
-                        <div class="option-preview"></div>
-                        <div class="option-info">
-                            <div class="option-name">Luminous Flow</div>
-                            <div class="option-species">Specimen γ</div>
-                        </div>
-                    </div>
-                    <div class="video-option" data-video="./PXL_20250824_022753408.TS.mp4" data-name="Gentle Pulse">
-                        <div class="option-preview"></div>
-                        <div class="option-info">
-                            <div class="option-name">Gentle Pulse</div>
-                            <div class="option-species">Specimen δ</div>
-                        </div>
-                    </div>
+        <!-- 追加動画セクション -->
+        <section class="additional-videos">
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Crystal Drift</h3>
+                    <p class="species-name">Specimen α</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022552960.TS.mp4" type="video/mp4">
+                    </video>
                 </div>
             </div>
-        </div>
+
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Ethereal Dance</h3>
+                    <p class="species-name">Specimen β</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022630179.TS.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Luminous Flow</h3>
+                    <p class="species-name">Specimen γ</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022701371.TS.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Gentle Pulse</h3>
+                    <p class="species-name">Specimen δ</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022753408.TS.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </section>
         
         <!-- オーディオ -->
         <audio id="audio" loop preload="auto">
@@ -1247,37 +921,6 @@
         <div class="scroll-hint">scroll to discover more</div>
     </section>
 
-    <!-- クラゲ投票ボタン -->
-    <div class="vote-container">
-        <div class="vote-button" id="voteButton">
-            <div class="vote-icon">
-                <svg class="jellyfish-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                    <!-- クラゲの傘部分 -->
-                    <ellipse class="jellyfish-body" cx="16" cy="12" rx="12" ry="8"/>
-                    
-                    <!-- 触手 -->
-                    <path class="jellyfish-tentacle" d="M10 18 Q9 22 8 26 Q7 28 9 28 Q11 28 10 26 Q9 24 10 22"/>
-                    <path class="jellyfish-tentacle" d="M13 19 Q12 23 11 27 Q10 29 12 29 Q14 29 13 27 Q12 25 13 23"/>
-                    <path class="jellyfish-tentacle" d="M19 19 Q20 23 21 27 Q22 29 20 29 Q18 29 19 27 Q20 25 19 23"/>
-                    <path class="jellyfish-tentacle" d="M22 18 Q23 22 24 26 Q25 28 23 28 Q21 28 22 26 Q23 24 22 22"/>
-                    
-                    <!-- 内部の発光効果 -->
-                    <ellipse cx="16" cy="11" rx="8" ry="5" fill="rgba(200,240,255,0.3)"/>
-                    <ellipse cx="16" cy="10" rx="5" ry="3" fill="rgba(220,250,255,0.4)"/>
-                </svg>
-            </div>
-            <div class="vote-text">
-                <div class="vote-text-main">クラゲ好きなら</div>
-                <div class="vote-text-sub">vote for jellyfish</div>
-            </div>
-            <div class="vote-count" id="voteCount">0</div>
-            <div class="vote-label">votes</div>
-        </div>
-        <div class="vote-effect" id="voteEffect"></div>
-    </div>
-
-    <!-- マイルストーン通知 -->
-    <div class="milestone-popup" id="milestonePopup"></div>
 
     <!-- カーソルトレイル -->
     <div class="cursor-trail" id="trail"></div>
@@ -1288,8 +931,7 @@
             sound: false,
             expanded: false,
             focused: false,
-            volume: 0.25,
-            votes: 0
+            volume: 0.25
         };
         
         // DOM要素
@@ -1304,11 +946,7 @@
             volume: document.getElementById('volume'),
             trail: document.getElementById('trail'),
             adPlaceholder: document.getElementById('adPlaceholder'),
-            adsenseUnit: document.getElementById('adsenseUnit'),
-            voteButton: document.getElementById('voteButton'),
-            voteCount: document.getElementById('voteCount'),
-            voteEffect: document.getElementById('voteEffect'),
-            milestonePopup: document.getElementById('milestonePopup')
+            adsenseUnit: document.getElementById('adsenseUnit')
         };
         
         // 初期化
@@ -1429,93 +1067,6 @@
             updateTrail();
         }
         
-        // 投票システム設定
-        function setupVoting() {
-            // ローカルストレージから投票数を読み込み
-            const savedVotes = localStorage.getItem('jellyfishVotes');
-            if (savedVotes) {
-                state.votes = parseInt(savedVotes, 10) || 0;
-                updateVoteDisplay();
-            }
-            
-            // 投票ボタンクリックイベント
-            elements.voteButton.addEventListener('click', handleVote);
-        }
-        
-        // 投票処理
-        function handleVote() {
-            state.votes++;
-            updateVoteDisplay();
-            saveVotes();
-            createVoteEffect();
-            checkMilestone();
-        }
-        
-        // 投票表示更新
-        function updateVoteDisplay() {
-            elements.voteCount.textContent = state.votes.toLocaleString();
-        }
-        
-        // 投票数保存
-        function saveVotes() {
-            localStorage.setItem('jellyfishVotes', state.votes.toString());
-        }
-        
-        // 投票エフェクト生成
-        function createVoteEffect() {
-            for (let i = 0; i < 8; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'vote-particle';
-                
-                const angle = (i / 8) * Math.PI * 2;
-                const distance = 50 + Math.random() * 30;
-                const dx = Math.cos(angle) * distance + 'px';
-                const dy = Math.sin(angle) * distance + 'px';
-                
-                particle.style.setProperty('--dx', dx);
-                particle.style.setProperty('--dy', dy);
-                
-                elements.voteEffect.appendChild(particle);
-                
-                setTimeout(() => {
-                    if (particle.parentNode) {
-                        particle.parentNode.removeChild(particle);
-                    }
-                }, 1000);
-            }
-        }
-        
-        // マイルストーンチェック
-        function checkMilestone() {
-            const milestones = [10, 25, 50, 100, 250, 500, 1000];
-            
-            if (milestones.includes(state.votes)) {
-                showMilestone();
-            }
-        }
-        
-        // マイルストーン表示
-        function showMilestone() {
-            const messages = {
-                10: '🌊 初回の波を作りました！',
-                25: '🪼 小さな群れができました',
-                50: '✨ クラゲファン仲間が増えています',
-                100: '🌟 素晴らしいコミュニティです！',
-                250: '🏆 クラゲ愛が深海に響いています',
-                500: '🎉 あなたは真のクラゲ愛好家です',
-                1000: '👑 クラゲマスターの称号を獲得！'
-            };
-            
-            const message = messages[state.votes];
-            if (message) {
-                elements.milestonePopup.textContent = message;
-                elements.milestonePopup.classList.add('show');
-                
-                setTimeout(() => {
-                    elements.milestonePopup.classList.remove('show');
-                }, 3000);
-            }
-        }
         
         // 読み込み画面を隠す
         function hideLoading() {
@@ -1542,79 +1093,24 @@
         // スクロールイベント追加
         window.addEventListener('scroll', handleScroll);
         
-        // ビデオ選択機能
-        function setupVideoSelector() {
-            const selectorToggle = document.getElementById('selectorToggle');
-            const selectorMenu = document.getElementById('selectorMenu');
-            const videoOptions = document.querySelectorAll('.video-option');
+        // スクロール時の動画アニメーション
+        function setupScrollAnimations() {
+            const videoItems = document.querySelectorAll('.video-item');
             
-            // セレクターの開閉
-            selectorToggle.addEventListener('click', function() {
-                selectorMenu.classList.toggle('show');
-            });
-            
-            // 外部クリックでメニューを閉じる
-            document.addEventListener('click', function(e) {
-                if (!selectorToggle.contains(e.target) && !selectorMenu.contains(e.target)) {
-                    selectorMenu.classList.remove('show');
-                }
-            });
-            
-            // ビデオオプションのクリック処理
-            videoOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const videoPath = this.getAttribute('data-video');
-                    const videoName = this.getAttribute('data-name');
-                    
-                    if (videoPath) {
-                        switchVideo(videoPath, videoName);
-                        
-                        // アクティブ状態を更新
-                        videoOptions.forEach(opt => opt.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        // メニューを閉じる
-                        selectorMenu.classList.remove('show');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
                     }
                 });
+            }, {
+                threshold: 0.1,
+                rootMargin: '50px'
             });
-        }
-        
-        // ビデオ切り替え機能
-        function switchVideo(videoPath, videoName) {
-            const video = elements.video;
             
-            if (video) {
-                // 切り替えエフェクトを開始
-                video.classList.add('video-transition');
-                
-                // 少し遅延してからビデオを切り替え
-                setTimeout(() => {
-                    // 現在の再生時間と状態を保存
-                    const wasPlaying = !video.paused;
-                    
-                    // 新しいビデオソースを設定
-                    video.src = videoPath;
-                    video.load();
-                    
-                    // ビデオが読み込まれたら再生
-                    video.addEventListener('loadeddata', function onLoad() {
-                        if (wasPlaying) {
-                            video.play().catch(() => {
-                                console.log('Video autoplay blocked');
-                            });
-                        }
-                        
-                        // エフェクトを解除
-                        video.classList.remove('video-transition');
-                        
-                        // イベントリスナーを削除
-                        video.removeEventListener('loadeddata', onLoad);
-                        
-                        console.log(`Switched to video: ${videoName}`);
-                    });
-                }, 200);
-            }
+            videoItems.forEach(item => {
+                observer.observe(item);
+            });
         }
         
         // 初期化
@@ -1622,9 +1118,8 @@
             setupAudio();
             setupVideo();
             setupControls();
-            setupVoting();
             setupMouseTrail();
-            setupVideoSelector();
+            setupScrollAnimations();
             hideLoading();
         }
 
