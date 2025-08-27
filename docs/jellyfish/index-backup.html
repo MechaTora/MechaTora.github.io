@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>クラゲ瞑想 - Jellyfish Meditation | 深海の癒し空間</title>
+    <!-- Updated: Multiple jellyfish videos in vertical layout v2.0 -->
+    <meta name="description" content="美しいクラゲの映像と深海の環境音で心を癒します。瞑想・リラクゼーションに最適な癒し空間。Beautiful jellyfish videos with deep ocean sounds for meditation and relaxation.">
+    <meta name="keywords" content="クラゲ,瞑想,癒し,リラックス,深海,jellyfish,meditation,healing,relaxation,ocean">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="クラゲ瞑想 - Jellyfish Meditation | 深海の癒し空間">
+    <meta property="og:description" content="美しいクラゲの映像と深海の環境音で心を癒します。瞑想・リラクゼーションに最適。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.github.io/jellyfish/">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="クラゲ瞑想 - Jellyfish Meditation">
+    <meta name="twitter:description" content="美しいクラゲの映像と深海の環境音で心を癒します。">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6NJKWS2RJ8');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+            crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500&family=Source+Sans+Pro:wght@200;300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: #000408;
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 200;
+            cursor: none;
+            letter-spacing: 0.03em;
+            scroll-behavior: smooth;
+        }
+        
+        /* メインコンテンツ領域 */
+        .main-content {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 深海グラデーション */
+        .ocean {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                #001a2e 0%,
+                #000f1a 50%,
+                #000408 100%
+            );
+            z-index: -2;
+        }
+        
+        /* 光の波紋 */
+        .light-waves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0,100,150,0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 60%, rgba(0,80,120,0.02) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0,60,100,0.01) 0%, transparent 60%);
+            animation: wave-drift 25s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes wave-drift {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translateY(-20px) scale(1.02);
+                opacity: 1;
+            }
+        }
+        
+        /* メインビデオコンテナ */
+        .video-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85vw;
+            height: 65vh;
+            max-width: 900px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0,60,120,0.4);
+            z-index: 1;
+            transition: z-index 0.3s ease;
+        }
+        
+        /* スクロール時の動画背面化 */
+        .video-behind {
+            z-index: 0 !important;
+        }
+        
+        .video-behind .jellyfish-video {
+            filter: brightness(0.2) contrast(1.15) saturate(1.2) blur(3px);
+        }
+        
+        .jellyfish-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.1) contrast(1.15) saturate(1.2);
+        }
+        
+        /* フォールバック表示 */
+        .video-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,20,40,0.9);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            font-weight: 200;
+        }
+        
+        .jellyfish-animation {
+            font-size: 3rem;
+            animation: float 3s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* タイトル */
+        .title {
+            position: fixed;
+            top: 8vh;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.9);
+            font-size: 1.5rem;
+            font-weight: 100;
+            text-align: center;
+            letter-spacing: 0.2em;
+            text-transform: lowercase;
+            opacity: 0;
+            animation: fade-in 2s ease 1s forwards;
+            z-index: 5;
+        }
+        
+        .subtitle {
+            position: fixed;
+            top: 12vh;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fade-in 2s ease 2s forwards;
+            z-index: 5;
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        /* コントロール */
+        .controls {
+            position: fixed;
+            bottom: 6vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.03);
+            opacity: 0;
+            animation: fade-in 2s ease 3s forwards;
+            z-index: 10;
+        }
+        
+        .control-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.6);
+            padding: 6px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 10px;
+            font-weight: 200;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: lowercase;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .control-btn .icon {
+            font-size: 8px;
+            opacity: 0.7;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.02);
+            color: rgba(255,255,255,0.8);
+            border-color: rgba(255,255,255,0.1);
+            transform: translateY(-1px);
+        }
+        
+        .control-btn.active {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.9);
+            border-color: rgba(255,255,255,0.15);
+        }
+        
+        /* 音量スライダー */
+        .volume-slider {
+            width: 60px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 1px;
+            outline: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            margin-left: 8px;
+            align-self: center;
+        }
+        
+        .controls:hover .volume-slider {
+            opacity: 1;
+        }
+        
+        /* 全画面モード */
+        .fullscreen-mode .video-container {
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            border-radius: 0;
+            top: 0;
+            left: 0;
+            transform: none;
+        }
+        
+        .fullscreen-mode .title,
+        .fullscreen-mode .subtitle {
+            opacity: 0;
+        }
+        
+        /* カーソルトレイル */
+        .cursor-trail {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+        }
+        
+        /* 読み込み画面 */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000408;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
+        }
+        
+        .loading-text {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* アドセンス広告枠 */
+        .ad-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 160px;
+            height: 600px;
+            z-index: 5;
+            opacity: 0;
+            animation: fade-in 2s ease 4s forwards;
+        }
+        
+        .ad-placeholder {
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.2);
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .ad-placeholder:hover {
+            background: rgba(0,0,0,0.08);
+            border-color: rgba(255,255,255,0.05);
+        }
+        
+        .ad-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            opacity: 0.3;
+        }
+        
+        .ad-dimensions {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5rem;
+            opacity: 0.2;
+        }
+        
+        /* 実際のアドセンス広告用 */
+        .adsense-unit {
+            width: 100%;
+            height: 100%;
+            display: none; /* 準備完了時にblock */
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .video-container {
+                width: 75vw;
+            }
+            
+            .ad-container {
+                width: 120px;
+                height: 480px;
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .video-container {
+                width: 95vw;
+                height: 55vh;
+            }
+            
+            .title {
+                font-size: 1.2rem;
+                top: 6vh;
+            }
+            
+            .subtitle {
+                font-size: 0.6rem;
+                top: 9vh;
+            }
+            
+            .controls {
+                bottom: 4vh;
+                gap: 6px;
+                padding: 6px 12px;
+            }
+            
+            .control-btn {
+                padding: 5px 10px;
+                font-size: 9px;
+            }
+            
+            /* モバイルでは広告を下部に移動 */
+            .ad-container {
+                position: fixed;
+                right: 50%;
+                bottom: 80px;
+                top: auto;
+                transform: translateX(50%);
+                width: 320px;
+                height: 50px;
+                opacity: 0.7;
+            }
+            
+            .ad-placeholder {
+                flex-direction: row;
+                font-size: 0.5rem;
+            }
+            
+            .ad-text {
+                writing-mode: horizontal-tb;
+            }
+            
+            .ad-dimensions {
+                position: static;
+                transform: none;
+                margin-left: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .ad-container {
+                width: 280px;
+                height: 50px;
+                bottom: 70px;
+            }
+        }
+        
+        /* 追加動画セクション */
+        .additional-videos {
+            min-height: 100vh;
+            padding: 100px 0 60px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .video-item {
+            margin-bottom: 100px;
+            position: relative;
+        }
+        
+        .video-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .video-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fade-in 2s ease forwards;
+        }
+        
+        .video-title h3 {
+            color: rgba(255,255,255,0.95);
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: lowercase;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .species-name {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            font-weight: 200;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+        
+        .video-container.secondary {
+            width: 75vw;
+            height: 55vh;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* スクロール時の動画制御 */
+        .video-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+        
+        .video-item.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        
+        /* レスポンシブ調整 */
+        @media (max-width: 768px) {
+            .video-title h3 {
+                font-size: 1.5rem;
+            }
+            
+            .species-name {
+                font-size: 0.8rem;
+            }
+            
+            .video-container.secondary {
+                width: 90vw;
+                height: 50vh;
+            }
+            
+            .additional-videos {
+                padding: 80px 0 40px;
+            }
+            
+            .video-item {
+                margin-bottom: 80px;
+            }
+        }
+        
+        /* クラゲ雑学セクション */
+        .knowledge-section {
+            min-height: 100vh;
+            background: linear-gradient(
+                180deg,
+                rgba(0,4,8,0.95) 0%,
+                rgba(0,17,34,0.95) 20%,
+                rgba(0,34,68,0.95) 50%,
+                rgba(0,17,51,0.95) 80%,
+                rgba(0,4,8,0.95) 100%
+            );
+            padding: 100px 40px 60px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .knowledge-container {
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .knowledge-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.95);
+        }
+        
+        .knowledge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .knowledge-card {
+            background: rgba(0,20,40,0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .knowledge-card:hover {
+            background: rgba(0,30,60,0.9);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+        
+        .knowledge-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-bottom: 0.8rem;
+            color: rgba(255,255,255,0.95);
+            letter-spacing: 0.05em;
+        }
+        
+        .knowledge-card .subtitle {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .knowledge-card .content {
+            display: grid;
+            gap: 0.8rem;
+        }
+        
+        .knowledge-card .japanese {
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.85);
+            font-weight: 300;
+        }
+        
+        .knowledge-card .english {
+            font-size: 0.7rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.65);
+            font-weight: 200;
+            font-style: italic;
+            border-left: 2px solid rgba(255,255,255,0.1);
+            padding-left: 1rem;
+        }
+        
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        /* レスポンシブ調整 */
+        @media (max-width: 768px) {
+            .knowledge-section {
+                padding: 80px 20px 40px;
+            }
+            
+            .knowledge-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .knowledge-card {
+                padding: 1.5rem;
+            }
+            
+            .knowledge-title {
+                font-size: 1.3rem;
+                margin-bottom: 1.8rem;
+            }
+            
+            .knowledge-card h3 {
+                font-size: 0.85rem;
+            }
+            
+            .knowledge-card .subtitle {
+                font-size: 0.65rem;
+            }
+            
+            .knowledge-card .japanese {
+                font-size: 0.7rem;
+            }
+            
+            .knowledge-card .english {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 読み込み画面 -->
+    <div class="loading" id="loading">
+        <div class="loading-text">entering the depths</div>
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+        <!-- 背景 -->
+        <div class="ocean"></div>
+        <div class="light-waves"></div>
+        
+        <!-- タイトル -->
+        <h1 class="title">jellyfish meditation</h1>
+        <p class="subtitle">drift into tranquility</p>
+        
+        <!-- ビデオ -->
+        <div class="video-container">
+            <video class="jellyfish-video" id="video" loop muted autoplay playsinline preload="auto">
+                <source src="./213616_medium.mp4" type="video/mp4">
+                <source src="213616_medium.mp4" type="video/mp4">
+            </video>
+            <div class="video-fallback" id="fallback" style="display: none;">
+                <div>
+                    <div class="jellyfish-animation">🪼</div>
+                    <p>preparing meditation space...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 追加動画セクション -->
+        <section class="additional-videos">
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Crystal Drift</h3>
+                    <p class="species-name">Specimen α</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022552960.TS.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Ethereal Dance</h3>
+                    <p class="species-name">Specimen β</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022630179.TS.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Luminous Flow</h3>
+                    <p class="species-name">Specimen γ</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022701371.TS.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="video-item">
+                <div class="video-title">
+                    <h3>Gentle Pulse</h3>
+                    <p class="species-name">Specimen δ</p>
+                </div>
+                <div class="video-container secondary">
+                    <video class="jellyfish-video" loop muted autoplay playsinline preload="auto">
+                        <source src="./PXL_20250824_022753408.TS.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </section>
+        
+        <!-- オーディオ -->
+        <audio id="audio" loop preload="auto">
+            <source src="./11L-water-1752538285399.mp3" type="audio/mpeg">
+            <source src="11L-water-1752538285399.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- コントロール -->
+        <div class="controls">
+            <button class="control-btn" id="soundBtn">
+                <span class="icon">♪</span>sound
+            </button>
+            <button class="control-btn" id="expandBtn">
+                <span class="icon">⌘</span>expand
+            </button>
+            <button class="control-btn" id="focusBtn">
+                <span class="icon">○</span>focus
+            </button>
+            <input type="range" class="volume-slider" id="volume" min="0" max="100" value="25">
+        </div>
+    </div>
+    
+    <!-- アドセンス広告枠 -->
+    <div class="ad-container">
+        <!-- 準備中プレースホルダー -->
+        <div class="ad-placeholder" id="adPlaceholder">
+            <div class="ad-text">advertisement</div>
+            <div class="ad-dimensions">160×600</div>
+        </div>
+        
+        <!-- 実際のアドセンス広告（準備完了時に表示） -->
+        <div class="adsense-unit" id="adsenseUnit">
+            <!-- Google AdSense コードをここに挿入 -->
+            <!-- 例: 
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXX"
+                 data-ad-slot="XXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            -->
+        </div>
+    </div>
+
+    <!-- クラゲ雑学セクション -->
+    <section class="knowledge-section">
+        <div class="knowledge-container">
+            <h2 class="knowledge-title">Jellyfish Mysteries</h2>
+            
+            <div class="knowledge-grid">
+                <div class="knowledge-card">
+                    <h3>脳なき知性</h3>
+                    <div class="subtitle">brain-free intelligence</div>
+                    <div class="content">
+                        <div class="japanese">クラゲは脳を持たないにも関わらず、複雑な行動を示します。神経網だけで捕食、逃避、繁殖行動を行い、一部の種は学習能力まで持っています。</div>
+                        <div class="english">Despite having no brain, jellyfish exhibit complex behaviors. They hunt, escape, and reproduce using only a neural network, with some species even demonstrating learning abilities.</div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <h3>不老不死の存在</h3>
+                    <div class="subtitle">immortal existence</div>
+                    <div class="content">
+                        <div class="japanese">ベニクラゲ（Turritopsis dohrnii）は理論上不老不死です。老化や怪我をすると若い状態に逆戻りし、このサイクルを無限に繰り返すことができます。</div>
+                        <div class="english">The immortal jellyfish (Turritopsis dohrnii) is theoretically immortal. When aging or injured, it reverses to its juvenile state and can repeat this cycle indefinitely.</div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <h3>古代の放浪者</h3>
+                    <div class="subtitle">ancient wanderers</div>
+                    <div class="content">
+                        <div class="japanese">クラゲは約7億年前から地球上に存在し、恐竜よりもはるかに古い生物です。氷河期、大量絶滅事件を全て生き抜いてきた究極のサバイバリストです。</div>
+                        <div class="english">Jellyfish have existed for about 700 million years, far older than dinosaurs. They are ultimate survivors, having endured ice ages and mass extinction events.</div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <h3>自然の生体発光</h3>
+                    <div class="subtitle">natural biolight</div>
+                    <div class="content">
+                        <div class="japanese">多くのクラゲは生物発光能力を持ち、化学反応で美しい光を放ちます。この光は捕食者を驚かせたり、獲物をおびき寄せるために使われます。</div>
+                        <div class="english">Many jellyfish possess bioluminescent abilities, producing beautiful light through chemical reactions. This light is used to startle predators or lure prey.</div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <h3>完璧な捕食者</h3>
+                    <div class="subtitle">perfect predator</div>
+                    <div class="content">
+                        <div class="japanese">箱クラゲの毒は地球上で最も強力な毒の一つです。わずか数分で大型の魚を麻痺させ、人間にとっても非常に危険な存在として知られています。</div>
+                        <div class="english">Box jellyfish venom is one of the most potent toxins on Earth. It can paralyze large fish within minutes and is extremely dangerous to humans.</div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <h3>医学革命</h3>
+                    <div class="subtitle">medical revolution</div>
+                    <div class="content">
+                        <div class="japanese">クラゲの再生能力と透明性は医学研究に革命をもたらしています。GFP（緑色蛍光タンパク質）はクラゲから発見され、ノーベル賞受賞技術となりました。</div>
+                        <div class="english">Jellyfish regenerative abilities and transparency have revolutionized medical research. GFP (Green Fluorescent Protein) was discovered in jellyfish and became Nobel Prize-winning technology.</div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <h3>気候の指標</h3>
+                    <div class="subtitle">climate indicators</div>
+                    <div class="content">
+                        <div class="japanese">クラゲの大量発生は海洋環境の変化を示す重要な指標です。気候変動、海洋酸性化、乱獲の影響で世界各地でクラゲブルームが増加しています。</div>
+                        <div class="english">Jellyfish blooms are important indicators of ocean environmental changes. Climate change, ocean acidification, and overfishing are causing increased jellyfish blooms worldwide.</div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <h3>食文化の伝統</h3>
+                    <div class="subtitle">culinary tradition</div>
+                    <div class="content">
+                        <div class="japanese">アジアの多くの国でクラゲは高級食材として珍重されています。中国では2000年以上前から食用にされ、コラーゲンが豊富で美容効果があるとされています。</div>
+                        <div class="english">Jellyfish is prized as a delicacy in many Asian countries. It has been consumed in China for over 2000 years and is rich in collagen, believed to have beauty benefits.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scroll-hint">scroll to discover more</div>
+    </section>
+
+
+    <!-- カーソルトレイル -->
+    <div class="cursor-trail" id="trail"></div>
+
+    <script>
+        // 状態管理
+        let state = {
+            sound: false,
+            expanded: false,
+            focused: false,
+            volume: 0.25
+        };
+        
+        // DOM要素
+        const elements = {
+            loading: document.getElementById('loading'),
+            video: document.getElementById('video'),
+            audio: document.getElementById('audio'),
+            fallback: document.getElementById('fallback'),
+            soundBtn: document.getElementById('soundBtn'),
+            expandBtn: document.getElementById('expandBtn'),
+            focusBtn: document.getElementById('focusBtn'),
+            volume: document.getElementById('volume'),
+            trail: document.getElementById('trail'),
+            adPlaceholder: document.getElementById('adPlaceholder'),
+            adsenseUnit: document.getElementById('adsenseUnit')
+        };
+        
+        // 初期化
+        function init() {
+            setupAudio();
+            setupVideo();
+            setupControls();
+            setupVoting();
+            setupMouseTrail();
+            hideLoading();
+        }
+        
+        // オーディオ設定
+        function setupAudio() {
+            elements.audio.volume = state.volume;
+            elements.audio.addEventListener('error', () => {
+                console.log('Audio unavailable');
+            });
+        }
+        
+        // ビデオ設定
+        function setupVideo() {
+            elements.video.addEventListener('error', showFallback);
+            elements.video.addEventListener('loadeddata', () => {
+                console.log('Video loaded');
+                elements.fallback.style.display = 'none';
+            });
+        }
+        
+        // フォールバック表示
+        function showFallback() {
+            elements.fallback.style.display = 'flex';
+            console.log('Video fallback active');
+        }
+        
+        // コントロール設定
+        function setupControls() {
+            elements.soundBtn.addEventListener('click', toggleSound);
+            elements.expandBtn.addEventListener('click', toggleExpand);
+            elements.focusBtn.addEventListener('click', toggleFocus);
+            elements.volume.addEventListener('input', setVolume);
+            
+            // キーボード
+            document.addEventListener('keydown', handleKey);
+        }
+        
+        // 音声切り替え
+        function toggleSound() {
+            state.sound = !state.sound;
+            if (state.sound) {
+                elements.audio.play().catch(() => {});
+                elements.soundBtn.classList.add('active');
+            } else {
+                elements.audio.pause();
+                elements.soundBtn.classList.remove('active');
+            }
+        }
+        
+        // 拡大切り替え
+        function toggleExpand() {
+            state.expanded = !state.expanded;
+            document.body.classList.toggle('fullscreen-mode', state.expanded);
+            elements.expandBtn.classList.toggle('active', state.expanded);
+        }
+        
+        // フォーカス切り替え
+        function toggleFocus() {
+            state.focused = !state.focused;
+            elements.focusBtn.classList.toggle('active', state.focused);
+            document.body.style.cursor = state.focused ? 'none' : 'default';
+            
+            if (state.focused && !state.sound) {
+                toggleSound();
+            }
+        }
+        
+        // 音量設定
+        function setVolume() {
+            state.volume = elements.volume.value / 100;
+            elements.audio.volume = state.volume;
+        }
+        
+        // キーボード操作
+        function handleKey(e) {
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    toggleSound();
+                    break;
+                case 'KeyF':
+                    toggleExpand();
+                    break;
+                case 'KeyR':
+                    toggleFocus();
+                    break;
+                case 'Escape':
+                    if (state.expanded) toggleExpand();
+                    if (state.focused) toggleFocus();
+                    break;
+            }
+        }
+        
+        // マウストレイル
+        function setupMouseTrail() {
+            let mouseX = 0, mouseY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            function updateTrail() {
+                elements.trail.style.left = (mouseX - 6) + 'px';
+                elements.trail.style.top = (mouseY - 6) + 'px';
+                requestAnimationFrame(updateTrail);
+            }
+            
+            updateTrail();
+        }
+        
+        
+        // 読み込み画面を隠す
+        function hideLoading() {
+            setTimeout(() => {
+                elements.loading.style.opacity = '0';
+                setTimeout(() => {
+                    elements.loading.style.display = 'none';
+                }, 1000);
+            }, 1500);
+        }
+        
+        // スクロール監視で動画背面化
+        function handleScroll() {
+            const scrollY = window.scrollY;
+            const threshold = window.innerHeight * 0.3; // 30%スクロールで切り替え
+            
+            if (scrollY > threshold) {
+                document.querySelector('.video-container').classList.add('video-behind');
+            } else {
+                document.querySelector('.video-container').classList.remove('video-behind');
+            }
+        }
+        
+        // スクロールイベント追加
+        window.addEventListener('scroll', handleScroll);
+        
+        // スクロール時の動画アニメーション
+        function setupScrollAnimations() {
+            const videoItems = document.querySelectorAll('.video-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '50px'
+            });
+            
+            videoItems.forEach(item => {
+                observer.observe(item);
+            });
+        }
+        
+        // 初期化
+        function init() {
+            setupAudio();
+            setupVideo();
+            setupControls();
+            setupMouseTrail();
+            setupScrollAnimations();
+            hideLoading();
+        }
+
+        // 開始
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // アドセンス広告を有効にする関数（準備完了時に呼び出し）
+        function enableAdsense() {
+            elements.adPlaceholder.style.display = 'none';
+            elements.adsenseUnit.style.display = 'block';
+            console.log('AdSense enabled');
+        }
+        
+        // デバッグ用：プレースホルダークリックで切り替え
+        elements.adPlaceholder.addEventListener('click', () => {
+            elements.adPlaceholder.innerHTML = '<div class="ad-text">ready for adsense</div><div class="ad-dimensions">click to activate</div>';
+        });
+        
+        // クリーンアップ
+        window.addEventListener('beforeunload', () => {
+            elements.audio.pause();
+        });
+    </script>
+</body>
+</html>
