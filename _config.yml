@@ -36,6 +36,7 @@ include:
   - _pages
   - qualification-calendar
   - cat-healing-station
+  - jellyfish
 
 # Exclude from processing
 exclude:
@@ -47,7 +48,6 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
-  - jellyfish/
 
 # Custom URLs for sitemap (external subapps)
 external_urls:
