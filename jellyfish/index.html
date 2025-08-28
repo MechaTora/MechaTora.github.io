@@ -6,8 +6,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>クラゲ瞑想 - Jellyfish Meditation | 深海の癒し空間 v3.0</title>
-    <!-- FORCE UPDATE: Multiple jellyfish videos in vertical layout v3.0 -->
+    <title>クラゲ瞑想 - Jellyfish Meditation | 深海の癒し空間</title>
+    <!-- Optimized: Single video version for better performance -->
     <meta name="description" content="美しいクラゲの映像と深海の環境音で心を癒します。瞑想・リラクゼーションに最適な癒し空間。Beautiful jellyfish videos with deep ocean sounds for meditation and relaxation.">
     <meta name="keywords" content="クラゲ,瞑想,癒し,リラックス,深海,jellyfish,meditation,healing,relaxation,ocean">
     
@@ -528,73 +528,6 @@
             margin: 0 auto;
         }
         
-        .coming-soon-container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .preview-box {
-            background: rgba(0,20,40,0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 1.5rem 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .preview-box:hover {
-            background: rgba(0,30,60,0.8);
-            border-color: rgba(255,255,255,0.2);
-            transform: translateY(-5px);
-        }
-        
-        .preview-icon {
-            font-size: 2rem;
-            margin-bottom: 0.8rem;
-        }
-        
-        .preview-title {
-            color: rgba(255,255,255,0.8);
-            font-size: 0.8rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-        }
-        
-        .coming-soon-message {
-            background: rgba(0,10,20,0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 2rem auto;
-            max-width: 600px;
-        }
-        
-        .japanese-note {
-            color: rgba(255,255,255,0.9);
-            font-size: 0.85rem;
-            font-weight: 300;
-            margin-bottom: 0.8rem;
-            line-height: 1.6;
-        }
-        
-        .english-note {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.75rem;
-            font-weight: 200;
-            font-style: italic;
-            letter-spacing: 0.02em;
-        }
-        
         /* スクロール時の動画制御 */
         .video-item {
             opacity: 0;
@@ -621,35 +554,6 @@
             .video-container.secondary {
                 width: 90vw;
                 height: 50vh;
-            }
-            
-            .preview-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-            
-            .preview-box {
-                padding: 1rem;
-            }
-            
-            .preview-icon {
-                font-size: 1.5rem;
-            }
-            
-            .preview-title {
-                font-size: 0.75rem;
-            }
-            
-            .coming-soon-message {
-                padding: 1rem;
-            }
-            
-            .japanese-note {
-                font-size: 0.8rem;
-            }
-            
-            .english-note {
-                font-size: 0.7rem;
             }
             
             .additional-videos {
@@ -841,39 +745,6 @@
             </div>
         </div>
         
-        <!-- 追加コンテンツ通知セクション -->
-        <section class="additional-videos">
-            <div class="video-item">
-                <div class="video-title">
-                    <h3>More Jellyfish Coming Soon</h3>
-                    <p class="species-name">新しい映像を準備中 | Preparing new videos</p>
-                </div>
-                <div class="coming-soon-container">
-                    <div class="preview-grid">
-                        <div class="preview-box">
-                            <div class="preview-icon">🪼</div>
-                            <div class="preview-title">Crystal Drift</div>
-                        </div>
-                        <div class="preview-box">
-                            <div class="preview-icon">🌊</div>
-                            <div class="preview-title">Ethereal Dance</div>
-                        </div>
-                        <div class="preview-box">
-                            <div class="preview-icon">✨</div>
-                            <div class="preview-title">Luminous Flow</div>
-                        </div>
-                        <div class="preview-box">
-                            <div class="preview-icon">💫</div>
-                            <div class="preview-title">Gentle Pulse</div>
-                        </div>
-                    </div>
-                    <div class="coming-soon-message">
-                        <p class="japanese-note">高解像度のクラゲ映像を最適化中です。まもなく公開予定です。</p>
-                        <p class="english-note">High-resolution jellyfish videos are being optimized. Coming soon.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
         
         <!-- オーディオ -->
         <audio id="audio" loop preload="auto">
