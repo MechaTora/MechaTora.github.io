@@ -65,6 +65,12 @@ defaults:
     values:
       layout: "default"
       sitemap: true
+  - scope:
+      path: "jellyfish"
+      type: "pages"
+    values:
+      layout: null
+      sitemap: true
 
 # Custom site configuration
 timezone: Asia/Tokyo
