@@ -5,6 +5,38 @@
     box-sizing: border-box;
 }
 
+/* A8 Affiliate Ad Styles */
+.promoted-tweet {
+    border: 1px solid rgba(29, 155, 240, 0.2);
+    background: rgba(29, 155, 240, 0.02);
+}
+
+.promoted-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 8px 16px 0;
+    display: flex;
+    align-items: center;
+}
+
+.promoted-ad-container img {
+    transition: transform 0.2s ease;
+}
+
+.promoted-ad-container img:hover {
+    transform: scale(1.02);
+}
+
+.a8-ad-container img {
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.a8-ad-container img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 :root {
     --twitter-blue: #1d9bf0;
     --twitter-blue-hover: #1a8cd8;
