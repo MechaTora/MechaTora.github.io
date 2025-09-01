@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2章: dplyrによるデータ操作 | TIDYVERSE/TIDYMODELS</title>
+    <meta name="description" content="dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔧</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* CYBERPUNK NEON PALETTE */
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-lime: #39ff14;
+            --neon-orange: #ff6600;
+            --electric-blue: #0080ff;
+            --plasma-purple: #8000ff;
+            
+            /* DARK MATRIX BACKGROUNDS */
+            --void-black: #000000;
+            --deep-space: #0a0a0f;
+            --matrix-dark: #0d1117;
+            --carbon-grey: #161b22;
+            --terminal-green: #0dff00;
+            
+            /* HOLOGRAPHIC GRADIENTS */
+            --gradient-cyber: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            --gradient-matrix: linear-gradient(135deg, #0dff00 0%, #00ffff 50%, #8000ff 100%);
+            --gradient-plasma: linear-gradient(135deg, #ff6600 0%, #ff00ff 50%, #8000ff 100%);
+            --gradient-neural: linear-gradient(135deg, #0080ff 0%, #00ffff 25%, #39ff14 50%, #ffff00 75%, #ff6600 100%);
+            
+            /* GLASS MORPHISM */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 255, 255, 0.15);
+            
+            /* TYPOGRAPHY */
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-tech: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+            
+            /* SHADOWS & GLOWS */
+            --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            --text-glow: 0 0 10px currentColor;
+            --box-glow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-ui);
+            background: var(--void-black);
+            color: var(--neon-cyan);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        
+        /* ANIMATED BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2300ffff' fill-opacity='0.02'%3E%3Cpath d='M30 30h30v30H30V30zm15 15v15h15V45H45z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: matrixScroll 20s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        @keyframes matrixScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
+        
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .logo {
+            font-family: var(--font-mono);
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-shadow: var(--text-glow);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-family: var(--font-tech);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-cyber);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: var(--text-glow);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* MAIN CONTENT */
+        main {
+            margin-top: 100px;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* CHAPTER HEADER */
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+        
+        .chapter-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.6));
+            animation: iconFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chapter-number {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            color: rgba(0, 255, 255, 0.7);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+        
+        .chapter-title {
+            font-family: var(--font-tech);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient-neural);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .chapter-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* CONTENT SECTIONS */
+        .content-section {
+            margin-bottom: 4rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .content-section:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: var(--box-glow);
+        }
+        
+        .section-title {
+            font-family: var(--font-tech);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--neon-cyan);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 60%;
+            background: var(--gradient-cyber);
+            border-radius: 3px;
+        }
+        
+        .section-content {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content ul, .section-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content li {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        
+        .section-content ul li::before {
+            content: '▶';
+            color: var(--neon-cyan);
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+        }
+        
+        /* CODE BLOCKS */
+        .code-block {
+            background: var(--matrix-dark);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 15px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .code-header {
+            background: var(--carbon-grey);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #28ca42; }
+        
+        .code-title {
+            font-family: var(--font-mono);
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .code-content {
+            padding: 2rem;
+            font-family: var(--font-mono);
+            color: var(--terminal-green);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .code-comment { color: #6a9955; }
+        .code-function { color: var(--neon-magenta); }
+        .code-string { color: var(--neon-orange); }
+        .code-keyword { color: var(--electric-blue); }
+        .code-variable { color: var(--neon-cyan); }
+        .code-output { color: rgba(255, 255, 255, 0.8); }
+        
+        /* VERB CARDS */
+        .verb-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .verb-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .verb-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--verb-gradient);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .verb-card:hover {
+            border-color: var(--verb-color);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px var(--verb-shadow);
+        }
+        
+        .verb-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .verb-card.filter {
+            --verb-color: var(--neon-cyan);
+            --verb-gradient: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            --verb-shadow: rgba(0, 255, 255, 0.3);
+        }
+        
+        .verb-card.select {
+            --verb-color: var(--neon-lime);
+            --verb-gradient: linear-gradient(135deg, #39ff14 0%, #0dff00 100%);
+            --verb-shadow: rgba(57, 255, 20, 0.3);
+        }
+        
+        .verb-card.mutate {
+            --verb-color: var(--neon-orange);
+            --verb-gradient: linear-gradient(135deg, #ff6600 0%, #ff8c00 100%);
+            --verb-shadow: rgba(255, 102, 0, 0.3);
+        }
+        
+        .verb-card.summarise {
+            --verb-color: var(--neon-magenta);
+            --verb-gradient: linear-gradient(135deg, #ff00ff 0%, #8000ff 100%);
+            --verb-shadow: rgba(255, 0, 255, 0.3);
+        }
+        
+        .verb-title {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--verb-color);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--verb-color);
+        }
+        
+        .verb-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .verb-syntax {
+            font-family: var(--font-mono);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--verb-color);
+            font-size: 0.9rem;
+            color: var(--terminal-green);
+        }
+        
+        /* NAVIGATION BUTTONS */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin: 4rem auto 2rem auto;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            max-width: 700px;
+            width: fit-content;
+            box-sizing: border-box;
+        }
+        
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--gradient-cyber);
+            color: var(--void-black);
+            text-decoration: none;
+            border-radius: 12px;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            min-width: 0;
+            flex: 0 1 auto;
+        }
+        
+        .nav-btn:first-child {
+            margin-right: auto;
+        }
+        
+        .nav-btn:last-child {
+            margin-left: auto;
+        }
+        
+        .chapter-progress {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin: 0 1rem;
+            min-width: 120px;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+        
+        .nav-btn.disabled {
+            background: var(--carbon-grey);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .nav-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                gap: 0.8rem;
+                font-size: 0.85rem;
+                justify-content: center;
+            }
+            
+            main {
+                padding: 1rem;
+                margin-top: 80px;
+            }
+            
+            .content-section {
+                padding: 2rem;
+            }
+            
+            .section-title::before {
+                display: none;
+            }
+            
+            .verb-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                padding: 1rem;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 250px;
+                margin: 0 auto !important;
+            }
+            
+            .nav-btn:first-child,
+            .nav-btn:last-child {
+                margin: 0 auto !important;
+            }
+            
+            .chapter-progress {
+                order: 1;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* SCROLL ANIMATIONS */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="tidyverse-prototype.html" class="logo">TIDYVERSE</a>
+            <ul class="nav-links">
+                <li><a href="tidyverse-prototype.html">HOME</a></li>
+                <li><a href="#data-import">データ読み込み</a></li>
+                <li><a href="#verbs">動詞</a></li>
+                <li><a href="#pipes">パイプ</a></li>
+                <li><a href="#examples">実例</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <!-- Chapter Header -->
+            <header class="chapter-header fade-in-up">
+                <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr" class="chapter-icon">
+                <div class="chapter-number">CHAPTER 02</div>
+                <h1 class="chapter-title">データ操作マスタリー</h1>
+                <p class="chapter-description">
+                    dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装し、データ分析の生産性を劇的に向上させる。
+                </p>
+            </header>
+            
+            <!-- dplyr Overview -->
+            <section class="content-section fade-in-up">
+                <h2 class="section-title">dplyrとは？</h2>
+                <div class="section-content">
+                    <p>
+                        <strong>dplyr</strong>は「データ操作の文法」を提供するパッケージです。データ分析でよく使われる操作を、人間が理解しやすい「動詞」として表現し、複雑なデータ変換を直感的なコードで記述できます。
+                    </p>
+                    
+                    <p>
+                        dplyrの最大の特徴は、<strong>一貫性</strong>と<strong>可読性</strong>です。すべての関数が同じ原則に従って設計されているため、一度覚えれば様々な場面で応用できます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">dplyr_setup.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># dplyrの読み込み（tidyverseに含まれる）</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># サンプルデータの作成</span></span>
+                            <span class="code-line"><span class="code-variable">sales_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  product = <span class="code-function">c</span>(<span class="code-string">"A"</span>, <span class="code-string">"B"</span>, <span class="code-string">"C"</span>, <span class="code-string">"A"</span>, <span class="code-string">"B"</span>),</span>
+                            <span class="code-line">  region = <span class="code-function">c</span>(<span class="code-string">"East"</span>, <span class="code-string">"West"</span>, <span class="code-string">"East"</span>, <span class="code-string">"West"</span>, <span class="code-string">"East"</span>),</span>
+                            <span class="code-line">  sales = <span class="code-function">c</span>(<span class="code-string">100</span>, <span class="code-string">150</span>, <span class="code-string">120</span>, <span class="code-string">80</span>, <span class="code-string">200</span>),</span>
+                            <span class="code-line">  month = <span class="code-function">c</span>(<span class="code-string">1</span>, <span class="code-string">1</span>, <span class="code-string">1</span>, <span class="code-string">2</span>, <span class="code-string">2</span>)</span>
+                            <span class="code-line">)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Data Import & tibble -->
+            <section class="content-section fade-in-up" id="data-import">
+                <h2 class="section-title">データ読み込みの基礎</h2>
+                <div class="section-content">
+                    <p>
+                        データ分析の第一歩は、データを適切に読み込むことです。Tidyverseでは<strong>readr</strong>パッケージと<strong>tibble</strong>データ構造を使って、効率的で安全なデータ読み込みを実現します。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">readrによる高速データ読み込み</h3>
+                    <p>
+                        readrパッケージは、従来のRの読み込み関数よりも高速で、型推論が優秀で、進捗バーも表示される現代的なデータ読み込みツールです。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">data_import_examples.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 様々な形式のデータ読み込み</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># CSV読み込み（高速＆自動型推論）</span></span>
+                            <span class="code-line"><span class="code-variable">sales_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(<span class="code-string">"sales_2023.csv"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># TSV（タブ区切り）ファイル</span></span>
+                            <span class="code-line"><span class="code-variable">survey_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_tsv</span>(<span class="code-string">"survey_results.tsv"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 区切り文字を指定</span></span>
+                            <span class="code-line"><span class="code-variable">custom_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_delim</span>(<span class="code-string">"data.txt"</span>, delim = <span class="code-string">"|"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 固定幅ファイル</span></span>
+                            <span class="code-line"><span class="code-variable">fixed_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_fwf</span>(<span class="code-string">"fixed_width.txt"</span>, </span>
+                            <span class="code-line">  <span class="code-function">fwf_widths</span>(<span class="code-function">c</span>(<span class="code-string">10</span>, <span class="code-string">15</span>, <span class="code-string">8</span>), <span class="code-function">c</span>(<span class="code-string">"name"</span>, <span class="code-string">"address"</span>, <span class="code-string">"score"</span>))</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 日本語エンコーディング対応</span></span>
+                            <span class="code-line"><span class="code-variable">jp_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(<span class="code-string">"japanese_data.csv"</span>, locale = <span class="code-function">locale</span>(encoding = <span class="code-string">"CP932"</span>))</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">tibbleの革新的な特徴</h3>
+                    <p>
+                        tibbleは従来のdata.frameを現代的に再設計したデータ構造です。より安全で、見やすく、扱いやすくなっています。
+                    </p>
+                    
+                    <div class="verb-grid">
+                        <div class="verb-card filter">
+                            <h3 class="verb-title">🔍 賢い表示</h3>
+                            <p class="verb-description">
+                                大きなデータでも最初の10行だけ表示し、列の型情報も自動表示。コンソールが溢れません。
+                            </p>
+                        </div>
+                        
+                        <div class="verb-card select">
+                            <h3 class="verb-title">🛡️ 型安全性</h3>
+                            <p class="verb-description">
+                                部分マッチングや予期しない型変換を防ぎ、より予測可能で安全なコードを書けます。
+                            </p>
+                        </div>
+                        
+                        <div class="verb-card mutate">
+                            <h3 class="verb-title">📝 一貫した動作</h3>
+                            <p class="verb-description">
+                                文字列のファクター自動変換なし、行名なしなど、現代的なデータ分析に適した仕様です。
+                            </p>
+                        </div>
+                        
+                        <div class="verb-card summarise">
+                            <h3 class="verb-title">🚀 高性能</h3>
+                            <p class="verb-description">
+                                メモリ効率が良く、大きなデータセットでも高速に動作します。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">tibble_features.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># tibbleの作成と特徴</span></span>
+                            <span class="code-line"><span class="code-variable">my_tibble</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  id = <span class="code-string">1</span>:<span class="code-string">1000</span>,</span>
+                            <span class="code-line">  name = <span class="code-function">paste0</span>(<span class="code-string">"User_"</span>, id),</span>
+                            <span class="code-line">  score = <span class="code-function">rnorm</span>(<span class="code-string">1000</span>, mean = <span class="code-string">75</span>, sd = <span class="code-string">15</span>),</span>
+                            <span class="code-line">  category = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"A"</span>, <span class="code-string">"B"</span>, <span class="code-string">"C"</span>), <span class="code-string">1000</span>, replace = <span class="code-string">TRUE</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># tibbleの表示（自動で最初の10行のみ）</span></span>
+                            <span class="code-line"><span class="code-variable">my_tibble</span></span>
+                            <span class="code-line"><span class="code-output"># A tibble: 1,000 × 4</span></span>
+                            <span class="code-line"><span class="code-output">#      id name    score category</span></span>
+                            <span class="code-line"><span class="code-output">#   &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;</span></span>
+                            <span class="code-line"><span class="code-output"># 1     1 User_1   78.2 B</span></span>
+                            <span class="code-line"><span class="code-output"># 2     2 User_2   82.1 A</span></span>
+                            <span class="code-line"><span class="code-output"># ... with 990 more rows</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># data.frameからtibbleに変換</span></span>
+                            <span class="code-line"><span class="code-variable">cars_tibble</span> <span class="code-keyword">&lt;-</span> <span class="code-function">as_tibble</span>(mtcars)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">データの基本情報確認</h3>
+                    <p>
+                        読み込んだデータの構造を理解することは、分析の成功の鍵です。Tidyverseでは効率的なデータ探索ツールが豊富に用意されています。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">data_exploration.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 基本的なデータ確認</span></span>
+                            <span class="code-line"><span class="code-function">glimpse</span>(my_tibble)  <span class="code-comment"># データ構造の簡潔な表示</span></span>
+                            <span class="code-line"><span class="code-output">Rows: 1,000</span></span>
+                            <span class="code-line"><span class="code-output">Columns: 4</span></span>
+                            <span class="code-line"><span class="code-output">$ id       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...</span></span>
+                            <span class="code-line"><span class="code-output">$ name     &lt;chr&gt; "User_1", "User_2", "User_3", ...</span></span>
+                            <span class="code-line"><span class="code-output">$ score    &lt;dbl&gt; 78.2, 82.1, 71.5, 79.8, ...</span></span>
+                            <span class="code-line"><span class="code-output">$ category &lt;chr&gt; "B", "A", "C", "A", ...</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># より詳細な統計サマリー（skimrパッケージ）</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">skimr</span>)</span>
+                            <span class="code-line"><span class="code-function">skim</span>(my_tibble)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 基本統計</span></span>
+                            <span class="code-line"><span class="code-function">summary</span>(my_tibble)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># データの次元</span></span>
+                            <span class="code-line"><span class="code-function">dim</span>(my_tibble)     <span class="code-comment"># 行数と列数</span></span>
+                            <span class="code-line"><span class="code-function">nrow</span>(my_tibble)    <span class="code-comment"># 行数</span></span>
+                            <span class="code-line"><span class="code-function">ncol</span>(my_tibble)    <span class="code-comment"># 列数</span></span>
+                            <span class="code-line"><span class="code-function">names</span>(my_tibble)   <span class="code-comment"># 列名</span></span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">日本語データとエンコーディング</h3>
+                    <p>
+                        日本語データを扱う際は、文字エンコーディングの設定が重要です。readrパッケージは様々なエンコーディングに対応し、日本語データを安全に読み込めます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">japanese_encoding.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 日本語エンコーディング対応</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># Shift_JIS（Windows標準）</span></span>
+                            <span class="code-line"><span class="code-variable">sjis_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(</span>
+                            <span class="code-line">  <span class="code-string">"japanese_data.csv"</span>,</span>
+                            <span class="code-line">  locale = <span class="code-function">locale</span>(encoding = <span class="code-string">"CP932"</span>)  <span class="code-comment"># Windows Shift_JIS</span></span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># UTF-8（現代標準）</span></span>
+                            <span class="code-line"><span class="code-variable">utf8_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(</span>
+                            <span class="code-line">  <span class="code-string">"modern_data.csv"</span>,</span>
+                            <span class="code-line">  locale = <span class="code-function">locale</span>(encoding = <span class="code-string">"UTF-8"</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># エンコーディング自動検出</span></span>
+                            <span class="code-line"><span class="code-function">guess_encoding</span>(<span class="code-string">"mystery_data.csv"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 日本語ロケール設定</span></span>
+                            <span class="code-line"><span class="code-variable">jp_locale</span> <span class="code-keyword">&lt;-</span> <span class="code-function">locale</span>(</span>
+                            <span class="code-line">  encoding = <span class="code-string">"CP932"</span>,</span>
+                            <span class="code-line">  decimal_mark = <span class="code-string">"."</span>,      <span class="code-comment"># 小数点</span></span>
+                            <span class="code-line">  grouping_mark = <span class="code-string">","</span>,     <span class="code-comment"># 桁区切り</span></span>
+                            <span class="code-line">  date_format = <span class="code-string">"%Y/%m/%d"</span>  <span class="code-comment"># 日付形式</span></span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-variable">jp_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(<span class="code-string">"sales_japan.csv"</span>, locale = jp_locale)</span>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        適切なデータ読み込みは、信頼性の高い分析の基盤です。readrとtibbleを活用することで、効率的で安全なデータ処理ワークフローを構築できます。
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Core Verbs -->
+            <section class="content-section fade-in-up" id="verbs">
+                <h2 class="section-title">5つのコア動詞</h2>
+                <div class="section-content">
+                    <p>
+                        dplyrは5つの主要な動詞でデータ操作の大部分をカバーします。各動詞は特定の操作に特化し、組み合わせることで複雑な処理を表現できます。
+                    </p>
+                    
+                    <div class="verb-grid">
+                        <div class="verb-card filter">
+                            <h3 class="verb-title">filter()</h3>
+                            <p class="verb-description">
+                                条件に合致する行だけを抽出します。WHERE句のようなデータの絞り込みを行います。
+                            </p>
+                            <div class="verb-syntax">
+                                filter(data, condition)
+                            </div>
+                        </div>
+                        
+                        <div class="verb-card select">
+                            <h3 class="verb-title">select()</h3>
+                            <p class="verb-description">
+                                必要な列だけを選択します。データセットから特定の変数を取り出したり、列の順序を変更できます。
+                            </p>
+                            <div class="verb-syntax">
+                                select(data, columns)
+                            </div>
+                        </div>
+                        
+                        <div class="verb-card mutate">
+                            <h3 class="verb-title">mutate()</h3>
+                            <p class="verb-description">
+                                新しい列を作成したり、既存の列を変更します。計算フィールドの追加に使用します。
+                            </p>
+                            <div class="verb-syntax">
+                                mutate(data, new_col = expression)
+                            </div>
+                        </div>
+                        
+                        <div class="verb-card summarise">
+                            <h3 class="verb-title">summarise()</h3>
+                            <p class="verb-description">
+                                データを集約して要約統計を計算します。平均、合計、最大値などを求められます。
+                            </p>
+                            <div class="verb-syntax">
+                                summarise(data, stat = function(column))
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">dplyr_verbs_examples.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 1. filter() - 東部地域のデータのみ抽出</span></span>
+                            <span class="code-line"><span class="code-variable">east_sales</span> <span class="code-keyword">&lt;-</span> <span class="code-function">filter</span>(sales_data, region == <span class="code-string">"East"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 2. select() - 商品と売上のみ選択</span></span>
+                            <span class="code-line"><span class="code-variable">product_sales</span> <span class="code-keyword">&lt;-</span> <span class="code-function">select</span>(sales_data, product, sales)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 3. mutate() - 売上カテゴリを追加</span></span>
+                            <span class="code-line"><span class="code-variable">categorized</span> <span class="code-keyword">&lt;-</span> <span class="code-function">mutate</span>(sales_data, </span>
+                            <span class="code-line">  category = <span class="code-function">ifelse</span>(sales >= <span class="code-string">150</span>, <span class="code-string">"High"</span>, <span class="code-string">"Low"</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 4. summarise() - 地域別の平均売上</span></span>
+                            <span class="code-line"><span class="code-variable">region_summary</span> <span class="code-keyword">&lt;-</span> sales_data <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(region) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">summarise</span>(avg_sales = <span class="code-function">mean</span>(sales))</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Pipe Operator -->
+            <section class="content-section fade-in-up" id="pipes">
+                <h2 class="section-title">パイプ演算子の魔法</h2>
+                <div class="section-content">
+                    <p>
+                        パイプ演算子 <code>%>%</code> は、dplyrの真価を発揮させる重要な要素です。複数の操作を左から右へ、上から下へと自然な流れで記述できます。
+                    </p>
+                    
+                    <p>
+                        パイプを使うことで、<strong>「データに何をするか」</strong>を順序立てて表現でき、コードが読みやすく、理解しやすくなります。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pipe_comparison.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># パイプを使わない場合（読みにくい）</span></span>
+                            <span class="code-line"><span class="code-variable">result1</span> <span class="code-keyword">&lt;-</span> <span class="code-function">summarise</span>(</span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(</span>
+                            <span class="code-line">    <span class="code-function">filter</span>(sales_data, sales > <span class="code-string">100</span>),</span>
+                            <span class="code-line">    region</span>
+                            <span class="code-line">  ),</span>
+                            <span class="code-line">  avg_sales = <span class="code-function">mean</span>(sales)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># パイプを使う場合（読みやすい）</span></span>
+                            <span class="code-line"><span class="code-variable">result2</span> <span class="code-keyword">&lt;-</span> sales_data <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(sales > <span class="code-string">100</span>) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(region) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">summarise</span>(avg_sales = <span class="code-function">mean</span>(sales))</span>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        パイプを使ったコードは、まるで<strong>「レシピ」</strong>のように読むことができます：
+                    </p>
+                    <ol>
+                        <li>sales_dataを取って</li>
+                        <li>売上が100を超えるものだけフィルターして</li>
+                        <li>地域でグループ化して</li>
+                        <li>平均売上を計算する</li>
+                    </ol>
+                </div>
+            </section>
+            
+            <!-- Advanced Examples -->
+            <section class="content-section fade-in-up" id="examples">
+                <h2 class="section-title">実践的な応用例</h2>
+                <div class="section-content">
+                    <p>
+                        実際のデータ分析では、複数の動詞を組み合わせて複雑な処理を行います。以下に典型的なパターンを示します。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">advanced_dplyr.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># より複雑なサンプルデータ</span></span>
+                            <span class="code-line"><span class="code-variable">employee_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  name = <span class="code-function">c</span>(<span class="code-string">"Alice"</span>, <span class="code-string">"Bob"</span>, <span class="code-string">"Charlie"</span>, <span class="code-string">"Diana"</span>, <span class="code-string">"Eva"</span>),</span>
+                            <span class="code-line">  department = <span class="code-function">c</span>(<span class="code-string">"Sales"</span>, <span class="code-string">"IT"</span>, <span class="code-string">"Sales"</span>, <span class="code-string">"IT"</span>, <span class="code-string">"HR"</span>),</span>
+                            <span class="code-line">  salary = <span class="code-function">c</span>(<span class="code-string">50000</span>, <span class="code-string">70000</span>, <span class="code-string">55000</span>, <span class="code-string">75000</span>, <span class="code-string">60000</span>),</span>
+                            <span class="code-line">  experience = <span class="code-function">c</span>(<span class="code-string">3</span>, <span class="code-string">5</span>, <span class="code-string">2</span>, <span class="code-string">7</span>, <span class="code-string">4</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 複合的な分析例</span></span>
+                            <span class="code-line"><span class="code-variable">analysis_result</span> <span class="code-keyword">&lt;-</span> employee_data <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 経験年数3年以上の従業員のみ</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(experience >= <span class="code-string">3</span>) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 時給を計算（年間2000時間勤務と仮定）</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    hourly_rate = salary / <span class="code-string">2000</span>,</span>
+                            <span class="code-line">    seniority = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      experience >= <span class="code-string">7</span> ~ <span class="code-string">"Senior"</span>,</span>
+                            <span class="code-line">      experience >= <span class="code-string">3</span> ~ <span class="code-string">"Mid-level"</span>,</span>
+                            <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"Junior"</span></span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 部署ごとにグループ化</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(department, seniority) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 統計サマリーを計算</span></span>
+                            <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                            <span class="code-line">    count = <span class="code-function">n</span>(),</span>
+                            <span class="code-line">    avg_salary = <span class="code-function">mean</span>(salary),</span>
+                            <span class="code-line">    max_salary = <span class="code-function">max</span>(salary),</span>
+                            <span class="code-line">    avg_experience = <span class="code-function">mean</span>(experience),</span>
+                            <span class="code-line">    .groups = <span class="code-string">"drop"</span></span>
+                            <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 平均給与の降順でソート</span></span>
+                            <span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(avg_salary))</span>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        このようにdplyrを使うことで、複雑なデータ変換も段階的に、理解しやすい形で記述できます。各ステップが明確で、後から読み返したときも処理の流れが分かりやすくなります。
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Chapter Navigation -->
+            <nav class="chapter-nav fade-in-up">
+                <a href="chapter1-tidyverse-overview.html" class="nav-btn prev">
+                    ← 前の章
+                </a>
+                <div class="chapter-progress">
+                    第2章 / 全6章
+                </div>
+                <a href="chapter3-ggplot2-visualization.html" class="nav-btn next">
+                    次の章 →
+                </a>
+            </nav>
+        </div>
+    </main>
+    
+    <script>
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

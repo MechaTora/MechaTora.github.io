@@ -1,0 +1,2283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3章: ggplot2による美しい可視化 | TIDYVERSE/TIDYMODELS</title>
+    <meta name="description" content="ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsを理解し、エレガントなグラフを作成する技術をマスター。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* CYBERPUNK NEON PALETTE */
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-lime: #39ff14;
+            --neon-orange: #ff6600;
+            --electric-blue: #0080ff;
+            --plasma-purple: #8000ff;
+            --neon-yellow: #ffff00;
+            --neon-pink: #ff1493;
+            
+            /* DARK MATRIX BACKGROUNDS */
+            --void-black: #000000;
+            --deep-space: #0a0a0f;
+            --matrix-dark: #0d1117;
+            --carbon-grey: #161b22;
+            --terminal-green: #0dff00;
+            
+            /* VISUALIZATION GRADIENTS */
+            --gradient-cyber: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            --gradient-matrix: linear-gradient(135deg, #0dff00 0%, #00ffff 50%, #8000ff 100%);
+            --gradient-plasma: linear-gradient(135deg, #ff6600 0%, #ff00ff 50%, #8000ff 100%);
+            --gradient-neural: linear-gradient(135deg, #0080ff 0%, #00ffff 25%, #39ff14 50%, #ffff00 75%, #ff6600 100%);
+            --gradient-viz: linear-gradient(135deg, #ff1493 0%, #00ffff 25%, #39ff14 50%, #ffff00 75%, #ff6600 100%);
+            
+            /* GLASS MORPHISM */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 255, 255, 0.15);
+            
+            /* TYPOGRAPHY */
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-tech: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+            
+            /* SHADOWS & GLOWS */
+            --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            --text-glow: 0 0 10px currentColor;
+            --box-glow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-ui);
+            background: var(--void-black);
+            color: var(--neon-cyan);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        
+        /* ANIMATED BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 20, 147, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ff1493' fill-opacity='0.02'%3E%3Cpath d='M30 30h30v30H30V30zm15 15v15h15V45H45z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: matrixScroll 20s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        @keyframes matrixScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
+        
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 0.8rem 0;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 2rem;
+        }
+        
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-shadow: var(--text-glow);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            font-size: 1rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-family: var(--font-tech);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-viz);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--neon-pink);
+            text-shadow: var(--text-glow);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* MAIN CONTENT */
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* CHAPTER HEADER */
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+        
+        .chapter-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.6));
+            animation: iconFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        
+        .chapter-number {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            color: rgba(255, 20, 147, 0.7);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+        
+        .chapter-title {
+            font-family: var(--font-tech);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient-viz);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .chapter-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* CONTENT SECTIONS */
+        .content-section {
+            margin-bottom: 4rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .content-section:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.3);
+        }
+        
+        .section-title {
+            font-family: var(--font-tech);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--neon-pink);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 60%;
+            background: var(--gradient-viz);
+            border-radius: 3px;
+        }
+        
+        .section-content {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content ul, .section-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content li {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        
+        .section-content ul li::before {
+            content: '📊';
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+        }
+        
+        /* CODE BLOCKS */
+        .code-block {
+            background: var(--matrix-dark);
+            border: 1px solid var(--neon-pink);
+            border-radius: 15px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.2);
+        }
+        
+        .code-header {
+            background: var(--carbon-grey);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #28ca42; }
+        
+        .code-title {
+            font-family: var(--font-mono);
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .code-content {
+            padding: 2rem;
+            font-family: var(--font-mono);
+            color: var(--terminal-green);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .code-comment { color: #6a9955; }
+        .code-function { color: var(--neon-magenta); }
+        .code-string { color: var(--neon-orange); }
+        .code-keyword { color: var(--electric-blue); }
+        .code-variable { color: var(--neon-cyan); }
+        .code-output { color: rgba(255, 255, 255, 0.8); }
+        
+        /* GEOM CARDS */
+        .geom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .geom-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .geom-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--geom-gradient);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .geom-card:hover {
+            border-color: var(--geom-color);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px var(--geom-shadow);
+        }
+        
+        .geom-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .geom-card.point {
+            --geom-color: var(--neon-cyan);
+            --geom-gradient: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            --geom-shadow: rgba(0, 255, 255, 0.3);
+        }
+        
+        .geom-card.line {
+            --geom-color: var(--neon-lime);
+            --geom-gradient: linear-gradient(135deg, #39ff14 0%, #0dff00 100%);
+            --geom-shadow: rgba(57, 255, 20, 0.3);
+        }
+        
+        .geom-card.bar {
+            --geom-color: var(--neon-orange);
+            --geom-gradient: linear-gradient(135deg, #ff6600 0%, #ff8c00 100%);
+            --geom-shadow: rgba(255, 102, 0, 0.3);
+        }
+        
+        .geom-card.histogram {
+            --geom-color: var(--neon-magenta);
+            --geom-gradient: linear-gradient(135deg, #ff00ff 0%, #8000ff 100%);
+            --geom-shadow: rgba(255, 0, 255, 0.3);
+        }
+        
+        .geom-card.boxplot {
+            --geom-color: var(--neon-yellow);
+            --geom-gradient: linear-gradient(135deg, #ffff00 0%, #ffd700 100%);
+            --geom-shadow: rgba(255, 255, 0, 0.3);
+        }
+        
+        .geom-card.density {
+            --geom-color: var(--neon-pink);
+            --geom-gradient: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            --geom-shadow: rgba(255, 20, 147, 0.3);
+        }
+        
+        .geom-title {
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--geom-color);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--geom-color);
+        }
+        
+        .geom-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .geom-syntax {
+            font-family: var(--font-mono);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--geom-color);
+            font-size: 0.9rem;
+            color: var(--terminal-green);
+        }
+        
+        /* NAVIGATION BUTTONS */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin: 4rem auto 2rem auto;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            max-width: 700px;
+            width: fit-content;
+            box-sizing: border-box;
+        }
+        
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1rem;
+            background: var(--gradient-viz);
+            color: var(--void-black);
+            text-decoration: none;
+            border-radius: 10px;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            flex-shrink: 0;
+            flex-basis: auto;
+        }
+        
+        .chapter-progress {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin: 0 1rem;
+            min-width: 120px;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.5);
+        }
+        
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+        
+        .nav-btn.disabled {
+            background: var(--carbon-grey);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .nav-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+            
+            .nav-links {
+                gap: 1.5rem;
+                justify-content: flex-start;
+            }
+            
+            main {
+                margin-top: 120px;
+            }
+            }
+            
+            .section-title::before {
+                display: none;
+            }
+            
+            .geom-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                padding: 1rem;
+                max-width: 400px;
+                width: 90%;
+            }
+            
+            .nav-btn {
+                width: auto;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .chapter-progress {
+                order: 1;
+                margin: 0;
+                min-width: auto;
+            }
+        }
+        
+        /* SCROLL ANIMATIONS */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Visualization Output Styles */
+        .visualization-output {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .plot-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .plot-container svg {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0, 255, 255, 0.1));
+        }
+        
+        .visualization-output h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            text-shadow: var(--text-glow);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="tidyverse-prototype.html" class="logo">TIDYVERSE</a>
+            <ul class="nav-links">
+                <li><a href="tidyverse-prototype.html">HOME</a></li>
+                <li><a href="#geoms">グラフ</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <!-- Chapter Header -->
+            <header class="chapter-header fade-in-up">
+                <div class="chapter-icon">📊</div>
+                <div class="chapter-number">CHAPTER 03</div>
+                <h1 class="chapter-title">美しい可視化アート</h1>
+                <p class="chapter-description">
+                    ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsの理念を理解し、データの物語を美しく、効果的に伝えるグラフィックを作成する技術をマスターしよう。
+                </p>
+            </header>
+            
+            <!-- ggplot2 Overview -->
+            <section class="content-section fade-in-up">
+                <h2 class="section-title">ggplot2とは？</h2>
+                <div class="section-content">
+                    <p>
+                        <strong>ggplot2</strong>は「Grammar of Graphics」の理念に基づいて設計された、革新的なデータ可視化パッケージです。グラフを構成要素に分解し、それらを組み合わせることで、無限の表現力を実現します。
+                    </p>
+                    
+                    <p>
+                        従来のグラフ作成ツールとは異なり、ggplot2では<strong>「何を見せるか」</strong>と<strong>「どう見せるか」</strong>を明確に分離し、論理的で美しいビジュアライゼーションを作成できます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">ggplot2_setup.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># ggplot2の読み込み（tidyverseに含まれる）</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># サンプルデータの作成</span></span>
+                            <span class="code-line"><span class="code-variable">sample_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  x = <span class="code-function">c</span>(<span class="code-string">1</span>, <span class="code-string">2</span>, <span class="code-string">3</span>, <span class="code-string">4</span>, <span class="code-string">5</span>),</span>
+                            <span class="code-line">  y = <span class="code-function">c</span>(<span class="code-string">2</span>, <span class="code-string">5</span>, <span class="code-string">3</span>, <span class="code-string">8</span>, <span class="code-string">7</span>),</span>
+                            <span class="code-line">  category = <span class="code-function">c</span>(<span class="code-string">"A"</span>, <span class="code-string">"B"</span>, <span class="code-string">"A"</span>, <span class="code-string">"B"</span>, <span class="code-string">"A"</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 最初のggplotグラフ</span></span>
+                            <span class="code-line"><span class="code-function">ggplot</span>(sample_data, <span class="code-function">aes</span>(x = x, y = y)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, color = <span class="code-string">"#00ffff"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4 style="color: var(--neon-lime); margin: 1rem 0;">🎨 出力結果</h4>
+                        <div class="plot-container">
+                            <svg width="500" height="350" viewBox="0 0 500 350" style="background: #1a1a1a; border-radius: 8px; border: 1px solid var(--glass-border);">
+                                <!-- Grid lines -->
+                                <g stroke="#444" stroke-width="0.5">
+                                    <line x1="80" y1="50" x2="450" y2="50"/>
+                                    <line x1="80" y1="100" x2="450" y2="100"/>
+                                    <line x1="80" y1="150" x2="450" y2="150"/>
+                                    <line x1="80" y1="200" x2="450" y2="200"/>
+                                    <line x1="80" y1="250" x2="450" y2="250"/>
+                                    <line x1="80" y1="300" x2="450" y2="300"/>
+                                </g>
+                                <g stroke="#444" stroke-width="0.5">
+                                    <line x1="80" y1="50" x2="80" y2="300"/>
+                                    <line x1="172" y1="50" x2="172" y2="300"/>
+                                    <line x1="264" y1="50" x2="264" y2="300"/>
+                                    <line x1="356" y1="50" x2="356" y2="300"/>
+                                    <line x1="448" y1="50" x2="448" y2="300"/>
+                                </g>
+                                <!-- Axes -->
+                                <g stroke="#ccc" stroke-width="1">
+                                    <line x1="80" y1="300" x2="450" y2="300"/>
+                                    <line x1="80" y1="50" x2="80" y2="300"/>
+                                </g>
+                                <!-- Data points -->
+                                <circle cx="172" cy="262" r="6" fill="#00ffff" stroke="#00ffff" stroke-width="2"/>
+                                <circle cx="264" cy="175" r="6" fill="#00ffff" stroke="#00ffff" stroke-width="2"/>
+                                <circle cx="356" cy="225" r="6" fill="#00ffff" stroke="#00ffff" stroke-width="2"/>
+                                <circle cx="448" cy="100" r="6" fill="#00ffff" stroke="#00ffff" stroke-width="2"/>
+                                <circle cx="540" cy="137" r="6" fill="#00ffff" stroke="#00ffff" stroke-width="2"/>
+                                <!-- Axis labels -->
+                                <text x="265" y="330" text-anchor="middle" fill="#ccc" font-size="12">x</text>
+                                <text x="40" y="180" text-anchor="middle" fill="#ccc" font-size="12" transform="rotate(-90 40 180)">y</text>
+                                <!-- Tick labels -->
+                                <text x="172" y="315" text-anchor="middle" fill="#aaa" font-size="10">2</text>
+                                <text x="264" y="315" text-anchor="middle" fill="#aaa" font-size="10">3</text>
+                                <text x="356" y="315" text-anchor="middle" fill="#aaa" font-size="10">4</text>
+                                <text x="448" y="315" text-anchor="middle" fill="#aaa" font-size="10">5</text>
+                                <text x="70" y="305" text-anchor="end" fill="#aaa" font-size="10">2</text>
+                                <text x="70" y="255" text-anchor="end" fill="#aaa" font-size="10">4</text>
+                                <text x="70" y="205" text-anchor="end" fill="#aaa" font-size="10">6</text>
+                                <text x="70" y="155" text-anchor="end" fill="#aaa" font-size="10">8</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Grammar of Graphics -->
+            <section class="content-section fade-in-up" id="grammar">
+                <h2 class="section-title">Grammar of Graphics</h2>
+                <div class="section-content">
+                    <p>
+                        ggplot2の核心は「Grammar of Graphics」です。これは、グラフを以下の7つの要素に分解して考える理論的フレームワークです：
+                    </p>
+                    
+                    <ol>
+                        <li><strong>Data</strong> - 可視化するデータセット</li>
+                        <li><strong>Aesthetics</strong> - データを視覚的属性（x, y, color, size等）にマッピング</li>
+                        <li><strong>Geometries</strong> - データの幾何学的表現（点、線、棒等）</li>
+                        <li><strong>Facets</strong> - サブプロット作成</li>
+                        <li><strong>Statistics</strong> - データの統計的変換</li>
+                        <li><strong>Coordinates</strong> - 座標系の定義</li>
+                        <li><strong>Themes</strong> - グラフの外観</li>
+                    </ol>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">grammar_structure.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># Grammar of Graphicsの基本構造</span></span>
+                            <span class="code-line"><span class="code-function">ggplot</span>(</span>
+                            <span class="code-line">  data = <span class="code-variable">your_data</span>,                    <span class="code-comment"># 1. Data</span></span>
+                            <span class="code-line">  mapping = <span class="code-function">aes</span>(x = var1, y = var2)   <span class="code-comment"># 2. Aesthetics</span></span>
+                            <span class="code-line">) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>() +                      <span class="code-comment"># 3. Geometries</span></span>
+                            <span class="code-line">  <span class="code-function">facet_wrap</span>(~category) +            <span class="code-comment"># 4. Facets</span></span>
+                            <span class="code-line">  <span class="code-function">stat_smooth</span>() +                    <span class="code-comment"># 5. Statistics</span></span>
+                            <span class="code-line">  <span class="code-function">coord_cartesian</span>() +                <span class="code-comment"># 6. Coordinates</span></span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>()                    <span class="code-comment"># 7. Themes</span></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Geometries -->
+            <section class="content-section fade-in-up" id="geoms">
+                <h2 class="section-title">ジオメトリ：データの形</h2>
+                <div class="section-content">
+                    <p>
+                        ジオメトリ（geom）は、データを視覚的に表現する方法を決定します。ggplot2には30以上のgeomが用意されており、用途に応じて適切なものを選択できます。
+                    </p>
+                    
+                    <div class="geom-grid">
+                        <div class="geom-card point">
+                            <h3 class="geom-title">geom_point()</h3>
+                            <p class="geom-description">
+                                散布図を作成します。2つの連続変数の関係を調べるのに最適です。
+                            </p>
+                            <div class="geom-syntax">
+                                geom_point(aes(x, y, color, size))
+                            </div>
+                        </div>
+                        
+                        <div class="geom-card line">
+                            <h3 class="geom-title">geom_line()</h3>
+                            <p class="geom-description">
+                                線グラフを作成します。時系列データや連続性のあるデータの変化を表現します。
+                            </p>
+                            <div class="geom-syntax">
+                                geom_line(aes(x, y, color, linetype))
+                            </div>
+                        </div>
+                        
+                        <div class="geom-card bar">
+                            <h3 class="geom-title">geom_bar()</h3>
+                            <p class="geom-description">
+                                棒グラフを作成します。カテゴリカルデータの頻度や量を比較するのに使用します。
+                            </p>
+                            <div class="geom-syntax">
+                                geom_bar(aes(x, fill), stat = "count")
+                            </div>
+                        </div>
+                        
+                        <div class="geom-card histogram">
+                            <h3 class="geom-title">geom_histogram()</h3>
+                            <p class="geom-description">
+                                ヒストグラムを作成します。連続変数の分布を視覚化するのに最適です。
+                            </p>
+                            <div class="geom-syntax">
+                                geom_histogram(aes(x, fill), bins = 30)
+                            </div>
+                        </div>
+                        
+                        <div class="geom-card boxplot">
+                            <h3 class="geom-title">geom_boxplot()</h3>
+                            <p class="geom-description">
+                                箱ひげ図を作成します。データの分布、外れ値、四分位数を一目で把握できます。
+                            </p>
+                            <div class="geom-syntax">
+                                geom_boxplot(aes(x, y, fill))
+                            </div>
+                        </div>
+                        
+                        <div class="geom-card density">
+                            <h3 class="geom-title">geom_density()</h3>
+                            <p class="geom-description">
+                                密度プロットを作成します。データの分布を滑らかな曲線で表現します。
+                            </p>
+                            <div class="geom-syntax">
+                                geom_density(aes(x, fill), alpha = 0.7)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- geom_point detailed example -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🔶 geom_point(): 散布図の作成</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">scatter_plot_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># mtcarsデータで馬力と燃費の関係を調べる</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 基本的な散布図</span></span>
+                            <span class="code-line"><span class="code-variable">p1</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, color = <span class="code-string">"#00ffff"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"馬力と燃費の関係"</span>, </span>
+                            <span class="code-line">       x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 気筒数で色分けした散布図</span></span>
+                            <span class="code-line"><span class="code-variable">p2</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg, color = factor(cyl))) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">4</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"#ff1493"</span>, <span class="code-string">"#00ffff"</span>, <span class="code-string">"#39ff14"</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"気筒数別馬力と燃費"</span>,</span>
+                            <span class="code-line">       x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span>, color = <span class="code-string">"気筒数"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(p2)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4 style="color: var(--neon-lime); margin: 1rem 0;">🎨 出力結果</h4>
+                        <div class="plot-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400" style="background: #1a1a1a; border-radius: 8px; border: 1px solid var(--glass-border);">
+                                <!-- Grid -->
+                                <g stroke="#333" stroke-width="0.5">
+                                    <line x1="80" y1="50" x2="550" y2="50"/>
+                                    <line x1="80" y1="100" x2="550" y2="100"/>
+                                    <line x1="80" y1="150" x2="550" y2="150"/>
+                                    <line x1="80" y1="200" x2="550" y2="200"/>
+                                    <line x1="80" y1="250" x2="550" y2="250"/>
+                                    <line x1="80" y1="300" x2="550" y2="300"/>
+                                    <line x1="80" y1="350" x2="550" y2="350"/>
+                                </g>
+                                <!-- Axes -->
+                                <g stroke="#ccc" stroke-width="1.5">
+                                    <line x1="80" y1="350" x2="550" y2="350"/>
+                                    <line x1="80" y1="50" x2="80" y2="350"/>
+                                </g>
+                                <!-- Title -->
+                                <text x="315" y="30" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">気筒数別馬力と燃費</text>
+                                <!-- Data points (4-cylinder cars) -->
+                                <circle cx="150" cy="120" r="6" fill="#ff1493" opacity="0.8"/>
+                                <circle cx="180" cy="100" r="6" fill="#ff1493" opacity="0.8"/>
+                                <circle cx="200" cy="90" r="6" fill="#ff1493" opacity="0.8"/>
+                                <circle cx="220" cy="110" r="6" fill="#ff1493" opacity="0.8"/>
+                                <!-- Data points (6-cylinder cars) -->
+                                <circle cx="280" cy="180" r="6" fill="#00ffff" opacity="0.8"/>
+                                <circle cx="320" cy="200" r="6" fill="#00ffff" opacity="0.8"/>
+                                <circle cx="340" cy="190" r="6" fill="#00ffff" opacity="0.8"/>
+                                <circle cx="360" cy="210" r="6" fill="#00ffff" opacity="0.8"/>
+                                <!-- Data points (8-cylinder cars) -->
+                                <circle cx="420" cy="270" r="6" fill="#39ff14" opacity="0.8"/>
+                                <circle cx="450" cy="290" r="6" fill="#39ff14" opacity="0.8"/>
+                                <circle cx="480" cy="280" r="6" fill="#39ff14" opacity="0.8"/>
+                                <circle cx="510" cy="310" r="6" fill="#39ff14" opacity="0.8"/>
+                                <!-- Axis labels -->
+                                <text x="315" y="385" text-anchor="middle" fill="#ccc" font-size="14">馬力 (hp)</text>
+                                <text x="25" y="200" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 25 200)">燃費 (mpg)</text>
+                                <!-- Legend -->
+                                <g>
+                                    <circle cx="450" cy="80" r="4" fill="#ff1493"/>
+                                    <text x="460" y="85" fill="#ccc" font-size="12">4気筒</text>
+                                    <circle cx="450" cy="100" r="4" fill="#00ffff"/>
+                                    <text x="460" y="105" fill="#ccc" font-size="12">6気筒</text>
+                                    <circle cx="450" cy="120" r="4" fill="#39ff14"/>
+                                    <text x="460" y="125" fill="#ccc" font-size="12">8気筒</text>
+                                </g>
+                                <!-- Tick labels -->
+                                <text x="150" y="365" text-anchor="middle" fill="#aaa" font-size="10">100</text>
+                                <text x="300" y="365" text-anchor="middle" fill="#aaa" font-size="10">200</text>
+                                <text x="450" y="365" text-anchor="middle" fill="#aaa" font-size="10">300</text>
+                                <text x="70" y="320" text-anchor="end" fill="#aaa" font-size="10">10</text>
+                                <text x="70" y="250" text-anchor="end" fill="#aaa" font-size="10">20</text>
+                                <text x="70" y="180" text-anchor="end" fill="#aaa" font-size="10">30</text>
+                                <text x="70" y="110" text-anchor="end" fill="#aaa" font-size="10">35</text>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- geom_line example -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📈 geom_line(): 時系列データの可視化</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">line_plot_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 時系列データの作成と可視化</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># サンプルの売上データ</span></span>
+                            <span class="code-line"><span class="code-variable">sales_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  month = <span class="code-function">1</span>:<span class="code-string">12</span>,</span>
+                            <span class="code-line">  product_A = <span class="code-function">c</span>(<span class="code-string">120</span>, <span class="code-string">135</span>, <span class="code-string">158</span>, <span class="code-string">142</span>, <span class="code-string">168</span>, <span class="code-string">195</span>, <span class="code-string">210</span>, <span class="code-string">198</span>, <span class="code-string">185</span>, <span class="code-string">172</span>, <span class="code-string">165</span>, <span class="code-string">148</span>),</span>
+                            <span class="code-line">  product_B = <span class="code-function">c</span>(<span class="code-string">95</span>, <span class="code-string">108</span>, <span class="code-string">125</span>, <span class="code-string">140</span>, <span class="code-string">155</span>, <span class="code-string">178</span>, <span class="code-string">192</span>, <span class="code-string">205</span>, <span class="code-string">220</span>, <span class="code-string">235</span>, <span class="code-string">248</span>, <span class="code-string">260</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># データをlong形式に変換</span></span>
+                            <span class="code-line"><span class="code-variable">sales_long</span> <span class="code-keyword">&lt;-</span> sales_data <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">tidyr</span>::<span class="code-function">pivot_longer</span>(cols = <span class="code-function">starts_with</span>(<span class="code-string">"product"</span>), </span>
+                            <span class="code-line">                          names_to = <span class="code-string">"product"</span>, values_to = <span class="code-string">"sales"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 線グラフで売上推移を可視化</span></span>
+                            <span class="code-line"><span class="code-function">ggplot</span>(sales_long, <span class="code-function">aes</span>(x = month, y = sales, color = product)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_line</span>(size = <span class="code-string">2</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"#ff1493"</span>, <span class="code-string">"#00ffff"</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">scale_x_continuous</span>(breaks = <span class="code-string">1</span>:<span class="code-string">12</span>, </span>
+                            <span class="code-line">                         labels = <span class="code-function">paste0</span>(<span class="code-string">1</span>:<span class="code-string">12</span>, <span class="code-string">"月"</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"製品別売上推移 (2023年)"</span>,</span>
+                            <span class="code-line">       x = <span class="code-string">"月"</span>, y = <span class="code-string">"売上 (万円)"</span>, color = <span class="code-string">"製品"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(panel.grid.major = <span class="code-function">element_line</span>(color = <span class="code-string">"#333"</span>))</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4 style="color: var(--neon-lime); margin: 1rem 0;">🎨 出力結果</h4>
+                        <div class="plot-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400" style="background: #1a1a1a; border-radius: 8px; border: 1px solid var(--glass-border);">
+                                <!-- Grid -->
+                                <g stroke="#333" stroke-width="0.5">
+                                    <line x1="80" y1="60" x2="550" y2="60"/>
+                                    <line x1="80" y1="120" x2="550" y2="120"/>
+                                    <line x1="80" y1="180" x2="550" y2="180"/>
+                                    <line x1="80" y1="240" x2="550" y2="240"/>
+                                    <line x1="80" y1="300" x2="550" y2="300"/>
+                                    <line x1="80" y1="360" x2="550" y2="360"/>
+                                </g>
+                                <!-- Axes -->
+                                <g stroke="#ccc" stroke-width="1.5">
+                                    <line x1="80" y1="360" x2="550" y2="360"/>
+                                    <line x1="80" y1="60" x2="80" y2="360"/>
+                                </g>
+                                <!-- Title -->
+                                <text x="315" y="30" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">製品別売上推移 (2023年)</text>
+                                <!-- Product A line -->
+                                <polyline points="118,318 158,305 198,265 238,285 278,240 318,195 358,165 398,180 438,210 478,230 518,245 558,275" 
+                                         fill="none" stroke="#ff1493" stroke-width="3" opacity="0.8"/>
+                                <!-- Product B line -->
+                                <polyline points="118,345 158,330 198,300 238,270 278,240 318,195 358,165 398,135 438,105 478,75 518,60 558,45" 
+                                         fill="none" stroke="#00ffff" stroke-width="3" opacity="0.8"/>
+                                <!-- Product A points -->
+                                <circle cx="118" cy="318" r="4" fill="#ff1493"/>
+                                <circle cx="158" cy="305" r="4" fill="#ff1493"/>
+                                <circle cx="198" cy="265" r="4" fill="#ff1493"/>
+                                <circle cx="238" cy="285" r="4" fill="#ff1493"/>
+                                <circle cx="278" cy="240" r="4" fill="#ff1493"/>
+                                <circle cx="318" cy="195" r="4" fill="#ff1493"/>
+                                <circle cx="358" cy="165" r="4" fill="#ff1493"/>
+                                <circle cx="398" cy="180" r="4" fill="#ff1493"/>
+                                <circle cx="438" cy="210" r="4" fill="#ff1493"/>
+                                <circle cx="478" cy="230" r="4" fill="#ff1493"/>
+                                <circle cx="518" cy="245" r="4" fill="#ff1493"/>
+                                <circle cx="558" cy="275" r="4" fill="#ff1493"/>
+                                <!-- Product B points -->
+                                <circle cx="118" cy="345" r="4" fill="#00ffff"/>
+                                <circle cx="158" cy="330" r="4" fill="#00ffff"/>
+                                <circle cx="198" cy="300" r="4" fill="#00ffff"/>
+                                <circle cx="238" cy="270" r="4" fill="#00ffff"/>
+                                <circle cx="278" cy="240" r="4" fill="#00ffff"/>
+                                <circle cx="318" cy="195" r="4" fill="#00ffff"/>
+                                <circle cx="358" cy="165" r="4" fill="#00ffff"/>
+                                <circle cx="398" cy="135" r="4" fill="#00ffff"/>
+                                <circle cx="438" cy="105" r="4" fill="#00ffff"/>
+                                <circle cx="478" cy="75" r="4" fill="#00ffff"/>
+                                <circle cx="518" cy="60" r="4" fill="#00ffff"/>
+                                <circle cx="558" cy="45" r="4" fill="#00ffff"/>
+                                <!-- Axis labels -->
+                                <text x="315" y="390" text-anchor="middle" fill="#ccc" font-size="14">月</text>
+                                <text x="25" y="210" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 25 210)">売上 (万円)</text>
+                                <!-- Legend -->
+                                <g>
+                                    <line x1="420" y1="80" x2="440" y2="80" stroke="#ff1493" stroke-width="3"/>
+                                    <text x="450" y="85" fill="#ccc" font-size="12">product_A</text>
+                                    <line x1="420" y1="100" x2="440" y2="100" stroke="#00ffff" stroke-width="3"/>
+                                    <text x="450" y="105" fill="#ccc" font-size="12">product_B</text>
+                                </g>
+                                <!-- Tick labels X -->
+                                <text x="118" y="375" text-anchor="middle" fill="#aaa" font-size="10">1月</text>
+                                <text x="198" y="375" text-anchor="middle" fill="#aaa" font-size="10">3月</text>
+                                <text x="278" y="375" text-anchor="middle" fill="#aaa" font-size="10">5月</text>
+                                <text x="358" y="375" text-anchor="middle" fill="#aaa" font-size="10">7月</text>
+                                <text x="438" y="375" text-anchor="middle" fill="#aaa" font-size="10">9月</text>
+                                <text x="518" y="375" text-anchor="middle" fill="#aaa" font-size="10">11月</text>
+                                <!-- Tick labels Y -->
+                                <text x="70" y="365" text-anchor="end" fill="#aaa" font-size="10">100</text>
+                                <text x="70" y="305" text-anchor="end" fill="#aaa" font-size="10">150</text>
+                                <text x="70" y="245" text-anchor="end" fill="#aaa" font-size="10">200</text>
+                                <text x="70" y="185" text-anchor="end" fill="#aaa" font-size="10">250</text>
+                                <text x="70" y="125" text-anchor="end" fill="#aaa" font-size="10">300</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Aesthetics -->
+            <section class="content-section fade-in-up" id="aesthetics">
+                <h2 class="section-title">美学マッピング</h2>
+                <div class="section-content">
+                    <p>
+                        美学（aesthetics）は、データの値を視覚的属性にマッピングする方法を定義します。色、サイズ、形、透明度などを使って、データに追加の次元を与えることができます。
+                    </p>
+                    
+                    <p>
+                        効果的な美学マッピングは、データの隠れたパターンや関係性を浮き彫りにし、視聴者の理解を深めます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">aesthetics_advanced.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 複雑な美学マッピングの例</span></span>
+                            <span class="code-line"><span class="code-variable">complex_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, </span>
+                            <span class="code-line">  <span class="code-function">aes</span>(x = wt,                     <span class="code-comment"># x軸: 重量</span></span>
+                            <span class="code-line">      y = mpg,                   <span class="code-comment"># y軸: 燃費</span></span>
+                            <span class="code-line">      color = hp,                <span class="code-comment"># 色: 馬力（連続値）</span></span>
+                            <span class="code-line">      size = qsec,               <span class="code-comment"># サイズ: 加速性能</span></span>
+                            <span class="code-line">      shape = factor(cyl)        <span class="code-comment"># 形: 気筒数</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_gradient</span>(</span>
+                            <span class="code-line">    low = <span class="code-string">"blue"</span>, high = <span class="code-string">"red"</span>,</span>
+                            <span class="code-line">    name = <span class="code-string">"馬力"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_size_continuous</span>(</span>
+                            <span class="code-line">    range = <span class="code-function">c</span>(<span class="code-string">2</span>, <span class="code-string">8</span>),</span>
+                            <span class="code-line">    name = <span class="code-string">"1/4マイル時間"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"自動車の性能総合分析"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"重量、燃費、馬力、加速性能、気筒数の関係"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"重量 (1000 lbs)"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"燃費 (mpg)"</span>,</span>
+                            <span class="code-line">    shape = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.title = <span class="code-function">element_text</span>(size = <span class="code-string">16</span>, face = <span class="code-string">"bold"</span>),</span>
+                            <span class="code-line">    legend.position = <span class="code-string">"bottom"</span></span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4 style="color: var(--neon-lime); margin: 1rem 0;">🎨 出力結果: 5次元データの統合可視化</h4>
+                        <div class="plot-container">
+                            <svg width="700" height="500" viewBox="0 0 700 500" style="background: #1a1a1a; border-radius: 8px; border: 1px solid var(--glass-border);">
+                                <!-- Grid -->
+                                <g stroke="#333" stroke-width="0.5">
+                                    <line x1="100" y1="70" x2="600" y2="70"/>
+                                    <line x1="100" y1="130" x2="600" y2="130"/>
+                                    <line x1="100" y1="190" x2="600" y2="190"/>
+                                    <line x1="100" y1="250" x2="600" y2="250"/>
+                                    <line x1="100" y1="310" x2="600" y2="310"/>
+                                    <line x1="100" y1="370" x2="600" y2="370"/>
+                                    <line x1="100" y1="430" x2="600" y2="430"/>
+                                </g>
+                                <!-- Axes -->
+                                <g stroke="#ccc" stroke-width="1.5">
+                                    <line x1="100" y1="430" x2="600" y2="430"/>
+                                    <line x1="100" y1="70" x2="100" y2="430"/>
+                                </g>
+                                <!-- Title -->
+                                <text x="350" y="30" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold">自動車の性能総合分析</text>
+                                <text x="350" y="50" text-anchor="middle" fill="#aaa" font-size="14">重量、燃費、馬力、加速性能、気筒数の関係</text>
+                                
+                                <!-- Data points with different shapes, sizes, and colors representing 5 dimensions -->
+                                <!-- 4-cylinder cars (triangles) -->
+                                <polygon points="200,350 195,360 205,360" fill="#4472C4" opacity="0.8"/>
+                                <polygon points="180,320 173,335 187,335" fill="#5B9BD5" opacity="0.8"/>
+                                <polygon points="220,380 212,395 228,395" fill="#70AD47" opacity="0.8"/>
+                                <polygon points="160,300 152,315 168,315" fill="#5B9BD5" opacity="0.8"/>
+                                <polygon points="240,400 231,418 249,418" fill="#FFC000" opacity="0.8"/>
+                                
+                                <!-- 6-cylinder cars (circles) -->
+                                <circle cx="320" cy="280" r="8" fill="#FF6B35" opacity="0.8"/>
+                                <circle cx="350" cy="260" r="10" fill="#FF8C42" opacity="0.8"/>
+                                <circle cx="380" cy="300" r="7" fill="#E74C3C" opacity="0.8"/>
+                                <circle cx="300" cy="320" r="9" fill="#FF6B35" opacity="0.8"/>
+                                <circle cx="400" cy="240" r="11" fill="#C0392B" opacity="0.8"/>
+                                
+                                <!-- 8-cylinder cars (squares) -->
+                                <rect x="450" y="350" width="12" height="12" fill="#E74C3C" opacity="0.8"/>
+                                <rect x="480" y="370" width="15" height="15" fill="#C0392B" opacity="0.8"/>
+                                <rect x="520" y="390" width="10" height="10" fill="#922B21" opacity="0.8"/>
+                                <rect x="430" y="330" width="13" height="13" fill="#E74C3C" opacity="0.8"/>
+                                <rect x="500" y="410" width="16" height="16" fill="#922B21" opacity="0.8"/>
+                                <rect x="460" y="360" width="14" height="14" fill="#C0392B" opacity="0.8"/>
+                                
+                                <!-- Axis labels -->
+                                <text x="350" y="460" text-anchor="middle" fill="#ccc" font-size="14">重量 (1000 lbs)</text>
+                                <text x="40" y="250" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 40 250)">燃費 (mpg)</text>
+                                
+                                <!-- Legends -->
+                                <!-- Shape legend -->
+                                <g>
+                                    <text x="50" y="100" fill="#fff" font-size="12" font-weight="bold">気筒数:</text>
+                                    <polygon points="55,115 50,125 60,125" fill="#ccc"/>
+                                    <text x="70" y="123" fill="#ccc" font-size="10">4気筒</text>
+                                    <circle cx="55" cy="140" r="4" fill="#ccc"/>
+                                    <text x="70" y="143" fill="#ccc" font-size="10">6気筒</text>
+                                    <rect x="51" y="151" width="8" height="8" fill="#ccc"/>
+                                    <text x="70" y="158" fill="#ccc" font-size="10">8気筒</text>
+                                </g>
+                                
+                                <!-- Color legend -->
+                                <g>
+                                    <text x="50" y="200" fill="#fff" font-size="12" font-weight="bold">馬力:</text>
+                                    <rect x="50" y="210" width="15" height="8" fill="url(#horsepower-gradient)"/>
+                                    <text x="50" y="230" fill="#ccc" font-size="10">低</text>
+                                    <text x="75" y="230" fill="#ccc" font-size="10">高</text>
+                                </g>
+                                
+                                <!-- Size legend -->
+                                <g>
+                                    <text x="550" y="100" fill="#fff" font-size="12" font-weight="bold">加速性能:</text>
+                                    <circle cx="570" cy="115" r="3" fill="#ccc"/>
+                                    <text x="580" y="118" fill="#ccc" font-size="10">速い</text>
+                                    <circle cx="570" cy="135" r="6" fill="#ccc"/>
+                                    <text x="580" y="138" fill="#ccc" font-size="10">通常</text>
+                                    <circle cx="570" cy="155" r="9" fill="#ccc"/>
+                                    <text x="580" y="158" fill="#ccc" font-size="10">遅い</text>
+                                </g>
+                                
+                                <!-- Gradient definition -->
+                                <defs>
+                                    <linearGradient id="horsepower-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#4472C4;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#FF6B35;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#922B21;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Tick labels -->
+                                <text x="150" y="445" text-anchor="middle" fill="#aaa" font-size="10">2</text>
+                                <text x="250" y="445" text-anchor="middle" fill="#aaa" font-size="10">3</text>
+                                <text x="350" y="445" text-anchor="middle" fill="#aaa" font-size="10">4</text>
+                                <text x="450" y="445" text-anchor="middle" fill="#aaa" font-size="10">5</text>
+                                <text x="550" y="445" text-anchor="middle" fill="#aaa" font-size="10">6</text>
+                                
+                                <text x="90" y="435" text-anchor="end" fill="#aaa" font-size="10">10</text>
+                                <text x="90" y="375" text-anchor="end" fill="#aaa" font-size="10">20</text>
+                                <text x="90" y="315" text-anchor="end" fill="#aaa" font-size="10">30</text>
+                                <text x="90" y="255" text-anchor="end" fill="#aaa" font-size="10">40</text>
+                                <text x="90" y="195" text-anchor="end" fill="#aaa" font-size="10">50</text>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        このように、一つのグラフで5次元の情報（x, y, color, size, shape）を同時に表現することで、データの複雑な関係性を一目で理解できるようになります。効果的な美学マッピングにより、以下のパターンが読み取れます：
+                    </p>
+                    
+                    <ul style="color: var(--neon-cyan); margin: 1rem 0;">
+                        <li><strong>重量と燃費</strong>: 負の相関関係（重い車ほど燃費が悪い）</li>
+                        <li><strong>気筒数の影響</strong>: 8気筒車は重く、燃費が悪い傾向</li>
+                        <li><strong>馬力と色</strong>: 赤い点（高馬力）ほど燃費が悪い</li>
+                        <li><strong>サイズと加速</strong>: 大きい点ほど加速が遅い</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- Practical Examples -->
+            <section class="content-section fade-in-up" id="practical">
+                <h2 class="section-title">実践的なグラフ作成</h2>
+                <div class="section-content">
+                    <p>
+                        ggplot2の真価は、実際のデータを使って美しく洞察に富んだグラフを作成することにあります。ここでは、よく使われるグラフパターンと、プロフェッショナルな仕上げのテクニックを学びましょう。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">時系列データの可視化</h3>
+                    <p>
+                        時系列データは、ビジネスや研究において最も重要なデータタイプの一つです。トレンド、季節性、異常値を効果的に可視化する方法を見てみましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">timeseries_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 時系列データの準備</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">lubridate</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># サンプル売上データの作成</span></span>
+                            <span class="code-line"><span class="code-variable">sales_ts</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  date = <span class="code-function">seq</span>(<span class="code-function">as.Date</span>(<span class="code-string">"2020-01-01"</span>), <span class="code-function">as.Date</span>(<span class="code-string">"2023-12-31"</span>), by = <span class="code-string">"month"</span>),</span>
+                            <span class="code-line">  product_a = <span class="code-function">cumsum</span>(<span class="code-function">rnorm</span>(<span class="code-string">48</span>, mean = <span class="code-string">50</span>, sd = <span class="code-string">20</span>)) + <span class="code-string">1000</span>,</span>
+                            <span class="code-line">  product_b = <span class="code-function">cumsum</span>(<span class="code-function">rnorm</span>(<span class="code-string">48</span>, mean = <span class="code-string">30</span>, sd = <span class="code-string">15</span>)) + <span class="code-string">800</span>,</span>
+                            <span class="code-line">  product_c = <span class="code-function">cumsum</span>(<span class="code-function">rnorm</span>(<span class="code-string">48</span>, mean = <span class="code-string">25</span>, sd = <span class="code-string">12</span>)) + <span class="code-string">600</span></span>
+                            <span class="code-line">) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">pivot_longer</span>(</span>
+                            <span class="code-line">    cols = <span class="code-function">starts_with</span>(<span class="code-string">"product"</span>),</span>
+                            <span class="code-line">    names_to = <span class="code-string">"product"</span>,</span>
+                            <span class="code-line">    values_to = <span class="code-string">"sales"</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 美しい時系列グラフの作成</span></span>
+                            <span class="code-line"><span class="code-variable">timeseries_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(sales_ts, <span class="code-function">aes</span>(x = date, y = sales, color = product)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_line</span>(size = <span class="code-string">1.2</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">2</span>, alpha = <span class="code-string">0.6</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_x_date</span>(</span>
+                            <span class="code-line">    date_breaks = <span class="code-string">"6 months"</span>,</span>
+                            <span class="code-line">    date_labels = <span class="code-string">"%Y年%m月"</span>,</span>
+                            <span class="code-line">    expand = <span class="code-function">expansion</span>(mult = <span class="code-function">c</span>(<span class="code-string">0.02</span>, <span class="code-string">0.02</span>))</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(</span>
+                            <span class="code-line">    labels = <span class="code-function">scales::comma_format</span>(suffix = <span class="code-string">"万円"</span>),</span>
+                            <span class="code-line">    expand = <span class="code-function">expansion</span>(mult = <span class="code-function">c</span>(<span class="code-string">0</span>, <span class="code-string">0.1</span>))</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"product_a"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"product_b"</span> = <span class="code-string">"#ff00ff"</span>, <span class="code-string">"product_c"</span> = <span class="code-string">"#39ff14"</span>),</span>
+                            <span class="code-line">    labels = <span class="code-function">c</span>(<span class="code-string">"製品A"</span>, <span class="code-string">"製品B"</span>, <span class="code-string">"製品C"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"製品別売上高の推移"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"2020年1月〜2023年12月"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"年月"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"売上高"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"製品"</span>,</span>
+                            <span class="code-line">    caption = <span class="code-string">"データ：社内売上システム"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    axis.text.x = <span class="code-function">element_text</span>(angle = <span class="code-string">45</span>, hjust = <span class="code-string">1</span>),</span>
+                            <span class="code-line">    legend.position = <span class="code-string">"bottom"</span>,</span>
+                            <span class="code-line">    plot.title = <span class="code-function">element_text</span>(size = <span class="code-string">16</span>, face = <span class="code-string">"bold"</span>)</span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">分布の比較と統計可視化</h3>
+                    <p>
+                        データの分布を理解することは、統計分析の基本です。複数グループの分布を効果的に比較する方法を学びましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">distribution_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 分布分析用データの準備</span></span>
+                            <span class="code-line"><span class="code-variable">survey_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  age_group = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"20代"</span>, <span class="code-string">"30代"</span>, <span class="code-string">"40代"</span>, <span class="code-string">"50代"</span>), each = <span class="code-string">250</span>),</span>
+                            <span class="code-line">  income = <span class="code-function">c</span>(</span>
+                            <span class="code-line">    <span class="code-function">rnorm</span>(<span class="code-string">250</span>, mean = <span class="code-string">350</span>, sd = <span class="code-string">80</span>),   <span class="code-comment"># 20代</span></span>
+                            <span class="code-line">    <span class="code-function">rnorm</span>(<span class="code-string">250</span>, mean = <span class="code-string">450</span>, sd = <span class="code-string">100</span>),  <span class="code-comment"># 30代</span></span>
+                            <span class="code-line">    <span class="code-function">rnorm</span>(<span class="code-string">250</span>, mean = <span class="code-string">550</span>, sd = <span class="code-string">120</span>),  <span class="code-comment"># 40代</span></span>
+                            <span class="code-line">    <span class="code-function">rnorm</span>(<span class="code-string">250</span>, mean = <span class="code-string">600</span>, sd = <span class="code-string">150</span>)   <span class="code-comment"># 50代</span></span>
+                            <span class="code-line">  ),</span>
+                            <span class="code-line">  satisfaction = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"低"</span>, <span class="code-string">"中"</span>, <span class="code-string">"高"</span>), <span class="code-string">1000</span>, replace = <span class="code-string">TRUE</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 複合的な分布可視化</span></span>
+                            <span class="code-line"><span class="code-variable">distribution_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(survey_data, <span class="code-function">aes</span>(x = age_group, y = income)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_violin</span>(</span>
+                            <span class="code-line">    aes(fill = age_group),</span>
+                            <span class="code-line">    alpha = <span class="code-string">0.7</span>,</span>
+                            <span class="code-line">    scale = <span class="code-string">"width"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">geom_boxplot</span>(</span>
+                            <span class="code-line">    width = <span class="code-string">0.2</span>,</span>
+                            <span class="code-line">    alpha = <span class="code-string">0.9</span>,</span>
+                            <span class="code-line">    outlier.color = <span class="code-string">"red"</span>,</span>
+                            <span class="code-line">    outlier.size = <span class="code-string">2</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">stat_summary</span>(</span>
+                            <span class="code-line">    fun = mean,</span>
+                            <span class="code-line">    geom = <span class="code-string">"point"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"white"</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">3</span>,</span>
+                            <span class="code-line">    shape = <span class="code-string">18</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_fill_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"#00ffff"</span>, <span class="code-string">"#39ff14"</span>, <span class="code-string">"#ff6600"</span>, <span class="code-string">"#ff00ff"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(</span>
+                            <span class="code-line">    labels = <span class="code-function">scales::comma_format</span>(suffix = <span class="code-string">"万円"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"年代別年収分布の比較"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"バイオリンプロット + 箱ひげ図 + 平均値"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"年代"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"年収"</span>,</span>
+                            <span class="code-line">    fill = <span class="code-string">"年代"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(legend.position = <span class="code-string">"none"</span>)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">相関関係とパターンの発見</h3>
+                    <p>
+                        散布図は変数間の関係を理解するための最も強力なツールの一つです。回帰線、信頼区間、グループ分けを組み合わせた高度な分析を行いましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">correlation_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 相関分析用データ（mtcarsを拡張）</span></span>
+                            <span class="code-line"><span class="code-variable">car_data</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">rownames_to_column</span>(<span class="code-string">"model"</span>) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">as_tibble</span>() <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    transmission = <span class="code-function">ifelse</span>(am == <span class="code-string">1</span>, <span class="code-string">"マニュアル"</span>, <span class="code-string">"オートマ"</span>),</span>
+                            <span class="code-line">    efficiency_class = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      mpg >= <span class="code-string">25</span> ~ <span class="code-string">"高効率"</span>,</span>
+                            <span class="code-line">      mpg >= <span class="code-string">20</span> ~ <span class="code-string">"中効率"</span>,</span>
+                            <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"低効率"</span></span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 高度な散布図の作成</span></span>
+                            <span class="code-line"><span class="code-variable">correlation_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(car_data, <span class="code-function">aes</span>(x = wt, y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-comment"># 背景の密度等高線</span></span>
+                            <span class="code-line">  <span class="code-function">stat_density_2d</span>(alpha = <span class="code-string">0.3</span>, color = <span class="code-string">"gray70"</span>) +</span>
+                            <span class="code-line">  <span class="code-comment"># 回帰線と信頼区間</span></span>
+                            <span class="code-line">  <span class="code-function">geom_smooth</span>(</span>
+                            <span class="code-line">    method = <span class="code-string">"lm"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"#ff00ff"</span>,</span>
+                            <span class="code-line">    fill = <span class="code-string">"#ff00ff"</span>,</span>
+                            <span class="code-line">    alpha = <span class="code-string">0.2</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-comment"># データポイント</span></span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(</span>
+                            <span class="code-line">    aes(color = transmission, size = hp, shape = efficiency_class),</span>
+                            <span class="code-line">    alpha = <span class="code-string">0.8</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-comment"># ラベル付け（outlierのみ）</span></span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(</span>
+                            <span class="code-line">    data = car_data <span class="code-keyword">%>%</span> <span class="code-function">filter</span>(mpg > <span class="code-string">30</span> | wt > <span class="code-string">5</span>),</span>
+                            <span class="code-line">    aes(label = model),</span>
+                            <span class="code-line">    nudge_y = <span class="code-string">1</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">3</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"white"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"マニュアル"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"オートマ"</span> = <span class="code-string">"#39ff14"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_size_continuous</span>(range = <span class="code-function">c</span>(<span class="code-string">3</span>, <span class="code-string">8</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"自動車の重量と燃費の関係"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"変速機タイプ、馬力、効率クラス別分析"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"重量 (1000 lbs)"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"燃費 (mpg)"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"変速機"</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">"馬力"</span>,</span>
+                            <span class="code-line">    shape = <span class="code-string">"効率クラス"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"black"</span>),</span>
+                            <span class="code-line">    panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"gray10"</span>),</span>
+                            <span class="code-line">    legend.position = <span class="code-string">"bottom"</span></span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">ファセットによる多次元分析</h3>
+                    <p>
+                        ファセットは、データの複数の側面を同時に可視化する強力な機能です。Small Multiplesの原理により、複雑なパターンを理解しやすくします。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">facet_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 複雑なビジネスデータのシミュレーション</span></span>
+                            <span class="code-line"><span class="code-variable">business_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">expand_grid</span>(</span>
+                            <span class="code-line">  region = <span class="code-function">c</span>(<span class="code-string">"東京"</span>, <span class="code-string">"大阪"</span>, <span class="code-string">"名古屋"</span>, <span class="code-string">"福岡"</span>),</span>
+                            <span class="code-line">  quarter = <span class="code-function">c</span>(<span class="code-string">"Q1"</span>, <span class="code-string">"Q2"</span>, <span class="code-string">"Q3"</span>, <span class="code-string">"Q4"</span>),</span>
+                            <span class="code-line">  product_category = <span class="code-function">c</span>(<span class="code-string">"電子機器"</span>, <span class="code-string">"家具"</span>, <span class="code-string">"衣料品"</span>)</span>
+                            <span class="code-line">) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    sales = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      region == <span class="code-string">"東京"</span> ~ <span class="code-function">rnorm</span>(<span class="code-function">n</span>(), mean = <span class="code-string">1500</span>, sd = <span class="code-string">300</span>),</span>
+                            <span class="code-line">      region == <span class="code-string">"大阪"</span> ~ <span class="code-function">rnorm</span>(<span class="code-function">n</span>(), mean = <span class="code-string">1200</span>, sd = <span class="code-string">250</span>),</span>
+                            <span class="code-line">      region == <span class="code-string">"名古屋"</span> ~ <span class="code-function">rnorm</span>(<span class="code-function">n</span>(), mean = <span class="code-string">800</span>, sd = <span class="code-string">200</span>),</span>
+                            <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-function">rnorm</span>(<span class="code-function">n</span>(), mean = <span class="code-string">600</span>, sd = <span class="code-string">150</span>)</span>
+                            <span class="code-line">    ),</span>
+                            <span class="code-line">    profit_margin = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      product_category == <span class="code-string">"電子機器"</span> ~ <span class="code-function">runif</span>(<span class="code-function">n</span>(), <span class="code-string">0.15</span>, <span class="code-string">0.25</span>),</span>
+                            <span class="code-line">      product_category == <span class="code-string">"家具"</span> ~ <span class="code-function">runif</span>(<span class="code-function">n</span>(), <span class="code-string">0.30</span>, <span class="code-string">0.45</span>),</span>
+                            <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-function">runif</span>(<span class="code-function">n</span>(), <span class="code-string">0.50</span>, <span class="code-string">0.70</span>)</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># ファセットを活用した多次元可視化</span></span>
+                            <span class="code-line"><span class="code-variable">facet_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(business_data, <span class="code-function">aes</span>(x = quarter, y = sales)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(</span>
+                            <span class="code-line">    aes(fill = product_category),</span>
+                            <span class="code-line">    position = <span class="code-string">"dodge"</span>,</span>
+                            <span class="code-line">    alpha = <span class="code-string">0.8</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(</span>
+                            <span class="code-line">    aes(label = <span class="code-function">scales::comma</span>(sales, accuracy = <span class="code-string">1</span>), group = product_category),</span>
+                            <span class="code-line">    position = <span class="code-function">position_dodge</span>(width = <span class="code-string">0.9</span>),</span>
+                            <span class="code-line">    vjust = -<span class="code-string">0.5</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">3</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"white"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">facet_wrap</span>(~region, scales = <span class="code-string">"free_y"</span>, ncol = <span class="code-string">2</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_fill_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"電子機器"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"家具"</span> = <span class="code-string">"#ff6600"</span>, <span class="code-string">"衣料品"</span> = <span class="code-string">"#39ff14"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(</span>
+                            <span class="code-line">    labels = <span class="code-function">scales::comma_format</span>(suffix = <span class="code-string">"万円"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"地域別・四半期別・商品カテゴリ別売上分析"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"複数次元での売上パフォーマンス比較"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"四半期"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"売上高"</span>,</span>
+                            <span class="code-line">    fill = <span class="code-string">"商品カテゴリ"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    strip.text = <span class="code-function">element_text</span>(size = <span class="code-string">12</span>, face = <span class="code-string">"bold"</span>),</span>
+                            <span class="code-line">    legend.position = <span class="code-string">"bottom"</span></span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Facets: Subplots for Complex Analysis -->
+            <section class="content-section fade-in-up" id="facets">
+                <h2 class="section-title">ファセット：多次元データの分割表示</h2>
+                <div class="section-content">
+                    <p>
+                        ファセットは、データをサブグループに分割して複数のサブプロットを作成する強力な機能です。パターンの比較や、カテゴリ別の傾向を同時に把握することができます。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📊 facet_wrap(): 1変数での分割</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">facet_wrap_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 気筒数別の燃費と馬力の関係</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-variable">facet_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(am)), size = <span class="code-string">3</span>, alpha = <span class="code-string">0.7</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, color = <span class="code-string">"#39ff14"</span>, size = <span class="code-string">1.2</span>) +</span>
+                            <span class="code-line">  <span class="code-function">facet_wrap</span>(~cyl, scales = <span class="code-string">"free"</span>, ncol = <span class="code-string">3</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"0"</span> = <span class="code-string">"#ff1493"</span>, <span class="code-string">"1"</span> = <span class="code-string">"#00ffff"</span>),</span>
+                            <span class="code-line">    labels = <span class="code-function">c</span>(<span class="code-string">"AT"</span>, <span class="code-string">"MT"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"気筒数別：馬力と燃費の関係"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"トランスミッション別に色分け"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"トランスミッション"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    strip.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"#2a2a2a"</span>),</span>
+                            <span class="code-line">    strip.text = <span class="code-function">element_text</span>(color = <span class="code-string">"#00ffff"</span>, size = <span class="code-string">12</span>, face = <span class="code-string">"bold"</span>),</span>
+                            <span class="code-line">    panel.grid = <span class="code-function">element_line</span>(color = <span class="code-string">"#333"</span>)</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(facet_plot)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4 style="color: var(--neon-lime); margin: 1rem 0;">🎨 出力結果</h4>
+                        <div class="plot-container">
+                            <svg width="800" height="400" viewBox="0 0 800 400" style="background: #1a1a1a; border-radius: 8px; border: 1px solid var(--glass-border);">
+                                <!-- Title -->
+                                <text x="400" y="25" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">気筒数別：馬力と燃費の関係</text>
+                                <text x="400" y="45" text-anchor="middle" fill="#aaa" font-size="12">トランスミッション別に色分け</text>
+                                
+                                <!-- Facet panel 1: 4cyl -->
+                                <g>
+                                    <rect x="50" y="70" width="220" height="280" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+                                    <rect x="50" y="70" width="220" height="25" fill="#333"/>
+                                    <text x="160" y="87" text-anchor="middle" fill="#00ffff" font-size="11" font-weight="bold">4</text>
+                                    
+                                    <!-- Grid -->
+                                    <g stroke="#333" stroke-width="0.5">
+                                        <line x1="60" y1="110" x2="260" y2="110"/>
+                                        <line x1="60" y1="150" x2="260" y2="150"/>
+                                        <line x1="60" y1="190" x2="260" y2="190"/>
+                                        <line x1="60" y1="230" x2="260" y2="230"/>
+                                        <line x1="60" y1="270" x2="260" y2="270"/>
+                                        <line x1="60" y1="310" x2="260" y2="310"/>
+                                    </g>
+                                    
+                                    <!-- Data points -->
+                                    <circle cx="90" cy="130" r="4" fill="#ff1493" opacity="0.7"/>
+                                    <circle cx="110" cy="120" r="4" fill="#00ffff" opacity="0.7"/>
+                                    <circle cx="130" cy="115" r="4" fill="#00ffff" opacity="0.7"/>
+                                    <circle cx="150" cy="125" r="4" fill="#ff1493" opacity="0.7"/>
+                                    
+                                    <!-- Regression line -->
+                                    <line x1="80" y1="135" x2="200" y2="120" stroke="#39ff14" stroke-width="2"/>
+                                    
+                                    <text x="160" y="340" text-anchor="middle" fill="#ccc" font-size="10">馬力</text>
+                                    <text x="40" y="220" text-anchor="middle" fill="#ccc" font-size="10" transform="rotate(-90 40 220)">燃費</text>
+                                </g>
+                                
+                                <!-- Facet panel 2: 6cyl -->
+                                <g>
+                                    <rect x="290" y="70" width="220" height="280" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+                                    <rect x="290" y="70" width="220" height="25" fill="#333"/>
+                                    <text x="400" y="87" text-anchor="middle" fill="#00ffff" font-size="11" font-weight="bold">6</text>
+                                    
+                                    <!-- Grid -->
+                                    <g stroke="#333" stroke-width="0.5">
+                                        <line x1="300" y1="110" x2="500" y2="110"/>
+                                        <line x1="300" y1="150" x2="500" y2="150"/>
+                                        <line x1="300" y1="190" x2="500" y2="190"/>
+                                        <line x1="300" y1="230" x2="500" y2="230"/>
+                                        <line x1="300" y1="270" x2="500" y2="270"/>
+                                        <line x1="300" y1="310" x2="500" y2="310"/>
+                                    </g>
+                                    
+                                    <!-- Data points -->
+                                    <circle cx="320" cy="170" r="4" fill="#ff1493" opacity="0.7"/>
+                                    <circle cx="350" cy="160" r="4" fill="#00ffff" opacity="0.7"/>
+                                    <circle cx="380" cy="180" r="4" fill="#ff1493" opacity="0.7"/>
+                                    <circle cx="420" cy="190" r="4" fill="#ff1493" opacity="0.7"/>
+                                    
+                                    <!-- Regression line -->
+                                    <line x1="310" y1="165" x2="430" y2="195" stroke="#39ff14" stroke-width="2"/>
+                                    
+                                    <text x="400" y="340" text-anchor="middle" fill="#ccc" font-size="10">馬力</text>
+                                </g>
+                                
+                                <!-- Facet panel 3: 8cyl -->
+                                <g>
+                                    <rect x="530" y="70" width="220" height="280" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+                                    <rect x="530" y="70" width="220" height="25" fill="#333"/>
+                                    <text x="640" y="87" text-anchor="middle" fill="#00ffff" font-size="11" font-weight="bold">8</text>
+                                    
+                                    <!-- Grid -->
+                                    <g stroke="#333" stroke-width="0.5">
+                                        <line x1="540" y1="110" x2="740" y2="110"/>
+                                        <line x1="540" y1="150" x2="740" y2="150"/>
+                                        <line x1="540" y1="190" x2="740" y2="190"/>
+                                        <line x1="540" y1="230" x2="740" y2="230"/>
+                                        <line x1="540" y1="270" x2="740" y2="270"/>
+                                        <line x1="540" y1="310" x2="740" y2="310"/>
+                                    </g>
+                                    
+                                    <!-- Data points -->
+                                    <circle cx="580" cy="250" r="4" fill="#ff1493" opacity="0.7"/>
+                                    <circle cx="620" cy="240" r="4" fill="#ff1493" opacity="0.7"/>
+                                    <circle cx="660" cy="260" r="4" fill="#ff1493" opacity="0.7"/>
+                                    <circle cx="700" cy="270" r="4" fill="#ff1493" opacity="0.7"/>
+                                    
+                                    <!-- Regression line -->
+                                    <line x1="570" y1="245" x2="710" y2="275" stroke="#39ff14" stroke-width="2"/>
+                                    
+                                    <text x="640" y="340" text-anchor="middle" fill="#ccc" font-size="10">馬力</text>
+                                </g>
+                                
+                                <!-- Legend -->
+                                <g>
+                                    <circle cx="600" cy="360" r="3" fill="#ff1493"/>
+                                    <text x="610" y="364" fill="#ccc" font-size="10">AT</text>
+                                    <circle cx="650" cy="360" r="3" fill="#00ffff"/>
+                                    <text x="660" y="364" fill="#ccc" font-size="10">MT</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🔲 facet_grid(): 2変数での分割</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">facet_grid_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 気筒数×トランスミッションでのクロス分析</span></span>
+                            <span class="code-line"><span class="code-variable">grid_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(gear)), size = <span class="code-string">3</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"loess"</span>, se = <span class="code-string">TRUE</span>, alpha = <span class="code-string">0.2</span>) +</span>
+                            <span class="code-line">  <span class="code-function">facet_grid</span>(am ~ cyl, </span>
+                            <span class="code-line">              labeller = <span class="code-function">labeller</span>(am = <span class="code-function">c</span>(<span class="code-string">"0"</span> = <span class="code-string">"オートマ"</span>, <span class="code-string">"1"</span> = <span class="code-string">"マニュアル"</span>))) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"3"</span> = <span class="code-string">"#ff1493"</span>, <span class="code-string">"4"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"5"</span> = <span class="code-string">"#39ff14"</span>),</span>
+                            <span class="code-line">    name = <span class="code-string">"ギア数"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"トランスミッション×気筒数別：性能分析"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    strip.text = <span class="code-function">element_text</span>(size = <span class="code-string">10</span>, face = <span class="code-string">"bold"</span>)</span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Scales: Controlling Data Mapping -->
+            <section class="content-section fade-in-up" id="scales">
+                <h2 class="section-title">スケール：データマッピングの制御</h2>
+                <div class="section-content">
+                    <p>
+                        スケールは、データの値を視覚的属性（位置、色、サイズなど）にマッピングする方法を制御します。適切なスケールの選択により、データの特性を効果的に伝えることができます。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🌈 カラースケール</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">color_scales_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 様々なカラースケールの使用例</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">viridis</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 連続値のカラーグラデーション</span></span>
+                            <span class="code-line"><span class="code-variable">continuous_color</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = wt, y = mpg, color = hp)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">4</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_viridis_c</span>(</span>
+                            <span class="code-line">    option = <span class="code-string">"plasma"</span>,</span>
+                            <span class="code-line">    name = <span class="code-string">"馬力\n(hp)"</span>,</span>
+                            <span class="code-line">    guide = <span class="code-function">guide_colorbar</span>(</span>
+                            <span class="code-line">      barwidth = <span class="code-string">1</span>,</span>
+                            <span class="code-line">      barheight = <span class="code-string">10</span>,</span>
+                            <span class="code-line">      title.position = <span class="code-string">"top"</span></span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"連続カラースケール：Viridis Plasma"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"重量 (1000 lbs)"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(legend.position = <span class="code-string">"right"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># カテゴリカルデータの色分け</span></span>
+                            <span class="code-line"><span class="code-variable">discrete_color</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = wt, y = mpg, color = factor(cyl))) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">4</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_brewer</span>(</span>
+                            <span class="code-line">    type = <span class="code-string">"qual"</span>,</span>
+                            <span class="code-line">    palette = <span class="code-string">"Set1"</span>,</span>
+                            <span class="code-line">    name = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"カテゴリカルカラー：ColorBrewer Set1"</span>)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📏 軸スケール</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">axis_scales_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 軸の変換とカスタマイズ</span></span>
+                            <span class="code-line"><span class="code-variable">log_scale_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(cyl)), size = <span class="code-string">3</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_x_log10</span>(</span>
+                            <span class="code-line">    breaks = <span class="code-function">c</span>(<span class="code-string">50</span>, <span class="code-string">100</span>, <span class="code-string">200</span>, <span class="code-string">400</span>),</span>
+                            <span class="code-line">    labels = <span class="code-function">c</span>(<span class="code-string">"50hp"</span>, <span class="code-string">"100hp"</span>, <span class="code-string">"200hp"</span>, <span class="code-string">"400hp"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(</span>
+                            <span class="code-line">    breaks = <span class="code-function">seq</span>(<span class="code-string">10</span>, <span class="code-string">35</span>, <span class="code-string">5</span>),</span>
+                            <span class="code-line">    labels = <span class="code-function">function</span>(x) <span class="code-function">paste0</span>(x, <span class="code-string">" mpg"</span>),</span>
+                            <span class="code-line">    limits = <span class="code-function">c</span>(<span class="code-string">10</span>, <span class="code-string">35</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"対数スケールを使用した軸変換"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"X軸：対数スケール、Y軸：線形スケール"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"馬力 (対数スケール)"</span>, y = <span class="code-string">"燃費"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Coordinate Systems -->
+            <section class="content-section fade-in-up" id="coordinates">
+                <h2 class="section-title">座標系：データの幾何学的表現</h2>
+                <div class="section-content">
+                    <p>
+                        座標系は、データを平面上にどのように配置するかを決定します。デカルト座標系以外にも、極座標系や地図投影など、データの性質に応じた様々な座標系を選択できます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">coordinate_systems.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 極座標系を使用した円グラフ</span></span>
+                            <span class="code-line"><span class="code-variable">pie_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  category = <span class="code-function">c</span>(<span class="code-string">"製品A"</span>, <span class="code-string">"製品B"</span>, <span class="code-string">"製品C"</span>, <span class="code-string">"製品D"</span>),</span>
+                            <span class="code-line">  value = <span class="code-function">c</span>(<span class="code-string">30</span>, <span class="code-string">25</span>, <span class="code-string">25</span>, <span class="code-string">20</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-variable">polar_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(pie_data, <span class="code-function">aes</span>(x = <span class="code-string">""</span>, y = value, fill = category)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(width = <span class="code-string">1</span>, color = <span class="code-string">"white"</span>, size = <span class="code-string">2</span>) +</span>
+                            <span class="code-line">  <span class="code-function">coord_polar</span>(theta = <span class="code-string">"y"</span>, start = <span class="code-string">0</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_fill_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"#ff1493"</span>, <span class="code-string">"#00ffff"</span>, <span class="code-string">"#39ff14"</span>, <span class="code-string">"#ffd700"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"極座標系による円グラフ"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"製品別市場シェア"</span>,</span>
+                            <span class="code-line">    fill = <span class="code-string">"製品"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_void</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.title = <span class="code-function">element_text</span>(hjust = <span class="code-string">0.5</span>, size = <span class="code-string">16</span>),</span>
+                            <span class="code-line">    plot.subtitle = <span class="code-function">element_text</span>(hjust = <span class="code-string">0.5</span>, size = <span class="code-string">12</span>),</span>
+                            <span class="code-line">    legend.position = <span class="code-string">"bottom"</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 軸の入れ替え</span></span>
+                            <span class="code-line"><span class="code-variable">flipped_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = reorder(rownames(mtcars), mpg), y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(fill = <span class="code-string">"#00ffff"</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">coord_flip</span>() +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"軸入れ替えによる水平棒グラフ"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"車種"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(axis.text.y = <span class="code-function">element_text</span>(size = <span class="code-string">8</span>))</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Statistical Transformations -->
+            <section class="content-section fade-in-up" id="statistics">
+                <h2 class="section-title">統計変換：データの数学的分析</h2>
+                <div class="section-content">
+                    <p>
+                        統計変換（stat）は、生データを数学的に変換して、データのパターンや傾向を可視化します。回帰線、密度推定、統計要約など、データサイエンスに不可欠な機能です。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📈 stat_smooth(): 回帰線と傾向</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">regression_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 様々な回帰モデルの比較</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 線形回帰、LOESS、GAMモデルの比較</span></span>
+                            <span class="code-line"><span class="code-variable">regression_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(alpha = <span class="code-string">0.7</span>, size = <span class="code-string">3</span>, color = <span class="code-string">"white"</span>) +</span>
+                            <span class="code-line">  <span class="code-comment"># 線形回帰</span></span>
+                            <span class="code-line">  <span class="code-function">stat_smooth</span>(method = <span class="code-string">"lm"</span>, color = <span class="code-string">"#ff1493"</span>, </span>
+                            <span class="code-line">              se = <span class="code-string">TRUE</span>, alpha = <span class="code-string">0.2</span>, size = <span class="code-string">1.5</span>) +</span>
+                            <span class="code-line">  <span class="code-comment"># LOESS回帰</span></span>
+                            <span class="code-line">  <span class="code-function">stat_smooth</span>(method = <span class="code-string">"loess"</span>, color = <span class="code-string">"#00ffff"</span>, </span>
+                            <span class="code-line">              se = <span class="code-string">FALSE</span>, size = <span class="code-string">1.5</span>, linetype = <span class="code-string">"dashed"</span>) +</span>
+                            <span class="code-line">  <span class="code-comment"># GAM回帰</span></span>
+                            <span class="code-line">  <span class="code-function">stat_smooth</span>(method = <span class="code-string">"gam"</span>, color = <span class="code-string">"#39ff14"</span>, </span>
+                            <span class="code-line">              se = <span class="code-string">FALSE</span>, size = <span class="code-string">1.5</span>, linetype = <span class="code-string">"dotted"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"回帰モデルの比較分析"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"線形(LM), LOESS, GAMの異なるアプローチ"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"black"</span>),</span>
+                            <span class="code-line">    panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"#1a1a1a"</span>),</span>
+                            <span class="code-line">    panel.grid = <span class="code-function">element_line</span>(color = <span class="code-string">"#333"</span>)</span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4 style="color: var(--neon-lime); margin: 1rem 0;">🎨 出力結果</h4>
+                        <div class="plot-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400" style="background: #1a1a1a; border-radius: 8px; border: 1px solid var(--glass-border);">
+                                <!-- Grid -->
+                                <g stroke="#333" stroke-width="0.5">
+                                    <line x1="80" y1="60" x2="550" y2="60"/>
+                                    <line x1="80" y1="120" x2="550" y2="120"/>
+                                    <line x1="80" y1="180" x2="550" y2="180"/>
+                                    <line x1="80" y1="240" x2="550" y2="240"/>
+                                    <line x1="80" y1="300" x2="550" y2="300"/>
+                                    <line x1="80" y1="360" x2="550" y2="360"/>
+                                </g>
+                                <!-- Axes -->
+                                <g stroke="#ccc" stroke-width="1.5">
+                                    <line x1="80" y1="360" x2="550" y2="360"/>
+                                    <line x1="80" y1="60" x2="80" y2="360"/>
+                                </g>
+                                <!-- Title -->
+                                <text x="315" y="30" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">回帰モデルの比較分析</text>
+                                <text x="315" y="50" text-anchor="middle" fill="#aaa" font-size="12">線形(LM), LOESS, GAMの異なるアプローチ</text>
+                                
+                                <!-- Data points -->
+                                <circle cx="120" cy="120" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="140" cy="110" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="180" cy="140" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="220" cy="160" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="260" cy="180" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="300" cy="200" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="340" cy="220" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="380" cy="240" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="420" cy="260" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="460" cy="280" r="3" fill="white" opacity="0.7"/>
+                                <circle cx="500" cy="300" r="3" fill="white" opacity="0.7"/>
+                                
+                                <!-- Confidence interval for linear regression -->
+                                <polygon points="120,115 500,295 500,305 120,125" fill="#ff1493" opacity="0.2"/>
+                                
+                                <!-- Linear regression line -->
+                                <line x1="120" y1="120" x2="500" y2="300" stroke="#ff1493" stroke-width="2"/>
+                                
+                                <!-- LOESS line (curved) -->
+                                <path d="M 120 115 Q 220 155, 320 205 T 500 295" stroke="#00ffff" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                                
+                                <!-- GAM line (smooth curve) -->
+                                <path d="M 120 118 Q 180 138, 260 180 Q 340 220, 420 260 Q 460 275, 500 298" stroke="#39ff14" stroke-width="2" fill="none" stroke-dasharray="2,2"/>
+                                
+                                <!-- Axis labels -->
+                                <text x="315" y="385" text-anchor="middle" fill="#ccc" font-size="14">馬力 (hp)</text>
+                                <text x="25" y="210" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 25 210)">燃費 (mpg)</text>
+                                
+                                <!-- Legend -->
+                                <g>
+                                    <line x1="420" y1="80" x2="440" y2="80" stroke="#ff1493" stroke-width="2"/>
+                                    <text x="450" y="85" fill="#ccc" font-size="11">Linear (LM)</text>
+                                    <line x1="420" y1="95" x2="440" y2="95" stroke="#00ffff" stroke-width="2" stroke-dasharray="3,3"/>
+                                    <text x="450" y="100" fill="#ccc" font-size="11">LOESS</text>
+                                    <line x1="420" y1="110" x2="440" y2="110" stroke="#39ff14" stroke-width="2" stroke-dasharray="2,2"/>
+                                    <text x="450" y="115" fill="#ccc" font-size="11">GAM</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📊 stat_summary(): 統計要約</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">statistical_summary.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># カスタム統計要約の作成</span></span>
+                            <span class="code-line"><span class="code-variable">summary_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = factor(cyl), y = mpg)) +</span>
+                            <span class="code-line">  <span class="code-comment"># 生データポイント</span></span>
+                            <span class="code-line">  <span class="code-function">geom_jitter</span>(alpha = <span class="code-string">0.6</span>, width = <span class="code-string">0.2</span>, color = <span class="code-string">"white"</span>) +</span>
+                            <span class="code-line">  <span class="code-comment"># 平均値と標準誤差</span></span>
+                            <span class="code-line">  <span class="code-function">stat_summary</span>(</span>
+                            <span class="code-line">    fun = mean,</span>
+                            <span class="code-line">    fun.min = <span class="code-function">function</span>(x) mean(x) - <span class="code-function">sd</span>(x),</span>
+                            <span class="code-line">    fun.max = <span class="code-function">function</span>(x) mean(x) + <span class="code-function">sd</span>(x),</span>
+                            <span class="code-line">    geom = <span class="code-string">"pointrange"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"#ff1493"</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">1.2</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-comment"># 中央値と四分位数</span></span>
+                            <span class="code-line">  <span class="code-function">stat_summary</span>(</span>
+                            <span class="code-line">    fun = median,</span>
+                            <span class="code-line">    fun.min = <span class="code-function">function</span>(x) <span class="code-function">quantile</span>(x, <span class="code-string">0.25</span>),</span>
+                            <span class="code-line">    fun.max = <span class="code-function">function</span>(x) <span class="code-function">quantile</span>(x, <span class="code-string">0.75</span>),</span>
+                            <span class="code-line">    geom = <span class="code-string">"pointrange"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"#00ffff"</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">1.2</span>,</span>
+                            <span class="code-line">    position = <span class="code-function">position_nudge</span>(x = <span class="code-string">0.1</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"カスタム統計要約の比較"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"平均±SD (ピンク) vs 中央値±IQR (シアン)"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"気筒数"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Themes and Customization -->
+            <section class="content-section fade-in-up" id="themes">
+                <h2 class="section-title">プロフェッショナルなテーマ設計</h2>
+                <div class="section-content">
+                    <p>
+                        グラフの見た目は、データの理解と信頼性に大きく影響します。ggplot2の強力なテーマシステムを活用して、用途に応じた美しいグラフを作成しましょう。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">カスタムテーマの作成</h3>
+                    <p>
+                        組織のブランドに合わせたカスタムテーマを作成することで、一貫性のある美しい可視化を実現できます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">custom_themes.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># カスタム企業テーマの定義</span></span>
+                            <span class="code-line"><span class="code-variable">theme_corporate</span> <span class="code-keyword">&lt;-</span> <span class="code-function">function</span>(base_size = <span class="code-string">12</span>, base_family = <span class="code-string">""</span>) {</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>(base_size = base_size, base_family = base_family) +</span>
+                            <span class="code-line">    <span class="code-function">theme</span>(</span>
+                            <span class="code-line">      <span class="code-comment"># 全体の背景</span></span>
+                            <span class="code-line">      plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"white"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"white"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># グリッド線</span></span>
+                            <span class="code-line">      panel.grid.major = <span class="code-function">element_line</span>(color = <span class="code-string">"gray90"</span>, size = <span class="code-string">0.5</span>),</span>
+                            <span class="code-line">      panel.grid.minor = <span class="code-function">element_blank</span>(),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># 軸とタイトル</span></span>
+                            <span class="code-line">      axis.line = <span class="code-function">element_line</span>(color = <span class="code-string">"gray30"</span>, size = <span class="code-string">0.5</span>),</span>
+                            <span class="code-line">      axis.ticks = <span class="code-function">element_line</span>(color = <span class="code-string">"gray30"</span>, size = <span class="code-string">0.3</span>),</span>
+                            <span class="code-line">      axis.text = <span class="code-function">element_text</span>(color = <span class="code-string">"gray20"</span>, size = <span class="code-function">rel</span>(<span class="code-string">0.9</span>)),</span>
+                            <span class="code-line">      axis.title = <span class="code-function">element_text</span>(color = <span class="code-string">"gray10"</span>, size = <span class="code-function">rel</span>(<span class="code-string">1.0</span>)),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># プロットタイトル</span></span>
+                            <span class="code-line">      plot.title = <span class="code-function">element_text</span>(</span>
+                            <span class="code-line">        color = <span class="code-string">"#2c3e50"</span>,</span>
+                            <span class="code-line">        size = <span class="code-function">rel</span>(<span class="code-string">1.4</span>),</span>
+                            <span class="code-line">        face = <span class="code-string">"bold"</span>,</span>
+                            <span class="code-line">        hjust = <span class="code-string">0</span>,</span>
+                            <span class="code-line">        margin = <span class="code-function">margin</span>(b = <span class="code-string">20</span>)</span>
+                            <span class="code-line">      ),</span>
+                            <span class="code-line">      plot.subtitle = <span class="code-function">element_text</span>(</span>
+                            <span class="code-line">        color = <span class="code-string">"gray40"</span>,</span>
+                            <span class="code-line">        size = <span class="code-function">rel</span>(<span class="code-string">1.1</span>),</span>
+                            <span class="code-line">        hjust = <span class="code-string">0</span>,</span>
+                            <span class="code-line">        margin = <span class="code-function">margin</span>(b = <span class="code-string">20</span>)</span>
+                            <span class="code-line">      ),</span>
+                            <span class="code-line">      plot.caption = <span class="code-function">element_text</span>(</span>
+                            <span class="code-line">        color = <span class="code-string">"gray50"</span>,</span>
+                            <span class="code-line">        size = <span class="code-function">rel</span>(<span class="code-string">0.8</span>),</span>
+                            <span class="code-line">        hjust = <span class="code-string">1</span>,</span>
+                            <span class="code-line">        margin = <span class="code-function">margin</span>(t = <span class="code-string">20</span>)</span>
+                            <span class="code-line">      ),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># 凡例</span></span>
+                            <span class="code-line">      legend.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"white"</span>, color = <span class="code-string">"gray80"</span>),</span>
+                            <span class="code-line">      legend.key = <span class="code-function">element_rect</span>(fill = <span class="code-string">"white"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      legend.text = <span class="code-function">element_text</span>(color = <span class="code-string">"gray20"</span>),</span>
+                            <span class="code-line">      legend.title = <span class="code-function">element_text</span>(color = <span class="code-string">"gray10"</span>, face = <span class="code-string">"bold"</span>),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># ファセット</span></span>
+                            <span class="code-line">      strip.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"#ecf0f1"</span>, color = <span class="code-string">"gray80"</span>),</span>
+                            <span class="code-line">      strip.text = <span class="code-function">element_text</span>(color = <span class="code-string">"#2c3e50"</span>, face = <span class="code-string">"bold"</span>)</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># ダークモード テーマ</span></span>
+                            <span class="code-line"><span class="code-variable">theme_dark_pro</span> <span class="code-keyword">&lt;-</span> <span class="code-function">function</span>(base_size = <span class="code-string">12</span>) {</span>
+                            <span class="code-line">  <span class="code-function">theme_void</span>(base_size = base_size) +</span>
+                            <span class="code-line">    <span class="code-function">theme</span>(</span>
+                            <span class="code-line">      plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"#1a1a1a"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"#2d2d2d"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      panel.grid.major = <span class="code-function">element_line</span>(color = <span class="code-string">"#404040"</span>, size = <span class="code-string">0.3</span>),</span>
+                            <span class="code-line">      panel.grid.minor = <span class="code-function">element_line</span>(color = <span class="code-string">"#333333"</span>, size = <span class="code-string">0.1</span>),</span>
+                            <span class="code-line">      axis.text = <span class="code-function">element_text</span>(color = <span class="code-string">"#e0e0e0"</span>),</span>
+                            <span class="code-line">      axis.title = <span class="code-function">element_text</span>(color = <span class="code-string">"#f0f0f0"</span>),</span>
+                            <span class="code-line">      plot.title = <span class="code-function">element_text</span>(color = <span class="code-string">"#00ffff"</span>, face = <span class="code-string">"bold"</span>),</span>
+                            <span class="code-line">      plot.subtitle = <span class="code-function">element_text</span>(color = <span class="code-string">"#cccccc"</span>),</span>
+                            <span class="code-line">      legend.text = <span class="code-function">element_text</span>(color = <span class="code-string">"#e0e0e0"</span>),</span>
+                            <span class="code-line">      legend.title = <span class="code-function">element_text</span>(color = <span class="code-string">"#f0f0f0"</span>)</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># テーマ適用例</span></span>
+                            <span class="code-line"><span class="code-variable">corporate_example</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mpg, <span class="code-function">aes</span>(x = displ, y = hwy, color = class)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, alpha = <span class="code-string">0.7</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, color = <span class="code-string">"#e74c3c"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"エンジン排気量と燃費の関係"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"車種クラス別の分析結果"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"エンジン排気量 (L)"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"高速道路燃費 (mpg)"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"車種クラス"</span>,</span>
+                            <span class="code-line">    caption = <span class="code-string">"データソース: EPA燃費データベース"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_corporate</span>() +</span>
+                            <span class="code-line">  <span class="code-function">guides</span>(color = <span class="code-function">guide_legend</span>(title.position = <span class="code-string">"top"</span>))</span>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        これらの実践例により、ggplot2を使った本格的なデータ可視化の技術を身につけることができます。美しいグラフは、データの物語を効果的に伝え、意思決定をサポートする強力なツールになります。
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Advanced Techniques -->
+            <section class="content-section fade-in-up" id="advanced">
+                <h2 class="section-title">高度なテクニック</h2>
+                <div class="section-content">
+                    <p>
+                        ggplot2の真の力は、基本要素を組み合わせて革新的なビジュアライゼーションを作成することにあります。ファセット、統計変換、カスタムテーマを駆使して、データの物語を効果的に伝えましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">advanced_visualization.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 多面的なデータ分析</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># データの前処理と可視化を組み合わせ</span></span>
+                            <span class="code-line"><span class="code-variable">advanced_analysis</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    efficiency = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      mpg >= <span class="code-string">25</span> ~ <span class="code-string">"High"</span>,</span>
+                            <span class="code-line">      mpg >= <span class="code-string">20</span> ~ <span class="code-string">"Medium"</span>,</span>
+                            <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"Low"</span></span>
+                            <span class="code-line">    ),</span>
+                            <span class="code-line">    transmission = <span class="code-function">ifelse</span>(am == <span class="code-string">1</span>, <span class="code-string">"Manual"</span>, <span class="code-string">"Automatic"</span>)</span>
+                            <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = wt, y = hp)) +</span>
+                            <span class="code-line">    <span class="code-function">geom_point</span>(aes(color = efficiency, shape = transmission), </span>
+                            <span class="code-line">               size = <span class="code-string">3</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">    <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, </span>
+                            <span class="code-line">                color = <span class="code-string">"darkgray"</span>, linetype = <span class="code-string">"dashed"</span>) +</span>
+                            <span class="code-line">    <span class="code-function">facet_wrap</span>(~factor(cyl), ncol = <span class="code-string">3</span>, </span>
+                            <span class="code-line">               labeller = <span class="code-function">labeller</span>(.default = <span class="code-string">"気筒"</span>)) +</span>
+                            <span class="code-line">    <span class="code-function">scale_color_manual</span>(</span>
+                            <span class="code-line">      values = <span class="code-function">c</span>(<span class="code-string">"High"</span> = <span class="code-string">"#00ff41"</span>, </span>
+                            <span class="code-line">               <span class="code-string">"Medium"</span> = <span class="code-string">"#ffaa00"</span>, </span>
+                            <span class="code-line">               <span class="code-string">"Low"</span> = <span class="code-string">"#ff0040"</span>)</span>
+                            <span class="code-line">    ) +</span>
+                            <span class="code-line">    <span class="code-function">labs</span>(</span>
+                            <span class="code-line">      title = <span class="code-string">"自動車性能の多次元分析"</span>,</span>
+                            <span class="code-line">      subtitle = <span class="code-string">"重量、馬力、燃費効率、変速機タイプ、気筒数の関係"</span>,</span>
+                            <span class="code-line">      x = <span class="code-string">"重量 (1000 lbs)"</span>, y = <span class="code-string">"馬力 (hp)"</span>,</span>
+                            <span class="code-line">      color = <span class="code-string">"燃費効率"</span>, shape = <span class="code-string">"変速機"</span></span>
+                            <span class="code-line">    ) +</span>
+                            <span class="code-line">    <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">    <span class="code-function">theme</span>(</span>
+                            <span class="code-line">      plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"black"</span>),</span>
+                            <span class="code-line">      panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"gray10"</span>),</span>
+                            <span class="code-line">      text = <span class="code-function">element_text</span>(color = <span class="code-string">"white"</span>),</span>
+                            <span class="code-line">      plot.title = <span class="code-function">element_text</span>(size = <span class="code-string">16</span>, face = <span class="code-string">"bold"</span>, </span>
+                            <span class="code-line">                                 color = <span class="code-string">"cyan"</span>),</span>
+                            <span class="code-line">      strip.text = <span class="code-function">element_text</span>(color = <span class="code-string">"white"</span>, face = <span class="code-string">"bold"</span>)</span>
+                            <span class="code-line">    )</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Chapter Navigation -->
+            <nav class="chapter-nav fade-in-up">
+                <a href="chapter2-dplyr-data-manipulation.html" class="nav-btn prev">
+                    ← 前の章
+                </a>
+                <div class="chapter-progress">
+                    第3章 / 全6章
+                </div>
+                <a href="chapter4-tidyr-data-reshaping.html" class="nav-btn next">
+                    次の章 →
+                </a>
+            </nav>
+        </div>
+    </main>
+    
+    <script>
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Dynamic Icon Animation
+        const icon = document.querySelector('.chapter-icon');
+        if (icon) {
+            setInterval(() => {
+                icon.style.transform = `translateY(-10px) rotate(${Math.random() * 10 - 5}deg)`;
+                setTimeout(() => {
+                    icon.style.transform = 'translateY(0) rotate(0deg)';
+                }, 1000);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

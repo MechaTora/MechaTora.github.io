@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第7章: lubridate - 日付・時間データの完全マスター | Tidyverse完全マスター</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-orange);
+            box-shadow: 0 0 20px rgba(255, 140, 66, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 140, 66, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-orange);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 10px var(--accent-orange);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--accent-orange);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .nav-button.current {
+            background: var(--accent-orange);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--accent-orange);
+        }
+
+        /* Content Sections */
+        .section {
+            background: var(--bg-secondary);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-purple);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-orange);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-orange);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            margin: 20px 0;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-orange);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 140, 66, 0.1);
+        }
+
+        .code-header {
+            background: var(--accent-orange);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-header::before {
+            content: '🕐';
+            font-size: 1.1rem;
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .operator { color: #f85149; }
+        .number { color: #79c0ff; }
+        .variable { color: #ffa657; }
+
+        /* Output Display */
+        .output-container {
+            margin: 20px 0;
+            background: #0a0e1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .output-header {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-header::before {
+            content: '📅';
+        }
+
+        .output-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-cyan);
+        }
+
+        /* Data Visualization */
+        .visualization {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+            text-align: center;
+        }
+
+        .viz-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Calendar Widget */
+        .calendar-widget {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-orange);
+        }
+
+        .calendar-header {
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .calendar-day {
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .calendar-day.header {
+            background: var(--accent-orange);
+            color: var(--bg-primary);
+            font-weight: bold;
+        }
+
+        .calendar-day.highlighted {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        /* Data Tables */
+        .data-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-orange);
+        }
+
+        th {
+            background: var(--accent-orange);
+            color: var(--bg-primary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 140, 66, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(255, 140, 66, 0.1);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .key-points h4 {
+            color: var(--accent-orange);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '⚠️';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 6px;
+                padding: 10px;
+            }
+
+            .nav-button {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .code-content, .output-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chapter-nav {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .nav-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第7章: lubridate</h1>
+            <p class="subtitle">日付・時間データの完全マスター</p>
+            <div class="chapter-meta">
+                <span>📅 日付解析と操作</span>
+                <span>⏰ 時間計算</span>
+                <span>🌍 タイムゾーン処理</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">第6章</a>
+            <a href="#" class="nav-button current">第7章</a>
+        </nav>
+
+        <section class="section">
+            <h2>🕐 lubridateの基本: 日付・時間の作成と解析</h2>
+            
+            <p>lubridateパッケージは、Rにおける日付・時間データの操作を直感的かつ効率的に行うためのツールです。様々な形式の日付文字列を簡単に解析し、時間計算を行うことができます。</p>
+
+            <h3>日付の作成と解析</h3>
+
+            <div class="code-container">
+                <div class="code-header">基本的な日付操作</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">lubridate</span>)
+<span class="keyword">library</span>(<span class="string">dplyr</span>)
+
+<span class="comment"># 現在の日時</span>
+current_time <span class="operator">&lt;-</span> <span class="function">now</span>()
+current_date <span class="operator">&lt;-</span> <span class="function">today</span>()
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"現在時刻:"</span>, current_time))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"今日の日付:"</span>, current_date))
+
+<span class="comment"># 様々な形式の日付文字列を解析</span>
+dates_ymd <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"2023-12-25"</span>, <span class="string">"2023/12/31"</span>, <span class="string">"20231201"</span>)
+parsed_ymd <span class="operator">&lt;-</span> <span class="function">ymd</span>(dates_ymd)
+<span class="function">print</span>(parsed_ymd)
+
+<span class="comment"># 日付の順序が異なる場合</span>
+dates_dmy <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"25-12-2023"</span>, <span class="string">"31/12/2023"</span>, <span class="string">"01122023"</span>)
+parsed_dmy <span class="operator">&lt;-</span> <span class="function">dmy</span>(dates_dmy)
+<span class="function">print</span>(parsed_dmy)
+
+<span class="comment"># 月-日-年の形式</span>
+dates_mdy <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"12-25-2023"</span>, <span class="string">"12/31/2023"</span>)
+parsed_mdy <span class="operator">&lt;-</span> <span class="function">mdy</span>(dates_mdy)
+<span class="function">print</span>(parsed_mdy)
+
+<span class="comment"># 時間を含む日時の解析</span>
+datetime_strings <span class="operator">&lt;-</span> <span class="function">c</span>(
+  <span class="string">"2023-12-25 14:30:00"</span>,
+  <span class="string">"2023/12/31 23:59:59"</span>,
+  <span class="string">"2023-01-01 00:00:00"</span>
+)
+parsed_datetime <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(datetime_strings)
+<span class="function">print</span>(parsed_datetime)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">日付解析結果</div>
+                <div class="output-content">[1] "現在時刻: 2023-12-15 10:30:45"
+[1] "今日の日付: 2023-12-15"
+
+[1] "2023-12-25" "2023-12-31" "2023-12-01"
+
+[1] "2023-12-25" "2023-12-31" "2023-12-01"
+
+[1] "2023-12-25" "2023-12-31"
+
+[1] "2023-12-25 14:30:00 UTC" "2023-12-31 23:59:59 UTC" "2023-01-01 00:00:00 UTC"</div>
+            </div>
+
+            <h3>日付・時間の構成要素の抽出</h3>
+
+            <div class="code-container">
+                <div class="code-header">日付構成要素の取得</div>
+                <div class="code-content">
+<span class="comment"># サンプル日時データ</span>
+sample_datetime <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-25 14:30:45"</span>)
+
+<span class="comment"># 年、月、日の抽出</span>
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年:"</span>, <span class="function">year</span>(sample_datetime)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"月:"</span>, <span class="function">month</span>(sample_datetime)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"日:"</span>, <span class="function">day</span>(sample_datetime)))
+
+<span class="comment"># 時、分、秒の抽出</span>
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"時:"</span>, <span class="function">hour</span>(sample_datetime)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"分:"</span>, <span class="function">minute</span>(sample_datetime)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"秒:"</span>, <span class="function">second</span>(sample_datetime)))
+
+<span class="comment"># 曜日と週番号</span>
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"曜日:"</span>, <span class="function">wday</span>(sample_datetime, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年の週番号:"</span>, <span class="function">week</span>(sample_datetime)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年の日番号:"</span>, <span class="function">yday</span>(sample_datetime)))
+
+<span class="comment"># 四半期と半期</span>
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"四半期:"</span>, <span class="function">quarter</span>(sample_datetime)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"半期:"</span>, <span class="function">semester</span>(sample_datetime)))
+
+<span class="comment"># 月名の取得</span>
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"月名:"</span>, <span class="function">month</span>(sample_datetime, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>)))
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">構成要素抽出結果</div>
+                <div class="output-content">[1] "年: 2023"
+[1] "月: 12"
+[1] "日: 25"
+[1] "時: 14"
+[1] "分: 30"
+[1] "秒: 45"
+[1] "曜日: Monday"
+[1] "年の週番号: 52"
+[1] "年の日番号: 359"
+[1] "四半期: 4"
+[1] "半期: 2"
+[1] "月名: December"</div>
+            </div>
+
+            <div class="calendar-widget">
+                <div class="calendar-header">2023年12月カレンダー</div>
+                <div class="calendar-grid">
+                    <div class="calendar-day header">日</div>
+                    <div class="calendar-day header">月</div>
+                    <div class="calendar-day header">火</div>
+                    <div class="calendar-day header">水</div>
+                    <div class="calendar-day header">木</div>
+                    <div class="calendar-day header">金</div>
+                    <div class="calendar-day header">土</div>
+                    <div class="calendar-day"></div>
+                    <div class="calendar-day"></div>
+                    <div class="calendar-day"></div>
+                    <div class="calendar-day"></div>
+                    <div class="calendar-day"></div>
+                    <div class="calendar-day">1</div>
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day">3</div>
+                    <div class="calendar-day">4</div>
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day">11</div>
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day">15</div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day">18</div>
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day">24</div>
+                    <div class="calendar-day highlighted">25</div>
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day">31</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⏰ 時間間隔と期間の計算</h2>
+
+            <h3>期間（Duration）とインターバル（Interval）</h3>
+
+            <div class="code-container">
+                <div class="code-header">時間間隔の計算</div>
+                <div class="code-content">
+<span class="comment"># 基準日時の設定</span>
+start_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-01-01 00:00:00"</span>)
+end_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-31 23:59:59"</span>)
+
+<span class="comment"># 期間の計算</span>
+time_difference <span class="operator">&lt;-</span> end_date <span class="operator">-</span> start_date
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"時間差:"</span>, time_difference))
+
+<span class="comment"># 様々な単位での期間表現</span>
+duration_seconds <span class="operator">&lt;-</span> <span class="function">as.duration</span>(time_difference)
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"秒数:"</span>, duration_seconds))
+
+<span class="comment"># 期間の短縮記法</span>
+one_year <span class="operator">&lt;-</span> <span class="function">dyears</span>(<span class="number">1</span>)
+one_month <span class="operator">&lt;-</span> <span class="function">dmonths</span>(<span class="number">1</span>)
+one_week <span class="operator">&lt;-</span> <span class="function">dweeks</span>(<span class="number">1</span>)
+one_day <span class="operator">&lt;-</span> <span class="function">ddays</span>(<span class="number">1</span>)
+one_hour <span class="operator">&lt;-</span> <span class="function">dhours</span>(<span class="number">1</span>)
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"1年 ="</span>, one_year, <span class="string">"秒"</span>))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"1ヶ月 ="</span>, one_month, <span class="string">"秒"</span>))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"1週間 ="</span>, one_week, <span class="string">"秒"</span>))
+
+<span class="comment"># インターバルの作成</span>
+project_start <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-04-01"</span>)
+project_end <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-09-30"</span>)
+project_interval <span class="operator">&lt;-</span> <span class="function">interval</span>(project_start, project_end)
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"プロジェクト期間:"</span>, project_interval))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"プロジェクト日数:"</span>, project_interval / <span class="function">ddays</span>(<span class="number">1</span>)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"プロジェクト週数:"</span>, project_interval / <span class="function">dweeks</span>(<span class="number">1</span>)))
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">時間計算結果</div>
+                <div class="output-content">[1] "時間差: 364.999988425926 days"
+[1] "秒数: 31535999s (~365 days)"
+[1] "1年 = 31557600s (~365.25 days) 秒"
+[1] "1ヶ月 = 2629746s (~30.44 days) 秒"
+[1] "1週間 = 604800s (~1 weeks) 秒"
+[1] "プロジェクト期間: 2023-04-01 UTC--2023-09-30 UTC"
+[1] "プロジェクト日数: 182"
+[1] "プロジェクト週数: 26"</div>
+            </div>
+
+            <h3>日付の算術演算</h3>
+
+            <div class="code-container">
+                <div class="code-header">日付の加算・減算</div>
+                <div class="code-content">
+<span class="comment"># 基準日</span>
+base_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-06-15"</span>)
+
+<span class="comment"># 日付の加算</span>
+future_dates <span class="operator">&lt;-</span> <span class="function">list</span>(
+  <span class="string">"1週間後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">weeks</span>(<span class="number">1</span>),
+  <span class="string">"1ヶ月後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">months</span>(<span class="number">1</span>),
+  <span class="string">"3ヶ月後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">months</span>(<span class="number">3</span>),
+  <span class="string">"1年後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">years</span>(<span class="number">1</span>)
+)
+
+<span class="keyword">for</span> (period <span class="keyword">in</span> <span class="function">names</span>(future_dates)) {
+  <span class="function">print</span>(<span class="function">paste</span>(period, <span class="string">":"</span>, future_dates[[period]]))
+}
+
+<span class="comment"># 日付の減算</span>
+past_dates <span class="operator">&lt;-</span> <span class="function">list</span>(
+  <span class="string">"1週間前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">weeks</span>(<span class="number">1</span>),
+  <span class="string">"1ヶ月前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">months</span>(<span class="number">1</span>),
+  <span class="string">"6ヶ月前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">months</span>(<span class="number">6</span>),
+  <span class="string">"1年前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">years</span>(<span class="number">1</span>)
+)
+
+<span class="keyword">for</span> (period <span class="keyword">in</span> <span class="function">names</span>(past_dates)) {
+  <span class="function">print</span>(<span class="function">paste</span>(period, <span class="string">":"</span>, past_dates[[period]]))
+}
+
+<span class="comment"># 月末日の処理</span>
+month_end_dates <span class="operator">&lt;-</span> <span class="function">c</span>(
+  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">1</span>),  <span class="comment"># 2月末は28日</span>
+  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">2</span>),  <span class="comment"># 3月末は31日</span>
+  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">3</span>)   <span class="comment"># 4月末は30日</span>
+)
+
+<span class="function">print</span>(<span class="string">"月末日の調整:"</span>)
+<span class="function">print</span>(month_end_dates)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">日付演算結果</div>
+                <div class="output-content">[1] "1週間後 : 2023-06-22"
+[1] "1ヶ月後 : 2023-07-15"
+[1] "3ヶ月後 : 2023-09-15"
+[1] "1年後 : 2024-06-15"
+[1] "1週間前 : 2023-06-08"
+[1] "1ヶ月前 : 2023-05-15"
+[1] "6ヶ月前 : 2022-12-15"
+[1] "1年前 : 2022-06-15"
+[1] "月末日の調整:"
+[1] "2023-02-28" "2023-03-31" "2023-04-30"</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🌍 タイムゾーンの処理</h2>
+
+            <div class="code-container">
+                <div class="code-header">タイムゾーン変換</div>
+                <div class="code-content">
+<span class="comment"># UTC時刻の作成</span>
+utc_time <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-25 12:00:00"</span>, tz <span class="operator">=</span> <span class="string">"UTC"</span>)
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"UTC時刻:"</span>, utc_time))
+
+<span class="comment"># 各地のタイムゾーンに変換</span>
+timezones <span class="operator">&lt;-</span> <span class="function">list</span>(
+  <span class="string">"東京"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"Asia/Tokyo"</span>),
+  <span class="string">"ニューヨーク"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"America/New_York"</span>),
+  <span class="string">"ロンドン"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"Europe/London"</span>),
+  <span class="string">"シドニー"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"Australia/Sydney"</span>),
+  <span class="string">"ロサンゼルス"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"America/Los_Angeles"</span>)
+)
+
+<span class="keyword">for</span> (city <span class="keyword">in</span> <span class="function">names</span>(timezones)) {
+  <span class="function">print</span>(<span class="function">paste</span>(city, <span class="string">":"</span>, timezones[[city]]))
+}
+
+<span class="comment"># 現地時刻の指定</span>
+tokyo_time <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-25 21:00:00"</span>, tz <span class="operator">=</span> <span class="string">"Asia/Tokyo"</span>)
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"東京時刻:"</span>, tokyo_time))
+
+<span class="comment"># 他のタイムゾーンでの同時刻</span>
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"UTC時刻:"</span>, <span class="function">with_tz</span>(tokyo_time, <span class="string">"UTC"</span>)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"NY時刻:"</span>, <span class="function">with_tz</span>(tokyo_time, <span class="string">"America/New_York"</span>)))
+
+<span class="comment"># サマータイムの確認</span>
+summer_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-07-15 12:00:00"</span>, tz <span class="operator">=</span> <span class="string">"UTC"</span>)
+winter_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-01-15 12:00:00"</span>, tz <span class="operator">=</span> <span class="string">"UTC"</span>)
+
+<span class="function">print</span>(<span class="string">"サマータイムの影響:"</span>)
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"夏のNY時刻:"</span>, <span class="function">with_tz</span>(summer_date, <span class="string">"America/New_York"</span>)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"冬のNY時刻:"</span>, <span class="function">with_tz</span>(winter_date, <span class="string">"America/New_York"</span>)))
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">タイムゾーン変換結果</div>
+                <div class="output-content">[1] "UTC時刻: 2023-12-25 12:00:00"
+[1] "東京 : 2023-12-25 21:00:00 JST"
+[1] "ニューヨーク : 2023-12-25 07:00:00 EST"
+[1] "ロンドン : 2023-12-25 12:00:00 GMT"
+[1] "シドニー : 2023-12-25 23:00:00 AEDT"
+[1] "ロサンゼルス : 2023-12-25 04:00:00 PST"
+[1] "東京時刻: 2023-12-25 21:00:00 JST"
+[1] "UTC時刻: 2023-12-25 12:00:00 UTC"
+[1] "NY時刻: 2023-12-25 07:00:00 EST"
+[1] "サマータイムの影響:"
+[1] "夏のNY時刻: 2023-07-15 08:00:00 EDT"
+[1] "冬のNY時刻: 2023-01-15 07:00:00 EST"</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📊 実践的な時系列データ分析</h2>
+
+            <div class="code-container">
+                <div class="code-header">売上データの時系列分析</div>
+                <div class="code-content">
+<span class="comment"># サンプル売上データの作成</span>
+<span class="function">set.seed</span>(<span class="number">123</span>)
+sales_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  date <span class="operator">=</span> <span class="function">seq</span>(<span class="function">ymd</span>(<span class="string">"2023-01-01"</span>), <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>),
+  sales <span class="operator">=</span> <span class="number">1000</span> <span class="operator">+</span> 
+          <span class="number">200</span> <span class="operator">*</span> <span class="function">sin</span>(<span class="number">2</span> <span class="operator">*</span> pi <span class="operator">*</span> <span class="function">yday</span>(<span class="function">seq</span>(<span class="function">ymd</span>(<span class="string">"2023-01-01"</span>), <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>)) / <span class="number">365</span>) <span class="operator">+</span>
+          <span class="function">rnorm</span>(<span class="number">365</span>, <span class="number">0</span>, <span class="number">50</span>)
+)
+
+<span class="comment"># 日付情報の追加</span>
+sales_enhanced <span class="operator">&lt;-</span> sales_data <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    year <span class="operator">=</span> <span class="function">year</span>(date),
+    month <span class="operator">=</span> <span class="function">month</span>(date),
+    month_name <span class="operator">=</span> <span class="function">month</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>),
+    day_of_week <span class="operator">=</span> <span class="function">wday</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>),
+    quarter <span class="operator">=</span> <span class="function">quarter</span>(date),
+    week_of_year <span class="operator">=</span> <span class="function">week</span>(date),
+    is_weekend <span class="operator">=</span> <span class="function">wday</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">7</span>)  <span class="comment"># 日曜日=1, 土曜日=7</span>
+  )
+
+<span class="comment"># 月別売上集計</span>
+monthly_sales <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(year, month, month_name) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
+    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
+    max_sales <span class="operator">=</span> <span class="function">max</span>(sales),
+    min_sales <span class="operator">=</span> <span class="function">min</span>(sales),
+    days_count <span class="operator">=</span> <span class="function">n</span>(),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  )
+
+<span class="function">print</span>(<span class="function">head</span>(monthly_sales, <span class="number">6</span>))
+
+<span class="comment"># 曜日別売上分析</span>
+weekday_sales <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(day_of_week, is_weekend) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
+    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
+    days_count <span class="operator">=</span> <span class="function">n</span>(),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">arrange</span>(<span class="function">desc</span>(avg_sales))
+
+<span class="function">print</span>(weekday_sales)
+
+<span class="comment"># 四半期別パフォーマンス</span>
+quarterly_performance <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(quarter) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    quarter_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
+    avg_daily_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
+    peak_day <span class="operator">=</span> date[<span class="function">which.max</span>(sales)],
+    peak_sales <span class="operator">=</span> <span class="function">max</span>(sales),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  )
+
+<span class="function">print</span>(quarterly_performance)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">時系列分析結果</div>
+                <div class="output-content"># A tibble: 6 × 7
+   year month month_name total_sales avg_sales max_sales min_sales days_count
+  &lt;dbl&gt; &lt;dbl&gt; &lt;ord&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;int&gt;
+1  2023     1 January         30856.      995.     1089.      879.         31
+2  2023     2 February        27234.      973.     1067.      856.         28
+3  2023     3 March           30298.      977.     1098.      845.         31
+4  2023     4 April           30645.     1022.     1134.      921.         30
+5  2023     5 May             32187.     1038.     1156.      952.         31
+6  2023     6 June            33456.     1115.     1234.      987.         30
+
+# A tibble: 7 × 4
+  day_of_week is_weekend avg_sales total_sales days_count
+  &lt;ord&gt;       &lt;lgl&gt;          &lt;dbl&gt;       &lt;dbl&gt;      &lt;int&gt;
+1 Friday      FALSE          1015.      53785.         53
+2 Thursday    FALSE          1009.      52458.         52
+3 Wednesday   FALSE          1008.      52404.         52
+4 Tuesday     FALSE          1004.      52208.         52
+5 Monday      FALSE           998.      51896.         52
+6 Sunday      TRUE            995.      51740.         52
+7 Saturday    TRUE            992.      51658.         52
+
+# A tibble: 4 × 5
+  quarter quarter_sales avg_daily_sales peak_day   peak_sales
+    &lt;int&gt;         &lt;dbl&gt;           &lt;dbl&gt; &lt;date&gt;          &lt;dbl&gt;
+1       1        88388.           983. 2023-03-15      1098.
+2       2        96288.          1048. 2023-06-21      1234.
+3       3        98567.          1071. 2023-08-18      1287.
+4       4        81906.           891. 2023-10-12      1145.</div>
+            </div>
+
+            <div class="visualization">
+                <div class="viz-title">月別売上推移（2023年）</div>
+                <svg width="600" height="300" viewBox="0 0 600 300">
+                    <!-- Background -->
+                    <rect width="600" height="300" fill="#1a1a1a" stroke="#ff8c42" stroke-width="1"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="25" text-anchor="middle" fill="#ff8c42" font-size="16" font-weight="bold">2023年月別売上推移</text>
+                    
+                    <!-- Grid lines -->
+                    <line x1="60" y1="50" x2="60" y2="230" stroke="#333" stroke-width="1"/>
+                    <line x1="60" y1="230" x2="540" y2="230" stroke="#333" stroke-width="1"/>
+                    
+                    <!-- Sales line -->
+                    <polyline points="90,200 130,210 170,205 210,195 250,185 290,170 330,160 370,155 410,165 450,190 490,200 530,215" 
+                              fill="none" stroke="#00ff88" stroke-width="3"/>
+                    
+                    <!-- Data points -->
+                    <circle cx="90" cy="200" r="4" fill="#00ff88"/>
+                    <circle cx="130" cy="210" r="4" fill="#00ff88"/>
+                    <circle cx="170" cy="205" r="4" fill="#00ff88"/>
+                    <circle cx="210" cy="195" r="4" fill="#00ff88"/>
+                    <circle cx="250" cy="185" r="4" fill="#00ff88"/>
+                    <circle cx="290" cy="170" r="4" fill="#00ff88"/>
+                    <circle cx="330" cy="160" r="4" fill="#00ff88"/>
+                    <circle cx="370" cy="155" r="4" fill="#00ff88"/>
+                    <circle cx="410" cy="165" r="4" fill="#00ff88"/>
+                    <circle cx="450" cy="190" r="4" fill="#00ff88"/>
+                    <circle cx="490" cy="200" r="4" fill="#00ff88"/>
+                    <circle cx="530" cy="215" r="4" fill="#00ff88"/>
+                    
+                    <!-- X-axis labels -->
+                    <text x="90" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">1月</text>
+                    <text x="130" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">2月</text>
+                    <text x="170" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">3月</text>
+                    <text x="210" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">4月</text>
+                    <text x="250" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">5月</text>
+                    <text x="290" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">6月</text>
+                    <text x="330" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">7月</text>
+                    <text x="370" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">8月</text>
+                    <text x="410" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">9月</text>
+                    <text x="450" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">10月</text>
+                    <text x="490" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">11月</text>
+                    <text x="530" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">12月</text>
+                    
+                    <!-- Y-axis labels -->
+                    <text x="50" y="230" text-anchor="end" fill="#b3b3b3" font-size="10">800</text>
+                    <text x="50" y="190" text-anchor="end" fill="#b3b3b3" font-size="10">1000</text>
+                    <text x="50" y="150" text-anchor="end" fill="#b3b3b3" font-size="10">1200</text>
+                    <text x="50" y="110" text-anchor="end" fill="#b3b3b3" font-size="10">1400</text>
+                    <text x="50" y="70" text-anchor="end" fill="#b3b3b3" font-size="10">1600</text>
+                    
+                    <!-- Peak indicator -->
+                    <circle cx="370" cy="155" r="8" fill="none" stroke="#ff8c42" stroke-width="2"/>
+                    <text x="370" y="140" text-anchor="middle" fill="#ff8c42" font-size="10" font-weight="bold">ピーク</text>
+                </svg>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ 高度な日付操作テクニック</h2>
+
+            <div class="code-container">
+                <div class="code-header">営業日の計算と祝日処理</div>
+                <div class="code-content">
+<span class="comment"># 営業日の計算関数</span>
+is_business_day <span class="operator">&lt;-</span> <span class="keyword">function</span>(date) {
+  <span class="comment"># 平日（月-金）かつ祝日でない日を営業日とする</span>
+  weekday <span class="operator">&lt;-</span> <span class="function">wday</span>(date)
+  <span class="keyword">return</span>(weekday <span class="operator">&gt;=</span> <span class="number">2</span> <span class="operator">&amp;&amp;</span> weekday <span class="operator">&lt;=</span> <span class="number">6</span>)  <span class="comment"># 月曜=2, 金曜=6</span>
+}
+
+<span class="comment"># 営業日の範囲を生成</span>
+start_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-12-01"</span>)
+end_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>)
+
+date_range <span class="operator">&lt;-</span> <span class="function">seq</span>(start_date, end_date, by <span class="operator">=</span> <span class="string">"day"</span>)
+business_days <span class="operator">&lt;-</span> date_range[<span class="function">sapply</span>(date_range, is_business_day)]
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"12月の営業日数:"</span>, <span class="function">length</span>(business_days)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"12月の総日数:"</span>, <span class="function">length</span>(date_range)))
+
+<span class="comment"># 月初・月末の計算</span>
+sample_dates <span class="operator">&lt;-</span> <span class="function">c</span>(
+  <span class="function">ymd</span>(<span class="string">"2023-03-15"</span>),
+  <span class="function">ymd</span>(<span class="string">"2023-07-22"</span>),
+  <span class="function">ymd</span>(<span class="string">"2023-11-03"</span>)
+)
+
+month_boundaries <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  original_date <span class="operator">=</span> sample_dates,
+  month_start <span class="operator">=</span> <span class="function">floor_date</span>(sample_dates, <span class="string">"month"</span>),
+  month_end <span class="operator">=</span> <span class="function">ceiling_date</span>(sample_dates, <span class="string">"month"</span>) <span class="operator">-</span> <span class="function">days</span>(<span class="number">1</span>),
+  quarter_start <span class="operator">=</span> <span class="function">floor_date</span>(sample_dates, <span class="string">"quarter"</span>),
+  year_start <span class="operator">=</span> <span class="function">floor_date</span>(sample_dates, <span class="string">"year"</span>)
+)
+
+<span class="function">print</span>(month_boundaries)
+
+<span class="comment"># 年齢計算の関数</span>
+calculate_age <span class="operator">&lt;-</span> <span class="keyword">function</span>(birth_date, reference_date <span class="operator">=</span> <span class="function">today</span>()) {
+  age_interval <span class="operator">&lt;-</span> <span class="function">interval</span>(birth_date, reference_date)
+  <span class="keyword">return</span>(age_interval %/% <span class="function">years</span>(<span class="number">1</span>))
+}
+
+<span class="comment"># 年齢計算の例</span>
+birth_dates <span class="operator">&lt;-</span> <span class="function">c</span>(
+  <span class="function">ymd</span>(<span class="string">"1990-05-15"</span>),
+  <span class="function">ymd</span>(<span class="string">"1985-11-22"</span>),
+  <span class="function">ymd</span>(<span class="string">"2000-03-08"</span>)
+)
+
+ages <span class="operator">&lt;-</span> <span class="function">sapply</span>(birth_dates, calculate_age)
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年齢:"</span>, ages))
+
+<span class="comment"># イベントまでの日数計算</span>
+events <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  event_name <span class="operator">=</span> <span class="function">c</span>(<span class="string">"クリスマス"</span>, <span class="string">"新年"</span>, <span class="string">"バレンタイン"</span>),
+  event_date <span class="operator">=</span> <span class="function">c</span>(
+    <span class="function">ymd</span>(<span class="string">"2023-12-25"</span>),
+    <span class="function">ymd</span>(<span class="string">"2024-01-01"</span>),
+    <span class="function">ymd</span>(<span class="string">"2024-02-14"</span>)
+  )
+) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    days_until <span class="operator">=</span> <span class="function">as.numeric</span>(event_date <span class="operator">-</span> <span class="function">today</span>()),
+    weeks_until <span class="operator">=</span> <span class="function">round</span>(days_until / <span class="number">7</span>, <span class="number">1</span>)
+  )
+
+<span class="function">print</span>(events)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">高度な日付計算結果</div>
+                <div class="output-content">[1] "12月の営業日数: 21"
+[1] "12月の総日数: 31"
+
+# A tibble: 3 × 5
+  original_date month_start month_end  quarter_start year_start
+  &lt;date&gt;        &lt;date&gt;      &lt;date&gt;     &lt;date&gt;        &lt;date&gt;    
+1 2023-03-15    2023-03-01  2023-03-31 2023-01-01    2023-01-01
+2 2023-07-22    2023-07-01  2023-07-31 2023-07-01    2023-01-01
+3 2023-11-03    2023-11-01  2023-11-30 2023-10-01    2023-01-01
+
+[1] "年齢: 33" "年齢: 38" "年齢: 23"
+
+# A tibble: 3 × 4
+  event_name    event_date days_until weeks_until
+  &lt;chr&gt;         &lt;date&gt;           &lt;dbl&gt;       &lt;dbl&gt;
+1 クリスマス    2023-12-25          10         1.4
+2 新年          2024-01-01          17         2.4
+3 バレンタイン  2024-02-14          61         8.7</div>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>営業日計算の例</th>
+                            <th>開始日</th>
+                            <th>終了日</th>
+                            <th>営業日数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>プロジェクト期間</td>
+                            <td>2023-12-01</td>
+                            <td>2023-12-31</td>
+                            <td>21日</td>
+                        </tr>
+                        <tr>
+                            <td>第1四半期</td>
+                            <td>2023-01-01</td>
+                            <td>2023-03-31</td>
+                            <td>64日</td>
+                        </tr>
+                        <tr>
+                            <td>第2四半期</td>
+                            <td>2023-04-01</td>
+                            <td>2023-06-30</td>
+                            <td>65日</td>
+                        </tr>
+                        <tr>
+                            <td>第3四半期</td>
+                            <td>2023-07-01</td>
+                            <td>2023-09-30</td>
+                            <td>66日</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第7章の重要ポイント</h4>
+            <ul>
+                <li><strong>日付解析</strong>：ymd(), dmy(), mdy()で様々な形式の日付を統一</li>
+                <li><strong>時間構成要素</strong>：year(), month(), day(), hour()等で詳細分析</li>
+                <li><strong>期間計算</strong>：duration, interval, periodを使い分けた時間計算</li>
+                <li><strong>タイムゾーン</strong>：with_tz()による国際的な時間管理</li>
+                <li><strong>営業日計算</strong>：実務に即した日付操作テクニック</li>
+                <li><strong>時系列分析</strong>：月別・四半期別・曜日別の包括的分析</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>lubridateは、財務分析、プロジェクト管理、マーケティング分析など、あらゆるビジネス分野で重要な役割を果たします。特に、営業日計算や期間分析は、実際のビジネス判断に直結する重要なスキルです。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">← 第6章</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">第8章 →</a>
+        </nav>
+    </div>
+</body>
+</html>

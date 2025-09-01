@@ -1,0 +1,214 @@
+# 📊 Tidyverse/Tidymodels統計機械学習 完全ガイド
+
+## 🎯 学習ロードマップ概要
+**基礎 → 統計 → 機械学習 → 発展**  
+`tidyverse` → `broom` → `tidymodels` → `stacks/modeltime`
+
+---
+
+## 📚 Part 1: Tidyverse基礎編
+Rでのモダンなデータサイエンスワークフローの基礎を身につける
+
+### Chapter 1: Tidyverseの世界への招待 
+- **主要パッケージ**: `tidyverse`
+- Tidy data原則とは何か
+- パイプ演算子(`%>%`, `|>`)の威力
+- Tidyverseエコシステム全体像
+- RStudioでの効率的な開発環境構築
+
+### Chapter 2: データの読み込みと基本操作 
+- **主要パッケージ**: `readr`, `tibble`
+- CSVからExcelまで：`readr`による効率的データ読み込み
+- tibbleの特徴と従来のdata.frameとの違い
+- データの基本情報確認（`glimpse`, `skimr`）
+- 文字エンコーディングと日本語データの扱い
+
+### Chapter 3: データ変形の芸術 - tidyr 
+- **主要パッケージ**: `tidyr`
+- Wide形式とLong形式：`pivot_longer`と`pivot_wider`
+- 文字列分割・結合：`separate`と`unite`
+- 欠損値の処理：`drop_na`, `fill`, `replace_na`
+- ネストデータと`nest`/`unnest`
+
+### Chapter 4: データ操作の5つの動詞 - dplyr 
+- **主要パッケージ**: `dplyr`
+- `select`: 列選択の多彩なパターン
+- `filter`: 条件抽出の応用技法
+- `mutate`: 新しい変数の作成と変換
+- `arrange`: データの並び替え
+- `summarise`: 集計処理の極意
+- `group_by`との組み合わせパターン
+
+### Chapter 5: テーブル結合とリレーショナルデータ 
+- **主要パッケージ**: `dplyr`
+- 4つのjoin操作：`inner_join`, `left_join`, `right_join`, `full_join`
+- `semi_join`と`anti_join`の活用場面
+- 複数キーでの結合
+- 結合時のトラブルシューティング
+
+### Chapter 6: 美しいデータ可視化 - ggplot2 
+- **主要パッケージ**: `ggplot2`
+- Grammar of Graphicsの理解
+- geom_*による多様なグラフ作成
+- aestheticsとmappingの使い分け
+- facet_*による多面的可視化
+- テーマとカスタマイズ
+- インタラクティブ化（`plotly`連携）
+
+### Chapter 7: 関数型プログラミング - purrr 
+- **主要パッケージ**: `purrr`
+- `map`ファミリーの完全理解
+- リストとネストデータフレームの操作
+- `safely`, `possibly`によるエラーハンドリング
+- 複雑なデータ構造の処理例
+
+---
+
+## 📈 Part 2: Tidyなアプローチによる統計解析
+> **学習目標**: 統計手法をtidyな方法で実装し、結果を美しく可視化する
+
+### Chapter 8: 探索的データ解析(EDA)の実践 
+- **主要パッケージ**: `skimr`, `DataExplorer`, `corrr`
+- データの全体像把握：`skim`による高速概要
+- 欠損値パターンの可視化
+- 相関分析の新しいアプローチ：`corrr`
+- カテゴリカル変数の探索
+
+### Chapter 9: 統計的推論の現代的アプローチ 
+- **主要パッケージ**: `infer`
+- Bootstrap法による信頼区間
+- 置換検定による仮説検定
+- `infer`による直感的統計的推論
+- p値の正しい解釈
+
+### Chapter 10: 回帰分析のTidy実装 
+- **主要パッケージ**: `broom`, `modelr`
+- 線形回帰モデルの構築と診断
+- `tidy`, `glance`, `augment`による結果整理
+- モデル比較とAIC/BIC
+- 交互作用項と多項式回帰
+- ロジスティック回帰の実装
+
+### Chapter 11: 複数モデルの同時処理 
+- **主要パッケージ**: `broom`, `purrr`
+- `nest`によるグループ別モデリング
+- `map`を使った複数モデルの一括処理
+- モデル結果の比較可視化
+- 予測精度の評価
+
+---
+
+## 🤖 Part 3: Tidymodels機械学習
+> **学習目標**: 統一されたMLワークフローで効率的な機械学習を実践する
+
+### Chapter 12: Tidymodels入門 - 統一MLワークフロー 
+- **主要パッケージ**: `tidymodels`
+- Tidymodelsの設計思想
+- 主要パッケージの役割分担
+- 基本的なMLワークフローの構築
+- Train/Test分割とクロスバリデーション
+
+### Chapter 13: データ前処理の革命 - recipes 
+- **主要パッケージ**: `recipes`
+- recipe()による前処理パイプライン設計
+- 数値変数の処理：正規化、標準化、Box-Cox変換
+- カテゴリカル変数：ダミー変数、順序エンコーディング
+- 次元削減：PCA、ICA
+- 特徴量選択手法
+
+### Chapter 14: モデル仕様の統一 - parsnip 
+- **主要パッケージ**: `parsnip`
+- 統一されたモデルインターフェース
+- 線形回帰からランダムフォレストまで
+- エンジンの切り替え（lm, glmnet, ranger等）
+- モードの設定（regression vs classification）
+
+### Chapter 15: ワークフロー管理 - workflows 
+- **主要パッケージ**: `workflows`
+- recipe + model = workflow
+- 前処理とモデルの一括管理
+- workflowの利点と使い分け
+
+### Chapter 16: リサンプリング戦略 - rsample 
+- **主要パッケージ**: `rsample`
+- k-fold交差検証の実装
+- 時系列データの分割
+- Bootstrap リサンプリング
+- 層化サンプリング
+
+### Chapter 17: ハイパーパラメータチューニング - tune 
+- **主要パッケージ**: `tune`, `dials`
+- グリッドサーチとランダムサーチ
+- ベイズ最適化の活用
+- 並列処理による高速化
+- チューニング結果の可視化
+
+### Chapter 18: モデル評価の極意 - yardstick 
+- **主要パッケージ**: `yardstick`
+- 分類問題の評価指標（Accuracy, Precision, Recall, F1, AUC）
+- 回帰問題の評価指標（RMSE, MAE, R²）
+- 多クラス分類の評価
+- ROC曲線とPR曲線の作成
+
+### Chapter 19: 予測と解釈 
+- **主要パッケージ**: `workflows`, `yardstick`
+- 新しいデータでの予測
+- 予測区間の計算
+- モデルの解釈可能性
+- 特徴量重要度の算出
+
+---
+
+## 🚀 Part 4: 発展的トピック
+> **学習目標**: より高度な手法と最新の技術動向を学ぶ
+
+### Chapter 20: アンサンブル学習 - stacks 
+- **主要パッケージ**: `stacks`
+- モデルスタッキングの理論
+- 複数モデルの組み合わせ
+- ブレンディング手法
+- アンサンブルモデルの評価
+
+### Chapter 21: 時系列分析 - modeltime 
+- **主要パッケージ**: `modeltime`, `timetk`
+- 時系列データの前処理
+- ARIMA、Prophet、機械学習モデルの統合
+- 予測精度の比較
+- 時系列の可視化
+
+### Chapter 22: テキスト分析 - tidytext 
+- **主要パッケージ**: `tidytext`, `textrecipes`
+- テキストのトークン化
+- 感情分析
+- TF-IDFとword embeddings
+- テキスト分類
+
+### Chapter 23: 深層学習の統合 - torch 
+- **主要パッケージ**: `torch`, `luz`
+- TorchとTidymodelsの連携
+- ニューラルネットワークのtidyワークフロー
+- 画像・テキストデータの処理
+- 転移学習の実装
+
+### Chapter 24: 実践プロジェクト集 
+- **総合パッケージ**: 全部
+- Kaggleコンペティションの実例で解説
+---
+
+## 📖 付録・参考資料
+
+### Appendix A: トラブルシューティング集
+- よくあるエラーと解決法
+- パッケージ競合の解決
+- メモリ効率の改善
+
+### Appendix B: 実務での活用Tips
+- プロダクション環境での注意点
+- チーム開発でのベストプラクティス
+- バージョン管理とrenv
+
+### Appendix C: 参考文献・リソース
+- 公式ドキュメント
+- 推薦書籍
+- 関連ブログ・チュートリアル
+

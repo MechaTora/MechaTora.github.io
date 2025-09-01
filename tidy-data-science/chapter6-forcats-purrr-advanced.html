@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第6章: forcats & purrr - 因子とリスト操作 | Tidyverse完全マスター</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-neon);
+            box-shadow: var(--shadow-neon);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-neon);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-neon);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-neon);
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 10px var(--accent-neon);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--accent-neon);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .nav-button.current {
+            background: var(--accent-neon);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--accent-neon);
+        }
+
+        /* Content Sections */
+        .section {
+            background: var(--bg-secondary);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-purple);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-neon);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-neon);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            margin: 20px 0;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-neon);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.1);
+        }
+
+        .code-header {
+            background: var(--accent-neon);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-header::before {
+            content: '⚡';
+            font-size: 1.1rem;
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .operator { color: #f85149; }
+        .number { color: #79c0ff; }
+        .variable { color: #ffa657; }
+
+        /* Output Display */
+        .output-container {
+            margin: 20px 0;
+            background: #0a0e1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .output-header {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-header::before {
+            content: '📊';
+        }
+
+        .output-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-cyan);
+        }
+
+        /* Data Visualization */
+        .visualization {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+            text-align: center;
+        }
+
+        .viz-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Data Tables */
+        .data-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-neon);
+        }
+
+        th {
+            background: var(--accent-neon);
+            color: var(--bg-primary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-neon);
+        }
+
+        .key-points h4 {
+            color: var(--accent-neon);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '⚠️';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .nav-button {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .code-content, .output-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chapter-nav {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .nav-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第6章: forcats & purrr</h1>
+            <p class="subtitle">因子とリスト操作の高度なテクニック</p>
+            <div class="chapter-meta">
+                <span>📊 因子データの操作</span>
+                <span>🔄 関数型プログラミング</span>
+                <span>📈 ネストデータ処理</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
+            <a href="#" class="nav-button current">第6章</a>
+        </nav>
+
+        <section class="section">
+            <h2>🎯 forcats: 因子データの自在な操作</h2>
+            
+            <p>forcatsパッケージは、Rの因子（factor）データを効率的に操作するためのツールです。因子は順序のあるカテゴリカルデータを表現するのに重要な役割を果たします。</p>
+
+            <h3>基本的な因子操作</h3>
+
+            <div class="code-container">
+                <div class="code-header">因子の作成とレベル操作</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">forcats</span>)
+<span class="keyword">library</span>(<span class="string">dplyr</span>)
+
+<span class="comment"># 基本的な因子の作成</span>
+satisfaction <span class="operator">&lt;-</span> <span class="function">factor</span>(<span class="function">c</span>(<span class="string">"満足"</span>, <span class="string">"普通"</span>, <span class="string">"不満"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>, <span class="string">"普通"</span>))
+<span class="function">levels</span>(satisfaction)
+
+<span class="comment"># fct_relevel()でレベルの順序を指定</span>
+satisfaction_ordered <span class="operator">&lt;-</span> <span class="function">fct_relevel</span>(satisfaction, 
+  <span class="string">"非常に満足"</span>, <span class="string">"満足"</span>, <span class="string">"普通"</span>, <span class="string">"不満"</span>)
+<span class="function">levels</span>(satisfaction_ordered)
+
+<span class="comment"># fct_infreq()で頻度順に並び替え</span>
+satisfaction_freq <span class="operator">&lt;-</span> <span class="function">fct_infreq</span>(satisfaction)
+<span class="function">levels</span>(satisfaction_freq)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">実行結果</div>
+                <div class="output-content">[1] "不満"     "普通"     "満足"     "非常に満足"
+
+[1] "非常に満足" "満足"       "普通"       "不満"
+
+[1] "普通" "満足" "不満" "非常に満足"</div>
+            </div>
+
+            <h3>因子レベルの統合と再コード化</h3>
+
+            <div class="code-container">
+                <div class="code-header">レベルの統合とリコード</div>
+                <div class="code-content">
+<span class="comment"># サンプルデータの作成</span>
+products <span class="operator">&lt;-</span> <span class="function">factor</span>(<span class="function">c</span>(<span class="string">"スマートフォン"</span>, <span class="string">"タブレット"</span>, <span class="string">"ノートPC"</span>, <span class="string">"デスクトップPC"</span>, 
+                      <span class="string">"スマートフォン"</span>, <span class="string">"その他"</span>, <span class="string">"アクセサリ"</span>, <span class="string">"タブレット"</span>))
+
+<span class="comment"># fct_collapse()でカテゴリを統合</span>
+products_grouped <span class="operator">&lt;-</span> <span class="function">fct_collapse</span>(products,
+  <span class="string">"モバイル機器"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"スマートフォン"</span>, <span class="string">"タブレット"</span>),
+  <span class="string">"PC"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"ノートPC"</span>, <span class="string">"デスクトップPC"</span>),
+  <span class="string">"その他"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"その他"</span>, <span class="string">"アクセサリ"</span>)
+)
+
+<span class="function">table</span>(products_grouped)
+
+<span class="comment"># fct_recode()で個別にリコード</span>
+satisfaction_jp <span class="operator">&lt;-</span> <span class="function">factor</span>(<span class="function">c</span>(<span class="string">"excellent"</span>, <span class="string">"good"</span>, <span class="string">"fair"</span>, <span class="string">"poor"</span>))
+satisfaction_recoded <span class="operator">&lt;-</span> <span class="function">fct_recode</span>(satisfaction_jp,
+  <span class="string">"優秀"</span> <span class="operator">=</span> <span class="string">"excellent"</span>,
+  <span class="string">"良好"</span> <span class="operator">=</span> <span class="string">"good"</span>,
+  <span class="string">"普通"</span> <span class="operator">=</span> <span class="string">"fair"</span>,
+  <span class="string">"不良"</span> <span class="operator">=</span> <span class="string">"poor"</span>
+)
+
+<span class="function">levels</span>(satisfaction_recoded)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">統合結果</div>
+                <div class="output-content">products_grouped
+   モバイル機器            PC        その他 
+            3             2             3 
+
+[1] "優秀" "良好" "普通" "不良"</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎲 purrr: 関数型プログラミングの威力</h2>
+            
+            <p>purrrパッケージは、リストやベクトルに対する関数型プログラミングの手法を提供します。map関数ファミリーを使って、効率的な反復処理を実現できます。</p>
+
+            <h3>map関数の基本使用法</h3>
+
+            <div class="code-container">
+                <div class="code-header">map関数ファミリーの基本</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">purrr</span>)
+
+<span class="comment"># 数値リストの作成</span>
+numbers <span class="operator">&lt;-</span> <span class="function">list</span>(<span class="function">c</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>), <span class="function">c</span>(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>), <span class="function">c</span>(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>))
+
+<span class="comment"># map()で各要素に関数を適用</span>
+sums <span class="operator">&lt;-</span> <span class="function">map</span>(numbers, sum)
+<span class="function">str</span>(sums)
+
+<span class="comment"># map_dbl()で数値ベクトルを返す</span>
+sums_numeric <span class="operator">&lt;-</span> <span class="function">map_dbl</span>(numbers, sum)
+sums_numeric
+
+<span class="comment"># map_chr()で文字ベクトルを返す</span>
+lengths_char <span class="operator">&lt;-</span> <span class="function">map_chr</span>(numbers, ~ <span class="function">paste</span>(<span class="string">"長さ:"</span>, <span class="function">length</span>(.x)))
+lengths_char
+
+<span class="comment"># 複雑な関数の適用</span>
+stats <span class="operator">&lt;-</span> <span class="function">map</span>(numbers, ~ <span class="function">list</span>(
+  mean <span class="operator">=</span> <span class="function">mean</span>(.x),
+  sd <span class="operator">=</span> <span class="function">sd</span>(.x),
+  range <span class="operator">=</span> <span class="function">range</span>(.x)
+))
+stats
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">map実行結果</div>
+                <div class="output-content">List of 3
+ $ : int 6
+ $ : int 15
+ $ : int 24
+
+[1]  6 15 24
+
+[1] "長さ: 3" "長さ: 3" "長さ: 3"
+
+[[1]]
+[[1]]$mean
+[1] 2
+
+[[1]]$sd
+[1] 1
+
+[[1]]$range
+[1] 1 3
+
+[[2]]
+[[2]]$mean
+[1] 5
+
+[[2]]$sd
+[1] 1
+
+[[2]]$range
+[1] 4 6</div>
+            </div>
+
+            <h3>ネストしたデータフレームの処理</h3>
+
+            <div class="code-container">
+                <div class="code-header">ネストデータとpurrr</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">tidyr</span>)
+
+<span class="comment"># サンプルの売上データ</span>
+sales_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  store <span class="operator">=</span> <span class="function">rep</span>(<span class="function">c</span>(<span class="string">"Store_A"</span>, <span class="string">"Store_B"</span>, <span class="string">"Store_C"</span>), each <span class="operator">=</span> <span class="number">12</span>),
+  month <span class="operator">=</span> <span class="function">rep</span>(<span class="number">1</span>:<span class="number">12</span>, <span class="number">3</span>),
+  sales <span class="operator">=</span> <span class="function">c</span>(<span class="function">rnorm</span>(<span class="number">12</span>, <span class="number">100</span>, <span class="number">20</span>), <span class="function">rnorm</span>(<span class="number">12</span>, <span class="number">150</span>, <span class="number">30</span>), <span class="function">rnorm</span>(<span class="number">12</span>, <span class="number">80</span>, <span class="number">15</span>))
+)
+
+<span class="comment"># 店舗ごとにネスト</span>
+nested_sales <span class="operator">&lt;-</span> sales_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(store) <span class="operator">%&gt;%</span>
+  <span class="function">nest</span>()
+
+<span class="function">print</span>(nested_sales)
+
+<span class="comment"># 各店舗の統計量を計算</span>
+store_stats <span class="operator">&lt;-</span> nested_sales <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    stats <span class="operator">=</span> <span class="function">map</span>(data, ~ <span class="function">list</span>(
+      mean_sales <span class="operator">=</span> <span class="function">mean</span>(.x$sales),
+      total_sales <span class="operator">=</span> <span class="function">sum</span>(.x$sales),
+      peak_month <span class="operator">=</span> .x$month[<span class="function">which.max</span>(.x$sales)]
+    ))
+  )
+
+<span class="comment"># 統計情報を展開</span>
+store_summary <span class="operator">&lt;-</span> store_stats <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    mean_sales <span class="operator">=</span> <span class="function">map_dbl</span>(stats, ~ .x$mean_sales),
+    total_sales <span class="operator">=</span> <span class="function">map_dbl</span>(stats, ~ .x$total_sales),
+    peak_month <span class="operator">=</span> <span class="function">map_dbl</span>(stats, ~ .x$peak_month)
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(store, mean_sales, total_sales, peak_month)
+
+<span class="function">print</span>(store_summary)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">ネストデータ処理結果</div>
+                <div class="output-content"># A tibble: 3 × 2
+  store   data             
+  &lt;chr&gt;   &lt;list&gt;           
+1 Store_A &lt;tibble [12 × 2]&gt;
+2 Store_B &lt;tibble [12 × 2]&gt;
+3 Store_C &lt;tibble [12 × 2]&gt;
+
+# A tibble: 3 × 4
+  store   mean_sales total_sales peak_month
+  &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+1 Store_A       98.3       1180.          8
+2 Store_B      148.        1776.          5
+3 Store_C       79.4        953.         11</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📊 実践的な因子操作: 顧客満足度分析</h2>
+
+            <div class="code-container">
+                <div class="code-header">顧客満足度データの処理</div>
+                <div class="code-content">
+<span class="comment"># 顧客満足度調査データの作成</span>
+<span class="function">set.seed</span>(<span class="number">123</span>)
+customer_survey <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  customer_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">1000</span>,
+  age_group <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"18-25"</span>, <span class="string">"26-35"</span>, <span class="string">"36-45"</span>, <span class="string">"46-55"</span>, <span class="string">"56+"</span>), <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  satisfaction <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>), 
+                        <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, 
+                        prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.05</span>, <span class="number">0.15</span>, <span class="number">0.3</span>, <span class="number">0.35</span>, <span class="number">0.15</span>)),
+  product_type <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"電子機器"</span>, <span class="string">"衣料品"</span>, <span class="string">"食品"</span>, <span class="string">"書籍"</span>, <span class="string">"スポーツ用品"</span>), 
+                          <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
+)
+
+<span class="comment"># 因子の順序を適切に設定</span>
+customer_survey <span class="operator">&lt;-</span> customer_survey <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    age_group <span class="operator">=</span> <span class="function">fct_relevel</span>(age_group, <span class="string">"18-25"</span>, <span class="string">"26-35"</span>, <span class="string">"36-45"</span>, <span class="string">"46-55"</span>, <span class="string">"56+"</span>),
+    satisfaction <span class="operator">=</span> <span class="function">fct_relevel</span>(satisfaction, <span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>)
+  )
+
+<span class="comment"># 年代別満足度の集計</span>
+age_satisfaction <span class="operator">&lt;-</span> customer_survey <span class="operator">%&gt;%</span>
+  <span class="function">count</span>(age_group, satisfaction) <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(age_group) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(percentage <span class="operator">=</span> n / <span class="function">sum</span>(n) <span class="operator">*</span> <span class="number">100</span>)
+
+<span class="function">print</span>(age_satisfaction)
+
+<span class="comment"># 満足度を3段階に統合</span>
+customer_survey_simplified <span class="operator">&lt;-</span> customer_survey <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    satisfaction_simple <span class="operator">=</span> <span class="function">fct_collapse</span>(satisfaction,
+      <span class="string">"不満"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"非常に不満"</span>, <span class="string">"不満"</span>),
+      <span class="string">"普通"</span> <span class="operator">=</span> <span class="string">"普通"</span>,
+      <span class="string">"満足"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"満足"</span>, <span class="string">"非常に満足"</span>)
+    )
+  )
+
+<span class="comment"># 製品タイプ別の満足度（簡略版）</span>
+product_satisfaction <span class="operator">&lt;-</span> customer_survey_simplified <span class="operator">%&gt;%</span>
+  <span class="function">count</span>(product_type, satisfaction_simple) <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(product_type) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(percentage <span class="operator">=</span> <span class="function">round</span>(n / <span class="function">sum</span>(n) <span class="operator">*</span> <span class="number">100</span>, <span class="number">1</span>))
+
+<span class="function">print</span>(product_satisfaction)
+</div>
+            </div>
+
+            <div class="visualization">
+                <div class="viz-title">年代別満足度分析結果</div>
+                <svg width="600" height="300" viewBox="0 0 600 300">
+                    <!-- Background -->
+                    <rect width="600" height="300" fill="#1a1a1a" stroke="#00ff88" stroke-width="1"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="25" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">年代別満足度分布</text>
+                    
+                    <!-- Age groups bars -->
+                    <!-- 18-25 -->
+                    <rect x="50" y="50" width="30" height="60" fill="#ff7b72" opacity="0.8"/>
+                    <rect x="50" y="110" width="30" height="80" fill="#ffa657" opacity="0.8"/>
+                    <rect x="50" y="190" width="30" height="40" fill="#00ff88" opacity="0.8"/>
+                    
+                    <!-- 26-35 -->
+                    <rect x="130" y="60" width="30" height="50" fill="#ff7b72" opacity="0.8"/>
+                    <rect x="130" y="110" width="30" height="90" fill="#ffa657" opacity="0.8"/>
+                    <rect x="130" y="200" width="30" height="30" fill="#00ff88" opacity="0.8"/>
+                    
+                    <!-- 36-45 -->
+                    <rect x="210" y="70" width="30" height="40" fill="#ff7b72" opacity="0.8"/>
+                    <rect x="210" y="110" width="30" height="70" fill="#ffa657" opacity="0.8"/>
+                    <rect x="210" y="180" width="30" height="50" fill="#00ff88" opacity="0.8"/>
+                    
+                    <!-- 46-55 -->
+                    <rect x="290" y="80" width="30" height="30" fill="#ff7b72" opacity="0.8"/>
+                    <rect x="290" y="110" width="30" height="60" fill="#ffa657" opacity="0.8"/>
+                    <rect x="290" y="170" width="30" height="60" fill="#00ff88" opacity="0.8"/>
+                    
+                    <!-- 56+ -->
+                    <rect x="370" y="90" width="30" height="20" fill="#ff7b72" opacity="0.8"/>
+                    <rect x="370" y="110" width="30" height="50" fill="#ffa657" opacity="0.8"/>
+                    <rect x="370" y="160" width="30" height="70" fill="#00ff88" opacity="0.8"/>
+                    
+                    <!-- Labels -->
+                    <text x="65" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">18-25</text>
+                    <text x="145" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">26-35</text>
+                    <text x="225" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">36-45</text>
+                    <text x="305" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">46-55</text>
+                    <text x="385" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">56+</text>
+                    
+                    <!-- Legend -->
+                    <rect x="450" y="70" width="15" height="15" fill="#ff7b72" opacity="0.8"/>
+                    <text x="470" y="82" fill="#b3b3b3" font-size="12">不満</text>
+                    <rect x="450" y="95" width="15" height="15" fill="#ffa657" opacity="0.8"/>
+                    <text x="470" y="107" fill="#b3b3b3" font-size="12">普通</text>
+                    <rect x="450" y="120" width="15" height="15" fill="#00ff88" opacity="0.8"/>
+                    <text x="470" y="132" fill="#b3b3b3" font-size="12">満足</text>
+                </svg>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔄 高度なpurrr活用: 複数データセットの一括処理</h2>
+
+            <div class="code-container">
+                <div class="code-header">複数ファイルの一括読み込みと処理</div>
+                <div class="code-content">
+<span class="comment"># 複数の月次売上ファイルがあると仮定</span>
+<span class="comment"># ファイル名のリストを作成</span>
+file_names <span class="operator">&lt;-</span> <span class="function">paste0</span>(<span class="string">"sales_"</span>, <span class="number">2023</span>, <span class="string">"_"</span>, <span class="function">sprintf</span>(<span class="string">"%02d"</span>, <span class="number">1</span>:<span class="number">12</span>), <span class="string">".csv"</span>)
+
+<span class="comment"># ダミーデータを作成する関数</span>
+create_monthly_data <span class="operator">&lt;-</span> <span class="keyword">function</span>(month) {
+  <span class="function">tibble</span>(
+    month <span class="operator">=</span> month,
+    product <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"Product_A"</span>, <span class="string">"Product_B"</span>, <span class="string">"Product_C"</span>), <span class="number">100</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+    sales <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">1000</span> <span class="operator">+</span> month <span class="operator">*</span> <span class="number">50</span>, <span class="number">200</span>),
+    region <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"北海道"</span>, <span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"九州"</span>), <span class="number">100</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
+  )
+}
+
+<span class="comment"># map()を使って全月のデータを作成</span>
+monthly_data_list <span class="operator">&lt;-</span> <span class="function">map</span>(<span class="number">1</span>:<span class="number">12</span>, create_monthly_data)
+<span class="function">names</span>(monthly_data_list) <span class="operator">&lt;-</span> <span class="function">paste0</span>(<span class="string">"Month_"</span>, <span class="number">1</span>:<span class="number">12</span>)
+
+<span class="comment"># 各月の統計を計算</span>
+monthly_stats <span class="operator">&lt;-</span> <span class="function">map_dfr</span>(monthly_data_list, ~ {
+  .x <span class="operator">%&gt;%</span>
+    <span class="function">summarise</span>(
+      total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
+      avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
+      transactions <span class="operator">=</span> <span class="function">n</span>(),
+      unique_products <span class="operator">=</span> <span class="function">n_distinct</span>(product)
+    )
+}, .id <span class="operator">=</span> <span class="string">"month"</span>)
+
+<span class="function">print</span>(monthly_stats)
+
+<span class="comment"># 地域別分析を各月に対して実行</span>
+regional_analysis <span class="operator">&lt;-</span> <span class="function">map</span>(monthly_data_list, ~ {
+  .x <span class="operator">%&gt;%</span>
+    <span class="function">group_by</span>(region) <span class="operator">%&gt;%</span>
+    <span class="function">summarise</span>(
+      total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
+      avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
+      transactions <span class="operator">=</span> <span class="function">n</span>(),
+      .groups <span class="operator">=</span> <span class="string">'drop'</span>
+    )
+})
+
+<span class="comment"># 関東地域の月次推移を抽出</span>
+kanto_trend <span class="operator">&lt;-</span> <span class="function">map_dfr</span>(regional_analysis, ~ {
+  .x <span class="operator">%&gt;%</span> <span class="function">filter</span>(region <span class="operator">==</span> <span class="string">"関東"</span>)
+}, .id <span class="operator">=</span> <span class="string">"month"</span>)
+
+<span class="function">print</span>(kanto_trend)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">一括処理結果</div>
+                <div class="output-content"># A tibble: 12 × 5
+   month   total_sales avg_sales transactions unique_products
+   &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;        &lt;int&gt;           &lt;int&gt;
+ 1 Month_1     104539.     1045.          100               3
+ 2 Month_2     109876.     1099.          100               3
+ 3 Month_3     115234.     1152.          100               3
+ 4 Month_4     120512.     1205.          100               3
+ 5 Month_5     125798.     1258.          100               3
+ 6 Month_6     131067.     1311.          100               3
+
+# A tibble: 12 × 4
+   month   region total_sales avg_sales transactions
+   &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;        &lt;int&gt;
+ 1 Month_1 関東        26789.     1115.           24
+ 2 Month_2 関東        28156.     1173.           24
+ 3 Month_3 関東        29523.     1230.           24
+ 4 Month_4 関東        30890.     1287.           24</div>
+            </div>
+
+            <h3>条件分岐とエラーハンドリング</h3>
+
+            <div class="code-container">
+                <div class="code-header">safely()とpossibly()の活用</div>
+                <div class="code-content">
+<span class="comment"># エラーが発生する可能性のある関数</span>
+risky_calculation <span class="operator">&lt;-</span> <span class="keyword">function</span>(x) {
+  <span class="keyword">if</span> (x <span class="operator">&lt;</span> <span class="number">0</span>) {
+    <span class="function">stop</span>(<span class="string">"負の値は計算できません"</span>)
+  }
+  <span class="function">sqrt</span>(x) <span class="operator">+</span> <span class="function">log</span>(x)
+}
+
+<span class="comment"># テストデータ（負の値を含む）</span>
+test_values <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="number">4</span>, <span class="number">9</span>, <span class="number">-2</span>, <span class="number">16</span>, <span class="number">-5</span>, <span class="number">25</span>)
+
+<span class="comment"># safely()でエラーをキャッチ</span>
+safe_calculation <span class="operator">&lt;-</span> <span class="function">safely</span>(risky_calculation)
+results <span class="operator">&lt;-</span> <span class="function">map</span>(test_values, safe_calculation)
+
+<span class="comment"># 成功した結果のみを抽出</span>
+successful_results <span class="operator">&lt;-</span> <span class="function">map</span>(results, <span class="string">"result"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">keep</span>(~ !<span class="function">is.null</span>(.x))
+
+<span class="function">print</span>(successful_results)
+
+<span class="comment"># エラーメッセージを抽出</span>
+error_messages <span class="operator">&lt;-</span> <span class="function">map</span>(results, <span class="string">"error"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">keep</span>(~ !<span class="function">is.null</span>(.x))
+
+<span class="function">print</span>(error_messages)
+
+<span class="comment"># possibly()でデフォルト値を指定</span>
+safe_calc_with_default <span class="operator">&lt;-</span> <span class="function">possibly</span>(risky_calculation, otherwise <span class="operator">=</span> <span class="number">NA</span>)
+clean_results <span class="operator">&lt;-</span> <span class="function">map_dbl</span>(test_values, safe_calc_with_default)
+
+<span class="function">print</span>(clean_results)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">エラーハンドリング結果</div>
+                <div class="output-content">[[1]]
+[1] 3.386294
+
+[[2]]
+[1] 5.197225
+
+[[3]]
+[1] 6.772589
+
+[[1]]
+&lt;simpleError in risky_calculation(-2): 負の値は計算できません&gt;
+
+[[2]]
+&lt;simpleError in risky_calculation(-5): 負の値は計算できません&gt;
+
+[1] 3.386294 5.197225       NA 6.772589       NA 8.218876</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎯 実践演習: アンケート結果の包括的分析</h2>
+
+            <div class="code-container">
+                <div class="code-header">統合的なデータ分析パイプライン</div>
+                <div class="code-content">
+<span class="comment"># 複数のアンケート調査データを統合分析</span>
+<span class="function">set.seed</span>(<span class="number">456</span>)
+
+<span class="comment"># 複数の調査期間のデータを作成</span>
+survey_periods <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"2023Q1"</span>, <span class="string">"2023Q2"</span>, <span class="string">"2023Q3"</span>, <span class="string">"2023Q4"</span>)
+
+create_survey_data <span class="operator">&lt;-</span> <span class="keyword">function</span>(period) {
+  <span class="function">tibble</span>(
+    period <span class="operator">=</span> period,
+    respondent_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">500</span>,
+    age_group <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"20代"</span>, <span class="string">"30代"</span>, <span class="string">"40代"</span>, <span class="string">"50代"</span>, <span class="string">"60代以上"</span>), 
+                          <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+    service_satisfaction <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>),
+                                   <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, 
+                                   prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.05</span>, <span class="number">0.1</span>, <span class="number">0.25</span>, <span class="number">0.45</span>, <span class="number">0.15</span>)),
+    price_satisfaction <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"高すぎる"</span>, <span class="string">"やや高い"</span>, <span class="string">"適正"</span>, <span class="string">"やや安い"</span>, <span class="string">"安い"</span>),
+                               <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>,
+                               prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.15</span>, <span class="number">0.25</span>, <span class="number">0.4</span>, <span class="number">0.15</span>, <span class="number">0.05</span>)),
+    recommendation <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"全く推奨しない"</span>, <span class="string">"推奨しない"</span>, <span class="string">"どちらでもない"</span>, 
+                              <span class="string">"推奨する"</span>, <span class="string">"強く推奨する"</span>),
+                           <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>,
+                           prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.05</span>, <span class="number">0.1</span>, <span class="number">0.2</span>, <span class="number">0.5</span>, <span class="number">0.15</span>))
+  )
+}
+
+<span class="comment"># 全期間のデータを作成</span>
+all_survey_data <span class="operator">&lt;-</span> <span class="function">map_dfr</span>(survey_periods, create_survey_data)
+
+<span class="comment"># 因子の順序を設定</span>
+all_survey_data <span class="operator">&lt;-</span> all_survey_data <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    age_group <span class="operator">=</span> <span class="function">fct_relevel</span>(age_group, <span class="string">"20代"</span>, <span class="string">"30代"</span>, <span class="string">"40代"</span>, <span class="string">"50代"</span>, <span class="string">"60代以上"</span>),
+    service_satisfaction <span class="operator">=</span> <span class="function">fct_relevel</span>(service_satisfaction, 
+                                       <span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>),
+    price_satisfaction <span class="operator">=</span> <span class="function">fct_relevel</span>(price_satisfaction,
+                                    <span class="string">"高すぎる"</span>, <span class="string">"やや高い"</span>, <span class="string">"適正"</span>, <span class="string">"やや安い"</span>, <span class="string">"安い"</span>),
+    recommendation <span class="operator">=</span> <span class="function">fct_relevel</span>(recommendation,
+                              <span class="string">"全く推奨しない"</span>, <span class="string">"推奨しない"</span>, <span class="string">"どちらでもない"</span>, 
+                              <span class="string">"推奨する"</span>, <span class="string">"強く推奨する"</span>)
+  )
+
+<span class="comment"># 期間別・年代別の詳細分析</span>
+period_age_analysis <span class="operator">&lt;-</span> all_survey_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(period, age_group) <span class="operator">%&gt;%</span>
+  <span class="function">nest</span>() <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    analysis <span class="operator">=</span> <span class="function">map</span>(data, ~ {
+      <span class="function">list</span>(
+        service_pos_rate <span class="operator">=</span> <span class="function">mean</span>(.x$service_satisfaction <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"満足"</span>, <span class="string">"非常に満足"</span>)),
+        price_acceptable_rate <span class="operator">=</span> <span class="function">mean</span>(.x$price_satisfaction <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"適正"</span>, <span class="string">"やや安い"</span>, <span class="string">"安い"</span>)),
+        recommendation_rate <span class="operator">=</span> <span class="function">mean</span>(.x$recommendation <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"推奨する"</span>, <span class="string">"強く推奨する"</span>)),
+        sample_size <span class="operator">=</span> <span class="function">nrow</span>(.x)
+      )
+    })
+  )
+
+<span class="comment"># 分析結果を展開</span>
+detailed_analysis <span class="operator">&lt;-</span> period_age_analysis <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    service_pos_rate <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$service_pos_rate),
+    price_acceptable_rate <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$price_acceptable_rate),
+    recommendation_rate <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$recommendation_rate),
+    sample_size <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$sample_size)
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(-data, -analysis) <span class="operator">%&gt;%</span>
+  <span class="function">arrange</span>(period, age_group)
+
+<span class="function">print</span>(detailed_analysis)
+
+<span class="comment"># 総合満足度スコアの算出</span>
+satisfaction_scores <span class="operator">&lt;-</span> all_survey_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(period) <span class="operator">%&gt;%</span>
+  <span class="function">nest</span>() <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    overall_score <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ {
+      service_score <span class="operator">&lt;-</span> <span class="function">mean</span>(<span class="function">as.numeric</span>(.x$service_satisfaction))
+      price_score <span class="operator">&lt;-</span> <span class="function">mean</span>(<span class="function">as.numeric</span>(.x$price_satisfaction))
+      recommendation_score <span class="operator">&lt;-</span> <span class="function">mean</span>(<span class="function">as.numeric</span>(.x$recommendation))
+      (service_score <span class="operator">+</span> price_score <span class="operator">+</span> recommendation_score) / <span class="number">3</span>
+    })
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(period, overall_score)
+
+<span class="function">print</span>(satisfaction_scores)
+</div>
+            </div>
+
+            <div class="visualization">
+                <div class="viz-title">四半期別満足度推移</div>
+                <svg width="600" height="300" viewBox="0 0 600 300">
+                    <!-- Background -->
+                    <rect width="600" height="300" fill="#1a1a1a" stroke="#00d4ff" stroke-width="1"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="25" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">四半期別総合満足度スコア</text>
+                    
+                    <!-- Grid lines -->
+                    <line x1="80" y1="50" x2="80" y2="230" stroke="#333" stroke-width="1"/>
+                    <line x1="80" y1="230" x2="520" y2="230" stroke="#333" stroke-width="1"/>
+                    
+                    <!-- Satisfaction score line -->
+                    <polyline points="120,180 220,170 320,160 420,150" 
+                              fill="none" stroke="#00ff88" stroke-width="3"/>
+                    
+                    <!-- Data points -->
+                    <circle cx="120" cy="180" r="5" fill="#00ff88"/>
+                    <circle cx="220" cy="170" r="5" fill="#00ff88"/>
+                    <circle cx="320" cy="160" r="5" fill="#00ff88"/>
+                    <circle cx="420" cy="150" r="5" fill="#00ff88"/>
+                    
+                    <!-- Labels -->
+                    <text x="120" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q1</text>
+                    <text x="220" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q2</text>
+                    <text x="320" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q3</text>
+                    <text x="420" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q4</text>
+                    
+                    <!-- Y-axis labels -->
+                    <text x="70" y="230" text-anchor="end" fill="#b3b3b3" font-size="10">2.0</text>
+                    <text x="70" y="190" text-anchor="end" fill="#b3b3b3" font-size="10">2.5</text>
+                    <text x="70" y="150" text-anchor="end" fill="#b3b3b3" font-size="10">3.0</text>
+                    <text x="70" y="110" text-anchor="end" fill="#b3b3b3" font-size="10">3.5</text>
+                    <text x="70" y="70" text-anchor="end" fill="#b3b3b3" font-size="10">4.0</text>
+                    
+                    <!-- Values -->
+                    <text x="120" y="170" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">2.8</text>
+                    <text x="220" y="160" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">2.9</text>
+                    <text x="320" y="150" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">3.1</text>
+                    <text x="420" y="140" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">3.2</text>
+                </svg>
+            </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第6章の重要ポイント</h4>
+            <ul>
+                <li><strong>forcats</strong>で因子データの順序と分類を自在に操作</li>
+                <li><strong>purrr</strong>の関数型プログラミングで効率的な反復処理を実現</li>
+                <li><strong>map関数ファミリー</strong>を使った一括データ処理</li>
+                <li><strong>ネストデータ</strong>の階層的分析手法</li>
+                <li><strong>エラーハンドリング</strong>で堅牢なデータ処理パイプライン構築</li>
+                <li><strong>複数データセット</strong>の統合分析による洞察獲得</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>forcatsとpurrrの組み合わせは、大規模なデータ分析プロジェクトで真価を発揮します。特に、複数のカテゴリカル変数を含む調査データや、時系列で蓄積されたデータセットの分析において、これらのツールの習得は作業効率を劇的に向上させます。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">← 第5章</a>
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章に戻る</a>
+        </nav>
+    </div>
+</body>
+</html>

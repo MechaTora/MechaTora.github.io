@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第4章: tidyrによるデータ再構造化 | TIDYVERSE/TIDYMODELS</title>
+    <meta name="description" content="tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値処理、ネストされたデータの扱い方をマスターしよう。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔄</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* CYBERPUNK NEON PALETTE */
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-lime: #39ff14;
+            --neon-orange: #ff6600;
+            --electric-blue: #0080ff;
+            --plasma-purple: #8000ff;
+            --neon-yellow: #ffff00;
+            --neon-pink: #ff1493;
+            
+            /* DARK MATRIX BACKGROUNDS */
+            --void-black: #000000;
+            --deep-space: #0a0a0f;
+            --matrix-dark: #0d1117;
+            --carbon-grey: #161b22;
+            --terminal-green: #0dff00;
+            
+            /* VISUALIZATION GRADIENTS */
+            --gradient-cyber: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            --gradient-matrix: linear-gradient(135deg, #0dff00 0%, #00ffff 50%, #8000ff 100%);
+            --gradient-plasma: linear-gradient(135deg, #ff6600 0%, #ff00ff 50%, #8000ff 100%);
+            --gradient-neural: linear-gradient(135deg, #0080ff 0%, #00ffff 25%, #39ff14 50%, #ffff00 75%, #ff6600 100%);
+            --gradient-tidyr: linear-gradient(135deg, #ff00ff 0%, #00ffff 25%, #39ff14 50%, #ffff00 75%, #ff6600 100%);
+            
+            /* GLASS MORPHISM */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(255, 0, 255, 0.15);
+            
+            /* TYPOGRAPHY */
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-tech: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+            
+            /* SHADOWS & GLOWS */
+            --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            --text-glow: 0 0 10px currentColor;
+            --box-glow: 0 0 30px rgba(255, 0, 255, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-ui);
+            background: var(--void-black);
+            color: var(--neon-cyan);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        
+        /* ANIMATED BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ff00ff' fill-opacity='0.02'%3E%3Cpath d='M30 30h30v30H30V30zm15 15v15h15V45H45z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: matrixScroll 20s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+        
+        @keyframes matrixScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
+        
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 0.8rem 0;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 2rem;
+        }
+        
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-shadow: var(--text-glow);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            font-size: 1rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-family: var(--font-tech);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-tidyr);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--neon-magenta);
+            text-shadow: var(--text-glow);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* MAIN CONTENT */
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* CHAPTER HEADER */
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 4rem 2rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chapter-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--neon-magenta), transparent, var(--neon-cyan), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+        
+        .chapter-header::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            background: var(--matrix-dark);
+            border-radius: 27px;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .chapter-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chapter-number {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--neon-magenta);
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            text-shadow: var(--text-glow);
+        }
+        
+        .chapter-title {
+            font-family: var(--font-tech);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient-tidyr);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+        
+        .chapter-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* CONTENT SECTIONS */
+        .content-section {
+            margin-bottom: 6rem;
+            padding: 3rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--glass-shadow);
+        }
+        
+        .section-title {
+            font-family: var(--font-tech);
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--neon-magenta);
+            margin-bottom: 2rem;
+            position: relative;
+            text-shadow: var(--text-glow);
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -20px;
+            width: calc(100% + 40px);
+            height: calc(100% + 20px);
+            background: var(--gradient-tidyr);
+            opacity: 0.1;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        
+        .section-content {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content ul, .section-content ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+        
+        .section-content li {
+            margin-bottom: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* CODE BLOCKS */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(255, 0, 255, 0.1);
+        }
+        
+        .code-header {
+            background: rgba(255, 0, 255, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+        
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--neon-magenta);
+            opacity: 0.6;
+        }
+        
+        .code-title {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            font-weight: 500;
+        }
+        
+        .code-content {
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+        
+        /* DATA TRANSFORMATION CARDS */
+        .transform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .transform-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .transform-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-tidyr);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .transform-card:hover::before {
+            left: 0;
+        }
+        
+        .transform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-glow);
+        }
+        
+        .transform-title {
+            font-family: var(--font-tech);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--neon-magenta);
+            margin-bottom: 1rem;
+        }
+        
+        .transform-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .transform-syntax {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--neon-cyan);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--neon-cyan);
+        }
+        
+        /* VISUALIZATION OUTPUT STYLES */
+        .visualization-output {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .data-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .data-table {
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        
+        .data-table th {
+            background: var(--neon-magenta);
+            color: var(--void-black);
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 0, 255, 0.1);
+        }
+        
+        .visualization-output h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            text-shadow: var(--text-glow);
+            color: var(--neon-lime);
+        }
+        
+        /* COMPARISON LAYOUT */
+        .comparison-layout {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+        
+        .comparison-arrow {
+            font-size: 3rem;
+            color: var(--neon-lime);
+            text-shadow: var(--neon-glow);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        /* CHAPTER NAVIGATION */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin: 4rem auto 2rem auto;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            max-width: 700px;
+            width: fit-content;
+            box-sizing: border-box;
+        }
+        
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1rem;
+            background: var(--gradient-tidyr);
+            color: var(--void-black);
+            text-decoration: none;
+            border-radius: 10px;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            flex-shrink: 0;
+            flex-basis: auto;
+        }
+        
+        .chapter-progress {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin: 0 1rem;
+            min-width: 120px;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+        }
+        
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+        
+        .nav-btn.disabled {
+            background: var(--carbon-grey);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .nav-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+            
+            .nav-links {
+                gap: 1.5rem;
+                justify-content: flex-start;
+            }
+            
+            main {
+                margin-top: 120px;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+            }
+            
+            .transform-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .comparison-arrow {
+                transform: rotate(90deg);
+                font-size: 2rem;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                padding: 1rem;
+                max-width: 400px;
+                width: 90%;
+            }
+            
+            .nav-btn {
+                width: auto;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .chapter-progress {
+                order: 1;
+                margin: 0;
+                min-width: auto;
+            }
+        }
+        
+        /* SCROLL ANIMATIONS */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="tidyverse-prototype.html" class="logo">TIDYVERSE</a>
+            <ul class="nav-links">
+                <li><a href="tidyverse-prototype.html">HOME</a></li>
+                <li><a href="#reshape">変形</a></li>
+                <li><a href="#missing">欠損値</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <!-- Chapter Header -->
+            <header class="chapter-header fade-in-up">
+                <div class="chapter-icon">🔄</div>
+                <div class="chapter-number">CHAPTER 04</div>
+                <h1 class="chapter-title">データ再構造化の魔術</h1>
+                <p class="chapter-description">
+                    tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値の優雅な処理、複雑なデータ構造の整理術をマスターし、データサイエンスの真の力を解き放とう。
+                </p>
+            </header>
+            
+            <!-- tidyr Overview -->
+            <section class="content-section fade-in-up">
+                <h2 class="section-title">tidyrとは？</h2>
+                <div class="section-content">
+                    <p>
+                        <strong>tidyr</strong>は「tidy data」の原則に基づいて設計された、データ再構造化の専門パッケージです。混沌としたデータを美しく整理し、分析しやすい形に変換する強力なツールを提供します。
+                    </p>
+                    
+                    <p>
+                        現実のデータは常に理想的な形ではありません。Excel形式の幅の広いテーブル、不規則な欠損値、ネストされた複雑な構造...。tidyrは、これらすべてを「tidy」な形に変換する魔法を提供します。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">tidyr_setup.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># tidyrの読み込み（tidyverseに含まれる）</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyr</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># Tidy Dataの3つの原則</span></span>
+                            <span class="code-line"><span class="code-comment"># 1. 各変数は1つの列</span></span>
+                            <span class="code-line"><span class="code-comment"># 2. 各観測値は1つの行</span></span>
+                            <span class="code-line"><span class="code-comment"># 3. 各値は1つのセル</span></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Data Reshaping -->
+            <section class="content-section fade-in-up" id="reshape">
+                <h2 class="section-title">データ形状の変換</h2>
+                <div class="section-content">
+                    <p>
+                        データの形状変換は、tidyrの最も重要な機能です。Wide形式（横に広い）とLong形式（縦に長い）を自在に変換し、分析の目的に最適な形にデータを整形できます。
+                    </p>
+                    
+                    <div class="transform-grid">
+                        <div class="transform-card">
+                            <h3 class="transform-title">pivot_longer()</h3>
+                            <p class="transform-description">
+                                Wide形式からLong形式への変換。複数の列を1つの列にまとめ、データを「長く」します。
+                            </p>
+                            <div class="transform-syntax">
+                                pivot_longer(cols, names_to, values_to)
+                            </div>
+                        </div>
+                        
+                        <div class="transform-card">
+                            <h3 class="transform-title">pivot_wider()</h3>
+                            <p class="transform-description">
+                                Long形式からWide形式への変換。1つの列の値を複数の列に展開し、データを「広く」します。
+                            </p>
+                            <div class="transform-syntax">
+                                pivot_wider(names_from, values_from)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- pivot_longer Example -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📊 pivot_longer(): Wide → Long変換</h3>
+                    <p>
+                        売上データをExcel形式（Wide）から分析用形式（Long）に変換する実例を見てみましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pivot_longer_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># Wide形式の売上データ（Excel形式）</span></span>
+                            <span class="code-line"><span class="code-variable">sales_wide</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  店舗 = <span class="code-function">c</span>(<span class="code-string">"東京店"</span>, <span class="code-string">"大阪店"</span>, <span class="code-string">"名古屋店"</span>),</span>
+                            <span class="code-line">  Q1 = <span class="code-function">c</span>(<span class="code-string">1200</span>, <span class="code-string">980</span>, <span class="code-string">750</span>),</span>
+                            <span class="code-line">  Q2 = <span class="code-function">c</span>(<span class="code-string">1350</span>, <span class="code-string">1100</span>, <span class="code-string">820</span>),</span>
+                            <span class="code-line">  Q3 = <span class="code-function">c</span>(<span class="code-string">1180</span>, <span class="code-string">1250</span>, <span class="code-string">890</span>),</span>
+                            <span class="code-line">  Q4 = <span class="code-function">c</span>(<span class="code-string">1420</span>, <span class="code-string">1380</span>, <span class="code-string">950</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># Long形式に変換（分析しやすい形に）</span></span>
+                            <span class="code-line"><span class="code-variable">sales_long</span> <span class="code-keyword">&lt;-</span> sales_wide <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">pivot_longer</span>(</span>
+                            <span class="code-line">    cols = <span class="code-function">starts_with</span>(<span class="code-string">"Q"</span>),        <span class="code-comment"># Q1,Q2,Q3,Q4の列を対象</span></span>
+                            <span class="code-line">    names_to = <span class="code-string">"四半期"</span>,             <span class="code-comment"># 列名が入る新しい列</span></span>
+                            <span class="code-line">    values_to = <span class="code-string">"売上"</span>              <span class="code-comment"># 値が入る新しい列</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(sales_long)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4>🔄 データ変換結果</h4>
+                        <div class="comparison-layout">
+                            <div class="data-container">
+                                <table class="data-table">
+                                    <caption style="color: var(--neon-cyan); margin-bottom: 1rem; font-weight: bold;">Wide形式（変換前）</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>店舗</th>
+                                            <th>Q1</th>
+                                            <th>Q2</th>
+                                            <th>Q3</th>
+                                            <th>Q4</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>東京店</td>
+                                            <td>1200</td>
+                                            <td>1350</td>
+                                            <td>1180</td>
+                                            <td>1420</td>
+                                        </tr>
+                                        <tr>
+                                            <td>大阪店</td>
+                                            <td>980</td>
+                                            <td>1100</td>
+                                            <td>1250</td>
+                                            <td>1380</td>
+                                        </tr>
+                                        <tr>
+                                            <td>名古屋店</td>
+                                            <td>750</td>
+                                            <td>820</td>
+                                            <td>890</td>
+                                            <td>950</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="comparison-arrow">→</div>
+                            
+                            <div class="data-container">
+                                <table class="data-table">
+                                    <caption style="color: var(--neon-lime); margin-bottom: 1rem; font-weight: bold;">Long形式（変換後）</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>店舗</th>
+                                            <th>四半期</th>
+                                            <th>売上</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>東京店</td>
+                                            <td>Q1</td>
+                                            <td>1200</td>
+                                        </tr>
+                                        <tr>
+                                            <td>東京店</td>
+                                            <td>Q2</td>
+                                            <td>1350</td>
+                                        </tr>
+                                        <tr>
+                                            <td>東京店</td>
+                                            <td>Q3</td>
+                                            <td>1180</td>
+                                        </tr>
+                                        <tr>
+                                            <td>東京店</td>
+                                            <td>Q4</td>
+                                            <td>1420</td>
+                                        </tr>
+                                        <tr>
+                                            <td>大阪店</td>
+                                            <td>Q1</td>
+                                            <td>980</td>
+                                        </tr>
+                                        <tr>
+                                            <td>...</td>
+                                            <td>...</td>
+                                            <td>...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- pivot_wider Example -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📈 pivot_wider(): Long → Wide変換</h3>
+                    <p>
+                        アンケートデータをクロス集計表形式に変換する例を見てみましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pivot_wider_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># Long形式のアンケートデータ</span></span>
+                            <span class="code-line"><span class="code-variable">survey_long</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  回答者ID = <span class="code-function">rep</span>(<span class="code-string">1</span>:<span class="code-string">4</span>, each = <span class="code-string">3</span>),</span>
+                            <span class="code-line">  質問項目 = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"満足度"</span>, <span class="code-string">"利便性"</span>, <span class="code-string">"価格"</span>), <span class="code-string">4</span>),</span>
+                            <span class="code-line">  評価 = <span class="code-function">c</span>(<span class="code-string">5</span>, <span class="code-string">4</span>, <span class="code-string">3</span>, <span class="code-string">4</span>, <span class="code-string">5</span>, <span class="code-string">4</span>, <span class="code-string">3</span>, <span class="code-string">3</span>, <span class="code-string">5</span>, <span class="code-string">5</span>, <span class="code-string">4</span>, <span class="code-string">4</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># Wide形式に変換（クロス集計表形式）</span></span>
+                            <span class="code-line"><span class="code-variable">survey_wide</span> <span class="code-keyword">&lt;-</span> survey_long <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">pivot_wider</span>(</span>
+                            <span class="code-line">    names_from = 質問項目,        <span class="code-comment"># この列の値が新しい列名になる</span></span>
+                            <span class="code-line">    values_from = 評価            <span class="code-comment"># この列の値が各セルに入る</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(survey_wide)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4>🔄 データ変換結果</h4>
+                        <div class="comparison-layout">
+                            <div class="data-container">
+                                <table class="data-table">
+                                    <caption style="color: var(--neon-cyan); margin-bottom: 1rem; font-weight: bold;">Long形式（変換前）</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>回答者ID</th>
+                                            <th>質問項目</th>
+                                            <th>評価</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>満足度</td>
+                                            <td>5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>利便性</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>価格</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>満足度</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>...</td>
+                                            <td>...</td>
+                                            <td>...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="comparison-arrow">→</div>
+                            
+                            <div class="data-container">
+                                <table class="data-table">
+                                    <caption style="color: var(--neon-lime); margin-bottom: 1rem; font-weight: bold;">Wide形式（変換後）</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>回答者ID</th>
+                                            <th>満足度</th>
+                                            <th>利便性</th>
+                                            <th>価格</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>5</td>
+                                            <td>4</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                            <td>5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>4</td>
+                                            <td>4</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Missing Data Handling -->
+            <section class="content-section fade-in-up" id="missing">
+                <h2 class="section-title">欠損値の優雅な処理</h2>
+                <div class="section-content">
+                    <p>
+                        現実のデータには欠損値が付き物です。tidyrは、欠損値を適切に処理し、データの完全性を保ちながら分析を進めるための強力なツールを提供します。
+                    </p>
+                    
+                    <div class="transform-grid">
+                        <div class="transform-card">
+                            <h3 class="transform-title">drop_na()</h3>
+                            <p class="transform-description">
+                                欠損値を含む行を削除します。シンプルで直接的なアプローチです。
+                            </p>
+                            <div class="transform-syntax">
+                                drop_na(columns)
+                            </div>
+                        </div>
+                        
+                        <div class="transform-card">
+                            <h3 class="transform-title">fill()</h3>
+                            <p class="transform-description">
+                                前後の値で欠損値を埋めます。時系列データに特に有効です。
+                            </p>
+                            <div class="transform-syntax">
+                                fill(columns, .direction)
+                            </div>
+                        </div>
+                        
+                        <div class="transform-card">
+                            <h3 class="transform-title">replace_na()</h3>
+                            <p class="transform-description">
+                                欠損値を指定した値で置換します。カスタマイズされた補完が可能です。
+                            </p>
+                            <div class="transform-syntax">
+                                replace_na(list(col = value))
+                            </div>
+                        </div>
+                        
+                        <div class="transform-card">
+                            <h3 class="transform-title">complete()</h3>
+                            <p class="transform-description">
+                                データの組み合わせを完全にし、暗黙的な欠損値を明示的にします。
+                            </p>
+                            <div class="transform-syntax">
+                                complete(columns, fill)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Missing Data Example -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🔍 欠損値処理の実践</h3>
+                    <p>
+                        センサーデータの欠損値を様々な方法で処理する例を見てみましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">missing_data_handling.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 欠損値を含むセンサーデータ</span></span>
+                            <span class="code-line"><span class="code-variable">sensor_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  timestamp = <span class="code-function">seq</span>(<span class="code-function">as.POSIXct</span>(<span class="code-string">"2023-01-01 00:00:00"</span>), </span>
+                            <span class="code-line">                  by = <span class="code-string">"hour"</span>, length.out = <span class="code-string">10</span>),</span>
+                            <span class="code-line">  temperature = <span class="code-function">c</span>(<span class="code-string">22.5</span>, <span class="code-string">NA</span>, <span class="code-string">23.1</span>, <span class="code-string">22.8</span>, <span class="code-string">NA</span>, <span class="code-string">24.2</span>, <span class="code-string">24.5</span>, <span class="code-string">NA</span>, <span class="code-string">23.9</span>, <span class="code-string">23.7</span>),</span>
+                            <span class="code-line">  humidity = <span class="code-function">c</span>(<span class="code-string">65</span>, <span class="code-string">68</span>, <span class="code-string">NA</span>, <span class="code-string">70</span>, <span class="code-string">72</span>, <span class="code-string">NA</span>, <span class="code-string">69</span>, <span class="code-string">67</span>, <span class="code-string">65</span>, <span class="code-string">NA</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 方法1: 欠損値のある行を削除</span></span>
+                            <span class="code-line"><span class="code-variable">clean_data</span> <span class="code-keyword">&lt;-</span> sensor_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">drop_na</span>()</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 方法2: 前の値で埋める（温度センサー）</span></span>
+                            <span class="code-line"><span class="code-variable">filled_data</span> <span class="code-keyword">&lt;-</span> sensor_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">fill</span>(temperature, .direction = <span class="code-string">"down"</span>) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">fill</span>(humidity, .direction = <span class="code-string">"up"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 方法3: 平均値で置換</span></span>
+                            <span class="code-line"><span class="code-variable">imputed_data</span> <span class="code-keyword">&lt;-</span> sensor_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">replace_na</span>(<span class="code-function">list</span>(</span>
+                            <span class="code-line">    temperature = <span class="code-function">mean</span>(sensor_data$temperature, na.rm = <span class="code-string">TRUE</span>),</span>
+                            <span class="code-line">    humidity = <span class="code-function">mean</span>(sensor_data$humidity, na.rm = <span class="code-string">TRUE</span>)</span>
+                            <span class="code-line">  ))</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"補完後のデータ:"</span>)</span>
+                            <span class="code-line"><span class="code-function">print</span>(imputed_data)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4>🔄 欠損値処理結果</h4>
+                        <div class="comparison-layout">
+                            <div class="data-container">
+                                <table class="data-table">
+                                    <caption style="color: var(--neon-cyan); margin-bottom: 1rem; font-weight: bold;">元データ（欠損値あり）</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>時刻</th>
+                                            <th>温度</th>
+                                            <th>湿度</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>00:00</td>
+                                            <td>22.5</td>
+                                            <td>65</td>
+                                        </tr>
+                                        <tr>
+                                            <td>01:00</td>
+                                            <td style="color: var(--neon-pink);">NA</td>
+                                            <td>68</td>
+                                        </tr>
+                                        <tr>
+                                            <td>02:00</td>
+                                            <td>23.1</td>
+                                            <td style="color: var(--neon-pink);">NA</td>
+                                        </tr>
+                                        <tr>
+                                            <td>03:00</td>
+                                            <td>22.8</td>
+                                            <td>70</td>
+                                        </tr>
+                                        <tr>
+                                            <td>04:00</td>
+                                            <td style="color: var(--neon-pink);">NA</td>
+                                            <td>72</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="comparison-arrow">→</div>
+                            
+                            <div class="data-container">
+                                <table class="data-table">
+                                    <caption style="color: var(--neon-lime); margin-bottom: 1rem; font-weight: bold;">補完後データ</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>時刻</th>
+                                            <th>温度</th>
+                                            <th>湿度</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>00:00</td>
+                                            <td>22.5</td>
+                                            <td>65</td>
+                                        </tr>
+                                        <tr>
+                                            <td>01:00</td>
+                                            <td style="color: var(--neon-lime);">23.3</td>
+                                            <td>68</td>
+                                        </tr>
+                                        <tr>
+                                            <td>02:00</td>
+                                            <td>23.1</td>
+                                            <td style="color: var(--neon-lime);">68.0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>03:00</td>
+                                            <td>22.8</td>
+                                            <td>70</td>
+                                        </tr>
+                                        <tr>
+                                            <td>04:00</td>
+                                            <td style="color: var(--neon-lime);">23.3</td>
+                                            <td>72</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Techniques -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🎯 高度なデータ整理術</h3>
+                    <p>
+                        separate()とunite()を使って、複雑な文字列データを分割・結合する方法を学びましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">advanced_tidyr.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 複雑な文字列データ</span></span>
+                            <span class="code-line"><span class="code-variable">user_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  user_info = <span class="code-function">c</span>(<span class="code-string">"田中太郎_25_東京"</span>, <span class="code-string">"佐藤花子_30_大阪"</span>, <span class="code-string">"山田次郎_28_名古屋"</span>),</span>
+                            <span class="code-line">  score = <span class="code-function">c</span>(<span class="code-string">85</span>, <span class="code-string">92</span>, <span class="code-string">78</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 1つの列を複数の列に分割</span></span>
+                            <span class="code-line"><span class="code-variable">separated_data</span> <span class="code-keyword">&lt;-</span> user_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">separate</span>(</span>
+                            <span class="code-line">    col = user_info,</span>
+                            <span class="code-line">    into = <span class="code-function">c</span>(<span class="code-string">"名前"</span>, <span class="code-string">"年齢"</span>, <span class="code-string">"都市"</span>),</span>
+                            <span class="code-line">    sep = <span class="code-string">"_"</span></span>
+                            <span class="code-line">  ) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(年齢 = <span class="code-function">as.numeric</span>(年齢))</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 複数の列を1つに結合</span></span>
+                            <span class="code-line"><span class="code-variable">united_data</span> <span class="code-keyword">&lt;-</span> separated_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">unite</span>(</span>
+                            <span class="code-line">    col = <span class="code-string">"ID"</span>,</span>
+                            <span class="code-line">    名前, 都市,</span>
+                            <span class="code-line">    sep = <span class="code-string">"@"</span>,</span>
+                            <span class="code-line">    remove = <span class="code-string">FALSE</span>  <span class="code-comment"># 元の列を残す</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(united_data)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Chapter Navigation -->
+            <nav class="chapter-nav fade-in-up">
+                <a href="chapter3-ggplot2-visualization.html" class="nav-btn prev">
+                    ← 前の章
+                </a>
+                <div class="chapter-progress">
+                    第4章 / 全6章
+                </div>
+                <a href="chapter5-stringr-text-processing.html" class="nav-btn next">
+                    次の章 →
+                </a>
+            </nav>
+        </div>
+    </main>
+    
+    <script>
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Smooth Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Dynamic Icon Animation
+        const icon = document.querySelector('.chapter-icon');
+        if (icon) {
+            setInterval(() => {
+                icon.style.transform = `translateY(-10px) rotate(${Math.random() * 10 - 5}deg)`;
+                setTimeout(() => {
+                    icon.style.transform = 'translateY(0) rotate(0deg)';
+                }, 1000);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

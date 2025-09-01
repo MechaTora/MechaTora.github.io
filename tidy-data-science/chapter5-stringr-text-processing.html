@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第5章: stringrによるテキスト処理 | TIDYVERSE/TIDYMODELS</title>
+    <meta name="description" content="stringrで文字列を自在に操る。正規表現、パターンマッチング、テキストマイニングの技術をマスターし、データの隠れた価値を発見しよう。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔤</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* CYBERPUNK NEON PALETTE */
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-lime: #39ff14;
+            --neon-orange: #ff6600;
+            --electric-blue: #0080ff;
+            --plasma-purple: #8000ff;
+            --neon-yellow: #ffff00;
+            --neon-pink: #ff1493;
+            --neon-green: #00ff41;
+            
+            /* DARK MATRIX BACKGROUNDS */
+            --void-black: #000000;
+            --deep-space: #0a0a0f;
+            --matrix-dark: #0d1117;
+            --carbon-grey: #161b22;
+            --terminal-green: #0dff00;
+            
+            /* STRING PROCESSING GRADIENTS */
+            --gradient-cyber: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            --gradient-matrix: linear-gradient(135deg, #0dff00 0%, #00ffff 50%, #8000ff 100%);
+            --gradient-string: linear-gradient(135deg, #00ff41 0%, #00ffff 25%, #0080ff 50%, #8000ff 75%, #ff00ff 100%);
+            --gradient-regex: linear-gradient(135deg, #ffff00 0%, #ff6600 25%, #ff1493 50%, #8000ff 75%, #0080ff 100%);
+            
+            /* GLASS MORPHISM */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 255, 65, 0.15);
+            
+            /* TYPOGRAPHY */
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-tech: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+            
+            /* SHADOWS & GLOWS */
+            --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            --text-glow: 0 0 10px currentColor;
+            --box-glow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-ui);
+            background: var(--void-black);
+            color: var(--neon-cyan);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        
+        /* ANIMATED BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(255, 255, 0, 0.05) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2300ff41' fill-opacity='0.03'%3E%3Cpath d='M20 20h20v20H20V20zm10 10v10h10V30H30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: matrixScroll 15s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+        
+        @keyframes matrixScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
+        }
+        
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 0.8rem 0;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 2rem;
+        }
+        
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            text-shadow: var(--text-glow);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            font-size: 1rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-family: var(--font-tech);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-string);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--neon-green);
+            text-shadow: var(--text-glow);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* MAIN CONTENT */
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* CHAPTER HEADER */
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 4rem 2rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chapter-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--neon-green), transparent, var(--neon-cyan), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+        
+        .chapter-header::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            background: var(--matrix-dark);
+            border-radius: 27px;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .chapter-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chapter-number {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--neon-green);
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            text-shadow: var(--text-glow);
+        }
+        
+        .chapter-title {
+            font-family: var(--font-tech);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient-string);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+        
+        .chapter-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* CONTENT SECTIONS */
+        .content-section {
+            margin-bottom: 6rem;
+            padding: 3rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--glass-shadow);
+        }
+        
+        .section-title {
+            font-family: var(--font-tech);
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--neon-green);
+            margin-bottom: 2rem;
+            position: relative;
+            text-shadow: var(--text-glow);
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -20px;
+            width: calc(100% + 40px);
+            height: calc(100% + 20px);
+            background: var(--gradient-string);
+            opacity: 0.1;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        
+        .section-content {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content ul, .section-content ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+        
+        .section-content li {
+            margin-bottom: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* CODE BLOCKS */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1);
+        }
+        
+        .code-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+        
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--neon-green);
+            opacity: 0.6;
+        }
+        
+        .code-title {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            font-weight: 500;
+        }
+        
+        .code-content {
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+        .code-regex { color: #39ff14; font-weight: bold; }
+        .code-pattern { color: #ffff00; background: rgba(255, 255, 0, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+        
+        /* STRING FUNCTION CARDS */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .function-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-string);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .function-card:hover::before {
+            left: 0;
+        }
+        
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-glow);
+        }
+        
+        .function-title {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+        }
+        
+        .function-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .function-syntax {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--neon-cyan);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--neon-cyan);
+        }
+        
+        /* REGEX PATTERN DISPLAY */
+        .regex-showcase {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--neon-yellow);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .regex-showcase::before {
+            content: '正規表現';
+            position: absolute;
+            top: -12px;
+            left: 1rem;
+            background: var(--void-black);
+            color: var(--neon-yellow);
+            padding: 0 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .regex-pattern {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--neon-yellow);
+            background: rgba(255, 255, 0, 0.1);
+            padding: 0.8rem;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        
+        .regex-explanation {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        /* TEXT MINING VISUALIZATION */
+        .text-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .text-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .text-output {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--neon-green);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .text-sample {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            white-space: pre-wrap;
+        }
+        
+        .highlighted-text {
+            background: var(--neon-green);
+            color: var(--void-black);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        /* VISUALIZATION OUTPUT STYLES */
+        .visualization-output {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-table {
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .result-table th {
+            background: var(--neon-green);
+            color: var(--void-black);
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .result-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .result-table tr:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .visualization-output h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            text-shadow: var(--text-glow);
+            color: var(--neon-lime);
+        }
+        
+        /* CHAPTER NAVIGATION */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin: 4rem auto 2rem auto;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            max-width: 700px;
+            width: fit-content;
+            box-sizing: border-box;
+        }
+        
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1rem;
+            background: var(--gradient-string);
+            color: var(--void-black);
+            text-decoration: none;
+            border-radius: 10px;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            flex-shrink: 0;
+            flex-basis: auto;
+        }
+        
+        .chapter-progress {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin: 0 1rem;
+            min-width: 120px;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+        }
+        
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+        
+        .nav-btn.disabled {
+            background: var(--carbon-grey);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .nav-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+            
+            .nav-links {
+                gap: 1.5rem;
+                justify-content: flex-start;
+            }
+            
+            main {
+                margin-top: 120px;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+            }
+            
+            .function-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .text-analysis {
+                grid-template-columns: 1fr;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                padding: 1rem;
+                max-width: 400px;
+                width: 90%;
+            }
+            
+            .nav-btn {
+                width: auto;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .chapter-progress {
+                order: 1;
+                margin: 0;
+                min-width: auto;
+            }
+        }
+        
+        /* SCROLL ANIMATIONS */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="tidyverse-prototype.html" class="logo">TIDYVERSE</a>
+            <ul class="nav-links">
+                <li><a href="tidyverse-prototype.html">HOME</a></li>
+                <li><a href="#basics">基本操作</a></li>
+                <li><a href="#regex">正規表現</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <!-- Chapter Header -->
+            <header class="chapter-header fade-in-up">
+                <div class="chapter-icon">🔤</div>
+                <div class="chapter-number">CHAPTER 05</div>
+                <h1 class="chapter-title">テキスト処理の魔法</h1>
+                <p class="chapter-description">
+                    stringrで文字列を自在に操る。正規表現の奥深い世界、パターンマッチングの技術、テキストマイニングの神秘を解き明かし、データに隠された言葉の力を解放しよう。
+                </p>
+            </header>
+            
+            <!-- stringr Overview -->
+            <section class="content-section fade-in-up">
+                <h2 class="section-title">stringrとは？</h2>
+                <div class="section-content">
+                    <p>
+                        <strong>stringr</strong>は、文字列操作のための統一されたインターフェースを提供するパッケージです。複雑な文字列処理を直感的で読みやすいコードで実現し、テキストデータの隠れた価値を発見します。
+                    </p>
+                    
+                    <p>
+                        現代のデータサイエンスでは、構造化されていないテキストデータが急増しています。SNSの投稿、レビューコメント、ログファイル、Webスクレイピングデータ...。stringrは、これらすべてを分析可能な形に変換する強力な武器です。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">stringr_setup.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># stringrの読み込み（tidyverseに含まれる）</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">stringr</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># stringrの基本理念：</span></span>
+                            <span class="code-line"><span class="code-comment"># - 関数名が一貫している（str_で始まる）</span></span>
+                            <span class="code-line"><span class="code-comment"># - 最初の引数は常に文字列</span></span>
+                            <span class="code-line"><span class="code-comment"># - 正規表現をサポート</span></span>
+                            <span class="code-line"><span class="code-comment"># - ベクトル化に対応</span></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Basic String Operations -->
+            <section class="content-section fade-in-up" id="basics">
+                <h2 class="section-title">基本的な文字列操作</h2>
+                <div class="section-content">
+                    <p>
+                        stringrは豊富な文字列操作関数を提供します。検索、置換、分割、結合...。すべての操作が直感的で、コードの可読性を高めます。
+                    </p>
+                    
+                    <div class="function-grid">
+                        <div class="function-card">
+                            <h3 class="function-title">str_detect()</h3>
+                            <p class="function-description">
+                                文字列にパターンが含まれているかを検出。論理値を返します。
+                            </p>
+                            <div class="function-syntax">
+                                str_detect(string, pattern)
+                            </div>
+                        </div>
+                        
+                        <div class="function-card">
+                            <h3 class="function-title">str_extract()</h3>
+                            <p class="function-description">
+                                パターンにマッチする部分を抽出。最初のマッチのみを返します。
+                            </p>
+                            <div class="function-syntax">
+                                str_extract(string, pattern)
+                            </div>
+                        </div>
+                        
+                        <div class="function-card">
+                            <h3 class="function-title">str_replace()</h3>
+                            <p class="function-description">
+                                パターンにマッチする部分を置換。最初のマッチのみを置換します。
+                            </p>
+                            <div class="function-syntax">
+                                str_replace(string, pattern, replacement)
+                            </div>
+                        </div>
+                        
+                        <div class="function-card">
+                            <h3 class="function-title">str_split()</h3>
+                            <p class="function-description">
+                                パターンで文字列を分割。リストまたは行列を返します。
+                            </p>
+                            <div class="function-syntax">
+                                str_split(string, pattern)
+                            </div>
+                        </div>
+                        
+                        <div class="function-card">
+                            <h3 class="function-title">str_length()</h3>
+                            <p class="function-description">
+                                文字列の長さを取得。NAは正しく処理されます。
+                            </p>
+                            <div class="function-syntax">
+                                str_length(string)
+                            </div>
+                        </div>
+                        
+                        <div class="function-card">
+                            <h3 class="function-title">str_trim()</h3>
+                            <p class="function-description">
+                                文字列の前後の空白を削除。データクリーニングに必須です。
+                            </p>
+                            <div class="function-syntax">
+                                str_trim(string, side = "both")
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practical Example -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📧 実践例：メールアドレスの処理</h3>
+                    <p>
+                        顧客データベースのメールアドレスを分析・整理する実例を見てみましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">email_processing.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 顧客メールアドレスのサンプルデータ</span></span>
+                            <span class="code-line"><span class="code-variable">customer_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  id = <span class="code-string">1</span>:<span class="code-string">6</span>,</span>
+                            <span class="code-line">  email = <span class="code-function">c</span>(</span>
+                            <span class="code-line">    <span class="code-string">"  tanaka@example.com  "</span>,</span>
+                            <span class="code-line">    <span class="code-string">"SATO@GMAIL.COM"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"yamada.taro@company.co.jp"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"invalid-email"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"suzuki123@outlook.com"</span>,</span>
+                            <span class="code-line">    <span class="code-string">""</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 1. データクリーニング</span></span>
+                            <span class="code-line"><span class="code-variable">cleaned_data</span> <span class="code-keyword">&lt;-</span> customer_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    <span class="code-comment"># 前後の空白を削除</span></span>
+                            <span class="code-line">    email_clean = <span class="code-function">str_trim</span>(email),</span>
+                            <span class="code-line">    <span class="code-comment"># 小文字に統一</span></span>
+                            <span class="code-line">    email_lower = <span class="code-function">str_to_lower</span>(email_clean),</span>
+                            <span class="code-line">    <span class="code-comment"># 有効なメールアドレスかチェック</span></span>
+                            <span class="code-line">    is_valid = <span class="code-function">str_detect</span>(email_lower, <span class="code-regex">"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># ドメイン部分を抽出</span></span>
+                            <span class="code-line">    domain = <span class="code-function">str_extract</span>(email_lower, <span class="code-regex">"@(.+)$"</span>) <span class="code-keyword">%>%</span> <span class="code-function">str_remove</span>(<span class="code-regex">"@"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># ユーザー名部分を抽出</span></span>
+                            <span class="code-line">    username = <span class="code-function">str_extract</span>(email_lower, <span class="code-regex">"^[^@]+"</span>)</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(cleaned_data)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4>🔍 メールアドレス分析結果</h4>
+                        <div class="result-container">
+                            <table class="result-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>元データ</th>
+                                        <th>クリーニング後</th>
+                                        <th>有効性</th>
+                                        <th>ドメイン</th>
+                                        <th>ユーザー名</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td style="color: var(--neon-pink);">  tanaka@example.com  </td>
+                                        <td>tanaka@example.com</td>
+                                        <td style="color: var(--neon-green);">✓</td>
+                                        <td>example.com</td>
+                                        <td>tanaka</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td style="color: var(--neon-pink);">SATO@GMAIL.COM</td>
+                                        <td>sato@gmail.com</td>
+                                        <td style="color: var(--neon-green);">✓</td>
+                                        <td>gmail.com</td>
+                                        <td>sato</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>yamada.taro@company.co.jp</td>
+                                        <td>yamada.taro@company.co.jp</td>
+                                        <td style="color: var(--neon-green);">✓</td>
+                                        <td>company.co.jp</td>
+                                        <td>yamada.taro</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td style="color: var(--neon-pink);">invalid-email</td>
+                                        <td>invalid-email</td>
+                                        <td style="color: var(--neon-pink);">✗</td>
+                                        <td>NA</td>
+                                        <td>NA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>suzuki123@outlook.com</td>
+                                        <td>suzuki123@outlook.com</td>
+                                        <td style="color: var(--neon-green);">✓</td>
+                                        <td>outlook.com</td>
+                                        <td>suzuki123</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td style="color: var(--neon-pink);">(空文字)</td>
+                                        <td>(空文字)</td>
+                                        <td style="color: var(--neon-pink);">✗</td>
+                                        <td>NA</td>
+                                        <td>NA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Regular Expressions -->
+            <section class="content-section fade-in-up" id="regex">
+                <h2 class="section-title">正規表現の魔術</h2>
+                <div class="section-content">
+                    <p>
+                        正規表現は、パターンマッチングの強力な言語です。複雑な文字列パターンを簡潔に表現し、高度なテキスト処理を可能にします。stringrと組み合わせることで、真の威力を発揮します。
+                    </p>
+                    
+                    <!-- Common Regex Patterns -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🎯 よく使用される正規表現パターン</h3>
+                    
+                    <div class="function-grid">
+                        <div class="regex-showcase">
+                            <div class="regex-pattern">\\d+</div>
+                            <div class="regex-explanation">
+                                <strong>数字のマッチ</strong><br>
+                                \\d は任意の数字、+ は1回以上の繰り返しを意味します。
+                            </div>
+                        </div>
+                        
+                        <div class="regex-showcase">
+                            <div class="regex-pattern">[A-Za-z]+</div>
+                            <div class="regex-explanation">
+                                <strong>英字のマッチ</strong><br>
+                                [] は文字クラス、A-Za-z は大文字小文字の英字を表します。
+                            </div>
+                        </div>
+                        
+                        <div class="regex-showcase">
+                            <div class="regex-pattern">^\\w+@\\w+\\.\\w+$</div>
+                            <div class="regex-explanation">
+                                <strong>メールアドレス</strong><br>
+                                ^ は行の開始、$ は行の終了、\\w は英数字とアンダースコアです。
+                            </div>
+                        </div>
+                        
+                        <div class="regex-showcase">
+                            <div class="regex-pattern">\\b\\w{3,}\\b</div>
+                            <div class="regex-explanation">
+                                <strong>3文字以上の単語</strong><br>
+                                \\b は単語境界、{3,} は3回以上の繰り返しを意味します。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Text Mining Example -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🔍 テキストマイニング実践</h3>
+                    <p>
+                        顧客レビューデータから感情分析や重要な情報を抽出する例を見てみましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">text_mining_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 顧客レビューデータ</span></span>
+                            <span class="code-line"><span class="code-variable">reviews</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  id = <span class="code-string">1</span>:<span class="code-string">5</span>,</span>
+                            <span class="code-line">  text = <span class="code-function">c</span>(</span>
+                            <span class="code-line">    <span class="code-string">"この商品は素晴らしい！価格も￥2,980と手頃で、品質も最高です。★★★★★"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"配送が遅くてがっかりしました。3週間も待たされて...★★☆☆☆"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"普通の商品です。特に良くも悪くもない。価格は￥1,500でした。"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"最悪！返品したい！お金の無駄でした。電話番号03-1234-5678に連絡済み。"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"とても満足しています♪リピート確定です！メール送信：info@example.com"</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># テキストマイニング処理</span></span>
+                            <span class="code-line"><span class="code-variable">analyzed_reviews</span> <span class="code-keyword">&lt;-</span> reviews <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    <span class="code-comment"># 価格情報を抽出</span></span>
+                            <span class="code-line">    price = <span class="code-function">str_extract</span>(text, <span class="code-regex">"￥[0-9,]+"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># 星評価を抽出</span></span>
+                            <span class="code-line">    stars = <span class="code-function">str_count</span>(text, <span class="code-regex">"★"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># 感情語を検出</span></span>
+                            <span class="code-line">    positive = <span class="code-function">str_detect</span>(text, <span class="code-regex">"素晴らしい|最高|満足|良い"</span>),</span>
+                            <span class="code-line">    negative = <span class="code-function">str_detect</span>(text, <span class="code-regex">"がっかり|最悪|悪い|遅い"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># 連絡先情報を抽出</span></span>
+                            <span class="code-line">    phone = <span class="code-function">str_extract</span>(text, <span class="code-regex">"\\d{2,3}-\\d{4}-\\d{4}"</span>),</span>
+                            <span class="code-line">    email = <span class="code-function">str_extract</span>(text, <span class="code-regex">"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># 文字数</span></span>
+                            <span class="code-line">    char_count = <span class="code-function">str_length</span>(text),</span>
+                            <span class="code-line">    <span class="code-comment"># 感情スコア算出</span></span>
+                            <span class="code-line">    sentiment_score = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      positive & !negative ~ <span class="code-string">1</span>,</span>
+                            <span class="code-line">      !positive & negative ~ <span class="code-string">-1</span>,</span>
+                            <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">0</span></span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(analyzed_reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-analysis">
+                        <div class="text-input">
+                            <h4 style="color: var(--neon-cyan); margin-bottom: 1rem;">📝 元テキスト</h4>
+                            <div class="text-sample">この商品は<span class="highlighted-text">素晴らしい</span>！価格も<span class="highlighted-text">￥2,980</span>と手頃で、品質も<span class="highlighted-text">最高</span>です。<span class="highlighted-text">★★★★★</span></div>
+                            <div class="text-sample">配送が遅くて<span class="highlighted-text">がっかり</span>しました。3週間も待たされて...<span class="highlighted-text">★★☆☆☆</span></div>
+                            <div class="text-sample">普通の商品です。特に良くも悪くもない。価格は<span class="highlighted-text">￥1,500</span>でした。</div>
+                        </div>
+                        
+                        <div class="text-output">
+                            <h4 style="color: var(--neon-green); margin-bottom: 1rem;">🔍 分析結果</h4>
+                            <div class="text-sample">価格: ￥2,980
+星評価: 5個
+ポジティブ: ✓
+ネガティブ: ✗
+感情スコア: +1
+
+価格: なし
+星評価: 2個
+ポジティブ: ✗
+ネガティブ: ✓
+感情スコア: -1
+
+価格: ￥1,500
+星評価: 0個
+ポジティブ: ✗
+ネガティブ: ✗
+感情スコア: 0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Pattern Matching -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🎨 高度なパターンマッチング</h3>
+                    <p>
+                        複雑なログファイルから重要な情報を抽出する実例を見てみましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">log_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># Webサーバーログの分析</span></span>
+                            <span class="code-line"><span class="code-variable">log_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  log_entry = <span class="code-function">c</span>(</span>
+                            <span class="code-line">    <span class="code-string">"2023-12-01 14:23:45 192.168.1.100 GET /api/users 200 1.2ms"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"2023-12-01 14:24:10 10.0.0.25 POST /api/login 401 0.8ms"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"2023-12-01 14:25:33 203.104.15.200 GET /api/products 500 5.7ms"</span>,</span>
+                            <span class="code-line">    <span class="code-string">"2023-12-01 14:26:01 172.16.0.10 DELETE /api/users/123 204 2.1ms"</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 正規表現でログを構造化</span></span>
+                            <span class="code-line"><span class="code-variable">parsed_logs</span> <span class="code-keyword">&lt;-</span> log_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    <span class="code-comment"># 日時を抽出</span></span>
+                            <span class="code-line">    datetime = <span class="code-function">str_extract</span>(log_entry, <span class="code-regex">"\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># IPアドレスを抽出</span></span>
+                            <span class="code-line">    ip_address = <span class="code-function">str_extract</span>(log_entry, <span class="code-regex">"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># HTTPメソッドを抽出</span></span>
+                            <span class="code-line">    method = <span class="code-function">str_extract</span>(log_entry, <span class="code-regex">"\\b(GET|POST|PUT|DELETE|PATCH)\\b"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># URLパスを抽出</span></span>
+                            <span class="code-line">    path = <span class="code-function">str_extract</span>(log_entry, <span class="code-regex">"/[a-zA-Z0-9/_]+"</span>),</span>
+                            <span class="code-line">    <span class="code-comment"># ステータスコードを抽出</span></span>
+                            <span class="code-line">    status_code = <span class="code-function">str_extract</span>(log_entry, <span class="code-regex">"\\b[1-5]\\d{2}\\b"</span>) <span class="code-keyword">%>%</span> <span class="code-function">as.numeric</span>(),</span>
+                            <span class="code-line">    <span class="code-comment"># レスポンス時間を抽出</span></span>
+                            <span class="code-line">    response_time = <span class="code-function">str_extract</span>(log_entry, <span class="code-regex">"\\d+\\.\\d+ms"</span>) <span class="code-keyword">%>%</span> <span class="code-function">str_remove</span>(<span class="code-regex">"ms"</span>) <span class="code-keyword">%>%</span> <span class="code-function">as.numeric</span>(),</span>
+                            <span class="code-line">    <span class="code-comment"># エラーかどうかを判定</span></span>
+                            <span class="code-line">    is_error = status_code >= <span class="code-string">400</span>,</span>
+                            <span class="code-line">    <span class="code-comment"># IPアドレスの分類</span></span>
+                            <span class="code-line">    ip_type = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      <span class="code-function">str_detect</span>(ip_address, <span class="code-regex">"^192\\.168\\."</span>) ~ <span class="code-string">"Private"</span>,</span>
+                            <span class="code-line">      <span class="code-function">str_detect</span>(ip_address, <span class="code-regex">"^10\\."</span>) ~ <span class="code-string">"Private"</span>,</span>
+                            <span class="code-line">      <span class="code-function">str_detect</span>(ip_address, <span class="code-regex">"^172\\.(1[6-9]|2[0-9]|3[01])\\."</span>) ~ <span class="code-string">"Private"</span>,</span>
+                            <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"Public"</span></span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(parsed_logs)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-output">
+                        <h4>📊 ログ分析結果</h4>
+                        <div class="result-container">
+                            <table class="result-table">
+                                <thead>
+                                    <tr>
+                                        <th>日時</th>
+                                        <th>IPアドレス</th>
+                                        <th>メソッド</th>
+                                        <th>パス</th>
+                                        <th>ステータス</th>
+                                        <th>応答時間</th>
+                                        <th>エラー</th>
+                                        <th>IP種別</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2023-12-01 14:23:45</td>
+                                        <td>192.168.1.100</td>
+                                        <td>GET</td>
+                                        <td>/api/users</td>
+                                        <td style="color: var(--neon-green);">200</td>
+                                        <td>1.2ms</td>
+                                        <td style="color: var(--neon-green);">✗</td>
+                                        <td>Private</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-12-01 14:24:10</td>
+                                        <td>10.0.0.25</td>
+                                        <td>POST</td>
+                                        <td>/api/login</td>
+                                        <td style="color: var(--neon-orange);">401</td>
+                                        <td>0.8ms</td>
+                                        <td style="color: var(--neon-pink);">✓</td>
+                                        <td>Private</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-12-01 14:25:33</td>
+                                        <td>203.104.15.200</td>
+                                        <td>GET</td>
+                                        <td>/api/products</td>
+                                        <td style="color: var(--neon-pink);">500</td>
+                                        <td>5.7ms</td>
+                                        <td style="color: var(--neon-pink);">✓</td>
+                                        <td>Public</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-12-01 14:26:01</td>
+                                        <td>172.16.0.10</td>
+                                        <td>DELETE</td>
+                                        <td>/api/users/123</td>
+                                        <td style="color: var(--neon-green);">204</td>
+                                        <td>2.1ms</td>
+                                        <td style="color: var(--neon-green);">✗</td>
+                                        <td>Private</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Chapter Navigation -->
+            <nav class="chapter-nav fade-in-up">
+                <a href="chapter4-tidyr-data-reshaping.html" class="nav-btn prev">
+                    ← 前の章
+                </a>
+                <div class="chapter-progress">
+                    第5章 / 全6章
+                </div>
+                <a href="chapter6-lubridate-dates.html" class="nav-btn next">
+                    次の章 →
+                </a>
+            </nav>
+        </div>
+    </main>
+    
+    <script>
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Smooth Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Dynamic Icon Animation
+        const icon = document.querySelector('.chapter-icon');
+        if (icon) {
+            setInterval(() => {
+                icon.style.transform = `translateY(-10px) rotate(${Math.random() * 10 - 5}deg)`;
+                setTimeout(() => {
+                    icon.style.transform = 'translateY(0) rotate(0deg)';
+                }, 1000);
+            }, 3000);
+        }
+        
+        // Text highlighting animation
+        const highlightedTexts = document.querySelectorAll('.highlighted-text');
+        highlightedTexts.forEach((element, index) => {
+            setTimeout(() => {
+                element.style.animation = 'pulse 1s ease-in-out';
+            }, index * 200);
+        });
+    </script>
+</body>
+</html>

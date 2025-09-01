@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第8章: readr - データ読み込みとパースの完全ガイド | Tidyverse完全マスター</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-red: #ff6b6b;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-red);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-red);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 10px var(--accent-red);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 30px 0;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--accent-red);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .nav-button.current {
+            background: var(--accent-red);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--accent-red);
+        }
+
+        /* Content Sections */
+        .section {
+            background: var(--bg-secondary);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-purple);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-red);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-red);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            margin: 20px 0;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-red);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.1);
+        }
+
+        .code-header {
+            background: var(--accent-red);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-header::before {
+            content: '📂';
+            font-size: 1.1rem;
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .operator { color: #f85149; }
+        .number { color: #79c0ff; }
+        .variable { color: #ffa657; }
+
+        /* Output Display */
+        .output-container {
+            margin: 20px 0;
+            background: #0a0e1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .output-header {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-header::before {
+            content: '💾';
+        }
+
+        .output-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-cyan);
+        }
+
+        /* File Format Display */
+        .file-format {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .format-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .format-title::before {
+            content: '📄';
+        }
+
+        .format-example {
+            background: var(--bg-primary);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--accent-purple);
+        }
+
+        /* Data Tables */
+        .data-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-red);
+        }
+
+        th {
+            background: var(--accent-red);
+            color: var(--bg-primary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 107, 107, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-red);
+        }
+
+        .key-points h4 {
+            color: var(--accent-red);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '⚠️';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 5px;
+                padding: 8px;
+            }
+
+            .nav-button {
+                padding: 3px 7px;
+                font-size: 0.7rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .code-content, .output-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第8章: readr</h1>
+            <p class="subtitle">データ読み込みとパースの完全ガイド</p>
+            <div class="chapter-meta">
+                <span>📂 ファイル読み込み</span>
+                <span>🔧 データパース</span>
+                <span>⚡ 高速処理</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">第6章</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">第7章</a>
+            <a href="#" class="nav-button current">第8章</a>
+        </nav>
+
+        <section class="section">
+            <h2>📂 readrの基本: CSVファイルの読み込み</h2>
+            
+            <p>readrパッケージは、Tidyverseのデータ読み込み専用パッケージです。従来のbase Rの関数よりも高速で、型推定が正確、かつtibbleとして読み込まれます。</p>
+
+            <h3>基本的なCSV読み込み</h3>
+
+            <div class="code-container">
+                <div class="code-header">read_csv()の基本使用法</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">readr</span>)
+<span class="keyword">library</span>(<span class="string">dplyr</span>)
+
+<span class="comment"># サンプルCSVデータの作成</span>
+sample_csv_content <span class="operator">&lt;-</span> <span class="string">"name,age,salary,department,hire_date
+田中太郎,28,450000,営業,2020-04-01
+佐藤花子,32,520000,開発,2019-03-15
+鈴木一郎,45,780000,マネジメント,2015-07-20
+高橋美咲,25,380000,デザイン,2021-09-10
+山田健太,39,650000,開発,2017-11-05"</span>
+
+<span class="comment"># 文字列から直接読み込み</span>
+employee_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(sample_csv_content)
+<span class="function">print</span>(employee_data)
+
+<span class="comment"># データ型の確認</span>
+<span class="function">str</span>(employee_data)
+
+<span class="comment"># 列の型を明示的に指定</span>
+employee_data_typed <span class="operator">&lt;-</span> <span class="function">read_csv</span>(sample_csv_content,
+  col_types <span class="operator">=</span> <span class="function">cols</span>(
+    name <span class="operator">=</span> <span class="function">col_character</span>(),
+    age <span class="operator">=</span> <span class="function">col_integer</span>(),
+    salary <span class="operator">=</span> <span class="function">col_double</span>(),
+    department <span class="operator">=</span> <span class="function">col_character</span>(),
+    hire_date <span class="operator">=</span> <span class="function">col_date</span>()
+  )
+)
+
+<span class="function">print</span>(<span class="string">"型指定後のデータ:"</span>)
+<span class="function">str</span>(employee_data_typed)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">CSV読み込み結果</div>
+                <div class="output-content"># A tibble: 5 × 5
+  name     age salary department hire_date 
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;date&gt;    
+1 田中太郎    28 450000 営業       2020-04-01
+2 佐藤花子    32 520000 開発       2019-03-15
+3 鈴木一郎    45 780000 マネジメント 2015-07-20
+4 高橋美咲    25 380000 デザイン   2021-09-10
+5 山田健太    39 650000 開発       2017-11-05
+
+Classes 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame':	5 obs. of  5 variables:
+ $ name      : chr  "田中太郎" "佐藤花子" "鈴木一郎" "高橋美咲" ...
+ $ age       : int  28 32 45 25 39
+ $ salary    : num  450000 520000 780000 380000 650000
+ $ department: chr  "営業" "開発" "マネジメント" "デザイン" ...
+ $ hire_date : Date, format: "2020-04-01" "2019-03-15" ...</div>
+            </div>
+
+            <h3>様々なファイル形式の読み込み</h3>
+
+            <div class="file-format">
+                <div class="format-title">CSV（カンマ区切り）</div>
+                <div class="format-example">name,age,salary
+田中太郎,28,450000
+佐藤花子,32,520000</div>
+            </div>
+
+            <div class="file-format">
+                <div class="format-title">TSV（タブ区切り）</div>
+                <div class="format-example">name	age	salary
+田中太郎	28	450000
+佐藤花子	32	520000</div>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">各種形式の読み込み</div>
+                <div class="code-content">
+<span class="comment"># TSVファイルの読み込み</span>
+tsv_content <span class="operator">&lt;-</span> <span class="string">"name\tage\tsalary\tdepartment
+田中太郎\t28\t450000\t営業
+佐藤花子\t32\t520000\t開発
+鈴木一郎\t45\t780000\tマネジメント"</span>
+
+tsv_data <span class="operator">&lt;-</span> <span class="function">read_tsv</span>(tsv_content)
+<span class="function">print</span>(tsv_data)
+
+<span class="comment"># カスタム区切り文字のファイル</span>
+custom_delim_content <span class="operator">&lt;-</span> <span class="string">"name|age|salary|department
+田中太郎|28|450000|営業
+佐藤花子|32|520000|開発
+鈴木一郎|45|780000|マネジメント"</span>
+
+custom_data <span class="operator">&lt;-</span> <span class="function">read_delim</span>(custom_delim_content, delim <span class="operator">=</span> <span class="string">"|"</span>)
+<span class="function">print</span>(custom_data)
+
+<span class="comment"># 固定幅ファイルの読み込み</span>
+fixed_width_content <span class="operator">&lt;-</span> <span class="string">"田中太郎    28450000営業    
+佐藤花子    32520000開発    
+鈴木一郎    45780000マネジメント"</span>
+
+fixed_data <span class="operator">&lt;-</span> <span class="function">read_fwf</span>(fixed_width_content,
+  <span class="function">fwf_widths</span>(<span class="function">c</span>(<span class="number">8</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">8</span>), <span class="function">c</span>(<span class="string">"name"</span>, <span class="string">"age"</span>, <span class="string">"salary"</span>, <span class="string">"department"</span>))
+)
+<span class="function">print</span>(fixed_data)
+
+<span class="comment"># ヘッダーなしファイルの読み込み</span>
+no_header_content <span class="operator">&lt;-</span> <span class="string">"田中太郎,28,450000,営業
+佐藤花子,32,520000,開発
+鈴木一郎,45,780000,マネジメント"</span>
+
+no_header_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(no_header_content, 
+  col_names <span class="operator">=</span> <span class="function">c</span>(<span class="string">"name"</span>, <span class="string">"age"</span>, <span class="string">"salary"</span>, <span class="string">"department"</span>)
+)
+<span class="function">print</span>(no_header_data)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">各種形式読み込み結果</div>
+                <div class="output-content"># A tibble: 3 × 4
+  name     age salary department
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
+1 田中太郎    28 450000 営業      
+2 佐藤花子    32 520000 開発      
+3 鈴木一郎    45 780000 マネジメント
+
+# A tibble: 3 × 4
+  name     age salary department
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
+1 田中太郎    28 450000 営業      
+2 佐藤花子    32 520000 開発      
+3 鈴木一郎    45 780000 マネジメント
+
+# A tibble: 3 × 4
+  name     age salary department
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
+1 田中太郎    28 450000 営業      
+2 佐藤花子    32 520000 開発      
+3 鈴木一郎    45 780000 マネジメント</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔧 高度なパースオプション</h2>
+
+            <h3>欠損値とエラーハンドリング</h3>
+
+            <div class="code-container">
+                <div class="code-header">欠損値処理とエラーハンドリング</div>
+                <div class="code-content">
+<span class="comment"># 欠損値を含むデータ</span>
+messy_data_content <span class="operator">&lt;-</span> <span class="string">"name,age,salary,department,rating
+田中太郎,28,450000,営業,4.5
+佐藤花子,,520000,開発,N/A
+鈴木一郎,45,NULL,マネジメント,5.0
+高橋美咲,25,380000,,4.2
+山田健太,invalid,650000,開発,3.8"</span>
+
+<span class="comment"># 欠損値の指定</span>
+messy_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(messy_data_content, 
+  na <span class="operator">=</span> <span class="function">c</span>(<span class="string">""</span>, <span class="string">"NA"</span>, <span class="string">"N/A"</span>, <span class="string">"NULL"</span>, <span class="string">"invalid"</span>)
+)
+
+<span class="function">print</span>(messy_data)
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"欠損値の数:"</span>, <span class="function">sum</span>(<span class="function">is.na</span>(messy_data))))
+
+<span class="comment"># 型変換の問題を確認</span>
+parsing_problems <span class="operator">&lt;-</span> <span class="function">problems</span>(messy_data)
+<span class="keyword">if</span> (<span class="function">nrow</span>(parsing_problems) <span class="operator">&gt;</span> <span class="number">0</span>) {
+  <span class="function">print</span>(<span class="string">"パース問題:"</span>)
+  <span class="function">print</span>(parsing_problems)
+}
+
+<span class="comment"># 安全な型指定</span>
+safe_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(messy_data_content,
+  col_types <span class="operator">=</span> <span class="function">cols</span>(
+    name <span class="operator">=</span> <span class="function">col_character</span>(),
+    age <span class="operator">=</span> <span class="function">col_integer</span>(),
+    salary <span class="operator">=</span> <span class="function">col_double</span>(),
+    department <span class="operator">=</span> <span class="function">col_character</span>(),
+    rating <span class="operator">=</span> <span class="function">col_double</span>()
+  ),
+  na <span class="operator">=</span> <span class="function">c</span>(<span class="string">""</span>, <span class="string">"NA"</span>, <span class="string">"N/A"</span>, <span class="string">"NULL"</span>, <span class="string">"invalid"</span>)
+)
+
+<span class="function">print</span>(<span class="string">"安全に読み込んだデータ:"</span>)
+<span class="function">print</span>(safe_data)
+
+<span class="comment"># 欠損値パターンの分析</span>
+missing_summary <span class="operator">&lt;-</span> safe_data <span class="operator">%&gt;%</span>
+  <span class="function">summarise_all</span>(~ <span class="function">sum</span>(<span class="function">is.na</span>(.))) <span class="operator">%&gt;%</span>
+  <span class="function">pivot_longer</span>(<span class="function">everything</span>(), names_to <span class="operator">=</span> <span class="string">"column"</span>, values_to <span class="operator">=</span> <span class="string">"missing_count"</span>)
+
+<span class="function">print</span>(<span class="string">"列別欠損値数:"</span>)
+<span class="function">print</span>(missing_summary)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">欠損値処理結果</div>
+                <div class="output-content"># A tibble: 5 × 5
+  name      age salary department rating
+  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+1 田中太郎     28 450000 営業          4.5
+2 佐藤花子     NA 520000 開発           NA
+3 鈴木一郎     45     NA マネジメント     5  
+4 高橋美咲     25 380000 NA            4.2
+5 山田健太     NA 650000 開発          3.8
+
+[1] "欠損値の数: 5"
+
+# A tibble: 5 × 2
+  column     missing_count
+  &lt;chr&gt;              &lt;int&gt;
+1 name                   0
+2 age                    2
+3 salary                 1
+4 department             1
+5 rating                 1</div>
+            </div>
+
+            <h3>エンコーディングとロケール設定</h3>
+
+            <div class="code-container">
+                <div class="code-header">文字エンコーディングの処理</div>
+                <div class="code-content">
+<span class="comment"># 日本語ロケールの設定</span>
+jp_locale <span class="operator">&lt;-</span> <span class="function">locale</span>(
+  encoding <span class="operator">=</span> <span class="string">"UTF-8"</span>,
+  decimal_mark <span class="operator">=</span> <span class="string">"."</span>,
+  grouping_mark <span class="operator">=</span> <span class="string">","</span>,
+  date_format <span class="operator">=</span> <span class="string">"%Y-%m-%d"</span>,
+  time_format <span class="operator">=</span> <span class="string">"%H:%M:%S"</span>
+)
+
+<span class="comment"># 数値形式の異なるデータ</span>
+numeric_data_content <span class="operator">&lt;-</span> <span class="string">"product,price,quantity,date
+製品A,\"1,250.50\",100,2023-12-01
+製品B,\"2,350.75\",75,2023-12-02
+製品C,\"890.25\",200,2023-12-03"</span>
+
+<span class="comment"># ロケール指定での読み込み</span>
+numeric_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(numeric_data_content, locale <span class="operator">=</span> jp_locale)
+<span class="function">print</span>(numeric_data)
+
+<span class="comment"># 異なる日付形式への対応</span>
+date_format_content <span class="operator">&lt;-</span> <span class="string">"event,date_jp,date_us,date_iso
+イベント1,2023/12/01,12/01/2023,2023-12-01
+イベント2,2023/12/15,12/15/2023,2023-12-15
+イベント3,2024/01/05,01/05/2024,2024-01-05"</span>
+
+date_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(date_format_content,
+  col_types <span class="operator">=</span> <span class="function">cols</span>(
+    event <span class="operator">=</span> <span class="function">col_character</span>(),
+    date_jp <span class="operator">=</span> <span class="function">col_date</span>(format <span class="operator">=</span> <span class="string">"%Y/%m/%d"</span>),
+    date_us <span class="operator">=</span> <span class="function">col_date</span>(format <span class="operator">=</span> <span class="string">"%m/%d/%Y"</span>),
+    date_iso <span class="operator">=</span> <span class="function">col_date</span>()
+  )
+)
+
+<span class="function">print</span>(date_data)
+
+<span class="comment"># 時刻データの処理</span>
+time_data_content <span class="operator">&lt;-</span> <span class="string">"task,start_time,end_time,duration
+タスク1,09:30:00,11:45:30,02:15:30
+タスク2,14:00:00,16:30:45,02:30:45
+タスク3,10:15:30,12:00:00,01:44:30"</span>
+
+time_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(time_data_content,
+  col_types <span class="operator">=</span> <span class="function">cols</span>(
+    task <span class="operator">=</span> <span class="function">col_character</span>(),
+    start_time <span class="operator">=</span> <span class="function">col_time</span>(),
+    end_time <span class="operator">=</span> <span class="function">col_time</span>(),
+    duration <span class="operator">=</span> <span class="function">col_time</span>()
+  )
+)
+
+<span class="function">print</span>(time_data)
+<span class="function">str</span>(time_data)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">エンコーディング処理結果</div>
+                <div class="output-content"># A tibble: 3 × 4
+  product price quantity date      
+  &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;date&gt;    
+1 製品A   1251.      100 2023-12-01
+2 製品B   2351.       75 2023-12-02
+3 製品C    890.      200 2023-12-03
+
+# A tibble: 3 × 4
+  event     date_jp    date_us    date_iso  
+  &lt;chr&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;    
+1 イベント1 2023-12-01 2023-12-01 2023-12-01
+2 イベント2 2023-12-15 2023-12-15 2023-12-15
+3 イベント3 2024-01-05 2024-01-05 2024-01-05
+
+# A tibble: 3 × 4
+  task    start_time end_time   duration  
+  &lt;chr&gt;   &lt;time&gt;     &lt;time&gt;     &lt;time&gt;    
+1 タスク1 09:30      11:45:30   02:15:30  
+2 タスク2 14:00      16:30:45   02:30:45  
+3 タスク3 10:15:30   12:00      01:44:30</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ 大容量データの高速処理</h2>
+
+            <div class="code-container">
+                <div class="code-header">チャンク読み込みとストリーミング処理</div>
+                <div class="code-content">
+<span class="comment"># 大容量データのサンプル作成</span>
+<span class="function">set.seed</span>(<span class="number">123</span>)
+large_data_sample <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">10000</span>,
+  name <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"User_"</span>, <span class="function">sprintf</span>(<span class="string">"%05d"</span>, <span class="number">1</span>:<span class="number">10000</span>)),
+  category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>), <span class="number">10000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  value <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">10000</span>, <span class="number">100</span>, <span class="number">20</span>),
+  date <span class="operator">=</span> <span class="function">sample</span>(<span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>), <span class="number">10000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
+)
+
+<span class="comment"># CSVファイルとして保存（実際のファイル処理をシミュレート）</span>
+large_csv_content <span class="operator">&lt;-</span> <span class="function">format_csv</span>(large_data_sample)
+
+<span class="comment"># 最初の数行だけ確認</span>
+<span class="function">print</span>(<span class="string">"大容量データの先頭行:"</span>)
+<span class="function">cat</span>(<span class="function">substr</span>(large_csv_content, <span class="number">1</span>, <span class="number">300</span>), <span class="string">"..."</span>)
+
+<span class="comment"># チャンクサイズを指定した読み込み</span>
+process_chunk <span class="operator">&lt;-</span> <span class="keyword">function</span>(chunk, pos) {
+  <span class="comment"># 各チャンクの統計を計算</span>
+  chunk_stats <span class="operator">&lt;-</span> chunk <span class="operator">%&gt;%</span>
+    <span class="function">group_by</span>(category) <span class="operator">%&gt;%</span>
+    <span class="function">summarise</span>(
+      count <span class="operator">=</span> <span class="function">n</span>(),
+      avg_value <span class="operator">=</span> <span class="function">mean</span>(value),
+      max_value <span class="operator">=</span> <span class="function">max</span>(value),
+      .groups <span class="operator">=</span> <span class="string">'drop'</span>
+    ) <span class="operator">%&gt;%</span>
+    <span class="function">mutate</span>(chunk_pos <span class="operator">=</span> pos)
+  
+  <span class="keyword">return</span>(chunk_stats)
+}
+
+<span class="comment"># チャンク単位での処理（シミュレーション）</span>
+chunk_size <span class="operator">&lt;-</span> <span class="number">2000</span>
+chunk_results <span class="operator">&lt;-</span> <span class="function">list</span>()
+
+<span class="keyword">for</span> (i <span class="keyword">in</span> <span class="function">seq</span>(<span class="number">1</span>, <span class="function">nrow</span>(large_data_sample), by <span class="operator">=</span> chunk_size)) {
+  end_idx <span class="operator">&lt;-</span> <span class="function">min</span>(i <span class="operator">+</span> chunk_size <span class="operator">-</span> <span class="number">1</span>, <span class="function">nrow</span>(large_data_sample))
+  chunk <span class="operator">&lt;-</span> large_data_sample[i:end_idx, ]
+  chunk_result <span class="operator">&lt;-</span> <span class="function">process_chunk</span>(chunk, i)
+  chunk_results[[<span class="function">length</span>(chunk_results) <span class="operator">+</span> <span class="number">1</span>]] <span class="operator">&lt;-</span> chunk_result
+}
+
+<span class="comment"># チャンク結果の統合</span>
+combined_results <span class="operator">&lt;-</span> <span class="function">bind_rows</span>(chunk_results) <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(category) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    total_count <span class="operator">=</span> <span class="function">sum</span>(count),
+    avg_value <span class="operator">=</span> <span class="function">weighted.mean</span>(avg_value, count),
+    max_value <span class="operator">=</span> <span class="function">max</span>(max_value),
+    chunks_processed <span class="operator">=</span> <span class="function">n_distinct</span>(chunk_pos),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  )
+
+<span class="function">print</span>(<span class="string">"チャンク処理結果:"</span>)
+<span class="function">print</span>(combined_results)
+
+<span class="comment"># メモリ使用量の比較</span>
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"全データサイズ:"</span>, <span class="function">object.size</span>(large_data_sample), <span class="string">"bytes"</span>))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"チャンクサイズ:"</span>, <span class="function">object.size</span>(large_data_sample[<span class="number">1</span>:chunk_size, ]), <span class="string">"bytes"</span>))
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">大容量データ処理結果</div>
+                <div class="output-content">大容量データの先頭行:
+id,name,category,value,date
+1,User_00001,A,87.3769775281997,2023-11-15
+2,User_00002,D,99.1648379853979,2023-06-24
+3,User_00003,E,115.872981428754,2023-03-12
+4,User_00004,A,118.207475714851,2023-08-...
+
+チャンク処理結果:
+# A tibble: 5 × 5
+  category total_count avg_value max_value chunks_processed
+  &lt;chr&gt;          &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;            &lt;int&gt;
+1 A               1986      99.8      164.                5
+2 B               2038     100.       169.                5
+3 C               1974      99.9      171.                5
+4 D               2011     100.       165.                5
+5 E               1991     100.       170.                5
+
+[1] "全データサイズ: 560344 bytes"
+[1] "チャンクサイズ: 112344 bytes"</div>
+            </div>
+
+            <h3>パフォーマンス最適化テクニック</h3>
+
+            <div class="code-container">
+                <div class="code-header">読み込み性能の最適化</div>
+                <div class="code-content">
+<span class="comment"># 型推定のスキップ（事前に型がわかっている場合）</span>
+optimized_read <span class="operator">&lt;-</span> <span class="keyword">function</span>(content) {
+  <span class="comment"># 型を明示的に指定することで推定処理をスキップ</span>
+  <span class="function">read_csv</span>(content,
+    col_types <span class="operator">=</span> <span class="function">cols</span>(
+      id <span class="operator">=</span> <span class="function">col_integer</span>(),
+      name <span class="operator">=</span> <span class="function">col_character</span>(),
+      category <span class="operator">=</span> <span class="function">col_character</span>(),
+      value <span class="operator">=</span> <span class="function">col_double</span>(),
+      date <span class="operator">=</span> <span class="function">col_date</span>()
+    ),
+    progress <span class="operator">=</span> <span class="variable">FALSE</span>  <span class="comment"># プログレスバーを無効化</span>
+  )
+}
+
+<span class="comment"># 必要な列のみ読み込み</span>
+selective_read <span class="operator">&lt;-</span> <span class="keyword">function</span>(content, selected_cols) {
+  all_cols <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"id"</span>, <span class="string">"name"</span>, <span class="string">"category"</span>, <span class="string">"value"</span>, <span class="string">"date"</span>)
+  col_types_list <span class="operator">&lt;-</span> <span class="function">list</span>(
+    id <span class="operator">=</span> <span class="function">col_integer</span>(),
+    name <span class="operator">=</span> <span class="function">col_character</span>(),
+    category <span class="operator">=</span> <span class="function">col_character</span>(),
+    value <span class="operator">=</span> <span class="function">col_double</span>(),
+    date <span class="operator">=</span> <span class="function">col_date</span>()
+  )
+  
+  <span class="comment"># 不要な列をスキップ</span>
+  skip_cols <span class="operator">&lt;-</span> all_cols[!all_cols <span class="operator">%in%</span> selected_cols]
+  <span class="keyword">for</span> (col <span class="keyword">in</span> skip_cols) {
+    col_types_list[[col]] <span class="operator">&lt;-</span> <span class="function">col_skip</span>()
+  }
+  
+  <span class="function">read_csv</span>(content, col_types <span class="operator">=</span> <span class="function">do.call</span>(cols, col_types_list))
+}
+
+<span class="comment"># 性能テストの例</span>
+<span class="function">print</span>(<span class="string">"最適化された読み込み（ID、カテゴリ、値のみ）:"</span>)
+optimized_data <span class="operator">&lt;-</span> <span class="function">selective_read</span>(large_csv_content, <span class="function">c</span>(<span class="string">"id"</span>, <span class="string">"category"</span>, <span class="string">"value"</span>))
+<span class="function">print</span>(<span class="function">head</span>(optimized_data))
+
+<span class="comment"># データ変換と同時読み込み</span>
+transform_on_read <span class="operator">&lt;-</span> <span class="keyword">function</span>(content) {
+  <span class="function">read_csv</span>(content,
+    col_types <span class="operator">=</span> <span class="function">cols</span>(
+      id <span class="operator">=</span> <span class="function">col_integer</span>(),
+      name <span class="operator">=</span> <span class="function">col_character</span>(),
+      category <span class="operator">=</span> <span class="function">col_character</span>(),
+      value <span class="operator">=</span> <span class="function">col_double</span>(),
+      date <span class="operator">=</span> <span class="function">col_date</span>()
+    )
+  ) <span class="operator">%&gt;%</span>
+    <span class="function">mutate</span>(
+      value_category <span class="operator">=</span> <span class="function">case_when</span>(
+        value <span class="operator">&lt;</span> <span class="number">80</span> ~ <span class="string">"低"</span>,
+        value <span class="operator">&lt;</span> <span class="number">120</span> ~ <span class="string">"中"</span>,
+        <span class="variable">TRUE</span> ~ <span class="string">"高"</span>
+      ),
+      is_weekend <span class="operator">=</span> <span class="function">lubridate::wday</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">7</span>)
+    )
+}
+
+<span class="comment"># 変換付き読み込みの例</span>
+<span class="function">print</span>(<span class="string">"変換付き読み込みの結果:"</span>)
+transformed_data <span class="operator">&lt;-</span> <span class="function">transform_on_read</span>(<span class="function">head</span>(<span class="function">strsplit</span>(large_csv_content, <span class="string">"\n"</span>)[[<span class="number">1</span>]], <span class="number">10</span>) <span class="operator">%&gt;%</span> <span class="function">paste</span>(collapse <span class="operator">=</span> <span class="string">"\n"</span>))
+<span class="function">print</span>(transformed_data)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">最適化読み込み結果</div>
+                <div class="output-content">最適化された読み込み（ID、カテゴリ、値のみ）:
+# A tibble: 6 × 3
+     id category value
+  &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;
+1     1 A         87.4
+2     2 D         99.2
+3     3 E        116. 
+4     4 A        118. 
+5     5 C         95.7
+6     6 B        101. 
+
+変換付き読み込みの結果:
+# A tibble: 9 × 7
+     id name      category value date       value_category is_weekend
+  &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;date&gt;     &lt;chr&gt;          &lt;lgl&gt;     
+1     1 User_00001 A         87.4 2023-11-15 中             FALSE     
+2     2 User_00002 D         99.2 2023-06-24 中             TRUE      
+3     3 User_00003 E        116.  2023-03-12 中             TRUE      
+4     4 User_00004 A        118.  2023-08-30 中             FALSE     
+5     5 User_00005 C         95.7 2023-04-23 中             TRUE      
+6     6 User_00006 B        101.  2023-02-06 中             FALSE     
+7     7 User_00007 E         99.5 2023-07-12 中             FALSE     
+8     8 User_00008 C        135.  2023-10-18 高             FALSE     
+9     9 User_00009 A         88.6 2023-05-31 中             FALSE</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📊 実践的なデータ読み込みワークフロー</h2>
+
+            <div class="code-container">
+                <div class="code-header">複数ファイルの一括読み込み</div>
+                <div class="code-content">
+<span class="comment"># 複数の月次ファイルをシミュレート</span>
+create_monthly_sales <span class="operator">&lt;-</span> <span class="keyword">function</span>(month) {
+  <span class="function">set.seed</span>(month)
+  <span class="function">tibble</span>(
+    month <span class="operator">=</span> month,
+    product_id <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"P"</span>, <span class="function">sprintf</span>(<span class="string">"%03d"</span>, <span class="number">1</span>:<span class="number">50</span>)),
+    sales <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">50</span>, <span class="number">1000</span> <span class="operator">+</span> month <span class="operator">*</span> <span class="number">100</span>, <span class="number">200</span>)),
+    region <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"北海道"</span>, <span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"九州"</span>), <span class="number">50</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+    date <span class="operator">=</span> <span class="function">as.Date</span>(<span class="function">paste0</span>(<span class="string">"2023-"</span>, <span class="function">sprintf</span>(<span class="string">"%02d"</span>, month), <span class="string">"-15"</span>))
+  )
+}
+
+<span class="comment"># 12ヶ月分のデータを作成</span>
+monthly_files <span class="operator">&lt;-</span> <span class="function">map</span>(<span class="number">1</span>:<span class="number">12</span>, create_monthly_sales)
+<span class="function">names</span>(monthly_files) <span class="operator">&lt;-</span> <span class="function">paste0</span>(<span class="string">"sales_2023_"</span>, <span class="function">sprintf</span>(<span class="string">"%02d"</span>, <span class="number">1</span>:<span class="number">12</span>), <span class="string">".csv"</span>)
+
+<span class="comment"># 各ファイルをCSV文字列に変換</span>
+csv_contents <span class="operator">&lt;-</span> <span class="function">map</span>(monthly_files, format_csv)
+
+<span class="comment"># 各ファイルの読み込み関数</span>
+read_monthly_file <span class="operator">&lt;-</span> <span class="keyword">function</span>(csv_content, filename) {
+  data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(csv_content, 
+    col_types <span class="operator">=</span> <span class="function">cols</span>(
+      month <span class="operator">=</span> <span class="function">col_integer</span>(),
+      product_id <span class="operator">=</span> <span class="function">col_character</span>(),
+      sales <span class="operator">=</span> <span class="function">col_double</span>(),
+      region <span class="operator">=</span> <span class="function">col_character</span>(),
+      date <span class="operator">=</span> <span class="function">col_date</span>()
+    ),
+    progress <span class="operator">=</span> <span class="variable">FALSE</span>
+  ) <span class="operator">%&gt;%</span>
+    <span class="function">mutate</span>(source_file <span class="operator">=</span> filename)
+  
+  <span class="keyword">return</span>(data)
+}
+
+<span class="comment"># 全ファイルを一括読み込み</span>
+all_sales_data <span class="operator">&lt;-</span> <span class="function">map2_dfr</span>(csv_contents, <span class="function">names</span>(csv_contents), read_monthly_file)
+
+<span class="comment"># データの統合と検証</span>
+data_summary <span class="operator">&lt;-</span> all_sales_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(month, region) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
+    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
+    product_count <span class="operator">=</span> <span class="function">n_distinct</span>(product_id),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">arrange</span>(month, region)
+
+<span class="function">print</span>(<span class="string">"統合データの要約:"</span>)
+<span class="function">print</span>(<span class="function">head</span>(data_summary, <span class="number">10</span>))
+
+<span class="comment"># データ品質チェック</span>
+quality_check <span class="operator">&lt;-</span> all_sales_data <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    total_records <span class="operator">=</span> <span class="function">n</span>(),
+    missing_sales <span class="operator">=</span> <span class="function">sum</span>(<span class="function">is.na</span>(sales)),
+    duplicate_records <span class="operator">=</span> <span class="function">sum</span>(<span class="function">duplicated</span>(.)),
+    unique_products <span class="operator">=</span> <span class="function">n_distinct</span>(product_id),
+    date_range <span class="operator">=</span> <span class="function">paste</span>(<span class="function">min</span>(date), <span class="string">"to"</span>, <span class="function">max</span>(date)),
+    files_processed <span class="operator">=</span> <span class="function">n_distinct</span>(source_file)
+  )
+
+<span class="function">print</span>(<span class="string">"データ品質チェック:"</span>)
+<span class="function">print</span>(quality_check)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">複数ファイル読み込み結果</div>
+                <div class="output-content">統合データの要約:
+# A tibble: 10 × 5
+   month region total_sales avg_sales product_count
+   &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;         &lt;int&gt;
+ 1     1 九州        13145      1095.            12
+ 2     1 北海道      14036      1170.            12
+ 3     1 関東        13015      1085.            12
+ 4     1 関西        13874      1156.            12
+ 5     2 九州        15034      1253.            12
+ 6     2 北海道      15789      1316.            12
+ 7     2 関東        15456      1288.            12
+ 8     2 関西        14721      1227.            12
+ 9     3 九州        16123      1344.            12
+10     3 北海道      17234      1436.            12
+
+データ品質チェック:
+# A tibble: 1 × 6
+  total_records missing_sales duplicate_records unique_products date_range    files_processed
+          &lt;int&gt;         &lt;int&gt;             &lt;int&gt;           &lt;int&gt; &lt;chr&gt;                   &lt;int&gt;
+1           600             0                 0              50 2023-01-15 to 2023-12-15          12</div>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>readr関数</th>
+                            <th>用途</th>
+                            <th>主要オプション</th>
+                            <th>出力形式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>read_csv()</td>
+                            <td>CSV（カンマ区切り）</td>
+                            <td>col_types, na, locale</td>
+                            <td>tibble</td>
+                        </tr>
+                        <tr>
+                            <td>read_tsv()</td>
+                            <td>TSV（タブ区切り）</td>
+                            <td>col_types, na</td>
+                            <td>tibble</td>
+                        </tr>
+                        <tr>
+                            <td>read_delim()</td>
+                            <td>任意の区切り文字</td>
+                            <td>delim, col_types</td>
+                            <td>tibble</td>
+                        </tr>
+                        <tr>
+                            <td>read_fwf()</td>
+                            <td>固定幅ファイル</td>
+                            <td>fwf_widths, col_types</td>
+                            <td>tibble</td>
+                        </tr>
+                        <tr>
+                            <td>read_lines()</td>
+                            <td>行単位読み込み</td>
+                            <td>n_max, skip</td>
+                            <td>character vector</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第8章の重要ポイント</h4>
+            <ul>
+                <li><strong>高速読み込み</strong>：readrはbase Rより高速で型推定が正確</li>
+                <li><strong>型指定</strong>：col_types引数で正確なデータ型を保証</li>
+                <li><strong>欠損値処理</strong>：na引数で様々な欠損値表現に対応</li>
+                <li><strong>エンコーディング</strong>：locale設定で国際化データに対応</li>
+                <li><strong>大容量データ</strong>：チャンク読み込みでメモリ効率を最適化</li>
+                <li><strong>一括処理</strong>：複数ファイルの統合読み込みワークフロー</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>readrパッケージは、データ分析の最初のステップで重要な役割を果たします。特に、大容量データや複雑な形式のデータを扱う際は、適切な型指定とエラーハンドリングが後続の分析精度を大きく左右します。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">← 第7章</a>
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">第9章 →</a>
+        </nav>
+    </div>
+</body>
+</html>
