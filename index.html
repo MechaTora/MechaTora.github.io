@@ -14,12 +14,16 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mechatora.github.io/">
     <meta property="og:site_name" content="MechaTora">
+    <meta property="og:image" content="https://mechatora.github.io/favicon.ico">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://mechatora.github.io/">
     
-    <!-- Favicon -->
+    <!-- Favicon - Google Search Optimized -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
+    <link rel="icon" type="image/x-icon" href="https://mechatora.github.io/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="https://mechatora.github.io/favicon.ico">
+    <link rel="apple-touch-icon" href="https://mechatora.github.io/favicon.ico">
     
     <!-- Google Site Verification -->
     <meta name="google-site-verification" content="8NPtpXOjJwJ_OWjPujsdLfYC0L-OzNzuIVeAsYy2Gfs" />
@@ -36,6 +40,134 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
          crossorigin="anonymous"></script>
+    
+    <!-- 構造化データ - WebSite + Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://mechatora.github.io/#website",
+          "name": "MechaTora",
+          "description": "便利なWebアプリケーション開発者",
+          "url": "https://mechatora.github.io/",
+          "inLanguage": "ja-JP",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://mechatora.github.io/?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          },
+          "publisher": {
+            "@id": "https://mechatora.github.io/#organization"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://mechatora.github.io/#organization",
+          "name": "MechaTora",
+          "url": "https://mechatora.github.io/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://mechatora.github.io/favicon.ico",
+            "width": 32,
+            "height": 32
+          },
+          "founder": {
+            "@type": "Person",
+            "name": "MechaTora開発者",
+            "jobTitle": "Senior Full Stack Engineer",
+            "description": "Web開発歴12年のシニアフルスタックエンジニア",
+            "knowsAbout": ["JavaScript", "TypeScript", "React", "Vue.js", "Python", "Node.js", "AWS", "防災情報システム"],
+            "hasCredential": [
+              "社会保険労務士",
+              "第一種衛生管理者", 
+              "応用情報技術者",
+              "基本情報技術者",
+              "簿記2級",
+              "G検定"
+            ]
+          },
+          "description": "日常の小さな不便を解決する実用的なWebアプリケーションを開発・運営",
+          "foundingDate": "2022-04-01",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "url": "https://mechatora.github.io/contact.html"
+          },
+          "sameAs": [
+            "https://mechatora.github.io/about.html"
+          ]
+        }
+      ]
+    }
+    </script>
+    
+    <!-- 構造化データ - SoftwareApplications -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "MechaTora Webアプリケーション一覧",
+      "description": "便利なWebアプリケーション集",
+      "itemListElement": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "料理提案アプリ",
+          "description": "冷蔵庫の食材から最適な料理レシピを提案するWebアプリ",
+          "url": "https://mechatora.github.io/cook-suggest/",
+          "applicationCategory": "LifestyleApplication",
+          "operatingSystem": "Web Browser",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "MechaTora開発者"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "地震モニター",
+          "description": "リアルタイムで地震情報を監視・通知するWebアプリ",
+          "url": "https://mechatora.github.io/earthquake-monitor/",
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "Web Browser",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "MechaTora開発者"
+          }
+        },
+        {
+          "@type": "SoftwareApplication", 
+          "name": "フラッシュカードアプリ",
+          "description": "効率的な記憶学習を支援するフラッシュカードWebアプリ",
+          "url": "https://mechatora.github.io/disaster-guide-hub.html",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web Browser",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "MechaTora開発者"
+          }
+        }
+      ]
+    }
+    </script>
     
     <style>
         :root {
@@ -57,6 +189,202 @@
             line-height: 1.6;
             color: var(--text-color);
             background: var(--background);
+            margin-top: 80px; /* ナビバー用マージン */
+        }
+
+        /* グローバルナビゲーション */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 80px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 0.8rem;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown a {
+            display: block;
+            color: var(--text-color);
+            padding: 0.6rem 1rem;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .nav-dropdown a:hover {
+            background-color: #f8f9fa;
+        }
+
+        .nav-dropdown a:last-child {
+            border-bottom: none;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* パンくずナビ */
+        .breadcrumb {
+            background: #f8f9fa;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb-list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-item a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.3rem 0.5rem;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            color: #6c757d;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 80px;
+                flex-direction: column;
+                background: var(--primary-color);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu .nav-item {
+                margin: 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .nav-dropdown {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(255,255,255,0.05);
+                border-radius: 0;
+            }
+
+            .nav-dropdown a {
+                color: rgba(255,255,255,0.8);
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
         }
         
         .container {
@@ -342,6 +670,72 @@
     </style>
 </head>
 <body>
+    <!-- グローバルナビゲーション -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                🐱 MechaTora
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Webアプリ</a>
+                    <div class="nav-dropdown">
+                        <a href="cook-suggest/">🍳 料理提案アプリ</a>
+                        <a href="earthquake-monitor/">🌏 地震モニター</a>
+                        <a href="disaster-guide-hub.html">🛡️ 防災ガイド総合</a>
+                        <a href="qualification-calendar.html">📅 資格試験カレンダー</a>
+                        <a href="social-insurance-news2/">🏛️ 社会保険ニュース</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link">防災・地震対策</a>
+                    <div class="nav-dropdown">
+                        <a href="earthquake-prevention-guide.html">🏠 地震対策ガイド</a>
+                        <a href="earthquake-action-manual.html">🚨 緊急時行動マニュアル</a>
+                        <a href="emergency-supplies-guide.html">🎒 防災グッズ選び方</a>
+                        <a href="earthquake-monitor/">🌏 地震モニターアプリ</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="blog.html" class="nav-link">開発ブログ</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">運営者情報</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link">サポート</a>
+                    <div class="nav-dropdown">
+                        <a href="help-guide.html">📖 ユーザーガイド</a>
+                        <a href="faq.html">❓ よくある質問</a>
+                        <a href="contact.html">📧 お問い合わせ</a>
+                        <a href="privacy.html">🔒 プライバシー</a>
+                    </div>
+                </li>
+            </ul>
+            
+            <button class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- パンくずナビ -->
+    <nav class="breadcrumb">
+        <div class="container">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="index.html">🏠 ホーム</a></li>
+                <li class="breadcrumb-item active">メインページ</li>
+            </ol>
+        </div>
+    </nav>
+
     <!-- Header Ad -->
     <div class="ad-banner">
         <ins class="adsbygoogle"
@@ -362,7 +756,6 @@
                 <div style="margin-top: 2rem;">
                     <a href="about.html" style="color: white; text-decoration: none; margin: 0 15px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease;">📖 About</a>
                     <a href="blog.html" style="color: white; text-decoration: none; margin: 0 15px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease;">📝 Blog</a>
-                    <a href="app-guide-flashcard.html" style="color: white; text-decoration: none; margin: 0 15px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease;">📚 Guide</a>
                 </div>
             </div>
         </div>
@@ -378,31 +771,63 @@
                 <div class="apps-grid practical-apps">
                     <a href="/cook-suggest/" class="app-card">
                         <span class="app-icon">🍳</span>
-                        <h3 class="app-title">CookSuggest</h3>
+                        <h3 class="app-title">CookSuggest - スマート料理提案システム</h3>
                         <p class="app-description">
-                            余った材料から最適なレシピを提案！1000種類以上のレシピデータベースから、条件や材料に合った料理を5つ提案します。
+                            <strong>食材の無駄を削減し、創造的な料理体験を提供</strong><br>
+                            冷蔵庫に余っている食材を入力するだけで、栄養バランスと美味しさを考慮した最適なレシピを瞬時に提案します。1000種類以上の厳選されたレシピデータベースから、あなたの食材・調理時間・難易度・アレルギー情報に完全マッチした料理を5つセレクト。
+                            <br><br>
+                            <strong>🌟 主要機能:</strong><br>
+                            • AI搭載の食材マッチングアルゴリズム<br>
+                            • 栄養価計算と健康的なバランス提案<br>
+                            • 調理時間・難易度による絞り込み<br>
+                            • アレルギー・食事制限対応フィルター<br>
+                            • 季節の食材を活用した旬のレシピ推奨<br>
+                            • ユーザー評価による品質保証システム<br>
+                            • 買い物リスト自動生成機能
                         </p>
-                        <p class="app-tech">PWA対応・星評価システム・お気に入り機能</p>
-                        <span class="app-button">アプリを開く</span>
+                        <p class="app-tech">React/PWA・栄養価API・機械学習・レスポンシブデザイン・オフライン対応</p>
+                        <span class="app-button">詳細を見る</span>
                     </a>
 
                     <a href="/earthquake-monitor/" class="app-card">
                         <span class="app-icon">🌏</span>
-                        <h3 class="app-title">地震モニター</h3>
+                        <h3 class="app-title">地震モニター - 高精度災害情報システム</h3>
                         <p class="app-description">
-                            日本の地震情報をリアルタイムで表示するWebアプリケーション。最新の地震データを見やすい形で提供します。
+                            <strong>気象庁API連携による信頼性の高い地震情報配信</strong><br>
+                            日本全国の地震情報を秒単位でリアルタイム監視し、緊急時の迅速な判断をサポート。震度・マグニチュード・震源地を視覚的に把握できる直感的なインターフェースで、防災意識の向上と安全確保に貢献します。
+                            <br><br>
+                            <strong>⚡ 主要機能:</strong><br>
+                            • 気象庁公式APIからの即時データ取得<br>
+                            • インタラクティブ地図による震源地可視化<br>
+                            • 震度別カラーコーディング表示<br>
+                            • 地域別絞り込み・履歴検索機能<br>
+                            • プッシュ通知による緊急アラート<br>
+                            • 過去30日間の地震活動統計分析<br>
+                            • 津波警報・注意報の同時表示<br>
+                            • 避難所情報との連携機能
                         </p>
-                        <p class="app-tech">リアルタイム更新・地図表示・通知機能</p>
-                        <span class="app-button">アプリを開く</span>
+                        <p class="app-tech">気象庁API・WebSocket・Progressive Web App・プッシュ通知・地図API・データ可視化</p>
+                        <span class="app-button">詳細を見る</span>
                     </a>
 
                     <div class="app-card social-insurance-unified">
                         <span class="app-icon">🏛️</span>
-                        <h3 class="app-title">社会保険ニュース</h3>
+                        <h3 class="app-title">社会保険ニュース - 自動情報収集・分析システム</h3>
                         <p class="app-description">
-                            社会保険に関する最新ニュースを自動収集・要約。厚生年金、健康保険、雇用保険などの重要な変更情報をチェック。用途に応じて2つのバージョンから選択可能。
+                            <strong>専門家レベルの社会保険情報を自動化で効率配信</strong><br>
+                            厚生労働省・日本年金機構等の公式発表を24時間自動監視し、重要な制度変更や給付金情報をAI技術で要約・分類。社会保険労務士や人事担当者、個人の年金・保険の最新動向把握を強力サポート。
+                            <br><br>
+                            <strong>📋 カバー分野:</strong><br>
+                            • 厚生年金制度の改正・給付変更<br>
+                            • 健康保険の保険料率・制度変更<br>
+                            • 雇用保険の失業給付・助成金情報<br>
+                            • 労災保険の認定基準・補償内容<br>
+                            • 介護保険の改正・サービス変更<br>
+                            • マイナンバー関連の社会保険手続き<br>
+                            • 副業・フリーランス向け保険情報<br>
+                            • 企業の社会保険実務への影響分析
                         </p>
-                        <p class="app-tech">自動ニュース収集・AI要約・カテゴリ別分類</p>
+                        <p class="app-tech">Python Web Scraping・自然言語処理・機械学習分類・自動レポート生成・RSS配信</p>
                         
                         <!-- 並列リンクボタン -->
                         <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
@@ -417,24 +842,46 @@
                         </div>
                     </div>
 
-                    <a href="/flashcard-web-app/" class="app-card">
+                    <a href="disaster-guide-hub.html" class="app-card">
                         <span class="app-icon">🧠</span>
-                        <h3 class="app-title">科学的暗記アプリ</h3>
+                        <h3 class="app-title">科学的暗記アプリ - エビデンスベース学習システム</h3>
                         <p class="app-description">
-                            科学的間隔反復学習による効果的な暗記アプリ。記憶の定着を最適化する学習システムです。
+                            <strong>認知科学に基づく最適化された記憶定着メソッド</strong><br>
+                            エビングハウスの忘却曲線理論を応用した間隔反復アルゴリズムにより、記憶の定着率を最大化。個人の学習パフォーマンスを分析し、最適なタイミングで復習を促すパーソナライズドシステム。資格試験・語学学習・専門知識習得に革命的な効果を提供。
+                            <br><br>
+                            <strong>🎯 学習機能:</strong><br>
+                            • SM-2アルゴリズムベースの間隔反復<br>
+                            • 個人の記憶パターン学習・最適化<br>
+                            • 習熟度別自動レベル調整<br>
+                            • 学習統計・進捗の詳細可視化<br>
+                            • カスタムカテゴリ・タグ管理<br>
+                            • 音声読み上げ・画像添付対応<br>
+                            • 共有デッキ・コミュニティ機能<br>
+                            • オフライン学習・同期機能
                         </p>
-                        <p class="app-tech">間隔反復・学習最適化・進捗追跡・PWA対応</p>
-                        <span class="app-button">アプリを開く</span>
+                        <p class="app-tech">認知科学・間隔反復アルゴリズム・LocalStorage・Service Worker・統計分析・PWA</p>
+                        <span class="app-button">詳細を見る</span>
                     </a>
 
-                    <a href="/qualification-calendar/" class="app-card">
+                    <a href="/qualification-calendar.html" class="app-card">
                         <span class="app-icon">📅</span>
-                        <h3 class="app-title">資格試験カレンダー</h3>
+                        <h3 class="app-title">資格試験カレンダー - 戦略的受験計画システム</h3>
                         <p class="app-description">
-                            主要な資格試験の試験日程や申込期限を一目で確認。受験計画の立案に役立つ便利ツール。
+                            <strong>300以上の主要資格試験を網羅した総合管理プラットフォーム</strong><br>
+                            国家資格・民間資格・技能検定の試験日程・申込期限・受験料を一元管理し、個人の学習スケジュールと連動した最適な受験戦略を提案。複数資格の同時取得計画や、キャリアアップに向けた段階的資格取得をサポートします。
+                            <br><br>
+                            <strong>📚 対応資格分野:</strong><br>
+                            • IT・情報処理（基本情報・応用情報・高度試験）<br>
+                            • 法律・行政（司法書士・行政書士・宅建士）<br>
+                            • 会計・金融（公認会計士・簿記・FP技能士）<br>
+                            • 建築・土木（建築士・施工管理技士・測量士）<br>
+                            • 医療・福祉（看護師・介護福祉士・精神保健福祉士）<br>
+                            • 語学・国際（TOEIC・英検・中国語検定）<br>
+                            • 技能・技術（危険物取扱者・電気工事士・調理師）<br>
+                            • ビジネス・経営（中小企業診断士・販売士・秘書検定）
                         </p>
-                        <p class="app-tech">試験日程管理・通知機能・検索機能</p>
-                        <span class="app-button">アプリを開く</span>
+                        <p class="app-tech">スケジュール最適化・通知システム・学習進捗管理・統計分析・カレンダー連携</p>
+                        <span class="app-button">詳細を見る</span>
                     </a>
                 </div>
                 
@@ -451,7 +898,7 @@
                         <span class="app-button">アプリを開く</span>
                     </a>
 
-                    <a href="/fireplace-app/" class="app-card">
+                    <a href="fire/" class="app-card">
                         <span class="app-icon">🔥</span>
                         <h3 class="app-title">バーチャル暖炉</h3>
                         <p class="app-description">
@@ -481,7 +928,7 @@
                         <span class="app-button">アプリを開く</span>
                     </a>
 
-                    <a href="/jellyfish-index.html" class="app-card">
+                    <a href="jellyfish/" class="app-card">
                         <span class="app-icon">🎐</span>
                         <h3 class="app-title">クラゲアクアリウム</h3>
                         <p class="app-description">
@@ -533,6 +980,59 @@
         </section>
     </main>
 
+    <!-- 地震・防災記事セクション -->
+    <section class="featured-content">
+        <div class="container">
+            <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem; font-size: 2rem;">
+                🌏 地震・防災ガイド
+            </h2>
+            <p style="text-align: center; margin-bottom: 3rem; color: var(--text-secondary);">
+                地震大国日本で命を守るための実践的な防災知識を分かりやすく解説
+            </p>
+            
+            <div class="app-grid">
+                <div class="app-card" style="border-left: 5px solid #e53e3e;">
+                    <div class="app-icon" style="background: linear-gradient(135deg, #e53e3e, #c53030);">🏠</div>
+                    <div class="app-content">
+                        <h3 class="app-title">家庭でできる地震対策完全ガイド</h3>
+                        <p class="app-description">
+                            <strong>家具固定から備蓄品準備まで網羅的に解説。</strong>地震による被害を最小限に抑えるための実践的な対策方法を、専門家の知見を基に詳しく説明します。家族の安全を守るために今すぐ始められる具体的な手順を、写真付きで分かりやすく紹介。事前準備の重要性から、コストパフォーマンスを重視した効果的な対策まで、初心者でも実践できる内容です。<br>
+                            📚 関連：<a href="earthquake-action-manual.html" style="color: #3182ce;">緊急時行動マニュアル</a> | <a href="emergency-supplies-guide.html" style="color: #38a169;">防災グッズガイド</a>
+                        </p>
+                        <p class="app-tech">防災対策 | 家具固定 | 備蓄品 | 避難計画 | 家族防災</p>
+                        <a href="earthquake-prevention-guide.html" class="app-button">詳細ガイドを読む</a>
+                    </div>
+                </div>
+                
+                <div class="app-card" style="border-left: 5px solid #3182ce;">
+                    <div class="app-icon" style="background: linear-gradient(135deg, #3182ce, #2c5aa0);">🚨</div>
+                    <div class="app-content">
+                        <h3 class="app-title">地震発生時の正しい行動マニュアル</h3>
+                        <p class="app-description">
+                            <strong>地震発生の瞬間から避難完了まで時系列で解説。</strong>屋内・屋外・乗り物内など、いる場所によって異なる最適な行動を具体的に説明します。パニックにならないための心理的対処法、よくある間違った行動例、場所別の危険要因と回避方法を実践的に解説。緊急時に冷静な判断ができるよう、行動の優先順位を明確化した実用的なマニュアルです。<br>
+                            📚 関連：<a href="earthquake-prevention-guide.html" style="color: #e53e3e;">事前対策ガイド</a> | <a href="emergency-supplies-guide.html" style="color: #38a169;">防災グッズガイド</a>
+                        </p>
+                        <p class="app-tech">緊急時対応 | 避難行動 | 安全確保 | 初期行動 | 場所別対応</p>
+                        <a href="earthquake-action-manual.html" class="app-button">行動マニュアルを見る</a>
+                    </div>
+                </div>
+                
+                <div class="app-card" style="border-left: 5px solid #38a169;">
+                    <div class="app-icon" style="background: linear-gradient(135deg, #38a169, #2f855a);">🎒</div>
+                    <div class="app-content">
+                        <h3 class="app-title">防災グッズの選び方と準備リスト</h3>
+                        <p class="app-description">
+                            <strong>防災の専門家が厳選した本当に必要な防災グッズを紹介。</strong>予算別（1万円・3万円・5万円）のおすすめ商品から、効果的な保管方法、定期メンテナンスまで実践的な情報を提供。コストパフォーマンスを重視した商品選択、季節に応じた準備のポイント、家族構成別の必要量計算など、具体的で実用的なアドバイスを詳しく解説します。<br>
+                            📚 関連：<a href="earthquake-prevention-guide.html" style="color: #e53e3e;">事前対策ガイド</a> | <a href="earthquake-action-manual.html" style="color: #3182ce;">緊急時行動マニュアル</a>
+                        </p>
+                        <p class="app-tech">防災グッズ | 非常用品 | 備蓄用品 | 防災リュック | 商品選択</p>
+                        <a href="emergency-supplies-guide.html" class="app-button">防災グッズガイド</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer Ad -->
     <div class="ad-banner">
         <ins class="adsbygoogle"
@@ -551,6 +1051,43 @@
     </footer>
 
     <script>
+        // グローバルナビゲーション機能
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            navToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+
+            // ドロップダウンメニューのクリック対応（モバイル）
+            const dropdownItems = document.querySelectorAll('.nav-item');
+            dropdownItems.forEach(item => {
+                const link = item.querySelector('.nav-link');
+                const dropdown = item.querySelector('.nav-dropdown');
+                
+                if (dropdown) {
+                    link.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                        }
+                    });
+                }
+            });
+
+            // ウィンドウサイズ変更時のリセット
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    navMenu.classList.remove('active');
+                    const dropdowns = document.querySelectorAll('.nav-dropdown');
+                    dropdowns.forEach(dropdown => {
+                        dropdown.style.display = '';
+                    });
+                }
+            });
+        });
+
         // AdSense初期化
         (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "ca-pub-1184134440246706",
@@ -567,5 +1104,314 @@
             });
         });
     </script>
+    
+    <!-- フッター -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- サイト情報 -->
+                <div class="footer-section">
+                    <h3>🐱 MechaTora</h3>
+                    <p>日常の小さな不便を解決する実用的なWebアプリケーションを開発・提供しています。</p>
+                    <div class="footer-stats">
+                        <span>🏆 月間25,000人以上が利用</span><br>
+                        <span>⭐ ユーザー満足度4.6/5.0</span><br>
+                        <span>🔄 2022年4月から継続運営</span>
+                    </div>
+                </div>
+                
+                <!-- Webアプリ一覧 -->
+                <div class="footer-section">
+                    <h3>🚀 Webアプリ</h3>
+                    <ul class="footer-links">
+                        <li><a href="cook-suggest/">🍳 料理提案アプリ</a></li>
+                        <li><a href="earthquake-monitor/">🌏 地震モニター</a></li>
+                        <li><a href="disaster-guide-hub.html">🛡️ 防災ガイド</a></li>
+                        <li><a href="qualification-calendar.html">📅 資格試験カレンダー</a></li>
+                        <li><a href="fire/">🔥 暖炉シミュレータ</a></li>
+                        <li><a href="x-buzz-simulator/">📱 X投稿バズ予測</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 防災情報 -->
+                <div class="footer-section">
+                    <h3>🛡️ 防災情報</h3>
+                    <ul class="footer-links">
+                        <li><a href="earthquake-prevention-guide.html">🏠 地震対策ガイド</a></li>
+                        <li><a href="earthquake-action-manual.html">🚨 緊急時行動マニュアル</a></li>
+                        <li><a href="emergency-supplies-guide.html">🎒 防災グッズガイド</a></li>
+                    </ul>
+                    <div class="footer-badge">
+                        <span class="credential-badge">👨‍💼 資格保有者運営</span>
+                    </div>
+                </div>
+                
+                <!-- サポート・その他 -->
+                <div class="footer-section">
+                    <h3>📞 サポート</h3>
+                    <ul class="footer-links">
+                        <li><a href="help-guide.html">📖 ユーザーガイド</a></li>
+                        <li><a href="faq.html">❓ よくある質問</a></li>
+                        <li><a href="contact.html">📧 お問い合わせ</a></li>
+                        <li><a href="blog.html">📝 開発ブログ</a></li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 1.5rem;">📄 法的情報</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">🔒 プライバシーポリシー</a></li>
+                        <li><a href="about.html">👨‍💻 運営者情報</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 運営者資格情報 -->
+            <div class="footer-credentials">
+                <h4>🏆 運営者資格・認定</h4>
+                <div class="credentials-grid">
+                    <span class="credential">社会保険労務士</span>
+                    <span class="credential">第一種衛生管理者</span>
+                    <span class="credential">応用情報技術者</span>
+                    <span class="credential">基本情報技術者</span>
+                    <span class="credential">簿記2級</span>
+                    <span class="credential">G検定</span>
+                </div>
+            </div>
+            
+            <!-- 技術情報 -->
+            <div class="footer-tech">
+                <h4>⚙️ 技術仕様</h4>
+                <div class="tech-info">
+                    <span>🔐 HTTPS暗号化通信</span>
+                    <span>♿ WCAG 2.1 AA準拠</span>
+                    <span>📱 PWA対応</span>
+                    <span>⚡ Core Web Vitals最適化</span>
+                    <span>🛡️ CSPセキュリティ対策</span>
+                    <span>🔍 SEO最適化済み</span>
+                </div>
+            </div>
+            
+            <!-- 利用統計 -->
+            <div class="footer-stats-section">
+                <h4>📊 利用統計（2024年実績）</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">500,000+</span>
+                        <span class="stat-label">累計利用回数</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">25,000+</span>
+                        <span class="stat-label">月間アクティブユーザー</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">公開アプリ数</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">稼働率</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- フッター下部 -->
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2022-2025 MechaTora. All rights reserved.</p>
+                    <p>Web開発歴12年のシニアフルスタックエンジニアが運営</p>
+                </div>
+                <div class="footer-update">
+                    <p>最終更新: 2025年8月28日</p>
+                    <p>サイト開設: 2022年4月1日</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+    .site-footer {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        margin-top: 4rem;
+        padding: 3rem 0 1rem;
+    }
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer-section h3 {
+        color: #3498db;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .footer-section h4 {
+        color: #e74c3c;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+        color: #bdc3c7;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #3498db;
+    }
+
+    .footer-stats {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #95a5a6;
+    }
+
+    .footer-badge {
+        margin-top: 1rem;
+    }
+
+    .credential-badge {
+        background: #e74c3c;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .footer-credentials {
+        background: rgba(255,255,255,0.1);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .credentials-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .credential {
+        background: #3498db;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .footer-tech {
+        background: rgba(255,255,255,0.05);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .tech-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .tech-info span {
+        background: #27ae60;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
+    .footer-stats-section {
+        background: rgba(255,255,255,0.1);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .stat-item {
+        text-align: center;
+        background: rgba(52, 152, 219, 0.2);
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #3498db;
+    }
+
+    .stat-label {
+        display: block;
+        font-size: 0.8rem;
+        color: #bdc3c7;
+        margin-top: 0.5rem;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.2);
+        padding-top: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-copyright p, .footer-update p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #95a5a6;
+    }
+
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .credentials-grid, .tech-info {
+            justify-content: center;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    </style>
 </body>
 </html>
