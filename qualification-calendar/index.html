@@ -931,7 +931,7 @@ layout: null
                 name: '社会保険労務士',
                 category: 'hr',
                 frequency: '年1回',
-                examDates: ['2025-08-24'],
+                examDates: ['2025-08-24', '2026-08-23'],
                 studyHours: '800-1000時間',
                 difficulty: 'S'
             },
@@ -940,7 +940,7 @@ layout: null
                 name: 'キャリアコンサルタント',
                 category: 'hr',
                 frequency: '年3回',
-                examDates: ['2025-03-09', '2025-07-13', '2025-11-16'],
+                examDates: ['2025-07-13', '2025-11-16', '2026-03-08'],
                 studyHours: '150-300時間',
                 difficulty: 'B'
             },
@@ -987,7 +987,7 @@ layout: null
                 name: '税理士',
                 category: 'finance',
                 frequency: '年1回',
-                examDates: ['2025-08-05'],
+                examDates: ['2026-08-04'],
                 studyHours: '2500-3500時間',
                 difficulty: 'S+'
             },
@@ -1072,7 +1072,7 @@ layout: null
                 name: '中小企業診断士',
                 category: 'business',
                 frequency: '年1回',
-                examDates: ['2025-08-03'],
+                examDates: ['2026-08-02'],
                 studyHours: '1000-1500時間',
                 difficulty: 'A+'
             },
@@ -1166,7 +1166,7 @@ layout: null
                 name: 'ITパスポート',
                 category: 'it',
                 frequency: '随時',
-                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
+                examDates: ['2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-07-01', '2025-08-01', '2025-09-01', '2025-10-01', '2025-11-01', '2025-12-01'],
                 studyHours: '100-150時間',
                 difficulty: 'C',
                 isIPA: true
@@ -1176,7 +1176,7 @@ layout: null
                 name: '基本情報技術者',
                 category: 'it',
                 frequency: '随時',
-                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
+                examDates: ['2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-07-01', '2025-08-01', '2025-09-01', '2025-10-01', '2025-11-01', '2025-12-01'],
                 studyHours: '200-300時間',
                 difficulty: 'B',
                 isIPA: true
@@ -1293,7 +1293,7 @@ layout: null
         function calculateDaysUntil(examDate) {
             if (!examDate) return null;
             const diffTime = examDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             return diffDays;
         }
 
