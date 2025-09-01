@@ -797,7 +797,7 @@
         // PWA対応 - Service Worker登録
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('/static/sw.js')
                     .then(function(registration) {
                         console.log('SW registered: ', registration);
                     })
