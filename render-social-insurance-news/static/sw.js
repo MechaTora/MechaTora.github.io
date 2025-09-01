@@ -2,8 +2,7 @@
 const CACHE_NAME = 'social-insurance-news-v1';
 const urlsToCache = [
   '/',
-  '/static/style.css',
-  '/static/app.js'
+  '/static/manifest.json'
 ];
 
 // Install
