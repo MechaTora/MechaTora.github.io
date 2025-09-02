@@ -20,16 +20,41 @@ class SocialInsuranceNewsApp:
     """Render版ニュースアプリ"""
     
     def __init__(self):
-        self.data_file = 'data/processed_news.json'
-        self.report_file = 'data/daily_report.json'
+        # 絶対パスを使用してファイル読み込みを確実にする
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.data_file = os.path.join(base_dir, 'data', 'processed_news.json')
+        self.report_file = os.path.join(base_dir, 'data', 'daily_report.json')
     
     def load_news_data(self):
         """ニュースデータ読み込み"""
         try:
+            print(f"データファイルパス: {self.data_file}")
+            print(f"ファイル存在チェック: {os.path.exists(self.data_file)}")
+            print(f"現在の作業ディレクトリ: {os.getcwd()}")
+            
             if os.path.exists(self.data_file):
                 with open(self.data_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            return {'news': [], 'total_count': 0, 'categories': {}}
+                    data = json.load(f)
+                print(f"データ読み込み成功: {len(data.get('news', []))}件")
+                return data
+            else:
+                print("データファイルが存在しません")
+                # フォールバック用のサンプルデータを提供
+                return {
+                    'news': [{
+                        'title': 'データ準備中',
+                        'url': '#',
+                        'source': 'システム',
+                        'category': 'その他', 
+                        'importance': '低',
+                        'summary': '現在ニュースデータを準備中です。しばらくお待ちください。',
+                        'keywords': ['準備中'],
+                        'published_date': datetime.now().strftime('%Y年%m月%d日'),
+                        'scraped_at': datetime.now().isoformat()
+                    }],
+                    'total_count': 1,
+                    'categories': {'その他': 1}
+                }
         except Exception as e:
             print(f"データ読み込みエラー: {e}")
             return {'news': [], 'total_count': 0, 'categories': {}}
