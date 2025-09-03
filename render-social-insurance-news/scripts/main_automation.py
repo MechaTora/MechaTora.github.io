@@ -121,20 +121,33 @@ class RenderNewsAutomation:
                     response.raise_for_status()
                     soup = BeautifulSoup(response.content, 'html.parser')
                     
-                    # ニュースアイテム抽出
-                    articles = soup.find_all('div', class_='newsFeed_item')
+                    # 現在のYahoo!ニュース構造に対応したセレクター
+                    articles = soup.find_all('article') or soup.find_all('div', class_=lambda x: x and ('sc-' in x or 'newsFeed' in x))
                     
                     for article in articles[:5]:  # 各検索語で5件
                         try:
-                            link_elem = article.find('a')
+                            # より幅広いセレクター（現在のYahoo構造に対応）
+                            link_elem = (
+                                article.find('a', href=True) or 
+                                article.find('a') or
+                                article.find('h1')
+                            )
+                            
                             if not link_elem:
                                 continue
                             
                             title = link_elem.get_text(strip=True)
-                            url = link_elem.get('href', '')
+                            url = link_elem.get('href', '') if link_elem.name == 'a' else ''
+                            
+                            # URLが空の場合は親要素からリンクを探す
+                            if not url:
+                                parent_link = article.find_parent('a') or article.find('a')
+                                url = parent_link.get('href', '') if parent_link else ''
                             
                             if url.startswith('/'):
                                 url = 'https://news.yahoo.co.jp' + url
+                            elif not url.startswith('http'):
+                                continue  # 無効なURLはスキップ
                             
                             news_item = {
                                 'title': title,
@@ -160,8 +173,18 @@ class RenderNewsAutomation:
                     print(f"Yahoo検索エラー {term}: {e}")
                     continue
             
-            print(f"✅ Yahoo!ニュース {len(news_list)}件取得")
-            return news_list
+            # 重複除去
+            unique_news = []
+            seen_titles = set()
+            for news in news_list:
+                if news['title'] not in seen_titles and len(news['title']) > 10:
+                    unique_news.append(news)
+                    seen_titles.add(news['title'])
+            
+            print(f"✅ Yahoo!ニュース {len(unique_news)}件取得（重複除去後）")
+            if unique_news:
+                print(f"📝 取得例: {unique_news[0]['title'][:50]}...")
+            return unique_news
             
         except Exception as e:
             print(f"❌ Yahoo!ニュース取得エラー: {e}")
