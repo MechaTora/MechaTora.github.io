@@ -73,8 +73,13 @@ class SocialInsuranceNewsApp:
     def update_news(self):
         """ニュース更新（手動実行用）"""
         try:
-            # メインの自動化スクリプトを実行
-            result = subprocess.run([sys.executable, 'scripts/main_automation.py'], 
+            # メインの自動化スクリプトを実行（絶対パス使用）
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            script_path = os.path.join(base_dir, 'scripts', 'main_automation.py')
+            print(f"自動化スクリプトパス: {script_path}")
+            print(f"スクリプト存在確認: {os.path.exists(script_path)}")
+            
+            result = subprocess.run([sys.executable, script_path], 
                                   capture_output=True, text=True, timeout=300)
             
             if result.returncode == 0:
