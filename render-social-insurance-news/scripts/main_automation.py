@@ -15,6 +15,14 @@ from bs4 import BeautifulSoup
 import time
 import random
 
+# デバッグ出力
+print("=== 社会保険ニュース自動化スクリプト開始 ===")
+print(f"実行時刻: {datetime.now()}")
+print(f"Python実行パス: {sys.executable}")
+print(f"スクリプトディレクトリ: {Path(__file__).parent}")
+print(f"作業ディレクトリ: {os.getcwd()}")
+print("=" * 50)
+
 # パス設定
 BASE_DIR = Path(__file__).parent.parent
 DATA_DIR = BASE_DIR / 'data'
@@ -359,14 +367,25 @@ class RenderNewsAutomation:
 
 def main():
     """メイン実行"""
-    automation = RenderNewsAutomation()
-    success = automation.run_automation()
-    
-    if success:
-        print("\n✅ 社会保険ニュース自動化成功!")
-        sys.exit(0)
-    else:
-        print("\n❌ 社会保険ニュース自動化失敗!")
+    try:
+        print("\n🤖 自動化処理開始...")
+        automation = RenderNewsAutomation()
+        success = automation.run_automation()
+        
+        if success:
+            print("\n✅ 社会保険ニュース自動化成功!")
+            print(f"処理終了時刻: {datetime.now()}")
+            sys.exit(0)
+        else:
+            print("\n❌ 社会保険ニュース自動化失敗!")
+            print(f"処理終了時刻: {datetime.now()}")
+            sys.exit(1)
+            
+    except Exception as e:
+        print(f"\n💥 メイン処理で予期しないエラー: {e}")
+        print("エラー詳細:")
+        traceback.print_exc()
+        print(f"処理終了時刻: {datetime.now()}")
         sys.exit(1)
 
 if __name__ == "__main__":

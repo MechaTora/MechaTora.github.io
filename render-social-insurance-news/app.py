@@ -82,15 +82,51 @@ class SocialInsuranceNewsApp:
             result = subprocess.run([sys.executable, script_path], 
                                   capture_output=True, text=True, timeout=300)
             
+            print(f"スクリプト実行結果 - returncode: {result.returncode}")
+            print(f"stdout: {result.stdout}")
+            print(f"stderr: {result.stderr}")
+            
             if result.returncode == 0:
-                return {"status": "success", "message": "ニュース更新完了"}
+                return {
+                    "status": "success", 
+                    "message": "ニュース更新完了",
+                    "stdout": result.stdout,
+                    "debug_info": {
+                        "script_path": script_path,
+                        "script_exists": os.path.exists(script_path),
+                        "working_dir": os.getcwd()
+                    }
+                }
             else:
-                return {"status": "error", "message": f"更新エラー: {result.stderr}"}
+                return {
+                    "status": "error", 
+                    "message": f"更新エラー: returncode={result.returncode}",
+                    "stderr": result.stderr,
+                    "stdout": result.stdout,
+                    "debug_info": {
+                        "script_path": script_path,
+                        "script_exists": os.path.exists(script_path),
+                        "working_dir": os.getcwd(),
+                        "python_path": sys.executable
+                    }
+                }
                 
-        except subprocess.TimeoutExpired:
-            return {"status": "error", "message": "更新タイムアウト（5分）"}
+        except subprocess.TimeoutExpired as e:
+            return {
+                "status": "error", 
+                "message": "更新タイムアウト（5分）",
+                "error_details": str(e)
+            }
         except Exception as e:
-            return {"status": "error", "message": f"更新エラー: {str(e)}"}
+            return {
+                "status": "error", 
+                "message": f"更新エラー: {str(e)}",
+                "error_type": type(e).__name__,
+                "debug_info": {
+                    "script_path": script_path if 'script_path' in locals() else "未定義",
+                    "working_dir": os.getcwd()
+                }
+            }
 
 # アプリインスタンス
 news_app = SocialInsuranceNewsApp()
