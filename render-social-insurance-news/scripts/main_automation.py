@@ -280,23 +280,29 @@ class RenderNewsAutomation:
             return []
     
     def is_social_insurance_relevant(self, title):
-        """社会保険関連の判定（より厳格）"""
-        if len(title.strip()) < 10:  # 短すぎるタイトルは除外
+        """社会保険関連の判定（緩和版）"""
+        if len(title.strip()) < 8:  # より短い閾値
             return False
         
-        # 社会保険関連キーワード
+        # 社会保険関連キーワード（拡張版）
         relevant_keywords = [
             '健康保険', '厚生年金', '国民年金', '雇用保険', '労災保険', '介護保険',
             '社会保険', '被保険者', '保険料', '年金', '医療保険', '失業給付',
             '労働災害', '介護給付', '保険適用', '制度改正', '法改正',
-            '協会けんぽ', '年金機構', '社労士', '給付金', '適用拡大'
+            '協会けんぽ', '年金機構', '社労士', '給付金', '適用拡大',
+            # 追加キーワード
+            '医療費', '高齢者', '障害者', '育児', '出産', '療養費',
+            '扶養', '賃金', '労働者', '事業主', '保険制度', '社会保障',
+            '福祉', '医療制度', '退職', '就職', 'ハローワーク', '職業訓練',
+            '休業補償', '通勤災害', '業務災害', '要介護', '要支援'
         ]
         
         # 除外キーワード（関係ないもの）
         exclude_keywords = [
             'JavaScript', 'Cookie', 'PDF', 'システム', 'メンテナンス',
             'ブラウザ', 'Internet Explorer', 'アクセシビリティ',
-            '音声読み上げ', '文字サイズ', 'サイト内検索'
+            '音声読み上げ', '文字サイズ', 'サイト内検索', 'スポーツ',
+            '芸能', 'エンタメ', '天気', '占い', 'ゲーム'
         ]
         
         # 除外キーワードチェック
@@ -308,6 +314,15 @@ class RenderNewsAutomation:
         for keyword in relevant_keywords:
             if keyword in title:
                 return True
+        
+        # 部分的な関連性も考慮
+        partial_keywords = ['保険', '年金', '給付', '制度', '労働', '医療', '福祉']
+        title_lower = title.lower()
+        matched_partials = sum(1 for keyword in partial_keywords if keyword in title_lower)
+        
+        # 2個以上の部分キーワードがあれば関連とする
+        if matched_partials >= 2:
+            return True
         
         return False
     
@@ -446,7 +461,7 @@ class RenderNewsAutomation:
                 {
                     'name': 'Yahoo!ニュース',
                     'base_url': 'https://news.yahoo.co.jp',
-                    'search_terms': ['社会保険', '厚生年金', '健康保険', '雇用保険', '年金改正', '介護保険', '労災保険'],
+                    'search_terms': ['社会保険', '厚生年金', '健康保険', '雇用保険', '年金改正', '介護保険', '労災保険', '年金制度', '医療保険制度', '保険料改正'],
                     'scraper': self.scrape_yahoo_enhanced
                 },
                 {
@@ -456,10 +471,16 @@ class RenderNewsAutomation:
                     'scraper': self.scrape_nhk_news
                 },
                 {
-                    'name': '産経ニュース',
-                    'base_url': 'https://www.sankei.com',
-                    'search_terms': ['社会保険', '年金制度'],
-                    'scraper': self.scrape_sankei_news
+                    'name': '朝日新聞デジタル',
+                    'base_url': 'https://www.asahi.com',
+                    'search_terms': ['社会保険', '厚生年金', '健康保険'],
+                    'scraper': self.scrape_asahi_news
+                },
+                {
+                    'name': '日経新聞',
+                    'base_url': 'https://www.nikkei.com',
+                    'search_terms': ['社会保険', '年金制度', '医療制度'],
+                    'scraper': self.scrape_nikkei_news
                 }
             ]
             
@@ -608,10 +629,10 @@ class RenderNewsAutomation:
         try:
             self.check_rate_limit('www3.nhk.or.jp')
             
-            # NHKの社会ニュースセクション
+            # NHKの社会ニュースセクション（修正版）
             nhk_urls = [
-                'https://www3.nhk.or.jp/news/cat/cat07.html',  # 社会
-                'https://www3.nhk.or.jp/news/cat/cat06.html'   # 経済
+                'https://www3.nhk.or.jp/news/',  # トップページ
+                'https://www3.nhk.or.jp/news/catnew.html'  # 新着ニュース
             ]
             
             for url in nhk_urls:
@@ -750,6 +771,158 @@ class RenderNewsAutomation:
                             continue
                     
                     print(f"    産経 '{term}': {extracted}件")
+                    time.sleep(1)
+                    
+                except Exception as e:
+                    continue
+            
+            return news_list
+            
+        except Exception as e:
+            return []
+    
+    def scrape_asahi_news(self, site_config):
+        """朝日新聞デジタル スクレイパー"""
+        news_list = []
+        
+        try:
+            self.check_rate_limit('www.asahi.com')
+            
+            # 朝日新聞の検索
+            for term in site_config['search_terms']:
+                try:
+                    search_url = f"https://www.asahi.com/search/news/?query={term}"
+                    response = self.session.get(search_url, timeout=30)
+                    
+                    if response.status_code != 200:
+                        continue
+                    
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # 朝日新聞の記事一覧
+                    articles = soup.select('.SearchResult li, article, .List li')
+                    
+                    extracted = 0
+                    for article in articles[:5]:
+                        try:
+                            link = article.select_one('a[href]')
+                            if not link:
+                                continue
+                            
+                            title = link.get_text(strip=True)
+                            href = link.get('href', '')
+                            
+                            if not self.is_social_insurance_relevant(title):
+                                continue
+                            
+                            if href.startswith('/'):
+                                full_url = 'https://www.asahi.com' + href
+                            else:
+                                full_url = href
+                            
+                            category, related_categories, confidence = self.enhanced_categorization(title, '')
+                            importance = self.enhanced_importance(title, '')
+                            keywords = self.enhanced_keywords(title, '')
+                            
+                            news_item = {
+                                'id': self.generate_id(title, full_url),
+                                'title': title,
+                                'url': full_url,
+                                'source': '朝日新聞デジタル',
+                                'category': category,
+                                'importance': importance,
+                                'summary': self.create_summary(title, category, keywords),
+                                'keywords': keywords,
+                                'published_date': datetime.now().strftime('%Y年%m月%d日'),
+                                'scraped_at': datetime.now().isoformat(),
+                                'related_categories': related_categories,
+                                'confidence_score': confidence,
+                                'search_term': term
+                            }
+                            
+                            news_list.append(news_item)
+                            extracted += 1
+                            
+                        except Exception as e:
+                            continue
+                    
+                    print(f"    朝日 '{term}': {extracted}件")
+                    time.sleep(1)
+                    
+                except Exception as e:
+                    continue
+            
+            return news_list
+            
+        except Exception as e:
+            return []
+    
+    def scrape_nikkei_news(self, site_config):
+        """日経新聞 スクレイパー"""
+        news_list = []
+        
+        try:
+            self.check_rate_limit('www.nikkei.com')
+            
+            # 日経新聞の検索
+            for term in site_config['search_terms']:
+                try:
+                    search_url = f"https://www.nikkei.com/search/?s={term}"
+                    response = self.session.get(search_url, timeout=30)
+                    
+                    if response.status_code != 200:
+                        continue
+                    
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # 日経新聞の記事一覧
+                    articles = soup.select('.searchResult_item, .cmn-list_item, article')
+                    
+                    extracted = 0
+                    for article in articles[:5]:
+                        try:
+                            link = article.select_one('a[href]')
+                            if not link:
+                                continue
+                            
+                            title = link.get_text(strip=True)
+                            href = link.get('href', '')
+                            
+                            if not self.is_social_insurance_relevant(title):
+                                continue
+                            
+                            if href.startswith('/'):
+                                full_url = 'https://www.nikkei.com' + href
+                            else:
+                                full_url = href
+                            
+                            category, related_categories, confidence = self.enhanced_categorization(title, '')
+                            importance = self.enhanced_importance(title, '')
+                            keywords = self.enhanced_keywords(title, '')
+                            
+                            news_item = {
+                                'id': self.generate_id(title, full_url),
+                                'title': title,
+                                'url': full_url,
+                                'source': '日経新聞',
+                                'category': category,
+                                'importance': importance,
+                                'summary': self.create_summary(title, category, keywords),
+                                'keywords': keywords,
+                                'published_date': datetime.now().strftime('%Y年%m月%d日'),
+                                'scraped_at': datetime.now().isoformat(),
+                                'related_categories': related_categories,
+                                'confidence_score': confidence,
+                                'search_term': term
+                            }
+                            
+                            news_list.append(news_item)
+                            extracted += 1
+                            
+                        except Exception as e:
+                            continue
+                    
+                    print(f"    日経 '{term}': {extracted}件")
                     time.sleep(1)
                     
                 except Exception as e:
