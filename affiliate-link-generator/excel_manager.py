@@ -14,6 +14,13 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, PatternFill, Alignment
 
+# 古いExcel形式のサポート
+try:
+    import xlrd
+    XLRD_AVAILABLE = True
+except ImportError:
+    XLRD_AVAILABLE = False
+
 
 class ExcelManager:
     def __init__(self):
@@ -51,6 +58,16 @@ class ExcelManager:
             elif file_ext in ['.et', '.ett']:
                 print(f"⚠️ WPS Spreadsheets形式(.et)を検出")
                 print("   → 互換モードで読み込みを試行します")
+            elif file_ext == '.xls':
+                print(f"📊 古いExcel形式(.xls)を検出")
+                if XLRD_AVAILABLE:
+                    print("   → xlrdを使用してxlsファイルを読み込みます")
+                    print(f"   📦 xlrd バージョン: {xlrd.__version__}")
+                    return self._load_xls_file(file_path)
+                else:
+                    print("   ❌ xlrdパッケージが必要です: pip install xlrd")
+                    print("   → .xlsファイルは読み込めません")
+                    return False
             
             # ファイルアクセス権チェック
             if not os.access(file_path, os.R_OK):
@@ -73,6 +90,9 @@ class ExcelManager:
             
             print(f"📖 Excelファイルを読み込み中: {os.path.basename(file_path)}")
             print(f"   ファイルサイズ: {file_size / 1024:.1f} KB")
+            
+            # ファイル形式の詳細検証
+            self._detect_file_format(file_path)
             
             # Excelファイルの読み込み（WPS Spreadsheets対応）
             try:
@@ -115,15 +135,29 @@ class ExcelManager:
                         elif "version" in error_msg or "format" in error_msg:
                             print("   → WPS Spreadsheets形式の可能性があります")
                             print("   → 解決方法: WPS で .xlsx 形式で保存し直してください")
-                        elif "wps" in error_msg:
-                            print("   → WPS Spreadsheets専用形式です")
-                            print("   → 解決方法: Microsoft Excel形式(.xlsx)で保存してください")
-                        elif "zipfile" in error_msg or "zip" in error_msg:
-                            print("   → ファイル形式が正しくない可能性があります")
-                            print("   → Excelで開いて .xlsx 形式で保存し直してください")
+                        elif "wps" in error_msg or ".et file format" in error_msg:
+                            print("   → WPS Spreadsheets専用形式(.et)です")
+                            print("   → 解決方法: WPSで開いてMicrosoft Excel形式(.xlsx)で保存してください")
+                            print("   → 参考: WPS_互換性ガイド.md をご確認ください")
+                        elif "zipfile" in error_msg or "zip" in error_msg or "badzipfile" in error_msg:
+                            print("   → ファイルが破損しているか、WPS形式で保存されています")
+                            # WPS形式の場合はxlrdで再試行
+                            if XLRD_AVAILABLE:
+                                print("   🔄 xlrdでWPS形式として再試行中...")
+                                try:
+                                    return self._load_compound_document_file(file_path)
+                                except Exception as xlrd_error:
+                                    print(f"   ❌ xlrd での読み込みも失敗: {xlrd_error}")
+                            print("   → 解決方法1: WPSで開いて「Excel ワークシート(.xlsx)」形式で再保存")
+                            print("   → 解決方法2: Microsoft Excelで開いて再保存")
+                            print("   → 参考: WPS_互換性ガイド.md をご確認ください")
                         elif "xml" in error_msg:
                             print("   → XMLファイル構造に問題があります")
                             print("   → Excelで開いて修復後、再保存してください")
+                        elif ".xls file format" in error_msg:
+                            print("   → 古いExcel形式(.xls)です")
+                            print("   → 解決方法: Excelで開いて.xlsx形式で保存し直してください")
+                            print("   → または xlrd パッケージをインストール: pip install xlrd")
                         
                         return False
             
@@ -154,6 +188,189 @@ class ExcelManager:
             
         except Exception as e:
             print(f"❌ 予期しないエラーが発生しました: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def _detect_file_format(self, file_path: str) -> None:
+        """
+        ファイル形式を詳細検証する
+        
+        Args:
+            file_path (str): 検証するファイルのパス
+        """
+        try:
+            # ファイルの先頭バイトを確認
+            with open(file_path, 'rb') as f:
+                header = f.read(8)
+                
+            # ZIP形式（正しい.xlsx）の場合
+            if header.startswith(b'PK'):
+                print("   📋 ファイル形式: ZIP/Office Open XML (正常な.xlsx)")
+                return
+            
+            # WPS Spreadsheets形式の場合
+            if header.startswith(b'\xd0\xcf\x11\xe0'):
+                print("   📋 ファイル形式: Compound Document (WPS Spreadsheets)")
+                print("   ⚠️ WPSで作成されたファイルです")
+                if XLRD_AVAILABLE:
+                    print("   🔄 xlrdを使用してWPS形式の読み込みを試行します")
+                else:
+                    print("   💡 解決方法: WPSで開いて「名前を付けて保存」→「Excel ワークシート(.xlsx)」")
+                return
+                
+            # その他の形式
+            print(f"   📋 ファイル形式: 不明 (先頭8バイト: {header})")
+            print("   ⚠️ 標準的でないファイル形式の可能性があります")
+            
+        except Exception as e:
+            print(f"   ⚠️ ファイル形式検証エラー: {str(e)}")
+    
+    def _load_xls_file(self, file_path: str) -> bool:
+        """
+        古い.xls形式のファイルを読み込む（xlrd使用）
+        
+        Args:
+            file_path (str): 読み込むxlsファイルのパス
+            
+        Returns:
+            bool: 読み込み成功時True、失敗時False
+        """
+        try:
+            if not XLRD_AVAILABLE:
+                print("❌ xlrdパッケージがインストールされていません")
+                return False
+            
+            print(f"📖 xlsファイルを読み込み中: {os.path.basename(file_path)}")
+            
+            # xlrdでxlsファイルを開く
+            workbook_xls = xlrd.open_workbook(file_path)
+            if not workbook_xls.sheet_names():
+                print("❌ ワークシートが見つかりません")
+                return False
+            
+            # 最初のシートを取得
+            worksheet_xls = workbook_xls.sheet_by_index(0)
+            print(f"📊 ワークシート: {worksheet_xls.name}")
+            print(f"   行数: {worksheet_xls.nrows}, 列数: {worksheet_xls.ncols}")
+            
+            # openpyxlのワークブックに変換
+            self.workbook = Workbook()
+            self.worksheet = self.workbook.active
+            self.worksheet.title = worksheet_xls.name
+            
+            # データをopenpyxl形式に変換
+            for row_idx in range(worksheet_xls.nrows):
+                for col_idx in range(worksheet_xls.ncols):
+                    cell_value = worksheet_xls.cell_value(row_idx, col_idx)
+                    
+                    # xlrdの型に応じて値を変換
+                    if worksheet_xls.cell_type(row_idx, col_idx) == xlrd.XL_CELL_DATE:
+                        # 日付型の処理
+                        try:
+                            date_tuple = xlrd.xldate_as_tuple(cell_value, workbook_xls.datemode)
+                            if date_tuple[:3] != (0, 0, 0):  # 有効な日付
+                                cell_value = datetime.datetime(*date_tuple)
+                        except xlrd.xldate.XLDateError:
+                            pass  # 日付変換に失敗した場合は元の値を使用
+                    elif worksheet_xls.cell_type(row_idx, col_idx) == xlrd.XL_CELL_EMPTY:
+                        cell_value = None
+                    
+                    # openpyxlのセルに値を設定（1ベースのインデックス）
+                    self.worksheet.cell(row=row_idx + 1, column=col_idx + 1, value=cell_value)
+            
+            self.file_path = file_path
+            
+            # データの読み込み
+            success = self._load_products_data()
+            if success:
+                print(f"✅ xlsファイルの読み込み完了: {len(self.products_data)}個の商品データ")
+            else:
+                print("❌ 商品データの読み込みに失敗")
+                
+            return success
+            
+        except Exception as e:
+            print(f"❌ xlsファイル読み込みエラー: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def _load_compound_document_file(self, file_path: str) -> bool:
+        """
+        Compound Document形式のファイルを読み込む（WPS/古いExcel対応）
+        
+        Args:
+            file_path (str): 読み込むファイルのパス
+            
+        Returns:
+            bool: 読み込み成功時True、失敗時False
+        """
+        try:
+            if not XLRD_AVAILABLE:
+                print("❌ xlrdパッケージがインストールされていません")
+                return False
+            
+            print(f"📖 Compound Documentファイル読み込み中: {os.path.basename(file_path)}")
+            
+            # xlrdでCompound Documentファイルを開く
+            try:
+                workbook_xls = xlrd.open_workbook(file_path)
+            except Exception as e:
+                print(f"   ❌ xlrdでの読み込み失敗: {str(e)}")
+                # 一部のWPSファイルは.xlsとしても読めない場合がある
+                if "unsupported format" in str(e).lower() or "not supported" in str(e).lower():
+                    print("   → このWPSファイルは読み込み不可能な形式です")
+                    print("   → WPSで開いて.xlsx形式で保存し直してください")
+                return False
+                
+            if not workbook_xls.sheet_names():
+                print("❌ ワークシートが見つかりません")
+                return False
+            
+            # 最初のシートを取得
+            worksheet_xls = workbook_xls.sheet_by_index(0)
+            print(f"📊 ワークシート: {worksheet_xls.name}")
+            print(f"   行数: {worksheet_xls.nrows}, 列数: {worksheet_xls.ncols}")
+            
+            # openpyxlのワークブックに変換
+            self.workbook = Workbook()
+            self.worksheet = self.workbook.active
+            self.worksheet.title = worksheet_xls.name
+            
+            # データをopenpyxl形式に変換
+            for row_idx in range(worksheet_xls.nrows):
+                for col_idx in range(worksheet_xls.ncols):
+                    cell_value = worksheet_xls.cell_value(row_idx, col_idx)
+                    
+                    # xlrdの型に応じて値を変換
+                    if worksheet_xls.cell_type(row_idx, col_idx) == xlrd.XL_CELL_DATE:
+                        # 日付型の処理
+                        try:
+                            date_tuple = xlrd.xldate_as_tuple(cell_value, workbook_xls.datemode)
+                            if date_tuple[:3] != (0, 0, 0):  # 有効な日付
+                                cell_value = datetime.datetime(*date_tuple)
+                        except xlrd.xldate.XLDateError:
+                            pass  # 日付変換に失敗した場合は元の値を使用
+                    elif worksheet_xls.cell_type(row_idx, col_idx) == xlrd.XL_CELL_EMPTY:
+                        cell_value = None
+                    
+                    # openpyxlのセルに値を設定（1ベースのインデックス）
+                    self.worksheet.cell(row=row_idx + 1, column=col_idx + 1, value=cell_value)
+            
+            self.file_path = file_path
+            
+            # データの読み込み
+            success = self._load_products_data()
+            if success:
+                print(f"✅ Compound Documentファイルの読み込み完了: {len(self.products_data)}個の商品データ")
+            else:
+                print("❌ 商品データの読み込みに失敗")
+                
+            return success
+            
+        except Exception as e:
+            print(f"❌ Compound Documentファイル読み込みエラー: {str(e)}")
             import traceback
             traceback.print_exc()
             return False

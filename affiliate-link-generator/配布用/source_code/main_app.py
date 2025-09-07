@@ -285,16 +285,20 @@ class AffiliateApp:
         
         try:
             # スクレーパー初期化
+            amazon_scraper = None
+            rakuten_scraper = None
+            
             if self.amazon_var.get():
                 associate_id = self.config.get("amazon", "associate_id")
                 search_interval = self.config.get("amazon", "search_interval", 2.0)
                 amazon_scraper = AmazonScraper(associate_id=associate_id, headless=True, search_interval=search_interval)
                 
                 if not amazon_scraper.initialize_driver():
-                    self.progress_queue.put(("error", "Amazon WebDriverの初期化に失敗しました"))
-                    return
-                
-                self.progress_queue.put(("info", "✅ Amazon スクレーパー初期化完了"))
+                    self.progress_queue.put(("warning", "⚠️ Amazon WebDriverの初期化に失敗しました"))
+                    self.progress_queue.put(("info", "💡 楽天検索のみで続行します"))
+                    amazon_scraper = None  # Amazon検索を無効化
+                else:
+                    self.progress_queue.put(("info", "✅ Amazon スクレーパー初期化完了"))
             
             if self.rakuten_var.get():
                 affiliate_id = self.config.get("rakuten", "affiliate_id")
@@ -303,6 +307,11 @@ class AffiliateApp:
                 rakuten_scraper = RakutenScraper(affiliate_id=affiliate_id, api_key=api_key, search_interval=search_interval)
                 
                 self.progress_queue.put(("info", "✅ 楽天 スクレーパー初期化完了"))
+            
+            # 両方とも初期化に失敗した場合のみエラー
+            if not amazon_scraper and not rakuten_scraper:
+                self.progress_queue.put(("error", "❌ すべての検索エンジンの初期化に失敗しました"))
+                return
             
             # 商品処理
             for i, product in enumerate(self.products_data):

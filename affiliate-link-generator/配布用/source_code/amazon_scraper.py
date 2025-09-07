@@ -50,18 +50,24 @@ class AmazonScraper:
             # Chrome オプション設定
             chrome_options = Options()
             
-            if self.headless:
-                chrome_options.add_argument('--headless')
-            
-            # 安定性向上のためのオプション
+            # 常にヘッドレスモード（WSL対応）
+            chrome_options.add_argument('--headless')
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_argument('--disable-gpu')
+            chrome_options.add_argument('--remote-debugging-port=9222')
+            
+            # WSL環境対応
+            chrome_options.add_argument('--disable-software-rasterizer')
+            chrome_options.add_argument('--disable-background-timer-throttling')
+            chrome_options.add_argument('--disable-renderer-backgrounding')
+            chrome_options.add_argument('--disable-backgrounding-occluded-windows')
+            
+            # 安定性向上のためのオプション
             chrome_options.add_argument('--window-size=1920,1080')
             chrome_options.add_argument('--disable-extensions')
             chrome_options.add_argument('--disable-plugins')
             chrome_options.add_argument('--disable-images')  # 画像読み込み無効化で高速化
-            chrome_options.add_argument('--disable-javascript')  # JS無効化
             
             # User-Agent設定
             user_agent = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
@@ -73,16 +79,31 @@ class AmazonScraper:
             chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
             chrome_options.add_experimental_option('useAutomationExtension', False)
             
-            # WebDriverの作成
-            service = Service(ChromeDriverManager().install())
-            self.driver = webdriver.Chrome(service=service, options=chrome_options)
+            # WebDriverの作成を試行
+            try:
+                print("   → ChromeDriver自動ダウンロード中...")
+                service = Service(ChromeDriverManager().install())
+                self.driver = webdriver.Chrome(service=service, options=chrome_options)
+            except Exception as e1:
+                print(f"   ⚠️ 自動ダウンロード失敗: {e1}")
+                print("   → 手動ChromeDriverを試行中...")
+                
+                # 手動ChromeDriverを試行
+                try:
+                    self.driver = webdriver.Chrome(options=chrome_options)
+                except Exception as e2:
+                    print(f"   ❌ 手動ChromeDriver失敗: {e2}")
+                    raise Exception("ChromeDriverの初期化に失敗しました")
             
             # タイムアウト設定
             self.driver.implicitly_wait(10)
             self.driver.set_page_load_timeout(30)
             
             # 自動化検知回避
-            self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            try:
+                self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            except:
+                pass  # JavaScriptエラーは無視
             
             print("✅ Chrome WebDriver 初期化完了")
             self.is_initialized = True
@@ -90,10 +111,24 @@ class AmazonScraper:
             
         except Exception as e:
             print(f"❌ WebDriver初期化エラー: {str(e)}")
-            if "chrome" in str(e).lower():
-                print("   → Google Chromeが正しくインストールされているか確認してください")
-            elif "chromedriver" in str(e).lower():
-                print("   → ChromeDriverの自動ダウンロードに失敗しました")
+            print("\n🔧 解決方法:")
+            
+            if "chrome" in str(e).lower() or "No such file" in str(e):
+                print("   1. Google Chromeをインストール:")
+                print("      Windows: https://www.google.com/chrome/")
+                print("      Ubuntu: sudo apt-get install google-chrome-stable")
+                print("      CentOS: sudo yum install google-chrome-stable")
+            
+            if "chromedriver" in str(e).lower():
+                print("   2. ChromeDriverの手動インストール:")
+                print("      https://chromedriver.chromium.org/downloads")
+            
+            if "DISPLAY" in str(e) or "X11" in str(e):
+                print("   3. WSL環境では以下を実行:")
+                print("      export DISPLAY=:0.0")
+                print("      または X11転送を設定")
+                
+            print("   4. 代替手段として楽天検索のみ使用することも可能です")
             return False
     
     def search_product(self, product_name: str, max_results: int = 5) -> List[Dict[str, str]]:

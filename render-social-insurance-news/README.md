@@ -17,8 +17,8 @@
 - **UX配慮**: 広告とコンテンツの調和
 
 ### 🤖 自動化
-- **毎朝4時更新**: Render Cron Jobs
-- **多源スクレイピング**: 厚労省・Yahoo!ニュース
+- **毎朝4時更新**: GitHub Actions（信頼性重視）
+- **多源スクレイピング**: 厚労省・Yahoo!ニュース・NHK・朝日・日経
 - **AI要約**: 重要度・カテゴリ自動判定
 - **重複除去**: 高品質なニュース提供
 
@@ -38,8 +38,8 @@
 
 ### インフラ
 - **Render**: ホスティング・自動デプロイ
-- **Cron Jobs**: 定期実行（毎朝4時）
-- **GitHub**: ソースコード管理
+- **GitHub Actions**: 定期実行（毎朝4時JST）
+- **GitHub**: ソースコード管理・自動化
 - **Environment Variables**: 設定管理
 
 ## 📁 ディレクトリ構造
@@ -96,10 +96,11 @@ git push origin main
 
 ## 📊 運用・監視
 
-### 自動更新
-- **実行時間**: 毎朝4:00 JST
+### 自動更新（GitHub Actions）
+- **実行時間**: 毎朝4:00 JST（UTC 19:00）
 - **処理時間**: 約3-5分
 - **データ保持**: 最新100件
+- **手動実行**: GitHub Actions タブから可能
 
 ### パフォーマンス
 - **応答時間**: < 500ms
@@ -162,8 +163,9 @@ git push origin main
 
 **Q: ニュースが更新されない**
 ```bash
-# Cron Job ログ確認
-# Render Console > Cron Jobs
+# GitHub Actions ログ確認
+# GitHub Repository > Actions > 社会保険ニュース自動更新
+# 手動実行: Actions > Run workflow
 ```
 
 **Q: 広告が表示されない**

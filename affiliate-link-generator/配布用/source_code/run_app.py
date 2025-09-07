@@ -45,6 +45,58 @@ def check_python_version():
     print(f"✅ Python バージョン: {version.major}.{version.minor}.{version.micro}")
     return True
 
+def check_and_install_tkinter():
+    """tkinterの確認と自動インストール"""
+    print("🔍 tkinter をチェック中...")
+    
+    try:
+        import tkinter
+        print("✅ tkinter は利用可能です")
+        return True
+    except ImportError:
+        print("⚠️ tkinter が見つかりません - 自動インストールを試行中...")
+        
+        # Windows環境での自動修復を試行
+        try:
+            import platform
+            if platform.system().lower() == "windows":
+                print("🔧 Windows環境でtkinter修復を試行中...")
+                
+                # 代替パッケージの試行
+                try:
+                    subprocess.run([sys.executable, "-m", "pip", "install", "tk"], 
+                                 capture_output=True, check=True)
+                    print("✅ tk パッケージをインストールしました")
+                    return True
+                except:
+                    pass
+                
+                print("❌ tkinter自動インストールに失敗")
+                print("📋 解決方法:")
+                print("   1. https://www.python.org/downloads/ からPython最新版をダウンロード")
+                print("   2. インストール時に 'tcl/tk and IDLE' にチェック")
+                print("   3. 'Add Python to PATH' にチェック")
+                
+                # 自動でブラウザを開く
+                try:
+                    import webbrowser
+                    webbrowser.open("https://www.python.org/downloads/")
+                    print("🌐 Pythonダウンロードページを開きました")
+                except:
+                    pass
+                
+                return False
+                
+            else:
+                print("❌ Linux/macOS環境では手動インストールが必要です:")
+                print("   Ubuntu/Debian: sudo apt-get install python3-tk")
+                print("   CentOS/RHEL: sudo yum install tkinter")
+                return False
+                
+        except Exception as e:
+            print(f"❌ tkinterチェック中にエラー: {e}")
+            return False
+
 def check_chrome_browser():
     """Google Chromeの存在確認"""
     print("🔍 Google Chrome をチェック中...")
@@ -244,6 +296,11 @@ def main():
         
         # Pythonバージョンチェック
         if not check_python_version():
+            input("Enterを押して終了...")
+            return
+        
+        # tkinterチェック
+        if not check_and_install_tkinter():
             input("Enterを押して終了...")
             return
         
