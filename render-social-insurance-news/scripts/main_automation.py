@@ -280,29 +280,52 @@ class RenderNewsAutomation:
             return []
     
     def is_social_insurance_relevant(self, title):
-        """社会保険関連の判定（緩和版）"""
-        if len(title.strip()) < 8:  # より短い閾値
+        """社会保険関連の判定（大幅緩和版）"""
+        if len(title.strip()) < 5:  # より短い閾値
             return False
         
-        # 社会保険関連キーワード（拡張版）
+        # 社会保険関連キーワード（大幅拡張版）
         relevant_keywords = [
+            # 基本的な社会保険制度
             '健康保険', '厚生年金', '国民年金', '雇用保険', '労災保険', '介護保険',
             '社会保険', '被保険者', '保険料', '年金', '医療保険', '失業給付',
             '労働災害', '介護給付', '保険適用', '制度改正', '法改正',
+            
+            # 組織・制度名
             '協会けんぽ', '年金機構', '社労士', '給付金', '適用拡大',
-            # 追加キーワード
+            '厚生労働省', 'ハローワーク', '年金事務所', '社会保険労務士',
+            
+            # 関連する社会問題・政策（大幅拡張）
             '医療費', '高齢者', '障害者', '育児', '出産', '療養費',
             '扶養', '賃金', '労働者', '事業主', '保険制度', '社会保障',
-            '福祉', '医療制度', '退職', '就職', 'ハローワーク', '職業訓練',
-            '休業補償', '通勤災害', '業務災害', '要介護', '要支援'
+            '福祉', '医療制度', '退職', '就職', '職業訓練',
+            '休業補償', '通勤災害', '業務災害', '要介護', '要支援',
+            
+            # より幅広い関連キーワード
+            '働き方改革', '少子高齢化', 'マイナンバー', '電子申請',
+            '定年延長', '非正規雇用', '正社員化', 'DX', 'デジタル化',
+            '手続き簡素化', '窓口', '相談', '申請', '給付',
+            '認定', '審査', '支給', '受給', '納付', '徴収',
+            
+            # 新規追加（労働・経済関連）
+            '最低賃金', '残業代', '有給休暇', '産休', '育休', '介護休暇',
+            '労基法', '労働法', '労働基準', '時短勤務', 'テレワーク',
+            '副業', '兼業', '転職', '就活', 'リストラ', 'リスキリング',
+            '人手不足', '採用', '新卒', '中途', 'シニア', '女性活躍',
+            '多様性', 'ダイバーシティ', 'インクルージョン', 'ワークライフバランス',
+            
+            # 経済・政策関連
+            '税制改正', '所得税', '住民税', '消費税', '控除', '減税',
+            '物価', 'インフレ', '景気', '経済政策', '政府', '国会',
+            '予算', '財政', '補助金', '助成金', '支援策', 'コロナ支援'
         ]
         
         # 除外キーワード（関係ないもの）
         exclude_keywords = [
-            'JavaScript', 'Cookie', 'PDF', 'システム', 'メンテナンス',
+            'JavaScript', 'Cookie', 'PDF', 'システムメンテナンス',
             'ブラウザ', 'Internet Explorer', 'アクセシビリティ',
-            '音声読み上げ', '文字サイズ', 'サイト内検索', 'スポーツ',
-            '芸能', 'エンタメ', '天気', '占い', 'ゲーム'
+            'スポーツ', '芸能', 'エンタメ', '天気', '占い', 'ゲーム',
+            '株価', '為替', '競馬', '宝くじ', 'パチンコ', 'アニメ', '映画'
         ]
         
         # 除外キーワードチェック
@@ -310,18 +333,27 @@ class RenderNewsAutomation:
             if exclude in title:
                 return False
         
-        # 関連キーワードチェック
+        # 関連キーワードチェック（1つでも含まれていればOK）
         for keyword in relevant_keywords:
             if keyword in title:
                 return True
         
-        # 部分的な関連性も考慮
-        partial_keywords = ['保険', '年金', '給付', '制度', '労働', '医療', '福祉']
-        title_lower = title.lower()
-        matched_partials = sum(1 for keyword in partial_keywords if keyword in title_lower)
+        # 部分キーワードもチェック（緩い条件）
+        partial_keywords = [
+            '保険', '年金', '給付', '制度', '労働', '医療', '福祉',
+            '働', '仕事', '雇用', '退職', '就職', '病気', '介護',
+            '子育て', '出産', '育児', '障害', '高齢', '申請', '手続き',
+            '税', '料金', '支払い', '控除', '減免', '免除', '補助',
+            '支援', '助成', '政策', '改正', '変更', '見直し'
+        ]
         
-        # 2個以上の部分キーワードがあれば関連とする
-        if matched_partials >= 2:
+        matched_partials = 0
+        for keyword in partial_keywords:
+            if keyword in title:
+                matched_partials += 1
+        
+        # 1個以上の部分キーワードがあれば関連とする（大幅緩和）
+        if matched_partials >= 1:
             return True
         
         return False
@@ -456,31 +488,37 @@ class RenderNewsAutomation:
         try:
             print("📰 ニュースサイト総合スクレイピング開始")
             
-            # 複数のニュースサイトから収集
+            # 複数のニュースサイトから収集（Yahoo復活 + 代替ソース追加）
             news_sites = [
                 {
                     'name': 'Yahoo!ニュース',
                     'base_url': 'https://news.yahoo.co.jp',
-                    'search_terms': ['社会保険', '厚生年金', '健康保険', '雇用保険', '年金改正', '介護保険', '労災保険', '年金制度', '医療保険制度', '保険料改正'],
-                    'scraper': self.scrape_yahoo_enhanced
+                    'search_terms': ['社会保険', '厚生年金', '健康保険', '雇用保険', '年金改正', '介護保険', '労災保険', '年金制度', '医療保険制度', '保険料改正', '働き方改革', '最低賃金'],
+                    'scraper': self.scrape_yahoo_simple
                 },
                 {
                     'name': 'NHKニュース',
                     'base_url': 'https://www3.nhk.or.jp',
-                    'search_terms': ['社会保険', '年金', '医療保険'],
+                    'search_terms': ['社会保険', '年金', '医療保険', '雇用', '労働', '厚生労働省'],
                     'scraper': self.scrape_nhk_news
                 },
                 {
-                    'name': '朝日新聞デジタル',
-                    'base_url': 'https://www.asahi.com',
-                    'search_terms': ['社会保険', '厚生年金', '健康保険'],
-                    'scraper': self.scrape_asahi_news
+                    'name': '時事通信',
+                    'base_url': 'https://www.jiji.com',
+                    'search_terms': ['社会保険', '厚生年金', '健康保険', '雇用保険', '年金改正', '介護保険', '労災保険'],
+                    'scraper': self.scrape_jiji_news
                 },
                 {
-                    'name': '日経新聞',
-                    'base_url': 'https://www.nikkei.com',
-                    'search_terms': ['社会保険', '年金制度', '医療制度'],
-                    'scraper': self.scrape_nikkei_news
+                    'name': '共同通信',
+                    'base_url': 'https://www.kyodo.co.jp',
+                    'search_terms': ['社会保険', '年金制度', '医療制度', '雇用制度', '労働政策'],
+                    'scraper': self.scrape_kyodo_news
+                },
+                {
+                    'name': 'ITmedia ビジネス',
+                    'base_url': 'https://www.itmedia.co.jp/business',
+                    'search_terms': ['社会保険', '働き方改革', '労働法', '雇用保険', '厚生年金'],
+                    'scraper': self.scrape_itmedia_news
                 }
             ]
             
@@ -857,29 +895,131 @@ class RenderNewsAutomation:
         except Exception as e:
             return []
     
-    def scrape_nikkei_news(self, site_config):
-        """日経新聞 スクレイパー"""
+    def scrape_yahoo_simple(self, site_config):
+        """Yahoo!ニュース シンプルスクレイパー（RSS/トピック利用）"""
         news_list = []
         
         try:
-            self.check_rate_limit('www.nikkei.com')
+            self.check_rate_limit('news.yahoo.co.jp')
             
-            # 日経新聞の検索
-            for term in site_config['search_terms']:
+            # Yahoo!のトピック一覧とRSS的なアプローチ
+            yahoo_topics = [
+                'https://news.yahoo.co.jp/topics/domestic',     # 国内ニュース
+                'https://news.yahoo.co.jp/topics/business',     # 経済ニュース
+                'https://news.yahoo.co.jp/topics/local'         # 地域ニュース
+            ]
+            
+            for topic_url in yahoo_topics:
                 try:
-                    search_url = f"https://www.nikkei.com/search/?s={term}"
-                    response = self.session.get(search_url, timeout=30)
-                    
-                    if response.status_code != 200:
-                        continue
-                    
+                    response = self.session.get(topic_url, timeout=30)
+                    response.raise_for_status()
                     soup = BeautifulSoup(response.content, 'html.parser')
                     
-                    # 日経新聞の記事一覧
-                    articles = soup.select('.searchResult_item, .cmn-list_item, article')
+                    # より広範囲にリンクを探す
+                    links = soup.find_all('a', href=True)
                     
                     extracted = 0
-                    for article in articles[:5]:
+                    for link in links:
+                        try:
+                            title = link.get_text(strip=True)
+                            href = link.get('href', '')
+                            
+                            # 最低限の条件チェック
+                            if (not title or len(title) < 10 or 
+                                not href or 'news' not in href):
+                                continue
+                            
+                            # 関連性チェック（緩和版を使用）
+                            if not self.is_social_insurance_relevant(title):
+                                continue
+                            
+                            # URL正規化
+                            if href.startswith('/'):
+                                full_url = 'https://news.yahoo.co.jp' + href
+                            elif not href.startswith('http'):
+                                continue
+                            else:
+                                full_url = href
+                            
+                            # ニュースアイテム作成
+                            category, related_categories, confidence = self.enhanced_categorization(title, '')
+                            importance = self.enhanced_importance(title, '')
+                            keywords = self.enhanced_keywords(title, '')
+                            
+                            news_item = {
+                                'id': self.generate_id(title, full_url),
+                                'title': title,
+                                'url': full_url,
+                                'source': 'Yahoo!ニュース',
+                                'category': category,
+                                'importance': importance,
+                                'summary': self.create_summary(title, category, keywords),
+                                'keywords': keywords,
+                                'published_date': datetime.now().strftime('%Y年%m月%d日'),
+                                'scraped_at': datetime.now().isoformat(),
+                                'related_categories': related_categories,
+                                'confidence_score': confidence
+                            }
+                            
+                            news_list.append(news_item)
+                            extracted += 1
+                            
+                            # 各トピックから最大5件
+                            if extracted >= 5:
+                                break
+                                
+                        except Exception as e:
+                            continue
+                    
+                    print(f"    Yahoo {topic_url.split('/')[-1]}: {extracted}件")
+                    time.sleep(2)  # レート制限
+                    
+                except Exception as e:
+                    continue
+            
+            # 重複除去
+            unique_news = []
+            seen_titles = set()
+            for news in news_list:
+                if news['title'] not in seen_titles:
+                    unique_news.append(news)
+                    seen_titles.add(news['title'])
+            
+            return unique_news
+            
+        except Exception as e:
+            print(f"Yahoo!ニュース簡易版エラー: {e}")
+            return []
+
+    def scrape_nikkei_news(self, site_config):
+        """日経新聞 スクレイパー（無効化）"""
+        # 日経新聞は有料会員制のため無効化
+        return []
+    
+    def scrape_jiji_news(self, site_config):
+        """時事通信 スクレイパー"""
+        news_list = []
+        
+        try:
+            self.check_rate_limit('www.jiji.com')
+            
+            # 時事通信の社会セクション
+            jiji_urls = [
+                'https://www.jiji.com/jc/list?g=soc',  # 社会
+                'https://www.jiji.com/jc/list?g=pol'   # 政治（制度関連）
+            ]
+            
+            for url in jiji_urls:
+                try:
+                    response = self.session.get(url, timeout=30)
+                    response.raise_for_status()
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # 時事通信の記事一覧
+                    articles = soup.select('.ListNewsItem, .newslist li, article')
+                    
+                    extracted = 0
+                    for article in articles[:15]:
                         try:
                             link = article.select_one('a[href]')
                             if not link:
@@ -892,7 +1032,89 @@ class RenderNewsAutomation:
                                 continue
                             
                             if href.startswith('/'):
-                                full_url = 'https://www.nikkei.com' + href
+                                full_url = 'https://www.jiji.com' + href
+                            else:
+                                full_url = href
+                            
+                            # 日付抽出
+                            date_elem = article.select_one('.date, time, [class*="time"]')
+                            published_date = date_elem.get_text(strip=True) if date_elem else datetime.now().strftime('%Y年%m月%d日')
+                            
+                            category, related_categories, confidence = self.enhanced_categorization(title, '')
+                            importance = self.enhanced_importance(title, '')
+                            keywords = self.enhanced_keywords(title, '')
+                            
+                            news_item = {
+                                'id': self.generate_id(title, full_url),
+                                'title': title,
+                                'url': full_url,
+                                'source': '時事通信',
+                                'category': category,
+                                'importance': importance,
+                                'summary': self.create_summary(title, category, keywords),
+                                'keywords': keywords,
+                                'published_date': published_date,
+                                'scraped_at': datetime.now().isoformat(),
+                                'related_categories': related_categories,
+                                'confidence_score': confidence
+                            }
+                            
+                            news_list.append(news_item)
+                            extracted += 1
+                            
+                        except Exception as e:
+                            continue
+                    
+                    print(f"    時事通信 {url.split('=')[-1]}: {extracted}件")
+                    
+                except Exception as e:
+                    continue
+            
+            return news_list
+            
+        except Exception as e:
+            return []
+    
+    def scrape_kyodo_news(self, site_config):
+        """共同通信 スクレイパー"""
+        news_list = []
+        
+        try:
+            self.check_rate_limit('www.kyodo.co.jp')
+            
+            # 共同通信のトップページから
+            kyodo_urls = [
+                'https://www.kyodo.co.jp/',
+                'https://www.kyodo.co.jp/politics/',
+                'https://www.kyodo.co.jp/life/'
+            ]
+            
+            for url in kyodo_urls:
+                try:
+                    response = self.session.get(url, timeout=30)
+                    response.raise_for_status()
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # 共同通信の記事一覧
+                    articles = soup.select('.article-list li, .news-list li, article, .card')
+                    
+                    extracted = 0
+                    for article in articles[:10]:
+                        try:
+                            link = article.select_one('a[href]')
+                            if not link:
+                                continue
+                            
+                            title = link.get_text(strip=True)
+                            href = link.get('href', '')
+                            
+                            if not self.is_social_insurance_relevant(title):
+                                continue
+                            
+                            if href.startswith('/'):
+                                full_url = 'https://www.kyodo.co.jp' + href
+                            elif not href.startswith('http'):
+                                continue
                             else:
                                 full_url = href
                             
@@ -904,7 +1126,7 @@ class RenderNewsAutomation:
                                 'id': self.generate_id(title, full_url),
                                 'title': title,
                                 'url': full_url,
-                                'source': '日経新聞',
+                                'source': '共同通信',
                                 'category': category,
                                 'importance': importance,
                                 'summary': self.create_summary(title, category, keywords),
@@ -912,8 +1134,7 @@ class RenderNewsAutomation:
                                 'published_date': datetime.now().strftime('%Y年%m月%d日'),
                                 'scraped_at': datetime.now().isoformat(),
                                 'related_categories': related_categories,
-                                'confidence_score': confidence,
-                                'search_term': term
+                                'confidence_score': confidence
                             }
                             
                             news_list.append(news_item)
@@ -922,8 +1143,161 @@ class RenderNewsAutomation:
                         except Exception as e:
                             continue
                     
-                    print(f"    日経 '{term}': {extracted}件")
-                    time.sleep(1)
+                    print(f"    共同通信 {url.split('/')[-2] if len(url.split('/')) > 3 else 'main'}: {extracted}件")
+                    
+                except Exception as e:
+                    continue
+            
+            return news_list
+            
+        except Exception as e:
+            return []
+    
+    def scrape_itmedia_news(self, site_config):
+        """ITmedia ビジネス スクレイパー"""
+        news_list = []
+        
+        try:
+            self.check_rate_limit('www.itmedia.co.jp')
+            
+            # ITmediaビジネスのトピック
+            itmedia_urls = [
+                'https://www.itmedia.co.jp/business/',
+                'https://www.itmedia.co.jp/business/subtop/work/'
+            ]
+            
+            for url in itmedia_urls:
+                try:
+                    response = self.session.get(url, timeout=30)
+                    response.raise_for_status()
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # ITmediaの記事一覧
+                    articles = soup.select('.colBoxLeft li, .topicsList li, article')
+                    
+                    extracted = 0
+                    for article in articles[:10]:
+                        try:
+                            link = article.select_one('a[href]')
+                            if not link:
+                                continue
+                            
+                            title = link.get_text(strip=True)
+                            href = link.get('href', '')
+                            
+                            if not self.is_social_insurance_relevant(title):
+                                continue
+                            
+                            if href.startswith('/'):
+                                full_url = 'https://www.itmedia.co.jp' + href
+                            elif not href.startswith('http'):
+                                continue
+                            else:
+                                full_url = href
+                            
+                            category, related_categories, confidence = self.enhanced_categorization(title, '')
+                            importance = self.enhanced_importance(title, '')
+                            keywords = self.enhanced_keywords(title, '')
+                            
+                            news_item = {
+                                'id': self.generate_id(title, full_url),
+                                'title': title,
+                                'url': full_url,
+                                'source': 'ITmedia ビジネス',
+                                'category': category,
+                                'importance': importance,
+                                'summary': self.create_summary(title, category, keywords),
+                                'keywords': keywords,
+                                'published_date': datetime.now().strftime('%Y年%m月%d日'),
+                                'scraped_at': datetime.now().isoformat(),
+                                'related_categories': related_categories,
+                                'confidence_score': confidence
+                            }
+                            
+                            news_list.append(news_item)
+                            extracted += 1
+                            
+                        except Exception as e:
+                            continue
+                    
+                    print(f"    ITmedia {url.split('/')[-2] if '/' in url else 'main'}: {extracted}件")
+                    
+                except Exception as e:
+                    continue
+            
+            return news_list
+            
+        except Exception as e:
+            return []
+    
+    def scrape_president_news(self, site_config):
+        """プレジデントオンライン スクレイパー"""
+        news_list = []
+        
+        try:
+            self.check_rate_limit('president.jp')
+            
+            # プレジデントオンラインのカテゴリ
+            president_urls = [
+                'https://president.jp/list/category/business',
+                'https://president.jp/list/category/money'
+            ]
+            
+            for url in president_urls:
+                try:
+                    response = self.session.get(url, timeout=30)
+                    response.raise_for_status()
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # プレジデントの記事一覧
+                    articles = soup.select('.article-list li, .list-item, article')
+                    
+                    extracted = 0
+                    for article in articles[:10]:
+                        try:
+                            link = article.select_one('a[href]')
+                            if not link:
+                                continue
+                            
+                            title = link.get_text(strip=True)
+                            href = link.get('href', '')
+                            
+                            if not self.is_social_insurance_relevant(title):
+                                continue
+                            
+                            if href.startswith('/'):
+                                full_url = 'https://president.jp' + href
+                            elif not href.startswith('http'):
+                                continue
+                            else:
+                                full_url = href
+                            
+                            category, related_categories, confidence = self.enhanced_categorization(title, '')
+                            importance = self.enhanced_importance(title, '')
+                            keywords = self.enhanced_keywords(title, '')
+                            
+                            news_item = {
+                                'id': self.generate_id(title, full_url),
+                                'title': title,
+                                'url': full_url,
+                                'source': 'プレジデントオンライン',
+                                'category': category,
+                                'importance': importance,
+                                'summary': self.create_summary(title, category, keywords),
+                                'keywords': keywords,
+                                'published_date': datetime.now().strftime('%Y年%m月%d日'),
+                                'scraped_at': datetime.now().isoformat(),
+                                'related_categories': related_categories,
+                                'confidence_score': confidence
+                            }
+                            
+                            news_list.append(news_item)
+                            extracted += 1
+                            
+                        except Exception as e:
+                            continue
+                    
+                    print(f"    プレジデント {url.split('/')[-1]}: {extracted}件")
                     
                 except Exception as e:
                     continue
