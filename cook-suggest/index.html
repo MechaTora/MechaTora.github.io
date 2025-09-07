@@ -29,8 +29,9 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍳</text></svg>">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="cook-suggest-manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6B4E3D">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="CookSuggest">
@@ -2142,6 +2143,37 @@
         console.log(`📊 Total recipes loaded: ${allRecipes.length}`);
         console.log(`🔍 検索機能が利用可能です`);
         
+        // お気に入り機能の初期化
+        let favorites = JSON.parse(localStorage.getItem('cookSuggestFavorites') || '[]');
+        console.log(`❤️ お気に入りレシピ数: ${favorites.length}`);
+        
+        // レシピ評価システムの初期化
+        let recipeRatings = JSON.parse(localStorage.getItem('cookSuggestRatings') || '{}');
+        console.log(`⭐ 評価データ数: ${Object.keys(recipeRatings).length}`);
+        
+        // お気に入り機能
+        function toggleFavorite(recipe, buttonElement) {
+            const recipeId = recipe.name + '-' + recipe.cuisine;
+            const index = favorites.findIndex(fav => (fav.name + '-' + fav.cuisine) === recipeId);
+            
+            if (index === -1) {
+                // お気に入りに追加
+                favorites.push(recipe);
+                buttonElement.innerHTML = '❤️';
+                buttonElement.classList.add('favorited');
+                console.log(`❤️ お気に入りに追加: ${recipe.name}`);
+            } else {
+                // お気に入りから削除
+                favorites.splice(index, 1);
+                buttonElement.innerHTML = '🤍';
+                buttonElement.classList.remove('favorited');
+                console.log(`💔 お気に入りから削除: ${recipe.name}`);
+            }
+            
+            // ローカルストレージに保存
+            localStorage.setItem('cookSuggestFavorites', JSON.stringify(favorites));
+        }
+        
         // データベースの整合性チェック
         let errorCount = 0;
         allRecipes.forEach((recipe, index) => {
@@ -2932,8 +2964,7 @@
         }
 
 
-        // レシピ評価システム
-        let recipeRatings = JSON.parse(localStorage.getItem('cookSuggestRatings') || '{}');
+        // レシピ評価システム（既に上部で初期化済み）
 
         function initializeRatings() {
             // 各レシピにデフォルト評価を設定（評価がない場合）
