@@ -2227,32 +2227,58 @@
 
         // 条件に基づいてレシピを検索
         function searchRecipes(conditions) {
+            console.log('🔍 searchRecipes開始:', conditions);
             let filteredRecipes = [...allRecipes];
+            console.log('📊 初期レシピ数:', filteredRecipes.length);
 
             // フィルタリング
             if (conditions.difficulty && conditions.difficulty !== '全て') {
+                console.log('🎯 難易度フィルタ適用:', conditions.difficulty);
+                const beforeCount = filteredRecipes.length;
                 filteredRecipes = filteredRecipes.filter(recipe => recipe.difficulty === conditions.difficulty);
+                console.log(`📈 難易度フィルタ後: ${beforeCount} → ${filteredRecipes.length}`);
             }
 
             if (conditions.cuisine && conditions.cuisine !== 'その他') {
+                console.log('🍽️ 料理タイプフィルタ適用:', conditions.cuisine);
+                const beforeCount = filteredRecipes.length;
                 filteredRecipes = filteredRecipes.filter(recipe => recipe.cuisine === conditions.cuisine);
+                console.log(`📈 料理タイプフィルタ後: ${beforeCount} → ${filteredRecipes.length}`);
             } else if (conditions.cuisine === 'その他') {
+                console.log('🍽️ その他料理フィルタ適用');
+                const beforeCount = filteredRecipes.length;
                 filteredRecipes = filteredRecipes.filter(recipe => 
                     !['和食', '洋食', '中華', 'デザート'].includes(recipe.cuisine)
                 );
+                console.log(`📈 その他フィルタ後: ${beforeCount} → ${filteredRecipes.length}`);
             }
 
             if (conditions.calories === 'デザート') {
+                console.log('🍰 デザートフィルタ適用');
+                const beforeCount = filteredRecipes.length;
                 filteredRecipes = filteredRecipes.filter(recipe => recipe.cuisine === 'デザート');
+                console.log(`📈 デザートフィルタ後: ${beforeCount} → ${filteredRecipes.length}`);
             } else if (conditions.calories === 'ヘルシー') {
+                console.log('🥗 ヘルシーフィルタ適用 (≤250kcal)');
+                const beforeCount = filteredRecipes.length;
                 filteredRecipes = filteredRecipes.filter(recipe => recipe.calories <= 250);
+                console.log(`📈 ヘルシーフィルタ後: ${beforeCount} → ${filteredRecipes.length}`);
             } else if (conditions.calories === 'ガッツリ') {
+                console.log('🍖 ガッツリフィルタ適用 (≥400kcal)');
+                const beforeCount = filteredRecipes.length;
                 filteredRecipes = filteredRecipes.filter(recipe => recipe.calories >= 400);
+                console.log(`📈 ガッツリフィルタ後: ${beforeCount} → ${filteredRecipes.length}`);
             }
 
             // ランダムに並び替えて4つ選択
+            console.log('🎲 ランダム並び替え前:', filteredRecipes.length);
             const shuffled = filteredRecipes.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 4);
+            const result = shuffled.slice(0, 4);
+            console.log('✅ 最終選択結果:', result.length, 'レシピ');
+            if (result.length > 0) {
+                console.log('📋 選択されたレシピ:', result.map(r => r.name));
+            }
+            return result;
         }
 
         // モーダル関連
@@ -2449,8 +2475,10 @@
                 const selectedRecipes = searchRecipes(selectedConditions);
                 console.log('📋 検索結果レシピ数:', selectedRecipes.length);
                 
+                console.log('🏪 レストランデータ総数:', restaurants.length);
                 const selectedRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
                 console.log('🏪 選択されたレストラン:', selectedRestaurant?.name || 'なし');
+                console.log('🏪 レストラン詳細:', selectedRestaurant);
                 
                 // 4つのレシピ + 1つのレストラン = 5つの提案
                 const allSuggestions = [...selectedRecipes, selectedRestaurant];
@@ -2732,11 +2760,23 @@
                 } else {
                     // 条件検索モード（既存の機能）
                     console.log('📋 選択された条件:', selectedConditions);
-                    const hasCondition = Object.values(selectedConditions).some(v => v !== null);
+                    const conditionValues = Object.values(selectedConditions);
+                    console.log('🔍 条件値配列:', conditionValues);
+                    const hasCondition = conditionValues.some(v => v !== null);
+                    console.log('✅ 条件選択チェック:', hasCondition);
                     
                     if (!hasCondition) {
-                        alert('条件を1つ以上選択してください！');
-                        return;
+                        console.log('⚠️ 条件が選択されていません - ランダム選択で実行');
+                        // 条件が選択されていない場合は、ランダムに全てから選択
+                        selectedConditions = {
+                            difficulty: null,
+                            servings: null, 
+                            calories: null,
+                            cuisine: null
+                        };
+                        console.log('🎲 デフォルト条件で実行:', selectedConditions);
+                    } else {
+                        console.log('✅ 条件検索を開始します');
                     }
 
                     document.querySelector('#loading p').textContent = '美味しそうな料理を準備中...';
