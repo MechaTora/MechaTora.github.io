@@ -2138,7 +2138,24 @@
             { name: 'タルトタタン', difficulty: '上級', time: 90, calories: 250, cuisine: 'デザート', emoji: '🍎', bgColor: '#FFEFD5' }
         ];
 
-        console.log(`Total recipes loaded: ${allRecipes.length}`);
+        console.log(`🍳 CookSuggest初期化開始`);
+        console.log(`📊 Total recipes loaded: ${allRecipes.length}`);
+        console.log(`🔍 検索機能が利用可能です`);
+        
+        // データベースの整合性チェック
+        let errorCount = 0;
+        allRecipes.forEach((recipe, index) => {
+            if (!recipe.name || !recipe.difficulty || !recipe.cuisine) {
+                console.error(`❌ レシピデータエラー (index: ${index}):`, recipe);
+                errorCount++;
+            }
+        });
+        
+        if (errorCount > 0) {
+            console.warn(`⚠️ ${errorCount}個のレシピにデータ不整合があります`);
+        } else {
+            console.log(`✅ レシピデータの整合性チェック完了`);
+        }
 
         // レストランデータ
         const restaurants = [
@@ -2427,14 +2444,28 @@
 
         // 5つの結果表示関数
         function showFiveResults() {
-            const selectedRecipes = searchRecipes(selectedConditions);
-            const selectedRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
-            
-            // 4つのレシピ + 1つのレストラン = 5つの提案
-            const allSuggestions = [...selectedRecipes, selectedRestaurant];
-            
-            const resultGrid = document.getElementById('resultGrid');
-            resultGrid.innerHTML = '';
+            try {
+                console.log('🔍 条件ベース検索開始:', selectedConditions);
+                const selectedRecipes = searchRecipes(selectedConditions);
+                console.log('📋 検索結果レシピ数:', selectedRecipes.length);
+                
+                const selectedRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+                console.log('🏪 選択されたレストラン:', selectedRestaurant?.name || 'なし');
+                
+                // 4つのレシピ + 1つのレストラン = 5つの提案
+                const allSuggestions = [...selectedRecipes, selectedRestaurant];
+                console.log('📊 総提案数:', allSuggestions.length);
+                
+                const resultGrid = document.getElementById('resultGrid');
+                if (!resultGrid) {
+                    throw new Error('resultGrid要素が見つかりません');
+                }
+                resultGrid.innerHTML = '';
+                
+                if (allSuggestions.length === 0) {
+                    resultGrid.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">条件に合うレシピが見つかりませんでした。</div>';
+                    return;
+                }
             
             allSuggestions.forEach((item, index) => {
                 const isRestaurant = item.genre !== undefined;
@@ -2507,6 +2538,15 @@
                 
                 resultGrid.innerHTML += cardHtml;
             });
+                console.log('✅ 結果表示完了');
+            } catch (error) {
+                console.error('❌ 結果表示エラー:', error);
+                const resultGrid = document.getElementById('resultGrid');
+                if (resultGrid) {
+                    resultGrid.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff6b6b;">エラーが発生しました。ページを再読み込みしてお試しください。</div>';
+                }
+                throw error;
+            }
         }
 
         // タブ切り替え機能
@@ -2659,55 +2699,95 @@
 
         // 元の料理提案ボタンを材料検索対応に更新
         document.getElementById('generateBtn').addEventListener('click', function() {
-            if (currentTab === 'ingredients') {
-                // 材料検索モード
-                if (selectedIngredients.length === 0) {
-                    alert('材料を1つ以上選択してください！');
-                    return;
-                }
-                
-                // ローディング表示
-                document.querySelector('#loading p').textContent = '選択した材料でレシピを検索中...';
-                document.getElementById('loading').style.display = 'block';
-                document.getElementById('resultSection').style.display = 'none';
-                
-                setTimeout(() => {
-                    showIngredientBasedResults();
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('resultSection').style.display = 'block';
-                }, 2000);
-                
-            } else {
-                // 条件検索モード（既存の機能）
-                const hasCondition = Object.values(selectedConditions).some(v => v !== null);
-                
-                if (!hasCondition) {
-                    alert('条件を1つ以上選択してください！');
-                    return;
-                }
+            console.log('🔍 料理提案ボタンクリック - 現在のタブ:', currentTab);
+            
+            try {
+                if (currentTab === 'ingredients') {
+                    // 材料検索モード
+                    console.log('📝 選択された材料:', selectedIngredients);
+                    if (selectedIngredients.length === 0) {
+                        alert('材料を1つ以上選択してください！');
+                        return;
+                    }
+                    
+                    // ローディング表示
+                    document.querySelector('#loading p').textContent = '選択した材料でレシピを検索中...';
+                    document.getElementById('loading').style.display = 'block';
+                    document.getElementById('resultSection').style.display = 'none';
+                    
+                    setTimeout(() => {
+                        try {
+                            console.log('🍳 材料ベース検索実行中...');
+                            showIngredientBasedResults();
+                            document.getElementById('loading').style.display = 'none';
+                            document.getElementById('resultSection').style.display = 'block';
+                            console.log('✅ 材料ベース検索完了');
+                        } catch (error) {
+                            console.error('❌ 材料ベース検索エラー:', error);
+                            document.getElementById('loading').style.display = 'none';
+                            alert('検索処理中にエラーが発生しました。ページを再読み込みしてお試しください。');
+                        }
+                    }, 2000);
+                    
+                } else {
+                    // 条件検索モード（既存の機能）
+                    console.log('📋 選択された条件:', selectedConditions);
+                    const hasCondition = Object.values(selectedConditions).some(v => v !== null);
+                    
+                    if (!hasCondition) {
+                        alert('条件を1つ以上選択してください！');
+                        return;
+                    }
 
-                document.querySelector('#loading p').textContent = '美味しそうな料理を準備中...';
-                document.getElementById('loading').style.display = 'block';
-                document.getElementById('resultSection').style.display = 'none';
-                
-                setTimeout(() => {
-                    showFiveResults();
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('resultSection').style.display = 'block';
-                }, 2000);
+                    document.querySelector('#loading p').textContent = '美味しそうな料理を準備中...';
+                    document.getElementById('loading').style.display = 'block';
+                    document.getElementById('resultSection').style.display = 'none';
+                    
+                    setTimeout(() => {
+                        try {
+                            console.log('🍽️ 条件検索実行中...');
+                            showFiveResults();
+                            document.getElementById('loading').style.display = 'none';
+                            document.getElementById('resultSection').style.display = 'block';
+                            console.log('✅ 条件検索完了');
+                        } catch (error) {
+                            console.error('❌ 条件検索エラー:', error);
+                            document.getElementById('loading').style.display = 'none';
+                            alert('検索処理中にエラーが発生しました。ページを再読み込みしてお試しください。');
+                        }
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('❌ メイン検索処理エラー:', error);
+                document.getElementById('loading').style.display = 'none';
+                alert('検索処理でエラーが発生しました: ' + error.message);
             }
         });
 
         // 材料ベースの結果表示
         function showIngredientBasedResults() {
-            const matchingRecipes = searchByIngredients(selectedIngredients);
-            const selectedRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
-            
-            // 4つのレシピ + 1つのレストラン = 5つの提案
-            const allSuggestions = [...matchingRecipes, selectedRestaurant];
-            
-            const resultGrid = document.getElementById('resultGrid');
-            resultGrid.innerHTML = '';
+            try {
+                console.log('🔍 材料ベース検索開始:', selectedIngredients);
+                const matchingRecipes = searchByIngredients(selectedIngredients);
+                console.log('📋 マッチしたレシピ数:', matchingRecipes.length);
+                
+                const selectedRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+                console.log('🏪 選択されたレストラン:', selectedRestaurant?.name || 'なし');
+                
+                // 4つのレシピ + 1つのレストラン = 5つの提案
+                const allSuggestions = [...matchingRecipes, selectedRestaurant];
+                console.log('📊 総提案数:', allSuggestions.length);
+                
+                const resultGrid = document.getElementById('resultGrid');
+                if (!resultGrid) {
+                    throw new Error('resultGrid要素が見つかりません');
+                }
+                resultGrid.innerHTML = '';
+                
+                if (allSuggestions.length === 0) {
+                    resultGrid.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">条件に合うレシピが見つかりませんでした。</div>';
+                    return;
+                }
             
             allSuggestions.forEach((item, index) => {
                 const isRestaurant = item.genre !== undefined;
@@ -2787,6 +2867,15 @@
                 
                 resultGrid.innerHTML += cardHtml;
             });
+                console.log('✅ 材料ベース結果表示完了');
+            } catch (error) {
+                console.error('❌ 材料ベース結果表示エラー:', error);
+                const resultGrid = document.getElementById('resultGrid');
+                if (resultGrid) {
+                    resultGrid.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff6b6b;">エラーが発生しました。ページを再読み込みしてお試しください。</div>';
+                }
+                throw error;
+            }
         }
 
         // Service Worker登録（PWA対応）
