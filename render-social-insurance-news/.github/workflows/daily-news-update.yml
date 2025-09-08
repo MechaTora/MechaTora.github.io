@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   actions: read
+  metadata: read
 
 jobs:
   update-news:
@@ -22,6 +23,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
+        persist-credentials: true
     
     - name: Python環境設定
       uses: actions/setup-python@v4
@@ -45,10 +47,12 @@ jobs:
         echo "📋 生成されたファイル一覧:"
         ls -la render-social-insurance-news/data/*.json render-social-insurance-news/templates/*.html 2>/dev/null || echo "No files generated"
     
-    - name: 変更をコミット
+    - name: Git設定とコミット
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        # Git設定
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git config --global --add safe.directory $PWD
         
         # 変更があるかチェック
         if [ -n "$(git status --porcelain)" ]; then
@@ -61,8 +65,8 @@ jobs:
                      -m "🤖 Generated with [Claude Code](https://claude.ai/code)" \
                      -m "Co-Authored-By: Claude <noreply@anthropic.com>"
           
-          # プッシュ実行
-          git push origin main
+          # プッシュ実行（強制的に認証情報を使用）
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
           echo "✅ 更新完了"
         else
           echo "ℹ️ 変更なし、コミットスキップ"
