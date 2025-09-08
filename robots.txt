@@ -1,23 +1,10 @@
+# GitHub Pages版は正規サイト(mechatora.com)にリダイレクトするため制限
 User-agent: *
-Allow: /
+Disallow: /
 
-# サイトマップの場所
+# 正規サイトのサイトマップを参照
 Sitemap: https://mechatora.com/sitemap.xml
 
-# 主要ページの明示
-Allow: /index.html
-Allow: /flashcard-web-app/
-Allow: /cook-suggest/
-Allow: /earthquake-monitor/
-Allow: /x-buzz-simulator/
-Allow: /fire/
-Allow: /qualification-calendar.html
-Allow: /commute-flow-map.html
-Allow: /garden/
-Allow: /jellyfish/
+# GitHub Pages版はmechatora.comにリダイレクトされます
+# 正規サイト: https://mechatora.com/
 
-# AdSense ads.txt
-Allow: /ads.txt
-
-# クロール促進のためのディレクティブ
-Crawl-delay: 1

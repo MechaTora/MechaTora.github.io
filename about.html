@@ -22,6 +22,13 @@
     <link rel="canonical" href="https://mechatora.com/about.html">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
+    <!-- GitHub Pages to mechatora.com redirect -->
+    <script>
+    if (window.location.hostname === 'mechatora.github.io') {
+        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+    </script>
+    
     <style>
         :root {
             --primary-color: #667eea;

@@ -41,6 +41,13 @@ layout: null
     <!-- Canonical URL -->
     <link rel="canonical" href="https://mechatora.com/knowhow/">
     
+    
+    <!-- GitHub Pages to mechatora.com redirect -->
+    <script>
+    if (window.location.hostname === 'mechatora.github.io') {
+        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+    </script>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
@@ -1212,8 +1219,6 @@ module.exports = app;</code></pre>
     &lt;link rel="alternate" hreflang="en" href="https://example.com/en/web-development-tools"&gt;
     &lt;link rel="alternate" hreflang="x-default" href="https://example.com/web-development-tools"&gt;
     
-    &lt;!-- Canonical URL --&gt;
-    &lt;link rel="canonical" href="https://example.com/web-development-tools"&gt;
     
     &lt;!-- Open Graph メタタグ / Open Graph Meta Tags --&gt;
     &lt;meta property="og:type" content="article"&gt;
