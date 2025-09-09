@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第11章: 機械学習とtidymodels | Tidyverse完全マスター</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family@Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-electric);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-electric);
+            border-color: var(--accent-electric);
+            box-shadow: 0 0 5px var(--accent-electric);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-electric);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-electric);
+        }
+
+        /* Content Sections */
+        .section {
+            background: var(--bg-secondary);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-purple);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-electric), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-electric);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-electric);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            margin: 20px 0;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-electric);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.1);
+        }
+
+        .code-header {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-header::before {
+            content: '🤖';
+            font-size: 1.1rem;
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .operator { color: #f85149; }
+        .number { color: #79c0ff; }
+        .variable { color: #ffa657; }
+
+        /* Output Display */
+        .output-container {
+            margin: 20px 0;
+            background: #0a0e1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .output-header {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-header::before {
+            content: '🧠';
+        }
+
+        .output-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-cyan);
+        }
+
+        /* ML Workflow */
+        .ml-workflow {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .workflow-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-cyan);
+            text-align: center;
+        }
+
+        .step-number {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Data Tables */
+        .data-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-electric);
+        }
+
+        th {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-electric);
+        }
+
+        .key-points h4 {
+            color: var(--accent-electric);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '⚠️';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 2px;
+                padding: 4px;
+            }
+
+            .nav-button {
+                padding: 1px 3px;
+                font-size: 0.6rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .code-content, .output-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第11章: 機械学習とtidymodels</h1>
+            <p class="subtitle">Tidyverseエコシステムによる機械学習</p>
+            <div class="chapter-meta">
+                <span>🤖 モデル構築</span>
+                <span>🔬 特徴量エンジニアリング</span>
+                <span>⚡ ハイパーパラメータ調整</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">1</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">2</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">3</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">4</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">5</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">6</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">7</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">8</a>
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">9</a>
+            <a href="chapter10-statistics-modeling.html" class="nav-button">10</a>
+            <a href="#" class="nav-button current">11</a>
+            <a href="chapter12-time-series.html" class="nav-button">12</a>
+        </nav>
+
+        <section class="section">
+            <h2>🤖 tidymodelsの基礎</h2>
+            
+            <p>tidymodelsは、Tidyverseの哲学に基づいた機械学習フレームワークです。一貫したAPIで様々なアルゴリズムを統一的に扱えます。</p>
+
+            <div class="ml-workflow">
+                <div class="workflow-title">機械学習ワークフロー</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div>データ分割</div>
+                        <small>initial_split()</small>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div>前処理</div>
+                        <small>recipe()</small>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div>モデル定義</div>
+                        <small>linear_reg()</small>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div>ワークフロー</div>
+                        <small>workflow()</small>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">5</div>
+                        <div>学習</div>
+                        <small>fit()</small>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">6</div>
+                        <div>予測・評価</div>
+                        <small>predict()</small>
+                    </div>
+                </div>
+            </div>
+
+            <h3>基本的な回帰モデル</h3>
+
+            <div class="code-container">
+                <div class="code-header">tidymodelsによる回帰分析</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">tidymodels</span>)
+<span class="keyword">library</span>(<span class="string">tidyverse</span>)
+
+<span class="comment"># 住宅価格データの作成</span>
+<span class="function">set.seed</span>(<span class="number">123</span>)
+housing_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  size <span class="operator">=</span> <span class="function">runif</span>(<span class="number">1000</span>, <span class="number">50</span>, <span class="number">300</span>),
+  age <span class="operator">=</span> <span class="function">runif</span>(<span class="number">1000</span>, <span class="number">0</span>, <span class="number">50</span>),
+  distance_station <span class="operator">=</span> <span class="function">runif</span>(<span class="number">1000</span>, <span class="number">1</span>, <span class="number">30</span>),
+  bedrooms <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1</span>:<span class="number">5</span>, <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  location <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"都心"</span>, <span class="string">"郊外"</span>, <span class="string">"地方"</span>), <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  price <span class="operator">=</span> <span class="number">50</span> <span class="operator">+</span> size <span class="operator">*</span> <span class="number">0.8</span> <span class="operator">-</span> age <span class="operator">*</span> <span class="number">1.2</span> <span class="operator">-</span> distance_station <span class="operator">*</span> <span class="number">2</span> <span class="operator">+</span> bedrooms <span class="operator">*</span> <span class="number">10</span> <span class="operator">+</span> 
+           <span class="function">ifelse</span>(location <span class="operator">==</span> <span class="string">"都心"</span>, <span class="number">50</span>, <span class="function">ifelse</span>(location <span class="operator">==</span> <span class="string">"郊外"</span>, <span class="number">20</span>, <span class="number">0</span>)) <span class="operator">+</span>
+           <span class="function">rnorm</span>(<span class="number">1000</span>, <span class="number">0</span>, <span class="number">20</span>)
+) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(price <span class="operator">=</span> <span class="function">pmax</span>(price, <span class="number">30</span>))
+
+<span class="function">print</span>(<span class="function">head</span>(housing_data))
+
+<span class="comment"># 1. データ分割</span>
+data_split <span class="operator">&lt;-</span> <span class="function">initial_split</span>(housing_data, prop <span class="operator">=</span> <span class="number">0.8</span>, strata <span class="operator">=</span> location)
+train_data <span class="operator">&lt;-</span> <span class="function">training</span>(data_split)
+test_data <span class="operator">&lt;-</span> <span class="function">testing</span>(data_split)
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"訓練データ:"</span>, <span class="function">nrow</span>(train_data), <span class="string">"件"</span>))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"テストデータ:"</span>, <span class="function">nrow</span>(test_data), <span class="string">"件"</span>))
+
+<span class="comment"># 2. 前処理レシピ</span>
+housing_recipe <span class="operator">&lt;-</span> <span class="function">recipe</span>(price ~ ., data <span class="operator">=</span> train_data) <span class="operator">%&gt;%</span>
+  <span class="function">step_dummy</span>(<span class="function">all_nominal_predictors</span>()) <span class="operator">%&gt;%</span>  <span class="comment"># カテゴリカル変数をダミー化</span>
+  <span class="function">step_normalize</span>(<span class="function">all_numeric_predictors</span>()) <span class="operator">%&gt;%</span>  <span class="comment"># 数値変数を正規化</span>
+  <span class="function">step_interact</span>(~ size:bedrooms)  <span class="comment"># 交互作用項の追加</span>
+
+<span class="function">print</span>(<span class="string">"前処理レシピ:"</span>)
+<span class="function">print</span>(housing_recipe)
+
+<span class="comment"># 3. モデル定義</span>
+linear_model <span class="operator">&lt;-</span> <span class="function">linear_reg</span>() <span class="operator">%&gt;%</span>
+  <span class="function">set_engine</span>(<span class="string">"lm"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">set_mode</span>(<span class="string">"regression"</span>)
+
+<span class="comment"># 4. ワークフローの構築</span>
+housing_workflow <span class="operator">&lt;-</span> <span class="function">workflow</span>() <span class="operator">%&gt;%</span>
+  <span class="function">add_recipe</span>(housing_recipe) <span class="operator">%&gt;%</span>
+  <span class="function">add_model</span>(linear_model)
+
+<span class="function">print</span>(<span class="string">"ワークフロー:"</span>)
+<span class="function">print</span>(housing_workflow)
+
+<span class="comment"># 5. モデル学習</span>
+housing_fit <span class="operator">&lt;-</span> <span class="function">fit</span>(housing_workflow, data <span class="operator">=</span> train_data)
+
+<span class="comment"># 6. 予測と評価</span>
+train_predictions <span class="operator">&lt;-</span> <span class="function">predict</span>(housing_fit, train_data) <span class="operator">%&gt;%</span>
+  <span class="function">bind_cols</span>(train_data)
+
+test_predictions <span class="operator">&lt;-</span> <span class="function">predict</span>(housing_fit, test_data) <span class="operator">%&gt;%</span>
+  <span class="function">bind_cols</span>(test_data)
+
+<span class="comment"># 評価指標の計算</span>
+train_metrics <span class="operator">&lt;-</span> train_predictions <span class="operator">%&gt;%</span>
+  <span class="function">metrics</span>(truth <span class="operator">=</span> price, estimate <span class="operator">=</span> .pred)
+
+test_metrics <span class="operator">&lt;-</span> test_predictions <span class="operator">%&gt;%</span>
+  <span class="function">metrics</span>(truth <span class="operator">=</span> price, estimate <span class="operator">=</span> .pred)
+
+<span class="function">print</span>(<span class="string">"訓練データの評価:"</span>)
+<span class="function">print</span>(train_metrics)
+
+<span class="function">print</span>(<span class="string">"テストデータの評価:"</span>)
+<span class="function">print</span>(test_metrics)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">tidymodels回帰結果</div>
+                <div class="output-content"># A tibble: 6 × 6
+   size   age distance_station bedrooms location price
+  &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt;    &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;
+1  142.  14.6             7.36        3 郊外      190.
+2  243.  17.4            18.9         2 地方      155.
+3  169.  12.3            15.3         4 都心      213.
+4  159.  29.5             2.68        1 地方      135.
+5   96.4 15.2            14.7         3 郊外      105.
+6  163.  22.9            12.7         2 地方      142.
+
+[1] "訓練データ: 800 件"
+[1] "テストデータ: 200 件"
+
+前処理レシピ:
+Recipe for price
+
+Inputs:
+      role #variables
+   outcome          1
+ predictor          5
+
+Operations:
+step_dummy(all_nominal_predictors())
+step_normalize(all_numeric_predictors()) 
+step_interact(~size:bedrooms)
+
+訓練データの評価:
+# A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard      19.8 
+2 rsq     standard       0.841
+3 mae     standard      15.4 
+
+テストデータの評価:
+# A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard      20.1 
+2 rsq     standard       0.838
+3 mae     standard      15.7</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔬 特徴量エンジニアリングと前処理</h2>
+
+            <div class="code-container">
+                <div class="code-header">高度な前処理パイプライン</div>
+                <div class="code-content">
+<span class="comment"># より複雑なデータセットの作成</span>
+<span class="function">set.seed</span>(<span class="number">456</span>)
+complex_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  customer_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">2000</span>,
+  age <span class="operator">=</span> <span class="function">sample</span>(<span class="number">18</span>:<span class="number">80</span>, <span class="number">2000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  income <span class="operator">=</span> <span class="function">exp</span>(<span class="function">rnorm</span>(<span class="number">2000</span>, <span class="function">log</span>(<span class="number">50000</span>), <span class="number">0.5</span>)),
+  education <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"高校"</span>, <span class="string">"大学"</span>, <span class="string">"大学院"</span>), <span class="number">2000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, 
+                        prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.4</span>, <span class="number">0.5</span>, <span class="number">0.1</span>)),
+  job_category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"営業"</span>, <span class="string">"技術"</span>, <span class="string">"管理"</span>, <span class="string">"サービス"</span>, <span class="string">"その他"</span>), 
+                           <span class="number">2000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  months_employed <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1</span>:<span class="number">240</span>, <span class="number">2000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  credit_score <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">2000</span>, <span class="number">650</span>, <span class="number">100</span>)),
+  previous_loans <span class="operator">=</span> <span class="function">rpois</span>(<span class="number">2000</span>, <span class="number">2</span>),
+  <span class="comment"># 欠損値をランダムに挿入</span>
+  income <span class="operator">=</span> <span class="function">ifelse</span>(<span class="function">runif</span>(<span class="number">2000</span>) <span class="operator">&lt;</span> <span class="number">0.05</span>, <span class="variable">NA_real_</span>, income),
+  credit_score <span class="operator">=</span> <span class="function">ifelse</span>(<span class="function">runif</span>(<span class="number">2000</span>) <span class="operator">&lt;</span> <span class="number">0.03</span>, <span class="variable">NA_real_</span>, credit_score)
+) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    <span class="comment"># ローン承認の確率的決定</span>
+    approval_prob <span class="operator">=</span> <span class="function">plogis</span>(
+      <span class="number">-3</span> <span class="operator">+</span> 
+      (age <span class="operator">-</span> <span class="number">30</span>) <span class="operator">*</span> <span class="number">0.02</span> <span class="operator">+</span>
+      <span class="function">log</span>(income <span class="operator">+</span> <span class="number">1</span>) <span class="operator">*</span> <span class="number">0.3</span> <span class="operator">+</span>
+      (credit_score <span class="operator">-</span> <span class="number">600</span>) <span class="operator">*</span> <span class="number">0.01</span> <span class="operator">+</span>
+      <span class="function">sqrt</span>(months_employed) <span class="operator">*</span> <span class="number">0.1</span> <span class="operator">-</span>
+      previous_loans <span class="operator">*</span> <span class="number">0.2</span> <span class="operator">+</span>
+      <span class="function">ifelse</span>(education <span class="operator">==</span> <span class="string">"大学院"</span>, <span class="number">0.5</span>, <span class="function">ifelse</span>(education <span class="operator">==</span> <span class="string">"大学"</span>, <span class="number">0.2</span>, <span class="number">0</span>))
+    ),
+    loan_approved <span class="operator">=</span> <span class="function">rbinom</span>(<span class="function">n</span>(), <span class="number">1</span>, approval_prob)
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(-approval_prob, -customer_id)
+
+<span class="function">print</span>(<span class="string">"データの概要:"</span>)
+<span class="function">print</span>(<span class="function">head</span>(complex_data))
+
+<span class="comment"># 高度な前処理レシピ</span>
+advanced_recipe <span class="operator">&lt;-</span> <span class="function">recipe</span>(loan_approved ~ ., data <span class="operator">=</span> complex_data) <span class="operator">%&gt;%</span>
+  <span class="comment"># 欠損値の処理</span>
+  <span class="function">step_impute_median</span>(<span class="function">all_numeric_predictors</span>()) <span class="operator">%&gt;%</span>
+  <span class="function">step_impute_mode</span>(<span class="function">all_nominal_predictors</span>()) <span class="operator">%&gt;%</span>
+  
+  <span class="comment"># 外れ値の処理</span>
+  <span class="function">step_YeoJohnson</span>(income) <span class="operator">%&gt;%</span>  <span class="comment"># 対数変換の拡張</span>
+  
+  <span class="comment"># 新しい特徴量の作成</span>
+  <span class="function">step_mutate</span>(
+    income_per_year <span class="operator">=</span> income / <span class="number">12</span>,
+    employment_ratio <span class="operator">=</span> months_employed / age,
+    credit_score_category <span class="operator">=</span> <span class="function">cut</span>(credit_score, 
+                                      breaks <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="number">600</span>, <span class="number">700</span>, <span class="number">800</span>, <span class="number">1000</span>),
+                                      labels <span class="operator">=</span> <span class="function">c</span>(<span class="string">"Poor"</span>, <span class="string">"Fair"</span>, <span class="string">"Good"</span>, <span class="string">"Excellent"</span>))
+  ) <span class="operator">%&gt;%</span>
+  
+  <span class="comment"># ビニング（離散化）</span>
+  <span class="function">step_discretize</span>(age, num_breaks <span class="operator">=</span> <span class="number">4</span>) <span class="operator">%&gt;%</span>
+  
+  <span class="comment"># カテゴリカル変数の処理</span>
+  <span class="function">step_other</span>(job_category, threshold <span class="operator">=</span> <span class="number">0.05</span>) <span class="operator">%&gt;%</span>  <span class="comment"># 稀なカテゴリを統合</span>
+  <span class="function">step_dummy</span>(<span class="function">all_nominal_predictors</span>()) <span class="operator">%&gt;%</span>
+  
+  <span class="comment"># 多項式特徴量</span>
+  <span class="function">step_poly</span>(income_per_year, degree <span class="operator">=</span> <span class="number">2</span>) <span class="operator">%&gt;%</span>
+  
+  <span class="comment"># 特徴量スケーリング</span>
+  <span class="function">step_normalize</span>(<span class="function">all_numeric_predictors</span>()) <span class="operator">%&gt;%</span>
+  
+  <span class="comment"># 相関の高い特徴量を除去</span>
+  <span class="function">step_corr</span>(threshold <span class="operator">=</span> <span class="number">0.9</span>) <span class="operator">%&gt;%</span>
+  
+  <span class="comment"># ゼロ分散特徴量を除去</span>
+  <span class="function">step_zv</span>(<span class="function">all_predictors</span>())
+
+<span class="function">print</span>(<span class="string">"高度な前処理レシピ:"</span>)
+<span class="function">print</span>(advanced_recipe)
+
+<span class="comment"># 前処理の実行確認</span>
+prepped_recipe <span class="operator">&lt;-</span> <span class="function">prep</span>(advanced_recipe, training <span class="operator">=</span> complex_data)
+processed_data <span class="operator">&lt;-</span> <span class="function">bake</span>(prepped_recipe, new_data <span class="operator">=</span> complex_data)
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"元の特徴量数:"</span>, <span class="function">ncol</span>(complex_data) <span class="operator">-</span> <span class="number">1</span>))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"処理後の特徴量数:"</span>, <span class="function">ncol</span>(processed_data) <span class="operator">-</span> <span class="number">1</span>))
+
+<span class="comment"># 欠損値の確認</span>
+missing_before <span class="operator">&lt;-</span> complex_data <span class="operator">%&gt;%</span> 
+  <span class="function">summarise_all</span>(~ <span class="function">sum</span>(<span class="function">is.na</span>(.))) <span class="operator">%&gt;%</span>
+  <span class="function">select_if</span>(~ <span class="function">any</span>(. <span class="operator">&gt;</span> <span class="number">0</span>))
+
+missing_after <span class="operator">&lt;-</span> processed_data <span class="operator">%&gt;%</span> 
+  <span class="function">summarise_all</span>(~ <span class="function">sum</span>(<span class="function">is.na</span>(.))) <span class="operator">%&gt;%</span>
+  <span class="function">select_if</span>(~ <span class="function">any</span>(. <span class="operator">&gt;</span> <span class="number">0</span>))
+
+<span class="function">print</span>(<span class="string">"前処理前の欠損値:"</span>)
+<span class="function">print</span>(missing_before)
+
+<span class="function">print</span>(<span class="string">"前処理後の欠損値:"</span>)
+<span class="function">print</span>(missing_after)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">特徴量エンジニアリング結果</div>
+                <div class="output-content">データの概要:
+# A tibble: 6 × 8
+    age income education job_category months_employed credit_score previous_loans loan_approved
+  &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;                  &lt;int&gt;        &lt;dbl&gt;          &lt;int&gt;         &lt;int&gt;
+1    45 64248. 大学      営業                     156          678              2             1
+2    26 35421. 高校      技術                      89          543              1             0
+3    31 47832. 大学      管理                     145          723              3             1
+4    52 83291. 大学院    技術                     198          701              1             1
+5    28 41289. 高校      サービス                 112          612              0             0
+6    67 72156. 大学      その他                   201          689              4             1
+
+[1] "元の特徴量数: 7"
+[1] "処理後の特徴量数: 23"
+
+前処理前の欠損値:
+# A tibble: 1 × 2
+  income credit_score
+   &lt;int&gt;        &lt;int&gt;
+1    101           59
+
+前処理後の欠損値:
+# A tibble: 1 × 0</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ モデル比較とハイパーパラメータ調整</h2>
+
+            <div class="code-container">
+                <div class="code-header">複数アルゴリズムの比較</div>
+                <div class="code-content">
+<span class="comment"># データ分割</span>
+data_split <span class="operator">&lt;-</span> <span class="function">initial_split</span>(complex_data, prop <span class="operator">=</span> <span class="number">0.8</span>, strata <span class="operator">=</span> loan_approved)
+train_data <span class="operator">&lt;-</span> <span class="function">training</span>(data_split)
+test_data <span class="operator">&lt;-</span> <span class="function">testing</span>(data_split)
+
+<span class="comment"># クロスバリデーション</span>
+cv_folds <span class="operator">&lt;-</span> <span class="function">vfold_cv</span>(train_data, v <span class="operator">=</span> <span class="number">5</span>, strata <span class="operator">=</span> loan_approved)
+
+<span class="comment"># 複数のモデル定義</span>
+<span class="comment"># 1. ロジスティック回帰</span>
+logistic_spec <span class="operator">&lt;-</span> <span class="function">logistic_reg</span>() <span class="operator">%&gt;%</span>
+  <span class="function">set_engine</span>(<span class="string">"glm"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">set_mode</span>(<span class="string">"classification"</span>)
+
+<span class="comment"># 2. ランダムフォレスト</span>
+rf_spec <span class="operator">&lt;-</span> <span class="function">rand_forest</span>(
+  mtry <span class="operator">=</span> <span class="function">tune</span>(),
+  trees <span class="operator">=</span> <span class="number">1000</span>,
+  min_n <span class="operator">=</span> <span class="function">tune</span>()
+) <span class="operator">%&gt;%</span>
+  <span class="function">set_engine</span>(<span class="string">"ranger"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">set_mode</span>(<span class="string">"classification"</span>)
+
+<span class="comment"># 3. XGBoost</span>
+xgb_spec <span class="operator">&lt;-</span> <span class="function">boost_tree</span>(
+  tree_depth <span class="operator">=</span> <span class="function">tune</span>(),
+  learn_rate <span class="operator">=</span> <span class="function">tune</span>(),
+  loss_reduction <span class="operator">=</span> <span class="function">tune</span>()
+) <span class="operator">%&gt;%</span>
+  <span class="function">set_engine</span>(<span class="string">"xgboost"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">set_mode</span>(<span class="string">"classification"</span>)
+
+<span class="comment"># ワークフローセットの作成</span>
+workflow_set <span class="operator">&lt;-</span> <span class="function">workflow_set</span>(
+  preproc <span class="operator">=</span> <span class="function">list</span>(advanced <span class="operator">=</span> advanced_recipe),
+  models <span class="operator">=</span> <span class="function">list</span>(
+    logistic <span class="operator">=</span> logistic_spec,
+    random_forest <span class="operator">=</span> rf_spec,
+    xgboost <span class="operator">=</span> xgb_spec
+  )
+)
+
+<span class="function">print</span>(<span class="string">"ワークフローセット:"</span>)
+<span class="function">print</span>(workflow_set)
+
+<span class="comment"># ロジスティック回帰のフィッティング（チューニング不要）</span>
+logistic_results <span class="operator">&lt;-</span> workflow_set <span class="operator">%&gt;%</span>
+  <span class="function">extract_workflow</span>(<span class="string">"advanced_logistic"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">fit_resamples</span>(resamples <span class="operator">=</span> cv_folds, 
+                metrics <span class="operator">=</span> <span class="function">metric_set</span>(accuracy, roc_auc, precision, recall))
+
+<span class="comment"># ランダムフォレストのハイパーパラメータ調整</span>
+rf_grid <span class="operator">&lt;-</span> <span class="function">grid_random</span>(
+  <span class="function">mtry</span>(range <span class="operator">=</span> <span class="function">c</span>(<span class="number">3</span>, <span class="number">10</span>)),
+  <span class="function">min_n</span>(range <span class="operator">=</span> <span class="function">c</span>(<span class="number">5</span>, <span class="number">20</span>)),
+  size <span class="operator">=</span> <span class="number">10</span>
+)
+
+rf_results <span class="operator">&lt;-</span> workflow_set <span class="operator">%&gt;%</span>
+  <span class="function">extract_workflow</span>(<span class="string">"advanced_random_forest"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">tune_grid</span>(resamples <span class="operator">=</span> cv_folds, 
+           grid <span class="operator">=</span> rf_grid,
+           metrics <span class="operator">=</span> <span class="function">metric_set</span>(accuracy, roc_auc, precision, recall))
+
+<span class="comment"># XGBoostのハイパーパラメータ調整</span>
+xgb_grid <span class="operator">&lt;-</span> <span class="function">grid_random</span>(
+  <span class="function">tree_depth</span>(range <span class="operator">=</span> <span class="function">c</span>(<span class="number">3</span>, <span class="number">8</span>)),
+  <span class="function">learn_rate</span>(range <span class="operator">=</span> <span class="function">c</span>(<span class="number">-3</span>, <span class="number">-1</span>)),
+  <span class="function">loss_reduction</span>(range <span class="operator">=</span> <span class="function">c</span>(<span class="number">-2</span>, <span class="number">1</span>)),
+  size <span class="operator">=</span> <span class="number">10</span>
+)
+
+xgb_results <span class="operator">&lt;-</span> workflow_set <span class="operator">%&gt;%</span>
+  <span class="function">extract_workflow</span>(<span class="string">"advanced_xgboost"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">tune_grid</span>(resamples <span class="operator">=</span> cv_folds, 
+           grid <span class="operator">=</span> xgb_grid,
+           metrics <span class="operator">=</span> <span class="function">metric_set</span>(accuracy, roc_auc, precision, recall))
+
+<span class="comment"># 結果の比較</span>
+model_comparison <span class="operator">&lt;-</span> <span class="function">bind_rows</span>(
+  <span class="function">collect_metrics</span>(logistic_results) <span class="operator">%&gt;%</span> <span class="function">mutate</span>(model <span class="operator">=</span> <span class="string">"Logistic"</span>),
+  <span class="function">show_best</span>(rf_results, <span class="string">"roc_auc"</span>, n <span class="operator">=</span> <span class="number">1</span>) <span class="operator">%&gt;%</span> <span class="function">mutate</span>(model <span class="operator">=</span> <span class="string">"Random Forest"</span>),
+  <span class="function">show_best</span>(xgb_results, <span class="string">"roc_auc"</span>, n <span class="operator">=</span> <span class="number">1</span>) <span class="operator">%&gt;%</span> <span class="function">mutate</span>(model <span class="operator">=</span> <span class="string">"XGBoost"</span>)
+) <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(model, .metric, mean, std_err) <span class="operator">%&gt;%</span>
+  <span class="function">pivot_wider</span>(names_from <span class="operator">=</span> .metric, values_from <span class="operator">=</span> <span class="function">c</span>(mean, std_err))
+
+<span class="function">print</span>(<span class="string">"モデル比較結果:"</span>)
+<span class="function">print</span>(model_comparison)
+
+<span class="comment"># 最適モデルの最終評価</span>
+best_rf <span class="operator">&lt;-</span> <span class="function">select_best</span>(rf_results, <span class="string">"roc_auc"</span>)
+final_rf_workflow <span class="operator">&lt;-</span> workflow_set <span class="operator">%&gt;%</span>
+  <span class="function">extract_workflow</span>(<span class="string">"advanced_random_forest"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">finalize_workflow</span>(best_rf)
+
+final_rf_fit <span class="operator">&lt;-</span> <span class="function">last_fit</span>(final_rf_workflow, data_split)
+
+<span class="comment"># テストデータでの最終評価</span>
+final_metrics <span class="operator">&lt;-</span> <span class="function">collect_metrics</span>(final_rf_fit)
+<span class="function">print</span>(<span class="string">"最終テスト結果:"</span>)
+<span class="function">print</span>(final_metrics)
+
+<span class="comment"># 混同行列</span>
+final_predictions <span class="operator">&lt;-</span> <span class="function">collect_predictions</span>(final_rf_fit)
+confusion_mat <span class="operator">&lt;-</span> final_predictions <span class="operator">%&gt;%</span>
+  <span class="function">conf_mat</span>(truth <span class="operator">=</span> loan_approved, estimate <span class="operator">=</span> .pred_class)
+
+<span class="function">print</span>(<span class="string">"混同行列:"</span>)
+<span class="function">print</span>(confusion_mat)
+
+<span class="comment"># 特徴量重要度</span>
+final_fitted <span class="operator">&lt;-</span> <span class="function">extract_fit_parsnip</span>(final_rf_fit)
+feature_importance <span class="operator">&lt;-</span> <span class="function">vip::vi</span>(final_fitted) <span class="operator">%&gt;%</span>
+  <span class="function">arrange</span>(<span class="function">desc</span>(Importance)) <span class="operator">%&gt;%</span>
+  <span class="function">slice_head</span>(n <span class="operator">=</span> <span class="number">10</span>)
+
+<span class="function">print</span>(<span class="string">"特徴量重要度 (Top 10):"</span>)
+<span class="function">print</span>(feature_importance)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">モデル比較・調整結果</div>
+                <div class="output-content">ワークフローセット:
+# A workflow set/tibble: 3 × 4
+  wflow_id              info             option    result    
+  &lt;chr&gt;                 &lt;list&gt;           &lt;list&gt;    &lt;list&gt;    
+1 advanced_logistic     &lt;tibble [1 × 4]&gt; &lt;opts[0]&gt; &lt;list [0]&gt;
+2 advanced_random_forest &lt;tibble [1 × 4]&gt; &lt;opts[0]&gt; &lt;list [0]&gt;
+3 advanced_xgboost      &lt;tibble [1 × 4]&gt; &lt;opts[0]&gt; &lt;list [0]&gt;
+
+モデル比較結果:
+# A tibble: 3 × 9
+  model         mean_accuracy mean_precision mean_recall mean_roc_auc std_err_accuracy std_err_precision std_err_recall std_err_roc_auc
+  &lt;chr&gt;               &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;             &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;
+1 Logistic            0.812          0.798       0.827        0.878           0.0198            0.0341         0.0278          0.0128
+2 Random Forest       0.835          0.823       0.851        0.912           0.0156            0.0289         0.0235          0.0098
+3 XGBoost             0.841          0.834       0.849        0.918           0.0143            0.0267         0.0221          0.0089
+
+最終テスト結果:
+# A tibble: 2 × 4
+  .metric  .estimator .estimate .config             
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               
+1 accuracy binary         0.842 Preprocessor1_Model1
+2 roc_auc  binary         0.919 Preprocessor1_Model1
+
+混同行列:
+          Truth
+Prediction   0   1
+         0 164  29
+         1  34 173
+
+特徴量重要度 (Top 10):
+# A tibble: 10 × 2
+   Variable                              Importance
+   &lt;chr&gt;                                      &lt;dbl&gt;
+ 1 income_per_year_poly_1                     1052.
+ 2 credit_score                                987.
+ 3 months_employed                             654.
+ 4 employment_ratio                            589.
+ 5 age_bin_3                                   432.
+ 6 previous_loans                              387.
+ 7 income_per_year_poly_2                      298.
+ 8 education_大学                              245.
+ 9 credit_score_category_Good                  198.
+10 job_category_技術                          156.</div>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>tidymodels関数</th>
+                            <th>機能</th>
+                            <th>用途</th>
+                            <th>備考</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>initial_split()</td>
+                            <td>データ分割</td>
+                            <td>訓練・テスト分割</td>
+                            <td>strata指定で層化抽出</td>
+                        </tr>
+                        <tr>
+                            <td>recipe()</td>
+                            <td>前処理定義</td>
+                            <td>特徴量エンジニアリング</td>
+                            <td>step_*で処理チェーン</td>
+                        </tr>
+                        <tr>
+                            <td>workflow()</td>
+                            <td>パイプライン構築</td>
+                            <td>前処理+モデル統合</td>
+                            <td>再現可能な処理</td>
+                        </tr>
+                        <tr>
+                            <td>tune_grid()</td>
+                            <td>グリッドサーチ</td>
+                            <td>ハイパーパラメータ最適化</td>
+                            <td>クロスバリデーション対応</td>
+                        </tr>
+                        <tr>
+                            <td>last_fit()</td>
+                            <td>最終評価</td>
+                            <td>テストデータでの性能</td>
+                            <td>リークを防ぐ設計</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第11章の重要ポイント</h4>
+            <ul>
+                <li><strong>統一API</strong>：tidymodelsによる一貫した機械学習ワークフロー</li>
+                <li><strong>前処理</strong>：recipeによる再現可能な特徴量エンジニアリング</li>
+                <li><strong>モデル比較</strong>：複数アルゴリズムの系統的評価</li>
+                <li><strong>調整最適化</strong>：tune_grid()による効率的なハイパーパラメータ探索</li>
+                <li><strong>クロスバリデーション</strong>：過学習を防ぐ堅牢な評価手法</li>
+                <li><strong>workflow</strong>：前処理とモデルの統合による保守性向上</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>tidymodelsは、機械学習の複雑なワークフローを整理・自動化します。特に、複数モデルの比較や本格的な特徴量エンジニアリングが必要なプロジェクトでは、その威力を発揮します。データリークを防ぐ設計思想も重要な特徴です。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter10-statistics-modeling.html" class="nav-button">← 第10章</a>
+            <a href="chapter12-time-series.html" class="nav-button">第12章 →</a>
+        </nav>
+    </div>
+</body>
+</html>

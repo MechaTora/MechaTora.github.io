@@ -20,16 +20,41 @@ class SocialInsuranceNewsApp:
     """Render版ニュースアプリ"""
     
     def __init__(self):
-        self.data_file = 'data/processed_news.json'
-        self.report_file = 'data/daily_report.json'
+        # 絶対パスを使用してファイル読み込みを確実にする
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.data_file = os.path.join(base_dir, 'data', 'processed_news.json')
+        self.report_file = os.path.join(base_dir, 'data', 'daily_report.json')
     
     def load_news_data(self):
         """ニュースデータ読み込み"""
         try:
+            print(f"データファイルパス: {self.data_file}")
+            print(f"ファイル存在チェック: {os.path.exists(self.data_file)}")
+            print(f"現在の作業ディレクトリ: {os.getcwd()}")
+            
             if os.path.exists(self.data_file):
                 with open(self.data_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            return {'news': [], 'total_count': 0, 'categories': {}}
+                    data = json.load(f)
+                print(f"データ読み込み成功: {len(data.get('news', []))}件")
+                return data
+            else:
+                print("データファイルが存在しません")
+                # フォールバック用のサンプルデータを提供
+                return {
+                    'news': [{
+                        'title': 'データ準備中',
+                        'url': '#',
+                        'source': 'システム',
+                        'category': 'その他', 
+                        'importance': '低',
+                        'summary': '現在ニュースデータを準備中です。しばらくお待ちください。',
+                        'keywords': ['準備中'],
+                        'published_date': datetime.now().strftime('%Y年%m月%d日'),
+                        'scraped_at': datetime.now().isoformat()
+                    }],
+                    'total_count': 1,
+                    'categories': {'その他': 1}
+                }
         except Exception as e:
             print(f"データ読み込みエラー: {e}")
             return {'news': [], 'total_count': 0, 'categories': {}}
@@ -48,19 +73,60 @@ class SocialInsuranceNewsApp:
     def update_news(self):
         """ニュース更新（手動実行用）"""
         try:
-            # メインの自動化スクリプトを実行
-            result = subprocess.run([sys.executable, 'scripts/main_automation.py'], 
+            # メインの自動化スクリプトを実行（絶対パス使用）
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            script_path = os.path.join(base_dir, 'scripts', 'main_automation.py')
+            print(f"自動化スクリプトパス: {script_path}")
+            print(f"スクリプト存在確認: {os.path.exists(script_path)}")
+            
+            result = subprocess.run([sys.executable, script_path], 
                                   capture_output=True, text=True, timeout=300)
             
+            print(f"スクリプト実行結果 - returncode: {result.returncode}")
+            print(f"stdout: {result.stdout}")
+            print(f"stderr: {result.stderr}")
+            
             if result.returncode == 0:
-                return {"status": "success", "message": "ニュース更新完了"}
+                return {
+                    "status": "success", 
+                    "message": "ニュース更新完了",
+                    "stdout": result.stdout,
+                    "debug_info": {
+                        "script_path": script_path,
+                        "script_exists": os.path.exists(script_path),
+                        "working_dir": os.getcwd()
+                    }
+                }
             else:
-                return {"status": "error", "message": f"更新エラー: {result.stderr}"}
+                return {
+                    "status": "error", 
+                    "message": f"更新エラー: returncode={result.returncode}",
+                    "stderr": result.stderr,
+                    "stdout": result.stdout,
+                    "debug_info": {
+                        "script_path": script_path,
+                        "script_exists": os.path.exists(script_path),
+                        "working_dir": os.getcwd(),
+                        "python_path": sys.executable
+                    }
+                }
                 
-        except subprocess.TimeoutExpired:
-            return {"status": "error", "message": "更新タイムアウト（5分）"}
+        except subprocess.TimeoutExpired as e:
+            return {
+                "status": "error", 
+                "message": "更新タイムアウト（5分）",
+                "error_details": str(e)
+            }
         except Exception as e:
-            return {"status": "error", "message": f"更新エラー: {str(e)}"}
+            return {
+                "status": "error", 
+                "message": f"更新エラー: {str(e)}",
+                "error_type": type(e).__name__,
+                "debug_info": {
+                    "script_path": script_path if 'script_path' in locals() else "未定義",
+                    "working_dir": os.getcwd()
+                }
+            }
 
 # アプリインスタンス
 news_app = SocialInsuranceNewsApp()

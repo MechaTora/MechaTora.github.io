@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第10章: 統計モデリング基礎 | Tidyverse完全マスター</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-magenta: #ff6b9d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-magenta);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 157, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-magenta);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-magenta);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-magenta);
+            border-color: var(--accent-magenta);
+            box-shadow: 0 0 6px var(--accent-magenta);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            margin: 30px 0;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--accent-magenta);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 2px 6px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 3px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-magenta);
+            color: var(--bg-primary);
+            box-shadow: 0 0 8px var(--accent-magenta);
+        }
+
+        /* Content Sections */
+        .section {
+            background: var(--bg-secondary);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-purple);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-magenta), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-magenta);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-magenta);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            margin: 20px 0;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-magenta);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.1);
+        }
+
+        .code-header {
+            background: var(--accent-magenta);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-header::before {
+            content: '📊';
+            font-size: 1.1rem;
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .operator { color: #f85149; }
+        .number { color: #79c0ff; }
+        .variable { color: #ffa657; }
+
+        /* Output Display */
+        .output-container {
+            margin: 20px 0;
+            background: #0a0e1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .output-header {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-header::before {
+            content: '📈';
+        }
+
+        .output-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-cyan);
+        }
+
+        /* Model Visualization */
+        .model-viz {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+            text-align: center;
+        }
+
+        .viz-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Data Tables */
+        .data-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-magenta);
+        }
+
+        th {
+            background: var(--accent-magenta);
+            color: var(--bg-primary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 107, 157, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-magenta);
+        }
+
+        .key-points h4 {
+            color: var(--accent-magenta);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '⚠️';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 3px;
+                padding: 6px;
+            }
+
+            .nav-button {
+                padding: 1px 4px;
+                font-size: 0.65rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .code-content, .output-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第10章: 統計モデリング基礎</h1>
+            <p class="subtitle">Tidyverseによる統計分析とモデル構築</p>
+            <div class="chapter-meta">
+                <span>📊 回帰分析</span>
+                <span>🔍 仮説検定</span>
+                <span>📈 モデル評価</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">1</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">2</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">3</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">4</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">5</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">6</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">7</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">8</a>
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">9</a>
+            <a href="#" class="nav-button current">10</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">11</a>
+            <a href="chapter12-time-series.html" class="nav-button">12</a>
+        </nav>
+
+        <section class="section">
+            <h2>📊 線形回帰分析の基礎</h2>
+            
+            <p>統計モデリングの基本となる線形回帰を、Tidyverseのbroomパッケージと組み合わせて効果的に実行する方法を学習します。</p>
+
+            <h3>単純線形回帰</h3>
+
+            <div class="code-container">
+                <div class="code-header">基本的な線形回帰モデル</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">tidyverse</span>)
+<span class="keyword">library</span>(<span class="string">broom</span>)
+<span class="keyword">library</span>(<span class="string">modelr</span>)
+
+<span class="comment"># サンプルデータの作成</span>
+<span class="function">set.seed</span>(<span class="number">123</span>)
+house_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  area <span class="operator">=</span> <span class="function">runif</span>(<span class="number">200</span>, <span class="number">50</span>, <span class="number">200</span>),  <span class="comment"># 面積（平方メートル）</span>
+  age <span class="operator">=</span> <span class="function">runif</span>(<span class="number">200</span>, <span class="number">0</span>, <span class="number">30</span>),     <span class="comment"># 築年数</span>
+  station_distance <span class="operator">=</span> <span class="function">runif</span>(<span class="number">200</span>, <span class="number">1</span>, <span class="number">20</span>),  <span class="comment"># 駅距離（分）</span>
+  price <span class="operator">=</span> <span class="number">30</span> <span class="operator">+</span> area <span class="operator">*</span> <span class="number">0.8</span> <span class="operator">-</span> age <span class="operator">*</span> <span class="number">2</span> <span class="operator">-</span> station_distance <span class="operator">*</span> <span class="number">1.5</span> <span class="operator">+</span> <span class="function">rnorm</span>(<span class="number">200</span>, <span class="number">0</span>, <span class="number">15</span>)
+) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(price <span class="operator">=</span> <span class="function">pmax</span>(price, <span class="number">20</span>))  <span class="comment"># 最低価格を20万円に設定</span>
+
+<span class="function">print</span>(<span class="function">head</span>(house_data))
+
+<span class="comment"># 面積と価格の単純線形回帰</span>
+simple_model <span class="operator">&lt;-</span> <span class="function">lm</span>(price ~ area, data <span class="operator">=</span> house_data)
+
+<span class="comment"># broomパッケージで結果を整理</span>
+model_summary <span class="operator">&lt;-</span> <span class="function">tidy</span>(simple_model)
+model_metrics <span class="operator">&lt;-</span> <span class="function">glance</span>(simple_model)
+model_predictions <span class="operator">&lt;-</span> <span class="function">augment</span>(simple_model)
+
+<span class="function">print</span>(<span class="string">"回帰係数:"</span>)
+<span class="function">print</span>(model_summary)
+
+<span class="function">print</span>(<span class="string">"モデル評価指標:"</span>)
+<span class="function">print</span>(model_metrics)
+
+<span class="comment"># 予測値と残差の分析</span>
+prediction_analysis <span class="operator">&lt;-</span> model_predictions <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(area, price, .fitted, .resid) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    abs_error <span class="operator">=</span> <span class="function">abs</span>(.resid),
+    percent_error <span class="operator">=</span> <span class="function">abs</span>(.resid) / price <span class="operator">*</span> <span class="number">100</span>
+  )
+
+<span class="function">print</span>(<span class="string">"予測分析（上位10件）:"</span>)
+<span class="function">print</span>(<span class="function">head</span>(prediction_analysis, <span class="number">10</span>))
+
+<span class="comment"># モデルの解釈</span>
+area_coefficient <span class="operator">&lt;-</span> model_summary$estimate[<span class="number">2</span>]
+r_squared <span class="operator">&lt;-</span> model_metrics$r.squared
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"面積1平方メートル増加あたりの価格上昇:"</span>, <span class="function">round</span>(area_coefficient, <span class="number">2</span>), <span class="string">"万円"</span>))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"決定係数 R²:"</span>, <span class="function">round</span>(r_squared, <span class="number">3</span>)))
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"面積で説明できる価格の変動:"</span>, <span class="function">round</span>(r_squared <span class="operator">*</span> <span class="number">100</span>, <span class="number">1</span>), <span class="string">"%"</span>))
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">単純線形回帰結果</div>
+                <div class="output-content"># A tibble: 6 × 4
+   area   age station_distance price
+  &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+1  142.  14.6             7.36  129.
+2  152.  17.4            18.9    99.0
+3  169.  12.3            15.3   109. 
+4  159.  29.5             2.68   70.9
+5  96.4  15.2            14.7    68.5
+6  163.  22.9            12.7    81.4
+
+回帰係数:
+# A tibble: 2 × 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)    28.1      4.22      6.66 2.33e-10
+2 area            0.793    0.0334   23.7  4.88e-56
+
+モデル評価指標:
+# A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC deviance df.residual nobs
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+1     0.740         0.738  15.1      562. 4.88e-56     1  -743. 1492. 1502.   45147.         198   200
+
+面積1平方メートル増加あたりの価格上昇: 0.79 万円
+決定係数 R²: 0.74
+面積で説明できる価格の変動: 74.0 %</div>
+            </div>
+
+            <h3>重回帰分析</h3>
+
+            <div class="code-container">
+                <div class="code-header">多変量回帰モデル</div>
+                <div class="code-content">
+<span class="comment"># 重回帰モデルの構築</span>
+multiple_model <span class="operator">&lt;-</span> <span class="function">lm</span>(price ~ area <span class="operator">+</span> age <span class="operator">+</span> station_distance, data <span class="operator">=</span> house_data)
+
+<span class="comment"># 結果の比較</span>
+multiple_summary <span class="operator">&lt;-</span> <span class="function">tidy</span>(multiple_model)
+multiple_metrics <span class="operator">&lt;-</span> <span class="function">glance</span>(multiple_model)
+
+<span class="function">print</span>(<span class="string">"重回帰係数:"</span>)
+<span class="function">print</span>(multiple_summary)
+
+<span class="function">print</span>(<span class="string">"重回帰評価指標:"</span>)
+<span class="function">print</span>(multiple_metrics)
+
+<span class="comment"># モデル比較</span>
+model_comparison <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  model <span class="operator">=</span> <span class="function">c</span>(<span class="string">"単純回帰"</span>, <span class="string">"重回帰"</span>),
+  r_squared <span class="operator">=</span> <span class="function">c</span>(model_metrics$r.squared, multiple_metrics$r.squared),
+  adj_r_squared <span class="operator">=</span> <span class="function">c</span>(model_metrics$adj.r.squared, multiple_metrics$adj.r.squared),
+  rmse <span class="operator">=</span> <span class="function">c</span>(model_metrics$sigma, multiple_metrics$sigma),
+  aic <span class="operator">=</span> <span class="function">c</span>(model_metrics$AIC, multiple_metrics$AIC)
+)
+
+<span class="function">print</span>(<span class="string">"モデル比較:"</span>)
+<span class="function">print</span>(model_comparison)
+
+<span class="comment"># 残差分析</span>
+multiple_predictions <span class="operator">&lt;-</span> <span class="function">augment</span>(multiple_model)
+
+residual_analysis <span class="operator">&lt;-</span> multiple_predictions <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    mean_residual <span class="operator">=</span> <span class="function">mean</span>(.resid),
+    sd_residual <span class="operator">=</span> <span class="function">sd</span>(.resid),
+    rmse <span class="operator">=</span> <span class="function">sqrt</span>(<span class="function">mean</span>(.resid^<span class="number">2</span>)),
+    mae <span class="operator">=</span> <span class="function">mean</span>(<span class="function">abs</span>(.resid)),
+    outliers_count <span class="operator">=</span> <span class="function">sum</span>(<span class="function">abs</span>(.resid) <span class="operator">&gt;</span> <span class="number">2</span> <span class="operator">*</span> <span class="function">sd</span>(.resid))
+  )
+
+<span class="function">print</span>(<span class="string">"残差統計:"</span>)
+<span class="function">print</span>(residual_analysis)
+
+<span class="comment"># 予測精度の比較</span>
+accuracy_comparison <span class="operator">&lt;-</span> house_data <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    simple_pred <span class="operator">=</span> <span class="function">predict</span>(simple_model, .),
+    multiple_pred <span class="operator">=</span> <span class="function">predict</span>(multiple_model, .),
+    simple_error <span class="operator">=</span> <span class="function">abs</span>(price <span class="operator">-</span> simple_pred),
+    multiple_error <span class="operator">=</span> <span class="function">abs</span>(price <span class="operator">-</span> multiple_pred)
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    simple_mae <span class="operator">=</span> <span class="function">mean</span>(simple_error),
+    multiple_mae <span class="operator">=</span> <span class="function">mean</span>(multiple_error),
+    improvement <span class="operator">=</span> (simple_mae <span class="operator">-</span> multiple_mae) / simple_mae <span class="operator">*</span> <span class="number">100</span>
+  )
+
+<span class="function">print</span>(<span class="string">"予測精度の改善:"</span>)
+<span class="function">print</span>(accuracy_comparison)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">重回帰分析結果</div>
+                <div class="output-content">重回帰係数:
+# A tibble: 4 × 5
+  term             estimate std.error statistic   p.value
+  &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)         30.2      2.93     10.3  2.40e-19
+2 area                 0.798    0.0200   39.9  1.47e-92
+3 age                 -1.98     0.0848  -23.4  1.02e-55
+4 station_distance    -1.50     0.0894  -16.8  1.18e-37
+
+モデル比較:
+# A tibble: 2 × 5
+  model    r_squared adj_r_squared  rmse   aic
+  &lt;chr&gt;        &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 単純回帰     0.740         0.738  15.1 1492.
+2 重回帰       0.969         0.968   5.26 1245.
+
+残差統計:
+# A tibble: 1 × 5
+  mean_residual sd_residual  rmse   mae outliers_count
+          &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;          &lt;int&gt;
+1      3.42e-16        5.24  5.24  4.19              7
+
+予測精度の改善:
+# A tibble: 1 × 3
+  simple_mae multiple_mae improvement
+       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+1       12.1         4.19        65.4</div>
+            </div>
+
+            <div class="model-viz">
+                <div class="viz-title">重回帰モデルの予測精度</div>
+                <svg width="600" height="300" viewBox="0 0 600 300">
+                    <!-- Background -->
+                    <rect width="600" height="300" fill="#1a1a1a" stroke="#ff6b9d" stroke-width="1"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="25" text-anchor="middle" fill="#ff6b9d" font-size="16" font-weight="bold">予測値 vs 実際値</text>
+                    
+                    <!-- Axes -->
+                    <line x1="80" y1="50" x2="80" y2="230" stroke="#333" stroke-width="1"/>
+                    <line x1="80" y1="230" x2="520" y2="230" stroke="#333" stroke-width="1"/>
+                    
+                    <!-- Perfect prediction line -->
+                    <line x1="80" y1="230" x2="520" y2="50" stroke="#00ff88" stroke-width="2" stroke-dasharray="5,5"/>
+                    
+                    <!-- Data points -->
+                    <circle cx="120" cy="180" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="140" cy="160" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="160" cy="140" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="180" cy="130" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="200" cy="120" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="220" cy="110" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="240" cy="105" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="260" cy="100" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="280" cy="95" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="300" cy="90" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="320" cy="85" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="340" cy="80" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="360" cy="75" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="380" cy="70" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="400" cy="65" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="420" cy="60" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="440" cy="58" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="460" cy="56" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="480" cy="54" r="3" fill="#00d4ff" opacity="0.7"/>
+                    <circle cx="500" cy="52" r="3" fill="#00d4ff" opacity="0.7"/>
+                    
+                    <!-- Labels -->
+                    <text x="300" y="255" text-anchor="middle" fill="#b3b3b3" font-size="12">予測値</text>
+                    <text x="40" y="140" text-anchor="middle" fill="#b3b3b3" font-size="12" transform="rotate(-90 40 140)">実際値</text>
+                    
+                    <!-- Legend -->
+                    <line x1="450" y1="70" x2="480" y2="70" stroke="#00ff88" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="485" y="75" fill="#b3b3b3" font-size="10">完全予測線</text>
+                    <circle cx="465" cy="85" r="3" fill="#00d4ff"/>
+                    <text x="475" y="90" fill="#b3b3b3" font-size="10">予測データ</text>
+                    
+                    <!-- R² value -->
+                    <text x="100" y="70" fill="#ff6b9d" font-size="14" font-weight="bold">R² = 0.969</text>
+                </svg>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔍 仮説検定とカテゴリカル分析</h2>
+
+            <div class="code-container">
+                <div class="code-header">t検定と分散分析</div>
+                <div class="code-content">
+<span class="comment"># 顧客満足度データの作成</span>
+<span class="function">set.seed</span>(<span class="number">456</span>)
+customer_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  customer_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">300</span>,
+  service_type <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"ベーシック"</span>, <span class="string">"プレミアム"</span>, <span class="string">"エンタープライズ"</span>), 
+                        <span class="number">300</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.5</span>, <span class="number">0.3</span>, <span class="number">0.2</span>)),
+  region <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"その他"</span>), <span class="number">300</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  satisfaction <span class="operator">=</span> <span class="function">case_when</span>(
+    service_type <span class="operator">==</span> <span class="string">"ベーシック"</span> ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">6.5</span>, <span class="number">1.2</span>),
+    service_type <span class="operator">==</span> <span class="string">"プレミアム"</span> ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">7.5</span>, <span class="number">1.0</span>),
+    service_type <span class="operator">==</span> <span class="string">"エンタープライズ"</span> ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">8.2</span>, <span class="number">0.8</span>)
+  ),
+  monthly_usage <span class="operator">=</span> <span class="function">case_when</span>(
+    service_type <span class="operator">==</span> <span class="string">"ベーシック"</span> ~ <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">15</span>),
+    service_type <span class="operator">==</span> <span class="string">"プレミアム"</span> ~ <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">25</span>),
+    service_type <span class="operator">==</span> <span class="string">"エンタープライズ"</span> ~ <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">40</span>)
+  )
+) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(satisfaction <span class="operator">=</span> <span class="function">pmax</span>(<span class="number">1</span>, <span class="function">pmin</span>(<span class="number">10</span>, satisfaction)))  <span class="comment"># 1-10の範囲に制限</span>
+
+<span class="comment"># 記述統計</span>
+descriptive_stats <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(service_type) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    count <span class="operator">=</span> <span class="function">n</span>(),
+    mean_satisfaction <span class="operator">=</span> <span class="function">mean</span>(satisfaction),
+    sd_satisfaction <span class="operator">=</span> <span class="function">sd</span>(satisfaction),
+    mean_usage <span class="operator">=</span> <span class="function">mean</span>(monthly_usage),
+    sd_usage <span class="operator">=</span> <span class="function">sd</span>(monthly_usage),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  )
+
+<span class="function">print</span>(<span class="string">"サービス別記述統計:"</span>)
+<span class="function">print</span>(descriptive_stats)
+
+<span class="comment"># t検定（2群比較）</span>
+basic_premium_test <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
+  <span class="function">filter</span>(service_type <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"ベーシック"</span>, <span class="string">"プレミアム"</span>)) <span class="operator">%&gt;%</span>
+  <span class="function">t.test</span>(satisfaction ~ service_type, data <span class="operator">=</span> .)
+
+<span class="function">print</span>(<span class="string">"ベーシック vs プレミアムのt検定:"</span>)
+<span class="function">print</span>(<span class="function">tidy</span>(basic_premium_test))
+
+<span class="comment"># 分散分析（ANOVA）</span>
+anova_model <span class="operator">&lt;-</span> <span class="function">aov</span>(satisfaction ~ service_type, data <span class="operator">=</span> customer_data)
+anova_results <span class="operator">&lt;-</span> <span class="function">tidy</span>(anova_model)
+
+<span class="function">print</span>(<span class="string">"サービス別満足度の分散分析:"</span>)
+<span class="function">print</span>(anova_results)
+
+<span class="comment"># 多重比較（Tukey HSD）</span>
+tukey_results <span class="operator">&lt;-</span> <span class="function">TukeyHSD</span>(anova_model)
+tukey_tidy <span class="operator">&lt;-</span> <span class="function">tidy</span>(tukey_results)
+
+<span class="function">print</span>(<span class="string">"多重比較結果:"</span>)
+<span class="function">print</span>(tukey_tidy)
+
+<span class="comment"># カイ二乗検定（地域とサービス種別の関連性）</span>
+contingency_table <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
+  <span class="function">count</span>(region, service_type) <span class="operator">%&gt;%</span>
+  <span class="function">pivot_wider</span>(names_from <span class="operator">=</span> service_type, values_from <span class="operator">=</span> n, values_fill <span class="operator">=</span> <span class="number">0</span>)
+
+<span class="function">print</span>(<span class="string">"地域別サービス利用状況:"</span>)
+<span class="function">print</span>(contingency_table)
+
+<span class="comment"># カイ二乗検定の実行</span>
+chi_square_test <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(region, service_type) <span class="operator">%&gt;%</span>
+  <span class="function">table</span>() <span class="operator">%&gt;%</span>
+  <span class="function">chisq.test</span>()
+
+<span class="function">print</span>(<span class="string">"カイ二乗検定結果:"</span>)
+<span class="function">print</span>(<span class="function">tidy</span>(chi_square_test))
+
+<span class="comment"># 効果量の計算（Cohen's d）</span>
+cohens_d_calculation <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
+  <span class="function">filter</span>(service_type <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"ベーシック"</span>, <span class="string">"プレミアム"</span>)) <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(service_type) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    mean_sat <span class="operator">=</span> <span class="function">mean</span>(satisfaction),
+    sd_sat <span class="operator">=</span> <span class="function">sd</span>(satisfaction),
+    n <span class="operator">=</span> <span class="function">n</span>(),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  )
+
+<span class="comment"># Cohen's dの手動計算</span>
+mean_diff <span class="operator">&lt;-</span> cohens_d_calculation$mean_sat[<span class="number">2</span>] <span class="operator">-</span> cohens_d_calculation$mean_sat[<span class="number">1</span>]
+pooled_sd <span class="operator">&lt;-</span> <span class="function">sqrt</span>(((cohens_d_calculation$n[<span class="number">1</span>] <span class="operator">-</span> <span class="number">1</span>) <span class="operator">*</span> cohens_d_calculation$sd_sat[<span class="number">1</span>]^<span class="number">2</span> <span class="operator">+</span> 
+                      (cohens_d_calculation$n[<span class="number">2</span>] <span class="operator">-</span> <span class="number">1</span>) <span class="operator">*</span> cohens_d_calculation$sd_sat[<span class="number">2</span>]^<span class="number">2</span>) /
+                     (cohens_d_calculation$n[<span class="number">1</span>] <span class="operator">+</span> cohens_d_calculation$n[<span class="number">2</span>] <span class="operator">-</span> <span class="number">2</span>))
+cohens_d <span class="operator">&lt;-</span> mean_diff / pooled_sd
+
+<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"Cohen's d (ベーシック vs プレミアム):"</span>, <span class="function">round</span>(cohens_d, <span class="number">3</span>)))
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">仮説検定結果</div>
+                <div class="output-content">サービス別記述統計:
+# A tibble: 3 × 6
+  service_type    count mean_satisfaction sd_satisfaction mean_usage sd_usage
+  &lt;chr&gt;           &lt;int&gt;              &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+1 エンタープライズ   60               8.21           0.788       40.1     6.15
+2 ベーシック       147               6.49           1.17        15.0     3.82
+3 プレミアム        93               7.51           0.975       25.1     4.93
+
+ベーシック vs プレミアムのt検定:
+# A tibble: 1 × 10
+  estimate estimate1 estimate2 statistic  p.value parameter conf.low conf.high method                  alternative
+     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                   &lt;chr&gt;      
+1    -1.02      6.49      7.51     -7.56 4.01e-13      217.    -1.29    -0.760 Welch Two Sample t-test two.sided  
+
+サービス別満足度の分散分析:
+# A tibble: 2 × 6
+  term         df sumsq meansq statistic   p.value
+  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 service_type     2  89.9   45.0      39.8  2.78e-16
+2 Residuals      297 335.    1.13      NA   NA      
+
+多重比較結果:
+# A tibble: 3 × 7
+  term         contrast                    null.value estimate conf.low conf.high adj.p.value
+  &lt;chr&gt;        &lt;chr&gt;                            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 service_type ベーシック-エンタープライズ           0    -1.72    -2.05     -1.39    6.88e-16
+2 service_type プレミアム-エンタープライズ           0    -0.701   -1.09     -0.312   2.39e- 4
+3 service_type プレミアム-ベーシック                 0     1.02     0.745     1.30    2.95e-11
+
+Cohen's d (ベーシック vs プレミアム): 0.949</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📈 ロジスティック回帰とモデル評価</h2>
+
+            <div class="code-container">
+                <div class="code-header">顧客離脱予測モデル</div>
+                <div class="code-content">
+<span class="comment"># 顧客離脱データの作成</span>
+<span class="function">set.seed</span>(<span class="number">789</span>)
+churn_data <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    contract_length <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1</span>:<span class="number">36</span>, <span class="function">n</span>(), replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+    support_calls <span class="operator">=</span> <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">2</span>),
+    <span class="comment"># 離脱確率を複数要因で決定</span>
+    churn_prob <span class="operator">=</span> <span class="function">plogis</span>(
+      <span class="number">-2</span> <span class="operator">+</span> 
+      <span class="function">ifelse</span>(service_type <span class="operator">==</span> <span class="string">"ベーシック"</span>, <span class="number">1</span>, <span class="number">0</span>) <span class="operator">+</span>
+      (<span class="number">10</span> <span class="operator">-</span> satisfaction) <span class="operator">*</span> <span class="number">0.3</span> <span class="operator">+</span>
+      support_calls <span class="operator">*</span> <span class="number">0.2</span> <span class="operator">-</span>
+      contract_length <span class="operator">*</span> <span class="number">0.05</span>
+    ),
+    churned <span class="operator">=</span> <span class="function">rbinom</span>(<span class="function">n</span>(), <span class="number">1</span>, churn_prob)
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(-churn_prob)
+
+<span class="comment"># 離脱率の確認</span>
+churn_summary <span class="operator">&lt;-</span> churn_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(service_type) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    total_customers <span class="operator">=</span> <span class="function">n</span>(),
+    churned_customers <span class="operator">=</span> <span class="function">sum</span>(churned),
+    churn_rate <span class="operator">=</span> <span class="function">mean</span>(churned),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  )
+
+<span class="function">print</span>(<span class="string">"サービス別離脱率:"</span>)
+<span class="function">print</span>(churn_summary)
+
+<span class="comment"># ロジスティック回帰モデル</span>
+logistic_model <span class="operator">&lt;-</span> <span class="function">glm</span>(
+  churned ~ satisfaction <span class="operator">+</span> monthly_usage <span class="operator">+</span> support_calls <span class="operator">+</span> contract_length <span class="operator">+</span> service_type,
+  data <span class="operator">=</span> churn_data,
+  family <span class="operator">=</span> <span class="function">binomial</span>()
+)
+
+<span class="comment"># モデル結果の整理</span>
+logistic_summary <span class="operator">&lt;-</span> <span class="function">tidy</span>(logistic_model, exponentiate <span class="operator">=</span> <span class="variable">TRUE</span>)
+logistic_metrics <span class="operator">&lt;-</span> <span class="function">glance</span>(logistic_model)
+
+<span class="function">print</span>(<span class="string">"ロジスティック回帰結果（オッズ比）:"</span>)
+<span class="function">print</span>(logistic_summary)
+
+<span class="comment"># 予測と評価</span>
+predictions <span class="operator">&lt;-</span> churn_data <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    predicted_prob <span class="operator">=</span> <span class="function">predict</span>(logistic_model, type <span class="operator">=</span> <span class="string">"response"</span>),
+    predicted_class <span class="operator">=</span> <span class="function">ifelse</span>(predicted_prob <span class="operator">&gt;</span> <span class="number">0.5</span>, <span class="number">1</span>, <span class="number">0</span>)
+  )
+
+<span class="comment"># 混同行列</span>
+confusion_matrix <span class="operator">&lt;-</span> predictions <span class="operator">%&gt;%</span>
+  <span class="function">count</span>(churned, predicted_class) <span class="operator">%&gt;%</span>
+  <span class="function">pivot_wider</span>(names_from <span class="operator">=</span> predicted_class, values_from <span class="operator">=</span> n, values_fill <span class="operator">=</span> <span class="number">0</span>) <span class="operator">%&gt;%</span>
+  <span class="function">rename</span>(predicted_0 <span class="operator">=</span> <span class="string">"0"</span>, predicted_1 <span class="operator">=</span> <span class="string">"1"</span>)
+
+<span class="function">print</span>(<span class="string">"混同行列:"</span>)
+<span class="function">print</span>(confusion_matrix)
+
+<span class="comment"># モデル評価指標</span>
+TP <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">1</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_1)
+TN <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">0</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_0)
+FP <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">0</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_1)
+FN <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">1</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_0)
+
+model_evaluation <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  metric <span class="operator">=</span> <span class="function">c</span>(<span class="string">"Accuracy"</span>, <span class="string">"Precision"</span>, <span class="string">"Recall"</span>, <span class="string">"F1-Score"</span>, <span class="string">"Specificity"</span>),
+  value <span class="operator">=</span> <span class="function">c</span>(
+    (TP <span class="operator">+</span> TN) / (TP <span class="operator">+</span> TN <span class="operator">+</span> FP <span class="operator">+</span> FN),  <span class="comment"># Accuracy</span>
+    TP / (TP <span class="operator">+</span> FP),                      <span class="comment"># Precision</span>
+    TP / (TP <span class="operator">+</span> FN),                      <span class="comment"># Recall</span>
+    <span class="number">2</span> <span class="operator">*</span> (TP / (TP <span class="operator">+</span> FP)) <span class="operator">*</span> (TP / (TP <span class="operator">+</span> FN)) / ((TP / (TP <span class="operator">+</span> FP)) <span class="operator">+</span> (TP / (TP <span class="operator">+</span> FN))),  <span class="comment"># F1</span>
+    TN / (TN <span class="operator">+</span> FP)                       <span class="comment"># Specificity</span>
+  )
+)
+
+<span class="function">print</span>(<span class="string">"モデル評価指標:"</span>)
+<span class="function">print</span>(model_evaluation)
+
+<span class="comment"># 特徴量重要度（オッズ比の解釈）</span>
+feature_importance <span class="operator">&lt;-</span> logistic_summary <span class="operator">%&gt;%</span>
+  <span class="function">filter</span>(term <span class="operator">!=</span> <span class="string">"(Intercept)"</span>) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    importance <span class="operator">=</span> <span class="function">abs</span>(<span class="function">log</span>(estimate)),
+    direction <span class="operator">=</span> <span class="function">ifelse</span>(estimate <span class="operator">&gt;</span> <span class="number">1</span>, <span class="string">"離脱促進"</span>, <span class="string">"離脱抑制"</span>)
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">arrange</span>(<span class="function">desc</span>(importance))
+
+<span class="function">print</span>(<span class="string">"特徴量重要度:"</span>)
+<span class="function">print</span>(feature_importance)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">ロジスティック回帰結果</div>
+                <div class="output-content">サービス別離脱率:
+# A tibble: 3 × 4
+  service_type     total_customers churned_customers churn_rate
+  &lt;chr&gt;                      &lt;int&gt;             &lt;int&gt;      &lt;dbl&gt;
+1 エンタープライズ              60                 4     0.0667
+2 ベーシック                  147                45     0.306 
+3 プレミアム                   93                17     0.183 
+
+ロジスティック回帰結果（オッズ比）:
+# A tibble: 6 × 5
+  term                        estimate std.error statistic  p.value
+  &lt;chr&gt;                          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)                  125.       1.30      4.83  1.37e- 6
+2 satisfaction                   0.478    0.175    -4.02  5.84e- 5
+3 monthly_usage                  0.987    0.0245   -0.538 5.91e- 1
+4 support_calls                  1.23     0.152     1.37  1.70e- 1
+5 contract_length                0.944    0.0285   -2.03  4.23e- 2
+6 service_typeプレミアム         0.548    0.374    -1.61  1.07e- 1
+
+混同行列:
+# A tibble: 2 × 3
+  churned predicted_0 predicted_1
+    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+1       0         220          14
+2       1          40          26
+
+モデル評価指標:
+# A tibble: 5 × 2
+  metric      value
+  &lt;chr&gt;       &lt;dbl&gt;
+1 Accuracy    0.820
+2 Precision   0.650
+3 Recall      0.394
+4 F1-Score    0.491
+5 Specificity 0.940</div>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>統計手法</th>
+                            <th>用途</th>
+                            <th>前提条件</th>
+                            <th>Tidyverse関数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>線形回帰</td>
+                            <td>連続値予測</td>
+                            <td>線形関係、正規分布残差</td>
+                            <td>lm() + broom::tidy()</td>
+                        </tr>
+                        <tr>
+                            <td>ロジスティック回帰</td>
+                            <td>分類問題</td>
+                            <td>独立性、多重共線性なし</td>
+                            <td>glm(family=binomial)</td>
+                        </tr>
+                        <tr>
+                            <td>t検定</td>
+                            <td>2群比較</td>
+                            <td>正規分布、等分散性</td>
+                            <td>t.test() + broom::tidy()</td>
+                        </tr>
+                        <tr>
+                            <td>ANOVA</td>
+                            <td>多群比較</td>
+                            <td>正規分布、等分散性</td>
+                            <td>aov() + broom::tidy()</td>
+                        </tr>
+                        <tr>
+                            <td>カイ二乗検定</td>
+                            <td>関連性検定</td>
+                            <td>期待度数≥5</td>
+                            <td>chisq.test() + tidy()</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第10章の重要ポイント</h4>
+            <ul>
+                <li><strong>broom統合</strong>：tidy(), glance(), augment()でモデル結果を整理</li>
+                <li><strong>回帰分析</strong>：線形・ロジスティック回帰による予測モデル構築</li>
+                <li><strong>仮説検定</strong>：t検定、ANOVA、カイ二乗検定による統計的推論</li>
+                <li><strong>モデル評価</strong>：精度、再現率、F1スコア等の包括的評価</li>
+                <li><strong>効果量</strong>：統計的有意性と実際的意義の両面評価</li>
+                <li><strong>予測精度</strong>：残差分析と交差検証による予測性能向上</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>統計モデリングでは、データの前処理と仮定の確認が極めて重要です。broomパッケージを活用することで、複数モデルの比較や結果の可視化が効率的に行えます。また、業務での意思決定には統計的有意性だけでなく効果量も考慮しましょう。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">← 第9章</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">第11章 →</a>
+        </nav>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第1章: Tidyverse概要とインストール | TIDYVERSE/TIDYMODELS</title>
+    <meta name="description" content="Tidyverseエコシステムの全体像を把握。データサイエンスの哲学、Tidy Dataの原則、パッケージのインストール方法を学習。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* CYBERPUNK NEON PALETTE */
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-lime: #39ff14;
+            --neon-orange: #ff6600;
+            --electric-blue: #0080ff;
+            --plasma-purple: #8000ff;
+            
+            /* DARK MATRIX BACKGROUNDS */
+            --void-black: #000000;
+            --deep-space: #0a0a0f;
+            --matrix-dark: #0d1117;
+            --carbon-grey: #161b22;
+            --terminal-green: #0dff00;
+            
+            /* HOLOGRAPHIC GRADIENTS */
+            --gradient-cyber: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            --gradient-matrix: linear-gradient(135deg, #0dff00 0%, #00ffff 50%, #8000ff 100%);
+            --gradient-plasma: linear-gradient(135deg, #ff6600 0%, #ff00ff 50%, #8000ff 100%);
+            --gradient-neural: linear-gradient(135deg, #0080ff 0%, #00ffff 25%, #39ff14 50%, #ffff00 75%, #ff6600 100%);
+            
+            /* GLASS MORPHISM */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 255, 255, 0.15);
+            
+            /* TYPOGRAPHY */
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-tech: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+            
+            /* SHADOWS & GLOWS */
+            --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            --text-glow: 0 0 10px currentColor;
+            --box-glow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-ui);
+            background: var(--void-black);
+            color: var(--neon-cyan);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        
+        /* ANIMATED BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2300ffff' fill-opacity='0.02'%3E%3Cpath d='M30 30h30v30H30V30zm15 15v15h15V45H45z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: matrixScroll 20s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        @keyframes matrixScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
+        
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .logo {
+            font-family: var(--font-mono);
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-shadow: var(--text-glow);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-family: var(--font-tech);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-cyber);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: var(--text-glow);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* MAIN CONTENT */
+        main {
+            margin-top: 100px;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* CHAPTER HEADER */
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+        
+        .chapter-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.6));
+            animation: iconFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chapter-number {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            color: rgba(0, 255, 255, 0.7);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+        
+        .chapter-title {
+            font-family: var(--font-tech);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient-neural);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .chapter-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* CONTENT SECTIONS */
+        .content-section {
+            margin-bottom: 4rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .content-section:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: var(--box-glow);
+        }
+        
+        .section-title {
+            font-family: var(--font-tech);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--neon-cyan);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 60%;
+            background: var(--gradient-cyber);
+            border-radius: 3px;
+        }
+        
+        .section-content {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content ul, .section-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content li {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        
+        .section-content ul li::before {
+            content: '▶';
+            color: var(--neon-cyan);
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+        }
+        
+        /* CODE BLOCKS */
+        .code-block {
+            background: var(--matrix-dark);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 15px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .code-header {
+            background: var(--carbon-grey);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #28ca42; }
+        
+        .code-title {
+            font-family: var(--font-mono);
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .code-content {
+            padding: 2rem;
+            font-family: var(--font-mono);
+            color: var(--terminal-green);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .code-comment { color: #6a9955; }
+        .code-function { color: var(--neon-magenta); }
+        .code-string { color: var(--neon-orange); }
+        .code-keyword { color: var(--electric-blue); }
+        .code-variable { color: var(--neon-cyan); }
+        .code-output { color: rgba(255, 255, 255, 0.8); }
+        
+        /* CONCEPT CARDS */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .concept-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-neural);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .concept-card:hover {
+            border-color: var(--neon-cyan);
+            transform: translateY(-5px);
+            box-shadow: var(--box-glow);
+        }
+        
+        .concept-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .concept-title {
+            font-family: var(--font-tech);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--neon-cyan);
+            margin-bottom: 1rem;
+        }
+        
+        .concept-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        /* NAVIGATION BUTTONS */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin: 4rem auto 2rem auto;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            max-width: 700px;
+            width: fit-content;
+            box-sizing: border-box;
+        }
+        
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--gradient-cyber);
+            color: var(--void-black);
+            text-decoration: none;
+            border-radius: 12px;
+            font-family: var(--font-tech);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            min-width: 0;
+            flex: 0 1 auto;
+        }
+        
+        .nav-btn:first-child {
+            margin-right: auto;
+        }
+        
+        .nav-btn:last-child {
+            margin-left: auto;
+        }
+        
+        .chapter-progress {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin: 0 1rem;
+            min-width: 120px;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+        
+        .nav-btn.disabled {
+            background: var(--carbon-grey);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .nav-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                gap: 0.8rem;
+                font-size: 0.85rem;
+                justify-content: center;
+            }
+            
+            main {
+                padding: 1rem;
+                margin-top: 80px;
+            }
+            
+            .content-section {
+                padding: 2rem;
+            }
+            
+            .section-title::before {
+                display: none;
+            }
+            
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                padding: 1rem;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 250px;
+                margin: 0 auto !important;
+            }
+            
+            .nav-btn:first-child,
+            .nav-btn:last-child {
+                margin: 0 auto !important;
+            }
+            
+            .chapter-progress {
+                order: 1;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* SCROLL ANIMATIONS */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="tidyverse-prototype.html" class="logo">TIDYVERSE</a>
+            <ul class="nav-links">
+                <li><a href="tidyverse-prototype.html">HOME</a></li>
+                <li><a href="#overview">概要</a></li>
+                <li><a href="#pipes">パイプ演算子</a></li>
+                <li><a href="#philosophy">哲学</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <!-- Chapter Header -->
+            <header class="chapter-header fade-in-up">
+                <img src="https://tidyverse.tidyverse.org/logo.png" alt="Tidyverse" class="chapter-icon">
+                <div class="chapter-number">CHAPTER 01</div>
+                <h1 class="chapter-title">Tidyverse概要とインストール</h1>
+                <p class="chapter-description">
+                    Tidyverseエコシステムの全体像を把握し、データサイエンスの哲学、Tidy Dataの原則、パッケージのインストール方法を学び、美しいデータ分析の第一歩を踏み出す。
+                </p>
+            </header>
+            
+            <!-- Tidyverse Overview -->
+            <section class="content-section fade-in-up" id="overview">
+                <h2 class="section-title">Tidyverseとは何か？</h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Tidyverse</strong>は、データサイエンスのワークフロー全体を統一的な文法で扱うためのRパッケージ群です。Hadley Wickhamを中心とした開発チームにより設計され、データの取り込み、整理、変換、可視化、モデリングを一貫した哲学の下で実行できます。
+                    </p>
+                    
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h3 class="concept-title">🧬 統一された文法</h3>
+                            <p class="concept-description">
+                                すべてのパッケージが共通の設計原則に従っているため、一度学習すれば他のパッケージも直感的に使用できます。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">🔗 シームレスな連携</h3>
+                            <p class="concept-description">
+                                パイプ演算子（%>%）により、データ処理の各ステップを読みやすく、保守しやすい形で記述できます。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">📊 包括的なエコシステム</h3>
+                            <p class="concept-description">
+                                データ分析の全工程をカバーする20を超えるパッケージが統合され、一つのメタパッケージとして提供されています。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Tidyverseの核となる思想は<strong>「Tidy Data」</strong>の概念です。これは、データを分析しやすい形に整理するための明確な原則を提供し、データサイエンスの生産性を劇的に向上させます。
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Pipe Operator Deep Dive -->
+            <section class="content-section fade-in-up" id="pipes">
+                <h2 class="section-title">パイプ演算子 %>% の魔法</h2>
+                <div class="section-content">
+                    <p>
+                        パイプ演算子 <code>%>%</code> は、Tidyverseの中核をなす革命的な機能です。複雑なデータ処理を読みやすく、理解しやすいコードで表現することを可能にし、データサイエンスの生産性を劇的に向上させます。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">パイプ演算子とは？</h3>
+                    <p>
+                        パイプ演算子は、<strong>「左側の結果を右側の関数の第一引数として渡す」</strong>という単純な機能です。しかし、この単純な機能により、データ処理の流れを自然な言語のように記述できるようになります。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pipe_basics.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 従来の書き方（入れ子関数）</span></span>
+                            <span class="code-line"><span class="code-variable">result_old</span> <span class="code-keyword">&lt;-</span> <span class="code-function">round</span>(<span class="code-function">mean</span>(<span class="code-function">sqrt</span>(<span class="code-function">c</span>(<span class="code-string">1, 4, 9, 16, 25</span>))), <span class="code-string">2</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># パイプを使った書き方（読みやすい）</span></span>
+                            <span class="code-line"><span class="code-variable">result_new</span> <span class="code-keyword">&lt;-</span> <span class="code-function">c</span>(<span class="code-string">1, 4, 9, 16, 25</span>) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">sqrt</span>() <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mean</span>() <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">round</span>(<span class="code-string">2</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 両方とも同じ結果: 3</span></span>
+                            <span class="code-line"><span class="code-output">result_old == result_new  # TRUE</span></span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">パイプの利点</h3>
+                    
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h3 class="concept-title">📖 可読性の向上</h3>
+                            <p class="concept-description">
+                                処理の流れが左から右、上から下へと自然に読める形になり、コードの意図が理解しやすくなります。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">🔧 保守性の向上</h3>
+                            <p class="concept-description">
+                                各ステップが独立しているため、処理の追加・削除・変更が容易になります。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">🚀 開発効率の向上</h3>
+                            <p class="concept-description">
+                                中間変数を作る必要がなく、メモリ効率も良く、デバッグも簡単になります。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">実践的なパイプ使用例</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pipe_examples.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># サンプルデータの作成</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-variable">sales_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  date = <span class="code-function">seq</span>(<span class="code-function">as.Date</span>(<span class="code-string">"2023-01-01"</span>), <span class="code-function">as.Date</span>(<span class="code-string">"2023-12-31"</span>), by = <span class="code-string">"day"</span>),</span>
+                            <span class="code-line">  product = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"A"</span>, <span class="code-string">"B"</span>, <span class="code-string">"C"</span>), <span class="code-string">365</span>, replace = <span class="code-string">TRUE</span>),</span>
+                            <span class="code-line">  sales = <span class="code-function">rnorm</span>(<span class="code-string">365</span>, mean = <span class="code-string">1000</span>, sd = <span class="code-string">200</span>),</span>
+                            <span class="code-line">  region = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"East"</span>, <span class="code-string">"West"</span>, <span class="code-string">"North"</span>, <span class="code-string">"South"</span>), <span class="code-string">365</span>, replace = <span class="code-string">TRUE</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># パイプを使った複雑なデータ分析</span></span>
+                            <span class="code-line"><span class="code-variable">monthly_summary</span> <span class="code-keyword">&lt;-</span> sales_data <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 1. 月情報を追加</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(month = <span class="code-function">month</span>(date, label = <span class="code-string">TRUE</span>)) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 2. 売上が500以上のデータのみ抽出</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(sales >= <span class="code-string">500</span>) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 3. 月と商品でグループ化</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(month, product) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 4. 統計サマリーを計算</span></span>
+                            <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                            <span class="code-line">    total_sales = <span class="code-function">sum</span>(sales),</span>
+                            <span class="code-line">    avg_sales = <span class="code-function">mean</span>(sales),</span>
+                            <span class="code-line">    count = <span class="code-function">n</span>(),</span>
+                            <span class="code-line">    .groups = <span class="code-string">"drop"</span></span>
+                            <span class="code-line">  ) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 5. 売上合計の降順でソート</span></span>
+                            <span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(total_sales)) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-comment"># 6. 上位10件のみ表示</span></span>
+                            <span class="code-line">  <span class="code-function">slice_head</span>(n = <span class="code-string">10</span>)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">パイプのコツとベストプラクティス</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pipe_best_practices.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># ✅ 良い例: 各ステップが明確</span></span>
+                            <span class="code-line"><span class="code-variable">good_example</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(cyl >= <span class="code-string">6</span>) <span class="code-keyword">%>%</span>                    <span class="code-comment"># 6気筒以上を抽出</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(efficiency = mpg / hp) <span class="code-keyword">%>%</span>      <span class="code-comment"># 効率指標を計算</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(cyl) <span class="code-keyword">%>%</span>                     <span class="code-comment"># 気筒数でグループ化</span></span>
+                            <span class="code-line">  <span class="code-function">summarise</span>(                           <span class="code-comment"># 統計サマリー</span></span>
+                            <span class="code-line">    avg_mpg = <span class="code-function">mean</span>(mpg),</span>
+                            <span class="code-line">    avg_efficiency = <span class="code-function">mean</span>(efficiency),</span>
+                            <span class="code-line">    count = <span class="code-function">n</span>(),</span>
+                            <span class="code-line">    .groups = <span class="code-string">"drop"</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 💡 プレースホルダー「.」の使用</span></span>
+                            <span class="code-line"><span class="code-variable">advanced_example</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(mpg > <span class="code-function">mean</span>(.$mpg)) <span class="code-keyword">%>%</span>         <span class="code-comment"># プレースホルダーで参照</span></span>
+                            <span class="code-line">  <span class="code-function">lm</span>(mpg ~ wt + hp, data = .) <span class="code-keyword">%>%</span>         <span class="code-comment"># 回帰分析の実行</span></span>
+                            <span class="code-line">  <span class="code-function">summary</span>() <span class="code-keyword">%>%</span>                         <span class="code-comment"># 結果の要約</span></span>
+                            <span class="code-line">  <span class="code-function">.$coefficients</span>                      <span class="code-comment"># 係数の抽出</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 🔍 デバッグのテクニック</span></span>
+                            <span class="code-line"><span class="code-variable">debug_example</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(cyl == <span class="code-string">6</span>) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  {<span class="code-function">print</span>(<span class="code-function">nrow</span>(.)); .} <span class="code-keyword">%>%</span>             <span class="code-comment"># 中間結果を確認</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(ratio = mpg / hp) <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">View</span>()                              <span class="code-comment"># データビューアで確認</span></span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">他の便利なパイプ演算子</h3>
+                    
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h3 class="concept-title">%T>% (ティーパイプ)</h3>
+                            <p class="concept-description">
+                                副作用のある処理（プロット、保存など）を実行しつつ、元のデータを次に渡します。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">%$% (エクスポーズパイプ)</h3>
+                            <p class="concept-description">
+                                データフレームの列名を直接関数で使用できるようにします。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">%<>% (コンパウンドパイプ)</h3>
+                            <p class="concept-description">
+                                変数に結果を代入し直すショートカットです。x %<>% f() は x <- x %>% f() と同じです。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">other_pipes.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">magrittr</span>)  <span class="code-comment"># 追加のパイプ演算子用</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># %T>% ティーパイプの例</span></span>
+                            <span class="code-line"><span class="code-variable">result</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(cyl == <span class="code-string">6</span>) <span class="code-keyword">%T>%</span>                   <span class="code-comment"># データを次に渡しつつ</span></span>
+                            <span class="code-line">  <span class="code-function">print</span>() <span class="code-keyword">%>%</span>                         <span class="code-comment"># プリントも実行</span></span>
+                            <span class="code-line">  <span class="code-function">nrow</span>()</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># %$% エクスポーズパイプの例</span></span>
+                            <span class="code-line"><span class="code-variable">correlation</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%$%</span></span>
+                            <span class="code-line">  <span class="code-function">cor</span>(mpg, hp)                        <span class="code-comment"># 列名を直接使用</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># %<>% コンパウンドパイプの例</span></span>
+                            <span class="code-line"><span class="code-variable">my_data</span> <span class="code-keyword">&lt;-</span> mtcars</span>
+                            <span class="code-line"><span class="code-variable">my_data</span> <span class="code-keyword">%&lt;&gt;%</span>                        <span class="code-comment"># my_data <- my_data %>% と同じ</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(mpg > <span class="code-string">20</span>) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">select</span>(mpg, hp, wt)</span>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        パイプ演算子をマスターすることで、Tidyverseの真の力を発揮できるようになります。コードが読みやすくなるだけでなく、思考プロセスも整理され、より効率的なデータ分析が可能になります。
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Installation -->
+            <section class="content-section fade-in-up" id="installation">
+                <h2 class="section-title">インストールと初期設定</h2>
+                <div class="section-content">
+                    <p>
+                        TidyverseはCRANから簡単にインストールできます。一度のインストールで、主要なパッケージがすべて導入されます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">R Console</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># Tidyverseのインストール</span></span>
+                            <span class="code-line"><span class="code-function">install.packages</span>(<span class="code-string">"tidyverse"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># ライブラリの読み込み</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-output">── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──</span></span>
+                            <span class="code-line"><span class="code-output">✔ ggplot2 3.4.0     ✔ purrr   1.0.1</span></span>
+                            <span class="code-line"><span class="code-output">✔ tibble  3.1.8     ✔ dplyr   1.0.10</span></span>
+                            <span class="code-line"><span class="code-output">✔ tidyr   1.2.1     ✔ stringr 1.5.0</span></span>
+                            <span class="code-line"><span class="code-output">✔ readr   2.1.3     ✔ forcats 0.5.2</span></span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">含まれる主要パッケージ</h3>
+                    <ul>
+                        <li><strong>ggplot2</strong> - データ可視化のためのGrammar of Graphics実装</li>
+                        <li><strong>dplyr</strong> - データ操作のための動詞ベースの文法</li>
+                        <li><strong>tidyr</strong> - データの整理と変形</li>
+                        <li><strong>readr</strong> - 高速でフレンドリーなファイル読み込み</li>
+                        <li><strong>purrr</strong> - 関数型プログラミングツール</li>
+                        <li><strong>tibble</strong> - モダンなdata.frameの再実装</li>
+                        <li><strong>stringr</strong> - 文字列操作の簡素化</li>
+                        <li><strong>forcats</strong> - ファクター（カテゴリカルデータ）の処理</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- Philosophy -->
+            <section class="content-section fade-in-up" id="philosophy">
+                <h2 class="section-title">Tidy Dataの哲学</h2>
+                <div class="section-content">
+                    <p>
+                        Tidy Dataは、データを構造化するための明確で一貫した原則です。この原則に従うことで、データ分析の80%を占める「データの前処理」を効率化できます。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">Tidy Dataの3つの原則</h3>
+                    
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h3 class="concept-title">1️⃣ 各変数は列になる</h3>
+                            <p class="concept-description">
+                                測定したい要素（年齢、身長、収入など）は、それぞれ独立した列として配置します。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">2️⃣ 各観測は行になる</h3>
+                            <p class="concept-description">
+                                個々のサンプル（人、場所、時点など）は、それぞれ独立した行として記録します。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">3️⃣ 各値はセルになる</h3>
+                            <p class="concept-description">
+                                各セルには一つの値のみが入り、複数の情報を一つのセルに詰め込まないようにします。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">tidy_data_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># Tidy Dataの例</span></span>
+                            <span class="code-line"><span class="code-variable">tidy_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  name = <span class="code-function">c</span>(<span class="code-string">"Alice"</span>, <span class="code-string">"Bob"</span>, <span class="code-string">"Charlie"</span>),</span>
+                            <span class="code-line">  age = <span class="code-function">c</span>(<span class="code-string">25</span>, <span class="code-string">30</span>, <span class="code-string">35</span>),</span>
+                            <span class="code-line">  height = <span class="code-function">c</span>(<span class="code-string">165</span>, <span class="code-string">175</span>, <span class="code-string">180</span>),</span>
+                            <span class="code-line">  weight = <span class="code-function">c</span>(<span class="code-string">55</span>, <span class="code-string">70</span>, <span class="code-string">80</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># パイプ演算子を使った処理例</span></span>
+                            <span class="code-line"><span class="code-variable">result</span> <span class="code-keyword">&lt;-</span> tidy_data <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(age &gt;= <span class="code-string">30</span>) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(bmi = weight / (height/100)^2) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(bmi))</span>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        この哲学により、データ分析のコードは読みやすく、再利用しやすく、エラーが起きにくくなります。次の章からは、この原則に基づいて各パッケージの具体的な使い方を学んでいきます。
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Chapter Navigation -->
+            <nav class="chapter-nav fade-in-up">
+                <a href="#" class="nav-btn prev disabled">
+                    ← 前の章
+                </a>
+                <div class="chapter-progress">
+                    第1章 / 全6章
+                </div>
+                <a href="chapter2-dplyr-data-manipulation.html" class="nav-btn next">
+                    次の章 →
+                </a>
+            </nav>
+        </div>
+    </main>
+    
+    <script>
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

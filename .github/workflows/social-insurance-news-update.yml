@@ -1,0 +1,72 @@
+name: 社会保険ニュース自動更新
+
+on:
+  schedule:
+    # 毎日朝4時(UTC 19:00 = JST 04:00)に実行
+    - cron: '0 19 * * *'
+  workflow_dispatch:  # 手動実行も可能
+    inputs:
+      force_update:
+        description: '強制更新'
+        required: false
+        default: 'false'
+
+jobs:
+  update-social-insurance-news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: リポジトリをチェックアウト
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Python環境セットアップ
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        
+    - name: 依存関係インストール
+      run: |
+        cd render-social-insurance-news
+        pip install -r requirements.txt
+        
+    - name: ニュース自動更新実行
+      run: |
+        cd render-social-insurance-news
+        python scripts/main_automation.py
+        
+    - name: 更新データをコミット
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add render-social-insurance-news/data/
+        
+        if git diff --staged --quiet; then
+          echo "変更なし - コミットをスキップ"
+        else
+          git commit -m "🤖 社会保険ニュース自動更新 - $(TZ=Asia/Tokyo date '+%Y年%m月%d日 %H:%M')"
+          git push
+        fi
+        
+    - name: Render Webhook通知（デプロイトリガー）
+      if: success()
+      run: |
+        # Renderのauto-deployが有効なので、pushで自動デプロイされる
+        echo "✅ ニュース更新完了 - Renderで自動デプロイ開始"
+        
+    - name: 実行結果サマリー
+      if: always()
+      run: |
+        echo "## 🤖 社会保険ニュース更新サマリー" >> $GITHUB_STEP_SUMMARY
+        echo "- **実行日時**: $(TZ=Asia/Tokyo date '+%Y年%m月%d日 %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+        echo "- **ステータス**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "render-social-insurance-news/data/processed_news.json" ]; then
+          NEWS_COUNT=$(python -c "import json; data=json.load(open('render-social-insurance-news/data/processed_news.json')); print(data['total_count'])")
+          echo "- **収集ニュース数**: ${NEWS_COUNT}件" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "- **サイトURL**: https://social-insurance-news-render-1.onrender.com/" >> $GITHUB_STEP_SUMMARY

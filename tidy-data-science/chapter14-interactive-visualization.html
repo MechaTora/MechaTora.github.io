@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第14章: インタラクティブ可視化とplotly | Tidyverse完全マスター</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-violet: #8b5cf6;
+            --accent-indigo: #6366f1;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-violet);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-violet);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-violet);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-violet);
+            border-color: var(--accent-violet);
+            box-shadow: 0 0 5px var(--accent-violet);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-violet);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-violet);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-violet);
+        }
+
+        /* Content Sections */
+        .section {
+            background: var(--bg-secondary);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-purple);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-violet);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-violet);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            margin: 20px 0;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-violet);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.1);
+        }
+
+        .code-header {
+            background: var(--accent-violet);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-header::before {
+            content: '🎮';
+            font-size: 1.1rem;
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .operator { color: #f85149; }
+        .number { color: #79c0ff; }
+        .variable { color: #ffa657; }
+
+        /* Output Display */
+        .output-container {
+            margin: 20px 0;
+            background: #0a0e1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .output-header {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-header::before {
+            content: '⚡';
+        }
+
+        .output-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-cyan);
+        }
+
+        /* Interactive Features */
+        .interactive-demo {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-indigo);
+        }
+
+        .demo-title {
+            color: var(--accent-indigo);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .demo-content {
+            background: var(--bg-primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--accent-indigo);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-placeholder {
+            color: var(--accent-indigo);
+            font-style: italic;
+            font-size: 1rem;
+        }
+
+        /* Interactive Controls */
+        .control-panel {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid var(--accent-violet);
+        }
+
+        .control-title {
+            color: var(--accent-violet);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .control-button {
+            padding: 5px 10px;
+            background: var(--accent-indigo);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            background: var(--accent-violet);
+            transform: translateY(-1px);
+        }
+
+        .control-slider {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        /* plotly Features */
+        .plotly-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .feature-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .feature-example {
+            background: var(--bg-primary);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-purple);
+        }
+
+        /* Data Tables */
+        .data-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-violet);
+        }
+
+        th {
+            background: var(--accent-violet);
+            color: var(--bg-primary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-violet);
+        }
+
+        .key-points h4 {
+            color: var(--accent-violet);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '⚠️';
+        }
+
+        /* Animation for interactive elements */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .interactive-element {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 2px;
+                padding: 4px;
+            }
+
+            .nav-button {
+                padding: 1px 3px;
+                font-size: 0.6rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .plotly-features {
+                grid-template-columns: 1fr;
+            }
+
+            .code-content, .output-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+
+            .control-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第14章: インタラクティブ可視化</h1>
+            <p class="subtitle">plotlyとShinyによる動的データ探索</p>
+            <div class="chapter-meta">
+                <span>🎮 インタラクティブ</span>
+                <span>📊 plotly連携</span>
+                <span>⚡ リアルタイム</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">1</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">2</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">3</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">4</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">5</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">6</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">7</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">8</a>
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">9</a>
+            <a href="chapter10-statistics-modeling.html" class="nav-button">10</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">11</a>
+            <a href="chapter12-time-series.html" class="nav-button">12</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">13</a>
+            <a href="#" class="nav-button current">14</a>
+            <a href="chapter15-advanced-data-viz.html" class="nav-button">15</a>
+        </nav>
+
+        <section class="section">
+            <h2>🎮 plotlyによるインタラクティブ可視化</h2>
+            
+            <p>plotlyは、ggplot2で作成したグラフを簡単にインタラクティブに変換できる強力なパッケージです。ズーム、パン、ツールチップ、フィルタリングなどの機能を追加できます。</p>
+
+            <h3>ggplot2からplotlyへの変換</h3>
+
+            <div class="code-container">
+                <div class="code-header">基本的なplotly変換</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">plotly</span>)
+<span class="keyword">library</span>(<span class="string">ggplot2</span>)
+<span class="keyword">library</span>(<span class="string">dplyr</span>)
+<span class="keyword">library</span>(<span class="string">htmlwidgets</span>)
+
+<span class="comment"># インタラクティブ分析用データの作成</span>
+<span class="function">set.seed</span>(<span class="number">123</span>)
+interactive_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
+  company_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">200</span>,
+  company_name <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"企業"</span>, <span class="function">sprintf</span>(<span class="string">"%03d"</span>, <span class="number">1</span>:<span class="number">200</span>)),
+  industry <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"IT"</span>, <span class="string">"製造業"</span>, <span class="string">"金融"</span>, <span class="string">"小売"</span>, <span class="string">"サービス"</span>), <span class="number">200</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
+  revenue <span class="operator">=</span> <span class="function">round</span>(<span class="function">rlnorm</span>(<span class="number">200</span>, <span class="function">log</span>(<span class="number">1000</span>), <span class="number">1</span>)),
+  employees <span class="operator">=</span> <span class="function">round</span>(<span class="function">rlnorm</span>(<span class="number">200</span>, <span class="function">log</span>(<span class="number">100</span>), <span class="number">0.8</span>)),
+  profit_margin <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">200</span>, <span class="number">15</span>, <span class="number">8</span>), <span class="number">1</span>),
+  satisfaction <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">200</span>, <span class="number">4.0</span>, <span class="number">0.8</span>), <span class="number">1</span>),
+  founded_year <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1980</span>:<span class="number">2020</span>, <span class="number">200</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
+) <span class="operator">%&gt;%</span>
+  <span class="function">mutate</span>(
+    revenue_per_employee <span class="operator">=</span> <span class="function">round</span>(revenue / employees <span class="operator">*</span> <span class="number">10</span>, <span class="number">1</span>),
+    company_age <span class="operator">=</span> <span class="number">2023</span> <span class="operator">-</span> founded_year,
+    size_category <span class="operator">=</span> <span class="function">case_when</span>(
+      employees <span class="operator">&lt;</span> <span class="number">50</span> ~ <span class="string">"小企業"</span>,
+      employees <span class="operator">&lt;</span> <span class="number">200</span> ~ <span class="string">"中企業"</span>,
+      <span class="variable">TRUE</span> ~ <span class="string">"大企業"</span>
+    ),
+    <span class="comment"># カスタムツールチップ用のテキスト</span>
+    tooltip_text <span class="operator">=</span> <span class="function">paste0</span>(
+      <span class="string">"会社名: "</span>, company_name, <span class="string">"&lt;br&gt;"</span>,
+      <span class="string">"業界: "</span>, industry, <span class="string">"&lt;br&gt;"</span>,
+      <span class="string">"売上: ¥"</span>, <span class="function">format</span>(revenue, big.mark <span class="operator">=</span> <span class="string">","</span>), <span class="string">"M&lt;br&gt;"</span>,
+      <span class="string">"従業員数: "</span>, <span class="function">format</span>(employees, big.mark <span class="operator">=</span> <span class="string">","</span>), <span class="string">"人&lt;br&gt;"</span>,
+      <span class="string">"利益率: "</span>, profit_margin, <span class="string">"%&lt;br&gt;"</span>,
+      <span class="string">"設立年: "</span>, founded_year, <span class="string">"年"</span>
+    )
+  )
+
+<span class="comment"># 1. 基本的なggplot2からplotlyへの変換</span>
+basic_ggplot <span class="operator">&lt;-</span> interactive_data <span class="operator">%&gt;%</span>
+  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> revenue, y <span class="operator">=</span> profit_margin, color <span class="operator">=</span> industry,
+             size <span class="operator">=</span> employees, text <span class="operator">=</span> tooltip_text)) <span class="operator">+</span>
+  <span class="function">geom_point</span>(alpha <span class="operator">=</span> <span class="number">0.7</span>) <span class="operator">+</span>
+  <span class="function">scale_x_log10</span>(labels <span class="operator">=</span> <span class="function">scales::label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"M"</span>)) <span class="operator">+</span>
+  <span class="function">scale_size_continuous</span>(range <span class="operator">=</span> <span class="function">c</span>(<span class="number">3</span>, <span class="number">15</span>), guide <span class="operator">=</span> <span class="string">"none"</span>) <span class="operator">+</span>
+  <span class="function">labs</span>(
+    title <span class="operator">=</span> <span class="string">"企業分析: 売上 vs 利益率"</span>,
+    subtitle <span class="operator">=</span> <span class="string">"業界別・規模別の企業パフォーマンス比較"</span>,
+    x <span class="operator">=</span> <span class="string">"売上高（百万円）"</span>,
+    y <span class="operator">=</span> <span class="string">"利益率（%）"</span>,
+    color <span class="operator">=</span> <span class="string">"業界"</span>
+  ) <span class="operator">+</span>
+  <span class="function">theme_minimal</span>() <span class="operator">+</span>
+  <span class="function">theme</span>(
+    plot.title <span class="operator">=</span> <span class="function">element_text</span>(size <span class="operator">=</span> <span class="number">16</span>, face <span class="operator">=</span> <span class="string">"bold"</span>),
+    plot.subtitle <span class="operator">=</span> <span class="function">element_text</span>(size <span class="operator">=</span> <span class="number">12</span>),
+    legend.position <span class="operator">=</span> <span class="string">"bottom"</span>
+  )
+
+<span class="comment"># plotlyに変換</span>
+interactive_plot <span class="operator">&lt;-</span> <span class="function">ggplotly</span>(
+  basic_ggplot,
+  tooltip <span class="operator">=</span> <span class="string">"text"</span>,  <span class="comment"># カスタムツールチップを使用</span>
+  width <span class="operator">=</span> <span class="number">800</span>,
+  height <span class="operator">=</span> <span class="number">600</span>
+) <span class="operator">%&gt;%</span>
+  <span class="function">layout</span>(
+    title <span class="operator">=</span> <span class="function">list</span>(
+      text <span class="operator">=</span> <span class="string">"企業分析: 売上 vs 利益率&lt;br&gt;&lt;sub&gt;インタラクティブ版 - クリック・ドラッグで操作可能&lt;/sub&gt;"</span>,
+      font <span class="operator">=</span> <span class="function">list</span>(size <span class="operator">=</span> <span class="number">16</span>)
+    ),
+    hovermode <span class="operator">=</span> <span class="string">"closest"</span>,
+    showlegend <span class="operator">=</span> <span class="variable">TRUE</span>
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">config</span>(
+    displayModeBar <span class="operator">=</span> <span class="variable">TRUE</span>,
+    modeBarButtonsToRemove <span class="operator">=</span> <span class="function">c</span>(<span class="string">"lasso2d"</span>, <span class="string">"select2d"</span>),
+    displaylogo <span class="operator">=</span> <span class="variable">FALSE</span>,
+    toImageButtonOptions <span class="operator">=</span> <span class="function">list</span>(
+      format <span class="operator">=</span> <span class="string">"png"</span>,
+      filename <span class="operator">=</span> <span class="string">"企業分析チャート"</span>,
+      width <span class="operator">=</span> <span class="number">1200</span>,
+      height <span class="operator">=</span> <span class="number">800</span>
+    )
+  )
+
+<span class="function">print</span>(<span class="string">"基本的なインタラクティブプロットが作成されました"</span>)
+
+<span class="comment"># 2. 高度なインタラクティブ機能</span>
+<span class="comment"># 複数のサブプロットを持つダッシュボード</span>
+subplot_data <span class="operator">&lt;-</span> interactive_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(industry, size_category) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(
+    avg_revenue <span class="operator">=</span> <span class="function">mean</span>(revenue),
+    avg_profit_margin <span class="operator">=</span> <span class="function">mean</span>(profit_margin),
+    count <span class="operator">=</span> <span class="function">n</span>(),
+    .groups <span class="operator">=</span> <span class="string">'drop'</span>
+  )
+
+<span class="comment"># サブプロット1: 業界別平均売上</span>
+p1 <span class="operator">&lt;-</span> subplot_data <span class="operator">%&gt;%</span>
+  <span class="function">plot_ly</span>(
+    x <span class="operator">=</span> ~industry,
+    y <span class="operator">=</span> ~avg_revenue,
+    color <span class="operator">=</span> ~size_category,
+    type <span class="operator">=</span> <span class="string">"bar"</span>,
+    text <span class="operator">=</span> ~<span class="function">paste0</span>(<span class="string">"¥"</span>, <span class="function">round</span>(avg_revenue), <span class="string">"M"</span>),
+    textposition <span class="operator">=</span> <span class="string">"outside"</span>,
+    hovertemplate <span class="operator">=</span> <span class="string">"&lt;b&gt;%{x}&lt;/b&gt;&lt;br&gt;企業規模: %{fullData.name}&lt;br&gt;平均売上: ¥%{y:.0f}M&lt;extra&gt;&lt;/extra&gt;"</span>
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">layout</span>(
+    title <span class="operator">=</span> <span class="string">"業界・規模別平均売上"</span>,
+    xaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"業界"</span>),
+    yaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"平均売上（百万円）"</span>)
+  )
+
+<span class="comment"># サブプロット2: 規模別利益率分布</span>
+p2 <span class="operator">&lt;-</span> interactive_data <span class="operator">%&gt;%</span>
+  <span class="function">plot_ly</span>(
+    y <span class="operator">=</span> ~profit_margin,
+    color <span class="operator">=</span> ~size_category,
+    type <span class="operator">=</span> <span class="string">"box"</span>,
+    boxpoints <span class="operator">=</span> <span class="string">"outliers"</span>
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">layout</span>(
+    title <span class="operator">=</span> <span class="string">"企業規模別利益率分布"</span>,
+    xaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"企業規模"</span>),
+    yaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"利益率（%）"</span>)
+  )
+
+<span class="comment"># サブプロット3: 時系列トレンド</span>
+trend_data <span class="operator">&lt;-</span> interactive_data <span class="operator">%&gt;%</span>
+  <span class="function">group_by</span>(founded_year, industry) <span class="operator">%&gt;%</span>
+  <span class="function">summarise</span>(new_companies <span class="operator">=</span> <span class="function">n</span>(), .groups <span class="operator">=</span> <span class="string">'drop'</span>) <span class="operator">%&gt;%</span>
+  <span class="function">filter</span>(founded_year <span class="operator">&gt;=</span> <span class="number">2000</span>)
+
+p3 <span class="operator">&lt;-</span> trend_data <span class="operator">%&gt;%</span>
+  <span class="function">plot_ly</span>(
+    x <span class="operator">=</span> ~founded_year,
+    y <span class="operator">=</span> ~new_companies,
+    color <span class="operator">=</span> ~industry,
+    type <span class="operator">=</span> <span class="string">"scatter"</span>,
+    mode <span class="operator">=</span> <span class="string">"lines+markers"</span>,
+    line <span class="operator">=</span> <span class="function">list</span>(width <span class="operator">=</span> <span class="number">3</span>),
+    marker <span class="operator">=</span> <span class="function">list</span>(size <span class="operator">=</span> <span class="number">8</span>)
+  ) <span class="operator">%&gt;%</span>
+  <span class="function">layout</span>(
+    title <span class="operator">=</span> <span class="string">"業界別企業設立トレンド（2000年以降）"</span>,
+    xaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"設立年"</span>),
+    yaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"新設企業数"</span>)
+  )
+
+<span class="comment"># サブプロットを組み合わせ</span>
+combined_dashboard <span class="operator">&lt;-</span> <span class="function">subplot</span>(
+  p1, p2, p3,
+  nrows <span class="operator">=</span> <span class="number">3</span>,
+  heights <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.35</span>, <span class="number">0.3</span>, <span class="number">0.35</span>),
+  titleY <span class="operator">=</span> <span class="variable">TRUE</span>,
+  titleX <span class="operator">=</span> <span class="variable">TRUE</span>
+) <span class="operator">%&gt;%</span>
+  <span class="function">layout</span>(
+    title <span class="operator">=</span> <span class="string">"企業分析統合ダッシュボード"</span>,
+    showlegend <span class="operator">=</span> <span class="variable">TRUE</span>,
+    height <span class="operator">=</span> <span class="number">900</span>
+  )
+
+<span class="function">print</span>(<span class="string">"統合ダッシュボードが作成されました"</span>)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">plotlyインタラクティブ化結果</div>
+                <div class="output-content">[1] "基本的なインタラクティブプロットが作成されました"
+[1] "統合ダッシュボードが作成されました"
+
+# plotlyの主要機能:
+- ホバーツールチップ: 詳細情報の表示
+- ズーム・パン: 自由な範囲選択と移動
+- レジェンド操作: データ系列の表示/非表示
+- データポイント選択: クリックによる個別選択
+- 画像エクスポート: PNG/SVG形式での保存
+
+# ダッシュボード構成:
+- 複数チャートの統合表示
+- 統一されたカラーパレット
+- インタラクティブな凡例連動
+- レスポンシブレイアウト</div>
+            </div>
+
+            <div class="interactive-demo">
+                <div class="demo-title">plotlyインタラクティブ機能デモ</div>
+                <div class="demo-content">
+                    <div class="interactive-element">
+                        <p class="demo-placeholder">🎮 インタラクティブグラフエリア</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">
+                            ここに実際のplotlyグラフが表示されます<br>
+                            • マウスホバーで詳細情報<br>
+                            • ドラッグでズーム・パン<br>
+                            • ダブルクリックでリセット<br>
+                            • 凡例クリックで系列切り替え
+                        </p>
+                    </div>
+                </div>
+                <div class="control-panel">
+                    <div class="control-title">コントロールパネル</div>
+                    <div class="control-group">
+                        <button class="control-button" onclick="alert('データフィルタ機能')">フィルタ</button>
+                        <button class="control-button" onclick="alert('データソート機能')">ソート</button>
+                        <button class="control-button" onclick="alert('チャート切り替え')">チャート種別</button>
+                        <input type="range" class="control-slider" min="1" max="100" value="50">
+                        <span style="color: var(--text-secondary); font-size: 0.8rem;">透明度調整</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3>カスタムインタラクション</h3>
+
+            <div class="code-container">
+                <div class="code-header">高度なカスタムインタラクション</div>
+                <div class="code-content">
+<span class="comment"># カスタムボタンとドロップダウンを含むインタラクティブチャート</span>
+create_advanced_interactive <span class="operator">&lt;-</span> <span class="keyword">function</span>(data) {
+  
+  <span class="comment"># データ変換ボタンの設定</span>
+  transform_buttons <span class="operator">&lt;-</span> <span class="function">list</span>(
+    <span class="function">list</span>(
+      method <span class="operator">=</span> <span class="string">"restyle"</span>,
+      args <span class="operator">=</span> <span class="function">list</span>(<span class="string">"transforms[0].value"</span>, <span class="string">"linear"</span>),
+      label <span class="operator">=</span> <span class="string">"線形スケール"</span>
+    ),
+    <span class="function">list</span>(
+      method <span class="operator">=</span> <span class="string">"relayout"</span>,
+      args <span class="operator">=</span> <span class="function">list</span>(<span class="string">"xaxis.type"</span>, <span class="string">"log"</span>),
+      label <span class="operator">=</span> <span class="string">"対数スケール"</span>
+    )
+  )
+  
+  <span class="comment"># アニメーション用の年度別データ</span>
+  animation_data <span class="operator">&lt;-</span> data <span class="operator">%&gt;%</span>
+    <span class="function">mutate</span>(frame <span class="operator">=</span> <span class="function">cut</span>(founded_year, breaks <span class="operator">=</span> <span class="number">5</span>, labels <span class="operator">=</span> <span class="function">c</span>(<span class="string">"1980-1988"</span>, <span class="string">"1989-1996"</span>, <span class="string">"1997-2004"</span>, <span class="string">"2005-2012"</span>, <span class="string">"2013-2020"</span>)))
+  
+  <span class="comment"># メインプロット</span>
+  p <span class="operator">&lt;-</span> animation_data <span class="operator">%&gt;%</span>
+    <span class="function">plot_ly</span>(
+      x <span class="operator">=</span> ~revenue,
+      y <span class="operator">=</span> ~employees,
+      size <span class="operator">=</span> ~profit_margin,
+      color <span class="operator">=</span> ~industry,
+      frame <span class="operator">=</span> ~frame,
+      ids <span class="operator">=</span> ~company_id,
+      text <span class="operator">=</span> ~company_name,
+      type <span class="operator">=</span> <span class="string">"scatter"</span>,
+      mode <span class="operator">=</span> <span class="string">"markers"</span>,
+      marker <span class="operator">=</span> <span class="function">list</span>(
+        sizemode <span class="operator">=</span> <span class="string">"diameter"</span>,
+        sizeref <span class="operator">=</span> <span class="number">2</span>,
+        sizemin <span class="operator">=</span> <span class="number">4</span>,
+        line <span class="operator">=</span> <span class="function">list</span>(width <span class="operator">=</span> <span class="number">2</span>, color <span class="operator">=</span> <span class="string">"white"</span>)
+      ),
+      hovertemplate <span class="operator">=</span> <span class="string">"&lt;b&gt;%{text}&lt;/b&gt;&lt;br&gt;売上: ¥%{x:,.0f}M&lt;br&gt;従業員: %{y:,.0f}人&lt;br&gt;利益率: %{marker.size:.1f}%&lt;extra&gt;&lt;/extra&gt;"</span>
+    ) <span class="operator">%&gt;%</span>
+    
+    <span class="comment"># レイアウト設定</span>
+    <span class="function">layout</span>(
+      title <span class="operator">=</span> <span class="function">list</span>(
+        text <span class="operator">=</span> <span class="string">"企業パフォーマンス分析（時代別アニメーション）"</span>,
+        x <span class="operator">=</span> <span class="number">0.5</span>
+      ),
+      xaxis <span class="operator">=</span> <span class="function">list</span>(
+        title <span class="operator">=</span> <span class="string">"売上高（百万円）"</span>,
+        type <span class="operator">=</span> <span class="string">"linear"</span>,
+        range <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="function">max</span>(data$revenue) <span class="operator">*</span> <span class="number">1.1</span>)
+      ),
+      yaxis <span class="operator">=</span> <span class="function">list</span>(
+        title <span class="operator">=</span> <span class="string">"従業員数（人）"</span>,
+        range <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="function">max</span>(data$employees) <span class="operator">*</span> <span class="number">1.1</span>)
+      ),
+      
+      <span class="comment"># カスタムボタンメニュー</span>
+      updatemenus <span class="operator">=</span> <span class="function">list</span>(
+        <span class="function">list</span>(
+          type <span class="operator">=</span> <span class="string">"buttons"</span>,
+          direction <span class="operator">=</span> <span class="string">"left"</span>,
+          x <span class="operator">=</span> <span class="number">0.1</span>,
+          y <span class="operator">=</span> <span class="number">1.15</span>,
+          buttons <span class="operator">=</span> <span class="function">list</span>(
+            <span class="function">list</span>(
+              method <span class="operator">=</span> <span class="string">"relayout"</span>,
+              args <span class="operator">=</span> <span class="function">list</span>(<span class="string">"xaxis.type"</span>, <span class="string">"linear"</span>),
+              label <span class="operator">=</span> <span class="string">"線形"</span>
+            ),
+            <span class="function">list</span>(
+              method <span class="operator">=</span> <span class="string">"relayout"</span>,
+              args <span class="operator">=</span> <span class="function">list</span>(<span class="string">"xaxis.type"</span>, <span class="string">"log"</span>),
+              label <span class="operator">=</span> <span class="string">"対数"</span>
+            )
+          )
+        ),
+        
+        <span class="comment"># 業界フィルタ</span>
+        <span class="function">list</span>(
+          type <span class="operator">=</span> <span class="string">"dropdown"</span>,
+          x <span class="operator">=</span> <span class="number">0.5</span>,
+          y <span class="operator">=</span> <span class="number">1.15</span>,
+          buttons <span class="operator">=</span> <span class="function">c</span>(
+            <span class="function">list</span>(<span class="function">list</span>(method <span class="operator">=</span> <span class="string">"restyle"</span>, args <span class="operator">=</span> <span class="function">list</span>(<span class="string">"visible"</span>, <span class="variable">TRUE</span>), label <span class="operator">=</span> <span class="string">"すべて表示"</span>)),
+            <span class="function">lapply</span>(<span class="function">unique</span>(data$industry), <span class="keyword">function</span>(ind) {
+              visible <span class="operator">&lt;-</span> data$industry <span class="operator">==</span> ind
+              <span class="function">list</span>(method <span class="operator">=</span> <span class="string">"restyle"</span>, args <span class="operator">=</span> <span class="function">list</span>(<span class="string">"visible"</span>, visible), label <span class="operator">=</span> ind)
+            })
+          )
+        )
+      ),
+      
+      <span class="comment"># アニメーション設定</span>
+      sliders <span class="operator">=</span> <span class="function">list</span>(
+        <span class="function">list</span>(
+          active <span class="operator">=</span> <span class="number">0</span>,
+          currentvalue <span class="operator">=</span> <span class="function">list</span>(prefix <span class="operator">=</span> <span class="string">"時代: "</span>),
+          steps <span class="operator">=</span> <span class="function">lapply</span>(<span class="function">unique</span>(animation_data$frame), <span class="keyword">function</span>(f) {
+            <span class="function">list</span>(
+              args <span class="operator">=</span> <span class="function">list</span>(<span class="string">"frame"</span>, <span class="function">list</span>(duration <span class="operator">=</span> <span class="number">300</span>, redraw <span class="operator">=</span> <span class="variable">TRUE</span>)),
+              label <span class="operator">=</span> f,
+              method <span class="operator">=</span> <span class="string">"animate"</span>,
+              value <span class="operator">=</span> f
+            )
+          })
+        )
+      )
+    ) <span class="operator">%&gt;%</span>
+    
+    <span class="comment"># アニメーション設定</span>
+    <span class="function">animation_opts</span>(
+      frame <span class="operator">=</span> <span class="number">1000</span>,
+      transition <span class="operator">=</span> <span class="number">300</span>,
+      redraw <span class="operator">=</span> <span class="variable">TRUE</span>
+    ) <span class="operator">%&gt;%</span>
+    
+    <span class="comment"># 設定</span>
+    <span class="function">config</span>(
+      displayModeBar <span class="operator">=</span> <span class="variable">TRUE</span>,
+      modeBarButtonsToAdd <span class="operator">=</span> <span class="function">c</span>(<span class="string">"drawline"</span>, <span class="string">"drawopenpath"</span>, <span class="string">"drawclosedpath"</span>, <span class="string">"eraseshape"</span>),
+      displaylogo <span class="operator">=</span> <span class="variable">FALSE</span>
+    )
+  
+  <span class="keyword">return</span>(p)
+}
+
+<span class="comment"># 高度なインタラクティブプロットの作成</span>
+advanced_plot <span class="operator">&lt;-</span> <span class="function">create_advanced_interactive</span>(interactive_data)
+
+<span class="function">print</span>(<span class="string">"高度なカスタムインタラクションが追加されました"</span>)
+
+<span class="comment"># クロスフィルタリング用のデータ準備</span>
+crossfilter_data <span class="operator">&lt;-</span> interactive_data <span class="operator">%&gt;%</span>
+  <span class="function">select</span>(company_name, industry, revenue, employees, profit_margin, satisfaction)
+
+<span class="comment"># HTMLウィジェットとしての保存設定</span>
+widget_options <span class="operator">&lt;-</span> <span class="function">list</span>(
+  width <span class="operator">=</span> <span class="string">"100%"</span>,
+  height <span class="operator">=</span> <span class="string">"600px"</span>,
+  elementId <span class="operator">=</span> <span class="string">"interactive-business-chart"</span>
+)
+
+<span class="function">print</span>(<span class="string">"ウィジェット設定が完了しました"</span>)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">高度なインタラクション結果</div>
+                <div class="output-content">[1] "高度なカスタムインタラクションが追加されました"
+[1] "ウィジェット設定が完了しました"
+
+# 高度なインタラクティブ機能:
+- アニメーション: 時系列での変化表示
+- カスタムボタン: スケール切り替え、フィルタ
+- ドロップダウンメニュー: 動的データ選択
+- スライダー: アニメーション制御
+- 描画ツール: 注釈・マーキング機能
+
+# 企業分析特化機能:
+- 業界別フィルタリング
+- 企業規模による色分け
+- 多次元データの同時表示
+- カスタムツールチップ情報</div>
+            </div>
+
+            <div class="plotly-features">
+                <div class="feature-card">
+                    <div class="feature-title">🎯 ホバーツールチップ</div>
+                    <div class="feature-description">マウスオーバーで詳細情報を表示。HTMLフォーマット対応でリッチな情報提示が可能。</div>
+                    <div class="feature-example">hovertemplate = "&lt;b&gt;%{text}&lt;/b&gt;&lt;br&gt;値: %{y:.2f}&lt;extra&gt;&lt;/extra&gt;"</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">🔍 ズーム・パン</div>
+                    <div class="feature-description">マウスドラッグでのズーム、パン操作。特定範囲の詳細分析に最適。</div>
+                    <div class="feature-example">config(scrollZoom = TRUE, doubleClick = 'reset')</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">🎮 カスタムボタン</div>
+                    <div class="feature-description">データ変換、フィルタリング、表示切り替えのためのカスタムUI要素。</div>
+                    <div class="feature-example">updatemenus = list(type = "buttons", buttons = [...])</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">🎬 アニメーション</div>
+                    <div class="feature-description">時系列データの動的表示。データの変化パターンを効果的に表現。</div>
+                    <div class="feature-example">animation_opts(frame = 1000, transition = 300)</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">📊 サブプロット</div>
+                    <div class="feature-description">複数のチャートを統合したダッシュボード表示。包括的な分析視点を提供。</div>
+                    <div class="feature-example">subplot(p1, p2, nrows = 2, shareX = TRUE)</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">💾 エクスポート</div>
+                    <div class="feature-description">PNG、SVG、PDF形式での画像保存。プレゼンテーション資料に最適。</div>
+                    <div class="feature-example">toImageButtonOptions = list(format = "png", filename = "chart")</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ Shinyによるリアルタイムダッシュボード</h2>
+
+            <h3>基本的なShinyアプリケーション</h3>
+
+            <div class="code-container">
+                <div class="code-header">Shiny + plotlyダッシュボード</div>
+                <div class="code-content">
+<span class="keyword">library</span>(<span class="string">shiny</span>)
+<span class="keyword">library</span>(<span class="string">shinydashboard</span>)
+<span class="keyword">library</span>(<span class="string">DT</span>)
+
+<span class="comment"># Shiny UIの定義</span>
+dashboard_ui <span class="operator">&lt;-</span> <span class="function">dashboardPage</span>(
+  
+  <span class="comment"># ヘッダー</span>
+  <span class="function">dashboardHeader</span>(title <span class="operator">=</span> <span class="string">"企業分析ダッシュボード"</span>),
+  
+  <span class="comment"># サイドバー</span>
+  <span class="function">dashboardSidebar</span>(
+    <span class="function">sidebarMenu</span>(
+      <span class="function">menuItem</span>(<span class="string">"概要"</span>, tabName <span class="operator">=</span> <span class="string">"overview"</span>, icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"dashboard"</span>)),
+      <span class="function">menuItem</span>(<span class="string">"詳細分析"</span>, tabName <span class="operator">=</span> <span class="string">"analysis"</span>, icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"chart-line"</span>)),
+      <span class="function">menuItem</span>(<span class="string">"データテーブル"</span>, tabName <span class="operator">=</span> <span class="string">"data"</span>, icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"table"</span>))
+    ),
+    
+    <span class="comment"># フィルタコントロール</span>
+    <span class="function">div</span>(style <span class="operator">=</span> <span class="string">"padding: 20px;"</span>,
+      <span class="function">h4</span>(<span class="string">"フィルタ設定"</span>),
+      
+      <span class="function">selectInput</span>(
+        inputId <span class="operator">=</span> <span class="string">"industry_filter"</span>,
+        label <span class="operator">=</span> <span class="string">"業界選択:"</span>,
+        choices <span class="operator">=</span> <span class="function">c</span>(<span class="string">"すべて"</span> <span class="operator">=</span> <span class="string">"all"</span>, <span class="string">"IT"</span>, <span class="string">"製造業"</span>, <span class="string">"金融"</span>, <span class="string">"小売"</span>, <span class="string">"サービス"</span>),
+        selected <span class="operator">=</span> <span class="string">"all"</span>,
+        multiple <span class="operator">=</span> <span class="variable">TRUE</span>
+      ),
+      
+      <span class="function">sliderInput</span>(
+        inputId <span class="operator">=</span> <span class="string">"revenue_range"</span>,
+        label <span class="operator">=</span> <span class="string">"売上範囲（百万円）:"</span>,
+        min <span class="operator">=</span> <span class="number">0</span>,
+        max <span class="operator">=</span> <span class="number">5000</span>,
+        value <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="number">5000</span>),
+        step <span class="operator">=</span> <span class="number">100</span>
+      ),
+      
+      <span class="function">sliderInput</span>(
+        inputId <span class="operator">=</span> <span class="string">"employee_range"</span>,
+        label <span class="operator">=</span> <span class="string">"従業員数範囲:"</span>,
+        min <span class="operator">=</span> <span class="number">1</span>,
+        max <span class="operator">=</span> <span class="number">1000</span>,
+        value <span class="operator">=</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">1000</span>),
+        step <span class="operator">=</span> <span class="number">10</span>
+      ),
+      
+      <span class="function">checkboxInput</span>(
+        inputId <span class="operator">=</span> <span class="string">"show_trend"</span>,
+        label <span class="operator">=</span> <span class="string">"トレンドライン表示"</span>,
+        value <span class="operator">=</span> <span class="variable">TRUE</span>
+      ),
+      
+      <span class="function">actionButton</span>(
+        inputId <span class="operator">=</span> <span class="string">"refresh_data"</span>,
+        label <span class="operator">=</span> <span class="string">"データ更新"</span>,
+        icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"refresh"</span>),
+        class <span class="operator">=</span> <span class="string">"btn-primary"</span>
+      )
+    )
+  ),
+  
+  <span class="comment"># メインコンテンツ</span>
+  <span class="function">dashboardBody</span>(
+    <span class="function">tags$head</span>(
+      <span class="function">tags$style</span>(<span class="function">HTML</span>(<span class="string">"
+        .content-wrapper, .right-side {
+          background-color: #f4f4f4;
+        }
+        .main-header .logo {
+          background-color: #3c8dbc !important;
+        }
+        .skin-blue .main-header .navbar {
+          background-color: #3c8dbc !important;
+        }
+      "</span>))
+    ),
+    
+    <span class="function">tabItems</span>(
+      <span class="comment"># 概要タブ</span>
+      <span class="function">tabItem</span>(
+        tabName <span class="operator">=</span> <span class="string">"overview"</span>,
+        
+        <span class="function">fluidRow</span>(
+          <span class="comment"># KPIボックス</span>
+          <span class="function">valueBoxOutput</span>(<span class="string">"total_companies"</span>, width <span class="operator">=</span> <span class="number">3</span>),
+          <span class="function">valueBoxOutput</span>(<span class="string">"avg_revenue"</span>, width <span class="operator">=</span> <span class="number">3</span>),
+          <span class="function">valueBoxOutput</span>(<span class="string">"avg_employees"</span>, width <span class="operator">=</span> <span class="number">3</span>),
+          <span class="function">valueBoxOutput</span>(<span class="string">"avg_profit"</span>, width <span class="operator">=</span> <span class="number">3</span>)
+        ),
+        
+        <span class="function">fluidRow</span>(
+          <span class="function">box</span>(
+            title <span class="operator">=</span> <span class="string">"業界別売上分布"</span>,
+            status <span class="operator">=</span> <span class="string">"primary"</span>,
+            solidHeader <span class="operator">=</span> <span class="variable">TRUE</span>,
+            width <span class="operator">=</span> <span class="number">8</span>,
+            <span class="function">plotlyOutput</span>(<span class="string">"industry_plot"</span>, height <span class="operator">=</span> <span class="string">"400px"</span>)
+          ),
+          
+          <span class="function">box</span>(
+            title <span class="operator">=</span> <span class="string">"企業規模分布"</span>,
+            status <span class="operator">=</span> <span class="string">"success"</span>,
+            solidHeader <span class="operator">=</span> <span class="variable">TRUE</span>,
+            width <span class="operator">=</span> <span class="number">4</span>,
+            <span class="function">plotlyOutput</span>(<span class="string">"size_plot"</span>, height <span class="operator">=</span> <span class="string">"400px"</span>)
+          )
+        )
+      ),
+      
+      <span class="comment"># 詳細分析タブ</span>
+      <span class="function">tabItem</span>(
+        tabName <span class="operator">=</span> <span class="string">"analysis"</span>,
+        
+        <span class="function">fluidRow</span>(
+          <span class="function">box</span>(
+            title <span class="operator">=</span> <span class="string">"企業パフォーマンス散布図"</span>,
+            status <span class="operator">=</span> <span class="string">"primary"</span>,
+            solidHeader <span class="operator">=</span> <span class="variable">TRUE</span>,
+            width <span class="operator">=</span> <span class="number">12</span>,
+            <span class="function">plotlyOutput</span>(<span class="string">"scatter_plot"</span>, height <span class="operator">=</span> <span class="string">"500px"</span>)
+          )
+        ),
+        
+        <span class="function">fluidRow</span>(
+          <span class="function">box</span>(
+            title <span class="operator">=</span> <span class="string">"時系列トレンド"</span>,
+            status <span class="operator">=</span> <span class="string">"info"</span>,
+            solidHeader <span class="operator">=</span> <span class="variable">TRUE</span>,
+            width <span class="operator">=</span> <span class="number">6</span>,
+            <span class="function">plotlyOutput</span>(<span class="string">"trend_plot"</span>, height <span class="operator">=</span> <span class="string">"350px"</span>)
+          ),
+          
+          <span class="function">box</span>(
+            title <span class="operator">=</span> <span class="string">"相関分析"</span>,
+            status <span class="operator">=</span> <span class="string">"warning"</span>,
+            solidHeader <span class="operator">=</span> <span class="variable">TRUE</span>,
+            width <span class="operator">=</span> <span class="number">6</span>,
+            <span class="function">plotlyOutput</span>(<span class="string">"correlation_plot"</span>, height <span class="operator">=</span> <span class="string">"350px"</span>)
+          )
+        )
+      ),
+      
+      <span class="comment"># データテーブルタブ</span>
+      <span class="function">tabItem</span>(
+        tabName <span class="operator">=</span> <span class="string">"data"</span>,
+        
+        <span class="function">fluidRow</span>(
+          <span class="function">box</span>(
+            title <span class="operator">=</span> <span class="string">"企業データテーブル"</span>,
+            status <span class="operator">=</span> <span class="string">"primary"</span>,
+            solidHeader <span class="operator">=</span> <span class="variable">TRUE</span>,
+            width <span class="operator">=</span> <span class="number">12</span>,
+            
+            <span class="function">div</span>(style <span class="operator">=</span> <span class="string">"margin-bottom: 20px;"</span>,
+              <span class="function">downloadButton</span>(<span class="string">"download_data"</span>, <span class="string">"CSVダウンロード"</span>, class <span class="operator">=</span> <span class="string">"btn-success"</span>)
+            ),
+            
+            <span class="function">DT::dataTableOutput</span>(<span class="string">"data_table"</span>)
+          )
+        )
+      )
+    )
+  )
+)
+
+<span class="comment"># Shinyサーバーロジック</span>
+dashboard_server <span class="operator">&lt;-</span> <span class="keyword">function</span>(input, output, session) {
+  
+  <span class="comment"># リアクティブデータフィルタリング</span>
+  filtered_data <span class="operator">&lt;-</span> <span class="function">reactive</span>({
+    data <span class="operator">&lt;-</span> interactive_data
+    
+    <span class="comment"># 業界フィルタ</span>
+    <span class="keyword">if</span> (!<span class="function">is.null</span>(input$industry_filter) <span class="operator">&amp;&amp;</span> !<span class="string">"all"</span> <span class="operator">%in%</span> input$industry_filter) {
+      data <span class="operator">&lt;-</span> data <span class="operator">%&gt;%</span> <span class="function">filter</span>(industry <span class="operator">%in%</span> input$industry_filter)
+    }
+    
+    <span class="comment"># 売上範囲フィルタ</span>
+    data <span class="operator">&lt;-</span> data <span class="operator">%&gt;%</span>
+      <span class="function">filter</span>(
+        revenue <span class="operator">&gt;=</span> input$revenue_range[<span class="number">1</span>],
+        revenue <span class="operator">&lt;=</span> input$revenue_range[<span class="number">2</span>],
+        employees <span class="operator">&gt;=</span> input$employee_range[<span class="number">1</span>],
+        employees <span class="operator">&lt;=</span> input$employee_range[<span class="number">2</span>]
+      )
+    
+    <span class="keyword">return</span>(data)
+  })
+  
+  <span class="comment"># KPIボックス</span>
+  output$total_companies <span class="operator">&lt;-</span> <span class="function">renderValueBox</span>({
+    <span class="function">valueBox</span>(
+      value <span class="operator">=</span> <span class="function">nrow</span>(<span class="function">filtered_data</span>()),
+      subtitle <span class="operator">=</span> <span class="string">"総企業数"</span>,
+      icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"building"</span>),
+      color <span class="operator">=</span> <span class="string">"blue"</span>
+    )
+  })
+  
+  output$avg_revenue <span class="operator">&lt;-</span> <span class="function">renderValueBox</span>({
+    <span class="function">valueBox</span>(
+      value <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"¥"</span>, <span class="function">round</span>(<span class="function">mean</span>(<span class="function">filtered_data</span>()$revenue)), <span class="string">"M"</span>),
+      subtitle <span class="operator">=</span> <span class="string">"平均売上"</span>,
+      icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"yen-sign"</span>),
+      color <span class="operator">=</span> <span class="string">"green"</span>
+    )
+  })
+  
+  output$avg_employees <span class="operator">&lt;-</span> <span class="function">renderValueBox</span>({
+    <span class="function">valueBox</span>(
+      value <span class="operator">=</span> <span class="function">round</span>(<span class="function">mean</span>(<span class="function">filtered_data</span>()$employees)),
+      subtitle <span class="operator">=</span> <span class="string">"平均従業員数"</span>,
+      icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"users"</span>),
+      color <span class="operator">=</span> <span class="string">"yellow"</span>
+    )
+  })
+  
+  output$avg_profit <span class="operator">&lt;-</span> <span class="function">renderValueBox</span>({
+    <span class="function">valueBox</span>(
+      value <span class="operator">=</span> <span class="function">paste0</span>(<span class="function">round</span>(<span class="function">mean</span>(<span class="function">filtered_data</span>()$profit_margin), <span class="number">1</span>), <span class="string">"%"</span>),
+      subtitle <span class="operator">=</span> <span class="string">"平均利益率"</span>,
+      icon <span class="operator">=</span> <span class="function">icon</span>(<span class="string">"chart-line"</span>),
+      color <span class="operator">=</span> <span class="string">"red"</span>
+    )
+  })
+  
+  <span class="comment"># プロット生成</span>
+  output$scatter_plot <span class="operator">&lt;-</span> <span class="function">renderPlotly</span>({
+    p <span class="operator">&lt;-</span> <span class="function">filtered_data</span>() <span class="operator">%&gt;%</span>
+      <span class="function">plot_ly</span>(
+        x <span class="operator">=</span> ~revenue,
+        y <span class="operator">=</span> ~profit_margin,
+        color <span class="operator">=</span> ~industry,
+        size <span class="operator">=</span> ~employees,
+        text <span class="operator">=</span> ~company_name,
+        type <span class="operator">=</span> <span class="string">"scatter"</span>,
+        mode <span class="operator">=</span> <span class="string">"markers"</span>,
+        hovertemplate <span class="operator">=</span> <span class="string">"&lt;b&gt;%{text}&lt;/b&gt;&lt;br&gt;売上: ¥%{x:,.0f}M&lt;br&gt;利益率: %{y:.1f}%&lt;extra&gt;&lt;/extra&gt;"</span>
+      ) <span class="operator">%&gt;%</span>
+      <span class="function">layout</span>(
+        title <span class="operator">=</span> <span class="string">"売上 vs 利益率"</span>,
+        xaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"売上高（百万円）"</span>),
+        yaxis <span class="operator">=</span> <span class="function">list</span>(title <span class="operator">=</span> <span class="string">"利益率（%）"</span>)
+      )
+    
+    <span class="keyword">if</span> (input$show_trend) {
+      p <span class="operator">&lt;-</span> p <span class="operator">%&gt;%</span> <span class="function">add_lines</span>(
+        x <span class="operator">=</span> ~revenue,
+        y <span class="operator">=</span> <span class="function">fitted</span>(<span class="function">lm</span>(profit_margin ~ revenue, data <span class="operator">=</span> <span class="function">filtered_data</span>())),
+        line <span class="operator">=</span> <span class="function">list</span>(color <span class="operator">=</span> <span class="string">"red"</span>, width <span class="operator">=</span> <span class="number">2</span>),
+        name <span class="operator">=</span> <span class="string">"トレンドライン"</span>,
+        hoverinfo <span class="operator">=</span> <span class="string">"skip"</span>
+      )
+    }
+    
+    p
+  })
+  
+  <span class="comment"># データテーブル</span>
+  output$data_table <span class="operator">&lt;-</span> <span class="function">DT::renderDataTable</span>({
+    <span class="function">filtered_data</span>() <span class="operator">%&gt;%</span>
+      <span class="function">select</span>(company_name, industry, revenue, employees, profit_margin, satisfaction) <span class="operator">%&gt;%</span>
+      <span class="function">DT::datatable</span>(
+        options <span class="operator">=</span> <span class="function">list</span>(
+          pageLength <span class="operator">=</span> <span class="number">15</span>,
+          scrollX <span class="operator">=</span> <span class="variable">TRUE</span>,
+          searching <span class="operator">=</span> <span class="variable">TRUE</span>
+        ),
+        colnames <span class="operator">=</span> <span class="function">c</span>(<span class="string">"企業名"</span>, <span class="string">"業界"</span>, <span class="string">"売上(M¥)"</span>, <span class="string">"従業員数"</span>, <span class="string">"利益率(%)"</span>, <span class="string">"満足度"</span>)
+      ) <span class="operator">%&gt;%</span>
+      <span class="function">DT::formatCurrency</span>(<span class="string">"revenue"</span>, currency <span class="operator">=</span> <span class="string">"¥"</span>, mark <span class="operator">=</span> <span class="string">","</span>) <span class="operator">%&gt;%</span>
+      <span class="function">DT::formatPercentage</span>(<span class="string">"profit_margin"</span>, digits <span class="operator">=</span> <span class="number">1</span>)
+  })
+  
+  <span class="comment"># データダウンロード</span>
+  output$download_data <span class="operator">&lt;-</span> <span class="function">downloadHandler</span>(
+    filename <span class="operator">=</span> <span class="keyword">function</span>() {
+      <span class="function">paste</span>(<span class="string">"企業データ_"</span>, <span class="function">Sys.Date</span>(), <span class="string">".csv"</span>, sep <span class="operator">=</span> <span class="string">""</span>)
+    },
+    content <span class="operator">=</span> <span class="keyword">function</span>(file) {
+      <span class="function">write.csv</span>(<span class="function">filtered_data</span>(), file, row.names <span class="operator">=</span> <span class="variable">FALSE</span>)
+    }
+  )
+}
+
+<span class="comment"># アプリケーションの実行設定</span>
+app_config <span class="operator">&lt;-</span> <span class="function">list</span>(
+  ui <span class="operator">=</span> dashboard_ui,
+  server <span class="operator">=</span> dashboard_server,
+  options <span class="operator">=</span> <span class="function">list</span>(port <span class="operator">=</span> <span class="number">3838</span>)
+)
+
+<span class="function">print</span>(<span class="string">"Shinyダッシュボードアプリケーションが設定されました"</span>)
+<span class="function">print</span>(<span class="string">"実行コマンド: shinyApp(ui = dashboard_ui, server = dashboard_server)"</span>)
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">Shinyダッシュボード設定結果</div>
+                <div class="output-content">[1] "Shinyダッシュボードアプリケーションが設定されました"
+[1] "実行コマンド: shinyApp(ui = dashboard_ui, server = dashboard_server)"
+
+# Shinyダッシュボードの主要機能:
+- リアルタイムフィルタリング: 動的データ絞り込み
+- KPI表示: 重要指標の視覚的表示
+- インタラクティブプロット: plotly統合
+- データテーブル: 検索・ソート機能
+- CSVダウンロード: フィルタ済みデータの出力
+
+# ユーザーインターフェース:
+- 業界別フィルタ
+- 売上・従業員数スライダー
+- トレンドライン表示切り替え
+- タブベースナビゲーション
+- レスポンシブデザイン</div>
+            </div>
+
+            <div class="interactive-demo">
+                <div class="demo-title">Shinyダッシュボード プレビュー</div>
+                <div class="demo-content">
+                    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 10px; width: 100%; height: 100%;">
+                        <!-- サイドバー -->
+                        <div style="background: #222d32; padding: 15px; border-radius: 5px;">
+                            <div style="color: white; font-size: 0.9rem; margin-bottom: 10px;">
+                                <strong>📊 企業分析</strong>
+                            </div>
+                            <div style="color: #b3b3b3; font-size: 0.7rem; line-height: 1.4;">
+                                • 概要<br>
+                                • 詳細分析<br>
+                                • データテーブル<br><br>
+                                <strong>フィルタ:</strong><br>
+                                業界: [全て▼]<br>
+                                売上: [0━━━5000]<br>
+                                従業員: [1━━1000]
+                            </div>
+                        </div>
+                        <!-- メインエリア -->
+                        <div style="background: #f4f4f4; padding: 15px; border-radius: 5px;">
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px;">
+                                <div style="background: #3c8dbc; color: white; padding: 8px; border-radius: 3px; text-align: center; font-size: 0.7rem;">
+                                    <div>📈 200</div>
+                                    <div>企業数</div>
+                                </div>
+                                <div style="background: #00a65a; color: white; padding: 8px; border-radius: 3px; text-align: center; font-size: 0.7rem;">
+                                    <div>¥1.2M</div>
+                                    <div>平均売上</div>
+                                </div>
+                                <div style="background: #f39c12; color: white; padding: 8px; border-radius: 3px; text-align: center; font-size: 0.7rem;">
+                                    <div>150人</div>
+                                    <div>従業員数</div>
+                                </div>
+                                <div style="background: #dd4b39; color: white; padding: 8px; border-radius: 3px; text-align: center; font-size: 0.7rem;">
+                                    <div>15.2%</div>
+                                    <div>利益率</div>
+                                </div>
+                            </div>
+                            <div style="background: white; padding: 10px; border-radius: 5px; text-align: center; border: 1px solid #ddd;">
+                                <div style="color: #3c8dbc; font-weight: bold; margin-bottom: 5px; font-size: 0.8rem;">企業パフォーマンス散布図</div>
+                                <div style="color: #999; font-size: 0.7rem;">📊 インタラクティブチャートエリア</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>インタラクティブ技術</th>
+                        <th>適用領域</th>
+                        <th>主要機能</th>
+                        <th>実装難易度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>plotly変換</td>
+                        <td>静的グラフ拡張</td>
+                        <td>ホバー、ズーム、フィルタ</td>
+                        <td>低</td>
+                    </tr>
+                    <tr>
+                        <td>カスタムボタン</td>
+                        <td>データ操作UI</td>
+                        <td>スケール切り替え、表示制御</td>
+                        <td>中</td>
+                    </tr>
+                    <tr>
+                        <td>アニメーション</td>
+                        <td>時系列表現</td>
+                        <td>データ変化の動的表示</td>
+                        <td>中</td>
+                    </tr>
+                    <tr>
+                        <td>Shinyダッシュボード</td>
+                        <td>Webアプリケーション</td>
+                        <td>リアルタイム分析環境</td>
+                        <td>高</td>
+                    </tr>
+                    <tr>
+                        <td>クロスフィルタ</td>
+                        <td>複数チャート連動</td>
+                        <td>統合的データ探索</td>
+                        <td>高</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="key-points">
+            <h4>第14章の重要ポイント</h4>
+            <ul>
+                <li><strong>ggplotly変換</strong>：静的グラフの簡単インタラクティブ化</li>
+                <li><strong>カスタム機能</strong>：ボタン、ドロップダウン、スライダーの追加</li>
+                <li><strong>アニメーション</strong>：時系列データの動的可視化</li>
+                <li><strong>Shiny統合</strong>：Webベースのリアルタイムダッシュボード</li>
+                <li><strong>ユーザビリティ</strong>：直感的操作による探索的データ分析</li>
+                <li><strong>パフォーマンス</strong>：大容量データの効率的レンダリング</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>インタラクティブ可視化は、ユーザーがデータと対話することで新たな洞察を発見できる強力な手法です。plotlyは既存のggplot2コードを活用しながら段階的にインタラクティブ要素を追加できるため、学習コストを抑えて高度な機能を実現できます。Shinyとの組み合わせにより、エンドユーザー向けの本格的な分析アプリケーションも構築可能です。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">← 第13章</a>
+            <a href="chapter15-advanced-data-viz.html" class="nav-button">第15章 →</a>
+        </nav>
+    </div>
+</body>
+</html>

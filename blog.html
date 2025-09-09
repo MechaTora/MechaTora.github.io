@@ -11,11 +11,17 @@
     <meta property="og:title" content="開発ブログ - MechaTora">
     <meta property="og:description" content="Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
     <meta property="og:type" content="blog">
-    <meta property="og:url" content="https://mechatora.github.io/blog.html">
+    <meta property="og:url" content="https://mechatora.com/blog.html">
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
          crossorigin="anonymous"></script>
+    <!-- GitHub Pages to mechatora.com redirect -->
+    <script>
+    if (window.location.hostname === 'mechatora.github.io') {
+        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+    </script>
     
     <style>
         :root {

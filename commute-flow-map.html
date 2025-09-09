@@ -11,13 +11,19 @@
     <meta property="og:title" content="全国都市圏通勤流動マップ | Japan Commuter Flow Map">
     <meta property="og:description" content="関東・中部・関西・福岡圏の通勤流動を可視化 | Interactive visualization of commuter flows in major Japanese metropolitan areas">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mechatora.github.io/commute-flow-map.html">
+    <meta property="og:url" content="https://mechatora.com/commute-flow-map.html">
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GitHub Pages to mechatora.com redirect -->
+    <script>
+    if (window.location.hostname === 'mechatora.github.io') {
+        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+    </script>
     
     <style>
         * {
@@ -788,7 +794,7 @@
                     { name: "天王寺・天王寺区", center: [34.6460, 135.5066], totalInflow: 180000 },
                     { name: "本町・西区", center: [34.6826, 135.4932], totalInflow: 160000 },
                     { name: "新大阪・淀川区", center: [34.7326, 135.5009], totalInflow: 140000 },
-                    { name: "住吉・住吉区", center: [34.6138, 135.4951], totalInflow: 120000 }
+                    { name: "住吉区", center: [34.6138, 135.4951], totalInflow: 120000 }
                 ],
                 inflowData: [
                     { from: [34.8113, 135.4669], fromName: "兵庫県尼崎市", toArea: "梅田・北区", volume: 35000 },
