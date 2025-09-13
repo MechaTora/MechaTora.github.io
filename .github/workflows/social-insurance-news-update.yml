@@ -15,12 +15,16 @@ jobs:
   update-social-insurance-news:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: read
     
     steps:
     - name: リポジトリをチェックアウト
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
         
     - name: Python環境セットアップ
       uses: actions/setup-python@v4
@@ -42,13 +46,26 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        
+        # デバッグ: 変更状況確認
+        echo "=== Git Status ==="
+        git status
+        
+        echo "=== 変更されたファイル ==="
+        git diff --name-only
+        
+        # データディレクトリの変更を追加
         git add render-social-insurance-news/data/
+        
+        echo "=== ステージングされたファイル ==="
+        git diff --staged --name-only
         
         if git diff --staged --quiet; then
           echo "変更なし - コミットをスキップ"
         else
-          git commit -m "🤖 社会保険ニュース自動更新 - $(TZ=Asia/Tokyo date '+%Y年%m月%d日 %H:%M')"
-          git push
+          echo "変更あり - コミット実行"
+          git commit -m "🔄 社会保険ニュースデータ最新更新 - $(TZ=Asia/Tokyo date '+%Y年%m月%d日 %H:%M')"
+          git push origin main
         fi
         
     - name: Render Webhook通知（デプロイトリガー）
