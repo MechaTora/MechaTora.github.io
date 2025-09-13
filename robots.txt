@@ -1,10 +1,76 @@
-# GitHub Pages版は正規サイト(mechatora.com)にリダイレクトするため制限
-User-agent: *
-Disallow: /
+  User-agent: *
+  Allow: /
 
-# 正規サイトのサイトマップを参照
-Sitemap: https://mechatora.com/sitemap.xml
+  # 個人情報・機密データをブロック
+  Disallow: /admin/
+  Disallow: /dashboard/
+  Disallow: /user/
+  Disallow: /profile/
+  Disallow: /account/
+  Disallow: /login/
+  Disallow: /auth/
+  Disallow: /api/private/
+  Disallow: /config/
+  Disallow: /.env
+  Disallow: /.git/
+  Disallow: /backup/
+  Disallow: /logs/
 
-# GitHub Pages版はmechatora.comにリダイレクトされます
-# 正規サイト: https://mechatora.com/
+  # 一時的・内部ファイルをブロック
+  Disallow: /temp/
+  Disallow: /tmp/
+  Disallow: /cache/
+  Disallow: /.well-known/
+  Disallow: /node_modules/
+  Disallow: /*.log$
+  Disallow: /*.json$
+  Disallow: /*.xml$
+  Disallow: /*.csv$
+  Disallow: /*.sql$
+  Disallow: /*.db$
+
+  # メール・連絡先フォームをブロック
+  Disallow: /contact/submit/
+  Disallow: /form/
+  Disallow: /mail/
+
+  # 検索インデックス化したくないページ
+  Disallow: /test/
+  Disallow: /dev/
+  Disallow: /beta/
+  Disallow: /staging/
+
+  # プライバシーポリシー等は公開（Allowで明示）
+  Allow: /privacy/
+  Allow: /terms/
+  Allow: /about/
+
+  # 良性な検索エンジンには詳細許可
+  User-agent: Googlebot
+  Allow: /
+  Disallow: /admin/
+  Disallow: /user/
+  Disallow: /api/private/
+
+  User-agent: Bingbot
+  Allow: /
+  Disallow: /admin/
+  Disallow: /user/
+  Disallow: /api/private/
+
+  # 悪意のあるボットをブロック
+  User-agent: SemrushBot
+  Disallow: /
+
+  User-agent: AhrefsBot
+  Disallow: /
+
+  User-agent: MJ12bot
+  Disallow: /
+
+  # サイトマップ
+  Sitemap: https://mechatora.com/sitemap.xml
+
+  # クロール遅延設定（サーバー負荷軽減）
+  Crawl-delay: 1
 
