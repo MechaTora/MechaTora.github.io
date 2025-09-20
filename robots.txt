@@ -1,6 +1,18 @@
   User-agent: *
   Allow: /
 
+  # 公開ページは明示的に許可
+  Allow: /*.html
+  Allow: /contact.html
+  Allow: /blog.html
+  Allow: /privacy.html
+  Allow: /privacy-policy.html
+  Allow: /earthquake-monitor/
+  Allow: /jellyfish-simulation/
+  Allow: /flashcard-web-app/
+  Allow: /beer-quiz/
+  Allow: /unreasonable-othello/
+
   # 個人情報・機密データをブロック
   Disallow: /admin/
   Disallow: /dashboard/
@@ -23,16 +35,14 @@
   Disallow: /.well-known/
   Disallow: /node_modules/
   Disallow: /*.log$
-  Disallow: /*.json$
-  Disallow: /*.xml$
   Disallow: /*.csv$
   Disallow: /*.sql$
   Disallow: /*.db$
 
-  # メール・連絡先フォームをブロック
+  # フォーム送信エンドポイントのみブロック
   Disallow: /contact/submit/
-  Disallow: /form/
-  Disallow: /mail/
+  Disallow: /form/submit/
+  Disallow: /mail/send/
 
   # 検索インデックス化したくないページ
   Disallow: /test/
