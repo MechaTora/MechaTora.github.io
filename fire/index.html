@@ -33,6 +33,49 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
          crossorigin="anonymous"></script>
     
+    <!-- Video-specific Meta Tags -->
+    <meta property="video:duration" content="3600">
+    <meta property="video:width" content="854">
+    <meta property="video:height" content="480">
+    <meta property="video:type" content="video/mp4">
+    <meta property="video:url" content="https://mechatora.com/fire/239511.mp4">
+    
+    <!-- Structured Data for Video -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        "name": "バーチャル焚火 - リラックス・瞑想・作業用BGM",
+        "description": "永続再生の焚火映像で究極のリラックス体験。リアルな炎の揺らめきと自然な焚火の音で心を癒し、ストレス解消や集中力向上に最適。",
+        "thumbnailUrl": "https://mechatora.com/fire/fire-thumbnail.jpg",
+        "uploadDate": "2024-01-01T00:00:00Z",
+        "duration": "PT1H",
+        "contentUrl": "https://mechatora.com/fire/239511.mp4",
+        "embedUrl": "https://mechatora.com/fire/",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaTora",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://mechatora.com/logo.png"
+            }
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "MechaTora",
+            "url": "https://mechatora.com"
+        },
+        "keywords": ["焚火", "リラックス", "癒し", "作業用BGM", "睡眠", "瞑想", "ASMR", "環境音", "ストレス解消"],
+        "genre": ["癒し", "リラクゼーション", "環境音"],
+        "isFamilyFriendly": true,
+        "inLanguage": "ja",
+        "potentialAction": {
+            "@type": "WatchAction",
+            "target": "https://mechatora.com/fire/"
+        }
+    }
+    </script>
+    
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff8c00">
@@ -316,8 +359,19 @@
 
     <div class="fireplace-container" id="fireplaceContainer">
         <!-- 焚火動画 -->
-        <video class="fireplace-video" id="fireplaceVideo" autoplay muted loop>
+        <video class="fireplace-video" id="fireplaceVideo" autoplay muted loop
+               poster="fire-thumbnail.jpg"
+               itemprop="video"
+               itemscope 
+               itemtype="https://schema.org/VideoObject">
             <source src="239511.mp4" type="video/mp4">
+            <meta itemprop="name" content="バーチャル焚火 - リラックス・瞑想・作業用BGM">
+            <meta itemprop="description" content="永続再生の焚火映像で究極のリラックス体験">
+            <meta itemprop="thumbnailUrl" content="https://mechatora.com/fire/fire-thumbnail.jpg">
+            <meta itemprop="contentUrl" content="https://mechatora.com/fire/239511.mp4">
+            <meta itemprop="embedUrl" content="https://mechatora.com/fire/">
+            <meta itemprop="uploadDate" content="2024-01-01">
+            <meta itemprop="duration" content="PT1H">
             お使いのブラウザは動画に対応していません。
         </video>
         
