@@ -60,14 +60,6 @@
           "description": "便利なWebアプリケーション開発者",
           "url": "https://mechatora.com/",
           "inLanguage": "ja-JP",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://mechatora.com/?search={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
-          },
           "publisher": {
             "@id": "https://mechatora.com/#organization"
           }
@@ -1008,6 +1000,27 @@
     </footer>
 
     <script>
+        // Canonical URL処理（検索パラメータ除去）
+        document.addEventListener('DOMContentLoaded', function() {
+            // URLに検索パラメータがある場合、canonicalを正規URLに設定
+            const currentUrl = window.location.href;
+            const baseUrl = window.location.origin + window.location.pathname;
+            
+            if (currentUrl !== baseUrl) {
+                const canonicalLink = document.querySelector('link[rel="canonical"]');
+                if (canonicalLink) {
+                    canonicalLink.href = baseUrl;
+                }
+                
+                // 検索パラメータがある場合はGoogle側での正規化促進
+                if (window.location.search) {
+                    // 履歴置換（ユーザー体験を損なわない）
+                    const newUrl = baseUrl;
+                    window.history.replaceState({}, document.title, newUrl);
+                }
+            }
+        });
+
         // グローバルナビゲーション機能
         document.addEventListener('DOMContentLoaded', function() {
             const navToggle = document.querySelector('.nav-toggle');
