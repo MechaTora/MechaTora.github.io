@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第17章: ハイパーパラメータチューニング - tune | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-electric);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-electric);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-electric);
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-electric);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1);
+        }
+
+        .code-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--accent-electric);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-electric);
+            opacity: 0.6;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+            background: #0d1117;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Syntax highlighting */
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+        .code-regex { color: #39ff14; font-weight: bold; }
+        .code-pattern { color: #ffff00; background: rgba(255, 255, 0, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+        /* Content Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.02);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.15);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-electric), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-electric);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-electric);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        .section p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Function Grid */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .function-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-electric) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .function-card:hover::before {
+            left: 0;
+        }
+
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+
+        .function-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-electric);
+            margin-bottom: 1rem;
+        }
+
+        .function-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .function-syntax {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        /* Tuning Workflow */
+        .tuning-workflow {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .workflow-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--accent-electric);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+        }
+
+        .step-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎛️ ハイパーパラメータチューニング - tune</h1>
+            <div class="subtitle">第17章: モデル性能を最大化する最適化戦略</div>
+            <div class="chapter-meta">
+                <span>🎯 Hyperparameter Tuning</span>
+                <span>⚡ Grid Search & Bayesian Optimization</span>
+                <span>🏎️ Racing Algorithms</span>
+            </div>
+            <p class="chapter-description">
+                モデル性能を最大化する秘訣。tuneパッケージでグリッドサーチ、ベイズ最適化、Racingアルゴリズムなど、効率的なハイパーパラメータ探索技術をマスターしよう。
+            </p>
+        </header>
+
+        <!-- Navigation Widget -->
+        <nav class="chapter-nav">
+            <a href="chapter10-advanced-dplyr.html" class="nav-button">Ch10: dplyr応用</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">Ch11: 機械学習</a>
+            <a href="chapter12-model-evaluation.html" class="nav-button">Ch12: モデル評価</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">Ch13: ggplot2応用</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">Ch14: 対話的可視化</a>
+            <a href="chapter15-big-data.html" class="nav-button">Ch15: ビッグデータ</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">Ch16: リサンプリング</a>
+            <a href="chapter17-hyperparameter-tuning.html" class="nav-button current">Ch17: チューニング</a>
+            <a href="chapter18-advanced-modeling.html" class="nav-button">Ch18: 高度モデリング</a>
+            <a href="chapter19-deployment.html" class="nav-button">Ch19: デプロイ</a>
+            <a href="chapter20-best-practices.html" class="nav-button">Ch20: ベストプラクティス</a>
+        </nav>
+
+        <!-- HYPERPARAMETER TUNING INTRODUCTION -->
+        <section class="section">
+            <h2>🎯 ハイパーパラメータチューニングの重要性</h2>
+            <p>
+                ハイパーパラメータチューニングは、機械学習モデルの性能を最大化するための重要な技術です。tuneパッケージを使用して、効率的な最適化戦略を実装します。
+            </p>
+
+            <div class="tuning-workflow">
+                <div class="workflow-title">🔄 ハイパーパラメータチューニングワークフロー</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-number">1️⃣</div>
+                        <div>データ分割</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2️⃣</div>
+                        <div>モデル定義</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3️⃣</div>
+                        <div>グリッド設定</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4️⃣</div>
+                        <div>チューニング実行</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">5️⃣</div>
+                        <div>最適化評価</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">6️⃣</div>
+                        <div>モデル最終化</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>📦 環境のセットアップ</h3>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">チューニング環境の準備</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># ハイパーパラメータチューニングエコシステムの読み込み</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidymodels</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># チューニング専用パッケージ</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tune</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dials</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># サンプルデータの作成</span></span>
+                    <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-variable">123</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 分類用データセット</span></span>
+                    <span class="code-line"><span class="code-variable">classification_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                    <span class="code-line">  x1 <span class="code-keyword">=</span> <span class="code-function">rnorm</span>(<span class="code-variable">1000</span>),</span>
+                    <span class="code-line">  x2 <span class="code-keyword">=</span> <span class="code-function">rnorm</span>(<span class="code-variable">1000</span>),</span>
+                    <span class="code-line">  x3 <span class="code-keyword">=</span> <span class="code-function">rnorm</span>(<span class="code-variable">1000</span>),</span>
+                    <span class="code-line">  y <span class="code-keyword">=</span> <span class="code-function">factor</span>(<span class="code-function">ifelse</span>(x1 + x2 + <span class="code-function">rnorm</span>(<span class="code-variable">1000</span>) > <span class="code-variable">0</span>, <span class="code-string">"A"</span>, <span class="code-string">"B"</span>))</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">glimpse</span>(classification_data)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TUNING FUNCTIONS -->
+        <section class="section">
+            <h2>⚙️ 主要なチューニング関数</h2>
+            <p>
+                tuneパッケージの主要な関数を理解し、効果的なハイパーパラメータ最適化を実現しましょう。
+            </p>
+            
+            <div class="function-grid">
+                <div class="function-card">
+                    <div class="function-title">tune()</div>
+                    <div class="function-description">
+                        モデルパラメータをチューニング対象としてマークする基本関数。どのパラメータを最適化するかを指定。
+                    </div>
+                    <div class="function-syntax">mtry = tune(), trees = tune()</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">tune_grid()</div>
+                    <div class="function-description">
+                        グリッドサーチでハイパーパラメータを探索。事前に定義したグリッドで網羅的な探索を実行。
+                    </div>
+                    <div class="function-syntax">tune_grid(resamples, grid)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">tune_bayes()</div>
+                    <div class="function-description">
+                        ベイズ最適化で効率的なハイパーパラメータ探索。過去の結果を学習して次の探索点を効率化。
+                    </div>
+                    <div class="function-syntax">tune_bayes(resamples, initial, iter)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">tune_race_anova()</div>
+                    <div class="function-description">
+                        Racingアルゴリズムで高速チューニング。性能が低いパラメータを早期に除外して効率化。
+                    </div>
+                    <div class="function-syntax">tune_race_anova(resamples, grid)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">select_best()</div>
+                    <div class="function-description">
+                        チューニング結果から最適なパラメータを選択。指定したメトリックで最高の結果を取得。
+                    </div>
+                    <div class="function-syntax">select_best(metric = "accuracy")</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">finalize_workflow()</div>
+                    <div class="function-description">
+                        選択したパラメータでワークフローを最終化。チューニング済みのモデルで本格的な予測を実行。
+                    </div>
+                    <div class="function-syntax">finalize_workflow(best_params)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BASIC TUNING -->
+        <section class="section">
+            <h2>🔧 基本的なチューニング</h2>
+            <p>
+                tune()関数を使用してハイパーパラメータをマークし、グリッドサーチで最適値を探索します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">基本的なグリッドサーチ</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># データ分割</span></span>
+                    <span class="code-line"><span class="code-variable">data_split</span> <span class="code-keyword">&lt;-</span> classification_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">initial_split</span>(prop <span class="code-keyword">=</span> <span class="code-variable">0.8</span>, strata <span class="code-keyword">=</span> y)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-variable">train_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(data_split)</span>
+                    <span class="code-line"><span class="code-variable">test_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(data_split)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># クロスバリデーション</span></span>
+                    <span class="code-line"><span class="code-variable">cv_folds</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">vfold_cv</span>(v <span class="code-keyword">=</span> <span class="code-variable">5</span>, strata <span class="code-keyword">=</span> y)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># チューニング対象モデル</span></span>
+                    <span class="code-line"><span class="code-variable">rf_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">rand_forest</span>(</span>
+                    <span class="code-line">  mtry <span class="code-keyword">=</span> <span class="code-function">tune</span>(),</span>
+                    <span class="code-line">  trees <span class="code-keyword">=</span> <span class="code-function">tune</span>(),</span>
+                    <span class="code-line">  min_n <span class="code-keyword">=</span> <span class="code-function">tune</span>()</span>
+                    <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"ranger"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"classification"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"チューニングモデル設定完了"</span>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRID SEARCH -->
+        <section class="section">
+            <h2>🔍 グリッドサーチ</h2>
+            <p>
+                パラメータ空間を体系的に探索するグリッドサーチを実装します。regular gridとrandom gridの両方を学習します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">グリッドサーチの実装</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># レシピ作成</span></span>
+                    <span class="code-line"><span class="code-variable">rf_recipe</span> <span class="code-keyword">&lt;-</span> <span class="code-function">recipe</span>(y ~ ., data <span class="code-keyword">=</span> train_data) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">step_normalize</span>(<span class="code-function">all_numeric_predictors</span>())</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ワークフロー作成</span></span>
+                    <span class="code-line"><span class="code-variable">rf_workflow</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_model</span>(rf_model) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_recipe</span>(rf_recipe)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># レギュラーグリッド</span></span>
+                    <span class="code-line"><span class="code-variable">rf_grid</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">extract_parameter_set_dials</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">grid_regular</span>(levels <span class="code-keyword">=</span> <span class="code-variable">3</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(rf_grid)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ランダムグリッド</span></span>
+                    <span class="code-line"><span class="code-variable">rf_random_grid</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">extract_parameter_set_dials</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">grid_random</span>(size <span class="code-keyword">=</span> <span class="code-variable">20</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"グリッド作成完了"</span>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TUNING EXECUTION -->
+        <section class="section">
+            <h2>⚡ チューニング実行</h2>
+            <p>
+                tune_grid()を使用して、実際にハイパーパラメータチューニングを実行し、最適なパラメータを見つけます。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">チューニングの実行</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># グリッドサーチ実行</span></span>
+                    <span class="code-line"><span class="code-variable">rf_results</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tune_grid</span>(</span>
+                    <span class="code-line">    resamples <span class="code-keyword">=</span> cv_folds,</span>
+                    <span class="code-line">    grid <span class="code-keyword">=</span> rf_random_grid</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 結果確認</span></span>
+                    <span class="code-line"><span class="code-variable">best_metrics</span> <span class="code-keyword">&lt;-</span> rf_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">collect_metrics</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(mean))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">head</span>(best_metrics))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 最適パラメータ選択</span></span>
+                    <span class="code-line"><span class="code-variable">best_params</span> <span class="code-keyword">&lt;-</span> rf_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">select_best</span>(<span class="code-string">"accuracy"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(best_params)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- BAYESIAN OPTIMIZATION -->
+        <section class="section">
+            <h2>🧠 ベイズ最適化</h2>
+            <p>
+                tune_bayes()を使用して、より効率的なベイズ最適化によるハイパーパラメータ探索を実装します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">ベイズ最適化の実装</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 初期グリッド</span></span>
+                    <span class="code-line"><span class="code-variable">initial_grid</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">extract_parameter_set_dials</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">grid_random</span>(size <span class="code-keyword">=</span> <span class="code-variable">5</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ベイズ最適化実行</span></span>
+                    <span class="code-line"><span class="code-variable">bayes_results</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tune_bayes</span>(</span>
+                    <span class="code-line">    resamples <span class="code-keyword">=</span> cv_folds,</span>
+                    <span class="code-line">    initial <span class="code-keyword">=</span> initial_grid,</span>
+                    <span class="code-line">    iter <span class="code-keyword">=</span> <span class="code-variable">10</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ベイズ結果確認</span></span>
+                    <span class="code-line"><span class="code-variable">bayes_best</span> <span class="code-keyword">&lt;-</span> bayes_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">select_best</span>(<span class="code-string">"accuracy"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(bayes_best)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARAMETER RANGES -->
+        <section class="section">
+            <h2>📏 パラメータ範囲の設定</h2>
+            <p>
+                dialsパッケージを使用して、ハイパーパラメータの探索範囲をカスタマイズします。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">カスタムパラメータ範囲</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># パラメータ範囲設定</span></span>
+                    <span class="code-line"><span class="code-variable">custom_params</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">extract_parameter_set_dials</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">update</span>(</span>
+                    <span class="code-line">    mtry <span class="code-keyword">=</span> <span class="code-function">mtry</span>(<span class="code-function">range</span> <span class="code-keyword">=</span> <span class="code-function">c</span>(<span class="code-variable">1</span>, <span class="code-variable">3</span>)),</span>
+                    <span class="code-line">    trees <span class="code-keyword">=</span> <span class="code-function">trees</span>(<span class="code-function">range</span> <span class="code-keyword">=</span> <span class="code-function">c</span>(<span class="code-variable">50</span>, <span class="code-variable">500</span>))</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># カスタムグリッド作成</span></span>
+                    <span class="code-line"><span class="code-variable">custom_grid</span> <span class="code-keyword">&lt;-</span> custom_params <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">grid_regular</span>(levels <span class="code-keyword">=</span> <span class="code-variable">4</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(custom_grid)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODEL FINALIZATION -->
+        <section class="section">
+            <h2>🏁 モデルの最終化</h2>
+            <p>
+                最適なハイパーパラメータでモデルを最終化し、テストデータで性能を評価します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">最終モデルの構築</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 最終ワークフロー作成</span></span>
+                    <span class="code-line"><span class="code-variable">final_workflow</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">finalize_workflow</span>(best_params)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 最終モデル訓練</span></span>
+                    <span class="code-line"><span class="code-variable">final_fit</span> <span class="code-keyword">&lt;-</span> final_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">last_fit</span>(data_split)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># テスト性能評価</span></span>
+                    <span class="code-line"><span class="code-variable">test_metrics</span> <span class="code-keyword">&lt;-</span> final_fit <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">collect_metrics</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(test_metrics)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 予測結果</span></span>
+                    <span class="code-line"><span class="code-variable">test_predictions</span> <span class="code-keyword">&lt;-</span> final_fit <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">collect_predictions</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">head</span>(test_predictions))</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- RACING -->
+        <section class="section">
+            <h2>🏎️ Racing アルゴリズム</h2>
+            <p>
+                tune_race_anova()を使用して、効率的なRacingアルゴリズムによる高速チューニングを実装します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">Racing アルゴリズムの実装</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># Racing用大きなグリッド</span></span>
+                    <span class="code-line"><span class="code-variable">racing_grid</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">extract_parameter_set_dials</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">grid_random</span>(size <span class="code-keyword">=</span> <span class="code-variable">50</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># Racing実行</span></span>
+                    <span class="code-line"><span class="code-variable">racing_results</span> <span class="code-keyword">&lt;-</span> rf_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tune_race_anova</span>(</span>
+                    <span class="code-line">    resamples <span class="code-keyword">=</span> cv_folds,</span>
+                    <span class="code-line">    grid <span class="code-keyword">=</span> racing_grid</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># Racing結果</span></span>
+                    <span class="code-line"><span class="code-variable">racing_best</span> <span class="code-keyword">&lt;-</span> racing_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">select_best</span>(<span class="code-string">"accuracy"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(racing_best)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MULTI MODEL TUNING -->
+        <section class="section">
+            <h2>🔄 複数モデルの同時チューニング</h2>
+            <p>
+                workflow_set()を使用して、複数のモデルを同時にチューニングし、最適なモデルを選択します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">複数モデルチューニング</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 複数モデル定義</span></span>
+                    <span class="code-line"><span class="code-variable">svm_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">svm_rbf</span>(cost <span class="code-keyword">=</span> <span class="code-function">tune</span>(), rbf_sigma <span class="code-keyword">=</span> <span class="code-function">tune</span>()) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"kernlab"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"classification"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-variable">lr_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">logistic_reg</span>(penalty <span class="code-keyword">=</span> <span class="code-function">tune</span>(), mixture <span class="code-keyword">=</span> <span class="code-function">tune</span>()) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"glmnet"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ワークフローセット作成</span></span>
+                    <span class="code-line"><span class="code-variable">model_set</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow_set</span>(</span>
+                    <span class="code-line">  preproc <span class="code-keyword">=</span> <span class="code-function">list</span>(norm <span class="code-keyword">=</span> rf_recipe),</span>
+                    <span class="code-line">  models <span class="code-keyword">=</span> <span class="code-function">list</span>(rf <span class="code-keyword">=</span> rf_model, svm <span class="code-keyword">=</span> svm_model, lr <span class="code-keyword">=</span> lr_model)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 全モデルチューニング</span></span>
+                    <span class="code-line"><span class="code-variable">set_results</span> <span class="code-keyword">&lt;-</span> model_set <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">workflow_map</span>(<span class="code-string">"tune_grid"</span>, resamples <span class="code-keyword">=</span> cv_folds, grid <span class="code-keyword">=</span> <span class="code-variable">10</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">rank_results</span>(set_results))</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVANCED STRATEGIES -->
+        <section class="section">
+            <h2>🎯 高度な最適化戦略</h2>
+            <p>
+                異なるチューニング手法の特徴と使い分けを理解し、状況に応じた最適な戦略を選択しましょう。
+            </p>
+            
+            <div class="function-grid">
+                <div class="function-card">
+                    <div class="function-title">📋 グリッドサーチ</div>
+                    <div class="function-description">
+                        <strong>適用ケース:</strong> パラメータが少ない、網羅的探索が必要<br>
+                        <strong>メリット:</strong> 理解しやすい、再現可能性高<br>
+                        <strong>デメリット:</strong> 計算コストが高い
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">🧠 ベイズ最適化</div>
+                    <div class="function-description">
+                        <strong>適用ケース:</strong> 高次元パラメータ、計算コストが高い<br>
+                        <strong>メリット:</strong> 効率的、適応的探索<br>
+                        <strong>デメリット:</strong> 結果が不安定
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">🏎️ Racing</div>
+                    <div class="function-description">
+                        <strong>適用ケース:</strong> 大きな探索空間、高速チューニング<br>
+                        <strong>メリット:</strong> 高速、リソース効率的<br>
+                        <strong>デメリット:</strong> 最適解を逃す可能性
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section class="section">
+            <h2>🎆 章のまとめ</h2>
+            <p>
+                本章では、tuneパッケージを使用した包括的なハイパーパラメータチューニング技術をマスターしました。実用的な機械学習システム構築のための重要なスキルを習得しました。
+            </p>
+            
+            <h3>📚 学習した主要ポイント</h3>
+            <div class="function-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div class="function-card">
+                    <div class="function-title">基本手法</div>
+                    <div class="function-description">
+                        • tune()でパラメータマーキング<br>
+                        • グリッドサーチの実装<br>
+                        • クロスバリデーションと組み合わせ
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">高度な最適化</div>
+                    <div class="function-description">
+                        • ベイズ最適化の活用<br>
+                        • Racingアルゴリズム<br>
+                        • パラメータ範囲のカスタマイズ
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">実用的テクニック</div>
+                    <div class="function-description">
+                        • 複数モデルの同時最適化<br>
+                        • 最終モデルの構築と評価<br>
+                        • 成果物の管理と共有
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 30px; font-size: 1.1rem; color: var(--accent-electric); text-align: center;">
+                🚀 <strong>これであなたもハイパーパラメータチューニングのエキスパートです！</strong>
+            </p>
+        </section>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 章間ナビゲーション -->
+    <div style="display: flex; justify-content: space-between; margin: 3rem 0; padding: 0 2rem;">
+        <a href="chapter16-resampling-rsample.html" style="display: flex; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); border: 1px solid var(--accent-cyan); border-radius: 15px; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease;">
+            <span style="font-size: 1.5rem; margin-right: 0.5rem;">←</span>
+            <div>
+                <div style="font-size: 0.9rem; color: var(--accent-cyan);">前の章</div>
+                <div style="font-weight: 600;">第16章: リサンプリング - rsample</div>
+            </div>
+        </a>
+        
+        <a href="chapter18-model-evaluation-yardstick.html" style="display: flex; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); border: 1px solid var(--accent-cyan); border-radius: 15px; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease;">
+            <div style="text-align: right;">
+                <div style="font-size: 0.9rem; color: var(--accent-cyan);">次の章</div>
+                <div style="font-weight: 600;">第18章: モデル評価 - yardstick</div>
+            </div>
+            <span style="font-size: 1.5rem; margin-left: 0.5rem;">→</span>
+        </a>
+    </div>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </div>
+</body>
+</html>

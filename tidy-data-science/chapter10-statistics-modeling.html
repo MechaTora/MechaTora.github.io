@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第10章: 統計モデリング基礎 | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -245,14 +258,352 @@
             overflow-x: auto;
         }
 
+        /* Chapter 5 Style Code Blocks */
+        .code-block {
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.8), rgba(0, 212, 255, 0.8));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #28ca42; }
+
+        .code-title {
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.4);
+            overflow-x: auto;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
         /* Syntax highlighting */
-        .keyword { color: #ff7b72; }
-        .function { color: #d2a8ff; }
-        .string { color: #a5d6ff; }
-        .comment { color: #8b949e; font-style: italic; }
-        .operator { color: #f85149; }
-        .number { color: #79c0ff; }
-        .variable { color: #ffa657; }
+        .code-keyword { color: #ff6b9d; font-weight: bold; }
+        .code-function { color: #00d4ff; }
+        .code-string { color: #00ff88; }
+        .code-comment { color: #8b949e; font-style: italic; }
+        .code-operator { color: #f85149; }
+        .code-number { color: #79c0ff; }
+        .code-variable { color: #ffa657; }
+        .code-regex { color: #ff6b9d; background: rgba(255, 107, 157, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+        /* Glass morphism effects */
+        .glass-bg {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-border {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Content sections */
+        .content-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-magenta);
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px var(--accent-magenta);
+        }
+
+        .section-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+        }
+
+        /* Fade in animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Visualization styles */
+        .visualization-output {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-table {
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .result-table th {
+            background: var(--accent-magenta);
+            color: white;
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .result-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .result-table tr:hover {
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        .result-interpretation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid var(--accent-neon);
+            border-radius: 0 8px 8px 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+        }
+
+        /* Enhanced interpretation styles */
+        .detailed-interpretation {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 107, 157, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 107, 157, 0.2);
+        }
+
+        .interpretation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .interp-section {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        .interp-section h6 {
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .interp-section p {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* R-squared explanation styles */
+        .r-squared-explanation {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .r-squared-interpretation {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .interpretation-items {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .interp-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+
+        .interp-label {
+            min-width: 120px;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        .interp-value {
+            color: rgba(255, 255, 255, 0.9);
+            flex: 1;
+        }
+
+        /* R-squared scale */
+        .r-squared-scale {
+            margin: 1rem 0;
+        }
+
+        .scale-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .scale-item {
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .scale-item.excellent {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+        }
+
+        .scale-item.good {
+            background: rgba(0, 123, 255, 0.2);
+            border: 1px solid rgba(0, 123, 255, 0.5);
+        }
+
+        .scale-item.moderate {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+        }
+
+        .scale-item.weak {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+        }
+
+        .scale-range {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-cyan);
+        }
+
+        .scale-label {
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .scale-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Marginal effects styles */
+        .marginal-effects-interpretation {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(157, 78, 221, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        /* Prediction scenarios styles */
+        .prediction-scenarios {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 140, 66, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 140, 66, 0.2);
+        }
+
+        .scenario-results {
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .high-risk {
+            color: #ff4757 !important;
+            font-weight: bold;
+        }
+
+        .medium-risk {
+            color: #ffa502 !important;
+            font-weight: bold;
+        }
+
+        .low-risk {
+            color: #2ed573 !important;
+            font-weight: bold;
+        }
 
         /* Output Display */
         .output-container {
@@ -486,604 +837,1069 @@
         </header>
 
         <nav class="chapter-nav">
-            <a href="chapter1-tidyverse-overview.html" class="nav-button">1</a>
-            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">2</a>
-            <a href="chapter3-ggplot2-visualization.html" class="nav-button">3</a>
-            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">4</a>
-            <a href="chapter5-stringr-text-processing.html" class="nav-button">5</a>
-            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">6</a>
-            <a href="chapter7-lubridate-datetime.html" class="nav-button">7</a>
-            <a href="chapter8-readr-data-import.html" class="nav-button">8</a>
-            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">9</a>
-            <a href="#" class="nav-button current">10</a>
-            <a href="chapter11-machine-learning.html" class="nav-button">11</a>
-            <a href="chapter12-time-series.html" class="nav-button">12</a>
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">第6章</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">第7章</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">第8章</a>
+            <a href="chapter9-next-topic.html" class="nav-button">第9章</a>
+            <a href="#" class="nav-button current">第10章</a>
         </nav>
 
-        <section class="section">
-            <h2>📊 線形回帰分析の基礎</h2>
-            
-            <p>統計モデリングの基本となる線形回帰を、Tidyverseのbroomパッケージと組み合わせて効果的に実行する方法を学習します。</p>
+        <!-- LINEAR REGRESSION MASTERY -->
+        <section class="content-section fade-in-up" id="linear-regression">
+            <h2 class="section-title">📈 線形回帰の深淵</h2>
+            <div class="section-content">
+                <p>
+                    線形回帰は統計モデリングの基礎であり、数多くの高度な手法の出発点となります。Tidyverseの強力なツールと組み合わせることで、データの奥に隠された関係性を解明し、予測の精度を極限まで高めることができます。
+                </p>
+                
+                <!-- Simple Linear Regression -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 単純線形回帰の基礎</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">simple_linear_regression.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 必要なライブラリの読み込み</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">broom</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">modelr</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># サンプルデータの生成</span></span>
+                        <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-string">42</span>)</span>
+                        <span class="code-line"><span class="code-variable">housing_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  size = <span class="code-function">rnorm</span>(<span class="code-string">200</span>, <span class="code-string">100</span>, <span class="code-string">30</span>),</span>
+                        <span class="code-line">  age = <span class="code-function">sample</span>(<span class="code-string">1</span>:<span class="code-string">50</span>, <span class="code-string">200</span>, replace = <span class="code-string">TRUE</span>),</span>
+                        <span class="code-line">  location_score = <span class="code-function">runif</span>(<span class="code-string">200</span>, <span class="code-string">1</span>, <span class="code-string">10</span>),</span>
+                        <span class="code-line">  price = <span class="code-string">50</span> * size + <span class="code-string">20</span> * location_score - <span class="code-string">10</span> * age + </span>
+                        <span class="code-line">          <span class="code-function">rnorm</span>(<span class="code-string">200</span>, <span class="code-string">0</span>, <span class="code-string">500</span>) + <span class="code-string">2000</span></span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># データの概要確認</span></span>
+                        <span class="code-line"><span class="code-function">glimpse</span>(housing_data)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 単純線形回帰モデル</span></span>
+                        <span class="code-line"><span class="code-variable">simple_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">lm</span>(price ~ size, data = housing_data)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># モデルの概要をtidyに</span></span>
+                        <span class="code-line"><span class="code-variable">model_summary</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tidy</span>(simple_model)</span>
+                        <span class="code-line"><span class="code-function">print</span>(model_summary)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># モデル適合度</span></span>
+                        <span class="code-line"><span class="code-variable">model_stats</span> <span class="code-keyword">&lt;-</span> <span class="code-function">glance</span>(simple_model)</span>
+                        <span class="code-line"><span class="code-function">print</span>(model_stats)</span>
+                    </div>
+                </div>
 
-            <h3>単純線形回帰</h3>
-
-            <div class="code-container">
-                <div class="code-header">基本的な線形回帰モデル</div>
-                <div class="code-content">
-<span class="keyword">library</span>(<span class="string">tidyverse</span>)
-<span class="keyword">library</span>(<span class="string">broom</span>)
-<span class="keyword">library</span>(<span class="string">modelr</span>)
-
-<span class="comment"># サンプルデータの作成</span>
-<span class="function">set.seed</span>(<span class="number">123</span>)
-house_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  area <span class="operator">=</span> <span class="function">runif</span>(<span class="number">200</span>, <span class="number">50</span>, <span class="number">200</span>),  <span class="comment"># 面積（平方メートル）</span>
-  age <span class="operator">=</span> <span class="function">runif</span>(<span class="number">200</span>, <span class="number">0</span>, <span class="number">30</span>),     <span class="comment"># 築年数</span>
-  station_distance <span class="operator">=</span> <span class="function">runif</span>(<span class="number">200</span>, <span class="number">1</span>, <span class="number">20</span>),  <span class="comment"># 駅距離（分）</span>
-  price <span class="operator">=</span> <span class="number">30</span> <span class="operator">+</span> area <span class="operator">*</span> <span class="number">0.8</span> <span class="operator">-</span> age <span class="operator">*</span> <span class="number">2</span> <span class="operator">-</span> station_distance <span class="operator">*</span> <span class="number">1.5</span> <span class="operator">+</span> <span class="function">rnorm</span>(<span class="number">200</span>, <span class="number">0</span>, <span class="number">15</span>)
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(price <span class="operator">=</span> <span class="function">pmax</span>(price, <span class="number">20</span>))  <span class="comment"># 最低価格を20万円に設定</span>
-
-<span class="function">print</span>(<span class="function">head</span>(house_data))
-
-<span class="comment"># 面積と価格の単純線形回帰</span>
-simple_model <span class="operator">&lt;-</span> <span class="function">lm</span>(price ~ area, data <span class="operator">=</span> house_data)
-
-<span class="comment"># broomパッケージで結果を整理</span>
-model_summary <span class="operator">&lt;-</span> <span class="function">tidy</span>(simple_model)
-model_metrics <span class="operator">&lt;-</span> <span class="function">glance</span>(simple_model)
-model_predictions <span class="operator">&lt;-</span> <span class="function">augment</span>(simple_model)
-
-<span class="function">print</span>(<span class="string">"回帰係数:"</span>)
-<span class="function">print</span>(model_summary)
-
-<span class="function">print</span>(<span class="string">"モデル評価指標:"</span>)
-<span class="function">print</span>(model_metrics)
-
-<span class="comment"># 予測値と残差の分析</span>
-prediction_analysis <span class="operator">&lt;-</span> model_predictions <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(area, price, .fitted, .resid) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    abs_error <span class="operator">=</span> <span class="function">abs</span>(.resid),
-    percent_error <span class="operator">=</span> <span class="function">abs</span>(.resid) / price <span class="operator">*</span> <span class="number">100</span>
-  )
-
-<span class="function">print</span>(<span class="string">"予測分析（上位10件）:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(prediction_analysis, <span class="number">10</span>))
-
-<span class="comment"># モデルの解釈</span>
-area_coefficient <span class="operator">&lt;-</span> model_summary$estimate[<span class="number">2</span>]
-r_squared <span class="operator">&lt;-</span> model_metrics$r.squared
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"面積1平方メートル増加あたりの価格上昇:"</span>, <span class="function">round</span>(area_coefficient, <span class="number">2</span>), <span class="string">"万円"</span>))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"決定係数 R²:"</span>, <span class="function">round</span>(r_squared, <span class="number">3</span>)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"面積で説明できる価格の変動:"</span>, <span class="function">round</span>(r_squared <span class="operator">*</span> <span class="number">100</span>, <span class="number">1</span>), <span class="string">"%"</span>))
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">単純線形回帰結果</div>
-                <div class="output-content"># A tibble: 6 × 4
-   area   age station_distance price
-  &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1  142.  14.6             7.36  129.
-2  152.  17.4            18.9    99.0
-3  169.  12.3            15.3   109. 
-4  159.  29.5             2.68   70.9
-5  96.4  15.2            14.7    68.5
-6  163.  22.9            12.7    81.4
-
-回帰係数:
-# A tibble: 2 × 5
-  term        estimate std.error statistic  p.value
-  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)    28.1      4.22      6.66 2.33e-10
-2 area            0.793    0.0334   23.7  4.88e-56
-
-モデル評価指標:
-# A tibble: 1 × 12
-  r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC deviance df.residual nobs
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
-1     0.740         0.738  15.1      562. 4.88e-56     1  -743. 1492. 1502.   45147.         198   200
-
-面積1平方メートル増加あたりの価格上昇: 0.79 万円
-決定係数 R²: 0.74
-面積で説明できる価格の変動: 74.0 %</div>
-            </div>
-
-            <h3>重回帰分析</h3>
-
-            <div class="code-container">
-                <div class="code-header">多変量回帰モデル</div>
-                <div class="code-content">
-<span class="comment"># 重回帰モデルの構築</span>
-multiple_model <span class="operator">&lt;-</span> <span class="function">lm</span>(price ~ area <span class="operator">+</span> age <span class="operator">+</span> station_distance, data <span class="operator">=</span> house_data)
-
-<span class="comment"># 結果の比較</span>
-multiple_summary <span class="operator">&lt;-</span> <span class="function">tidy</span>(multiple_model)
-multiple_metrics <span class="operator">&lt;-</span> <span class="function">glance</span>(multiple_model)
-
-<span class="function">print</span>(<span class="string">"重回帰係数:"</span>)
-<span class="function">print</span>(multiple_summary)
-
-<span class="function">print</span>(<span class="string">"重回帰評価指標:"</span>)
-<span class="function">print</span>(multiple_metrics)
-
-<span class="comment"># モデル比較</span>
-model_comparison <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  model <span class="operator">=</span> <span class="function">c</span>(<span class="string">"単純回帰"</span>, <span class="string">"重回帰"</span>),
-  r_squared <span class="operator">=</span> <span class="function">c</span>(model_metrics$r.squared, multiple_metrics$r.squared),
-  adj_r_squared <span class="operator">=</span> <span class="function">c</span>(model_metrics$adj.r.squared, multiple_metrics$adj.r.squared),
-  rmse <span class="operator">=</span> <span class="function">c</span>(model_metrics$sigma, multiple_metrics$sigma),
-  aic <span class="operator">=</span> <span class="function">c</span>(model_metrics$AIC, multiple_metrics$AIC)
-)
-
-<span class="function">print</span>(<span class="string">"モデル比較:"</span>)
-<span class="function">print</span>(model_comparison)
-
-<span class="comment"># 残差分析</span>
-multiple_predictions <span class="operator">&lt;-</span> <span class="function">augment</span>(multiple_model)
-
-residual_analysis <span class="operator">&lt;-</span> multiple_predictions <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    mean_residual <span class="operator">=</span> <span class="function">mean</span>(.resid),
-    sd_residual <span class="operator">=</span> <span class="function">sd</span>(.resid),
-    rmse <span class="operator">=</span> <span class="function">sqrt</span>(<span class="function">mean</span>(.resid^<span class="number">2</span>)),
-    mae <span class="operator">=</span> <span class="function">mean</span>(<span class="function">abs</span>(.resid)),
-    outliers_count <span class="operator">=</span> <span class="function">sum</span>(<span class="function">abs</span>(.resid) <span class="operator">&gt;</span> <span class="number">2</span> <span class="operator">*</span> <span class="function">sd</span>(.resid))
-  )
-
-<span class="function">print</span>(<span class="string">"残差統計:"</span>)
-<span class="function">print</span>(residual_analysis)
-
-<span class="comment"># 予測精度の比較</span>
-accuracy_comparison <span class="operator">&lt;-</span> house_data <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    simple_pred <span class="operator">=</span> <span class="function">predict</span>(simple_model, .),
-    multiple_pred <span class="operator">=</span> <span class="function">predict</span>(multiple_model, .),
-    simple_error <span class="operator">=</span> <span class="function">abs</span>(price <span class="operator">-</span> simple_pred),
-    multiple_error <span class="operator">=</span> <span class="function">abs</span>(price <span class="operator">-</span> multiple_pred)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    simple_mae <span class="operator">=</span> <span class="function">mean</span>(simple_error),
-    multiple_mae <span class="operator">=</span> <span class="function">mean</span>(multiple_error),
-    improvement <span class="operator">=</span> (simple_mae <span class="operator">-</span> multiple_mae) / simple_mae <span class="operator">*</span> <span class="number">100</span>
-  )
-
-<span class="function">print</span>(<span class="string">"予測精度の改善:"</span>)
-<span class="function">print</span>(accuracy_comparison)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">重回帰分析結果</div>
-                <div class="output-content">重回帰係数:
-# A tibble: 4 × 5
-  term             estimate std.error statistic   p.value
-  &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-1 (Intercept)         30.2      2.93     10.3  2.40e-19
-2 area                 0.798    0.0200   39.9  1.47e-92
-3 age                 -1.98     0.0848  -23.4  1.02e-55
-4 station_distance    -1.50     0.0894  -16.8  1.18e-37
-
-モデル比較:
-# A tibble: 2 × 5
-  model    r_squared adj_r_squared  rmse   aic
-  &lt;chr&gt;        &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 単純回帰     0.740         0.738  15.1 1492.
-2 重回帰       0.969         0.968   5.26 1245.
-
-残差統計:
-# A tibble: 1 × 5
-  mean_residual sd_residual  rmse   mae outliers_count
-          &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;          &lt;int&gt;
-1      3.42e-16        5.24  5.24  4.19              7
-
-予測精度の改善:
-# A tibble: 1 × 3
-  simple_mae multiple_mae improvement
-       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
-1       12.1         4.19        65.4</div>
-            </div>
-
-            <div class="model-viz">
-                <div class="viz-title">重回帰モデルの予測精度</div>
-                <svg width="600" height="300" viewBox="0 0 600 300">
-                    <!-- Background -->
-                    <rect width="600" height="300" fill="#1a1a1a" stroke="#ff6b9d" stroke-width="1"/>
+                <!-- Visualization Output -->
+                <div class="visualization-output">
+                    <h4>📊 回帰分析結果の詳細解釈</h4>
+                    <div class="result-container">
+                        <div class="result-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>係数</th>
+                                        <th>推定値</th>
+                                        <th>標準誤差</th>
+                                        <th>t値</th>
+                                        <th>p値</th>
+                                        <th>95%信頼区間</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>(Intercept)</td>
+                                        <td>2,085.432</td>
+                                        <td>342.567</td>
+                                        <td>6.085</td>
+                                        <td>< 0.001***</td>
+                                        <td>[1,414.4, 2,756.5]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>size</td>
+                                        <td>49.823</td>
+                                        <td>3.421</td>
+                                        <td>14.567</td>
+                                        <td>< 0.001***</td>
+                                        <td>[43.12, 56.53]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     
-                    <!-- Title -->
-                    <text x="300" y="25" text-anchor="middle" fill="#ff6b9d" font-size="16" font-weight="bold">予測値 vs 実際値</text>
-                    
-                    <!-- Axes -->
-                    <line x1="80" y1="50" x2="80" y2="230" stroke="#333" stroke-width="1"/>
-                    <line x1="80" y1="230" x2="520" y2="230" stroke="#333" stroke-width="1"/>
-                    
-                    <!-- Perfect prediction line -->
-                    <line x1="80" y1="230" x2="520" y2="50" stroke="#00ff88" stroke-width="2" stroke-dasharray="5,5"/>
-                    
-                    <!-- Data points -->
-                    <circle cx="120" cy="180" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="140" cy="160" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="160" cy="140" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="180" cy="130" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="200" cy="120" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="220" cy="110" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="240" cy="105" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="260" cy="100" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="280" cy="95" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="300" cy="90" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="320" cy="85" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="340" cy="80" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="360" cy="75" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="380" cy="70" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="400" cy="65" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="420" cy="60" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="440" cy="58" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="460" cy="56" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="480" cy="54" r="3" fill="#00d4ff" opacity="0.7"/>
-                    <circle cx="500" cy="52" r="3" fill="#00d4ff" opacity="0.7"/>
-                    
-                    <!-- Labels -->
-                    <text x="300" y="255" text-anchor="middle" fill="#b3b3b3" font-size="12">予測値</text>
-                    <text x="40" y="140" text-anchor="middle" fill="#b3b3b3" font-size="12" transform="rotate(-90 40 140)">実際値</text>
-                    
-                    <!-- Legend -->
-                    <line x1="450" y1="70" x2="480" y2="70" stroke="#00ff88" stroke-width="2" stroke-dasharray="5,5"/>
-                    <text x="485" y="75" fill="#b3b3b3" font-size="10">完全予測線</text>
-                    <circle cx="465" cy="85" r="3" fill="#00d4ff"/>
-                    <text x="475" y="90" fill="#b3b3b3" font-size="10">予測データ</text>
-                    
-                    <!-- R² value -->
-                    <text x="100" y="70" fill="#ff6b9d" font-size="14" font-weight="bold">R² = 0.969</text>
-                </svg>
+                    <div class="detailed-interpretation">
+                        <h5>🔍 係数の詳細解釈</h5>
+                        <div class="interpretation-grid">
+                            <div class="interp-section">
+                                <h6>切片 (Intercept): 2,085,432円</h6>
+                                <p><strong>意味：</strong> 面積が0平方メートルの場合の理論的価格。実際には意味を持たないが、回帰直線の位置を決定する重要な要素。</p>
+                                <p><strong>統計的有意性：</strong> t値=6.085、p<0.001で統計的に有意。</p>
+                            </div>
+                            
+                            <div class="interp-section">
+                                <h6>面積係数: 49,823円/㎡</h6>
+                                <p><strong>経済的意味：</strong> 住宅面積が1平方メートル増加するごとに、価格が約49,823円上昇することを示す。</p>
+                                <p><strong>信頼性：</strong> 95%信頼区間[43,120円〜56,530円]で、真の値がこの範囲内にある確率は95%。</p>
+                                <p><strong>実務的解釈：</strong> 10㎡の増加 → 約498,230円の価格上昇が期待される。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="r-squared-explanation">
+                        <h5>📈 決定係数（R²）の詳細解説</h5>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <div class="code-dots">
+                                    <div class="code-dot"></div>
+                                    <div class="code-dot"></div>
+                                    <div class="code-dot"></div>
+                                </div>
+                                <div class="code-title">r_squared_calculation.R</div>
+                            </div>
+                            <div class="code-content">
+                                <span class="code-line"><span class="code-comment"># 決定係数の手動計算</span></span>
+                                <span class="code-line"><span class="code-variable">predictions</span> <span class="code-keyword">&lt;-</span> <span class="code-function">predict</span>(simple_model)</span>
+                                <span class="code-line"><span class="code-variable">actual</span> <span class="code-keyword">&lt;-</span> housing_data$price</span>
+                                <span class="code-line"><span class="code-variable">mean_actual</span> <span class="code-keyword">&lt;-</span> <span class="code-function">mean</span>(actual)</span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-comment"># 平方和の計算</span></span>
+                                <span class="code-line"><span class="code-variable">SSE</span> <span class="code-keyword">&lt;-</span> <span class="code-function">sum</span>((actual - predictions)^<span class="code-string">2</span>)  <span class="code-comment"># 残差平方和</span></span>
+                                <span class="code-line"><span class="code-variable">SST</span> <span class="code-keyword">&lt;-</span> <span class="code-function">sum</span>((actual - mean_actual)^<span class="code-string">2</span>) <span class="code-comment"># 全平方和</span></span>
+                                <span class="code-line"><span class="code-variable">SSR</span> <span class="code-keyword">&lt;-</span> <span class="code-function">sum</span>((predictions - mean_actual)^<span class="code-string">2</span>) <span class="code-comment"># 回帰平方和</span></span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-comment"># R²の計算方法（2つの等価な式）</span></span>
+                                <span class="code-line"><span class="code-variable">r_squared_method1</span> <span class="code-keyword">&lt;-</span> SSR / SST</span>
+                                <span class="code-line"><span class="code-variable">r_squared_method2</span> <span class="code-keyword">&lt;-</span> <span class="code-string">1</span> - (SSE / SST)</span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"R² = SSR/SST =\"</span>, <span class="code-function">round</span>(r_squared_method1, <span class="code-string">4</span>), <span class="code-string">"\n"</span>)</span>
+                                <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"R² = 1-SSE/SST =\"</span>, <span class="code-function">round</span>(r_squared_method2, <span class="code-string">4</span>), <span class="code-string">"\n"</span>)</span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-comment"># 相関係数との関係</span></span>
+                                <span class="code-line"><span class="code-variable">correlation</span> <span class="code-keyword">&lt;-</span> <span class="code-function">cor</span>(housing_data$size, housing_data$price)</span>
+                                <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"相関係数 r =\"</span>, <span class="code-function">round</span>(correlation, <span class="code-string">4</span>), <span class="code-string">"\n"</span>)</span>
+                                <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"r² =\"</span>, <span class="code-function">round</span>(correlation^<span class="code-string">2</span>, <span class="code-string">4</span>), <span class="code-string">"(単回帰の場合、R² = r²)\n"</span>)</span>
+                            </div>
+                        </div>
+
+                        <div class="r-squared-interpretation">
+                            <h6>📊 R² = 0.742の意味</h6>
+                            <div class="interpretation-items">
+                                <div class="interp-item">
+                                    <span class="interp-label">説明力：</span>
+                                    <span class="interp-value">面積により住宅価格の変動の74.2%が説明される</span>
+                                </div>
+                                <div class="interp-item">
+                                    <span class="interp-label">未説明部分：</span>
+                                    <span class="interp-value">25.8%は他の要因（立地、築年数、設備など）による</span>
+                                </div>
+                                <div class="interp-item">
+                                    <span class="interp-label">モデルの質：</span>
+                                    <span class="interp-value">0.7以上は社会科学では良好な値</span>
+                                </div>
+                                <div class="interp-item">
+                                    <span class="interp-label">予測精度：</span>
+                                    <span class="interp-value">面積のみでも比較的高い精度で価格予測が可能</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="r-squared-scale">
+                            <h6>📏 R²の評価基準</h6>
+                            <div class="scale-container">
+                                <div class="scale-item excellent">
+                                    <div class="scale-range">0.8-1.0</div>
+                                    <div class="scale-label">優秀</div>
+                                    <div class="scale-desc">非常に強い関係</div>
+                                </div>
+                                <div class="scale-item good">
+                                    <div class="scale-range">0.6-0.8</div>
+                                    <div class="scale-label">良好</div>
+                                    <div class="scale-desc">強い関係（当モデル）</div>
+                                </div>
+                                <div class="scale-item moderate">
+                                    <div class="scale-range">0.4-0.6</div>
+                                    <div class="scale-label">中程度</div>
+                                    <div class="scale-desc">中程度の関係</div>
+                                </div>
+                                <div class="scale-item weak">
+                                    <div class="scale-range">0.0-0.4</div>
+                                    <div class="scale-label">弱い</div>
+                                    <div class="scale-desc">弱い関係</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multiple Regression -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 重回帰分析の威力</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">multiple_regression.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 重回帰モデルの構築</span></span>
+                        <span class="code-line"><span class="code-variable">multiple_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">lm</span>(</span>
+                        <span class="code-line">  price ~ size + age + location_score, </span>
+                        <span class="code-line">  data = housing_data</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># モデル比較</span></span>
+                        <span class="code-line"><span class="code-variable">model_comparison</span> <span class="code-keyword">&lt;-</span> <span class="code-function">bind_rows</span>(</span>
+                        <span class="code-line">  <span class="code-function">glance</span>(simple_model) <span class="code-keyword">%>%</span> <span class="code-function">mutate</span>(model = <span class="code-string">"Simple"</span>),</span>
+                        <span class="code-line">  <span class="code-function">glance</span>(multiple_model) <span class="code-keyword">%>%</span> <span class="code-function">mutate</span>(model = <span class="code-string">"Multiple"</span>)</span>
+                        <span class="code-line">) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(model, r.squared, adj.r.squared, AIC, BIC)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(model_comparison)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 予測精度の評価</span></span>
+                        <span class="code-line"><span class="code-variable">predictions</span> <span class="code-keyword">&lt;-</span> housing_data <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">add_predictions</span>(multiple_model) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">add_residuals</span>(multiple_model) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    abs_error = <span class="code-function">abs</span>(resid),</span>
+                        <span class="code-line">    squared_error = resid^<span class="code-string">2</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 予測精度メトリクス</span></span>
+                        <span class="code-line"><span class="code-variable">performance_metrics</span> <span class="code-keyword">&lt;-</span> predictions <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                        <span class="code-line">    MAE = <span class="code-function">mean</span>(abs_error),</span>
+                        <span class="code-line">    RMSE = <span class="code-function">sqrt</span>(<span class="code-function">mean</span>(squared_error)),</span>
+                        <span class="code-line">    MAPE = <span class="code-function">mean</span>(<span class="code-function">abs</span>(resid / price)) * <span class="code-string">100</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(performance_metrics)</span>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="section">
-            <h2>🔍 仮説検定とカテゴリカル分析</h2>
+        <!-- 統計推定結果の包括的解釈ガイド -->
+        <section class="content-section fade-in-up" id="statistical-interpretation">
+            <h2 class="section-title">📊 推定結果の一覧表示と重要指標の解釈</h2>
+            <div class="section-content">
+                <p>
+                    統計モデリングの結果を正しく解釈することは、データサイエンスにおいて最も重要なスキルの一つです。
+                    各指標が何を意味し、どのように意思決定に活用するべきかを包括的に解説します。
+                </p>
 
-            <div class="code-container">
-                <div class="code-header">t検定と分散分析</div>
-                <div class="code-content">
-<span class="comment"># 顧客満足度データの作成</span>
-<span class="function">set.seed</span>(<span class="number">456</span>)
-customer_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  customer_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">300</span>,
-  service_type <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"ベーシック"</span>, <span class="string">"プレミアム"</span>, <span class="string">"エンタープライズ"</span>), 
-                        <span class="number">300</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.5</span>, <span class="number">0.3</span>, <span class="number">0.2</span>)),
-  region <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"その他"</span>), <span class="number">300</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-  satisfaction <span class="operator">=</span> <span class="function">case_when</span>(
-    service_type <span class="operator">==</span> <span class="string">"ベーシック"</span> ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">6.5</span>, <span class="number">1.2</span>),
-    service_type <span class="operator">==</span> <span class="string">"プレミアム"</span> ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">7.5</span>, <span class="number">1.0</span>),
-    service_type <span class="operator">==</span> <span class="string">"エンタープライズ"</span> ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">8.2</span>, <span class="number">0.8</span>)
-  ),
-  monthly_usage <span class="operator">=</span> <span class="function">case_when</span>(
-    service_type <span class="operator">==</span> <span class="string">"ベーシック"</span> ~ <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">15</span>),
-    service_type <span class="operator">==</span> <span class="string">"プレミアム"</span> ~ <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">25</span>),
-    service_type <span class="operator">==</span> <span class="string">"エンタープライズ"</span> ~ <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">40</span>)
-  )
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(satisfaction <span class="operator">=</span> <span class="function">pmax</span>(<span class="number">1</span>, <span class="function">pmin</span>(<span class="number">10</span>, satisfaction)))  <span class="comment"># 1-10の範囲に制限</span>
+                <!-- 回帰分析結果の包括的表示 -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📋 統計推定結果の完全な解釈表</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">comprehensive_analysis.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 包括的な統計分析と結果解釈</span></span>
+                        <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                        <span class="code-line"><span class="code-function">library</span>(broom)</span>
+                        <span class="code-line"><span class="code-function">library</span>(performance)</span>
+                        <span class="code-line"><span class="code-function">library</span>(ggplot2)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># サンプルデータ：不動産価格予測</span></span>
+                        <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-string">42</span>)</span>
+                        <span class="code-line"><span class="code-variable">real_estate</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  area = <span class="code-function">rnorm</span>(<span class="code-string">200</span>, <span class="code-string">100</span>, <span class="code-string">30</span>),</span>
+                        <span class="code-line">  age = <span class="code-function">sample</span>(<span class="code-string">1</span>:<span class="code-string">50</span>, <span class="code-string">200</span>, replace = <span class="code-string">TRUE</span>),</span>
+                        <span class="code-line">  distance_to_station = <span class="code-function">rexp</span>(<span class="code-string">200</span>, <span class="code-string">0.5</span>),</span>
+                        <span class="code-line">  floor = <span class="code-function">sample</span>(<span class="code-string">1</span>:<span class="code-string">15</span>, <span class="code-string">200</span>, replace = <span class="code-string">TRUE</span>)</span>
+                        <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    price = <span class="code-string">50</span> * area - <span class="code-string">20</span> * age - <span class="code-string">10</span> * distance_to_station + </span>
+                        <span class="code-line">            <span class="code-string">5</span> * floor + <span class="code-function">rnorm</span>(<span class="code-string">200</span>, <span class="code-string">0</span>, <span class="code-string">500</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 重回帰モデルの構築</span></span>
+                        <span class="code-line"><span class="code-variable">full_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">lm</span>(</span>
+                        <span class="code-line">  price ~ area + age + distance_to_station + floor,</span>
+                        <span class="code-line">  data = real_estate</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 【1】回帰係数とその統計的有意性</span></span>
+                        <span class="code-line"><span class="code-variable">coefficients_table</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tidy</span>(full_model) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    significance = <span class="code-function">case_when</span>(</span>
+                        <span class="code-line">      p.value &lt; <span class="code-string">0.001</span> ~ <span class="code-string">"***（極めて有意）"</span>,</span>
+                        <span class="code-line">      p.value &lt; <span class="code-string">0.01</span>  ~ <span class="code-string">"**（とても有意）"</span>,</span>
+                        <span class="code-line">      p.value &lt; <span class="code-string">0.05</span>  ~ <span class="code-string">"*（有意）"</span>,</span>
+                        <span class="code-line">      p.value &lt; <span class="code-string">0.1</span>   ~ <span class="code-string">".（限界的有意）"</span>,</span>
+                        <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"（非有意）"</span></span>
+                        <span class="code-line">    ),</span>
+                        <span class="code-line">    effect_interpretation = <span class="code-function">case_when</span>(</span>
+                        <span class="code-line">      term == <span class="code-string">"area"</span> ~ <span class="code-string">"面積1㎡増加で価格増"</span>,</span>
+                        <span class="code-line">      term == <span class="code-string">"age"</span> ~ <span class="code-string">"築年数1年増で価格減"</span>,</span>
+                        <span class="code-line">      term == <span class="code-string">"distance_to_station"</span> ~ <span class="code-string">"駅距離1km増で価格減"</span>,</span>
+                        <span class="code-line">      term == <span class="code-string">"floor"</span> ~ <span class="code-string">"階数1階増で価格増"</span>,</span>
+                        <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"切片（基準値）"</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(term, estimate, std.error, statistic, p.value, significance, effect_interpretation)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"【回帰係数の解釈表】"</span>)</span>
+                        <span class="code-line"><span class="code-function">print</span>(coefficients_table)</span>
+                    </div>
+                </div>
 
-<span class="comment"># 記述統計</span>
-descriptive_stats <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(service_type) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    count <span class="operator">=</span> <span class="function">n</span>(),
-    mean_satisfaction <span class="operator">=</span> <span class="function">mean</span>(satisfaction),
-    sd_satisfaction <span class="operator">=</span> <span class="function">sd</span>(satisfaction),
-    mean_usage <span class="operator">=</span> <span class="function">mean</span>(monthly_usage),
-    sd_usage <span class="operator">=</span> <span class="function">sd</span>(monthly_usage),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
+                <!-- 推定結果の出力表示 -->
+                <div class="output-container">
+                    <div class="output-header">📊 回帰係数の解釈表</div>
+                    <div class="output-content">
+【回帰係数の解釈表】
+# A tibble: 5 × 7
+  term                 estimate std.error statistic  p.value significance      effect_interpretation  
+  &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;             &lt;chr&gt;                 
+1 (Intercept)            234.      389.     0.602  5.48e- 1 （非有意）         切片（基準値）         
+2 area                    49.8       1.63  30.5   2.11e-67 ***（極めて有意）   面積1㎡増加で価格増    
+3 age                    -19.9       4.36  -4.57  1.03e- 5 ***（極めて有意）   築年数1年増で価格減    
+4 distance_to_station     -9.87      9.56  -1.03  3.04e- 1 （非有意）         駅距離1km増で価格減    
+5 floor                    4.98     13.2    0.378  7.06e- 1 （非有意）         階数1階増で価格増     
+                    </div>
+                </div>
 
-<span class="function">print</span>(<span class="string">"サービス別記述統計:"</span>)
-<span class="function">print</span>(descriptive_stats)
+                <!-- モデル適合度指標の包括的解釈 -->
+                <div class="code-container">
+                    <div class="code-block">
+                        <span class="code-line"><span class="code-comment"># 【2】モデル適合度指標の包括的分析</span></span>
+                        <span class="code-line"><span class="code-variable">model_performance</span> <span class="code-keyword">&lt;-</span> <span class="code-function">glance</span>(full_model) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    r_squared_interpretation = <span class="code-function">case_when</span>(</span>
+                        <span class="code-line">      r.squared &gt;= <span class="code-string">0.8</span> ~ <span class="code-string">"優秀（説明力80%以上）"</span>,</span>
+                        <span class="code-line">      r.squared &gt;= <span class="code-string">0.6</span> ~ <span class="code-string">"良好（説明力60-80%）"</span>,</span>
+                        <span class="code-line">      r.squared &gt;= <span class="code-string">0.4</span> ~ <span class="code-string">"中程度（説明力40-60%）"</span>,</span>
+                        <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"低い（説明力40%未満）"</span></span>
+                        <span class="code-line">    ),</span>
+                        <span class="code-line">    f_statistic_interpretation = <span class="code-function">case_when</span>(</span>
+                        <span class="code-line">      p.value &lt; <span class="code-string">0.001</span> ~ <span class="code-string">"モデル全体が極めて有意"</span>,</span>
+                        <span class="code-line">      p.value &lt; <span class="code-string">0.01</span> ~ <span class="code-string">"モデル全体がとても有意"</span>,</span>
+                        <span class="code-line">      p.value &lt; <span class="code-string">0.05</span> ~ <span class="code-string">"モデル全体が有意"</span>,</span>
+                        <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"モデル全体が非有意"</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 追加の評価指標を計算</span></span>
+                        <span class="code-line"><span class="code-variable">additional_metrics</span> <span class="code-keyword">&lt;-</span> real_estate <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">add_predictions</span>(full_model, var = <span class="code-string">"predicted"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">add_residuals</span>(full_model, var = <span class="code-string">"residual"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                        <span class="code-line">    MAE = <span class="code-function">mean</span>(<span class="code-function">abs</span>(residual)),</span>
+                        <span class="code-line">    RMSE = <span class="code-function">sqrt</span>(<span class="code-function">mean</span>(residual^<span class="code-string">2</span>)),</span>
+                        <span class="code-line">    MAPE = <span class="code-function">mean</span>(<span class="code-function">abs</span>(residual / price)) * <span class="code-string">100</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"【モデル適合度の総合評価】"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"R²値："</span>, <span class="code-function">round</span>(model_performance$r.squared, <span class="code-string">4</span>), <span class="code-string">" - "</span>, model_performance$r_squared_interpretation, <span class="code-string">"\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"調整済みR²："</span>, <span class="code-function">round</span>(model_performance$adj.r.squared, <span class="code-string">4</span>), <span class="code-string">" - より保守的な評価\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"F統計量："</span>, <span class="code-function">round</span>(model_performance$statistic, <span class="code-string">2</span>), <span class="code-string">" - "</span>, model_performance$f_statistic_interpretation, <span class="code-string">"\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"AIC："</span>, <span class="code-function">round</span>(model_performance$AIC, <span class="code-string">2</span>), <span class="code-string">" - モデル選択の指標（小さい方が良い）\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"BIC："</span>, <span class="code-function">round</span>(model_performance$BIC, <span class="code-string">2</span>), <span class="code-string">" - より保守的なモデル選択指標\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"MAE："</span>, <span class="code-function">round</span>(additional_metrics$MAE, <span class="code-string">2</span>), <span class="code-string">" - 平均絶対誤差（万円）\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"RMSE："</span>, <span class="code-function">round</span>(additional_metrics$RMSE, <span class="code-string">2</span>), <span class="code-string">" - 二乗平均平方根誤差（万円）\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"MAPE："</span>, <span class="code-function">round</span>(additional_metrics$MAPE, <span class="code-string">2</span>), <span class="code-string">"% - 平均絶対パーセンテージ誤差\n"</span>)</span>
+                    </div>
+                </div>
 
-<span class="comment"># t検定（2群比較）</span>
-basic_premium_test <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(service_type <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"ベーシック"</span>, <span class="string">"プレミアム"</span>)) <span class="operator">%&gt;%</span>
-  <span class="function">t.test</span>(satisfaction ~ service_type, data <span class="operator">=</span> .)
+                <!-- 統計指標の視覚的解釈 -->
+                <div class="model-viz">
+                    <div class="viz-title">📊 統計指標の重要性ランキング</div>
+                    <svg width="100%" height="400" viewBox="0 0 800 400">
+                        <!-- R-squared visualization -->
+                        <rect x="50" y="50" width="700" height="60" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" rx="10"/>
+                        <text x="60" y="75" fill="#00d4ff" font-size="14" font-weight="bold">R²値 (決定係数)</text>
+                        <text x="60" y="95" fill="#ffffff" font-size="12">モデルの説明力を示す最重要指標 (0-1の範囲)</text>
+                        <rect x="600" y="60" width="120" height="20" fill="#00d4ff" rx="10"/>
+                        <text x="650" y="75" fill="#000" font-size="12" text-anchor="middle">重要度: ★★★★★</text>
+                        
+                        <!-- p-value visualization -->
+                        <rect x="50" y="130" width="700" height="60" fill="rgba(255, 107, 157, 0.1)" stroke="#ff6b9d" rx="10"/>
+                        <text x="60" y="155" fill="#ff6b9d" font-size="14" font-weight="bold">p値 (有意確率)</text>
+                        <text x="60" y="175" fill="#ffffff" font-size="12">統計的有意性を判定する指標 (0.05未満で有意)</text>
+                        <rect x="600" y="140" width="120" height="20" fill="#ff6b9d" rx="10"/>
+                        <text x="650" y="155" fill="#000" font-size="12" text-anchor="middle">重要度: ★★★★★</text>
+                        
+                        <!-- F-statistic visualization -->
+                        <rect x="50" y="210" width="700" height="60" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" rx="10"/>
+                        <text x="60" y="235" fill="#9d4edd" font-size="14" font-weight="bold">F統計量</text>
+                        <text x="60" y="255" fill="#ffffff" font-size="12">モデル全体の有意性を評価する指標</text>
+                        <rect x="600" y="220" width="120" height="20" fill="#9d4edd" rx="10"/>
+                        <text x="650" y="235" fill="#000" font-size="12" text-anchor="middle">重要度: ★★★★☆</text>
+                        
+                        <!-- AIC/BIC visualization -->
+                        <rect x="50" y="290" width="700" height="60" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" rx="10"/>
+                        <text x="60" y="315" fill="#00ff88" font-size="14" font-weight="bold">AIC/BIC</text>
+                        <text x="60" y="335" fill="#ffffff" font-size="12">モデル選択のための情報量基準（小さい方が良い）</text>
+                        <rect x="600" y="300" width="120" height="20" fill="#00ff88" rx="10"/>
+                        <text x="650" y="315" fill="#000" font-size="12" text-anchor="middle">重要度: ★★★☆☆</text>
+                    </svg>
+                </div>
 
-<span class="function">print</span>(<span class="string">"ベーシック vs プレミアムのt検定:"</span>)
-<span class="function">print</span>(<span class="function">tidy</span>(basic_premium_test))
-
-<span class="comment"># 分散分析（ANOVA）</span>
-anova_model <span class="operator">&lt;-</span> <span class="function">aov</span>(satisfaction ~ service_type, data <span class="operator">=</span> customer_data)
-anova_results <span class="operator">&lt;-</span> <span class="function">tidy</span>(anova_model)
-
-<span class="function">print</span>(<span class="string">"サービス別満足度の分散分析:"</span>)
-<span class="function">print</span>(anova_results)
-
-<span class="comment"># 多重比較（Tukey HSD）</span>
-tukey_results <span class="operator">&lt;-</span> <span class="function">TukeyHSD</span>(anova_model)
-tukey_tidy <span class="operator">&lt;-</span> <span class="function">tidy</span>(tukey_results)
-
-<span class="function">print</span>(<span class="string">"多重比較結果:"</span>)
-<span class="function">print</span>(tukey_tidy)
-
-<span class="comment"># カイ二乗検定（地域とサービス種別の関連性）</span>
-contingency_table <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
-  <span class="function">count</span>(region, service_type) <span class="operator">%&gt;%</span>
-  <span class="function">pivot_wider</span>(names_from <span class="operator">=</span> service_type, values_from <span class="operator">=</span> n, values_fill <span class="operator">=</span> <span class="number">0</span>)
-
-<span class="function">print</span>(<span class="string">"地域別サービス利用状況:"</span>)
-<span class="function">print</span>(contingency_table)
-
-<span class="comment"># カイ二乗検定の実行</span>
-chi_square_test <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(region, service_type) <span class="operator">%&gt;%</span>
-  <span class="function">table</span>() <span class="operator">%&gt;%</span>
-  <span class="function">chisq.test</span>()
-
-<span class="function">print</span>(<span class="string">"カイ二乗検定結果:"</span>)
-<span class="function">print</span>(<span class="function">tidy</span>(chi_square_test))
-
-<span class="comment"># 効果量の計算（Cohen's d）</span>
-cohens_d_calculation <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(service_type <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"ベーシック"</span>, <span class="string">"プレミアム"</span>)) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(service_type) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    mean_sat <span class="operator">=</span> <span class="function">mean</span>(satisfaction),
-    sd_sat <span class="operator">=</span> <span class="function">sd</span>(satisfaction),
-    n <span class="operator">=</span> <span class="function">n</span>(),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
-
-<span class="comment"># Cohen's dの手動計算</span>
-mean_diff <span class="operator">&lt;-</span> cohens_d_calculation$mean_sat[<span class="number">2</span>] <span class="operator">-</span> cohens_d_calculation$mean_sat[<span class="number">1</span>]
-pooled_sd <span class="operator">&lt;-</span> <span class="function">sqrt</span>(((cohens_d_calculation$n[<span class="number">1</span>] <span class="operator">-</span> <span class="number">1</span>) <span class="operator">*</span> cohens_d_calculation$sd_sat[<span class="number">1</span>]^<span class="number">2</span> <span class="operator">+</span> 
-                      (cohens_d_calculation$n[<span class="number">2</span>] <span class="operator">-</span> <span class="number">1</span>) <span class="operator">*</span> cohens_d_calculation$sd_sat[<span class="number">2</span>]^<span class="number">2</span>) /
-                     (cohens_d_calculation$n[<span class="number">1</span>] <span class="operator">+</span> cohens_d_calculation$n[<span class="number">2</span>] <span class="operator">-</span> <span class="number">2</span>))
-cohens_d <span class="operator">&lt;-</span> mean_diff / pooled_sd
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"Cohen's d (ベーシック vs プレミアム):"</span>, <span class="function">round</span>(cohens_d, <span class="number">3</span>)))
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">仮説検定結果</div>
-                <div class="output-content">サービス別記述統計:
-# A tibble: 3 × 6
-  service_type    count mean_satisfaction sd_satisfaction mean_usage sd_usage
-  &lt;chr&gt;           &lt;int&gt;              &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
-1 エンタープライズ   60               8.21           0.788       40.1     6.15
-2 ベーシック       147               6.49           1.17        15.0     3.82
-3 プレミアム        93               7.51           0.975       25.1     4.93
-
-ベーシック vs プレミアムのt検定:
-# A tibble: 1 × 10
-  estimate estimate1 estimate2 statistic  p.value parameter conf.low conf.high method                  alternative
-     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                   &lt;chr&gt;      
-1    -1.02      6.49      7.51     -7.56 4.01e-13      217.    -1.29    -0.760 Welch Two Sample t-test two.sided  
-
-サービス別満足度の分散分析:
-# A tibble: 2 × 6
-  term         df sumsq meansq statistic   p.value
-  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-1 service_type     2  89.9   45.0      39.8  2.78e-16
-2 Residuals      297 335.    1.13      NA   NA      
-
-多重比較結果:
-# A tibble: 3 × 7
-  term         contrast                    null.value estimate conf.low conf.high adj.p.value
-  &lt;chr&gt;        &lt;chr&gt;                            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
-1 service_type ベーシック-エンタープライズ           0    -1.72    -2.05     -1.39    6.88e-16
-2 service_type プレミアム-エンタープライズ           0    -0.701   -1.09     -0.312   2.39e- 4
-3 service_type プレミアム-ベーシック                 0     1.02     0.745     1.30    2.95e-11
-
-Cohen's d (ベーシック vs プレミアム): 0.949</div>
+                <!-- 出力結果の表示例 -->
+                <div class="output-container">
+                    <div class="output-header">📈 モデル適合度の総合評価</div>
+                    <div class="output-content">
+【モデル適合度の総合評価】
+R²値： 0.9524  - 優秀（説明力80%以上）
+調整済みR²： 0.9514  - より保守的な評価
+F統計量： 966.87  - モデル全体が極めて有意
+AIC： 2287.43  - モデル選択の指標（小さい方が良い）
+BIC： 2304.17  - より保守的なモデル選択指標
+MAE： 393.21  - 平均絶対誤差（万円）
+RMSE： 493.86  - 二乗平均平方根誤差（万円）
+MAPE： 8.73 % - 平均絶対パーセンテージ誤差
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="section">
-            <h2>📈 ロジスティック回帰とモデル評価</h2>
+        <!-- HYPOTHESIS TESTING -->
+        <section class="content-section fade-in-up" id="hypothesis-testing">
+            <h2 class="section-title">🔬 仮説検定の科学</h2>
+            <div class="section-content">
+                <p>
+                    仮説検定は、データから得られた結果が偶然によるものか、統計的に有意な違いなのかを判断する強力な手法です。Tidyverseの力を借りて、複雑な統計的推論を直感的に行うことができます。
+                </p>
+                
+                <!-- t-test Analysis -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 t検定による平均値比較</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">hypothesis_testing.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># A/Bテストデータの生成</span></span>
+                        <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-string">123</span>)</span>
+                        <span class="code-line"><span class="code-variable">ab_test_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  group = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"A"</span>, <span class="code-string">"B"</span>), each = <span class="code-string">100</span>),</span>
+                        <span class="code-line">  conversion_rate = <span class="code-function">c</span>(</span>
+                        <span class="code-line">    <span class="code-function">rbinom</span>(<span class="code-string">100</span>, <span class="code-string">1</span>, <span class="code-string">0.15</span>),  <span class="code-comment"># Group A</span></span>
+                        <span class="code-line">    <span class="code-function">rbinom</span>(<span class="code-string">100</span>, <span class="code-string">1</span>, <span class="code-string">0.22</span>)   <span class="code-comment"># Group B</span></span>
+                        <span class="code-line">  ),</span>
+                        <span class="code-line">  revenue = <span class="code-function">ifelse</span>(conversion_rate == <span class="code-string">1</span>,</span>
+                        <span class="code-line">                    <span class="code-function">rnorm</span>(<span class="code-string">200</span>, <span class="code-string">50</span>, <span class="code-string">15</span>),</span>
+                        <span class="code-line">                    <span class="code-string">0</span>)</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># グループ別統計量</span></span>
+                        <span class="code-line"><span class="code-variable">group_stats</span> <span class="code-keyword">&lt;-</span> ab_test_data <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">group_by</span>(group) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                        <span class="code-line">    n = <span class="code-function">n</span>(),</span>
+                        <span class="code-line">    conversion_rate = <span class="code-function">mean</span>(conversion_rate),</span>
+                        <span class="code-line">    avg_revenue = <span class="code-function">mean</span>(revenue),</span>
+                        <span class="code-line">    sd_revenue = <span class="code-function">sd</span>(revenue),</span>
+                        <span class="code-line">    .groups = <span class="code-string">'drop'</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(group_stats)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># t検定の実行</span></span>
+                        <span class="code-line"><span class="code-variable">revenue_test</span> <span class="code-keyword">&lt;-</span> <span class="code-function">t.test</span>(</span>
+                        <span class="code-line">  revenue ~ group,</span>
+                        <span class="code-line">  data = ab_test_data,</span>
+                        <span class="code-line">  var.equal = <span class="code-string">FALSE</span></span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 結果をtidyフォーマットに</span></span>
+                        <span class="code-line"><span class="code-variable">test_results</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tidy</span>(revenue_test)</span>
+                        <span class="code-line"><span class="code-function">print</span>(test_results)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 効果量の計算（Cohen's d）</span></span>
+                        <span class="code-line"><span class="code-variable">cohens_d</span> <span class="code-keyword">&lt;-</span> ab_test_data <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">group_by</span>(group) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">summarise</span>(mean_rev = <span class="code-function">mean</span>(revenue), .groups = <span class="code-string">'drop'</span>) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                        <span class="code-line">    effect_size = <span class="code-function">abs</span>(<span class="code-function">diff</span>(mean_rev)) / </span>
+                        <span class="code-line">                  <span class="code-function">sd</span>(ab_test_data$revenue)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(cohens_d)</span>
+                    </div>
+                </div>
 
-            <div class="code-container">
-                <div class="code-header">顧客離脱予測モデル</div>
-                <div class="code-content">
-<span class="comment"># 顧客離脱データの作成</span>
-<span class="function">set.seed</span>(<span class="number">789</span>)
-churn_data <span class="operator">&lt;-</span> customer_data <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    contract_length <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1</span>:<span class="number">36</span>, <span class="function">n</span>(), replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-    support_calls <span class="operator">=</span> <span class="function">rpois</span>(<span class="function">n</span>(), <span class="number">2</span>),
-    <span class="comment"># 離脱確率を複数要因で決定</span>
-    churn_prob <span class="operator">=</span> <span class="function">plogis</span>(
-      <span class="number">-2</span> <span class="operator">+</span> 
-      <span class="function">ifelse</span>(service_type <span class="operator">==</span> <span class="string">"ベーシック"</span>, <span class="number">1</span>, <span class="number">0</span>) <span class="operator">+</span>
-      (<span class="number">10</span> <span class="operator">-</span> satisfaction) <span class="operator">*</span> <span class="number">0.3</span> <span class="operator">+</span>
-      support_calls <span class="operator">*</span> <span class="number">0.2</span> <span class="operator">-</span>
-      contract_length <span class="operator">*</span> <span class="number">0.05</span>
-    ),
-    churned <span class="operator">=</span> <span class="function">rbinom</span>(<span class="function">n</span>(), <span class="number">1</span>, churn_prob)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(-churn_prob)
-
-<span class="comment"># 離脱率の確認</span>
-churn_summary <span class="operator">&lt;-</span> churn_data <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(service_type) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    total_customers <span class="operator">=</span> <span class="function">n</span>(),
-    churned_customers <span class="operator">=</span> <span class="function">sum</span>(churned),
-    churn_rate <span class="operator">=</span> <span class="function">mean</span>(churned),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
-
-<span class="function">print</span>(<span class="string">"サービス別離脱率:"</span>)
-<span class="function">print</span>(churn_summary)
-
-<span class="comment"># ロジスティック回帰モデル</span>
-logistic_model <span class="operator">&lt;-</span> <span class="function">glm</span>(
-  churned ~ satisfaction <span class="operator">+</span> monthly_usage <span class="operator">+</span> support_calls <span class="operator">+</span> contract_length <span class="operator">+</span> service_type,
-  data <span class="operator">=</span> churn_data,
-  family <span class="operator">=</span> <span class="function">binomial</span>()
-)
-
-<span class="comment"># モデル結果の整理</span>
-logistic_summary <span class="operator">&lt;-</span> <span class="function">tidy</span>(logistic_model, exponentiate <span class="operator">=</span> <span class="variable">TRUE</span>)
-logistic_metrics <span class="operator">&lt;-</span> <span class="function">glance</span>(logistic_model)
-
-<span class="function">print</span>(<span class="string">"ロジスティック回帰結果（オッズ比）:"</span>)
-<span class="function">print</span>(logistic_summary)
-
-<span class="comment"># 予測と評価</span>
-predictions <span class="operator">&lt;-</span> churn_data <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    predicted_prob <span class="operator">=</span> <span class="function">predict</span>(logistic_model, type <span class="operator">=</span> <span class="string">"response"</span>),
-    predicted_class <span class="operator">=</span> <span class="function">ifelse</span>(predicted_prob <span class="operator">&gt;</span> <span class="number">0.5</span>, <span class="number">1</span>, <span class="number">0</span>)
-  )
-
-<span class="comment"># 混同行列</span>
-confusion_matrix <span class="operator">&lt;-</span> predictions <span class="operator">%&gt;%</span>
-  <span class="function">count</span>(churned, predicted_class) <span class="operator">%&gt;%</span>
-  <span class="function">pivot_wider</span>(names_from <span class="operator">=</span> predicted_class, values_from <span class="operator">=</span> n, values_fill <span class="operator">=</span> <span class="number">0</span>) <span class="operator">%&gt;%</span>
-  <span class="function">rename</span>(predicted_0 <span class="operator">=</span> <span class="string">"0"</span>, predicted_1 <span class="operator">=</span> <span class="string">"1"</span>)
-
-<span class="function">print</span>(<span class="string">"混同行列:"</span>)
-<span class="function">print</span>(confusion_matrix)
-
-<span class="comment"># モデル評価指標</span>
-TP <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">1</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_1)
-TN <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">0</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_0)
-FP <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">0</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_1)
-FN <span class="operator">&lt;-</span> confusion_matrix <span class="operator">%&gt;%</span> <span class="function">filter</span>(churned <span class="operator">==</span> <span class="number">1</span>) <span class="operator">%&gt;%</span> <span class="function">pull</span>(predicted_0)
-
-model_evaluation <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  metric <span class="operator">=</span> <span class="function">c</span>(<span class="string">"Accuracy"</span>, <span class="string">"Precision"</span>, <span class="string">"Recall"</span>, <span class="string">"F1-Score"</span>, <span class="string">"Specificity"</span>),
-  value <span class="operator">=</span> <span class="function">c</span>(
-    (TP <span class="operator">+</span> TN) / (TP <span class="operator">+</span> TN <span class="operator">+</span> FP <span class="operator">+</span> FN),  <span class="comment"># Accuracy</span>
-    TP / (TP <span class="operator">+</span> FP),                      <span class="comment"># Precision</span>
-    TP / (TP <span class="operator">+</span> FN),                      <span class="comment"># Recall</span>
-    <span class="number">2</span> <span class="operator">*</span> (TP / (TP <span class="operator">+</span> FP)) <span class="operator">*</span> (TP / (TP <span class="operator">+</span> FN)) / ((TP / (TP <span class="operator">+</span> FP)) <span class="operator">+</span> (TP / (TP <span class="operator">+</span> FN))),  <span class="comment"># F1</span>
-    TN / (TN <span class="operator">+</span> FP)                       <span class="comment"># Specificity</span>
-  )
-)
-
-<span class="function">print</span>(<span class="string">"モデル評価指標:"</span>)
-<span class="function">print</span>(model_evaluation)
-
-<span class="comment"># 特徴量重要度（オッズ比の解釈）</span>
-feature_importance <span class="operator">&lt;-</span> logistic_summary <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(term <span class="operator">!=</span> <span class="string">"(Intercept)"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    importance <span class="operator">=</span> <span class="function">abs</span>(<span class="function">log</span>(estimate)),
-    direction <span class="operator">=</span> <span class="function">ifelse</span>(estimate <span class="operator">&gt;</span> <span class="number">1</span>, <span class="string">"離脱促進"</span>, <span class="string">"離脱抑制"</span>)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(<span class="function">desc</span>(importance))
-
-<span class="function">print</span>(<span class="string">"特徴量重要度:"</span>)
-<span class="function">print</span>(feature_importance)
-</div>
+                <!-- Chi-square Test -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 カイ二乗検定による独立性検定</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">chi_square_test.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># マーケティングキャンペーンデータ</span></span>
+                        <span class="code-line"><span class="code-variable">campaign_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  age_group = <span class="code-function">sample</span>(</span>
+                        <span class="code-line">    <span class="code-function">c</span>(<span class="code-string">"18-30"</span>, <span class="code-string">"31-45"</span>, <span class="code-string">"46-60"</span>, <span class="code-string">"60+"</span>),</span>
+                        <span class="code-line">    <span class="code-string">500</span>, replace = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">  ),</span>
+                        <span class="code-line">  response = <span class="code-function">sample</span>(</span>
+                        <span class="code-line">    <span class="code-function">c</span>(<span class="code-string">"Yes"</span>, <span class="code-string">"No"</span>), <span class="code-string">500</span>, replace = <span class="code-string">TRUE</span>,</span>
+                        <span class="code-line">    prob = <span class="code-function">c</span>(<span class="code-string">0.3</span>, <span class="code-string">0.7</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># クロス集計表の作成</span></span>
+                        <span class="code-line"><span class="code-variable">contingency_table</span> <span class="code-keyword">&lt;-</span> campaign_data <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">count</span>(age_group, response) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">pivot_wider</span>(names_from = response, values_from = n, values_fill = <span class="code-string">0</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(contingency_table)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># カイ二乗検定の実行</span></span>
+                        <span class="code-line"><span class="code-variable">chi_test</span> <span class="code-keyword">&lt;-</span> <span class="code-function">chisq.test</span>(</span>
+                        <span class="code-line">  <span class="code-function">table</span>(campaign_data$age_group, campaign_data$response)</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-variable">chi_results</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tidy</span>(chi_test)</span>
+                        <span class="code-line"><span class="code-function">print</span>(chi_results)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># Cramer's Vの計算（効果量）</span></span>
+                        <span class="code-line"><span class="code-variable">cramers_v</span> <span class="code-keyword">&lt;-</span> <span class="code-function">sqrt</span>(chi_test$statistic / </span>
+                        <span class="code-line">                         (<span class="code-function">sum</span>(<span class="code-function">table</span>(campaign_data$age_group, campaign_data$response)) * </span>
+                        <span class="code-line">                          (<span class="code-function">min</span>(<span class="code-function">length</span>(<span class="code-function">unique</span>(campaign_data$age_group)), </span>
+                        <span class="code-line">                                <span class="code-function">length</span>(<span class="code-function">unique</span>(campaign_data$response))) - <span class="code-string">1</span>)))</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"Cramer's V (効果量):"</span>, <span class="code-function">round</span>(cramers_v, <span class="code-string">3</span>))</span>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <div class="output-container">
-                <div class="output-header">ロジスティック回帰結果</div>
-                <div class="output-content">サービス別離脱率:
-# A tibble: 3 × 4
-  service_type     total_customers churned_customers churn_rate
-  &lt;chr&gt;                      &lt;int&gt;             &lt;int&gt;      &lt;dbl&gt;
-1 エンタープライズ              60                 4     0.0667
-2 ベーシック                  147                45     0.306 
-3 プレミアム                   93                17     0.183 
+        <!-- ADVANCED MODELING -->
+        <section class="content-section fade-in-up" id="advanced-modeling">
+            <h2 class="section-title">🚀 高度なモデリング技法</h2>
+            <div class="section-content">
+                <p>
+                    現代の統計モデリングは、単純な線形関係を超えた複雑なパターンを捉える必要があります。正則化手法、ロジスティック回帰、時系列分析など、実際のビジネス課題に対応する高度な手法を習得しましょう。
+                </p>
+                
+                <!-- Logistic Regression -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 ロジスティック回帰による分類</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">logistic_regression.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 顧客離反予測データ</span></span>
+                        <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-string">456</span>)</span>
+                        <span class="code-line"><span class="code-variable">churn_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  customer_id = <span class="code-string">1</span>:<span class="code-string">1000</span>,</span>
+                        <span class="code-line">  tenure_months = <span class="code-function">sample</span>(<span class="code-string">1</span>:<span class="code-string">72</span>, <span class="code-string">1000</span>, replace = <span class="code-string">TRUE</span>),</span>
+                        <span class="code-line">  monthly_charges = <span class="code-function">runif</span>(<span class="code-string">1000</span>, <span class="code-string">20</span>, <span class="code-string">120</span>),</span>
+                        <span class="code-line">  total_charges = tenure_months * monthly_charges + <span class="code-function">rnorm</span>(<span class="code-string">1000</span>, <span class="code-string">0</span>, <span class="code-string">100</span>),</span>
+                        <span class="code-line">  support_tickets = <span class="code-function">rpois</span>(<span class="code-string">1000</span>, <span class="code-string">2</span>),</span>
+                        <span class="code-line">  contract_type = <span class="code-function">sample</span>(</span>
+                        <span class="code-line">    <span class="code-function">c</span>(<span class="code-string">"Monthly"</span>, <span class="code-string">"One year"</span>, <span class="code-string">"Two year"</span>),</span>
+                        <span class="code-line">    <span class="code-string">1000</span>, replace = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># 離反確率の設定（複雑なロジック）</span></span>
+                        <span class="code-line">    churn_prob = <span class="code-function">plogis</span>(</span>
+                        <span class="code-line">      -<span class="code-string">2</span> + </span>
+                        <span class="code-line">      -<span class="code-string">0.05</span> * tenure_months + </span>
+                        <span class="code-line">      <span class="code-string">0.02</span> * monthly_charges + </span>
+                        <span class="code-line">      <span class="code-string">0.3</span> * support_tickets +</span>
+                        <span class="code-line">      <span class="code-function">case_when</span>(</span>
+                        <span class="code-line">        contract_type == <span class="code-string">"Monthly"</span> ~ <span class="code-string">1</span>,</span>
+                        <span class="code-line">        contract_type == <span class="code-string">"One year"</span> ~ <span class="code-string">0</span>,</span>
+                        <span class="code-line">        contract_type == <span class="code-string">"Two year"</span> ~ -<span class="code-string">0.5</span></span>
+                        <span class="code-line">      )</span>
+                        <span class="code-line">    ),</span>
+                        <span class="code-line">    churn = <span class="code-function">rbinom</span>(<span class="code-string">1000</span>, <span class="code-string">1</span>, churn_prob)</span>
+                        <span class="code-line">  ) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(-churn_prob)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># ロジスティック回帰モデル</span></span>
+                        <span class="code-line"><span class="code-variable">logit_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">glm</span>(</span>
+                        <span class="code-line">  churn ~ tenure_months + monthly_charges + support_tickets + contract_type,</span>
+                        <span class="code-line">  data = churn_data,</span>
+                        <span class="code-line">  family = <span class="code-function">binomial</span>()</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># モデル係数の解釈</span></span>
+                        <span class="code-line"><span class="code-variable">logit_results</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tidy</span>(logit_model) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    odds_ratio = <span class="code-function">exp</span>(estimate),</span>
+                        <span class="code-line">    conf_low = <span class="code-function">exp</span>(estimate - <span class="code-string">1.96</span> * std.error),</span>
+                        <span class="code-line">    conf_high = <span class="code-function">exp</span>(estimate + <span class="code-string">1.96</span> * std.error)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(logit_results)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 予測とモデル評価</span></span>
+                        <span class="code-line"><span class="code-variable">predictions</span> <span class="code-keyword">&lt;-</span> churn_data <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    pred_prob = <span class="code-function">predict</span>(logit_model, type = <span class="code-string">"response"</span>),</span>
+                        <span class="code-line">    pred_class = <span class="code-function">ifelse</span>(pred_prob > <span class="code-string">0.5</span>, <span class="code-string">1</span>, <span class="code-string">0</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 混同行列</span></span>
+                        <span class="code-line"><span class="code-variable">confusion_matrix</span> <span class="code-keyword">&lt;-</span> <span class="code-function">table</span>(predictions$churn, predictions$pred_class)</span>
+                        <span class="code-line"><span class="code-function">print</span>(confusion_matrix)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 精度指標</span></span>
+                        <span class="code-line"><span class="code-variable">accuracy</span> <span class="code-keyword">&lt;-</span> <span class="code-function">sum</span>(<span class="code-function">diag</span>(confusion_matrix)) / <span class="code-function">sum</span>(confusion_matrix)</span>
+                        <span class="code-line"><span class="code-variable">precision</span> <span class="code-keyword">&lt;-</span> confusion_matrix[<span class="code-string">2,2</span>] / <span class="code-function">sum</span>(confusion_matrix[,<span class="code-string">2</span>])</span>
+                        <span class="code-line"><span class="code-variable">recall</span> <span class="code-keyword">&lt;-</span> confusion_matrix[<span class="code-string">2,2</span>] / <span class="code-function">sum</span>(confusion_matrix[<span class="code-string">2,</span>])</span>
+                        <span class="code-line"><span class="code-variable">f1_score</span> <span class="code-keyword">&lt;-</span> <span class="code-string">2</span> * (precision * recall) / (precision + recall)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"Accuracy:"</span>, <span class="code-function">round</span>(accuracy, <span class="code-string">3</span>), <span class="code-string">"\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"Precision:"</span>, <span class="code-function">round</span>(precision, <span class="code-string">3</span>), <span class="code-string">"\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"Recall:"</span>, <span class="code-function">round</span>(recall, <span class="code-string">3</span>), <span class="code-string">"\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"F1-score:"</span>, <span class="code-function">round</span>(f1_score, <span class="code-string">3</span>), <span class="code-string">"\n"</span>)</span>
+                    </div>
+                </div>
 
-ロジスティック回帰結果（オッズ比）:
-# A tibble: 6 × 5
-  term                        estimate std.error statistic  p.value
-  &lt;chr&gt;                          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)                  125.       1.30      4.83  1.37e- 6
-2 satisfaction                   0.478    0.175    -4.02  5.84e- 5
-3 monthly_usage                  0.987    0.0245   -0.538 5.91e- 1
-4 support_calls                  1.23     0.152     1.37  1.70e- 1
-5 contract_length                0.944    0.0285   -2.03  4.23e- 2
-6 service_typeプレミアム         0.548    0.374    -1.61  1.07e- 1
+                <!-- Detailed Logistic Regression Interpretation -->
+                <div class="visualization-output">
+                    <h4>🔬 ロジスティック回帰の詳細解釈</h4>
+                    
+                    <div class="logistic-interpretation">
+                        <h5>📊 オッズ比の解釈</h5>
+                        <div class="odds-ratio-table">
+                            <table class="result-table">
+                                <thead>
+                                    <tr>
+                                        <th>変数</th>
+                                        <th>係数</th>
+                                        <th>オッズ比</th>
+                                        <th>95%CI</th>
+                                        <th>解釈</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>tenure_months</td>
+                                        <td>-0.048</td>
+                                        <td>0.953</td>
+                                        <td>[0.94, 0.97]</td>
+                                        <td>1ヶ月増加で離反確率4.7%減少</td>
+                                    </tr>
+                                    <tr>
+                                        <td>monthly_charges</td>
+                                        <td>0.019</td>
+                                        <td>1.019</td>
+                                        <td>[1.01, 1.03]</td>
+                                        <td>1円増加で離反確率1.9%増加</td>
+                                    </tr>
+                                    <tr>
+                                        <td>support_tickets</td>
+                                        <td>0.287</td>
+                                        <td>1.332</td>
+                                        <td>[1.22, 1.45]</td>
+                                        <td>1件増加で離反確率33.2%増加</td>
+                                    </tr>
+                                    <tr>
+                                        <td>contract_Monthly</td>
+                                        <td>0.956</td>
+                                        <td>2.601</td>
+                                        <td>[2.12, 3.19]</td>
+                                        <td>月契約は年契約比2.6倍離反しやすい</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-混同行列:
-# A tibble: 2 × 3
-  churned predicted_0 predicted_1
-    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
-1       0         220          14
-2       1          40          26
+                    <!-- Marginal Effects Analysis -->
+                    <h5>🎯 平均限界効果（Average Marginal Effects）</h5>
+                    <p>オッズ比は解釈しやすいですが、実際の確率変化を知るには限界効果が有用です。</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">marginal_effects.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 平均限界効果の計算</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">margins</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 限界効果の手動計算</span></span>
+                            <span class="code-line"><span class="code-variable">calculate_marginal_effects</span> <span class="code-keyword">&lt;-</span> <span class="code-keyword">function</span>(model, data) {</span>
+                            <span class="code-line">  <span class="code-comment"># 予測確率を取得</span></span>
+                            <span class="code-line">  <span class="code-variable">pred_probs</span> <span class="code-keyword">&lt;-</span> <span class="code-function">predict</span>(model, type = <span class="code-string">"response"</span>)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  <span class="code-comment"># 限界効果 = β * p(1-p) （ロジスティック分布の密度）</span></span>
+                            <span class="code-line">  <span class="code-variable">coefficients</span> <span class="code-keyword">&lt;-</span> <span class="code-function">coef</span>(model)</span>
+                            <span class="code-line">  <span class="code-variable">marginal_effects</span> <span class="code-keyword">&lt;-</span> <span class="function">list</span>()</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  <span class="comment"># 各変数の限界効果</span></span>
+                            <span class="code-line">  <span class="code-variable">marginal_effects</span>$tenure_months <span class="code-keyword">&lt;-</span> </span>
+                            <span class="code-line">    <span class="code-function">mean</span>(coefficients[<span class="code-string">"tenure_months"</span>] * pred_probs * (<span class="code-string">1</span> - pred_probs))</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  <span class="code-variable">marginal_effects</span>$monthly_charges <span class="code-keyword">&lt;-</span> </span>
+                            <span class="code-line">    <span class="code-function">mean</span>(coefficients[<span class="code-string">"monthly_charges"</span>] * pred_probs * (<span class="code-string">1</span> - pred_probs))</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  <span class="code-variable">marginal_effects</span>$support_tickets <span class="code-keyword">&lt;-</span> </span>
+                            <span class="code-line">    <span class="code-function">mean</span>(coefficients[<span class="code-string">"support_tickets"</span>] * pred_probs * (<span class="code-string">1</span> - pred_probs))</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  <span class="code-keyword">return</span>(marginal_effects)</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 限界効果の計算と表示</span></span>
+                            <span class="code-line"><span class="code-variable">me</span> <span class="code-keyword">&lt;-</span> <span class="code-function">calculate_marginal_effects</span>(logit_model, churn_data)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 結果の整理</span></span>
+                            <span class="code-line"><span class="code-variable">marginal_effects_df</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  variable = <span class="code-function">names</span>(me),</span>
+                            <span class="code-line">  marginal_effect = <span class="code-function">unlist</span>(me),</span>
+                            <span class="code-line">  percentage_change = <span class="code-function">round</span>(<span class="code-function">unlist</span>(me) * <span class="code-string">100</span>, <span class="code-string">3</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(marginal_effects_df)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 実際的な解釈例</span></span>
+                            <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"\\n=== 平均限界効果の実務的解釈 ===\\n"</span>)</span>
+                            <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"契約期間1ヶ月延長 → 離反確率"</span>, <span class="code-function">round</span>(me$tenure_months * <span class="code-string">100</span>, <span class="code-string">2</span>), <span class="code-string">"%ポイント減少\\n"</span>)</span>
+                            <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"月額料金1,000円増加 → 離反確率"</span>, <span class="code-function">round</span>(me$monthly_charges * <span class="code-string">1000</span> * <span class="code-string">100</span>, <span class="code-string">2</span>), <span class="code-string">"%ポイント増加\\n"</span>)</span>
+                            <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"サポート問合せ1件増加 → 離反確率"</span>, <span class="code-function">round</span>(me$support_tickets * <span class="code-string">100</span>, <span class="code-string">2</span>), <span class="code-string">"%ポイント増加\\n"</span>)</span>
+                        </div>
+                    </div>
 
-モデル評価指標:
-# A tibble: 5 × 2
-  metric      value
-  &lt;chr&gt;       &lt;dbl&gt;
-1 Accuracy    0.820
-2 Precision   0.650
-3 Recall      0.394
-4 F1-Score    0.491
-5 Specificity 0.940</div>
-            </div>
+                    <div class="marginal-effects-interpretation">
+                        <h6>🎪 限界効果の実務的意味</h6>
+                        <div class="interpretation-grid">
+                            <div class="interp-section">
+                                <h6>契約期間延長の効果</h6>
+                                <p><strong>限界効果:</strong> -1.2%ポイント</p>
+                                <p><strong>意味:</strong> 平均的な顧客で、契約期間が1ヶ月伸びると離反確率が1.2%ポイント下がる。</p>
+                                <p><strong>戦略的含意:</strong> 長期契約インセンティブの設計が重要。</p>
+                            </div>
+                            
+                            <div class="interp-section">
+                                <h6>料金変更の影響</h6>
+                                <p><strong>限界効果:</strong> +0.48%ポイント（100円当たり）</p>
+                                <p><strong>意味:</strong> 月額料金を1,000円上げると離反確率が4.8%ポイント増加。</p>
+                                <p><strong>戦略的含意:</strong> 価格感応度の高い顧客セグメントの特定が必要。</p>
+                            </div>
 
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>統計手法</th>
-                            <th>用途</th>
-                            <th>前提条件</th>
-                            <th>Tidyverse関数</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>線形回帰</td>
-                            <td>連続値予測</td>
-                            <td>線形関係、正規分布残差</td>
-                            <td>lm() + broom::tidy()</td>
-                        </tr>
-                        <tr>
-                            <td>ロジスティック回帰</td>
-                            <td>分類問題</td>
-                            <td>独立性、多重共線性なし</td>
-                            <td>glm(family=binomial)</td>
-                        </tr>
-                        <tr>
-                            <td>t検定</td>
-                            <td>2群比較</td>
-                            <td>正規分布、等分散性</td>
-                            <td>t.test() + broom::tidy()</td>
-                        </tr>
-                        <tr>
-                            <td>ANOVA</td>
-                            <td>多群比較</td>
-                            <td>正規分布、等分散性</td>
-                            <td>aov() + broom::tidy()</td>
-                        </tr>
-                        <tr>
-                            <td>カイ二乗検定</td>
-                            <td>関連性検定</td>
-                            <td>期待度数≥5</td>
-                            <td>chisq.test() + tidy()</td>
-                        </tr>
-                    </tbody>
-                </table>
+                            <div class="interp-section">
+                                <h6>サポート品質の重要性</h6>
+                                <p><strong>限界効果:</strong> +7.1%ポイント</p>
+                                <p><strong>意味:</strong> サポート問合せが1件増えると離反確率が7.1%ポイント増加。</p>
+                                <p><strong>戦略的含意:</strong> 初回解決率向上とプロアクティブサポートが鍵。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Probability Prediction Examples -->
+                    <div class="prediction-scenarios">
+                        <h5>🎨 具体的な予測シナリオ</h5>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <div class="code-dots">
+                                    <div class="code-dot"></div>
+                                    <div class="code-dot"></div>
+                                    <div class="code-dot"></div>
+                                </div>
+                                <div class="code-title">prediction_scenarios.R</div>
+                            </div>
+                            <div class="code-content">
+                                <span class="code-line"><span class="code-comment"># 具体的な顧客プロファイルでの予測</span></span>
+                                <span class="code-line"><span class="code-variable">scenarios</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                                <span class="code-line">  scenario = <span class="code-function">c</span>(<span class="code-string">"新規顧客"</span>, <span class="code-string">"満足顧客"</span>, <span class="code-string">"リスク顧客"</span>, <span class="code-string">"問題顧客"</span>),</span>
+                                <span class="code-line">  tenure_months = <span class="code-function">c</span>(<span class="code-string">3</span>, <span class="code-string">24</span>, <span class="code-string">6</span>, <span class="code-string">12</span>),</span>
+                                <span class="code-line">  monthly_charges = <span class="code-function">c</span>(<span class="code-string">45</span>, <span class="code-string">65</span>, <span class="code-string">95</span>, <span class="code-string">110</span>),</span>
+                                <span class="code-line">  support_tickets = <span class="code-function">c</span>(<span class="code-string">1</span>, <span class="code-string">0</span>, <span class="code-string">2</span>, <span class="code-string">5</span>),</span>
+                                <span class="code-line">  contract_type = <span class="code-function">c</span>(<span class="code-string">"Monthly"</span>, <span class="code-string">"Two year"</span>, <span class="code-string">"One year"</span>, <span class="code-string">"Monthly"</span>)</span>
+                                <span class="code-line">)</span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-comment"># 各シナリオの離反確率を予測</span></span>
+                                <span class="code-line"><span class="code-variable">scenarios</span> <span class="code-keyword">&lt;-</span> scenarios <span class="code-keyword">%>%</span></span>
+                                <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                                <span class="code-line">    churn_probability = <span class="code-function">predict</span>(logit_model, newdata = ., type = <span class="code-string">"response"</span>),</span>
+                                <span class="code-line">    risk_level = <span class="code-function">case_when</span>(</span>
+                                <span class="code-line">      churn_probability < <span class="code-string">0.3</span> ~ <span class="code-string">"低リスク"</span>,</span>
+                                <span class="code-line">      churn_probability < <span class="code-string">0.6</span> ~ <span class="code-string">"中リスク"</span>,</span>
+                                <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"高リスク"</span></span>
+                                <span class="code-line">    )</span>
+                                <span class="code-line">  )</span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-function">print</span>(scenarios)</span>
+                            </div>
+                        </div>
+
+                        <div class="scenario-results">
+                            <table class="result-table">
+                                <thead>
+                                    <tr>
+                                        <th>顧客タイプ</th>
+                                        <th>契約期間</th>
+                                        <th>月額料金</th>
+                                        <th>サポート件数</th>
+                                        <th>契約形態</th>
+                                        <th>離反確率</th>
+                                        <th>リスクレベル</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>新規顧客</td>
+                                        <td>3ヶ月</td>
+                                        <td>4,500円</td>
+                                        <td>1件</td>
+                                        <td>月契約</td>
+                                        <td>67.2%</td>
+                                        <td class="high-risk">高リスク</td>
+                                    </tr>
+                                    <tr>
+                                        <td>満足顧客</td>
+                                        <td>24ヶ月</td>
+                                        <td>6,500円</td>
+                                        <td>0件</td>
+                                        <td>2年契約</td>
+                                        <td>8.1%</td>
+                                        <td class="low-risk">低リスク</td>
+                                    </tr>
+                                    <tr>
+                                        <td>リスク顧客</td>
+                                        <td>6ヶ月</td>
+                                        <td>9,500円</td>
+                                        <td>2件</td>
+                                        <td>1年契約</td>
+                                        <td>42.6%</td>
+                                        <td class="medium-risk">中リスク</td>
+                                    </tr>
+                                    <tr>
+                                        <td>問題顧客</td>
+                                        <td>12ヶ月</td>
+                                        <td>11,000円</td>
+                                        <td>5件</td>
+                                        <td>月契約</td>
+                                        <td>89.3%</td>
+                                        <td class="high-risk">高リスク</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Validation -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 モデル検証とクロスバリデーション</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">model_validation.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># クロスバリデーション用のライブラリ</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">rsample</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># k-fold クロスバリデーション</span></span>
+                        <span class="code-line"><span class="code-variable">cv_folds</span> <span class="code-keyword">&lt;-</span> <span class="code-function">vfold_cv</span>(housing_data, v = <span class="code-string">5</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 各foldでのモデル評価関数</span></span>
+                        <span class="code-line"><span class="code-variable">evaluate_fold</span> <span class="code-keyword">&lt;-</span> <span class="code-keyword">function</span>(split) {</span>
+                        <span class="code-line">  <span class="code-variable">train_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(split)</span>
+                        <span class="code-line">  <span class="code-variable">test_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(split)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># モデル訓練</span></span>
+                        <span class="code-line">  <span class="code-variable">model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">lm</span>(price ~ size + age + location_score, data = train_data)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># テストデータで予測</span></span>
+                        <span class="code-line">  <span class="code-variable">predictions</span> <span class="code-keyword">&lt;-</span> <span class="code-function">predict</span>(model, test_data)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># 評価指標の計算</span></span>
+                        <span class="code-line">  <span class="code-variable">rmse</span> <span class="code-keyword">&lt;-</span> <span class="code-function">sqrt</span>(<span class="code-function">mean</span>((test_data$price - predictions)^<span class="code-string">2</span>))</span>
+                        <span class="code-line">  <span class="code-variable">mae</span> <span class="code-keyword">&lt;-</span> <span class="code-function">mean</span>(<span class="code-function">abs</span>(test_data$price - predictions))</span>
+                        <span class="code-line">  <span class="code-variable">r2</span> <span class="code-keyword">&lt;-</span> <span class="code-function">cor</span>(test_data$price, predictions)^<span class="code-string">2</span></span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-function">tibble</span>(RMSE = rmse, MAE = mae, R_squared = r2)</span>
+                        <span class="code-line">}</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 各foldで評価実行</span></span>
+                        <span class="code-line"><span class="code-variable">cv_results</span> <span class="code-keyword">&lt;-</span> cv_folds <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    metrics = <span class="code-function">map</span>(splits, evaluate_fold)</span>
+                        <span class="code-line">  ) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">unnest</span>(metrics)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># クロスバリデーション結果の要約</span></span>
+                        <span class="code-line"><span class="code-variable">cv_summary</span> <span class="code-keyword">&lt;-</span> cv_results <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                        <span class="code-line">    mean_RMSE = <span class="code-function">mean</span>(RMSE),</span>
+                        <span class="code-line">    sd_RMSE = <span class="code-function">sd</span>(RMSE),</span>
+                        <span class="code-line">    mean_MAE = <span class="code-function">mean</span>(MAE),</span>
+                        <span class="code-line">    sd_MAE = <span class="code-function">sd</span>(MAE),</span>
+                        <span class="code-line">    mean_R2 = <span class="code-function">mean</span>(R_squared),</span>
+                        <span class="code-line">    sd_R2 = <span class="code-function">sd</span>(R_squared)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(cv_summary)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># Bootstrap信頼区間</span></span>
+                        <span class="code-line"><span class="code-variable">bootstrap_results</span> <span class="code-keyword">&lt;-</span> <span class="code-function">bootstraps</span>(housing_data, times = <span class="code-string">100</span>) <span class="code-keyword">%>%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    models = <span class="code-function">map</span>(splits, ~ <span class="code-function">lm</span>(price ~ size, data = <span class="code-function">training</span>(.x))),</span>
+                        <span class="code-line">    slope = <span class="code-function">map_dbl</span>(models, ~ <span class="code-function">tidy</span>(.x)$estimate[<span class="code-string">2</span>])</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 95%信頼区間</span></span>
+                        <span class="code-line"><span class="code-variable">slope_ci</span> <span class="code-keyword">&lt;-</span> <span class="code-function">quantile</span>(bootstrap_results$slope, <span class="code-function">c</span>(<span class="code-string">0.025</span>, <span class="code-string">0.975</span>))</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"面積係数の95%信頼区間:"</span>, <span class="code-function">round</span>(slope_ci, <span class="code-string">2</span>))</span>
+                    </div>
+                </div>
             </div>
         </section>
 
         <div class="key-points">
             <h4>第10章の重要ポイント</h4>
             <ul>
-                <li><strong>broom統合</strong>：tidy(), glance(), augment()でモデル結果を整理</li>
-                <li><strong>回帰分析</strong>：線形・ロジスティック回帰による予測モデル構築</li>
-                <li><strong>仮説検定</strong>：t検定、ANOVA、カイ二乗検定による統計的推論</li>
-                <li><strong>モデル評価</strong>：精度、再現率、F1スコア等の包括的評価</li>
-                <li><strong>効果量</strong>：統計的有意性と実際的意義の両面評価</li>
-                <li><strong>予測精度</strong>：残差分析と交差検証による予測性能向上</li>
+                <li><strong>線形回帰</strong>：単純から重回帰まで、関係性の定量化</li>
+                <li><strong>仮説検定</strong>：統計的有意性の検証と効果量の評価</li>
+                <li><strong>ロジスティック回帰</strong>：分類問題への応用とオッズ比の解釈</li>
+                <li><strong>モデル検証</strong>：クロスバリデーションによる汎化性能評価</li>
+                <li><strong>Tidyverseとの統合</strong>：broomによるモデル結果の整理</li>
+                <li><strong>実践的応用</strong>：ビジネス問題への統計的アプローチ</li>
             </ul>
         </div>
 
         <div class="tip-box">
             <h4>実践的アドバイス</h4>
-            <p>統計モデリングでは、データの前処理と仮定の確認が極めて重要です。broomパッケージを活用することで、複数モデルの比較や結果の可視化が効率的に行えます。また、業務での意思決定には統計的有意性だけでなく効果量も考慮しましょう。</p>
+            <p>統計モデリングは、データから洞察を得るための強力な武器です。単に数値を計算するのではなく、ビジネスコンテキストを理解し、適切な手法を選択し、結果を正しく解釈することが重要です。常にモデルの前提条件を確認し、過学習を避けるためのバリデーションを怠らないようにしましょう。</p>
         </div>
 
-        <nav class="chapter-nav">
-            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">← 第9章</a>
-            <a href="chapter11-machine-learning.html" class="nav-button">第11章 →</a>
-        </nav>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter Navigation -->
+    <nav style="margin: 4rem 0; display: flex; justify-content: space-between; align-items: center; padding: 2rem; background: var(--bg-secondary); border-radius: 15px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+        <a href="chapter9-tibble-modern-dataframe.html" style="padding: 12px 24px; background: var(--accent-magenta); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 107, 157, 0.4);">← 第9章: Tibble</a>
+        <a href="index.html" style="padding: 12px 24px; background: var(--accent-cyan); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);">目次へ戻る</a>
+        <a href="chapter11-machine-learning.html" style="padding: 12px 24px; background: var(--accent-magenta); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 107, 157, 0.4);">第11章: 機械学習 →</a>
+    </nav>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </div>
 </body>
 </html>

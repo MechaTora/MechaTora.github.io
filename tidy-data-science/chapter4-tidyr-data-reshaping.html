@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第4章: tidyrによるデータ再構造化 | TIDYVERSE/TIDYMODELS</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <meta name="description" content="tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値処理、ネストされたデータの扱い方をマスターしよう。">
     
     <!-- Favicon -->
@@ -1258,19 +1271,275 @@
                 </div>
             </section>
             
+            <!-- Advanced Data Reshaping for Analytics -->
+            <section class="content-section fade-in-up" id="advanced-reshaping">
+                <h2 class="section-title">🔬 分析のための高度なデータ再構造化</h2>
+                <div class="section-content">
+                    <p>
+                        基本的なtidyr操作を習得したら、複雑な実世界データの再構造化に挑戦しましょう。
+                        統計分析や機械学習に適したデータ形式への変換は、分析の成功を左右する重要なスキルです。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">📊 時系列データの高度な再構造化</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">time_series_reshaping.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 時系列データの高度な再構造化</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(lubridate)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 複雑な時系列データの例</span>
+                            <span class="code-line">raw_sales <- <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  date = <span class="code-function">rep</span>(<span class="code-function">seq</span>(<span class="code-function">ymd</span>(<span class="code-string">"2023-01-01"</span>), <span class="code-function">ymd</span>(<span class="code-string">"2023-12-31"</span>), by = <span class="code-string">"month"</span>), <span class="code-number">3</span>),</span>
+                            <span class="code-line">  region = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"North"</span>, <span class="code-string">"South"</span>, <span class="code-string">"East"</span>), each = <span class="code-number">12</span>),</span>
+                            <span class="code-line">  product_A = <span class="code-function">runif</span>(<span class="code-number">36</span>, <span class="code-number">1000</span>, <span class="code-number">5000</span>),</span>
+                            <span class="code-line">  product_B = <span class="code-function">runif</span>(<span class="code-number">36</span>, <span class="code-number">800</span>, <span class="code-number">4000</span>),</span>
+                            <span class="code-line">  product_C = <span class="code-function">runif</span>(<span class="code-number">36</span>, <span class="code-number">1200</span>, <span class="code-number">6000</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 分析用のロング形式に変換</span>
+                            <span class="code-line">long_sales <- raw_sales <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">pivot_longer</span>(</span>
+                            <span class="code-line">    cols = <span class="code-function">starts_with</span>(<span class="code-string">"product_"</span>),</span>
+                            <span class="code-line">    names_to = <span class="code-string">"product"</span>,</span>
+                            <span class="code-line">    values_to = <span class="code-string">"sales"</span>,</span>
+                            <span class="code-line">    names_prefix = <span class="code-string">"product_"</span></span>
+                            <span class="code-line">  ) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    year = <span class="code-function">year</span>(date),</span>
+                            <span class="code-line">    month = <span class="code-function">month</span>(date, label = <span class="code-boolean">TRUE</span>),</span>
+                            <span class="code-line">    quarter = <span class="code-function">quarter</span>(date, with_year = <span class="code-boolean">TRUE</span>)</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 比較分析用のワイド形式に変換</span>
+                            <span class="code-line">comparative_analysis <- long_sales <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">pivot_wider</span>(</span>
+                            <span class="code-line">    names_from = region,</span>
+                            <span class="code-line">    values_from = sales,</span>
+                            <span class="code-line">    names_prefix = <span class="code-string">"region_"</span></span>
+                            <span class="code-line">  ) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    # 地域間格差の計算</span>
+                            <span class="code-line">    north_south_ratio = region_North / region_South,</span>
+                            <span class="code-line">    total_sales = region_North + region_South + region_East,</span>
+                            <span class="code-line">    max_region = <span class="code-function">pmax</span>(region_North, region_South, region_East)</span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🧬 ネストされたデータの高度な操作</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">nested_data_advanced.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># ネストされたデータの高度な操作</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(broom)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 複雑な階層データの処理</span>
+                            <span class="code-line">customer_data <- <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  customer_id = <span class="code-function">rep</span>(<span class="code-number">1</span>:<span class="code-number">100</span>, each = <span class="code-number">12</span>),</span>
+                            <span class="code-line">  month = <span class="code-function">rep</span>(<span class="code-number">1</span>:<span class="code-number">12</span>, <span class="code-number">100</span>),</span>
+                            <span class="code-line">  purchases = <span class="code-function">rpois</span>(<span class="code-number">1200</span>, <span class="code-number">3</span>),</span>
+                            <span class="code-line">  amount = <span class="code-function">purchases</span> * <span class="code-function">runif</span>(<span class="code-number">1200</span>, <span class="code-number">50</span>, <span class="code-number">200</span>),</span>
+                            <span class="code-line">  segment = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"Premium"</span>, <span class="code-string">"Standard"</span>, <span class="code-string">"Basic"</span>), <span class="code-number">1200</span>, replace = <span class="code-boolean">TRUE</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 顧客セグメント別の分析</span>
+                            <span class="code-line">nested_analysis <- customer_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(segment, customer_id) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                            <span class="code-line">    total_amount = <span class="code-function">sum</span>(amount),</span>
+                            <span class="code-line">    avg_monthly = <span class="code-function">mean</span>(amount),</span>
+                            <span class="code-line">    .groups = <span class="code-string">"drop_last"</span></span>
+                            <span class="code-line">  ) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">nest</span>(customer_data = -segment) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    # 各セグメントの統計サマリー</span>
+                            <span class="code-line">    summary_stats = <span class="code-function">map</span>(customer_data, <span class="code-operator">~</span> {</span>
+                            <span class="code-line">      <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">        n_customers = <span class="code-function">nrow</span>(.x),</span>
+                            <span class="code-line">        mean_ltv = <span class="code-function">mean</span>(.x$total_amount),</span>
+                            <span class="code-line">        median_ltv = <span class="code-function">median</span>(.x$total_amount),</span>
+                            <span class="code-line">        sd_ltv = <span class="code-function">sd</span>(.x$total_amount)</span>
+                            <span class="code-line">      )</span>
+                            <span class="code-line">    }),</span>
+                            <span class="code-line">    # 回帰分析（月次傾向）</span>
+                            <span class="code-line">    trend_model = <span class="code-function">map</span>(customer_data, <span class="code-operator">~</span> <span class="code-function">lm</span>(total_amount ~ avg_monthly, data = .x)),</span>
+                            <span class="code-line">    model_summary = <span class="code-function">map</span>(trend_model, broom::<span class="code-function">glance</span>)</span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🔍 欠損値の高度な処理戦略</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">missing_data_strategies.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 欠損値の高度な処理戦略</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(VIM)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 欠損値パターンの分析</span>
+                            <span class="code-line">analyze_missing_patterns <- <span class="code-function">function</span>(data) {</span>
+                            <span class="code-line">  data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">summarise_all</span>(<span class="code-operator">~</span> <span class="code-function">sum</span>(<span class="code-function">is.na</span>(.))) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">pivot_longer</span>(everything(), names_to = <span class="code-string">"variable"</span>, values_to = <span class="code-string">"missing_count"</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(missing_pct = missing_count / <span class="code-function">nrow</span>(data) * <span class="code-number">100</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">arrange</span>(<span class="code-function">desc</span>(missing_pct))</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 条件付き欠損値補完</span>
+                            <span class="code-line">smart_imputation <- <span class="code-function">function</span>(data, group_vars, target_var) {</span>
+                            <span class="code-line">  data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">group_by</span>(<span class="code-function">across</span>(<span class="code-function">all_of</span>(group_vars))) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">      # グループ内平均で補完</span>
+                            <span class="code-line">      {{target_var}} := <span class="code-function">coalesce</span>({{target_var}}, <span class="code-function">mean</span>({{target_var}}, na.rm = <span class="code-boolean">TRUE</span>))</span>
+                            <span class="code-line">    ) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">ungroup</span>() <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">      # 全体平均で補完（グループ内で補完できない場合）</span>
+                            <span class="code-line">      {{target_var}} := <span class="code-function">coalesce</span>({{target_var}}, <span class="code-function">mean</span>({{target_var}}, na.rm = <span class="code-boolean">TRUE</span>))</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 欠損値フラグの作成</span>
+                            <span class="code-line">create_missing_flags <- <span class="code-function">function</span>(data) {</span>
+                            <span class="code-line">  data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate_all</span>(<span class="code-function">list</span>(missing = <span class="code-operator">~</span> <span class="code-function">as.numeric</span>(<span class="code-function">is.na</span>(.))))</span>
+                            <span class="code-line">}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">💡 実践的アドバイス</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #39ff14; margin-bottom: 1rem;">📊 データ再構造化のコツ</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>目的を明確にする</strong>：どの分析手法に使うかで最適な形式が決まる</li>
+                            <li><strong>メモリ効率を考慮</strong>：大きなデータセットでは処理順序が重要</li>
+                            <li><strong>検証を怠らない</strong>：変換前後でデータの整合性を確認</li>
+                            <li><strong>再現可能性を確保</strong>：変換ステップを関数化して文書化</li>
+                            <li><strong>エラーハンドリング</strong>：想定外のデータ構造に対応する</li>
+                        </ul>
+                    </div>
+                    
+                    <p>
+                        これらの高度なデータ再構造化技法により、複雑な実世界のデータを分析に適した形式に効率的に変換できるようになります。
+                        次の章では、テキストデータの処理技法を学びましょう。
+                    </p>
+                </div>
+            </section>
+
             <!-- Chapter Navigation -->
             <nav class="chapter-nav fade-in-up">
-                <a href="chapter3-ggplot2-visualization.html" class="nav-btn prev">
-                    ← 前の章
-                </a>
-                <div class="chapter-progress">
-                    第4章 / 全6章
-                </div>
-                <a href="chapter5-stringr-text-processing.html" class="nav-btn next">
-                    次の章 →
-                </a>
+                <a href="chapter5-stringr-text-processing.html" class="nav-button">Chapter 5 →</a>
             </nav>
         </div>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </main>
     
     <script>

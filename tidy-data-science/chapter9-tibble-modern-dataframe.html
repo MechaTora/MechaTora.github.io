@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第9章: tibble - モダンなデータフレーム操作 | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -209,50 +222,78 @@
             margin: 20px 0 10px 0;
         }
 
-        /* Code Blocks */
-        .code-container {
-            margin: 20px 0;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-gold);
+        /* Chapter 5 Style Code Blocks */
+        .code-container, .code-block {
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .code-header {
-            background: var(--accent-gold);
-            color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.8), rgba(0, 212, 255, 0.8));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .code-header::before {
             content: '🏗️';
             font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #28ca42; }
+
+        .code-title {
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .code-content {
-            padding: 20px;
+            padding: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            background: #0d1117;
-            color: #c9d1d9;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.4);
             overflow-x: auto;
         }
 
+        .code-line {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
         /* Syntax highlighting */
-        .keyword { color: #ff7b72; }
-        .function { color: #d2a8ff; }
-        .string { color: #a5d6ff; }
-        .comment { color: #8b949e; font-style: italic; }
-        .operator { color: #f85149; }
-        .number { color: #79c0ff; }
-        .variable { color: #ffa657; }
+        .keyword, .code-keyword { color: #ffd700; font-weight: bold; }
+        .function, .code-function { color: #00d4ff; }
+        .string, .code-string { color: #00ff88; }
+        .comment, .code-comment { color: #8b949e; font-style: italic; }
+        .operator, .code-operator { color: #f85149; }
+        .number, .code-number { color: #79c0ff; }
+        .variable, .code-variable { color: #ffa657; }
 
         /* Output Display */
         .output-container {
@@ -564,45 +605,45 @@ tibble(name = "田中")
             <div class="code-container">
                 <div class="code-header">tibbleの作成と基本操作</div>
                 <div class="code-content">
-<span class="keyword">library</span>(<span class="string">tibble</span>)
-<span class="keyword">library</span>(<span class="string">dplyr</span>)
-
-<span class="comment"># tibbleの作成方法</span>
-<span class="comment"># 方法1: tibble()関数</span>
-employee_tibble <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">5</span>,
-  name <span class="operator">=</span> <span class="function">c</span>(<span class="string">"田中太郎"</span>, <span class="string">"佐藤花子"</span>, <span class="string">"鈴木一郎"</span>, <span class="string">"高橋美咲"</span>, <span class="string">"山田健太"</span>),
-  age <span class="operator">=</span> <span class="function">c</span>(<span class="number">28</span>, <span class="number">32</span>, <span class="number">45</span>, <span class="number">25</span>, <span class="number">39</span>),
-  salary <span class="operator">=</span> <span class="function">c</span>(<span class="number">450000</span>, <span class="number">520000</span>, <span class="number">780000</span>, <span class="number">380000</span>, <span class="number">650000</span>),
-  department <span class="operator">=</span> <span class="function">c</span>(<span class="string">"営業"</span>, <span class="string">"開発"</span>, <span class="string">"マネジメント"</span>, <span class="string">"デザイン"</span>, <span class="string">"開発"</span>)
-)
-
-<span class="function">print</span>(employee_tibble)
-
-<span class="comment"># 方法2: data.frameからの変換</span>
-df <span class="operator">&lt;-</span> <span class="function">data.frame</span>(
-  x <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>,
-  y <span class="operator">=</span> <span class="function">c</span>(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>),
-  stringsAsFactors <span class="operator">=</span> <span class="variable">FALSE</span>
-)
-tb_converted <span class="operator">&lt;-</span> <span class="function">as_tibble</span>(df)
-<span class="function">print</span>(tb_converted)
-
-<span class="comment"># 方法3: tribble()で行単位作成</span>
-small_data <span class="operator">&lt;-</span> <span class="function">tribble</span>(
-  ~name,     ~score, ~grade,
-  <span class="string">"Alice"</span>,   <span class="number">85</span>,     <span class="string">"A"</span>,
-  <span class="string">"Bob"</span>,     <span class="number">72</span>,     <span class="string">"B"</span>,
-  <span class="string">"Charlie"</span>, <span class="number">91</span>,     <span class="string">"A"</span>
-)
-<span class="function">print</span>(small_data)
-
-<span class="comment"># tibbleの基本情報</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"クラス:"</span>, <span class="function">class</span>(employee_tibble)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"行数:"</span>, <span class="function">nrow</span>(employee_tibble)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"列数:"</span>, <span class="function">ncol</span>(employee_tibble)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"列名:"</span>, <span class="function">paste</span>(<span class="function">names</span>(employee_tibble), collapse <span class="operator">=</span> <span class="string">", "</span>)))
-</div>
+                    <span class="code-line"><span class="keyword">library</span>(<span class="string">tibble</span>)</span>
+                    <span class="code-line"><span class="keyword">library</span>(<span class="string">dplyr</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># tibbleの作成方法</span></span>
+                    <span class="code-line"><span class="comment"># 方法1: tibble()関数</span></span>
+                    <span class="code-line">employee_tibble <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">5</span>,</span>
+                    <span class="code-line">  name <span class="operator">=</span> <span class="function">c</span>(<span class="string">"田中太郎"</span>, <span class="string">"佐藤花子"</span>, <span class="string">"鈴木一郎"</span>, <span class="string">"高橋美咲"</span>, <span class="string">"山田健太"</span>),</span>
+                    <span class="code-line">  age <span class="operator">=</span> <span class="function">c</span>(<span class="number">28</span>, <span class="number">32</span>, <span class="number">45</span>, <span class="number">25</span>, <span class="number">39</span>),</span>
+                    <span class="code-line">  salary <span class="operator">=</span> <span class="function">c</span>(<span class="number">450000</span>, <span class="number">520000</span>, <span class="number">780000</span>, <span class="number">380000</span>, <span class="number">650000</span>),</span>
+                    <span class="code-line">  department <span class="operator">=</span> <span class="function">c</span>(<span class="string">"営業"</span>, <span class="string">"開発"</span>, <span class="string">"マネジメント"</span>, <span class="string">"デザイン"</span>, <span class="string">"開発"</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(employee_tibble)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 方法2: data.frameからの変換</span></span>
+                    <span class="code-line">df <span class="operator">&lt;-</span> <span class="function">data.frame</span>(</span>
+                    <span class="code-line">  x <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>,</span>
+                    <span class="code-line">  y <span class="operator">=</span> <span class="function">c</span>(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>),</span>
+                    <span class="code-line">  stringsAsFactors <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line">tb_converted <span class="operator">&lt;-</span> <span class="function">as_tibble</span>(df)</span>
+                    <span class="code-line"><span class="function">print</span>(tb_converted)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 方法3: tribble()で行単位作成</span></span>
+                    <span class="code-line">small_data <span class="operator">&lt;-</span> <span class="function">tribble</span>(</span>
+                    <span class="code-line">  ~name,     ~score, ~grade,</span>
+                    <span class="code-line">  <span class="string">"Alice"</span>,   <span class="number">85</span>,     <span class="string">"A"</span>,</span>
+                    <span class="code-line">  <span class="string">"Bob"</span>,     <span class="number">72</span>,     <span class="string">"B"</span>,</span>
+                    <span class="code-line">  <span class="string">"Charlie"</span>, <span class="number">91</span>,     <span class="string">"A"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"><span class="function">print</span>(small_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># tibbleの基本情報</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"クラス:"</span>, <span class="function">class</span>(employee_tibble)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"行数:"</span>, <span class="function">nrow</span>(employee_tibble)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"列数:"</span>, <span class="function">ncol</span>(employee_tibble)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"列名:"</span>, <span class="function">paste</span>(<span class="function">names</span>(employee_tibble), collapse <span class="operator">=</span> <span class="string">", "</span>)))</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -645,63 +686,63 @@ small_data <span class="operator">&lt;-</span> <span class="function">tribble</s
             <div class="code-container">
                 <div class="code-header">リスト列の活用</div>
                 <div class="code-content">
-<span class="comment"># リスト列を含むtibble</span>
-nested_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  group <span class="operator">=</span> <span class="function">c</span>(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>),
-  values <span class="operator">=</span> <span class="function">list</span>(
-    <span class="function">c</span>(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>),
-    <span class="function">c</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>),
-    <span class="function">c</span>(<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>)
-  ),
-  stats <span class="operator">=</span> <span class="function">list</span>(
-    <span class="function">list</span>(mean <span class="operator">=</span> <span class="number">4</span>, sd <span class="operator">=</span> <span class="number">2.58</span>),
-    <span class="function">list</span>(mean <span class="operator">=</span> <span class="number">4</span>, sd <span class="operator">=</span> <span class="number">2</span>),
-    <span class="function">list</span>(mean <span class="operator">=</span> <span class="number">30</span>, sd <span class="operator">=</span> <span class="number">15.81</span>)
-  )
-)
-
-<span class="function">print</span>(nested_data)
-
-<span class="comment"># リスト列から値を抽出</span>
-<span class="function">print</span>(<span class="string">"グループAの値:"</span>)
-<span class="function">print</span>(nested_data$values[[<span class="number">1</span>]])
-
-<span class="comment"># リスト列の各要素に対する操作</span>
-nested_with_summary <span class="operator">&lt;-</span> nested_data <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    length <span class="operator">=</span> <span class="function">map_int</span>(values, length),
-    sum_values <span class="operator">=</span> <span class="function">map_dbl</span>(values, sum),
-    first_value <span class="operator">=</span> <span class="function">map_dbl</span>(values, ~ .x[<span class="number">1</span>]),
-    last_value <span class="operator">=</span> <span class="function">map_dbl</span>(values, ~ .x[<span class="function">length</span>(.x)])
-  )
-
-<span class="function">print</span>(nested_with_summary)
-
-<span class="comment"># ネストしたデータフレーム</span>
-sales_by_region <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  region <span class="operator">=</span> <span class="function">c</span>(<span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"九州"</span>),
-  data <span class="operator">=</span> <span class="function">list</span>(
-    <span class="function">tibble</span>(month <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>, sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">100</span>, <span class="number">120</span>, <span class="number">110</span>)),
-    <span class="function">tibble</span>(month <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>, sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">80</span>, <span class="number">95</span>, <span class="number">88</span>)),
-    <span class="function">tibble</span>(month <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>, sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">60</span>, <span class="number">70</span>, <span class="number">65</span>))
-  )
-)
-
-<span class="function">print</span>(sales_by_region)
-
-<span class="comment"># ネストしたデータの集計</span>
-region_summary <span class="operator">&lt;-</span> sales_by_region <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    total_sales <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ <span class="function">sum</span>(.x$sales)),
-    avg_sales <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ <span class="function">mean</span>(.x$sales)),
-    growth_rate <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ {
-      sales <span class="operator">&lt;-</span> .x$sales
-      (sales[<span class="function">length</span>(sales)] - sales[<span class="number">1</span>]) / sales[<span class="number">1</span>] <span class="operator">*</span> <span class="number">100</span>
-    })
-  )
-
-<span class="function">print</span>(region_summary)
-</div>
+                    <span class="code-line"><span class="comment"># リスト列を含むtibble</span></span>
+                    <span class="code-line">nested_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  group <span class="operator">=</span> <span class="function">c</span>(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>),</span>
+                    <span class="code-line">  values <span class="operator">=</span> <span class="function">list</span>(</span>
+                    <span class="code-line">    <span class="function">c</span>(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>),</span>
+                    <span class="code-line">    <span class="function">c</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>),</span>
+                    <span class="code-line">    <span class="function">c</span>(<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>)</span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  stats <span class="operator">=</span> <span class="function">list</span>(</span>
+                    <span class="code-line">    <span class="function">list</span>(mean <span class="operator">=</span> <span class="number">4</span>, sd <span class="operator">=</span> <span class="number">2.58</span>),</span>
+                    <span class="code-line">    <span class="function">list</span>(mean <span class="operator">=</span> <span class="number">4</span>, sd <span class="operator">=</span> <span class="number">2</span>),</span>
+                    <span class="code-line">    <span class="function">list</span>(mean <span class="operator">=</span> <span class="number">30</span>, sd <span class="operator">=</span> <span class="number">15.81</span>)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(nested_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># リスト列から値を抽出</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"グループAの値:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(nested_data$values[[<span class="number">1</span>]])</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># リスト列の各要素に対する操作</span></span>
+                    <span class="code-line">nested_with_summary <span class="operator">&lt;-</span> nested_data <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    length <span class="operator">=</span> <span class="function">map_int</span>(values, length),</span>
+                    <span class="code-line">    sum_values <span class="operator">=</span> <span class="function">map_dbl</span>(values, sum),</span>
+                    <span class="code-line">    first_value <span class="operator">=</span> <span class="function">map_dbl</span>(values, ~ .x[<span class="number">1</span>]),</span>
+                    <span class="code-line">    last_value <span class="operator">=</span> <span class="function">map_dbl</span>(values, ~ .x[<span class="function">length</span>(.x)])</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(nested_with_summary)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># ネストしたデータフレーム</span></span>
+                    <span class="code-line">sales_by_region <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  region <span class="operator">=</span> <span class="function">c</span>(<span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"九州"</span>),</span>
+                    <span class="code-line">  data <span class="operator">=</span> <span class="function">list</span>(</span>
+                    <span class="code-line">    <span class="function">tibble</span>(month <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>, sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">100</span>, <span class="number">120</span>, <span class="number">110</span>)),</span>
+                    <span class="code-line">    <span class="function">tibble</span>(month <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>, sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">80</span>, <span class="number">95</span>, <span class="number">88</span>)),</span>
+                    <span class="code-line">    <span class="function">tibble</span>(month <span class="operator">=</span> <span class="number">1</span>:<span class="number">3</span>, sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">60</span>, <span class="number">70</span>, <span class="number">65</span>))</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(sales_by_region)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># ネストしたデータの集計</span></span>
+                    <span class="code-line">region_summary <span class="operator">&lt;-</span> sales_by_region <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    total_sales <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ <span class="function">sum</span>(.x$sales)),</span>
+                    <span class="code-line">    avg_sales <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ <span class="function">mean</span>(.x$sales)),</span>
+                    <span class="code-line">    growth_rate <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ {</span>
+                    <span class="code-line">      sales <span class="operator">&lt;-</span> .x$sales</span>
+                    <span class="code-line">      (sales[<span class="function">length</span>(sales)] - sales[<span class="number">1</span>]) / sales[<span class="number">1</span>] <span class="operator">*</span> <span class="number">100</span></span>
+                    <span class="code-line">    })</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(region_summary)</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -743,52 +784,52 @@ region_summary <span class="operator">&lt;-</span> sales_by_region <span class="
             <div class="code-container">
                 <div class="code-header">動的な列操作</div>
                 <div class="code-content">
-<span class="comment"># 列の動的追加</span>
-employee_expanded <span class="operator">&lt;-</span> employee_tibble <span class="operator">%&gt;%</span>
-  <span class="function">add_column</span>(
-    bonus <span class="operator">=</span> salary <span class="operator">*</span> <span class="number">0.1</span>,
-    hire_year <span class="operator">=</span> <span class="function">c</span>(<span class="number">2020</span>, <span class="number">2019</span>, <span class="number">2015</span>, <span class="number">2021</span>, <span class="number">2017</span>),
-    .before <span class="operator">=</span> <span class="string">"department"</span>  <span class="comment"># department列の前に挿入</span>
-  )
-
-<span class="function">print</span>(employee_expanded)
-
-<span class="comment"># 行の追加</span>
-new_employee <span class="operator">&lt;-</span> employee_expanded <span class="operator">%&gt;%</span>
-  <span class="function">add_row</span>(
-    id <span class="operator">=</span> <span class="number">6</span>,
-    name <span class="operator">=</span> <span class="string">"林さくら"</span>,
-    age <span class="operator">=</span> <span class="number">29</span>,
-    salary <span class="operator">=</span> <span class="number">480000</span>,
-    bonus <span class="operator">=</span> <span class="number">48000</span>,
-    hire_year <span class="operator">=</span> <span class="number">2022</span>,
-    department <span class="operator">=</span> <span class="string">"マーケティング"</span>
-  )
-
-<span class="function">print</span>(new_employee)
-
-<span class="comment"># 条件付き列の追加</span>
-employee_with_status <span class="operator">&lt;-</span> new_employee <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    experience_years <span class="operator">=</span> <span class="number">2023</span> <span class="operator">-</span> hire_year,
-    salary_grade <span class="operator">=</span> <span class="function">case_when</span>(
-      salary <span class="operator">&lt;</span> <span class="number">400000</span> ~ <span class="string">"初級"</span>,
-      salary <span class="operator">&lt;</span> <span class="number">600000</span> ~ <span class="string">"中級"</span>,
-      <span class="variable">TRUE</span> ~ <span class="string">"上級"</span>
-    ),
-    is_senior <span class="operator">=</span> experience_years <span class="operator">&gt;=</span> <span class="number">5</span>,
-    total_compensation <span class="operator">=</span> salary <span class="operator">+</span> bonus
-  )
-
-<span class="function">print</span>(employee_with_status)
-
-<span class="comment"># 列の選択と並び替え</span>
-selected_columns <span class="operator">&lt;-</span> employee_with_status <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(name, department, salary_grade, total_compensation, is_senior) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(<span class="function">desc</span>(total_compensation))
-
-<span class="function">print</span>(selected_columns)
-</div>
+                    <span class="code-line"><span class="comment"># 列の動的追加</span></span>
+                    <span class="code-line">employee_expanded <span class="operator">&lt;-</span> employee_tibble <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">add_column</span>(</span>
+                    <span class="code-line">    bonus <span class="operator">=</span> salary <span class="operator">*</span> <span class="number">0.1</span>,</span>
+                    <span class="code-line">    hire_year <span class="operator">=</span> <span class="function">c</span>(<span class="number">2020</span>, <span class="number">2019</span>, <span class="number">2015</span>, <span class="number">2021</span>, <span class="number">2017</span>),</span>
+                    <span class="code-line">    .before <span class="operator">=</span> <span class="string">"department"</span>  <span class="comment"># department列の前に挿入</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(employee_expanded)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 行の追加</span></span>
+                    <span class="code-line">new_employee <span class="operator">&lt;-</span> employee_expanded <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">add_row</span>(</span>
+                    <span class="code-line">    id <span class="operator">=</span> <span class="number">6</span>,</span>
+                    <span class="code-line">    name <span class="operator">=</span> <span class="string">"林さくら"</span>,</span>
+                    <span class="code-line">    age <span class="operator">=</span> <span class="number">29</span>,</span>
+                    <span class="code-line">    salary <span class="operator">=</span> <span class="number">480000</span>,</span>
+                    <span class="code-line">    bonus <span class="operator">=</span> <span class="number">48000</span>,</span>
+                    <span class="code-line">    hire_year <span class="operator">=</span> <span class="number">2022</span>,</span>
+                    <span class="code-line">    department <span class="operator">=</span> <span class="string">"マーケティング"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(new_employee)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 条件付き列の追加</span></span>
+                    <span class="code-line">employee_with_status <span class="operator">&lt;-</span> new_employee <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    experience_years <span class="operator">=</span> <span class="number">2023</span> <span class="operator">-</span> hire_year,</span>
+                    <span class="code-line">    salary_grade <span class="operator">=</span> <span class="function">case_when</span>(</span>
+                    <span class="code-line">      salary <span class="operator">&lt;</span> <span class="number">400000</span> ~ <span class="string">"初級"</span>,</span>
+                    <span class="code-line">      salary <span class="operator">&lt;</span> <span class="number">600000</span> ~ <span class="string">"中級"</span>,</span>
+                    <span class="code-line">      <span class="variable">TRUE</span> ~ <span class="string">"上級"</span></span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line">    is_senior <span class="operator">=</span> experience_years <span class="operator">&gt;=</span> <span class="number">5</span>,</span>
+                    <span class="code-line">    total_compensation <span class="operator">=</span> salary <span class="operator">+</span> bonus</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(employee_with_status)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 列の選択と並び替え</span></span>
+                    <span class="code-line">selected_columns <span class="operator">&lt;-</span> employee_with_status <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">select</span>(name, department, salary_grade, total_compensation, is_senior) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">arrange</span>(<span class="function">desc</span>(total_compensation))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(selected_columns)</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -820,60 +861,60 @@ selected_columns <span class="operator">&lt;-</span> employee_with_status <span 
             <div class="code-container">
                 <div class="code-header">表示オプションのカスタマイズ</div>
                 <div class="code-content">
-<span class="comment"># 大きなデータセットの作成</span>
-<span class="function">set.seed</span>(<span class="number">123</span>)
-large_tibble <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">100</span>,
-  category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>), <span class="number">100</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-  value_1 <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">50</span>, <span class="number">10</span>),
-  value_2 <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">20</span>),
-  value_3 <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">25</span>, <span class="number">5</span>),
-  long_text <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"これは非常に長いテキストです"</span>, <span class="number">1</span>:<span class="number">100</span>, <span class="string">"番目のレコードを示しています"</span>),
-  date <span class="operator">=</span> <span class="function">sample</span>(<span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>), <span class="number">100</span>)
-)
-
-<span class="comment"># デフォルト表示</span>
-<span class="function">print</span>(<span class="string">"デフォルト表示:"</span>)
-<span class="function">print</span>(large_tibble)
-
-<span class="comment"># 表示行数を変更</span>
-<span class="function">print</span>(<span class="string">"最初の3行のみ表示:"</span>)
-<span class="function">print</span>(large_tibble, n <span class="operator">=</span> <span class="number">3</span>)
-
-<span class="comment"># すべての列を表示</span>
-<span class="function">print</span>(<span class="string">"全列表示:"</span>)
-<span class="function">print</span>(large_tibble, width <span class="operator">=</span> <span class="variable">Inf</span>)
-
-<span class="comment"># glimpse()で構造確認</span>
-<span class="function">print</span>(<span class="string">"データ構造の概要:"</span>)
-<span class="function">glimpse</span>(large_tibble)
-
-<span class="comment"># View()関数での詳細確認（実際にはRStudioで使用）</span>
-<span class="comment"># View(large_tibble)</span>
-
-<span class="comment"># 特定の列のサンプル</span>
-<span class="function">print</span>(<span class="string">"カテゴリ列のサンプル:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(large_tibble$category, <span class="number">10</span>))
-
-<span class="comment"># データ型の詳細確認</span>
-<span class="function">print</span>(<span class="string">"列の型情報:"</span>)
-<span class="function">print</span>(<span class="function">map_chr</span>(large_tibble, class))
-
-<span class="comment"># 欠損値の確認</span>
-<span class="comment"># 一部のデータにNAを挿入</span>
-large_tibble_with_na <span class="operator">&lt;-</span> large_tibble <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    value_1 <span class="operator">=</span> <span class="function">ifelse</span>(<span class="function">row_number</span>() <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">5</span>, <span class="number">15</span>, <span class="number">25</span>), <span class="variable">NA_real_</span>, value_1),
-    category <span class="operator">=</span> <span class="function">ifelse</span>(<span class="function">row_number</span>() <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">10</span>, <span class="number">20</span>), <span class="variable">NA_character_</span>, category)
-  )
-
-<span class="comment"># 欠損値サマリー</span>
-na_summary <span class="operator">&lt;-</span> large_tibble_with_na <span class="operator">%&gt;%</span>
-  <span class="function">summarise_all</span>(~ <span class="function">sum</span>(<span class="function">is.na</span>(.)))
-
-<span class="function">print</span>(<span class="string">"欠損値の数:"</span>)
-<span class="function">print</span>(na_summary)
-</div>
+                    <span class="code-line"><span class="comment"># 大きなデータセットの作成</span></span>
+                    <span class="code-line"><span class="function">set.seed</span>(<span class="number">123</span>)</span>
+                    <span class="code-line">large_tibble <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">100</span>,</span>
+                    <span class="code-line">  category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>), <span class="number">100</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                    <span class="code-line">  value_1 <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">50</span>, <span class="number">10</span>),</span>
+                    <span class="code-line">  value_2 <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">20</span>),</span>
+                    <span class="code-line">  value_3 <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">25</span>, <span class="number">5</span>),</span>
+                    <span class="code-line">  long_text <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"これは非常に長いテキストです"</span>, <span class="number">1</span>:<span class="number">100</span>, <span class="string">"番目のレコードを示しています"</span>),</span>
+                    <span class="code-line">  date <span class="operator">=</span> <span class="function">sample</span>(<span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>), <span class="number">100</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># デフォルト表示</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"デフォルト表示:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(large_tibble)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 表示行数を変更</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"最初の3行のみ表示:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(large_tibble, n <span class="operator">=</span> <span class="number">3</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># すべての列を表示</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"全列表示:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(large_tibble, width <span class="operator">=</span> <span class="variable">Inf</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># glimpse()で構造確認</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"データ構造の概要:"</span>)</span>
+                    <span class="code-line"><span class="function">glimpse</span>(large_tibble)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># View()関数での詳細確認（実際にはRStudioで使用）</span></span>
+                    <span class="code-line"><span class="comment"># View(large_tibble)</span></span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 特定の列のサンプル</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"カテゴリ列のサンプル:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(large_tibble$category, <span class="number">10</span>))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># データ型の詳細確認</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"列の型情報:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">map_chr</span>(large_tibble, class))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 欠損値の確認</span></span>
+                    <span class="code-line"><span class="comment"># 一部のデータにNAを挿入</span></span>
+                    <span class="code-line">large_tibble_with_na <span class="operator">&lt;-</span> large_tibble <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    value_1 <span class="operator">=</span> <span class="function">ifelse</span>(<span class="function">row_number</span>() <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">5</span>, <span class="number">15</span>, <span class="number">25</span>), <span class="variable">NA_real_</span>, value_1),</span>
+                    <span class="code-line">    category <span class="operator">=</span> <span class="function">ifelse</span>(<span class="function">row_number</span>() <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">10</span>, <span class="number">20</span>), <span class="variable">NA_character_</span>, category)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 欠損値サマリー</span></span>
+                    <span class="code-line">na_summary <span class="operator">&lt;-</span> large_tibble_with_na <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise_all</span>(~ <span class="function">sum</span>(<span class="function">is.na</span>(.)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"欠損値の数:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(na_summary)</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -916,92 +957,92 @@ na_summary <span class="operator">&lt;-</span> large_tibble_with_na <span class=
             <div class="code-container">
                 <div class="code-header">売上データの包括的分析</div>
                 <div class="code-content">
-<span class="comment"># 複雑な売上データの作成</span>
-<span class="function">set.seed</span>(<span class="number">456</span>)
-sales_analysis <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  transaction_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">1000</span>,
-  customer_id <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1</span>:<span class="number">200</span>, <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-  product_category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"電子機器"</span>, <span class="string">"衣料品"</span>, <span class="string">"食品"</span>, <span class="string">"書籍"</span>, <span class="string">"スポーツ用品"</span>), 
-                                <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-  purchase_date <span class="operator">=</span> <span class="function">sample</span>(<span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>), 
-                          <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-  amount <span class="operator">=</span> <span class="function">round</span>(<span class="function">rlnorm</span>(<span class="number">1000</span>, <span class="function">log</span>(<span class="number">5000</span>), <span class="number">1</span>)),
-  payment_method <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"クレジット"</span>, <span class="string">"現金"</span>, <span class="string">"電子マネー"</span>), 
-                            <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.6</span>, <span class="number">0.2</span>, <span class="number">0.2</span>)),
-  store_location <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"東京"</span>, <span class="string">"大阪"</span>, <span class="string">"名古屋"</span>, <span class="string">"福岡"</span>), 
-                            <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    month <span class="operator">=</span> <span class="function">lubridate::month</span>(purchase_date),
-    quarter <span class="operator">=</span> <span class="function">lubridate::quarter</span>(purchase_date),
-    day_of_week <span class="operator">=</span> <span class="function">lubridate::wday</span>(purchase_date, label <span class="operator">=</span> <span class="variable">TRUE</span>),
-    amount_category <span class="operator">=</span> <span class="function">case_when</span>(
-      amount <span class="operator">&lt;</span> <span class="number">2000</span> ~ <span class="string">"小額"</span>,
-      amount <span class="operator">&lt;</span> <span class="number">10000</span> ~ <span class="string">"中額"</span>,
-      <span class="variable">TRUE</span> ~ <span class="string">"高額"</span>
-    )
-  )
-
-<span class="function">print</span>(<span class="string">"売上データサンプル:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(sales_analysis))
-
-<span class="comment"># 顧客別の購買パターン分析</span>
-customer_patterns <span class="operator">&lt;-</span> sales_analysis <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(customer_id) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    total_purchases <span class="operator">=</span> <span class="function">n</span>(),
-    total_amount <span class="operator">=</span> <span class="function">sum</span>(amount),
-    avg_amount <span class="operator">=</span> <span class="function">mean</span>(amount),
-    favorite_category <span class="operator">=</span> <span class="function">names</span>(<span class="function">sort</span>(<span class="function">table</span>(product_category), decreasing <span class="operator">=</span> <span class="variable">TRUE</span>))[<span class="number">1</span>],
-    preferred_payment <span class="operator">=</span> <span class="function">names</span>(<span class="function">sort</span>(<span class="function">table</span>(payment_method), decreasing <span class="operator">=</span> <span class="variable">TRUE</span>))[<span class="number">1</span>],
-    first_purchase <span class="operator">=</span> <span class="function">min</span>(purchase_date),
-    last_purchase <span class="operator">=</span> <span class="function">max</span>(purchase_date),
-    purchase_span_days <span class="operator">=</span> <span class="function">as.numeric</span>(<span class="function">max</span>(purchase_date) <span class="operator">-</span> <span class="function">min</span>(purchase_date)),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    customer_segment <span class="operator">=</span> <span class="function">case_when</span>(
-      total_amount <span class="operator">&gt;</span> <span class="number">50000</span> <span class="operator">&amp;&amp;</span> total_purchases <span class="operator">&gt;</span> <span class="number">10</span> ~ <span class="string">"VIP"</span>,
-      total_amount <span class="operator">&gt;</span> <span class="number">20000</span> <span class="operator">||</span> total_purchases <span class="operator">&gt;</span> <span class="number">5</span> ~ <span class="string">"優良"</span>,
-      <span class="variable">TRUE</span> ~ <span class="string">"一般"</span>
-    )
-  )
-
-<span class="function">print</span>(<span class="string">"顧客セグメント分析:"</span>)
-<span class="function">print</span>(customer_patterns <span class="operator">%&gt;%</span> <span class="function">count</span>(customer_segment))
-
-<span class="comment"># 地域別・時系列分析</span>
-regional_monthly <span class="operator">&lt;-</span> sales_analysis <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(store_location, month) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    transactions <span class="operator">=</span> <span class="function">n</span>(),
-    total_sales <span class="operator">=</span> <span class="function">sum</span>(amount),
-    avg_transaction <span class="operator">=</span> <span class="function">mean</span>(amount),
-    unique_customers <span class="operator">=</span> <span class="function">n_distinct</span>(customer_id),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(store_location, month)
-
-<span class="function">print</span>(<span class="string">"地域別月次売上（上位10行）:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(regional_monthly, <span class="number">10</span>))
-
-<span class="comment"># 商品カテゴリ別の支払い方法傾向</span>
-category_payment_analysis <span class="operator">&lt;-</span> sales_analysis <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(product_category, payment_method) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    count <span class="operator">=</span> <span class="function">n</span>(),
-    avg_amount <span class="operator">=</span> <span class="function">mean</span>(amount),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(product_category) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    percentage <span class="operator">=</span> <span class="function">round</span>(count / <span class="function">sum</span>(count) <span class="operator">*</span> <span class="number">100</span>, <span class="number">1</span>)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(product_category, <span class="function">desc</span>(percentage))
-
-<span class="function">print</span>(<span class="string">"カテゴリ別支払い方法傾向:"</span>)
-<span class="function">print</span>(category_payment_analysis)
-</div>
+                    <span class="code-line"><span class="comment"># 複雑な売上データの作成</span></span>
+                    <span class="code-line"><span class="function">set.seed</span>(<span class="number">456</span>)</span>
+                    <span class="code-line">sales_analysis <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  transaction_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">1000</span>,</span>
+                    <span class="code-line">  customer_id <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1</span>:<span class="number">200</span>, <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                    <span class="code-line">  product_category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"電子機器"</span>, <span class="string">"衣料品"</span>, <span class="string">"食品"</span>, <span class="string">"書籍"</span>, <span class="string">"スポーツ用品"</span>), </span>
+                    <span class="code-line">                                <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                    <span class="code-line">  purchase_date <span class="operator">=</span> <span class="function">sample</span>(<span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>), </span>
+                    <span class="code-line">                          <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                    <span class="code-line">  amount <span class="operator">=</span> <span class="function">round</span>(<span class="function">rlnorm</span>(<span class="number">1000</span>, <span class="function">log</span>(<span class="number">5000</span>), <span class="number">1</span>)),</span>
+                    <span class="code-line">  payment_method <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"クレジット"</span>, <span class="string">"現金"</span>, <span class="string">"電子マネー"</span>), </span>
+                    <span class="code-line">                            <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.6</span>, <span class="number">0.2</span>, <span class="number">0.2</span>)),</span>
+                    <span class="code-line">  store_location <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"東京"</span>, <span class="string">"大阪"</span>, <span class="string">"名古屋"</span>, <span class="string">"福岡"</span>), </span>
+                    <span class="code-line">                            <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)</span>
+                    <span class="code-line">) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    month <span class="operator">=</span> <span class="function">lubridate::month</span>(purchase_date),</span>
+                    <span class="code-line">    quarter <span class="operator">=</span> <span class="function">lubridate::quarter</span>(purchase_date),</span>
+                    <span class="code-line">    day_of_week <span class="operator">=</span> <span class="function">lubridate::wday</span>(purchase_date, label <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                    <span class="code-line">    amount_category <span class="operator">=</span> <span class="function">case_when</span>(</span>
+                    <span class="code-line">      amount <span class="operator">&lt;</span> <span class="number">2000</span> ~ <span class="string">"小額"</span>,</span>
+                    <span class="code-line">      amount <span class="operator">&lt;</span> <span class="number">10000</span> ~ <span class="string">"中額"</span>,</span>
+                    <span class="code-line">      <span class="variable">TRUE</span> ~ <span class="string">"高額"</span></span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"売上データサンプル:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(sales_analysis))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 顧客別の購買パターン分析</span></span>
+                    <span class="code-line">customer_patterns <span class="operator">&lt;-</span> sales_analysis <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(customer_id) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    total_purchases <span class="operator">=</span> <span class="function">n</span>(),</span>
+                    <span class="code-line">    total_amount <span class="operator">=</span> <span class="function">sum</span>(amount),</span>
+                    <span class="code-line">    avg_amount <span class="operator">=</span> <span class="function">mean</span>(amount),</span>
+                    <span class="code-line">    favorite_category <span class="operator">=</span> <span class="function">names</span>(<span class="function">sort</span>(<span class="function">table</span>(product_category), decreasing <span class="operator">=</span> <span class="variable">TRUE</span>))[<span class="number">1</span>],</span>
+                    <span class="code-line">    preferred_payment <span class="operator">=</span> <span class="function">names</span>(<span class="function">sort</span>(<span class="function">table</span>(payment_method), decreasing <span class="operator">=</span> <span class="variable">TRUE</span>))[<span class="number">1</span>],</span>
+                    <span class="code-line">    first_purchase <span class="operator">=</span> <span class="function">min</span>(purchase_date),</span>
+                    <span class="code-line">    last_purchase <span class="operator">=</span> <span class="function">max</span>(purchase_date),</span>
+                    <span class="code-line">    purchase_span_days <span class="operator">=</span> <span class="function">as.numeric</span>(<span class="function">max</span>(purchase_date) <span class="operator">-</span> <span class="function">min</span>(purchase_date)),</span>
+                    <span class="code-line">    .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    customer_segment <span class="operator">=</span> <span class="function">case_when</span>(</span>
+                    <span class="code-line">      total_amount <span class="operator">&gt;</span> <span class="number">50000</span> <span class="operator">&amp;&amp;</span> total_purchases <span class="operator">&gt;</span> <span class="number">10</span> ~ <span class="string">"VIP"</span>,</span>
+                    <span class="code-line">      total_amount <span class="operator">&gt;</span> <span class="number">20000</span> <span class="operator">||</span> total_purchases <span class="operator">&gt;</span> <span class="number">5</span> ~ <span class="string">"優良"</span>,</span>
+                    <span class="code-line">      <span class="variable">TRUE</span> ~ <span class="string">"一般"</span></span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"顧客セグメント分析:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(customer_patterns <span class="operator">%&gt;%</span> <span class="function">count</span>(customer_segment))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 地域別・時系列分析</span></span>
+                    <span class="code-line">regional_monthly <span class="operator">&lt;-</span> sales_analysis <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(store_location, month) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    transactions <span class="operator">=</span> <span class="function">n</span>(),</span>
+                    <span class="code-line">    total_sales <span class="operator">=</span> <span class="function">sum</span>(amount),</span>
+                    <span class="code-line">    avg_transaction <span class="operator">=</span> <span class="function">mean</span>(amount),</span>
+                    <span class="code-line">    unique_customers <span class="operator">=</span> <span class="function">n_distinct</span>(customer_id),</span>
+                    <span class="code-line">    .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">arrange</span>(store_location, month)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"地域別月次売上（上位10行）:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(regional_monthly, <span class="number">10</span>))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 商品カテゴリ別の支払い方法傾向</span></span>
+                    <span class="code-line">category_payment_analysis <span class="operator">&lt;-</span> sales_analysis <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(product_category, payment_method) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    count <span class="operator">=</span> <span class="function">n</span>(),</span>
+                    <span class="code-line">    avg_amount <span class="operator">=</span> <span class="function">mean</span>(amount),</span>
+                    <span class="code-line">    .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(product_category) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    percentage <span class="operator">=</span> <span class="function">round</span>(count / <span class="function">sum</span>(count) <span class="operator">*</span> <span class="number">100</span>, <span class="number">1</span>)</span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">arrange</span>(product_category, <span class="function">desc</span>(percentage))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"カテゴリ別支払い方法傾向:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(category_payment_analysis)</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -1094,15 +1135,329 @@ category_payment_analysis <span class="operator">&lt;-</span> sales_analysis <sp
             </ul>
         </div>
 
+        <!-- 高度なTibble操作とモダン技法 -->
+        <section class="advanced-content">
+            <h2 class="section-title">📊 高度なTibble操作とモダン技法</h2>
+            
+            <div class="sub-section">
+                <h3>ネストしたデータ構造とリスト列の活用</h3>
+                <div class="code-container">
+                    <div class="code-block">
+                        <span class="code-line"><span class="comment"># リスト列を含む高度なデータ構造</span></span>
+                        <span class="code-line"><span class="function">library</span>(tidyverse)</span>
+                        <span class="code-line"><span class="function">library</span>(broom)</span>
+                        <span class="code-line"><span class="function">library</span>(modelr)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># ネストしたデータフレーム作成</span></span>
+                        <span class="code-line">nested_sales <span class="operator">&lt;-</span> sales_data <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">group_by</span>(region, product_category) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">nest</span>() <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">mutate</span>(</span>
+                        <span class="code-line">    <span class="comment"># 各グループに対して線形回帰モデル</span></span>
+                        <span class="code-line">    models <span class="operator">=</span> <span class="function">map</span>(data, <span class="operator">~</span> <span class="function">lm</span>(sales <span class="operator">~</span> month, data <span class="operator">=</span> .x)),</span>
+                        <span class="code-line">    <span class="comment"># モデルの統計情報</span></span>
+                        <span class="code-line">    model_stats <span class="operator">=</span> <span class="function">map</span>(models, broom::<span class="function">glance</span>),</span>
+                        <span class="code-line">    <span class="comment"># 係数情報</span></span>
+                        <span class="code-line">    coefficients <span class="operator">=</span> <span class="function">map</span>(models, broom::<span class="function">tidy</span>),</span>
+                        <span class="code-line">    <span class="comment"># 予測値</span></span>
+                        <span class="code-line">    predictions <span class="operator">=</span> <span class="function">map</span>(models, broom::<span class="function">augment</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># R²値の抽出と分析</span></span>
+                        <span class="code-line">r_squared_analysis <span class="operator">&lt;-</span> nested_sales <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">unnest</span>(model_stats) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">select</span>(region, product_category, r.squared, p.value, AIC, BIC) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">arrange</span>(<span class="function">desc</span>(r.squared))</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="function">print</span>(<span class="string">"地域・カテゴリ別回帰分析結果（R²値上位）:"</span>)</span>
+                        <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(r_squared_analysis, <span class="number">10</span>))</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sub-section">
+                <h3>並列処理とメモリ効率的なデータ操作</h3>
+                <div class="code-container">
+                    <div class="code-block">
+                        <span class="code-line"><span class="comment"># 大規模データセットの効率的処理</span></span>
+                        <span class="code-line"><span class="function">library</span>(future)</span>
+                        <span class="code-line"><span class="function">library</span>(furrr)</span>
+                        <span class="code-line"><span class="function">library</span>(arrow)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 並列処理設定</span></span>
+                        <span class="code-line"><span class="function">plan</span>(multisession, workers <span class="operator">=</span> <span class="number">4</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 大容量データの分割処理</span></span>
+                        <span class="code-line">chunk_process <span class="operator">&lt;-</span> <span class="keyword">function</span>(data_chunk) {</span>
+                        <span class="code-line">  data_chunk <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">    <span class="function">mutate</span>(</span>
+                        <span class="code-line">      <span class="comment"># 複雑な特徴量エンジニアリング</span></span>
+                        <span class="code-line">      rolling_avg_7d <span class="operator">=</span> <span class="function">slider</span>::<span class="function">slide_dbl</span>(</span>
+                        <span class="code-line">        sales_amount, mean, .before <span class="operator">=</span> <span class="number">6</span>, .complete <span class="operator">=</span> <span class="variable">TRUE</span></span>
+                        <span class="code-line">      ),</span>
+                        <span class="code-line">      rolling_std_7d <span class="operator">=</span> <span class="function">slider</span>::<span class="function">slide_dbl</span>(</span>
+                        <span class="code-line">        sales_amount, sd, .before <span class="operator">=</span> <span class="number">6</span>, .complete <span class="operator">=</span> <span class="variable">TRUE</span></span>
+                        <span class="code-line">      ),</span>
+                        <span class="code-line">      anomaly_score <span class="operator">=</span> <span class="function">abs</span>(sales_amount <span class="operator">-</span> rolling_avg_7d) / rolling_std_7d,</span>
+                        <span class="code-line">      is_anomaly <span class="operator">=</span> anomaly_score <span class="operator">&gt;</span> <span class="number">2</span></span>
+                        <span class="code-line">    ) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">    <span class="function">filter</span>(<span class="operator">!</span><span class="function">is.na</span>(rolling_avg_7d))</span>
+                        <span class="code-line">}</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># データを1000行ずつ分割して並列処理</span></span>
+                        <span class="code-line">large_dataset <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                        <span class="code-line">  date <span class="operator">=</span> <span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2020-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>),</span>
+                        <span class="code-line">  sales_amount <span class="operator">=</span> <span class="function">runif</span>(<span class="function">length</span>(date), <span class="number">100</span>, <span class="number">10000</span>)</span>
+                        <span class="code-line">) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">mutate</span>(chunk_id <span class="operator">=</span> (<span class="function">row_number</span>() <span class="operator">-</span> <span class="number">1</span>) <span class="operator">%/%</span> <span class="number">1000</span> <span class="operator">+</span> <span class="number">1</span>) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">group_split</span>(chunk_id)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 並列処理実行</span></span>
+                        <span class="code-line">processed_chunks <span class="operator">&lt;-</span> large_dataset <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">future_map_dfr</span>(chunk_process, .progress <span class="operator">=</span> <span class="variable">TRUE</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="function">cat</span>(<span class="string">"処理されたデータ行数:"</span>, <span class="function">nrow</span>(processed_chunks), <span class="string">"\n"</span>)</span>
+                        <span class="code-line"><span class="function">cat</span>(<span class="string">"異常値検出数:"</span>, <span class="function">sum</span>(processed_chunks<span class="operator">$</span>is_anomaly, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>), <span class="string">"\n"</span>)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sub-section">
+                <h3>Tibbleのパフォーマンス最適化技法</h3>
+                <div class="code-container">
+                    <div class="code-block">
+                        <span class="code-line"><span class="comment"># メモリ使用量とパフォーマンス分析</span></span>
+                        <span class="code-line"><span class="function">library</span>(pryr)</span>
+                        <span class="code-line"><span class="function">library</span>(bench)</span>
+                        <span class="code-line"><span class="function">library</span>(data.table)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 大規模データセット作成</span></span>
+                        <span class="code-line">n <span class="operator">&lt;-</span> <span class="number">1000000</span></span>
+                        <span class="code-line">large_tibble <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                        <span class="code-line">  id <span class="operator">=</span> <span class="number">1</span>:n,</span>
+                        <span class="code-line">  group <span class="operator">=</span> <span class="function">sample</span>(<span class="function">letters</span>[<span class="number">1</span>:<span class="number">10</span>], n, replace <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                        <span class="code-line">  value1 <span class="operator">=</span> <span class="function">rnorm</span>(n),</span>
+                        <span class="code-line">  value2 <span class="operator">=</span> <span class="function">rnorm</span>(n),</span>
+                        <span class="code-line">  category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">paste0</span>(<span class="string">"cat_"</span>, <span class="number">1</span>:<span class="number">100</span>), n, replace <span class="operator">=</span> <span class="variable">TRUE</span>)</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># パフォーマンス比較：tibble vs data.frame vs data.table</span></span>
+                        <span class="code-line">performance_test <span class="operator">&lt;-</span> <span class="function">bench</span>::<span class="function">mark</span>(</span>
+                        <span class="code-line">  tibble_summarise <span class="operator">=</span> {</span>
+                        <span class="code-line">    large_tibble <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="function">group_by</span>(group, category) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="function">summarise</span>(</span>
+                        <span class="code-line">        mean_v1 <span class="operator">=</span> <span class="function">mean</span>(value1),</span>
+                        <span class="code-line">        mean_v2 <span class="operator">=</span> <span class="function">mean</span>(value2),</span>
+                        <span class="code-line">        count <span class="operator">=</span> <span class="function">n</span>(),</span>
+                        <span class="code-line">        .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                        <span class="code-line">      )</span>
+                        <span class="code-line">  },</span>
+                        <span class="code-line">  data_frame_aggregate <span class="operator">=</span> {</span>
+                        <span class="code-line">    df <span class="operator">&lt;-</span> <span class="function">as.data.frame</span>(large_tibble)</span>
+                        <span class="code-line">    <span class="function">aggregate</span>(</span>
+                        <span class="code-line">      <span class="function">cbind</span>(value1, value2) <span class="operator">~</span> group <span class="operator">+</span> category,</span>
+                        <span class="code-line">      data <span class="operator">=</span> df,</span>
+                        <span class="code-line">      FUN <span class="operator">=</span> mean</span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  },</span>
+                        <span class="code-line">  data_table_approach <span class="operator">=</span> {</span>
+                        <span class="code-line">    dt <span class="operator">&lt;-</span> data.table::<span class="function">as.data.table</span>(large_tibble)</span>
+                        <span class="code-line">    dt[, .(</span>
+                        <span class="code-line">      mean_v1 <span class="operator">=</span> <span class="function">mean</span>(value1),</span>
+                        <span class="code-line">      mean_v2 <span class="operator">=</span> <span class="function">mean</span>(value2),</span>
+                        <span class="code-line">      count <span class="operator">=</span> <span class="function">.N</span></span>
+                        <span class="code-line">    ), by <span class="operator">=</span> .(group, category)]</span>
+                        <span class="code-line">  },</span>
+                        <span class="code-line">  iterations <span class="operator">=</span> <span class="number">5</span>,</span>
+                        <span class="code-line">  check <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="function">print</span>(<span class="string">"パフォーマンス比較結果:"</span>)</span>
+                        <span class="code-line"><span class="function">print</span>(performance_test)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># メモリ使用量分析</span></span>
+                        <span class="code-line">memory_usage <span class="operator">&lt;-</span> <span class="function">list</span>(</span>
+                        <span class="code-line">  tibble_size <span class="operator">=</span> pryr::<span class="function">object_size</span>(large_tibble),</span>
+                        <span class="code-line">  dataframe_size <span class="operator">=</span> pryr::<span class="function">object_size</span>(<span class="function">as.data.frame</span>(large_tibble)),</span>
+                        <span class="code-line">  datatable_size <span class="operator">=</span> pryr::<span class="function">object_size</span>(data.table::<span class="function">as.data.table</span>(large_tibble))</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="function">cat</span>(<span class="string">"メモリ使用量比較:\n"</span>)</span>
+                        <span class="code-line"><span class="function">print</span>(memory_usage)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sub-section">
+                <h3>高度なTibble操作: 動的列操作とメタプログラミング</h3>
+                <div class="code-container">
+                    <div class="code-block">
+                        <span class="code-line"><span class="comment"># 動的な列操作とメタプログラミング技法</span></span>
+                        <span class="code-line"><span class="function">library</span>(rlang)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 動的集計関数の作成</span></span>
+                        <span class="code-line">create_summary_function <span class="operator">&lt;-</span> <span class="keyword">function</span>(group_vars, summary_vars, summary_funs) {</span>
+                        <span class="code-line">  group_vars <span class="operator">&lt;-</span> <span class="function">syms</span>(group_vars)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="keyword">function</span>(data) {</span>
+                        <span class="code-line">    data <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="function">group_by</span>(<span class="operator">!!!</span>group_vars) <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="function">summarise</span>(</span>
+                        <span class="code-line">        <span class="function">across</span>(</span>
+                        <span class="code-line">          <span class="function">all_of</span>(summary_vars),</span>
+                        <span class="code-line">          summary_funs,</span>
+                        <span class="code-line">          .names <span class="operator">=</span> <span class="string">"{.col}_{.fn}"</span></span>
+                        <span class="code-line">        ),</span>
+                        <span class="code-line">        count <span class="operator">=</span> <span class="function">n</span>(),</span>
+                        <span class="code-line">        .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                        <span class="code-line">      )</span>
+                        <span class="code-line">  }</span>
+                        <span class="code-line">}</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 動的関数の使用例</span></span>
+                        <span class="code-line">custom_summarizer <span class="operator">&lt;-</span> <span class="function">create_summary_function</span>(</span>
+                        <span class="code-line">  group_vars <span class="operator">=</span> <span class="function">c</span>(<span class="string">"product_category"</span>, <span class="string">"store_location"</span>),</span>
+                        <span class="code-line">  summary_vars <span class="operator">=</span> <span class="function">c</span>(<span class="string">"amount"</span>, <span class="string">"quantity"</span>),</span>
+                        <span class="code-line">  summary_funs <span class="operator">=</span> <span class="function">list</span>(</span>
+                        <span class="code-line">    mean <span class="operator">=</span> <span class="operator">~</span> <span class="function">mean</span>(.x, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                        <span class="code-line">    median <span class="operator">=</span> <span class="operator">~</span> <span class="function">median</span>(.x, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                        <span class="code-line">    sd <span class="operator">=</span> <span class="operator">~</span> <span class="function">sd</span>(.x, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                        <span class="code-line">    q75 <span class="operator">=</span> <span class="operator">~</span> <span class="function">quantile</span>(.x, <span class="number">0.75</span>, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 条件付きmutate操作</span></span>
+                        <span class="code-line">conditional_feature_engineering <span class="operator">&lt;-</span> <span class="keyword">function</span>(data, conditions) {</span>
+                        <span class="code-line">  <span class="keyword">for</span> (condition <span class="keyword">in</span> conditions) {</span>
+                        <span class="code-line">    data <span class="operator">&lt;-</span> data <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="function">mutate</span>(</span>
+                        <span class="code-line">        <span class="string">!!condition$name</span> <span class="operator">:=</span> <span class="keyword">case_when</span>(</span>
+                        <span class="code-line">          <span class="operator">!!</span><span class="function">parse_expr</span>(condition$condition) <span class="operator">~</span> <span class="operator">!!</span><span class="function">parse_expr</span>(condition$value),</span>
+                        <span class="code-line">          <span class="variable">TRUE</span> <span class="operator">~</span> <span class="variable">NA_real_</span></span>
+                        <span class="code-line">        )</span>
+                        <span class="code-line">      )</span>
+                        <span class="code-line">  }</span>
+                        <span class="code-line">  data</span>
+                        <span class="code-line">}</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="comment"># 条件付き特徴量作成の例</span></span>
+                        <span class="code-line">feature_conditions <span class="operator">&lt;-</span> <span class="function">list</span>(</span>
+                        <span class="code-line">  <span class="function">list</span>(</span>
+                        <span class="code-line">    name <span class="operator">=</span> <span class="string">"high_value_purchase"</span>,</span>
+                        <span class="code-line">    condition <span class="operator">=</span> <span class="string">"amount &gt; quantile(amount, 0.9, na.rm = TRUE)"</span>,</span>
+                        <span class="code-line">    value <span class="operator">=</span> <span class="string">"amount"</span></span>
+                        <span class="code-line">  ),</span>
+                        <span class="code-line">  <span class="function">list</span>(</span>
+                        <span class="code-line">    name <span class="operator">=</span> <span class="string">"weekend_premium"</span>,</span>
+                        <span class="code-line">    condition <span class="operator">=</span> <span class="string">"wday(purchase_date) %in% c(1, 7)"</span>,</span>
+                        <span class="code-line">    value <span class="operator">=</span> <span class="string">"amount * 1.1"</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line">enhanced_data <span class="operator">&lt;-</span> sales_analysis <span class="operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="function">conditional_feature_engineering</span>(feature_conditions)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="function">print</span>(<span class="string">"条件付き特徴量作成結果（サンプル）:"</span>)</span>
+                        <span class="code-line"><span class="function">print</span>(<span class="function">glimpse</span>(enhanced_data))</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <div class="tip-box">
             <h4>実践的アドバイス</h4>
-            <p>tibbleは、data.frameの改良版として、より安全で予測可能なデータ操作を提供します。特に大規模なデータ分析プロジェクトでは、tibbleの型安全性とスマート表示機能が開発効率を大幅に向上させます。</p>
+            <p>tibbleは、data.frameの改良版として、より安全で予測可能なデータ操作を提供します。特に大規模なデータ分析プロジェクトでは、tibbleの型安全性とスマート表示機能が開発効率を大幅に向上させます。リスト列とネスト構造を活用することで、複雑なデータ分析ワークフローを効率的に実装できます。</p>
         </div>
 
-        <nav class="chapter-nav">
-            <a href="chapter8-readr-data-import.html" class="nav-button">← 第8章</a>
-            <a href="chapter10-statistics-modeling.html" class="nav-button">第10章 →</a>
-        </nav>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter Navigation -->
+    <nav style="margin: 4rem 0; display: flex; justify-content: space-between; align-items: center; padding: 2rem; background: var(--bg-secondary); border-radius: 15px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+        <a href="chapter8-readr-data-import.html" style="padding: 12px 24px; background: var(--accent-gold); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);">← 第8章: readr</a>
+        <a href="index.html" style="padding: 12px 24px; background: var(--accent-cyan); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);">目次へ戻る</a>
+        <a href="chapter10-statistics-modeling.html" style="padding: 12px 24px; background: var(--accent-gold); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);">第10章: 統計モデリング →</a>
+    </nav>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </div>
 </body>
 </html>

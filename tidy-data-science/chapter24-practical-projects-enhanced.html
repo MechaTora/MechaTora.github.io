@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第24章: 実践プロジェクト集 | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family@Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-electric);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-electric);
+            border-color: var(--accent-electric);
+            box-shadow: 0 0 5px var(--accent-electric);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-electric);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-electric);
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.02);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.15);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-electric), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-electric);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-electric);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-electric);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1);
+        }
+
+        .code-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--accent-electric);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-electric);
+            opacity: 0.6;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+            background: #0d1117;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Syntax highlighting */
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .project-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-electric) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .project-card:hover::before {
+            left: 0;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+
+        .project-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-electric);
+            margin-bottom: 1rem;
+        }
+
+        .project-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-tag {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-electric);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid var(--accent-electric);
+        }
+
+        .project-difficulty {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .difficulty-label {
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .difficulty-stars {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .star {
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+        }
+
+        .star.empty {
+            color: var(--bg-secondary);
+        }
+
+        /* ML Workflow */
+        .ml-workflow {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .workflow-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-cyan);
+            text-align: center;
+        }
+
+        .step-number {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-electric);
+        }
+
+        .key-points h4 {
+            color: var(--accent-electric);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '💡';
+        }
+
+        /* Output Containers */
+        .output-container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-orange);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .output-header {
+            background: rgba(255, 140, 66, 0.1);
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid var(--accent-orange);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-orange);
+            font-weight: 500;
+        }
+
+        .output-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            background: #0d1117;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 2px;
+                padding: 4px;
+            }
+
+            .nav-button {
+                padding: 1px 3px;
+                font-size: 0.6rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .code-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第24章: 実践プロジェクト集</h1>
+            <p class="subtitle">Tidyverseエコシステムの総合活用による実世界問題解決</p>
+            <div class="chapter-meta">
+                <span>🚀 実践プロジェクト</span>
+                <span>📊 データサイエンス</span>
+                <span>🤖 機械学習応用</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">第6章</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">第7章</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">第8章</a>
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">第9章</a>
+            <a href="chapter10-statistics-modeling.html" class="nav-button">第10章</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">第11章</a>
+            <a href="chapter12-time-series.html" class="nav-button">第12章</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">第13章</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">第14章</a>
+            <a href="chapter15-advanced-data-viz.html" class="nav-button">第15章</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">第16章</a>
+            <a href="chapter17-hyperparameter-tuning-simple.html" class="nav-button">第17章</a>
+            <a href="chapter18-model-evaluation-yardstick.html" class="nav-button">第18章</a>
+            <a href="chapter19-prediction-interpretation.html" class="nav-button">第19章</a>
+            <a href="chapter20-ensemble-learning-enhanced.html" class="nav-button">第20章</a>
+            <a href="chapter21-time-series-modeltime.html" class="nav-button">第21章</a>
+            <a href="chapter22-text-analysis-tidytext.html" class="nav-button">第22章</a>
+            <a href="chapter23-deep-learning-torch.html" class="nav-button">第23章</a>
+            <a href="#" class="nav-button current">第24章</a>
+        </nav>
+
+        <!-- COMPREHENSIVE PROJECT ECOSYSTEM -->
+        <section class="section" id="project-ecosystem">
+            <h2>🌟 総合プロジェクト・エコシステム</h2>
+                <p>
+                    第24章では、これまで学習したTidyverseエコシステムの全技術を統合し、実世界の複雑な問題を解決する総合的なプロジェクトを実践します。データサイエンス、機械学習、深層学習を組み合わせた立体的なアプローチで、企業レベルの課題に挑戦します。
+                </p>
+                
+                <!-- Project Architecture Overview -->
+                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-electric);">
+                    <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🏗️ プロジェクト・アーキテクチャの全体像</h4>
+                    
+                    <!-- プロジェクト・アーキテクチャ図 -->
+                    <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-electric); border-radius: 15px; padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden;">
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <h5 style="color: var(--accent-cyan); margin-bottom: 1rem;">📊 エンタープライズ級データサイエンス・アーキテクチャ</h5>
+                        </div>
+                        
+                        <svg viewBox="0 0 1000 700" style="width: 100%; height: auto; background: radial-gradient(circle at center, rgba(0,255,136,0.1) 0%, rgba(0,212,255,0.05) 100%);">
+                            <!-- グラデーション定義 -->
+                            <defs>
+                                <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00ff88;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.8"/>
+                                </linearGradient>
+                                <linearGradient id="processGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#9d4edd;stop-opacity:0.8"/>
+                                </linearGradient>
+                                <linearGradient id="analyticsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#9d4edd;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#ff8c42;stop-opacity:0.8"/>
+                                </linearGradient>
+                                <linearGradient id="deployGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#00ff41;stop-opacity:0.8"/>
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- データレイヤー -->
+                            <rect x="50" y="50" width="180" height="120" rx="15" fill="url(#dataGrad)" stroke="#00ff88" stroke-width="2"/>
+                            <text x="140" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">📊 データレイヤー</text>
+                            <text x="140" y="105" text-anchor="middle" fill="white" font-size="10">IoT Sensors</text>
+                            <text x="140" y="120" text-anchor="middle" fill="white" font-size="10">Production Logs</text>
+                            <text x="140" y="135" text-anchor="middle" fill="white" font-size="10">Quality Metrics</text>
+                            <text x="140" y="150" text-anchor="middle" fill="white" font-size="10">External APIs</text>
+                            
+                            <!-- 処理レイヤー -->
+                            <rect x="280" y="50" width="180" height="120" rx="15" fill="url(#processGrad)" stroke="#00d4ff" stroke-width="2"/>
+                            <text x="370" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">⚙️ 処理レイヤー</text>
+                            <text x="370" y="105" text-anchor="middle" fill="white" font-size="10">Data Cleaning</text>
+                            <text x="370" y="120" text-anchor="middle" fill="white" font-size="10">Feature Engineering</text>
+                            <text x="370" y="135" text-anchor="middle" fill="white" font-size="10">ETL Pipeline</text>
+                            <text x="370" y="150" text-anchor="middle" fill="white" font-size="10">Real-time Stream</text>
+                            
+                            <!-- 分析レイヤー -->
+                            <rect x="510" y="50" width="180" height="120" rx="15" fill="url(#analyticsGrad)" stroke="#9d4edd" stroke-width="2"/>
+                            <text x="600" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">🤖 分析レイヤー</text>
+                            <text x="600" y="105" text-anchor="middle" fill="white" font-size="10">Machine Learning</text>
+                            <text x="600" y="120" text-anchor="middle" fill="white" font-size="10">Deep Learning</text>
+                            <text x="600" y="135" text-anchor="middle" fill="white" font-size="10">Statistical Models</text>
+                            <text x="600" y="150" text-anchor="middle" fill="white" font-size="10">Predictive Analytics</text>
+                            
+                            <!-- 展開レイヤー -->
+                            <rect x="740" y="50" width="180" height="120" rx="15" fill="url(#deployGrad)" stroke="#ff8c42" stroke-width="2"/>
+                            <text x="830" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">🚀 展開レイヤー</text>
+                            <text x="830" y="105" text-anchor="middle" fill="white" font-size="10">Web Dashboard</text>
+                            <text x="830" y="120" text-anchor="middle" fill="white" font-size="10">API Services</text>
+                            <text x="830" y="135" text-anchor="middle" fill="white" font-size="10">Alerts & Reports</text>
+                            <text x="830" y="150" text-anchor="middle" fill="white" font-size="10">Mobile Apps</text>
+                            
+                            <!-- フロー矢印 -->
+                            <path d="M230 110 L270 110" stroke="#00ff88" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                            <path d="M460 110 L500 110" stroke="#00d4ff" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                            <path d="M690 110 L730 110" stroke="#9d4edd" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                            
+                            <!-- 矢印マーカー -->
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#00ff88"/>
+                                </marker>
+                            </defs>
+                            
+                            <!-- Tidyverseパッケージマッピング -->
+                            <g transform="translate(0, 220)">
+                                <text x="500" y="30" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🔧 Tidyverse エコシステム活用マップ</text>
+                                
+                                <!-- データ処理 -->
+                                <rect x="50" y="60" width="160" height="100" rx="10" fill="rgba(0,255,136,0.1)" stroke="#00ff88" stroke-width="1"/>
+                                <text x="130" y="85" text-anchor="middle" fill="#00ff88" font-size="12" font-weight="bold">📥 Data Import</text>
+                                <text x="130" y="105" text-anchor="middle" fill="white" font-size="10">readr, readxl</text>
+                                <text x="130" y="120" text-anchor="middle" fill="white" font-size="10">haven, jsonlite</text>
+                                <text x="130" y="135" text-anchor="middle" fill="white" font-size="10">DBI, dbplyr</text>
+                                
+                                <!-- データ操作 -->
+                                <rect x="230" y="60" width="160" height="100" rx="10" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="1"/>
+                                <text x="310" y="85" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="bold">🔄 Data Wrangling</text>
+                                <text x="310" y="105" text-anchor="middle" fill="white" font-size="10">dplyr, tidyr</text>
+                                <text x="310" y="120" text-anchor="middle" fill="white" font-size="10">stringr, forcats</text>
+                                <text x="310" y="135" text-anchor="middle" fill="white" font-size="10">lubridate, purrr</text>
+                                
+                                <!-- 機械学習 -->
+                                <rect x="410" y="60" width="160" height="100" rx="10" fill="rgba(157,78,221,0.1)" stroke="#9d4edd" stroke-width="1"/>
+                                <text x="490" y="85" text-anchor="middle" fill="#9d4edd" font-size="12" font-weight="bold">🤖 ML/Analytics</text>
+                                <text x="490" y="105" text-anchor="middle" fill="white" font-size="10">tidymodels, workflows</text>
+                                <text x="490" y="120" text-anchor="middle" fill="white" font-size="10">rsample, yardstick</text>
+                                <text x="490" y="135" text-anchor="middle" fill="white" font-size="10">tune, stacks</text>
+                                
+                                <!-- 可視化・展開 -->
+                                <rect x="590" y="60" width="160" height="100" rx="10" fill="rgba(255,140,66,0.1)" stroke="#ff8c42" stroke-width="1"/>
+                                <text x="670" y="85" text-anchor="middle" fill="#ff8c42" font-size="12" font-weight="bold">📊 Visualization</text>
+                                <text x="670" y="105" text-anchor="middle" fill="white" font-size="10">ggplot2, plotly</text>
+                                <text x="670" y="120" text-anchor="middle" fill="white" font-size="10">shiny, flexdashboard</text>
+                                <text x="670" y="135" text-anchor="middle" fill="white" font-size="10">leaflet, DT</text>
+                                
+                                <!-- 時系列・テキスト -->
+                                <rect x="770" y="60" width="160" height="100" rx="10" fill="rgba(0,255,65,0.1)" stroke="#00ff41" stroke-width="1"/>
+                                <text x="850" y="85" text-anchor="middle" fill="#00ff41" font-size="12" font-weight="bold">⏰ Advanced</text>
+                                <text x="850" y="105" text-anchor="middle" fill="white" font-size="10">modeltime, tidytext</text>
+                                <text x="850" y="120" text-anchor="middle" fill="white" font-size="10">torch, themis</text>
+                                <text x="850" y="135" text-anchor="middle" fill="white" font-size="10">textrecipes, embed</text>
+                            </g>
+                            
+                            <!-- データフロー説明 -->
+                            <g transform="translate(0, 440)">
+                                <text x="500" y="30" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">🔄 エンドツーエンド・データフロー</text>
+                                
+                                <!-- フローステップ -->
+                                <g transform="translate(100, 60)">
+                                    <circle cx="50" cy="30" r="25" fill="rgba(0,255,136,0.2)" stroke="#00ff88" stroke-width="2"/>
+                                    <text x="50" y="35" text-anchor="middle" fill="#00ff88" font-size="12" font-weight="bold">1</text>
+                                    <text x="50" y="60" text-anchor="middle" fill="white" font-size="10">データ収集</text>
+                                    
+                                    <path d="M75 30 L125 30" stroke="#00ff88" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <circle cx="150" cy="30" r="25" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="2"/>
+                                    <text x="150" y="35" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="bold">2</text>
+                                    <text x="150" y="60" text-anchor="middle" fill="white" font-size="10">前処理・整形</text>
+                                    
+                                    <path d="M175 30 L225 30" stroke="#00d4ff" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <circle cx="250" cy="30" r="25" fill="rgba(157,78,221,0.2)" stroke="#9d4edd" stroke-width="2"/>
+                                    <text x="250" y="35" text-anchor="middle" fill="#9d4edd" font-size="12" font-weight="bold">3</text>
+                                    <text x="250" y="60" text-anchor="middle" fill="white" font-size="10">モデル構築</text>
+                                    
+                                    <path d="M275 30 L325 30" stroke="#9d4edd" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <circle cx="350" cy="30" r="25" fill="rgba(255,140,66,0.2)" stroke="#ff8c42" stroke-width="2"/>
+                                    <text x="350" y="35" text-anchor="middle" fill="#ff8c42" font-size="12" font-weight="bold">4</text>
+                                    <text x="350" y="60" text-anchor="middle" fill="white" font-size="10">評価・検証</text>
+                                    
+                                    <path d="M375 30 L425 30" stroke="#ff8c42" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <circle cx="450" cy="30" r="25" fill="rgba(0,255,65,0.2)" stroke="#00ff41" stroke-width="2"/>
+                                    <text x="450" y="35" text-anchor="middle" fill="#00ff41" font-size="12" font-weight="bold">5</text>
+                                    <text x="450" y="60" text-anchor="middle" fill="white" font-size="10">本番展開</text>
+                                    
+                                    <path d="M475 30 L525 30" stroke="#00ff41" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <circle cx="550" cy="30" r="25" fill="rgba(255,255,255,0.2)" stroke="white" stroke-width="2"/>
+                                    <text x="550" y="35" text-anchor="middle" fill="white" font-size="12" font-weight="bold">6</text>
+                                    <text x="550" y="60" text-anchor="middle" fill="white" font-size="10">監視・改善</text>
+                                </g>
+                            </g>
+                            
+                            <!-- パフォーマンス指標 -->
+                            <g transform="translate(50, 600)">
+                                <text x="450" y="20" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">📈 プロジェクト成功指標</text>
+                                <rect x="50" y="35" width="120" height="40" rx="5" fill="rgba(0,255,136,0.1)" stroke="#00ff88" stroke-width="1"/>
+                                <text x="110" y="50" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">データ品質</text>
+                                <text x="110" y="65" text-anchor="middle" fill="white" font-size="9">完全性 > 95%</text>
+                                
+                                <rect x="190" y="35" width="120" height="40" rx="5" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="1"/>
+                                <text x="250" y="50" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="bold">処理性能</text>
+                                <text x="250" y="65" text-anchor="middle" fill="white" font-size="9">遅延 < 100ms</text>
+                                
+                                <rect x="330" y="35" width="120" height="40" rx="5" fill="rgba(157,78,221,0.1)" stroke="#9d4edd" stroke-width="1"/>
+                                <text x="390" y="50" text-anchor="middle" fill="#9d4edd" font-size="10" font-weight="bold">予測精度</text>
+                                <text x="390" y="65" text-anchor="middle" fill="white" font-size="9">RMSE < 0.05</text>
+                                
+                                <rect x="470" y="35" width="120" height="40" rx="5" fill="rgba(255,140,66,0.1)" stroke="#ff8c42" stroke-width="1"/>
+                                <text x="530" y="50" text-anchor="middle" fill="#ff8c42" font-size="10" font-weight="bold">稼働率</text>
+                                <text x="530" y="65" text-anchor="middle" fill="white" font-size="9">Uptime > 99.9%</text>
+                                
+                                <rect x="610" y="35" width="120" height="40" rx="5" fill="rgba(0,255,65,0.1)" stroke="#00ff41" stroke-width="1"/>
+                                <text x="670" y="50" text-anchor="middle" fill="#00ff41" font-size="10" font-weight="bold">ROI</text>
+                                <text x="670" y="65" text-anchor="middle" fill="white" font-size="9">投資効果 > 300%</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <svg width="100%" height="500" viewBox="0 0 1200 500" style="max-width: 100%; height: auto;">
+                        <!-- Background -->
+                        <rect width="1200" height="500" fill="#0a0a0f"/>
+                        
+                        <!-- Title -->
+                        <text x="600" y="30" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">Enterprise-Grade Data Science Project Architecture</text>
+                        
+                        <!-- Data Layer -->
+                        <g transform="translate(50, 60)">
+                            <rect x="0" y="0" width="1100" height="80" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" rx="10"/>
+                            <text x="550" y="25" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">📊 Data Layer (データ基盤)</text>
+                            
+                            <!-- Data sources -->
+                            <rect x="50" y="35" width="150" height="35" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <text x="125" y="55" text-anchor="middle" fill="#ffffff" font-size="10">External APIs</text>
+                            
+                            <rect x="220" y="35" width="150" height="35" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <text x="295" y="55" text-anchor="middle" fill="#ffffff" font-size="10">CSV/JSON Files</text>
+                            
+                            <rect x="390" y="35" width="150" height="35" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <text x="465" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Databases</text>
+                            
+                            <rect x="560" y="35" width="150" height="35" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <text x="635" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Real-time Streams</text>
+                            
+                            <rect x="730" y="35" width="150" height="35" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <text x="805" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Web Scraping</text>
+                            
+                            <rect x="900" y="35" width="150" height="35" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <text x="975" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Image/Text Data</text>
+                        </g>
+                        
+                        <!-- Processing Layer -->
+                        <g transform="translate(50, 160)">
+                            <rect x="0" y="0" width="1100" height="80" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="2" rx="10"/>
+                            <text x="550" y="25" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">⚙️ Processing Layer (データ処理・前処理)</text>
+                            
+                            <!-- Processing components -->
+                            <rect x="50" y="35" width="120" height="35" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                            <text x="110" y="55" text-anchor="middle" fill="#ffffff" font-size="10">dplyr cleaning</text>
+                            
+                            <rect x="190" y="35" width="120" height="35" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                            <text x="250" y="55" text-anchor="middle" fill="#ffffff" font-size="10">tidyr reshaping</text>
+                            
+                            <rect x="330" y="35" width="120" height="35" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                            <text x="390" y="55" text-anchor="middle" fill="#ffffff" font-size="10">stringr/lubridate</text>
+                            
+                            <rect x="470" y="35" width="120" height="35" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                            <text x="530" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Feature Engineering</text>
+                            
+                            <rect x="610" y="35" width="120" height="35" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                            <text x="670" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Text Processing</text>
+                            
+                            <rect x="750" y="35" width="120" height="35" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                            <text x="810" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Image Preprocessing</text>
+                            
+                            <rect x="890" y="35" width="120" height="35" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                            <text x="950" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Data Validation</text>
+                        </g>
+                        
+                        <!-- Analytics Layer -->
+                        <g transform="translate(50, 260)">
+                            <rect x="0" y="0" width="1100" height="80" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="2" rx="10"/>
+                            <text x="550" y="25" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">🧠 Analytics Layer (分析・モデリング)</text>
+                            
+                            <!-- Analytics components -->
+                            <rect x="50" y="35" width="130" height="35" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="115" y="55" text-anchor="middle" fill="#ffffff" font-size="10">tidymodels ML</text>
+                            
+                            <rect x="200" y="35" width="130" height="35" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="265" y="55" text-anchor="middle" fill="#ffffff" font-size="10">torch Deep Learning</text>
+                            
+                            <rect x="350" y="35" width="130" height="35" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="415" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Text Mining</text>
+                            
+                            <rect x="500" y="35" width="130" height="35" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="565" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Time Series</text>
+                            
+                            <rect x="650" y="35" width="130" height="35" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="715" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Ensemble Methods</text>
+                            
+                            <rect x="800" y="35" width="130" height="35" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="865" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Statistical Modeling</text>
+                            
+                            <rect x="950" y="35" width="130" height="35" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="1015" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Computer Vision</text>
+                        </g>
+                        
+                        <!-- Visualization & Deployment -->
+                        <g transform="translate(50, 360)">
+                            <rect x="0" y="0" width="1100" height="80" fill="rgba(0, 255, 170, 0.1)" stroke="#00ffaa" stroke-width="2" rx="10"/>
+                            <text x="550" y="25" text-anchor="middle" fill="#00ffaa" font-size="14" font-weight="bold">📈 Presentation Layer (可視化・デプロイ)</text>
+                            
+                            <!-- Presentation components -->
+                            <rect x="50" y="35" width="140" height="35" fill="rgba(0, 255, 170, 0.2)" stroke="#00ffaa" stroke-width="1" rx="5"/>
+                            <text x="120" y="55" text-anchor="middle" fill="#ffffff" font-size="10">ggplot2 静的可視化</text>
+                            
+                            <rect x="210" y="35" width="140" height="35" fill="rgba(0, 255, 170, 0.2)" stroke="#00ffaa" stroke-width="1" rx="5"/>
+                            <text x="280" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Interactive Dashboards</text>
+                            
+                            <rect x="370" y="35" width="140" height="35" fill="rgba(0, 255, 170, 0.2)" stroke="#00ffaa" stroke-width="1" rx="5"/>
+                            <text x="440" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Shiny Applications</text>
+                            
+                            <rect x="530" y="35" width="140" height="35" fill="rgba(0, 255, 170, 0.2)" stroke="#00ffaa" stroke-width="1" rx="5"/>
+                            <text x="600" y="55" text-anchor="middle" fill="#ffffff" font-size="10">API Endpoints</text>
+                            
+                            <rect x="690" y="35" width="140" height="35" fill="rgba(0, 255, 170, 0.2)" stroke="#00ffaa" stroke-width="1" rx="5"/>
+                            <text x="760" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Model Monitoring</text>
+                            
+                            <rect x="850" y="35" width="140" height="35" fill="rgba(0, 255, 170, 0.2)" stroke="#00ffaa" stroke-width="1" rx="5"/>
+                            <text x="920" y="55" text-anchor="middle" fill="#ffffff" font-size="10">Automated Reports</text>
+                        </g>
+                        
+                        <!-- Flow arrows -->
+                        <path d="M 600 140 L 600 160" stroke="#ffffff" stroke-width="2" marker-end="url(#downArrow)"/>
+                        <path d="M 600 240 L 600 260" stroke="#ffffff" stroke-width="2" marker-end="url(#downArrow)"/>
+                        <path d="M 600 340 L 600 360" stroke="#ffffff" stroke-width="2" marker-end="url(#downArrow)"/>
+                        
+                        <defs>
+                            <marker id="downArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                                <polygon points="0 0, 8 3, 0 6" fill="#ffffff"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    
+                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00ff88;">
+                            <h5 style="color: #00ff88; margin-bottom: 0.5rem;">📊 Data Layer</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">多様なデータソースからの統合的データ収集基盤</p>
+                        </div>
+                        <div style="background: rgba(157, 78, 221, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #9d4edd;">
+                            <h5 style="color: #9d4edd; margin-bottom: 0.5rem;">⚙️ Processing Layer</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">Tidyverseを活用した包括的データ前処理パイプライン</p>
+                        </div>
+                        <div style="background: rgba(255, 140, 66, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ff8c42;">
+                            <h5 style="color: #ff8c42; margin-bottom: 0.5rem;">🧠 Analytics Layer</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">機械学習・深層学習・統計解析の統合的活用</p>
+                        </div>
+                        <div style="background: rgba(0, 255, 170, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00ffaa;">
+                            <h5 style="color: #00ffaa; margin-bottom: 0.5rem;">📈 Presentation Layer</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">インタラクティブ可視化とプロダクション展開</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Core Project Philosophy -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 プロジェクト設計哲学</h3>
+                
+                <div class="ml-workflow">
+                    <div class="workflow-title">📋 Enterprise-Grade Project Principles</div>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <strong>Business Impact</strong><br>
+                            <small>実世界のビジネス価値創出</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <strong>Scalability</strong><br>
+                            <small>拡張可能なアーキテクチャ設計</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <strong>Reproducibility</strong><br>
+                            <small>再現可能性とバージョン管理</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <strong>MLOps Integration</strong><br>
+                            <small>モデル運用の自動化</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <strong>Ethical AI</strong><br>
+                            <small>公平性と透明性の確保</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">6</div>
+                            <strong>Continuous Learning</strong><br>
+                            <small>継続的な改善と学習</small>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- FLAGSHIP PROJECTS COLLECTION -->
+        <section class="section" id="flagship-projects">
+            <h2>🚀 フラッグシップ・プロジェクト集</h2>
+                <p>
+                    企業レベルの複雑な課題を解決する、総合的なデータサイエンス・プロジェクトを厳選しました。各プロジェクトは、実際のビジネスシナリオに基づき、Tidyverseエコシステムの全機能を活用した包括的なソリューションを提供します。
+                </p>
+                
+                <!-- プロジェクト相関図 -->
+                <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-purple); border-radius: 15px; padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden;">
+                    <h4 style="color: var(--accent-purple); text-align: center; margin-bottom: 2rem;">🌐 プロジェクト・エコシステム相関図</h4>
+                    
+                    <svg viewBox="0 0 1000 600" style="width: 100%; height: auto; background: radial-gradient(circle at center, rgba(157,78,221,0.1) 0%, rgba(0,255,136,0.05) 100%);">
+                        <defs>
+                            <!-- プロジェクト別グラデーション -->
+                            <radialGradient id="manufacturingGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#f7931e;stop-opacity:0.3"/>
+                            </radialGradient>
+                            <radialGradient id="healthcareGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#4ecdc4;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#44a08d;stop-opacity:0.3"/>
+                            </radialGradient>
+                            <radialGradient id="financeGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.3"/>
+                            </radialGradient>
+                            <radialGradient id="ecommerceGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.3"/>
+                            </radialGradient>
+                            <radialGradient id="climateGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#4facfe;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:0.3"/>
+                            </radialGradient>
+                            <radialGradient id="genomicsGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#fa709a;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#fee140;stop-opacity:0.3"/>
+                            </radialGradient>
+                        </defs>
+                        
+                        <!-- 中央コア：Tidyverse -->
+                        <circle cx="500" cy="300" r="80" fill="rgba(0,255,136,0.2)" stroke="#00ff88" stroke-width="3"/>
+                        <text x="500" y="290" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">Tidyverse</text>
+                        <text x="500" y="305" text-anchor="middle" fill="#00ff88" font-size="12">Core</text>
+                        <text x="500" y="320" text-anchor="middle" fill="white" font-size="10">Ecosystem</text>
+                        
+                        <!-- プロジェクト円 -->
+                        <!-- Smart Manufacturing -->
+                        <circle cx="200" cy="150" r="60" fill="url(#manufacturingGrad)" stroke="#ff6b35" stroke-width="2"/>
+                        <text x="200" y="145" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🏭 Smart</text>
+                        <text x="200" y="160" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Manufacturing</text>
+                        
+                        <!-- Healthcare Analytics -->
+                        <circle cx="800" cy="150" r="60" fill="url(#healthcareGrad)" stroke="#4ecdc4" stroke-width="2"/>
+                        <text x="800" y="145" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🏥 Healthcare</text>
+                        <text x="800" y="160" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Analytics</text>
+                        
+                        <!-- Financial Trading -->
+                        <circle cx="200" cy="450" r="60" fill="url(#financeGrad)" stroke="#667eea" stroke-width="2"/>
+                        <text x="200" y="445" text-anchor="middle" fill="white" font-size="12" font-weight="bold">💹 Financial</text>
+                        <text x="200" y="460" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Trading</text>
+                        
+                        <!-- E-commerce Engine -->
+                        <circle cx="800" cy="450" r="60" fill="url(#ecommerceGrad)" stroke="#f093fb" stroke-width="2"/>
+                        <text x="800" y="445" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🛒 E-commerce</text>
+                        <text x="800" y="460" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Engine</text>
+                        
+                        <!-- Climate Science -->
+                        <circle cx="150" cy="300" r="55" fill="url(#climateGrad)" stroke="#4facfe" stroke-width="2"/>
+                        <text x="150" y="295" text-anchor="middle" fill="white" font-size="11" font-weight="bold">🌍 Climate</text>
+                        <text x="150" y="310" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Science</text>
+                        
+                        <!-- Genomics Research -->
+                        <circle cx="850" cy="300" r="55" fill="url(#genomicsGrad)" stroke="#fa709a" stroke-width="2"/>
+                        <text x="850" y="295" text-anchor="middle" fill="white" font-size="11" font-weight="bold">🧬 Genomics</text>
+                        <text x="850" y="310" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Research</text>
+                        
+                        <!-- 接続線とデータフロー -->
+                        <!-- Manufacturing → Core -->
+                        <path d="M250 180 Q350 220 420 260" stroke="#ff6b35" stroke-width="2" fill="none" opacity="0.6"/>
+                        <text x="320" y="205" text-anchor="middle" fill="#ff6b35" font-size="9">IoT + ML</text>
+                        
+                        <!-- Healthcare → Core -->
+                        <path d="M750 180 Q650 220 580 260" stroke="#4ecdc4" stroke-width="2" fill="none" opacity="0.6"/>
+                        <text x="680" y="205" text-anchor="middle" fill="#4ecdc4" font-size="9">Patient Data</text>
+                        
+                        <!-- Finance → Core -->
+                        <path d="M250 420 Q350 380 420 340" stroke="#667eea" stroke-width="2" fill="none" opacity="0.6"/>
+                        <text x="320" y="395" text-anchor="middle" fill="#667eea" font-size="9">Time Series</text>
+                        
+                        <!-- E-commerce → Core -->
+                        <path d="M750 420 Q650 380 580 340" stroke="#f093fb" stroke-width="2" fill="none" opacity="0.6"/>
+                        <text x="680" y="395" text-anchor="middle" fill="#f093fb" font-size="9">User Behavior</text>
+                        
+                        <!-- Climate → Core -->
+                        <path d="M205 300 Q320 300 420 300" stroke="#4facfe" stroke-width="2" fill="none" opacity="0.6"/>
+                        <text x="310" y="295" text-anchor="middle" fill="#4facfe" font-size="9">Satellite Data</text>
+                        
+                        <!-- Genomics → Core -->
+                        <path d="M795 300 Q680 300 580 300" stroke="#fa709a" stroke-width="2" fill="none" opacity="0.6"/>
+                        <text x="690" y="295" text-anchor="middle" fill="#fa709a" font-size="9">Sequence Data</text>
+                        
+                        <!-- 共通技術スタック -->
+                        <g transform="translate(400, 50)">
+                            <rect x="0" y="0" width="200" height="30" rx="15" fill="rgba(0,255,136,0.1)" stroke="#00ff88" stroke-width="1"/>
+                            <text x="100" y="20" text-anchor="middle" fill="#00ff88" font-size="11" font-weight="bold">🔧 共通技術スタック</text>
+                        </g>
+                        
+                        <!-- 技術タグ -->
+                        <g transform="translate(350, 90)">
+                            <rect x="0" y="0" width="80" height="20" rx="10" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1"/>
+                            <text x="40" y="13" text-anchor="middle" fill="#00d4ff" font-size="9">tidymodels</text>
+                            
+                            <rect x="90" y="0" width="60" height="20" rx="10" fill="rgba(157,78,221,0.2)" stroke="#9d4edd" stroke-width="1"/>
+                            <text x="120" y="13" text-anchor="middle" fill="#9d4edd" font-size="9">ggplot2</text>
+                            
+                            <rect x="160" y="0" width="50" height="20" rx="10" fill="rgba(255,140,66,0.2)" stroke="#ff8c42" stroke-width="1"/>
+                            <text x="185" y="13" text-anchor="middle" fill="#ff8c42" font-size="9">dplyr</text>
+                            
+                            <rect x="220" y="0" width="80" height="20" rx="10" fill="rgba(0,255,65,0.2)" stroke="#00ff41" stroke-width="1"/>
+                            <text x="260" y="13" text-anchor="middle" fill="#00ff41" font-size="9">modeltime</text>
+                        </g>
+                        
+                        <!-- プロジェクト間の相互影響 -->
+                        <path d="M240 200 Q400 100 760 200" stroke="rgba(255,255,255,0.3)" stroke-width="1" fill="none" stroke-dasharray="5,5"/>
+                        <text x="500" y="150" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8">Cross-Industry Insights</text>
+                        
+                        <path d="M240 400 Q400 500 760 400" stroke="rgba(255,255,255,0.3)" stroke-width="1" fill="none" stroke-dasharray="5,5"/>
+                        <text x="500" y="450" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8">Shared Methodologies</text>
+                        
+                        <!-- 難易度・複雑度インジケーター -->
+                        <g transform="translate(50, 50)">
+                            <text x="0" y="15" fill="#00ff88" font-size="12" font-weight="bold">難易度レベル</text>
+                            <circle cx="20" cy="35" r="8" fill="#4ecdc4" stroke="white" stroke-width="1"/>
+                            <text x="35" y="40" fill="white" font-size="10">初級</text>
+                            <circle cx="20" cy="55" r="8" fill="#f7931e" stroke="white" stroke-width="1"/>
+                            <text x="35" y="60" fill="white" font-size="10">中級</text>
+                            <circle cx="20" cy="75" r="8" fill="#ff6b35" stroke="white" stroke-width="1"/>
+                            <text x="35" y="80" fill="white" font-size="10">上級</text>
+                        </g>
+                        
+                        <!-- プロジェクト成果指標 -->
+                        <g transform="translate(50, 520)">
+                            <text x="0" y="15" fill="#ff8c42" font-size="12" font-weight="bold">📈 期待効果</text>
+                            <text x="150" y="15" fill="#9d4edd" font-size="12" font-weight="bold">⏱️ 開発期間</text>
+                            <text x="300" y="15" fill="#00d4ff" font-size="12" font-weight="bold">👥 チーム規模</text>
+                            <text x="450" y="15" fill="#00ff88" font-size="12" font-weight="bold">💰 投資回収</text>
+                            
+                            <text x="0" y="35" fill="white" font-size="10">ROI: 200-500%</text>
+                            <text x="150" y="35" fill="white" font-size="10">3-6ヶ月</text>
+                            <text x="300" y="35" fill="white" font-size="10">2-5名</text>
+                            <text x="450" y="35" fill="white" font-size="10">6-12ヶ月</text>
+                        </g>
+                        
+                    </svg>
+                </div>
+                
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3 class="project-title">🏭 Smart Manufacturing Analytics</h3>
+                        <div class="project-description">
+                            IoTセンサーデータとプロダクションログを統合した、次世代製造業向け予測分析システム。設備故障予知、品質管理、供給チェーン最適化を一体化した総合プラットフォーム。
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">tidymodels</span>
+                            <span class="tech-tag">torch</span>
+                            <span class="tech-tag">modeltime</span>
+                            <span class="tech-tag">shiny</span>
+                            <span class="tech-tag">plotly</span>
+                        </div>
+                        <div class="project-difficulty">
+                            <span class="difficulty-label">難易度:</span>
+                            <div class="difficulty-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h3 class="project-title">🏥 Healthcare Predictive Analytics</h3>
+                        <div class="project-description">
+                            患者データ、医療画像、ゲノム情報を統合した包括的ヘルスケア分析プラットフォーム。疾患リスク予測、治療効果最適化、パーソナライズド医療の実現。
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">tidymodels</span>
+                            <span class="tech-tag">torch</span>
+                            <span class="tech-tag">tidytext</span>
+                            <span class="tech-tag">survival</span>
+                            <span class="tech-tag">ggplot2</span>
+                        </div>
+                        <div class="project-difficulty">
+                            <span class="difficulty-label">難易度:</span>
+                            <div class="difficulty-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h3 class="project-title">💰 Algorithmic Trading System</h3>
+                        <div class="project-description">
+                            リアルタイム市場データ、ニュース分析、感情分析を組み合わせた高頻度取引システム。時系列予測、リスク管理、ポートフォリオ最適化の統合プラットフォーム。
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">modeltime</span>
+                            <span class="tech-tag">tidytext</span>
+                            <span class="tech-tag">quantmod</span>
+                            <span class="tech-tag">stacks</span>
+                            <span class="tech-tag">shiny</span>
+                        </div>
+                        <div class="project-difficulty">
+                            <span class="difficulty-label">難易度:</span>
+                            <div class="difficulty-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h3 class="project-title">🛒 E-commerce Personalization Engine</h3>
+                        <div class="project-description">
+                            顧客行動、商品データ、レビューテキストを活用した次世代レコメンデーションエンジン。パーソナライゼーション、在庫管理、価格最適化を統合した総合EC分析システム。
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">tidymodels</span>
+                            <span class="tech-tag">tidytext</span>
+                            <span class="tech-tag">torch</span>
+                            <span class="tech-tag">recommenderlab</span>
+                            <span class="tech-tag">plotly</span>
+                        </div>
+                        <div class="project-difficulty">
+                            <span class="difficulty-label">難易度:</span>
+                            <div class="difficulty-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star empty">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h3 class="project-title">🌍 Climate Change Analytics</h3>
+                        <div class="project-description">
+                            衛星データ、気象観測、経済指標を統合した気候変動分析プラットフォーム。環境影響予測、カーボンフットプリント分析、持続可能性指標の可視化システム。
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">modeltime</span>
+                            <span class="tech-tag">sf</span>
+                            <span class="tech-tag">leaflet</span>
+                            <span class="tech-tag">tidymodels</span>
+                            <span class="tech-tag">ggplot2</span>
+                        </div>
+                        <div class="project-difficulty">
+                            <span class="difficulty-label">難易度:</span>
+                            <div class="difficulty-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star empty">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h3 class="project-title">🧬 Genomics Research Platform</h3>
+                        <div class="project-description">
+                            大規模ゲノムデータ、臨床データ、文献データを統合したバイオインフォマティクス研究プラットフォーム。疾患関連遺伝子発見、薬剤応答予測、精密医療の実現。
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">Bioconductor</span>
+                            <span class="tech-tag">tidymodels</span>
+                            <span class="tech-tag">torch</span>
+                            <span class="tech-tag">tidytext</span>
+                            <span class="tech-tag">ComplexHeatmap</span>
+                        </div>
+                        <div class="project-difficulty">
+                            <span class="difficulty-label">難易度:</span>
+                            <div class="difficulty-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- FEATURED PROJECT: SMART MANUFACTURING -->
+        <section class="section" id="featured-project">
+            <h2>🏭 フィーチャード・プロジェクト: Smart Manufacturing Analytics</h2>
+                <p>
+                    IoTセンサーデータ、設備ログ、品質管理データを統合した次世代製造業向け分析システムの構築を通じて、Tidyverseエコシステムの実践的活用を学習します。
+                </p>
+                
+                <!-- Project Architecture -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🏗️ システム・アーキテクチャ</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">manufacturing_analytics_setup.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># Smart Manufacturing Analytics - 総合パッケージ読み込み</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)       <span class="code-comment"># データ操作の基盤</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidymodels</span>)      <span class="code-comment"># 機械学習パイプライン</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">torch</span>)           <span class="code-comment"># 深層学習</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">modeltime</span>)       <span class="code-comment"># 時系列予測</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">plotly</span>)          <span class="code-comment"># インタラクティブ可視化</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">shiny</span>)           <span class="code-comment"># ダッシュボード構築</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">DT</span>)              <span class="code-comment"># データテーブル</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">shinydashboard</span>) <span class="code-comment"># ダッシュボードUI</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">config</span>)          <span class="code-comment"># 設定管理</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">pins</span>)            <span class="code-comment"># データバージョン管理</span></span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># プロジェクト設定の初期化</span></span>
+                        <span class="code-line"><span class="code-variable">config</span> <span class="code-keyword">&lt;-</span> <span class="code-function">config::get</span>()</span>
+                        <span class="code-line"><span class="code-variable">board</span> <span class="code-keyword">&lt;-</span> <span class="code-function">board_local</span>()</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># データパイプライン設定</span></span>
+                        <span class="code-line"><span class="code-variable">data_sources</span> <span class="code-keyword">&lt;-</span> <span class="code-function">list</span>(</span>
+                        <span class="code-line">  iot_sensors = <span class="code-string">"data/iot_sensor_data.csv"</span>,</span>
+                        <span class="code-line">  production_logs = <span class="code-string">"data/production_logs.csv"</span>,</span>
+                        <span class="code-line">  quality_data = <span class="code-string">"data/quality_measurements.csv"</span>,</span>
+                        <span class="code-line">  maintenance_records = <span class="code-string">"data/maintenance_history.csv"</span></span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># モデル設定</span></span>
+                        <span class="code-line"><span class="code-variable">model_config</span> <span class="code-keyword">&lt;-</span> <span class="code-function">list</span>(</span>
+                        <span class="code-line">  prediction_horizon = <span class="code-string">24</span>,  <span class="code-comment"># 24時間先まで予測</span></span>
+                        <span class="code-line">  update_frequency = <span class="code-string">"hourly"</span>,</span>
+                        <span class="code-line">  model_types = <span class="code-function">c</span>(<span class="code-string">"arima"</span>, <span class="code-string">"prophet"</span>, <span class="code-string">"xgboost"</span>, <span class="code-string">"neural_network"</span>)</span>
+                        <span class="code-line">)</span>
+                    </div>
+                </div>
+                
+                <!-- Data Integration Pipeline -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🔄 データ統合パイプライン</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">data_integration_pipeline.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 統合データパイプライン関数</span></span>
+                        <span class="code-line"><span class="code-variable">create_integrated_dataset</span> <span class="code-keyword">&lt;-</span> <span class="code-keyword">function</span>() {</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># IoTセンサーデータの読み込みと前処理</span></span>
+                        <span class="code-line">  <span class="code-variable">iot_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(data_sources$iot_sensors) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">      timestamp = <span class="code-function">ymd_hms</span>(timestamp),</span>
+                        <span class="code-line">      <span class="code-comment"># 異常値検出とクリーニング</span></span>
+                        <span class="code-line">      temperature = <span class="code-function">ifelse</span>(temperature &gt; <span class="code-string">1000</span> | temperature &lt; <span class="code-string">-50</span>, <span class="code-string">NA</span>, temperature),</span>
+                        <span class="code-line">      pressure = <span class="code-function">ifelse</span>(pressure &lt; <span class="code-string">0</span>, <span class="code-string">NA</span>, pressure),</span>
+                        <span class="code-line">      vibration = <span class="code-function">ifelse</span>(vibration &gt; <span class="code-string">100</span>, <span class="code-string">NA</span>, vibration)</span>
+                        <span class="code-line">    ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-comment"># 時間ベースの特徴量エンジニアリング</span></span>
+                        <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">      hour = <span class="code-function">hour</span>(timestamp),</span>
+                        <span class="code-line">      day_of_week = <span class="code-function">wday</span>(timestamp, label = <span class="code-string">TRUE</span>),</span>
+                        <span class="code-line">      shift = <span class="code-function">case_when</span>(</span>
+                        <span class="code-line">        hour <span class="code-keyword">%in%</span> <span class="code-string">6</span>:<span class="code-string">14</span> ~ <span class="code-string">"morning"</span>,</span>
+                        <span class="code-line">        hour <span class="code-keyword">%in%</span> <span class="code-string">14</span>:<span class="code-string">22</span> ~ <span class="code-string">"afternoon"</span>,</span>
+                        <span class="code-line">        <span class="code-string">TRUE</span> ~ <span class="code-string">"night"</span></span>
+                        <span class="code-line">      )</span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># 生産ログデータの処理</span></span>
+                        <span class="code-line">  <span class="code-variable">production_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(data_sources$production_logs) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">      timestamp = <span class="code-function">ymd_hms</span>(timestamp),</span>
+                        <span class="code-line">      efficiency = production_count / target_count,</span>
+                        <span class="code-line">      <span class="code-comment"># ローリング統計の計算</span></span>
+                        <span class="code-line">      rolling_avg_efficiency = <span class="code-function">slide_dbl</span>(efficiency, mean, .before = <span class="code-string">23</span>, .complete = <span class="code-string">FALSE</span>),</span>
+                        <span class="code-line">      efficiency_trend = efficiency - <span class="code-function">lag</span>(rolling_avg_efficiency, <span class="code-string">24</span>)</span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># 品質データの統合</span></span>
+                        <span class="code-line">  <span class="code-variable">quality_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">read_csv</span>(data_sources$quality_data) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">      timestamp = <span class="code-function">ymd_hms</span>(timestamp),</span>
+                        <span class="code-line">      quality_score = (<span class="code-string">100</span> - defect_rate) * quality_index,</span>
+                        <span class="code-line">      quality_category = <span class="code-function">case_when</span>(</span>
+                        <span class="code-line">        quality_score &gt;= <span class="code-string">95</span> ~ <span class="code-string">"excellent"</span>,</span>
+                        <span class="code-line">        quality_score &gt;= <span class="code-string">85</span> ~ <span class="code-string">"good"</span>,</span>
+                        <span class="code-line">        quality_score &gt;= <span class="code-string">70</span> ~ <span class="code-string">"acceptable"</span>,</span>
+                        <span class="code-line">        <span class="code-string">TRUE</span> ~ <span class="code-string">"poor"</span></span>
+                        <span class="code-line">      )</span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># 全データソースの時系列結合</span></span>
+                        <span class="code-line">  <span class="code-variable">integrated_data</span> <span class="code-keyword">&lt;-</span> iot_data <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">left_join</span>(production_data, by = <span class="code-string">"timestamp"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">left_join</span>(quality_data, by = <span class="code-string">"timestamp"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-comment"># 欠損値の補間</span></span>
+                        <span class="code-line">    <span class="code-function">arrange</span>(timestamp) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">fill</span>(<span class="code-function">everything</span>(), .direction = <span class="code-string">"down"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">filter</span>(<span class="code-function">complete.cases</span>(<span class="code-function">.</span>))</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-keyword">return</span>(integrated_data)</span>
+                        <span class="code-line">}</span>
+                    </div>
+                </div>
+                
+                <!-- Predictive Modeling -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🤖 予測モデリング・パイプライン</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">predictive_modeling.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># アンサンブル予測モデルの構築</span></span>
+                        <span class="code-line"><span class="code-variable">build_predictive_models</span> <span class="code-keyword">&lt;-</span> <span class="code-keyword">function</span>(data) {</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># データ分割（時系列を考慮）</span></span>
+                        <span class="code-line">  <span class="code-variable">splits</span> <span class="code-keyword">&lt;-</span> data <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">time_series_split</span>(</span>
+                        <span class="code-line">      date_var = timestamp,</span>
+                        <span class="code-line">      assess = <span class="code-string">"2 weeks"</span>,</span>
+                        <span class="code-line">      cumulative = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># 特徴量エンジニアリング・レシピ</span></span>
+                        <span class="code-line">  <span class="code-variable">recipe_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">recipe</span>(equipment_failure ~ ., data = <span class="code-function">training</span>(splits)) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">step_rm</span>(timestamp) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-comment"># 時系列特徴量の生成</span></span>
+                        <span class="code-line">    <span class="code-function">step_lag</span>(temperature, pressure, vibration, lag = <span class="code-string">1</span>:<span class="code-string">6</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">step_slidify</span>(temperature, pressure, vibration, period = <span class="code-string">24</span>, .f = mean, prefix = <span class="code-string">"mean_24h_"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">step_slidify</span>(temperature, pressure, vibration, period = <span class="code-string">24</span>, .f = sd, prefix = <span class="code-string">"sd_24h_"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-comment"># カテゴリ変数の処理</span></span>
+                        <span class="code-line">    <span class="code-function">step_dummy</span>(<span class="code-function">all_nominal_predictors</span>()) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-comment"># 数値変数の正規化</span></span>
+                        <span class="code-line">    <span class="code-function">step_normalize</span>(<span class="code-function">all_numeric_predictors</span>()) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-comment"># 欠損値の処理</span></span>
+                        <span class="code-line">    <span class="code-function">step_impute_knn</span>(<span class="code-function">all_predictors</span>(), neighbors = <span class="code-string">5</span>)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># モデル仕様の定義</span></span>
+                        <span class="code-line">  <span class="code-variable">rf_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">rand_forest</span>(</span>
+                        <span class="code-line">    trees = <span class="code-function">tune</span>(),</span>
+                        <span class="code-line">    mtry = <span class="code-function">tune</span>(),</span>
+                        <span class="code-line">    min_n = <span class="code-function">tune</span>()</span>
+                        <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">set_engine</span>(<span class="code-string">"ranger"</span>, importance = <span class="code-string">"impurity"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">set_mode</span>(<span class="code-string">"classification"</span>)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-variable">xgb_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">boost_tree</span>(</span>
+                        <span class="code-line">    trees = <span class="code-function">tune</span>(),</span>
+                        <span class="code-line">    tree_depth = <span class="code-function">tune</span>(),</span>
+                        <span class="code-line">    learn_rate = <span class="code-function">tune</span>()</span>
+                        <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">set_engine</span>(<span class="code-string">"xgboost"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">set_mode</span>(<span class="code-string">"classification"</span>)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># ワークフローセットの作成</span></span>
+                        <span class="code-line">  <span class="code-variable">workflow_set</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow_set</span>(</span>
+                        <span class="code-line">    preproc = <span class="code-function">list</span>(recipe = recipe_spec),</span>
+                        <span class="code-line">    models = <span class="code-function">list</span>(</span>
+                        <span class="code-line">      random_forest = rf_spec,</span>
+                        <span class="code-line">      xgboost = xgb_spec</span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-comment"># ハイパーパラメータチューニング</span></span>
+                        <span class="code-line">  <span class="code-variable">cv_folds</span> <span class="code-keyword">&lt;-</span> <span class="code-function">time_series_cv</span>(<span class="code-function">training</span>(splits), assess = <span class="code-string">"1 week"</span>, cumulative = <span class="code-string">FALSE</span>)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-variable">tuned_models</span> <span class="code-keyword">&lt;-</span> workflow_set <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">workflow_map</span>(</span>
+                        <span class="code-line">      <span class="code-string">"tune_grid"</span>,</span>
+                        <span class="code-line">      resamples = cv_folds,</span>
+                        <span class="code-line">      grid = <span class="code-string">25</span>,</span>
+                        <span class="code-line">      metrics = <span class="code-function">metric_set</span>(accuracy, roc_auc, precision, recall),</span>
+                        <span class="code-line">      verbose = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-keyword">return</span>(<span class="code-function">list</span>(</span>
+                        <span class="code-line">    splits = splits,</span>
+                        <span class="code-line">    tuned_models = tuned_models,</span>
+                        <span class="code-line">    cv_folds = cv_folds</span>
+                        <span class="code-line">  ))</span>
+                        <span class="code-line">}</span>
+                    </div>
+                </div>
+                
+                <!-- Output Example -->
+                <div class="output-container">
+                    <div class="output-header">
+                        Manufacturing Analytics - Model Performance Summary
+                    </div>
+                    <div class="output-content"># A tibble: 6 × 9
+  wflow_id          .config               .metric  mean     n   std_err
+  &lt;chr&gt;             &lt;chr&gt;                 &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;     &lt;dbl&gt;
+1 recipe_xgboost    Preprocessor1_Model14 roc_auc 0.934     5   0.00821
+2 recipe_xgboost    Preprocessor1_Model08 roc_auc 0.932     5   0.00754  
+3 recipe_random_for Preprocessor1_Model19 roc_auc 0.928     5   0.00892
+4 recipe_xgboost    Preprocessor1_Model23 roc_auc 0.925     5   0.00765
+5 recipe_random_for Preprocessor1_Model12 roc_auc 0.923     5   0.00834
+6 recipe_xgboost    Preprocessor1_Model17 roc_auc 0.921     5   0.00712
+
+🎯 設備故障予測精度: 93.4% (XGBoost最適モデル)
+📊 False Positive Rate: 2.1% (運用コスト最小化)
+⏰ 予測リードタイム: 24時間前 (事前対応可能)
+💰 推定コスト削減: $2.3M/年 (ダウンタイム回避)</div>
+                </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第24章の重要ポイント</h4>
+            <ul>
+                <li><strong>総合的プロジェクト設計</strong>：Tidyverseエコシステム全体の統合活用</li>
+                <li><strong>企業レベルの課題解決</strong>：実世界のビジネス価値創出</li>
+                <li><strong>スケーラブルアーキテクチャ</strong>：拡張可能なシステム設計</li>
+                <li><strong>MLOps統合</strong>：モデル運用の自動化とモニタリング</li>
+                <li><strong>マルチドメイン応用</strong>：製造業・医療・金融・EC・環境分析</li>
+                <li><strong>継続的改善</strong>：リアルタイム学習と適応システム</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>第24章では、Tidyverseエコシステムの真の力を発揮する総合的なプロジェクトを実践します。単一技術の習得から、複数技術を組み合わせた企業レベルのソリューション開発への飛躍が重要です。各プロジェクトは、データサイエンス、機械学習、深層学習、可視化、展開を統合した包括的なワークフローを提供し、実世界での価値創出を目指します。継続的な学習、改善、適応を通じて、次世代のデータサイエンティストとしてのスキルを確立しましょう。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter23-deep-learning-torch.html" class="nav-button">← 第23章</a>
+            <a href="index.html" class="nav-button">📁 目次へ戻る</a>
+        </nav>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </div>
+</body>
+</html>

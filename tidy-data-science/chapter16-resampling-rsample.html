@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第16章: リサンプリング戦略 - rsample | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px var(--accent-electric));
+        }
+
+        .chapter-number {
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-electric);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px var(--accent-electric);
+        }
+
+        .chapter-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Code Block Styles */
+        .code-block {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            margin: 30px 0;
+            overflow: hidden;
+            border: 1px solid var(--accent-neon);
+            box-shadow: var(--shadow-neon);
+        }
+
+        .code-header {
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-cyan));
+            color: var(--bg-primary);
+            padding: 12px 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .code-content {
+            padding: 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            display: block;
+            min-height: 1.6em;
+        }
+
+        .code-keyword {
+            color: var(--accent-purple);
+            font-weight: 700;
+        }
+
+        .code-function {
+            color: var(--accent-cyan);
+        }
+
+        .code-string {
+            color: var(--accent-orange);
+        }
+
+        .code-variable {
+            color: var(--accent-electric);
+        }
+
+        .code-comment {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Section Styles */
+        .section {
+            margin: 50px 0;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--accent-neon);
+        }
+
+        .section h2 {
+            color: var(--accent-neon);
+            margin-bottom: 25px;
+            font-size: 2rem;
+        }
+
+        .section h3 {
+            color: var(--accent-cyan);
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+
+        .section p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="chapter-icon">🔄</div>
+            <div class="chapter-number">CHAPTER 16</div>
+            <h1>リサンプリング戦略 - rsample</h1>
+            <p class="chapter-description">
+                信頼性の高いモデル評価のために。rsampleでクロスバリデーション、ブートストラップ、時系列分割など、様々なリサンプリング戦略をマスターしよう。
+            </p>
+        </header>
+
+        <!-- RESAMPLING INTRODUCTION -->
+        <section class="section">
+            <h2>🎯 リサンプリングの重要性</h2>
+            <p>
+                リサンプリングは、限られたデータから信頼性の高いモデル評価を行うための統計的手法です。rsampleパッケージを使用して、様々なリサンプリング戦略を実装します。
+            </p>
+            
+            <h3>📦 環境のセットアップ</h3>
+            
+            <div class="code-block">
+                <div class="code-header">リサンプリング環境の準備</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># リサンプリングエコシステムの読み込み</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">rsample</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 機械学習パッケージ</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidymodels</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">yardstick</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># サンプルデータの作成</span></span>
+                    <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-variable">123</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 回帰用データセット</span></span>
+                    <span class="code-line"><span class="code-variable">regression_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                    <span class="code-line">  x1 <span class="code-keyword">=</span> <span class="code-function">rnorm</span>(<span class="code-variable">1000</span>),</span>
+                    <span class="code-line">  x2 <span class="code-keyword">=</span> <span class="code-function">rnorm</span>(<span class="code-variable">1000</span>),</span>
+                    <span class="code-line">  y <span class="code-keyword">=</span> <span class="code-variable">2</span> * x1 + <span class="code-variable">1.5</span> * x2 + <span class="code-function">rnorm</span>(<span class="code-variable">1000</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">glimpse</span>(regression_data)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- BASIC SPLITTING -->
+        <section class="section">
+            <h2>✂️ 基本的なデータ分割</h2>
+            <p>
+                initial_split()を使用して、データを訓練用とテスト用に分割します。これが全てのモデル評価の出発点です。
+            </p>
+
+            <!-- シチュエーションと目的の説明 -->
+            <div class="situation-box" style="background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 2rem; border-radius: 15px; margin: 1.5rem 0; border: 1px solid var(--accent-cyan);">
+                <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">🎯 いつ・なぜ使うか？</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h5 style="color: var(--neon-lime); margin-bottom: 0.5rem;">📋 適用シチュエーション</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li>最終的なモデル性能を<strong>公正に評価</strong>したい</li>
+                            <li>新しいデータに対する<strong>予測精度</strong>を知りたい</li>
+                            <li>モデルの<strong>汎化能力</strong>を測定したい</li>
+                            <li>過学習（オーバーフィッティング）を<strong>検出</strong>したい</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--neon-magenta); margin-bottom: 0.5rem;">🎯 具体的な目的</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>Hold-out評価</strong>：未見データでの性能測定</li>
+                            <li><strong>層化分割</strong>：クラス比率や分布の保持</li>
+                            <li><strong>時系列分割</strong>：時間的順序の考慮</li>
+                            <li><strong>最終判定</strong>：プロダクション投入前の品質保証</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background: rgba(0, 255, 255, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <p style="color: var(--accent-cyan); margin: 0; font-weight: 500;">
+                        💡 <strong>重要な注意点</strong>: テストデータは一度だけ使用し、モデル選択や調整には絶対に使わないこと！
+                    </p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">訓練・テスト分割</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 基本的な分割</span></span>
+                    <span class="code-line"><span class="code-variable">data_split</span> <span class="code-keyword">&lt;-</span> regression_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">initial_split</span>(prop <span class="code-keyword">=</span> <span class="code-variable">0.8</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 訓練データ取得</span></span>
+                    <span class="code-line"><span class="code-variable">train_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(data_split)</span>
+                    <span class="code-line"><span class="code-variable">test_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(data_split)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">paste</span>(<span class="code-string">"訓練データ:"</span>, <span class="code-function">nrow</span>(train_data)))</span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">paste</span>(<span class="code-string">"テストデータ:"</span>, <span class="code-function">nrow</span>(test_data)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 層化抽出</span></span>
+                    <span class="code-line"><span class="code-variable">stratified_split</span> <span class="code-keyword">&lt;-</span> regression_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(y_group <span class="code-keyword">=</span> <span class="code-function">cut</span>(y, breaks <span class="code-keyword">=</span> <span class="code-variable">3</span>)) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">initial_split</span>(prop <span class="code-keyword">=</span> <span class="code-variable">0.8</span>, strata <span class="code-keyword">=</span> y_group)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"層化抽出完了"</span>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CROSS VALIDATION -->
+        <section class="section">
+            <h2>🔄 クロスバリデーション</h2>
+            <p>
+                クロスバリデーションにより、モデルの汎化性能を信頼性高く評価できます。k-fold、leave-one-out、Monte Carloなど様々な手法があります。
+            </p>
+
+            <!-- シチュエーションと目的の説明 -->
+            <div class="situation-box" style="background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 2rem; border-radius: 15px; margin: 1.5rem 0; border: 1px solid var(--accent-cyan);">
+                <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">🔍 いつ・なぜ使うか？</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h5 style="color: var(--neon-lime); margin-bottom: 0.5rem;">📋 適用シチュエーション</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>モデル選択</strong>時の性能比較をしたい</li>
+                            <li><strong>ハイパーパラメータ</strong>を調整したい</li>
+                            <li><strong>小さなデータセット</strong>を有効活用したい</li>
+                            <li><strong>統計的に安定</strong>した評価が必要</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--neon-magenta); margin-bottom: 0.5rem;">🎯 具体的な目的</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>K-fold CV</strong>：バランスの取れた評価</li>
+                            <li><strong>層化CV</strong>：不均衡データでの公正評価</li>
+                            <li><strong>Repeated CV</strong>：より安定した推定</li>
+                            <li><strong>Leave-one-out</strong>：極小データでの最大活用</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background: rgba(255, 255, 0, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <p style="color: var(--neon-lime); margin: 0; font-weight: 500;">
+                        ⚡ <strong>実用のコツ</strong>: 5-10 fold CVが一般的。計算コストと精度のバランスを考慮して選択！
+                    </p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">k-fold クロスバリデーション</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 10-fold クロスバリデーション</span></span>
+                    <span class="code-line"><span class="code-variable">cv_folds</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">vfold_cv</span>(v <span class="code-keyword">=</span> <span class="code-variable">10</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(cv_folds)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 層化CV</span></span>
+                    <span class="code-line"><span class="code-variable">stratified_cv</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(y_group <span class="code-keyword">=</span> <span class="code-function">cut</span>(y, breaks <span class="code-keyword">=</span> <span class="code-variable">3</span>)) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">vfold_cv</span>(v <span class="code-keyword">=</span> <span class="code-variable">5</span>, strata <span class="code-keyword">=</span> y_group)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"層化CV作成完了"</span>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOOTSTRAP -->
+        <section class="section">
+            <h2>👢 ブートストラップリサンプリング</h2>
+            <p>
+                ブートストラップは復元抽出によるリサンプリング手法で、信頼区間の推定や分散の評価に有用です。
+            </p>
+
+            <!-- シチュエーションと目的の説明 -->
+            <div class="situation-box" style="background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 2rem; border-radius: 15px; margin: 1.5rem 0; border: 1px solid var(--accent-cyan);">
+                <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">🎲 いつ・なぜ使うか？</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h5 style="color: var(--neon-lime); margin-bottom: 0.5rem;">📋 適用シチュエーション</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>不確実性</strong>の定量化をしたい</li>
+                            <li><strong>信頼区間</strong>を推定したい</li>
+                            <li><strong>分散</strong>や<strong>バイアス</strong>を評価したい</li>
+                            <li><strong>アンサンブル学習</strong>に活用したい</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--neon-magenta); margin-bottom: 0.5rem;">🎯 具体的な目的</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>Bootstrap CI</strong>：予測の信頼区間算出</li>
+                            <li><strong>Out-of-bag評価</strong>：OOBエラーでの性能測定</li>
+                            <li><strong>Bagging</strong>：ランダムフォレスト等の基盤</li>
+                            <li><strong>安定性評価</strong>：モデルの頑健性チェック</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background: rgba(255, 102, 0, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <p style="color: #ff6600; margin: 0; font-weight: 500;">
+                        🚀 <strong>パワフルな特徴</strong>: 元データの約63%を含み、37%はOut-of-bagとして独立評価に使用可能！
+                    </p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">ブートストラップサンプル</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># ブートストラップ作成</span></span>
+                    <span class="code-line"><span class="code-variable">bootstrap_samples</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">bootstraps</span>(times <span class="code-keyword">=</span> <span class="code-variable">25</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(bootstrap_samples)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 一つのブートストラップサンプル確認</span></span>
+                    <span class="code-line"><span class="code-variable">first_boot</span> <span class="code-keyword">&lt;-</span> bootstrap_samples$splits[[<span class="code-variable">1</span>]]</span>
+                    <span class="code-line"><span class="code-variable">boot_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">analysis</span>(first_boot)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">paste</span>(<span class="code-string">"ブートストラップサンプルサイズ:"</span>, <span class="code-function">nrow</span>(boot_data)))</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MONTE CARLO -->
+        <section class="section">
+            <h2>🎲 Monte Carlo クロスバリデーション</h2>
+            <p>
+                Monte Carlo CVは、ランダムな分割を繰り返す手法で、計算効率が良く大規模データセットに適しています。
+            </p>
+
+            <!-- シチュエーションと目的の説明 -->
+            <div class="situation-box" style="background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 2rem; border-radius: 15px; margin: 1.5rem 0; border: 1px solid var(--accent-cyan);">
+                <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">🌟 いつ・なぜ使うか？</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h5 style="color: var(--neon-lime); margin-bottom: 0.5rem;">📋 適用シチュエーション</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>大規模データ</strong>で計算効率を重視</li>
+                            <li><strong>柔軟な分割比率</strong>を設定したい</li>
+                            <li><strong>より多くの評価</strong>を効率的に実行</li>
+                            <li><strong>統計的変動</strong>を詳細に把握したい</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--neon-magenta); margin-bottom: 0.5rem;">🎯 具体的な目的</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>高速評価</strong>：計算時間の大幅短縮</li>
+                            <li><strong>カスタム比率</strong>：任意のtrain/test比率</li>
+                            <li><strong>並列処理</strong>：独立分割による効率化</li>
+                            <li><strong>信頼性向上</strong>：多数回評価による安定性</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background: rgba(57, 255, 20, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <p style="color: #39ff14; margin: 0; font-weight: 500;">
+                        💪 <strong>効率性の秘密</strong>: K-fold CVと異なり重複なし分割で、大データでも高速実行可能！
+                    </p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">Monte Carlo リサンプリング</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># Monte Carlo CV</span></span>
+                    <span class="code-line"><span class="code-variable">mc_cv</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mc_cv</span>(prop <span class="code-keyword">=</span> <span class="code-variable">0.8</span>, times <span class="code-keyword">=</span> <span class="code-variable">20</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(mc_cv)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 繰り返し検証</span></span>
+                    <span class="code-line"><span class="code-variable">repeated_cv</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">vfold_cv</span>(v <span class="code-keyword">=</span> <span class="code-variable">5</span>, repeats <span class="code-keyword">=</span> <span class="code-variable">3</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"繰り返しCV作成完了"</span>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIME SERIES SPLITS -->
+        <section class="section">
+            <h2>📊 時系列データ分割</h2>
+            <p>
+                時系列データでは、時間の順序を保持した特別な分割戦略が必要です。rolling_origin()とsliding_window()を使用します。
+            </p>
+
+            <!-- シチュエーションと目的の説明 -->
+            <div class="situation-box" style="background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 2rem; border-radius: 15px; margin: 1.5rem 0; border: 1px solid var(--accent-cyan);">
+                <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">⏰ いつ・なぜ使うか？</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h5 style="color: var(--neon-lime); margin-bottom: 0.5rem;">📋 適用シチュエーション</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>時系列データ</strong>の予測モデル構築</li>
+                            <li><strong>時間的依存性</strong>があるデータ分析</li>
+                            <li><strong>季節性</strong>や<strong>トレンド</strong>を考慮</li>
+                            <li><strong>未来予測</strong>の精度を正しく評価</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--neon-magenta); margin-bottom: 0.5rem;">🎯 具体的な目的</h5>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                            <li><strong>Rolling Forecast</strong>：逐次予測評価</li>
+                            <li><strong>Walk-forward</strong>：リアルタイム環境模擬</li>
+                            <li><strong>Temporal Leakage防止</strong>：未来情報の遮断</li>
+                            <li><strong>Dynamic Model</strong>：時間変化への対応</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background: rgba(255, 20, 147, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <p style="color: #ff1493; margin: 0; font-weight: 500;">
+                        ⚠️ <strong>重要な原則</strong>: 時系列では絶対に未来のデータを過去の予測に使ってはいけない！
+                    </p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">時系列リサンプリング</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 時系列データ作成</span></span>
+                    <span class="code-line"><span class="code-variable">ts_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                    <span class="code-line">  date <span class="code-keyword">=</span> <span class="code-function">seq</span>(<span class="code-function">as.Date</span>(<span class="code-string">"2020-01-01"</span>), <span class="code-function">as.Date</span>(<span class="code-string">"2023-12-31"</span>), by <span class="code-keyword">=</span> <span class="code-string">"day"</span>),</span>
+                    <span class="code-line">  value <span class="code-keyword">=</span> <span class="code-function">cumsum</span>(<span class="code-function">rnorm</span>(<span class="code-variable">1461</span>))</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># Rolling Origin</span></span>
+                    <span class="code-line"><span class="code-variable">rolling_splits</span> <span class="code-keyword">&lt;-</span> ts_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">rolling_origin</span>(</span>
+                    <span class="code-line">    initial <span class="code-keyword">=</span> <span class="code-variable">365</span>,</span>
+                    <span class="code-line">    assess <span class="code-keyword">=</span> <span class="code-variable">30</span>,</span>
+                    <span class="code-line">    skip <span class="code-keyword">=</span> <span class="code-variable">30</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(rolling_splits)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODEL EVALUATION -->
+        <section class="section">
+            <h2>📊 リサンプリングを用いたモデル評価</h2>
+            <p>
+                作成したリサンプリングオブジェクトを使用して、実際にモデルを評価します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">CV評価の実行</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># モデル定義</span></span>
+                    <span class="code-line"><span class="code-variable">lm_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">linear_reg</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"lm"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># レシピ定義</span></span>
+                    <span class="code-line"><span class="code-variable">basic_recipe</span> <span class="code-keyword">&lt;-</span> <span class="code-function">recipe</span>(y ~ ., data <span class="code-keyword">=</span> train_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ワークフロー作成</span></span>
+                    <span class="code-line"><span class="code-variable">lm_workflow</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_model</span>(lm_model) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_recipe</span>(basic_recipe)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># CV評価</span></span>
+                    <span class="code-line"><span class="code-variable">cv_results</span> <span class="code-keyword">&lt;-</span> lm_workflow <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit_resamples</span>(cv_folds)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">collect_metrics</span>(cv_results))</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- VALIDATION SET -->
+        <section class="section">
+            <h2>✅ バリデーションセット</h2>
+            <p>
+                3分割（train/validation/test）によるモデル開発とパラメータ調整の戦略を学びます。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">バリデーション分割</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 3分割作成</span></span>
+                    <span class="code-line"><span class="code-variable">val_split</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">initial_validation_split</span>(prop <span class="code-keyword">=</span> <span class="code-function">c</span>(<span class="code-variable">0.6</span>, <span class="code-variable">0.2</span>))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-variable">train_set</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(val_split)</span>
+                    <span class="code-line"><span class="code-variable">validation_set</span> <span class="code-keyword">&lt;-</span> <span class="code-function">validation</span>(val_split)</span>
+                    <span class="code-line"><span class="code-variable">test_set</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(val_split)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">paste</span>(</span>
+                    <span class="code-line">  <span class="code-string">"Train:"</span>, <span class="code-function">nrow</span>(train_set),</span>
+                    <span class="code-line">  <span class="code-string">"Validation:"</span>, <span class="code-function">nrow</span>(validation_set),</span>
+                    <span class="code-line">  <span class="code-string">"Test:"</span>, <span class="code-function">nrow</span>(test_set)</span>
+                    <span class="code-line">))</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CUSTOM SPLITS -->
+        <section class="section">
+            <h2>🛠️ カスタム分割戦略</h2>
+            <p>
+                特殊なデータ構造や要件に対応するための、カスタムリサンプリング戦略を作成します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">カスタム分割の実装</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># グループ別分割</span></span>
+                    <span class="code-line"><span class="code-variable">grouped_data</span> <span class="code-keyword">&lt;-</span> regression_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(group <span class="code-keyword">=</span> <span class="code-function">sample</span>(<span class="code-function">letters</span>[<span class="code-variable">1</span>:<span class="code-variable">5</span>], <span class="code-function">n</span>(), replace <span class="code-keyword">=</span> <span class="code-keyword">TRUE</span>))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># グループCV</span></span>
+                    <span class="code-line"><span class="code-variable">group_cv</span> <span class="code-keyword">&lt;-</span> grouped_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">group_vfold_cv</span>(group)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(group_cv)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># リーブワンアウト</span></span>
+                    <span class="code-line"><span class="code-variable">small_data</span> <span class="code-keyword">&lt;-</span> regression_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">slice_head</span>(n <span class="code-keyword">=</span> <span class="code-variable">50</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-variable">loo_cv</span> <span class="code-keyword">&lt;-</span> small_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">loo_cv</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"Leave-one-out CV作成完了"</span>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section class="section">
+            <h2>🎯 まとめ</h2>
+            <p>
+                本章では、rsampleパッケージを使用した様々なリサンプリング戦略を学習しました。
+            </p>
+            <ul style="color: var(--text-secondary); margin-left: 20px;">
+                <li>基本的な訓練・テスト分割の実装</li>
+                <li>k-fold クロスバリデーションの活用</li>
+                <li>ブートストラップリサンプリングの理解</li>
+                <li>Monte Carlo クロスバリデーション</li>
+                <li>時系列データの特殊分割戦略</li>
+                <li>バリデーションセットの設計</li>
+                <li>カスタム分割戦略の実装</li>
+            </ul>
+            <p>
+                これらの技術により、信頼性の高いモデル評価と汎化性能の推定が可能になります。
+            </p>
+        </section>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 章間ナビゲーション -->
+    <div style="display: flex; justify-content: space-between; margin: 3rem 0; padding: 0 2rem;">
+        <a href="chapter15-advanced-data-viz.html" style="display: flex; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); border: 1px solid var(--accent-cyan); border-radius: 15px; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease;">
+            <span style="font-size: 1.5rem; margin-right: 0.5rem;">←</span>
+            <div>
+                <div style="font-size: 0.9rem; color: var(--accent-cyan);">前の章</div>
+                <div style="font-weight: 600;">第15章: 高度なデータ可視化統合</div>
+            </div>
+        </a>
+        
+        <a href="chapter17-hyperparameter-tuning-simple.html" style="display: flex; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); border: 1px solid var(--accent-cyan); border-radius: 15px; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease;">
+            <div style="text-align: right;">
+                <div style="font-size: 0.9rem; color: var(--accent-cyan);">次の章</div>
+                <div style="font-weight: 600;">第17章: ハイパーパラメータチューニング</div>
+            </div>
+            <span style="font-size: 1.5rem; margin-left: 0.5rem;">→</span>
+        </a>
+    </div>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </div>
+</body>
+</html>

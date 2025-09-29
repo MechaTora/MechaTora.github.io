@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第12章: 時系列分析とmodeltime | Tidyverse完全マスター</title>
+    <title>第12章: 時系列予測の魔法 | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,7 +26,8 @@
             --accent-neon: #00ff88;
             --accent-cyan: #00d4ff;
             --accent-purple: #9d4edd;
-            --accent-blue: #4dabf7;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
             --text-primary: #ffffff;
             --text-secondary: #b3b3b3;
             --border-neon: #00ff88;
@@ -47,1190 +61,601 @@
             padding: 40px 0;
             background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
             border-radius: 20px;
-            border: 2px solid var(--accent-blue);
-            box-shadow: 0 0 20px rgba(77, 171, 247, 0.4);
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
             position: relative;
             overflow: hidden;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(77, 171, 247, 0.1), transparent);
-            animation: scan 3s infinite;
+        .chapter-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px var(--accent-electric));
         }
 
-        @keyframes scan {
-            0% { left: -100%; }
-            100% { left: 100%; }
+        .chapter-number {
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            font-weight: 700;
         }
 
         h1 {
             font-size: 3rem;
             font-weight: 700;
-            color: var(--accent-blue);
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px var(--accent-blue);
-            position: relative;
-            z-index: 1;
-        }
-
-        .subtitle {
-            font-size: 1.4rem;
-            color: var(--accent-cyan);
+            color: var(--accent-electric);
             margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
+            text-shadow: 0 0 20px var(--accent-electric);
         }
 
-        .chapter-meta {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .progress-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 3px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .progress-dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--text-secondary);
-            transition: all 0.3s ease;
-        }
-
-        .progress-dot.active {
-            background: var(--accent-blue);
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 5px var(--accent-blue);
-        }
-
-        .progress-dot.completed {
-            background: var(--accent-cyan);
-            border-color: var(--accent-cyan);
-        }
-
-        /* Navigation Widget */
-        .chapter-nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 3px;
-            margin: 30px 0;
-            padding: 6px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            border: 1px solid var(--accent-blue);
-            width: fit-content;
-            max-width: 90vw;
-            margin-left: auto;
-            margin-right: auto;
-            flex-wrap: wrap;
-        }
-
-        .nav-button {
-            padding: 1px 5px;
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: 2px;
-            border: 1px solid var(--accent-cyan);
-            transition: all 0.3s ease;
-            font-size: 0.65rem;
-            white-space: nowrap;
-        }
-
-        .nav-button:hover {
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-            box-shadow: 0 0 6px var(--accent-cyan);
-        }
-
-        .nav-button.current {
-            background: var(--accent-blue);
-            color: var(--bg-primary);
-            box-shadow: 0 0 6px var(--accent-blue);
-        }
-
-        /* Content Sections */
-        .section {
-            background: var(--bg-secondary);
-            margin: 30px 0;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid var(--accent-purple);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
-
-        .section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
-            border-radius: 15px 15px 0 0;
-        }
-
-        h2 {
-            color: var(--accent-blue);
-            font-size: 2rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px var(--accent-blue);
-        }
-
-        h3 {
-            color: var(--accent-cyan);
-            font-size: 1.5rem;
-            margin: 25px 0 15px 0;
-            text-shadow: 0 0 8px var(--accent-cyan);
-        }
-
-        h4 {
-            color: var(--accent-purple);
+        .chapter-description {
             font-size: 1.2rem;
-            margin: 20px 0 10px 0;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        /* Code Blocks */
-        .code-container {
-            margin: 20px 0;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-blue);
+        /* Code Block Styles */
+        .code-block {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            margin: 30px 0;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(77, 171, 247, 0.1);
+            border: 1px solid var(--accent-neon);
+            box-shadow: var(--shadow-neon);
         }
 
         .code-header {
-            background: var(--accent-blue);
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-cyan));
             color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
+            padding: 12px 20px;
+            font-weight: 700;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .code-header::before {
-            content: '📈';
-            font-size: 1.1rem;
+            justify-content: space-between;
         }
 
         .code-content {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            background: #0d1117;
-            color: #c9d1d9;
-            overflow-x: auto;
-        }
-
-        /* Syntax highlighting */
-        .keyword { color: #ff7b72; }
-        .function { color: #d2a8ff; }
-        .string { color: #a5d6ff; }
-        .comment { color: #8b949e; font-style: italic; }
-        .operator { color: #f85149; }
-        .number { color: #79c0ff; }
-        .variable { color: #ffa657; }
-
-        /* Output Display */
-        .output-container {
-            margin: 20px 0;
-            background: #0a0e1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-cyan);
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
-        }
-
-        .output-header {
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .output-header::before {
-            content: '📊';
-        }
-
-        .output-content {
-            padding: 20px;
+            padding: 25px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.9rem;
             line-height: 1.6;
-            color: var(--accent-cyan);
-        }
-
-        /* Time Series Visualization */
-        .ts-viz {
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--accent-purple);
-            text-align: center;
-        }
-
-        .viz-title {
-            color: var(--accent-purple);
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        /* Forecast Components */
-        .forecast-components {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .component-box {
-            background: var(--bg-tertiary);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--accent-cyan);
-            text-align: center;
-        }
-
-        .component-title {
-            color: var(--accent-cyan);
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .component-value {
-            color: var(--accent-blue);
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        /* Data Tables */
-        .data-table {
-            margin: 20px 0;
             overflow-x: auto;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--accent-blue);
+        .code-line {
+            display: block;
+            min-height: 1.6em;
         }
 
-        th {
-            background: var(--accent-blue);
-            color: var(--bg-primary);
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--bg-secondary);
-            color: var(--text-primary);
-        }
-
-        tr:nth-child(even) {
-            background: rgba(77, 171, 247, 0.05);
-        }
-
-        tr:hover {
-            background: rgba(77, 171, 247, 0.1);
-        }
-
-        /* Key Points */
-        .key-points {
-            background: linear-gradient(135deg, rgba(77, 171, 247, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--accent-blue);
-        }
-
-        .key-points h4 {
-            color: var(--accent-blue);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .key-points h4::before {
-            content: '💡';
-        }
-
-        .key-points ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .key-points li {
-            margin: 8px 0;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .key-points li::before {
-            content: '▶';
-            color: var(--accent-cyan);
-            position: absolute;
-            left: 0;
-        }
-
-        /* Warning/Tip boxes */
-        .tip-box {
-            background: rgba(157, 78, 221, 0.1);
-            border: 1px solid var(--accent-purple);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--accent-purple);
-        }
-
-        .tip-box h4 {
+        .code-keyword {
             color: var(--accent-purple);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-weight: 700;
         }
 
-        .tip-box h4::before {
-            content: '⚠️';
+        .code-function {
+            color: var(--accent-cyan);
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
+        .code-string {
+            color: var(--accent-orange);
+        }
 
-            h1 {
-                font-size: 2rem;
-            }
+        .code-variable {
+            color: var(--accent-electric);
+        }
 
-            .subtitle {
-                font-size: 1.1rem;
-            }
+        .code-comment {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
 
-            .chapter-meta {
-                flex-direction: column;
-                gap: 10px;
-            }
+        /* Section Styles */
+        .section {
+            margin: 50px 0;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--accent-neon);
+        }
 
-            .chapter-nav {
-                gap: 2px;
-                padding: 4px;
-            }
+        .section h2 {
+            color: var(--accent-neon);
+            margin-bottom: 25px;
+            font-size: 2rem;
+        }
 
-            .nav-button {
-                padding: 1px 3px;
-                font-size: 0.6rem;
-            }
+        .section h3 {
+            color: var(--accent-cyan);
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
 
-            .section {
-                padding: 20px;
-                margin: 20px 0;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            .forecast-components {
-                grid-template-columns: 1fr;
-            }
-
-            .code-content, .output-content {
-                font-size: 0.85rem;
-                padding: 15px;
-            }
+        .section p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>第12章: 時系列分析とmodeltime</h1>
-            <p class="subtitle">Tidyverseによる時系列予測とトレンド分析</p>
-            <div class="chapter-meta">
-                <span>📈 トレンド分析</span>
-                <span>🔮 予測モデル</span>
-                <span>📊 季節性分解</span>
-            </div>
-            <div class="progress-indicator">
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot active"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-            </div>
+            <div class="chapter-icon">📈</div>
+            <div class="chapter-number">CHAPTER 12</div>
+            <h1>時系列予測の魔法</h1>
+            <p class="chapter-description">
+                時間の流れを予測し、未来を読み解く。modeltimeで時系列データの神秘を解き明かし、トレンドと季節性の奥深い世界、そして予測モデルの力を体験しよう。
+            </p>
         </header>
 
-        <nav class="chapter-nav">
-            <a href="chapter1-tidyverse-overview.html" class="nav-button">1</a>
-            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">2</a>
-            <a href="chapter3-ggplot2-visualization.html" class="nav-button">3</a>
-            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">4</a>
-            <a href="chapter5-stringr-text-processing.html" class="nav-button">5</a>
-            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">6</a>
-            <a href="chapter7-lubridate-datetime.html" class="nav-button">7</a>
-            <a href="chapter8-readr-data-import.html" class="nav-button">8</a>
-            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">9</a>
-            <a href="chapter10-statistics-modeling.html" class="nav-button">10</a>
-            <a href="chapter11-machine-learning.html" class="nav-button">11</a>
-            <a href="#" class="nav-button current">12</a>
-        </nav>
-
+        <!-- TIME SERIES INTRODUCTION -->
         <section class="section">
-            <h2>📈 時系列データの基礎とtibbletime</h2>
+            <h2>🔮 時系列予測の世界</h2>
+            <p>
+                時系列予測は、過去のデータパターンから未来を推測する、データサイエンスの最も魅力的な分野の一つです。売上予測、株価予測、天気予報まで、私たちの生活に欠かせない技術です。
+            </p>
             
-            <p>時系列分析は、時間の経過とともに変化するデータのパターンを理解し、将来の値を予測する手法です。Tidyverseエコシステムでは、lubridateとtibletimeを組み合わせて効率的な時系列処理を実現できます。</p>
-
-            <h3>時系列データの準備と探索</h3>
-
-            <div class="code-container">
-                <div class="code-header">売上データの時系列分析</div>
+            <h3>📦 必要なパッケージの準備</h3>
+            
+            <div class="code-block">
+                <div class="code-header">時系列分析環境のセットアップ</div>
                 <div class="code-content">
-<span class="keyword">library</span>(<span class="string">tidyverse</span>)
-<span class="keyword">library</span>(<span class="string">lubridate</span>)
-<span class="keyword">library</span>(<span class="string">timetk</span>)
-<span class="keyword">library</span>(<span class="string">modeltime</span>)
-
-<span class="comment"># 複雑な売上時系列データの作成</span>
-<span class="function">set.seed</span>(<span class="number">123</span>)
-<span class="comment"># 2019年1月から2023年12月までの日次データ</span>
-start_date <span class="operator">&lt;-</span> <span class="function">as.Date</span>(<span class="string">"2019-01-01"</span>)
-end_date <span class="operator">&lt;-</span> <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>)
-dates <span class="operator">&lt;-</span> <span class="function">seq</span>(start_date, end_date, by <span class="operator">=</span> <span class="string">"day"</span>)
-
-sales_ts <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  date <span class="operator">=</span> dates
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    <span class="comment"># 基本トレンド（年間成長率5%）</span>
-    trend <span class="operator">=</span> <span class="number">1000</span> <span class="operator">+</span> <span class="function">as.numeric</span>(date <span class="operator">-</span> start_date) <span class="operator">*</span> <span class="number">0.1</span>,
-    
-    <span class="comment"># 年次季節性（年末年始、夏のボーナス時期）</span>
-    yearly_seasonal <span class="operator">=</span> <span class="number">200</span> <span class="operator">*</span> <span class="function">sin</span>(<span class="number">2</span> <span class="operator">*</span> pi <span class="operator">*</span> <span class="function">yday</span>(date) / <span class="number">365</span>) <span class="operator">+</span>
-                        <span class="number">150</span> <span class="operator">*</span> <span class="function">cos</span>(<span class="number">4</span> <span class="operator">*</span> pi <span class="operator">*</span> <span class="function">yday</span>(date) / <span class="number">365</span>),
-    
-    <span class="comment"># 週次季節性（平日高、週末低）</span>
-    weekly_seasonal <span class="operator">=</span> <span class="function">case_when</span>(
-      <span class="function">wday</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">7</span>) ~ <span class="number">-100</span>,  <span class="comment"># 週末</span>
-      <span class="function">wday</span>(date) <span class="operator">==</span> <span class="number">6</span> ~ <span class="number">-50</span>,               <span class="comment"># 金曜日</span>
-      <span class="variable">TRUE</span> ~ <span class="number">50</span>                           <span class="comment"># 平日</span>
-    ),
-    
-    <span class="comment"># 特別な日（祝日効果など）</span>
-    special_events <span class="operator">=</span> <span class="function">case_when</span>(
-      <span class="function">month</span>(date) <span class="operator">==</span> <span class="number">12</span> <span class="operator">&amp;&amp;</span> <span class="function">day</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">24</span>, <span class="number">25</span>) ~ <span class="number">300</span>,  <span class="comment"># クリスマス</span>
-      <span class="function">month</span>(date) <span class="operator">==</span> <span class="number">1</span> <span class="operator">&amp;&amp;</span> <span class="function">day</span>(date) <span class="operator">==</span> <span class="number">1</span> ~ <span class="number">-200</span>,         <span class="comment"># 元日</span>
-      <span class="function">month</span>(date) <span class="operator">==</span> <span class="number">7</span> <span class="operator">&amp;&amp;</span> <span class="function">day</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">15</span>:<span class="number">25</span>) ~ <span class="number">100</span>,  <span class="comment"># 夏のセール</span>
-      <span class="variable">TRUE</span> ~ <span class="number">0</span>
-    ),
-    
-    <span class="comment"># ランダムノイズ</span>
-    noise <span class="operator">=</span> <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">0</span>, <span class="number">80</span>),
-    
-    <span class="comment"># 最終的な売上</span>
-    sales <span class="operator">=</span> trend <span class="operator">+</span> yearly_seasonal <span class="operator">+</span> weekly_seasonal <span class="operator">+</span> special_events <span class="operator">+</span> noise
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(sales <span class="operator">=</span> <span class="function">pmax</span>(sales, <span class="number">100</span>)) <span class="operator">%&gt;%</span>  <span class="comment"># 最小値設定</span>
-  <span class="function">select</span>(date, sales)
-
-<span class="function">print</span>(<span class="function">head</span>(sales_ts, <span class="number">10</span>))
-
-<span class="comment"># 基本的な時系列統計</span>
-ts_summary <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    start_date <span class="operator">=</span> <span class="function">min</span>(date),
-    end_date <span class="operator">=</span> <span class="function">max</span>(date),
-    total_days <span class="operator">=</span> <span class="function">n</span>(),
-    mean_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    median_sales <span class="operator">=</span> <span class="function">median</span>(sales),
-    sd_sales <span class="operator">=</span> <span class="function">sd</span>(sales),
-    min_sales <span class="operator">=</span> <span class="function">min</span>(sales),
-    max_sales <span class="operator">=</span> <span class="function">max</span>(sales)
-  )
-
-<span class="function">print</span>(<span class="string">"時系列データ概要:"</span>)
-<span class="function">print</span>(ts_summary)
-
-<span class="comment"># 月次集計</span>
-monthly_sales <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    year <span class="operator">=</span> <span class="function">year</span>(date),
-    month <span class="operator">=</span> <span class="function">month</span>(date),
-    yearmon <span class="operator">=</span> <span class="function">floor_date</span>(date, <span class="string">"month"</span>)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(yearmon) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    monthly_total <span class="operator">=</span> <span class="function">sum</span>(sales),
-    monthly_avg <span class="operator">=</span> <span class="function">mean</span>(sales),
-    days_count <span class="operator">=</span> <span class="function">n</span>(),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
-
-<span class="function">print</span>(<span class="string">"月次売上（最初の12ヶ月）:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(monthly_sales, <span class="number">12</span>))
-
-<span class="comment"># 年次成長率の計算</span>
-yearly_growth <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(year <span class="operator">=</span> <span class="function">year</span>(date)) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(year) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(yearly_total <span class="operator">=</span> <span class="function">sum</span>(sales), .groups <span class="operator">=</span> <span class="string">'drop'</span>) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    growth_rate <span class="operator">=</span> (<span class="function">lag</span>(yearly_total, <span class="number">1</span>) <span class="operator">-</span> yearly_total) / <span class="function">lag</span>(yearly_total, <span class="number">1</span>) <span class="operator">*</span> <span class="number">100</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(!<span class="function">is.na</span>(growth_rate))
-
-<span class="function">print</span>(<span class="string">"年次成長率:"</span>)
-<span class="function">print</span>(yearly_growth)
-
-<span class="comment"># 週次・月次パターンの分析</span>
-pattern_analysis <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    weekday <span class="operator">=</span> <span class="function">wday</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>),
-    month_name <span class="operator">=</span> <span class="function">month</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>)
-  )
-
-weekday_pattern <span class="operator">&lt;-</span> pattern_analysis <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(weekday) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    median_sales <span class="operator">=</span> <span class="function">median</span>(sales),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(<span class="function">desc</span>(avg_sales))
-
-<span class="function">print</span>(<span class="string">"曜日別売上パターン:"</span>)
-<span class="function">print</span>(weekday_pattern)
-
-monthly_pattern <span class="operator">&lt;-</span> pattern_analysis <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(month_name) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    median_sales <span class="operator">=</span> <span class="function">median</span>(sales),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
-
-<span class="function">print</span>(<span class="string">"月別売上パターン:"</span>)
-<span class="function">print</span>(monthly_pattern)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">時系列データ探索結果</div>
-                <div class="output-content"># A tibble: 10 × 2
-   date       sales
-   &lt;date&gt;     &lt;dbl&gt;
- 1 2019-01-01  990.
- 2 2019-01-02 1088.
- 3 2019-01-03 1142.
- 4 2019-01-04 1165.
- 5 2019-01-05  941.
- 6 2019-01-06  898.
- 7 2019-01-07  961.
- 8 2019-01-08 1134.
- 9 2019-01-09 1089.
-10 2019-01-10 1203.
-
-時系列データ概要:
-# A tibble: 1 × 8
-  start_date end_date   total_days mean_sales median_sales sd_sales min_sales max_sales
-  &lt;date&gt;     &lt;date&gt;          &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-1 2019-01-01 2023-12-31       1826      1275.        1274.     173.      731.     1826.
-
-月次売上（最初の12ヶ月）:
-# A tibble: 12 × 4
-   yearmon    monthly_total monthly_avg days_count
-   &lt;date&gt;             &lt;dbl&gt;       &lt;dbl&gt;      &lt;int&gt;
- 1 2019-01-01        37589.       1213.         31
- 2 2019-02-01        32695.       1167.         28
- 3 2019-03-01        38476.       1241.         31
- 4 2019-04-01        39264.       1309.         30
- 5 2019-05-01        40871.       1318.         31
- 6 2019-06-01        41205.       1374.         30
-
-年次成長率:
-# A tibble: 4 × 3
-   year yearly_total growth_rate
-  &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
-1  2020      463926.      -0.349
-2  2021      479542.      -3.25 
-3  2022      495158.      -3.15 
-4  2023      510774.      -3.06 
-
-曜日別売上パターン:
-# A tibble: 7 × 3
-  weekday avg_sales median_sales
-  &lt;ord&gt;       &lt;dbl&gt;        &lt;dbl&gt;
-1 Tuesday     1324.        1322.
-2 Wednesday   1323.        1321.
-3 Monday      1324.        1323.
-4 Thursday    1323.        1322.
-5 Friday      1271.        1270.
-6 Saturday    1176.        1175.
-7 Sunday      1176.        1175.</div>
-            </div>
-
-            <div class="ts-viz">
-                <div class="viz-title">売上トレンドと季節性パターン</div>
-                <svg width="600" height="400" viewBox="0 0 600 400">
-                    <!-- Background -->
-                    <rect width="600" height="400" fill="#1a1a1a" stroke="#4dabf7" stroke-width="1"/>
-                    
-                    <!-- Title -->
-                    <text x="300" y="25" text-anchor="middle" fill="#4dabf7" font-size="16" font-weight="bold">2019-2023年売上推移</text>
-                    
-                    <!-- Grid lines -->
-                    <g stroke="#333" stroke-width="0.5">
-                        <line x1="60" y1="50" x2="60" y2="320"/>
-                        <line x1="60" y1="320" x2="540" y2="320"/>
-                        <!-- Horizontal grid -->
-                        <line x1="60" y1="320" x2="540" y2="320"/>
-                        <line x1="60" y1="270" x2="540" y2="270"/>
-                        <line x1="60" y1="220" x2="540" y2="220"/>
-                        <line x1="60" y1="170" x2="540" y2="170"/>
-                        <line x1="60" y1="120" x2="540" y2="120"/>
-                        <line x1="60" y1="70" x2="540" y2="70"/>
-                    </g>
-                    
-                    <!-- Main trend line -->
-                    <polyline points="60,280 120,270 180,260 240,250 300,240 360,230 420,220 480,210 540,200" 
-                              fill="none" stroke="#4dabf7" stroke-width="3"/>
-                    
-                    <!-- Seasonal fluctuations -->
-                    <path d="M 60 280 Q 90 290 120 270 Q 150 250 180 260 Q 210 270 240 250 Q 270 230 300 240 Q 330 250 360 230 Q 390 210 420 220 Q 450 230 480 210 Q 510 190 540 200" 
-                          fill="none" stroke="#00d4ff" stroke-width="2" opacity="0.7"/>
-                    
-                    <!-- Special events markers -->
-                    <circle cx="180" cy="240" r="4" fill="#ff6b9d"/>
-                    <circle cx="300" cy="220" r="4" fill="#ff6b9d"/>
-                    <circle cx="420" cy="200" r="4" fill="#ff6b9d"/>
-                    
-                    <!-- Year labels -->
-                    <text x="90" y="340" text-anchor="middle" fill="#b3b3b3" font-size="10">2019</text>
-                    <text x="180" y="340" text-anchor="middle" fill="#b3b3b3" font-size="10">2020</text>
-                    <text x="270" y="340" text-anchor="middle" fill="#b3b3b3" font-size="10">2021</text>
-                    <text x="360" y="340" text-anchor="middle" fill="#b3b3b3" font-size="10">2022</text>
-                    <text x="450" y="340" text-anchor="middle" fill="#b3b3b3" font-size="10">2023</text>
-                    
-                    <!-- Y-axis labels -->
-                    <text x="50" y="325" text-anchor="end" fill="#b3b3b3" font-size="10">1000</text>
-                    <text x="50" y="275" text-anchor="end" fill="#b3b3b3" font-size="10">1200</text>
-                    <text x="50" y="225" text-anchor="end" fill="#b3b3b3" font-size="10">1400</text>
-                    <text x="50" y="175" text-anchor="end" fill="#b3b3b3" font-size="10">1600</text>
-                    <text x="50" y="125" text-anchor="end" fill="#b3b3b3" font-size="10">1800</text>
-                    <text x="50" y="75" text-anchor="end" fill="#b3b3b3" font-size="10">2000</text>
-                    
-                    <!-- Legend -->
-                    <line x1="80" y1="370" x2="110" y2="370" stroke="#4dabf7" stroke-width="3"/>
-                    <text x="115" y="375" fill="#b3b3b3" font-size="10">メイントレンド</text>
-                    <line x1="200" y1="370" x2="230" y2="370" stroke="#00d4ff" stroke-width="2"/>
-                    <text x="235" y="375" fill="#b3b3b3" font-size="10">季節変動</text>
-                    <circle cx="340" cy="370" r="3" fill="#ff6b9d"/>
-                    <text x="350" y="375" fill="#b3b3b3" font-size="10">特別イベント</text>
-                </svg>
+                    <span class="code-line"><span class="code-comment"># 時系列分析エコシステムの読み込み</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">lubridate</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 時系列分析パッケージ</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">timetk</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">modeltime</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># サンプルデータの作成</span></span>
+                    <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-variable">123</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 期間の設定</span></span>
+                    <span class="code-line"><span class="code-variable">start_date</span> <span class="code-keyword">&lt;-</span> <span class="code-function">as.Date</span>(<span class="code-string">"2019-01-01"</span>)</span>
+                    <span class="code-line"><span class="code-variable">end_date</span> <span class="code-keyword">&lt;-</span> <span class="code-function">as.Date</span>(<span class="code-string">"2023-12-31"</span>)</span>
+                    <span class="code-line"><span class="code-variable">dates</span> <span class="code-keyword">&lt;-</span> <span class="code-function">seq</span>(start_date, end_date, by <span class="code-keyword">=</span> <span class="code-string">"day"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 時系列データの作成</span></span>
+                    <span class="code-line"><span class="code-variable">sales_ts</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(date <span class="code-keyword">=</span> dates) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(sales <span class="code-keyword">=</span> <span class="code-variable">1000</span> <span class="code-keyword">+</span> <span class="code-function">rnorm</span>(<span class="code-function">n</span>(), <span class="code-variable">0</span>, <span class="code-variable">100</span>))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># データの確認</span></span>
+                    <span class="code-line"><span class="code-function">glimpse</span>(sales_ts)</span>
+                </div>
             </div>
         </section>
 
+        <!-- DATA EXPLORATION -->
         <section class="section">
-            <h2>🔮 modeltimeによる予測モデル</h2>
-
-            <div class="code-container">
-                <div class="code-header">複数の時系列予測モデル</div>
+            <h2>📊 時系列データの探索</h2>
+            <p>
+                時系列データを理解するには、まず基本的な統計量と傾向を把握することが重要です。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">基本統計とトレンド分析</div>
                 <div class="code-content">
-<span class="comment"># データの分割（訓練用とテスト用）</span>
-splits <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">time_series_split</span>(assess <span class="operator">=</span> <span class="string">"3 months"</span>, cumulative <span class="operator">=</span> <span class="variable">TRUE</span>)
-
-train_data <span class="operator">&lt;-</span> <span class="function">training</span>(splits)
-test_data <span class="operator">&lt;-</span> <span class="function">testing</span>(splits)
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"訓練期間:"</span>, <span class="function">min</span>(train_data$date), <span class="string">"to"</span>, <span class="function">max</span>(train_data$date)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"テスト期間:"</span>, <span class="function">min</span>(test_data$date), <span class="string">"to"</span>, <span class="function">max</span>(test_data$date)))
-
-<span class="comment"># モデル1: ARIMA</span>
-model_arima <span class="operator">&lt;-</span> <span class="function">arima_reg</span>() <span class="operator">%&gt;%</span>
-  <span class="function">set_engine</span>(<span class="string">"auto_arima"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">fit</span>(sales ~ date, data <span class="operator">=</span> train_data)
-
-<span class="comment"># モデル2: 指数平滑法（ETS）</span>
-model_ets <span class="operator">&lt;-</span> <span class="function">exp_smoothing</span>() <span class="operator">%&gt;%</span>
-  <span class="function">set_engine</span>(<span class="string">"ets"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">fit</span>(sales ~ date, data <span class="operator">=</span> train_data)
-
-<span class="comment"># モデル3: 線形回帰（トレンド + 季節性）</span>
-model_lm <span class="operator">&lt;-</span> <span class="function">linear_reg</span>() <span class="operator">%&gt;%</span>
-  <span class="function">set_engine</span>(<span class="string">"lm"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">fit</span>(sales ~ <span class="function">as.numeric</span>(date) <span class="operator">+</span> <span class="function">wday</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>) <span class="operator">+</span> <span class="function">month</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>), 
-      data <span class="operator">=</span> train_data)
-
-<span class="comment"># モデル4: Prophet</span>
-model_prophet <span class="operator">&lt;-</span> <span class="function">prophet_reg</span>() <span class="operator">%&gt;%</span>
-  <span class="function">set_engine</span>(<span class="string">"prophet"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">fit</span>(sales ~ date, data <span class="operator">=</span> train_data)
-
-<span class="comment"># モデル5: 季節性ナイーブ</span>
-model_snaive <span class="operator">&lt;-</span> <span class="function">naive_reg</span>() <span class="operator">%&gt;%</span>
-  <span class="function">set_engine</span>(<span class="string">"snaive"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">fit</span>(sales ~ date, data <span class="operator">=</span> train_data)
-
-<span class="comment"># modeltimeテーブルの作成</span>
-models_tbl <span class="operator">&lt;-</span> <span class="function">modeltime_table</span>(
-  model_arima,
-  model_ets,
-  model_lm,
-  model_prophet,
-  model_snaive
-)
-
-<span class="function">print</span>(<span class="string">"モデル一覧:"</span>)
-<span class="function">print</span>(models_tbl)
-
-<span class="comment"># 予測の実行</span>
-forecast_tbl <span class="operator">&lt;-</span> models_tbl <span class="operator">%&gt;%</span>
-  <span class="function">modeltime_forecast</span>(
-    new_data <span class="operator">=</span> test_data,
-    actual_data <span class="operator">=</span> train_data,
-    keep_data <span class="operator">=</span> <span class="variable">TRUE</span>
-  )
-
-<span class="function">print</span>(<span class="string">"予測結果（サンプル）:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(forecast_tbl, <span class="number">10</span>))
-
-<span class="comment"># 精度評価</span>
-accuracy_tbl <span class="operator">&lt;-</span> models_tbl <span class="operator">%&gt;%</span>
-  <span class="function">modeltime_accuracy</span>(test_data)
-
-<span class="function">print</span>(<span class="string">"モデル精度比較:"</span>)
-<span class="function">print</span>(accuracy_tbl)
-
-<span class="comment"># 最良モデルの選択と将来予測</span>
-best_model_id <span class="operator">&lt;-</span> accuracy_tbl <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(mae <span class="operator">==</span> <span class="function">min</span>(mae)) <span class="operator">%&gt;%</span>
-  <span class="function">pull</span>(.model_id)
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"最良モデル ID:"</span>, best_model_id))
-
-<span class="comment"># 将来予測（3ヶ月先まで）</span>
-future_forecast <span class="operator">&lt;-</span> models_tbl <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(.model_id <span class="operator">==</span> best_model_id) <span class="operator">%&gt;%</span>
-  <span class="function">modeltime_refit</span>(sales_ts) <span class="operator">%&gt;%</span>
-  <span class="function">modeltime_forecast</span>(h <span class="operator">=</span> <span class="string">"3 months"</span>, actual_data <span class="operator">=</span> sales_ts)
-
-<span class="function">print</span>(<span class="string">"将来予測結果:"</span>)
-future_summary <span class="operator">&lt;-</span> future_forecast <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(.key <span class="operator">==</span> <span class="string">"prediction"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    start_date <span class="operator">=</span> <span class="function">min</span>(.index),
-    end_date <span class="operator">=</span> <span class="function">max</span>(.index),
-    avg_forecast <span class="operator">=</span> <span class="function">mean</span>(.value),
-    total_forecast <span class="operator">=</span> <span class="function">sum</span>(.value)
-  )
-<span class="function">print</span>(future_summary)
-
-<span class="comment"># 季節性分解の実行</span>
-decomposition <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">plot_seasonal_diagnostics</span>(.date_var <span class="operator">=</span> date, .value <span class="operator">=</span> sales, .feature_set <span class="operator">=</span> <span class="function">c</span>(<span class="string">"week"</span>, <span class="string">"month.lbl"</span>))
-
-<span class="comment"># 季節性統計の計算</span>
-seasonal_stats <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    month <span class="operator">=</span> <span class="function">month</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>),
-    wday <span class="operator">=</span> <span class="function">wday</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(month) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    seasonal_index <span class="operator">=</span> <span class="function">mean</span>(sales) / <span class="function">mean</span>(sales_ts$sales),
-    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(<span class="function">desc</span>(seasonal_index))
-
-<span class="function">print</span>(<span class="string">"月別季節指数:"</span>)
-<span class="function">print</span>(seasonal_stats)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">時系列予測結果</div>
-                <div class="output-content">[1] "訓練期間: 2019-01-01 to 2023-09-30"
-[1] "テスト期間: 2023-10-01 to 2023-12-31"
-
-モデル一覧:
-# Modeltime Table
-# A tibble: 5 × 3
-  .model_id .model     .model_desc             
-      &lt;int&gt; &lt;list&gt;     &lt;chr&gt;                   
-1         1 &lt;fit[+]&gt;   ARIMA(2,1,2)(0,1,1)[7] 
-2         2 &lt;fit[+]&gt;   ETS(A,A,A)             
-3         3 &lt;fit[+]&gt;   LM                      
-4         4 &lt;fit[+]&gt;   PROPHET                 
-5         5 &lt;fit[+]&gt;   SNAIVE(7)              
-
-モデル精度比較:
-# A tibble: 5 × 9
-  .model_id .model_desc              .type    mae  mape  mase smape  rmse   rsq
-      &lt;int&gt; &lt;chr&gt;                    &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1         1 ARIMA(2,1,2)(0,1,1)[7]   Test    67.8  5.29  0.85  5.32  85.2  0.89
-2         2 ETS(A,A,A)               Test    73.2  5.73  0.91  5.76  92.1  0.87
-3         3 LM                       Test    89.5  6.98  1.12  7.02 115.   0.79
-4         4 PROPHET                  Test    78.4  6.12  0.98  6.15  98.7  0.85
-5         5 SNAIVE(7)                Test   102.   7.95  1.27  7.99 128.   0.73
-
-[1] "最良モデル ID: 1"
-
-将来予測結果:
-# A tibble: 1 × 4
-  start_date end_date   avg_forecast total_forecast
-  &lt;date&gt;     &lt;date&gt;            &lt;dbl&gt;          &lt;dbl&gt;
-1 2024-01-01 2024-03-31        1456.        131081.
-
-月別季節指数:
-# A tibble: 12 × 3
-   month seasonal_index avg_sales
-   &lt;ord&gt;          &lt;dbl&gt;     &lt;dbl&gt;
- 1 Nov             1.07     1365.
- 2 Dec             1.06     1354.
- 3 Jul             1.05     1339.
- 4 Aug             1.04     1326.
- 5 Oct             1.03     1314.
- 6 Sep             1.01     1289.
- 7 Jun             1.01     1287.
- 8 May             1.00     1276.
- 9 Apr             0.993    1266.
-10 Mar             0.987    1259.
-11 Feb             0.962    1227.
-12 Jan             0.959    1223.</div>
-            </div>
-
-            <div class="forecast-components">
-                <div class="component-box">
-                    <div class="component-title">最優秀モデル</div>
-                    <div class="component-value">ARIMA</div>
-                </div>
-                <div class="component-box">
-                    <div class="component-title">予測精度 (MAE)</div>
-                    <div class="component-value">67.8</div>
-                </div>
-                <div class="component-box">
-                    <div class="component-title">R²スコア</div>
-                    <div class="component-value">0.89</div>
-                </div>
-                <div class="component-box">
-                    <div class="component-title">3ヶ月予測平均</div>
-                    <div class="component-value">1,456</div>
+                    <span class="code-line"><span class="code-comment"># 基本統計</span></span>
+                    <span class="code-line"><span class="code-variable">ts_summary</span> <span class="code-keyword">&lt;-</span> sales_ts <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">summarise</span>(mean_sales <span class="code-keyword">=</span> <span class="code-function">mean</span>(sales))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(ts_summary)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 月次集計</span></span>
+                    <span class="code-line"><span class="code-variable">monthly_sales</span> <span class="code-keyword">&lt;-</span> sales_ts <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(yearmon <span class="code-keyword">=</span> <span class="code-function">floor_date</span>(date, <span class="code-string">"month"</span>)) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">group_by</span>(yearmon) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">summarise</span>(monthly_total <span class="code-keyword">=</span> <span class="code-function">sum</span>(sales), .groups <span class="code-keyword">=</span> <span class="code-string">'drop'</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">head</span>(monthly_sales))</span>
                 </div>
             </div>
         </section>
 
+        <!-- MODEL BUILDING -->
         <section class="section">
-            <h2>📊 高度な時系列分析テクニック</h2>
-
-            <div class="code-container">
-                <div class="code-header">異常値検出と外部変数の組み込み</div>
+            <h2>🤖 予測モデルの構築</h2>
+            <p>
+                modeltimeパッケージを使用して、複数の時系列予測モデルを構築し、比較します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">モデル構築と評価</div>
                 <div class="code-content">
-<span class="comment"># 異常値検出</span>
-anomaly_detection <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">plot_anomaly_diagnostics</span>(.date_var <span class="operator">=</span> date, .value <span class="operator">=</span> sales, 
-                              .alpha <span class="operator">=</span> <span class="number">0.05</span>, .max_anomalies <span class="operator">=</span> <span class="number">0.1</span>)
-
-<span class="comment"># 異常値の特定</span>
-anomalies <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">tk_anomaly_diagnostics</span>(.date_var <span class="operator">=</span> date, .value <span class="operator">=</span> sales) <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(anomaly <span class="operator">==</span> <span class="string">"Yes"</span>)
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"検出された異常値数:"</span>, <span class="function">nrow</span>(anomalies)))
-<span class="function">print</span>(<span class="string">"異常値の例:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(anomalies, <span class="number">5</span>))
-
-<span class="comment"># 外部変数（例：広告費、気温など）を含むデータの作成</span>
-enhanced_sales <span class="operator">&lt;-</span> sales_ts <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    <span class="comment"># 広告費（週末に多く投入）</span>
-    ad_spend <span class="operator">=</span> <span class="function">case_when</span>(
-      <span class="function">wday</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">7</span>) ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">50000</span>, <span class="number">10000</span>),
-      <span class="variable">TRUE</span> ~ <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">30000</span>, <span class="number">8000</span>)
-    ),
-    
-    <span class="comment"># 気温（季節性あり）</span>
-    temperature <span class="operator">=</span> <span class="number">20</span> <span class="operator">+</span> <span class="number">15</span> <span class="operator">*</span> <span class="function">sin</span>(<span class="number">2</span> <span class="operator">*</span> pi <span class="operator">*</span> <span class="function">yday</span>(date) / <span class="number">365</span>) <span class="operator">+</span> <span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">0</span>, <span class="number">3</span>),
-    
-    <span class="comment"># 競合他社のキャンペーン（ランダム）</span>
-    competitor_campaign <span class="operator">=</span> <span class="function">rbinom</span>(<span class="function">n</span>(), <span class="number">1</span>, <span class="number">0.1</span>),
-    
-    <span class="comment"># 祝日フラグ</span>
-    is_holiday <span class="operator">=</span> <span class="function">case_when</span>(
-      <span class="function">month</span>(date) <span class="operator">==</span> <span class="number">1</span> <span class="operator">&amp;&amp;</span> <span class="function">day</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">1</span>:<span class="number">3</span>) ~ <span class="number">1</span>,
-      <span class="function">month</span>(date) <span class="operator">==</span> <span class="number">5</span> <span class="operator">&amp;&amp;</span> <span class="function">day</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">3</span>:<span class="number">5</span>) ~ <span class="number">1</span>,
-      <span class="function">month</span>(date) <span class="operator">==</span> <span class="number">12</span> <span class="operator">&amp;&amp;</span> <span class="function">day</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">23</span>:<span class="number">25</span>) ~ <span class="number">1</span>,
-      <span class="variable">TRUE</span> ~ <span class="number">0</span>
-    )
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(ad_spend <span class="operator">=</span> <span class="function">pmax</span>(ad_spend, <span class="number">10000</span>))
-
-<span class="comment"># 外部変数を含む高度なモデル</span>
-enhanced_splits <span class="operator">&lt;-</span> enhanced_sales <span class="operator">%&gt;%</span>
-  <span class="function">time_series_split</span>(assess <span class="operator">=</span> <span class="string">"3 months"</span>, cumulative <span class="operator">=</span> <span class="variable">TRUE</span>)
-
-enhanced_train <span class="operator">&lt;-</span> <span class="function">training</span>(enhanced_splits)
-enhanced_test <span class="operator">&lt;-</span> <span class="function">testing</span>(enhanced_splits)
-
-<span class="comment"># 外部変数を含む線形回帰モデル</span>
-model_enhanced_lm <span class="operator">&lt;-</span> <span class="function">linear_reg</span>() <span class="operator">%&gt;%</span>
-  <span class="function">set_engine</span>(<span class="string">"lm"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">fit</span>(sales ~ <span class="function">as.numeric</span>(date) <span class="operator">+</span> <span class="function">wday</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>) <span class="operator">+</span> <span class="function">month</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>) <span class="operator">+</span>
-           ad_spend <span class="operator">+</span> temperature <span class="operator">+</span> competitor_campaign <span class="operator">+</span> is_holiday,
-      data <span class="operator">=</span> enhanced_train)
-
-<span class="comment"># 外部変数を含むランダムフォレストモデル</span>
-model_enhanced_rf <span class="operator">&lt;-</span> <span class="function">rand_forest</span>(trees <span class="operator">=</span> <span class="number">500</span>) <span class="operator">%&gt;%</span>
-  <span class="function">set_engine</span>(<span class="string">"ranger"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">set_mode</span>(<span class="string">"regression"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">fit</span>(sales ~ <span class="function">as.numeric</span>(date) <span class="operator">+</span> <span class="function">wday</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>) <span class="operator">+</span> <span class="function">month</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>) <span class="operator">+</span>
-           ad_spend <span class="operator">+</span> temperature <span class="operator">+</span> competitor_campaign <span class="operator">+</span> is_holiday,
-      data <span class="operator">=</span> enhanced_train)
-
-<span class="comment"># 拡張モデルの評価</span>
-enhanced_models <span class="operator">&lt;-</span> <span class="function">modeltime_table</span>(
-  model_enhanced_lm,
-  model_enhanced_rf
-)
-
-enhanced_accuracy <span class="operator">&lt;-</span> enhanced_models <span class="operator">%&gt;%</span>
-  <span class="function">modeltime_accuracy</span>(enhanced_test)
-
-<span class="function">print</span>(<span class="string">"外部変数を含むモデルの精度:"</span>)
-<span class="function">print</span>(enhanced_accuracy)
-
-<span class="comment"># 特徴量重要度（ランダムフォレストモデル）</span>
-<span class="keyword">if</span> (<span class="function">require</span>(<span class="string">vip</span>, quietly <span class="operator">=</span> <span class="variable">TRUE</span>)) {
-  feature_importance <span class="operator">&lt;-</span> model_enhanced_rf <span class="operator">%&gt;%</span>
-    <span class="function">extract_fit_parsnip</span>() <span class="operator">%&gt;%</span>
-    <span class="function">vip::vi</span>() <span class="operator">%&gt;%</span>
-    <span class="function">arrange</span>(<span class="function">desc</span>(Importance))
-  
-  <span class="function">print</span>(<span class="string">"特徴量重要度:"</span>)
-  <span class="function">print</span>(feature_importance)
-}
-
-<span class="comment"># 残差分析</span>
-residuals_analysis <span class="operator">&lt;-</span> enhanced_models <span class="operator">%&gt;%</span>
-  <span class="function">modeltime_forecast</span>(new_data <span class="operator">=</span> enhanced_test, actual_data <span class="operator">=</span> enhanced_train) <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(.model_desc <span class="operator">==</span> <span class="string">"RANGER"</span>, .key <span class="operator">==</span> <span class="string">"prediction"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">left_join</span>(enhanced_test <span class="operator">%&gt;%</span> <span class="function">select</span>(date, actual_sales <span class="operator">=</span> sales), by <span class="operator">=</span> <span class="function">c</span>(<span class="string">".index"</span> <span class="operator">=</span> <span class="string">"date"</span>)) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(residuals <span class="operator">=</span> actual_sales <span class="operator">-</span> .value)
-
-residual_stats <span class="operator">&lt;-</span> residuals_analysis <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    mean_residual <span class="operator">=</span> <span class="function">mean</span>(residuals, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>),
-    sd_residual <span class="operator">=</span> <span class="function">sd</span>(residuals, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>),
-    rmse <span class="operator">=</span> <span class="function">sqrt</span>(<span class="function">mean</span>(residuals^<span class="number">2</span>, na.rm <span class="operator">=</span> <span class="variable">TRUE</span>)),
-    mae <span class="operator">=</span> <span class="function">mean</span>(<span class="function">abs</span>(residuals), na.rm <span class="operator">=</span> <span class="variable">TRUE</span>)
-  )
-
-<span class="function">print</span>(<span class="string">"残差統計:"</span>)
-<span class="function">print</span>(residual_stats)
-
-<span class="comment"># 予測区間の計算</span>
-prediction_intervals <span class="operator">&lt;-</span> enhanced_models <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(.model_id <span class="operator">==</span> <span class="number">2</span>) <span class="operator">%&gt;%</span>  <span class="comment"># Random Forestモデル</span>
-  <span class="function">modeltime_forecast</span>(
-    new_data <span class="operator">=</span> enhanced_test,
-    actual_data <span class="operator">=</span> enhanced_train,
-    conf_interval <span class="operator">=</span> <span class="number">0.95</span>
-  )
-
-interval_summary <span class="operator">&lt;-</span> prediction_intervals <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(.key <span class="operator">==</span> <span class="string">"prediction"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    avg_prediction <span class="operator">=</span> <span class="function">mean</span>(.value),
-    avg_lower <span class="operator">=</span> <span class="function">mean</span>(.conf_lo),
-    avg_upper <span class="operator">=</span> <span class="function">mean</span>(.conf_hi),
-    interval_width <span class="operator">=</span> <span class="function">mean</span>(.conf_hi <span class="operator">-</span> .conf_lo)
-  )
-
-<span class="function">print</span>(<span class="string">"予測区間の統計:"</span>)
-<span class="function">print</span>(interval_summary)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">高度な時系列分析結果</div>
-                <div class="output-content">[1] "検出された異常値数: 91"
-異常値の例:
-# A tibble: 5 × 8
-  date       observed cleaned  remainder anomaly recomposed_l1 recomposed_l2 anomaly_score
-  &lt;date&gt;        &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
-1 2019-01-19   1629.   1358.      271. Yes             1358.         1358.          3.39
-2 2019-01-20    779.   1046.     -267. Yes             1046.         1046.         -3.34
-3 2019-02-04   1752.   1441.      312. Yes             1441.         1441.          3.90
-4 2019-02-13    866.   1178.     -312. Yes             1178.         1178.         -3.90
-5 2019-02-17   1695.   1382.      313. Yes             1382.         1382.          3.92
-
-外部変数を含むモデルの精度:
-# A tibble: 2 × 9
-  .model_id .model_desc .type   mae  mape  mase smape  rmse   rsq
-      &lt;int&gt; &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1         1 LM          Test   54.2  4.24  0.68  4.26  69.8  0.93
-2         2 RANGER      Test   43.8  3.42  0.55  3.44  56.2  0.95
-
-特徴量重要度:
-# A tibble: 8 × 2
-  Variable                Importance
-  &lt;chr&gt;                        &lt;dbl&gt;
-1 as.numeric.date.             2851.
-2 ad_spend                     1043.
-3 temperature                   532.
-4 month.date..label...TRUE.     423.
-5 wday.date..label...TRUE.      298.
-6 competitor_campaign           167.
-7 is_holiday                     89.
-
-残差統計:
-# A tibble: 1 × 4
-  mean_residual sd_residual  rmse   mae
-          &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1          2.47        56.0  56.2  43.8
-
-予測区間の統計:
-# A tibble: 1 × 4
-  avg_prediction avg_lower avg_upper interval_width
-           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;
-1          1284.     1174.     1394.           220.</div>
-            </div>
-
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>時系列モデル</th>
-                            <th>特徴</th>
-                            <th>適用場面</th>
-                            <th>長所</th>
-                            <th>短所</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>ARIMA</td>
-                            <td>自己回帰統合移動平均</td>
-                            <td>定常な時系列</td>
-                            <td>理論的基盤が堅実</td>
-                            <td>パラメータ調整が複雑</td>
-                        </tr>
-                        <tr>
-                            <td>ETS</td>
-                            <td>指数平滑法</td>
-                            <td>トレンド・季節性あり</td>
-                            <td>直感的で解釈しやすい</td>
-                            <td>外部変数を扱えない</td>
-                        </tr>
-                        <tr>
-                            <td>Prophet</td>
-                            <td>Facebook開発</td>
-                            <td>祝日・外部要因あり</td>
-                            <td>自動で季節性を検出</td>
-                            <td>短期データでは不安定</td>
-                        </tr>
-                        <tr>
-                            <td>線形回帰</td>
-                            <td>外部変数利用可能</td>
-                            <td>複数要因の影響分析</td>
-                            <td>解釈性が高い</td>
-                            <td>非線形関係を捉えにくい</td>
-                        </tr>
-                        <tr>
-                            <td>Random Forest</td>
-                            <td>機械学習ベース</td>
-                            <td>複雑な非線形関係</td>
-                            <td>高い予測精度</td>
-                            <td>ブラックボックス</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <span class="code-line"><span class="code-comment"># データ分割</span></span>
+                    <span class="code-line"><span class="code-variable">splits</span> <span class="code-keyword">&lt;-</span> sales_ts <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">time_series_split</span>(assess <span class="code-keyword">=</span> <span class="code-string">"3 months"</span>, cumulative <span class="code-keyword">=</span> <span class="code-keyword">TRUE</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-variable">train_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(splits)</span>
+                    <span class="code-line"><span class="code-variable">test_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(splits)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ARIMAモデル</span></span>
+                    <span class="code-line"><span class="code-variable">model_arima</span> <span class="code-keyword">&lt;-</span> <span class="code-function">arima_reg</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"auto_arima"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit</span>(sales ~ date, data <span class="code-keyword">=</span> train_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 指数平滑化モデル</span></span>
+                    <span class="code-line"><span class="code-variable">model_ets</span> <span class="code-keyword">&lt;-</span> <span class="code-function">exp_smoothing</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"ets"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit</span>(sales ~ date, data <span class="code-keyword">=</span> train_data)</span>
+                </div>
             </div>
         </section>
 
-        <div class="key-points">
-            <h4>第12章の重要ポイント</h4>
-            <ul>
-                <li><strong>modeltime統合</strong>：複数の時系列モデルを統一的に比較評価</li>
-                <li><strong>季節性分解</strong>：トレンド、季節成分、残差の詳細分析</li>
-                <li><strong>予測精度</strong>：MAE、RMSE、MAPEによる包括的なモデル評価</li>
-                <li><strong>外部変数</strong>：広告費、気温等の外的要因を予測に組み込み</li>
-                <li><strong>異常値検出</strong>：時系列データの異常パターンを自動検出</li>
-                <li><strong>予測区間</strong>：不確実性を考慮した予測範囲の算出</li>
+        <!-- ADVANCED TIME SERIES ANALYSIS -->
+        <section class="section">
+            <h2>🔥 高度な時系列分析</h2>
+            <p>
+                季節性、トレンド、異常検知など、実務で重要な時系列分析手法をマスターします。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">季節性分解と異常検知</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">anomalize</span>)</span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">timetk</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 季節性を含むデータの作成</span></span>
+                    <span class="code-line"><span class="code-variable">seasonal_sales</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                    <span class="code-line">  date <span class="code-keyword">=</span> <span class="code-function">seq.Date</span>(<span class="code-function">as.Date</span>(<span class="code-string">"2020-01-01"</span>), <span class="code-function">as.Date</span>(<span class="code-string">"2023-12-31"</span>), by <span class="code-keyword">=</span> <span class="code-string">"day"</span>)</span>
+                    <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                    <span class="code-line">    day_of_year <span class="code-keyword">=</span> <span class="code-function">yday</span>(date),</span>
+                    <span class="code-line">    <span class="code-comment"># 基本トレンド</span></span>
+                    <span class="code-line">    trend <span class="code-keyword">=</span> <span class="code-variable">1000</span> <span class="code-keyword">+</span> <span class="code-function">row_number</span>() <span class="code-keyword">*</span> <span class="code-variable">0.1</span>,</span>
+                    <span class="code-line">    <span class="code-comment"># 季節性（年次）</span></span>
+                    <span class="code-line">    seasonal <span class="code-keyword">=</span> <span class="code-variable">200</span> <span class="code-keyword">*</span> <span class="code-function">sin</span>(<span class="code-variable">2</span> <span class="code-keyword">*</span> pi <span class="code-keyword">*</span> day_of_year <span class="code-keyword">/</span> <span class="code-variable">365</span>),</span>
+                    <span class="code-line">    <span class="code-comment"># 週次パターン</span></span>
+                    <span class="code-line">    weekly <span class="code-keyword">=</span> <span class="code-variable">50</span> <span class="code-keyword">*</span> <span class="code-function">sin</span>(<span class="code-variable">2</span> <span class="code-keyword">*</span> pi <span class="code-keyword">*</span> <span class="code-function">wday</span>(date) <span class="code-keyword">/</span> <span class="code-variable">7</span>),</span>
+                    <span class="code-line">    <span class="code-comment"># ノイズ</span></span>
+                    <span class="code-line">    noise <span class="code-keyword">=</span> <span class="code-function">rnorm</span>(<span class="code-function">n</span>(), <span class="code-variable">0</span>, <span class="code-variable">30</span>),</span>
+                    <span class="code-line">    <span class="code-comment"># 売上総計</span></span>
+                    <span class="code-line">    sales <span class="code-keyword">=</span> trend <span class="code-keyword">+</span> seasonal <span class="code-keyword">+</span> weekly <span class="code-keyword">+</span> noise</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 季節性分解</span></span>
+                    <span class="code-line"><span class="code-variable">decomposition</span> <span class="code-keyword">&lt;-</span> seasonal_sales <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tk_ts</span>(start <span class="code-keyword">=</span> <span class="code-variable">2020</span>, freq <span class="code-keyword">=</span> <span class="code-variable">365.25</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">decompose</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">sw_tidy</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">glimpse</span>(decomposition)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 異常検知</span></span>
+                    <span class="code-line"><span class="code-variable">anomalies</span> <span class="code-keyword">&lt;-</span> seasonal_sales <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">time_decompose</span>(sales, method <span class="code-keyword">=</span> <span class="code-string">"stl"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">anomalize</span>(remainder, method <span class="code-keyword">=</span> <span class="code-string">"iqr"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">time_recompose</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 異常値の確認</span></span>
+                    <span class="code-line"><span class="code-variable">anomaly_count</span> <span class="code-keyword">&lt;-</span> anomalies <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">filter</span>(anomaly <span class="code-keyword">==</span> <span class="code-string">"Yes"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">nrow</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"検出された異常値の数:"</span>, anomaly_count)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MULTIPLE FORECAST MODELS -->
+        <section class="section">
+            <h2>🤖 多様な予測モデルの比較</h2>
+            <p>
+                ARIMA、Prophet、機械学習手法など、複数のアプローチを比較し最適な手法を選択します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">包括的予測モデル構築</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">prophet</span>)</span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">randomForest</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># データ分割（訓練・検証・テスト）</span></span>
+                    <span class="code-line"><span class="code-variable">train_end</span> <span class="code-keyword">&lt;-</span> <span class="code-function">as.Date</span>(<span class="code-string">"2022-12-31"</span>)</span>
+                    <span class="code-line"><span class="code-variable">valid_end</span> <span class="code-keyword">&lt;-</span> <span class="code-function">as.Date</span>(<span class="code-string">"2023-06-30"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-variable">train_data</span> <span class="code-keyword">&lt;-</span> seasonal_sales <span class="code-keyword">%&gt;%</span> <span class="code-function">filter</span>(date <span class="code-keyword">&lt;=</span> train_end)</span>
+                    <span class="code-line"><span class="code-variable">valid_data</span> <span class="code-keyword">&lt;-</span> seasonal_sales <span class="code-keyword">%&gt;%</span> <span class="code-function">filter</span>(date <span class="code-keyword">&gt;</span> train_end, date <span class="code-keyword">&lt;=</span> valid_end)</span>
+                    <span class="code-line"><span class="code-variable">test_data</span> <span class="code-keyword">&lt;-</span> seasonal_sales <span class="code-keyword">%&gt;%</span> <span class="code-function">filter</span>(date <span class="code-keyword">&gt;</span> valid_end)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 1. ARIMAモデル</span></span>
+                    <span class="code-line"><span class="code-variable">arima_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">arima_reg</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"auto_arima"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit</span>(sales ~ date, data <span class="code-keyword">=</span> train_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 2. Prophetモデル</span></span>
+                    <span class="code-line"><span class="code-variable">prophet_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">prophet_reg</span>(</span>
+                    <span class="code-line">  seasonality_yearly <span class="code-keyword">=</span> <span class="code-keyword">TRUE</span>,</span>
+                    <span class="code-line">  seasonality_weekly <span class="code-keyword">=</span> <span class="code-keyword">TRUE</span></span>
+                    <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"prophet"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit</span>(sales ~ date, data <span class="code-keyword">=</span> train_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 3. 指数平滑化モデル</span></span>
+                    <span class="code-line"><span class="code-variable">ets_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">exp_smoothing</span>(</span>
+                    <span class="code-line">  seasonal_period <span class="code-keyword">=</span> <span class="code-variable">365</span></span>
+                    <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"ets"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit</span>(sales ~ date, data <span class="code-keyword">=</span> train_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 4. 機械学習アプローチ（特徴量エンジニアリング）</span></span>
+                    <span class="code-line"><span class="code-variable">ml_features</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tk_augment_timeseries_signature</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">select</span>(sales, date, index.num, year, quarter, month, </span>
+                    <span class="code-line">         wday, mday, yday, week, hour, minute, second)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-variable">rf_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">rand_forest</span>(trees <span class="code-keyword">=</span> <span class="code-variable">500</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"randomForest"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"regression"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit</span>(sales ~ ., data <span class="code-keyword">=</span> <span class="code-function">select</span>(ml_features, -date))</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODEL EVALUATION -->
+        <section class="section">
+            <h2>📈 モデル評価と予測</h2>
+            <p>
+                構築したモデルの性能を詳細に評価し、最適なモデルを選択します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">包括的モデル比較と予測</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># modeltimeテーブル作成</span></span>
+                    <span class="code-line"><span class="code-variable">model_table</span> <span class="code-keyword">&lt;-</span> <span class="code-function">modeltime_table</span>(</span>
+                    <span class="code-line">  arima_model, prophet_model, ets_model, rf_model</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 精度評価（検証データ）</span></span>
+                    <span class="code-line"><span class="code-variable">accuracy_results</span> <span class="code-keyword">&lt;-</span> model_table <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">modeltime_accuracy</span>(valid_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(accuracy_results)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 最良モデルの選択（MAEが最小）</span></span>
+                    <span class="code-line"><span class="code-variable">best_model_id</span> <span class="code-keyword">&lt;-</span> accuracy_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">arrange</span>(mae) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">slice</span>(<span class="code-variable">1</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">pull</span>(.model_id)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"最良モデル ID:"</span>, best_model_id)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 未来予測（3ヶ月先）</span></span>
+                    <span class="code-line"><span class="code-variable">forecast_results</span> <span class="code-keyword">&lt;-</span> model_table <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">modeltime_forecast</span>(</span>
+                    <span class="code-line">    h <span class="code-keyword">=</span> <span class="code-string">"3 months"</span>,</span>
+                    <span class="code-line">    actual_data <span class="code-keyword">=</span> seasonal_sales</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 予測結果の可視化</span></span>
+                    <span class="code-line"><span class="code-variable">forecast_plot</span> <span class="code-keyword">&lt;-</span> forecast_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">plot_modeltime_forecast</span>(.interactive <span class="code-keyword">=</span> <span class="code-keyword">FALSE</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(forecast_plot)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUSINESS APPLICATIONS -->
+        <section class="section">
+            <h2>💼 ビジネス応用とKPI監視</h2>
+            <p>
+                時系列予測をビジネス現場で活用する実践的なアプローチを学びます。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">KPIダッシュボード構築</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">plotly</span>)</span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">DT</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># KPI計算</span></span>
+                    <span class="code-line"><span class="code-variable">kpi_summary</span> <span class="code-keyword">&lt;-</span> seasonal_sales <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                    <span class="code-line">    year_month <span class="code-keyword">=</span> <span class="code-function">floor_date</span>(date, <span class="code-string">"month"</span>)</span>
+                    <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">group_by</span>(year_month) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                    <span class="code-line">    月間売上 <span class="code-keyword">=</span> <span class="code-function">sum</span>(sales),</span>
+                    <span class="code-line">    平均日売上 <span class="code-keyword">=</span> <span class="code-function">mean</span>(sales),</span>
+                    <span class="code-line">    売上標準偏差 <span class="code-keyword">=</span> <span class="code-function">sd</span>(sales),</span>
+                    <span class="code-line">    変動係数 <span class="code-keyword">=</span> 売上標準偏差 / 平均日売上,</span>
+                    <span class="code-line">    .groups <span class="code-keyword">=</span> <span class="code-string">'drop'</span></span>
+                    <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                    <span class="code-line">    前月比成長率 <span class="code-keyword">=</span> (<span class="code-variable">月間売上</span> / <span class="code-function">lag</span>(<span class="code-variable">月間売上</span>) - <span class="code-variable">1</span>) <span class="code-keyword">*</span> <span class="code-variable">100</span>,</span>
+                    <span class="code-line">    売上トレンド <span class="code-keyword">=</span> <span class="code-function">case_when</span>(</span>
+                    <span class="code-line">      前月比成長率 <span class="code-keyword">&gt;</span> <span class="code-variable">5</span> ~ <span class="code-string">"📈 上昇"</span>,</span>
+                    <span class="code-line">      前月比成長率 <span class="code-keyword">&lt;</span> -<span class="code-variable">5</span> ~ <span class="code-string">"📉 下降"</span>,</span>
+                    <span class="code-line">      <span class="code-keyword">TRUE</span> ~ <span class="code-string">"➡️ 横ばい"</span></span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 最新3ヶ月のサマリー</span></span>
+                    <span class="code-line"><span class="code-variable">recent_kpi</span> <span class="code-keyword">&lt;-</span> kpi_summary <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tail</span>(<span class="code-variable">3</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(recent_kpi)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 予測精度のビジネス価値計算</span></span>
+                    <span class="code-line"><span class="code-variable">business_impact</span> <span class="code-keyword">&lt;-</span> accuracy_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                    <span class="code-line">    予測精度ランク <span class="code-keyword">=</span> <span class="code-function">rank</span>(mae),</span>
+                    <span class="code-line">    コスト削減潜在力 <span class="code-keyword">=</span> (<span class="code-function">max</span>(mae) - mae) / <span class="code-function">max</span>(mae) <span class="code-keyword">*</span> <span class="code-variable">100</span>,</span>
+                    <span class="code-line">    推奨度 <span class="code-keyword">=</span> <span class="code-function">case_when</span>(</span>
+                    <span class="code-line">      予測精度ランク <span class="code-keyword">==</span> <span class="code-variable">1</span> ~ <span class="code-string">"🏆 最優秀"</span>,</span>
+                    <span class="code-line">      予測精度ランク <span class="code-keyword">==</span> <span class="code-variable">2</span> ~ <span class="code-string">"🥈 優秀"</span>,</span>
+                    <span class="code-line">      予測精度ランク <span class="code-keyword">==</span> <span class="code-variable">3</span> ~ <span class="code-string">"🥉 良好"</span>,</span>
+                    <span class="code-line">      <span class="code-keyword">TRUE</span> ~ <span class="code-string">"⚠️ 要改善"</span></span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">select</span>(.model_desc, mae, mape, 推奨度, コスト削減潜在力)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(business_impact)</span>
+                </div>
+            </div>
+        </section>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-function">head</span>(forecast_results))</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISUALIZATION -->
+        <section class="section">
+            <h2>📊 時系列可視化</h2>
+            <p>
+                時系列データと予測結果を美しく可視化し、パターンと傾向を理解します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">予測結果の可視化</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 時系列プロット</span></span>
+                    <span class="code-line"><span class="code-variable">ts_plot</span> <span class="code-keyword">&lt;-</span> sales_ts <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">plot_time_series</span>(date, sales)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(ts_plot)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 予測結果プロット</span></span>
+                    <span class="code-line"><span class="code-variable">forecast_plot</span> <span class="code-keyword">&lt;-</span> forecast_results <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">plot_modeltime_forecast</span>(.interactive <span class="code-keyword">=</span> <span class="code-keyword">FALSE</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(forecast_plot)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVANCED TECHNIQUES -->
+        <section class="section">
+            <h2>🚀 高度な時系列テクニック</h2>
+            <p>
+                外部変数を含むモデルや、より高度な予測手法を探索します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">高度なモデリング</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 外部変数の追加</span></span>
+                    <span class="code-line"><span class="code-variable">enhanced_data</span> <span class="code-keyword">&lt;-</span> sales_ts <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                    <span class="code-line">    trend <span class="code-keyword">=</span> <span class="code-function">row_number</span>(),</span>
+                    <span class="code-line">    month <span class="code-keyword">=</span> <span class="code-function">month</span>(date)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># Prophet モデル</span></span>
+                    <span class="code-line"><span class="code-variable">model_prophet</span> <span class="code-keyword">&lt;-</span> <span class="code-function">prophet_reg</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"prophet"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit</span>(sales ~ date, data <span class="code-keyword">=</span> train_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"Prophet モデル構築完了"</span>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section class="section">
+            <h2>🎯 まとめ</h2>
+            <p>
+                本章では、modeltimeパッケージを使用した時系列予測の基本から応用まで学習しました。
+            </p>
+            <ul style="color: var(--text-secondary); margin-left: 20px;">
+                <li>時系列データの基本的な探索と理解</li>
+                <li>複数の予測モデルの構築と比較</li>
+                <li>モデルの精度評価と選択</li>
+                <li>美しい時系列可視化の作成</li>
+                <li>高度な予測技法の応用</li>
             </ul>
-        </div>
+            <p>
+                これらの技術により、ビジネスの未来を予測し、データドリブンな意思決定を支援できます。
+            </p>
+        </section>
 
-        <div class="tip-box">
-            <h4>実践的アドバイス</h4>
-            <p>時系列分析では、ドメイン知識と統計手法の組み合わせが重要です。特に、外部変数の選択や季節性の理解は、予測精度を大きく左右します。modeltimeを活用することで、複数のアプローチを効率的に比較検討できます。</p>
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
         </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
 
-        <div class="tip-box">
-            <h4>統計モデリング篇の完了</h4>
-            <p>第10-12章で、基礎統計から機械学習、時系列分析まで、Tidyverseによる包括的な分析手法を習得しました。次章からは、さらに高度な可視化技術について学習していきます。</p>
-        </div>
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
 
-        <nav class="chapter-nav">
-            <a href="chapter11-machine-learning.html" class="nav-button">← 第11章</a>
-            <a href="chapter13-advanced-visualization.html" class="nav-button">第13章 →</a>
-        </nav>
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </div>
 </body>
 </html>

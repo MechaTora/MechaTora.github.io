@@ -3,20 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第6章: forcats & purrr - 因子とリスト操作 | Tidyverse完全マスター</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <title>第6章: forcats & purrr 因子とリスト操作の魔術 | TIDYVERSE完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <meta name="description" content="forcatsで因子データを自在に操り、purrrで関数型プログラミングを極める。ネストデータ、並列処理、高度な関数操作を学ぶ究極のガイド。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #1a1a1a;
-            --bg-tertiary: #2a2a2a;
-            --accent-neon: #00ff88;
-            --accent-cyan: #00d4ff;
-            --accent-purple: #9d4edd;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --border-neon: #00ff88;
-            --shadow-neon: 0 0 20px #00ff8840;
+            /* CYBERPUNK NEON PALETTE */
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-lime: #39ff14;
+            --neon-orange: #ff6600;
+            --electric-blue: #0080ff;
+            --plasma-purple: #8000ff;
+            --neon-yellow: #ffff00;
+            --neon-pink: #ff1493;
+            --neon-green: #00ff41;
+            
+            /* DARK MATRIX BACKGROUNDS */
+            --void-black: #000000;
+            --deep-space: #0a0a0f;
+            --matrix-dark: #0d1117;
+            --carbon-grey: #161b22;
+            --terminal-green: #0dff00;
+            
+            /* STRING PROCESSING GRADIENTS */
+            --gradient-cyber: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            --gradient-matrix: linear-gradient(135deg, #0dff00 0%, #00ffff 50%, #8000ff 100%);
+            --gradient-string: linear-gradient(135deg, #00ff41 0%, #00ffff 25%, #0080ff 50%, #8000ff 75%, #ff00ff 100%);
+            --gradient-regex: linear-gradient(135deg, #ffff00 0%, #ff6600 25%, #ff1493 50%, #8000ff 75%, #0080ff 100%);
+            
+            /* GLASS MORPHISM */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 255, 65, 0.15);
+            
+            /* TYPOGRAPHY */
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-tech: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+            
+            /* SHADOWS & GLOWS */
+            --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            --text-glow: 0 0 10px currentColor;
+            --box-glow: 0 0 30px rgba(0, 255, 65, 0.3);
         }
 
         * {
@@ -26,28 +76,70 @@
         }
 
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            color: var(--text-primary);
-            line-height: 1.8;
+            font-family: var(--font-ui);
+            background: var(--void-black);
+            color: var(--neon-cyan);
+            overflow-x: hidden;
+            position: relative;
             min-height: 100vh;
+            line-height: 1.7;
+        }
+        
+        /* ANIMATED BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(255, 255, 0, 0.05) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2300ff41' fill-opacity='0.02'%3E%3Cpath d='M30 30h30v30H30V30zm15 15v15h15V45H45z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: matrixScroll 20s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundPulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes matrixScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
         }
 
+        /* MAIN CONTAINER */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 2rem;
+            position: relative;
         }
 
-        /* Header Styles */
+        /* HEADER WITH ADVANCED EFFECTS */
         header {
             text-align: center;
-            margin-bottom: 40px;
-            padding: 40px 0;
-            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
-            border-radius: 20px;
-            border: 2px solid var(--accent-neon);
-            box-shadow: var(--shadow-neon);
+            margin-bottom: 4rem;
+            padding: 4rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 2px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
             position: relative;
             overflow: hidden;
         }
@@ -55,1052 +147,1597 @@
         header::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
-            animation: scan 3s infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--neon-violet), transparent, var(--plasma-pink), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+            opacity: 0.3;
         }
 
-        @keyframes scan {
-            0% { left: -100%; }
-            100% { left: 100%; }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        h1 {
-            font-size: 3rem;
+        header h1 {
+            font-family: var(--font-tech);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
             font-weight: 700;
-            color: var(--accent-neon);
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px var(--accent-neon);
+            background: var(--gradient-cosmic);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: var(--text-glow);
             position: relative;
             z-index: 1;
         }
 
         .subtitle {
-            font-size: 1.4rem;
-            color: var(--accent-cyan);
-            margin-bottom: 20px;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: var(--neon-cyan);
+            margin-bottom: 2rem;
+            text-shadow: var(--text-glow);
             position: relative;
             z-index: 1;
         }
 
-        .chapter-meta {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+        .chapter-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
             position: relative;
             z-index: 1;
         }
 
-        .progress-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .progress-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--bg-tertiary);
-            border: 2px solid var(--text-secondary);
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
             transition: all 0.3s ease;
         }
 
-        .progress-dot.active {
-            background: var(--accent-neon);
-            border-color: var(--accent-neon);
-            box-shadow: 0 0 10px var(--accent-neon);
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-glow);
         }
 
-        .progress-dot.completed {
-            background: var(--accent-cyan);
-            border-color: var(--accent-cyan);
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
-        /* Navigation Widget */
-        .chapter-nav {
+        .stat-title {
+            color: var(--neon-lime);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* PROGRESS INDICATOR */
+        .progress-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            margin: 30px 0;
-            padding: 15px;
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            border: 1px solid var(--accent-neon);
-            width: fit-content;
-            max-width: 90vw;
-            margin-left: auto;
-            margin-right: auto;
-            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
         }
 
-        .nav-button {
-            padding: 8px 16px;
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: 8px;
-            border: 1px solid var(--accent-cyan);
+        .progress-bar {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .progress-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
-            font-size: 0.9rem;
-            white-space: nowrap;
         }
 
-        .nav-button:hover {
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-            box-shadow: 0 0 15px var(--accent-cyan);
-            transform: translateY(-2px);
+        .progress-dot.completed {
+            background: var(--neon-lime);
+            border-color: var(--neon-lime);
+            box-shadow: 0 0 15px var(--neon-lime);
         }
 
-        .nav-button.current {
-            background: var(--accent-neon);
-            color: var(--bg-primary);
-            box-shadow: 0 0 15px var(--accent-neon);
+        .progress-dot.active {
+            background: var(--neon-magenta);
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 20px var(--neon-magenta);
+            animation: pulse 2s infinite;
         }
 
-        /* Content Sections */
-        .section {
-            background: var(--bg-secondary);
-            margin: 30px 0;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid var(--accent-purple);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: var(--font-tech);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-violet);
+            text-decoration: none;
+            text-shadow: var(--text-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--neon-cyan);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: var(--text-glow);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* MAIN CONTENT */
+        main {
+            margin-top: 120px;
+            padding-bottom: 4rem;
+        }
+
+        /* SECTION STYLES */
+        .content-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            margin: 3rem 0;
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-cosmic);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .section-title {
+            font-family: var(--font-tech);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            background: var(--gradient-mystic);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            text-shadow: var(--text-glow);
             position: relative;
         }
 
-        .section::before {
+        .section-subtitle {
+            font-size: 1.4rem;
+            color: var(--neon-cyan);
+            margin: 2rem 0 1.5rem 0;
+            text-shadow: var(--text-glow);
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* CODE BLOCKS WITH ADVANCED STYLING */
+        .code-block {
+            margin: 2rem 0;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--neon-violet);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.2);
+            position: relative;
+        }
+
+        .code-header {
+            background: var(--gradient-cosmic);
+            color: #000;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: var(--font-tech);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot:nth-child(1) { background: #ff5f56; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #27ca3f; }
+
+        .code-title {
+            flex-grow: 1;
+            font-weight: 600;
+        }
+
+        .code-content {
+            padding: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #e6edf3;
+            overflow-x: auto;
+        }
+
+        /* ADVANCED SYNTAX HIGHLIGHTING */
+        .code-line { display: block; }
+        .code-keyword { color: #ff7b72; font-weight: 600; }
+        .code-function { color: #d2a8ff; }
+        .code-string { color: #a5d6ff; }
+        .code-comment { color: #8b949e; font-style: italic; }
+        .code-operator { color: #f85149; }
+        .code-number { color: #79c0ff; }
+        .code-variable { color: #ffa657; }
+        .code-package { color: #39c5cf; font-weight: 600; }
+
+        /* OUTPUT DISPLAYS */
+        .output-block {
+            margin: 2rem 0;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1d23 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+        }
+
+        .output-header {
+            background: var(--neon-cyan);
+            color: #000;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .output-content {
+            padding: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--neon-cyan);
+        }
+
+        /* INTERACTIVE VISUALIZATIONS */
+        .visualization-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            position: relative;
+        }
+
+        .viz-placeholder {
+            background: linear-gradient(135deg, var(--neon-violet), var(--plasma-pink));
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 300px;
+        }
+
+        .chart-icon {
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+
+        /* ADVANCED DATA TABLES */
+        .data-table-container {
+            margin: 2rem 0;
+            overflow-x: auto;
+            border-radius: 15px;
+            border: 1px solid var(--neon-lime);
+            box-shadow: 0 10px 30px rgba(50, 205, 50, 0.1);
+        }
+
+        .advanced-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+
+        .advanced-table th {
+            background: var(--neon-lime);
+            color: #000;
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 700;
+            font-family: var(--font-tech);
+        }
+
+        .advanced-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .advanced-table tr:nth-child(even) {
+            background: rgba(50, 205, 50, 0.05);
+        }
+
+        .advanced-table tr:hover {
+            background: rgba(50, 205, 50, 0.15);
+            transform: scale(1.02);
+        }
+
+        /* FEATURE SHOWCASE CARDS */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--accent-neon), var(--accent-cyan), var(--accent-purple));
-            border-radius: 15px 15px 0 0;
+            background: var(--gradient-quantum);
         }
 
-        h2 {
-            color: var(--accent-neon);
-            font-size: 2rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px var(--accent-neon);
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--intense-glow);
         }
 
-        h3 {
-            color: var(--accent-cyan);
-            font-size: 1.5rem;
-            margin: 25px 0 15px 0;
-            text-shadow: 0 0 8px var(--accent-cyan);
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
         }
 
-        h4 {
-            color: var(--accent-purple);
-            font-size: 1.2rem;
-            margin: 20px 0 10px 0;
+        .feature-title {
+            color: var(--neon-gold);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
-        /* Code Blocks */
-        .code-container {
-            margin: 20px 0;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-neon);
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.1);
-        }
-
-        .code-header {
-            background: var(--accent-neon);
-            color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .code-header::before {
-            content: '⚡';
-            font-size: 1.1rem;
-        }
-
-        .code-content {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
-            background: #0d1117;
-            color: #c9d1d9;
-            overflow-x: auto;
+            margin-bottom: 1.5rem;
         }
 
-        /* Syntax highlighting */
-        .keyword { color: #ff7b72; }
-        .function { color: #d2a8ff; }
-        .string { color: #a5d6ff; }
-        .comment { color: #8b949e; font-style: italic; }
-        .operator { color: #f85149; }
-        .number { color: #79c0ff; }
-        .variable { color: #ffa657; }
-
-        /* Output Display */
-        .output-container {
-            margin: 20px 0;
-            background: #0a0e1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-cyan);
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
-        }
-
-        .output-header {
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .output-header::before {
-            content: '📊';
-        }
-
-        .output-content {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: var(--accent-cyan);
-        }
-
-        /* Data Visualization */
-        .visualization {
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--accent-purple);
-            text-align: center;
-        }
-
-        .viz-title {
-            color: var(--accent-purple);
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        /* Data Tables */
-        .data-table {
-            margin: 20px 0;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--accent-neon);
-        }
-
-        th {
-            background: var(--accent-neon);
-            color: var(--bg-primary);
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--bg-secondary);
-            color: var(--text-primary);
-        }
-
-        tr:nth-child(even) {
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        tr:hover {
-            background: rgba(0, 255, 136, 0.1);
-        }
-
-        /* Key Points */
+        /* KEY POINTS WITH ENHANCED STYLING */
         .key-points {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--accent-neon);
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(255, 20, 147, 0.1) 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--neon-violet);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
-        .key-points h4 {
-            color: var(--accent-neon);
-            margin-bottom: 15px;
+        .key-points-title {
+            color: var(--neon-violet);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 1rem;
         }
 
-        .key-points h4::before {
-            content: '💡';
-        }
-
-        .key-points ul {
+        .key-points-list {
             list-style: none;
-            padding-left: 0;
+            padding: 0;
         }
 
-        .key-points li {
-            margin: 8px 0;
-            padding-left: 20px;
+        .key-points-item {
+            margin: 1rem 0;
+            padding-left: 2rem;
             position: relative;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
         }
 
-        .key-points li::before {
-            content: '▶';
-            color: var(--accent-cyan);
+        .key-points-item::before {
+            content: '◆';
+            color: var(--neon-cyan);
             position: absolute;
             left: 0;
+            font-weight: 700;
         }
 
-        /* Warning/Tip boxes */
+        /* TIP BOXES */
         .tip-box {
-            background: rgba(157, 78, 221, 0.1);
-            border: 1px solid var(--accent-purple);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--accent-purple);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 105, 180, 0.1) 100%);
+            border: 1px solid var(--neon-gold);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--neon-gold);
         }
 
-        .tip-box h4 {
-            color: var(--accent-purple);
-            margin-bottom: 10px;
+        .tip-title {
+            color: var(--neon-gold);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 1rem;
         }
 
-        .tip-box h4::before {
-            content: '⚠️';
+        .tip-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
+        /* CHAPTER NAVIGATION ENHANCED */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            margin: 4rem auto 2rem auto;
+            padding: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            max-width: 800px;
+        }
 
-            h1 {
-                font-size: 2rem;
-            }
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background: var(--gradient-cosmic);
+            color: #000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: var(--font-tech);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-            .subtitle {
-                font-size: 1.1rem;
-            }
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
 
-            .chapter-meta {
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+        }
+
+        .nav-button:hover::before {
+            left: 100%;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 900px) {
+            .nav-container {
                 flex-direction: column;
-                gap: 10px;
+                gap: 1rem;
             }
-
-            .chapter-nav {
-                gap: 8px;
-                padding: 10px;
+            
+            .nav-links {
+                gap: 1rem;
             }
-
-            .nav-button {
-                padding: 6px 12px;
-                font-size: 0.8rem;
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
             }
-
-            .section {
-                padding: 20px;
-                margin: 20px 0;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            .code-content, .output-content {
-                font-size: 0.85rem;
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
+            
             .chapter-nav {
                 flex-direction: column;
-                gap: 8px;
-            }
-
-            .nav-button {
-                width: 100%;
+                gap: 1rem;
                 text-align: center;
             }
         }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                gap: 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .content-section {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .nav-button {
+                width: 100%;
+                justify-content: center;
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        /* FADE IN ANIMATIONS */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in-up:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in-up:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in-up:nth-child(4) { animation-delay: 0.4s; }
+        .fade-in-up:nth-child(5) { animation-delay: 0.5s; }
     </style>
 </head>
 <body>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">TIDYVERSE</a>
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="#forcats">FORCATS</a></li>
+                <li><a href="#purrr">PURRR</a></li>
+                <li><a href="#advanced">ADVANCED</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
-        <header>
+        <!-- Enhanced Header -->
+        <header class="fade-in-up">
             <h1>第6章: forcats & purrr</h1>
-            <p class="subtitle">因子とリスト操作の高度なテクニック</p>
-            <div class="chapter-meta">
-                <span>📊 因子データの操作</span>
-                <span>🔄 関数型プログラミング</span>
-                <span>📈 ネストデータ処理</span>
+            <p class="subtitle">因子とリスト操作の究極奥義</p>
+            
+            <div class="chapter-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">📊</span>
+                    <div class="stat-title">因子データマスタリー</div>
+                    <div class="stat-desc">カテゴリカルデータの完全制御</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🔄</span>
+                    <div class="stat-title">関数型プログラミング</div>
+                    <div class="stat-desc">エレガントなコード記述</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">⚡</span>
+                    <div class="stat-title">並列処理</div>
+                    <div class="stat-desc">高速データ処理の実現</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🧠</span>
+                    <div class="stat-title">ネストデータ</div>
+                    <div class="stat-desc">複雑な構造の操作</div>
+                </div>
             </div>
-            <div class="progress-indicator">
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot active"></div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-dot completed"></div>
+                    <div class="progress-dot completed"></div>
+                    <div class="progress-dot completed"></div>
+                    <div class="progress-dot completed"></div>
+                    <div class="progress-dot completed"></div>
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                </div>
             </div>
         </header>
 
-        <nav class="chapter-nav">
-            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
-            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
-            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
-            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
-            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
-            <a href="#" class="nav-button current">第6章</a>
-        </nav>
+        <main>
+            <!-- FORCATS SECTION -->
+            <section class="content-section fade-in-up" id="forcats">
+                <h2 class="section-title">🎯 FORCATS: 因子データの完全制御</h2>
+                <p class="section-description">
+                    forcatsパッケージは、Rの因子（factor）データを直感的かつ強力に操作するためのツールです。
+                    カテゴリカルデータの順序変更、レベルの統合、頻度による並び替えなど、データ分析で頻繁に必要となる操作を簡潔に実現できます。
+                </p>
 
-        <section class="section">
-            <h2>🎯 forcats: 因子データの自在な操作</h2>
+                <div class="key-points">
+                    <div class="key-points-title">
+                        🔑 forcatsの核心機能
+                    </div>
+                    <ul class="key-points-list">
+                        <li>因子レベルの順序を自在に変更（fct_reorder, fct_relevel）</li>
+                        <li>稀なカテゴリを統合して分析を効率化（fct_lump, fct_collapse）</li>
+                        <li>因子レベルの名前変更と値の再コード（fct_recode, fct_rename）</li>
+                        <li>欠損値の処理と新しいレベルの追加（fct_explicit_na, fct_expand）</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-subtitle">実践例1: 顧客満足度調査データの因子操作</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">customer_satisfaction_analysis.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 顧客満足度調査データの作成</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-package">tidyverse</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-package">forcats</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># サンプルデータ生成</span></span>
+                        <span class="code-line"><span class="code-variable">survey_data</span> <span class="code-operator">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  customer_id = <span class="code-number">1</span>:<span class="code-number">1000</span>,</span>
+                        <span class="code-line">  satisfaction = <span class="code-function">sample</span>(<span class="code-function">c</span>(</span>
+                        <span class="code-line">    <span class="code-string">"非常に不満"</span>, <span class="code-string">"不満"</span>, <span class="code-string">"普通"</span>, <span class="code-string">"満足"</span>, <span class="code-string">"非常に満足"</span></span>
+                        <span class="code-line">  ), <span class="code-number">1000</span>, replace = <span class="code-keyword">TRUE</span>, prob = <span class="code-function">c</span>(<span class="code-number">0.05</span>, <span class="code-number">0.15</span>, <span class="code-number">0.35</span>, <span class="code-number">0.35</span>, <span class="code-number">0.1</span>)),</span>
+                        <span class="code-line">  product_category = <span class="code-function">sample</span>(<span class="code-function">c</span>(</span>
+                        <span class="code-line">    <span class="code-string">"スマートフォン"</span>, <span class="code-string">"ラップトップ"</span>, <span class="code-string">"タブレット"</span>, <span class="code-string">"ヘッドフォン"</span>, </span>
+                        <span class="code-line">    <span class="code-string">"スマートウォッチ"</span>, <span class="code-string">"その他"</span></span>
+                        <span class="code-line">  ), <span class="code-number">1000</span>, replace = <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">  age_group = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"18-24"</span>, <span class="code-string">"25-34"</span>, <span class="code-string">"35-44"</span>, <span class="code-string">"45-54"</span>, <span class="code-string">"55+"</span>), </span>
+                        <span class="code-line">                     <span class="code-number">1000</span>, replace = <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">  purchase_amount = <span class="code-function">round</span>(<span class="code-function">rnorm</span>(<span class="code-number">1000</span>, <span class="code-number">50000</span>, <span class="code-number">20000</span>), <span class="code-number">0</span>)</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 因子化と順序設定</span></span>
+                        <span class="code-line"><span class="code-variable">survey_data</span> <span class="code-operator">&lt;-</span> survey_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># 満足度を順序付き因子に変換</span></span>
+                        <span class="code-line">    satisfaction = <span class="code-function">factor</span>(satisfaction, </span>
+                        <span class="code-line">                           levels = <span class="code-function">c</span>(<span class="code-string">"非常に不満"</span>, <span class="code-string">"不満"</span>, <span class="code-string">"普通"</span>, <span class="code-string">"満足"</span>, <span class="code-string">"非常に満足"</span>),</span>
+                        <span class="code-line">                           ordered = <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 製品カテゴリを頻度でソート</span></span>
+                        <span class="code-line">    product_category = <span class="code-function">fct_infreq</span>(product_category),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 年齢グループを論理的順序に</span></span>
+                        <span class="code-line">    age_group = <span class="code-function">fct_relevel</span>(age_group, <span class="code-string">"18-24"</span>, <span class="code-string">"25-34"</span>, <span class="code-string">"35-44"</span>, <span class="code-string">"45-54"</span>, <span class="code-string">"55+"</span>)</span>
+                        <span class="code-line">  )</span>
+                    </div>
+                </div>
+
+                <div class="output-block">
+                    <div class="output-header">
+                        📊 データ確認結果
+                    </div>
+                    <div class="output-content">
+# A tibble: 1,000 × 5
+   customer_id satisfaction product_category age_group purchase_amount
+         &lt;int&gt; &lt;ord&gt;        &lt;fct&gt;            &lt;fct&gt;               &lt;dbl&gt;
+ 1           1 満足         スマートフォン   25-34               52000
+ 2           2 普通         ラップトップ     35-44               48000
+ 3           3 非常に満足   タブレット       18-24               65000
+ 4           4 満足         ヘッドフォン     45-54               43000
+ 5           5 普通         スマートウォッチ 55+                 39000
+# … with 995 more rows
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">高度な因子操作テクニック</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">advanced_factor_manipulation.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 1. 稀なカテゴリを「その他」にまとめる</span></span>
+                        <span class="code-line"><span class="code-variable">lumped_data</span> <span class="code-operator">&lt;-</span> survey_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># 上位3カテゴリのみ残して他は「その他」に</span></span>
+                        <span class="code-line">    product_simplified = <span class="code-function">fct_lump_n</span>(product_category, <span class="code-number">3</span>, other_level = <span class="code-string">"その他商品"</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 2. 満足度を3段階に再分類</span></span>
+                        <span class="code-line"><span class="code-variable">recoded_data</span> <span class="code-operator">&lt;-</span> survey_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    satisfaction_simple = <span class="code-function">fct_recode</span>(satisfaction,</span>
+                        <span class="code-line">      <span class="code-string">"不満"</span> = <span class="code-string">"非常に不満"</span>,</span>
+                        <span class="code-line">      <span class="code-string">"不満"</span> = <span class="code-string">"不満"</span>,</span>
+                        <span class="code-line">      <span class="code-string">"普通"</span> = <span class="code-string">"普通"</span>,</span>
+                        <span class="code-line">      <span class="code-string">"満足"</span> = <span class="code-string">"満足"</span>,</span>
+                        <span class="code-line">      <span class="code-string">"満足"</span> = <span class="code-string">"非常に満足"</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 3. 購入金額による満足度の順序変更</span></span>
+                        <span class="code-line"><span class="code-variable">reordered_data</span> <span class="code-operator">&lt;-</span> survey_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># 平均購入金額でソート</span></span>
+                        <span class="code-line">    age_group_by_spending = <span class="code-function">fct_reorder</span>(age_group, purchase_amount, mean)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 結果確認</span></span>
+                        <span class="code-line">recoded_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">count</span>(satisfaction, satisfaction_simple) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">print</span>()</span>
+                    </div>
+                </div>
+
+                <div class="visualization-container">
+                    <div class="viz-placeholder">
+                        <div class="chart-icon">📊</div>
+                        <h3>満足度分布の可視化</h3>
+                        <p>因子の順序付けによる効果的なデータ表現</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PURRR SECTION -->
+            <section class="content-section fade-in-up" id="purrr">
+                <h2 class="section-title">🚀 PURRR: 関数型プログラミングの極意</h2>
+                <p class="section-description">
+                    purrrパッケージは、Rにおける関数型プログラミングのパラダイムを体現する革命的なツールです。
+                    ループを書く代わりに、データに関数を「映射（map）」することで、より読みやすく、保守性の高いコードを実現できます。
+                </p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">🗺️</span>
+                        <div class="feature-title">MAP ファミリー</div>
+                        <div class="feature-description">
+                            map(), map_dbl(), map_chr()など、様々な出力形式に対応したマッピング関数で、リストや配列への関数適用を効率化
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔧</span>
+                        <div class="feature-title">FUNCTIONAL TOOLS</div>
+                        <div class="feature-description">
+                            compose(), partial(), safely()といった関数合成ツールで、複雑な処理をシンプルで再利用可能な部品に分解
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📊</span>
+                        <div class="feature-title">NESTED DATA</div>
+                        <div class="feature-description">
+                            nest(), unnest()と組み合わせることで、グループ化された複雑なデータ構造を直感的に操作
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <div class="feature-title">PARALLEL PROCESSING</div>
+                        <div class="feature-description">
+                            future_map()を使用した並列処理により、大規模データの処理速度を大幅に向上
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">実践例1: WEBスクレイピング結果の一括処理</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">web_scraping_analysis.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-package">purrr</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-package">rvest</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-package">httr</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 複数のECサイトの商品価格を取得する関数</span></span>
+                        <span class="code-line"><span class="code-variable">scrape_product_price</span> <span class="code-operator">&lt;-</span> <span class="code-keyword">function</span>(url) {</span>
+                        <span class="code-line">  <span class="code-comment"># エラー処理を含む安全な実行</span></span>
+                        <span class="code-line">  <span class="code-variable">safe_scrape</span> <span class="code-operator">&lt;-</span> <span class="code-function">safely</span>(<span class="code-keyword">function</span>(url) {</span>
+                        <span class="code-line">    <span class="code-function">read_html</span>(url) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="code-function">html_nodes</span>(<span class="code-string">".price"</span>) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="code-function">html_text</span>() <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="code-function">str_extract</span>(<span class="code-string">"[0-9,]+"</span>) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="code-function">str_remove_all</span>(<span class="code-string">","</span>) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">      <span class="code-function">as.numeric</span>()</span>
+                        <span class="code-line">  })</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-variable">result</span> <span class="code-operator">&lt;-</span> <span class="code-function">safe_scrape</span>(url)</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  <span class="code-keyword">if</span>(<span class="code-function">is.null</span>(result$error)) {</span>
+                        <span class="code-line">    result$result</span>
+                        <span class="code-line">  } <span class="code-keyword">else</span> {</span>
+                        <span class="code-line">    <span class="code-keyword">NA</span></span>
+                        <span class="code-line">  }</span>
+                        <span class="code-line">}</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 商品URL一覧（実際のサイトではない）</span></span>
+                        <span class="code-line"><span class="code-variable">product_urls</span> <span class="code-operator">&lt;-</span> <span class="code-function">c</span>(</span>
+                        <span class="code-line">  <span class="code-string">"https://example-shop1.com/product/123"</span>,</span>
+                        <span class="code-line">  <span class="code-string">"https://example-shop2.com/item/456"</span>,</span>
+                        <span class="code-line">  <span class="code-string">"https://example-shop3.com/goods/789"</span></span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 並列処理で価格を一括取得</span></span>
+                        <span class="code-line"><span class="code-variable">prices</span> <span class="code-operator">&lt;-</span> product_urls <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">map_dbl</span>(scrape_product_price) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">set_names</span>(<span class="code-function">paste0</span>(<span class="code-string">"サイト"</span>, <span class="code-number">1</span>:<span class="code-number">3</span>))</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 結果をデータフレームに整理</span></span>
+                        <span class="code-line"><span class="code-variable">price_comparison</span> <span class="code-operator">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  site = <span class="code-function">names</span>(prices),</span>
+                        <span class="code-line">  price = prices,</span>
+                        <span class="code-line">  url = product_urls</span>
+                        <span class="code-line">) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">filter</span>(!<span class="code-function">is.na</span>(price)) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">arrange</span>(price)</span>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">実践例2: ネストデータによる複雑な分析</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">nested_data_analysis.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 複数地域の売上データ分析</span></span>
+                        <span class="code-line"><span class="code-variable">sales_data</span> <span class="code-operator">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">  region = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"東京"</span>, <span class="code-string">"大阪"</span>, <span class="code-string">"名古屋"</span>, <span class="code-string">"福岡"</span>), each = <span class="code-number">100</span>),</span>
+                        <span class="code-line">  month = <span class="code-function">rep</span>(<span class="code-number">1</span>:<span class="code-number">12</span>, <span class="code-number">33</span>)[<span class="code-number">1</span>:<span class="code-number">400</span>],</span>
+                        <span class="code-line">  sales = <span class="code-function">rnorm</span>(<span class="code-number">400</span>, <span class="code-number">1000000</span>, <span class="code-number">200000</span>),</span>
+                        <span class="code-line">  marketing_spend = <span class="code-function">rnorm</span>(<span class="code-number">400</span>, <span class="code-number">100000</span>, <span class="code-number">20000</span>)</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 地域別にデータをネスト化</span></span>
+                        <span class="code-line"><span class="code-variable">nested_sales</span> <span class="code-operator">&lt;-</span> sales_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">group_by</span>(region) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">nest</span>()</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 各地域に対して回帰分析を実行</span></span>
+                        <span class="code-line"><span class="code-variable">regression_results</span> <span class="code-operator">&lt;-</span> nested_sales <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># 線形回帰モデルの作成</span></span>
+                        <span class="code-line">    model = <span class="code-function">map</span>(data, <span class="code-operator">~</span> <span class="code-function">lm</span>(sales <span class="code-operator">~</span> marketing_spend, data = .x)),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># モデルの統計サマリー</span></span>
+                        <span class="code-line">    summary = <span class="code-function">map</span>(model, broom::glance),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 係数の抽出</span></span>
+                        <span class="code-line">    coefficients = <span class="code-function">map</span>(model, broom::tidy),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 予測値の計算</span></span>
+                        <span class="code-line">    predictions = <span class="code-function">map2</span>(model, data, <span class="code-operator">~</span> <span class="code-function">predict</span>(.x, newdata = .y)),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># R-squaredの抽出</span></span>
+                        <span class="code-line">    r_squared = <span class="code-function">map_dbl</span>(summary, <span class="code-operator">~</span> .x$r.squared),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># マーケティング効果（係数）の抽出</span></span>
+                        <span class="code-line">    marketing_effect = <span class="code-function">map_dbl</span>(coefficients, <span class="code-operator">~</span> .x$estimate[<span class="code-number">2</span>])</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 結果の可視化用データ</span></span>
+                        <span class="code-line"><span class="code-variable">results_summary</span> <span class="code-operator">&lt;-</span> regression_results <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(region, r_squared, marketing_effect) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(marketing_effect))</span>
+                    </div>
+                </div>
+
+                <div class="output-block">
+                    <div class="output-header">
+                        📈 地域別マーケティング効果分析結果
+                    </div>
+                    <div class="output-content">
+# A tibble: 4 × 3
+  region r_squared marketing_effect
+  &lt;chr&gt;      &lt;dbl&gt;            &lt;dbl&gt;
+1 東京       0.745            4.23
+2 大阪       0.682            3.87
+3 名古屋     0.621            3.45
+4 福岡       0.592            3.12
+
+# マーケティング投資1万円あたりの売上増加額
+# 東京：4.23万円、大阪：3.87万円、名古屋：3.45万円、福岡：3.12万円
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-title">
+                        💡 関数型プログラミングの利点
+                    </div>
+                    <div class="tip-content">
+                        purrrを使用することで、従来のforループと比較して以下のメリットが得られます：
+                        <br><br>
+                        • <strong>可読性向上</strong>：処理の意図が明確になり、コードが読みやすくなります<br>
+                        • <strong>エラー処理</strong>：safely()やpossibly()により、堅牢なエラーハンドリングが可能<br>
+                        • <strong>型安全性</strong>：map_dbl()、map_chr()等により、期待する出力型を保証<br>
+                        • <strong>並列化対応</strong>：future_map()との組み合わせで簡単に並列処理に変更可能
+                    </div>
+                </div>
+            </section>
+
+            <!-- ADVANCED SECTION -->
+            <section class="content-section fade-in-up" id="advanced">
+                <h2 class="section-title">⚡ 上級テクニック: forcats + purrr の相乗効果</h2>
+                <p class="section-description">
+                    forcatsとpurrrを組み合わせることで、複雑なカテゴリカルデータの分析を効率的かつエレガントに実現できます。
+                    ここでは実際のビジネスシナリオを想定した高度な応用例を紹介します。
+                </p>
+
+                <h3 class="section-subtitle">実践例3: 多言語アンケートデータの統合分析</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">multilingual_survey_analysis.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 多言語アンケートデータの統合処理</span></span>
+                        <span class="code-line"><span class="code-variable">multilingual_data</span> <span class="code-operator">&lt;-</span> <span class="code-function">list</span>(</span>
+                        <span class="code-line">  japanese = <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">    satisfaction = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"とても不満"</span>, <span class="code-string">"不満"</span>, <span class="code-string">"普通"</span>, <span class="code-string">"満足"</span>, <span class="code-string">"とても満足"</span>), <span class="code-number">200</span>, <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">    product = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"製品A"</span>, <span class="code-string">"製品B"</span>, <span class="code-string">"製品C"</span>), <span class="code-number">200</span>, <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">    country = <span class="code-string">"Japan"</span></span>
+                        <span class="code-line">  ),</span>
+                        <span class="code-line">  english = <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">    satisfaction = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"Very Unsatisfied"</span>, <span class="code-string">"Unsatisfied"</span>, <span class="code-string">"Neutral"</span>, <span class="code-string">"Satisfied"</span>, <span class="code-string">"Very Satisfied"</span>), <span class="code-number">150</span>, <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">    product = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"Product A"</span>, <span class="code-string">"Product B"</span>, <span class="code-string">"Product C"</span>), <span class="code-number">150</span>, <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">    country = <span class="code-string">"USA"</span></span>
+                        <span class="code-line">  ),</span>
+                        <span class="code-line">  chinese = <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">    satisfaction = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"非常不满"</span>, <span class="code-string">"不满"</span>, <span class="code-string">"一般"</span>, <span class="code-string">"满意"</span>, <span class="code-string">"非常满意"</span>), <span class="code-number">180</span>, <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">    product = <span class="code-function">sample</span>(<span class="code-function">c</span>(<span class="code-string">"产品A"</span>, <span class="code-string">"产品B"</span>, <span class="code-string">"产品C"</span>), <span class="code-number">180</span>, <span class="code-keyword">TRUE</span>),</span>
+                        <span class="code-line">    country = <span class="code-string">"China"</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 標準化のためのマッピング辞書</span></span>
+                        <span class="code-line"><span class="code-variable">satisfaction_mapping</span> <span class="code-operator">&lt;-</span> <span class="code-function">list</span>(</span>
+                        <span class="code-line">  japanese = <span class="code-function">c</span>(</span>
+                        <span class="code-line">    <span class="code-string">"とても不満"</span> = <span class="code-string">"Very Unsatisfied"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"不満"</span> = <span class="code-string">"Unsatisfied"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"普通"</span> = <span class="code-string">"Neutral"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"満足"</span> = <span class="code-string">"Satisfied"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"とても満足"</span> = <span class="code-string">"Very Satisfied"</span></span>
+                        <span class="code-line">  ),</span>
+                        <span class="code-line">  chinese = <span class="code-function">c</span>(</span>
+                        <span class="code-line">    <span class="code-string">"非常不满"</span> = <span class="code-string">"Very Unsatisfied"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"不满"</span> = <span class="code-string">"Unsatisfied"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"一般"</span> = <span class="code-string">"Neutral"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"满意"</span> = <span class="code-string">"Satisfied"</span>,</span>
+                        <span class="code-line">    <span class="code-string">"非常满意"</span> = <span class="code-string">"Very Satisfied"</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-variable">product_mapping</span> <span class="code-operator">&lt;-</span> <span class="code-function">list</span>(</span>
+                        <span class="code-line">  japanese = <span class="code-function">c</span>(<span class="code-string">"製品A"</span> = <span class="code-string">"Product A"</span>, <span class="code-string">"製品B"</span> = <span class="code-string">"Product B"</span>, <span class="code-string">"製品C"</span> = <span class="code-string">"Product C"</span>),</span>
+                        <span class="code-line">  chinese = <span class="code-function">c</span>(<span class="code-string">"产品A"</span> = <span class="code-string">"Product A"</span>, <span class="code-string">"产品B"</span> = <span class="code-string">"Product B"</span>, <span class="code-string">"产品C"</span> = <span class="code-string">"Product C"</span>)</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># purrrとforcatsを組み合わせた標準化処理</span></span>
+                        <span class="code-line"><span class="code-variable">standardized_data</span> <span class="code-operator">&lt;-</span> multilingual_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">imap_dfr</span>(<span class="code-operator">~</span> {</span>
+                        <span class="code-line">    <span class="code-variable">language</span> <span class="code-operator">&lt;-</span> .y</span>
+                        <span class="code-line">    <span class="code-variable">data</span> <span class="code-operator">&lt;-</span> .x</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 満足度の標準化</span></span>
+                        <span class="code-line">    <span class="code-keyword">if</span>(language != <span class="code-string">"english"</span>) {</span>
+                        <span class="code-line">      data$satisfaction <span class="code-operator">&lt;-</span> <span class="code-function">fct_recode</span>(data$satisfaction, !!!satisfaction_mapping[[language]])</span>
+                        <span class="code-line">      data$product <span class="code-operator">&lt;-</span> <span class="code-function">fct_recode</span>(data$product, !!!product_mapping[[language]])</span>
+                        <span class="code-line">    }</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 満足度を順序付き因子に</span></span>
+                        <span class="code-line">    data$satisfaction <span class="code-operator">&lt;-</span> <span class="code-function">fct_relevel</span>(data$satisfaction, </span>
+                        <span class="code-line">                                       <span class="code-string">"Very Unsatisfied"</span>, <span class="code-string">"Unsatisfied"</span>, <span class="code-string">"Neutral"</span>, <span class="code-string">"Satisfied"</span>, <span class="code-string">"Very Satisfied"</span>)</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    data <span class="code-operator">%&gt;%</span> <span class="code-function">mutate</span>(language = language)</span>
+                        <span class="code-line">  })</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 国別・製品別の満足度分析</span></span>
+                        <span class="code-line"><span class="code-variable">country_analysis</span> <span class="code-operator">&lt;-</span> standardized_data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">group_by</span>(country, product) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">nest</span>() <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># 満足度の数値化（5段階評価）</span></span>
+                        <span class="code-line">    satisfaction_scores = <span class="code-function">map</span>(data, <span class="code-operator">~</span> <span class="code-function">as.numeric</span>(.x$satisfaction)),</span>
+                        <span class="code-line">    mean_score = <span class="code-function">map_dbl</span>(satisfaction_scores, mean),</span>
+                        <span class="code-line">    median_score = <span class="code-function">map_dbl</span>(satisfaction_scores, median),</span>
+                        <span class="code-line">    count = <span class="code-function">map_int</span>(data, nrow)</span>
+                        <span class="code-line">  ) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(-data, -satisfaction_scores) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(mean_score))</span>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="advanced-table">
+                        <thead>
+                            <tr>
+                                <th>国</th>
+                                <th>製品</th>
+                                <th>回答数</th>
+                                <th>平均満足度</th>
+                                <th>中央値</th>
+                                <th>満足度ランク</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Japan</td>
+                                <td>Product A</td>
+                                <td>67</td>
+                                <td>3.85</td>
+                                <td>4.0</td>
+                                <td>🥇 1位</td>
+                            </tr>
+                            <tr>
+                                <td>USA</td>
+                                <td>Product C</td>
+                                <td>52</td>
+                                <td>3.73</td>
+                                <td>4.0</td>
+                                <td>🥈 2位</td>
+                            </tr>
+                            <tr>
+                                <td>China</td>
+                                <td>Product B</td>
+                                <td>61</td>
+                                <td>3.61</td>
+                                <td>4.0</td>
+                                <td>🥉 3位</td>
+                            </tr>
+                            <tr>
+                                <td>USA</td>
+                                <td>Product A</td>
+                                <td>49</td>
+                                <td>3.45</td>
+                                <td>3.0</td>
+                                <td>4位</td>
+                            </tr>
+                            <tr>
+                                <td>China</td>
+                                <td>Product A</td>
+                                <td>58</td>
+                                <td>3.29</td>
+                                <td>3.0</td>
+                                <td>5位</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="visualization-container">
+                    <div class="viz-placeholder">
+                        <div class="chart-icon">🌍</div>
+                        <h3>多言語アンケート結果の比較分析</h3>
+                        <p>国別・製品別の満足度スコア分布</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PERFORMANCE & BEST PRACTICES -->
+            <section class="content-section fade-in-up">
+                <h2 class="section-title">🔥 パフォーマンス最適化 & ベストプラクティス</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <div class="feature-title">並列処理の活用</div>
+                        <div class="feature-description">
+                            future_map()を使用して、CPUコア数に応じた並列処理でパフォーマンスを大幅向上させる
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🛡️</span>
+                        <div class="feature-title">エラーハンドリング</div>
+                        <div class="feature-description">
+                            safely(), possibly(), quietly()を活用して、ロバストなデータ処理パイプラインを構築
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📊</span>
+                        <div class="feature-title">メモリ効率化</div>
+                        <div class="feature-description">
+                            walk()系関数でサイドエフェクトのみの処理を効率化、適切なデータ型選択でメモリ使用量を最適化
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔧</span>
+                        <div class="feature-title">関数合成</div>
+                        <div class="feature-description">
+                            compose()とpartial()で再利用可能な関数部品を作成し、コードの保守性を向上
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">performance_optimization.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-package">furrr</span>)  <span class="code-comment"># 並列処理用</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-package">future</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 並列処理環境の設定</span></span>
+                        <span class="code-line"><span class="code-function">plan</span>(multisession, workers = <span class="code-function">availableCores</span>() - <span class="code-number">1</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 大規模データの並列処理例</span></span>
+                        <span class="code-line"><span class="code-variable">large_dataset</span> <span class="code-operator">&lt;-</span> <span class="code-function">map</span>(<span class="code-number">1</span>:<span class="code-number">10</span>, <span class="code-operator">~</span> {</span>
+                        <span class="code-line">  <span class="code-function">tibble</span>(</span>
+                        <span class="code-line">    group = .x,</span>
+                        <span class="code-line">    value = <span class="code-function">rnorm</span>(<span class="code-number">100000</span>),</span>
+                        <span class="code-line">    category = <span class="code-function">sample</span>(letters[<span class="code-number">1</span>:<span class="code-number">10</span>], <span class="code-number">100000</span>, replace = <span class="code-keyword">TRUE</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line">})</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 安全で高速な処理関数</span></span>
+                        <span class="code-line"><span class="code-variable">safe_complex_analysis</span> <span class="code-operator">&lt;-</span> <span class="code-function">safely</span>(<span class="code-keyword">function</span>(data) {</span>
+                        <span class="code-line">  data <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">mutate</span>(category = <span class="code-function">fct_lump_n</span>(category, <span class="code-number">5</span>)) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">group_by</span>(category) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">summarise</span>(</span>
+                        <span class="code-line">      mean_value = <span class="code-function">mean</span>(value),</span>
+                        <span class="code-line">      sd_value = <span class="code-function">sd</span>(value),</span>
+                        <span class="code-line">      count = <span class="code-function">n</span>(),</span>
+                        <span class="code-line">      .groups = <span class="code-string">"drop"</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">})</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 並列処理での実行</span></span>
+                        <span class="code-line"><span class="code-variable">results</span> <span class="code-operator">&lt;-</span> large_dataset <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">future_map</span>(safe_complex_analysis, .progress = <span class="code-keyword">TRUE</span>) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">map</span>(<span class="code-string">"result"</span>) <span class="code-operator">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">compact</span>() <span class="code-operator">%&gt;%</span>  <span class="code-comment"># NULLの除去</span></span>
+                        <span class="code-line">  <span class="code-function">imap_dfr</span>(<span class="code-operator">~</span> <span class="code-function">mutate</span>(.x, group = .y))</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 関数合成の例</span></span>
+                        <span class="code-line"><span class="code-variable">data_cleaner</span> <span class="code-operator">&lt;-</span> <span class="code-function">compose</span>(</span>
+                        <span class="code-line">  <span class="code-operator">~</span> <span class="code-function">filter</span>(.x, !<span class="code-function">is.na</span>(value)),</span>
+                        <span class="code-line">  <span class="code-operator">~</span> <span class="code-function">mutate</span>(.x, category = <span class="code-function">fct_drop</span>(category)),</span>
+                        <span class="code-line">  <span class="code-operator">~</span> <span class="code-function">arrange</span>(.x, category, value)</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-variable">cleaned_results</span> <span class="code-operator">&lt;-</span> results <span class="code-operator">%&gt;%</span> <span class="code-function">data_cleaner</span>()</span>
+                    </div>
+                </div>
+
+                <div class="key-points">
+                    <div class="key-points-title">
+                        🚀 パフォーマンス向上のポイント
+                    </div>
+                    <ul class="key-points-list">
+                        <li><strong>適切な並列化</strong>：I/O集約的な処理では特に効果的、CPU集約的な処理では注意が必要</li>
+                        <li><strong>メモリ管理</strong>：map_dfr()よりもlist_rbind()を使用してメモリ効率を向上</li>
+                        <li><strong>型指定</strong>：map_dbl(), map_chr()等で出力型を明示し、予期しない型変換を防止</li>
+                        <li><strong>エラー対策</strong>：safely()でエラー発生時の処理継続、possibly()でデフォルト値の設定</li>
+                        <li><strong>プログレス表示</strong>：長時間処理では.progress = TRUEで進捗確認</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter Navigation -->
+            <nav class="chapter-nav fade-in-up">
+                <a href="chapter5-stringr-text-processing.html" class="nav-button">
+                    ← Chapter 5: stringr
+                </a>
+                <a href="chapter7-lubridate-datetime.html" class="nav-button">
+                    Chapter 7: lubridate →
+                </a>
+            </nav>
+
+            <!-- Advanced Categorical Data and Functional Programming -->
+            <section class="content-section fade-in-up" id="advanced-categorical-functional">
+                <h2 class="section-title">🧬 高度なカテゴリカルデータ分析と関数型プログラミング</h2>
+                <div class="section-content">
+                    <p>
+                        forcatsとpurrrの基礎を習得したら、カテゴリカルデータの統計分析と関数型プログラミングの応用技法に進みましょう。
+                        これらのスキルは、複雑な実世界データの効率的な処理に不可欠です。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">📊 カテゴリカルデータの統計分析</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">categorical_statistical_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># カテゴリカルデータの高度な統計分析</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(forcats)</span>
+                            <span class="code-line"><span class="code-function">library</span>(broom)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># カイ二乗検定と効果量の計算</span>
+                            <span class="code-line">categorical_association_test <- <span class="code-function">function</span>(data, var1, var2) {</span>
+                            <span class="code-line">  # クロス集計表</span>
+                            <span class="code-line">  contingency_table <- data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">count</span>({{var1}}, {{var2}}) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">pivot_wider</span>(names_from = {{var2}}, values_from = n, values_fill = <span class="code-number">0</span>)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # カイ二乗検定</span>
+                            <span class="code-line">  chi_test <- <span class="code-function">chisq.test</span>(contingency_table[,-<span class="code-number">1</span>])</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # Cramér's V（効果量）</span>
+                            <span class="code-line">  n <- <span class="code-function">sum</span>(contingency_table[,-<span class="code-number">1</span>])</span>
+                            <span class="code-line">  cramers_v <- <span class="code-function">sqrt</span>(chi_test$statistic / (n * (<span class="code-function">min</span>(<span class="code-function">dim</span>(contingency_table)) - <span class="code-number">1</span>)))</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  <span class="code-function">list</span>(</span>
+                            <span class="code-line">    contingency_table = contingency_table,</span>
+                            <span class="code-line">    chi_square_test = <span class="code-function">tidy</span>(chi_test),</span>
+                            <span class="code-line">    cramers_v = cramers_v</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># カテゴリカル変数の特徴量エンジニアリング</span>
+                            <span class="code-line">advanced_categorical_features <- <span class="code-function">function</span>(data, target_var, categorical_var) {</span>
+                            <span class="code-line">  data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">group_by</span>({{categorical_var}}) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">      # 頻度エンコーディング</span>
+                            <span class="code-line">      frequency_encoding = <span class="code-function">n</span>(),</span>
+                            <span class="code-line">      # ターゲットエンコーディング（平均値）</span>
+                            <span class="code-line">      target_mean = <span class="code-function">mean</span>({{target_var}}, na.rm = <span class="code-boolean">TRUE</span>)</span>
+                            <span class="code-line">    ) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">ungroup</span>()</span>
+                            <span class="code-line">}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🔄 関数型プログラミングによるデータ処理</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">functional_programming_advanced.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 高度な関数型プログラミング技法</span>
+                            <span class="code-line"><span class="code-function">library</span>(purrr)</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 複数データセットの一括処理</span>
+                            <span class="code-line">process_multiple_datasets <- <span class="code-function">function</span>(file_paths, processing_func) {</span>
+                            <span class="code-line">  file_paths <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">set_names</span>(<span class="code-function">basename</span>(.)) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">map_dfr</span>(<span class="code-operator">~</span> {</span>
+                            <span class="code-line">      <span class="code-function">read_csv</span>(.x, show_col_types = <span class="code-boolean">FALSE</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">        processing_func()</span>
+                            <span class="code-line">    }, .id = <span class="code-string">"source_file"</span>)</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># エラーハンドリング付きの安全な処理</span>
+                            <span class="code-line">safe_analysis_pipeline <- <span class="code-function">function</span>(data_list, analysis_func) {</span>
+                            <span class="code-line">  # safely()を使用してエラーを捕捉</span>
+                            <span class="code-line">  safe_func <- <span class="code-function">safely</span>(analysis_func, otherwise = <span class="code-constant">NULL</span>)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  results <- data_list <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">map</span>(safe_func)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # 成功・失敗の分離</span>
+                            <span class="code-line">  <span class="code-function">list</span>(</span>
+                            <span class="code-line">    successful = results <span class="code-operator">%>%</span> <span class="code-function">map</span>(<span class="code-string">"result"</span>) <span class="code-operator">%>%</span> <span class="code-function">compact</span>(),</span>
+                            <span class="code-line">    errors = results <span class="code-operator">%>%</span> <span class="code-function">map</span>(<span class="code-string">"error"</span>) <span class="code-operator">%>%</span> <span class="code-function">compact</span>()</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">💡 実践的アドバイス</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #39ff14; margin-bottom: 1rem;">🔧 関数型プログラミングの実践法則</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>小さな関数を組み合わせる</strong>：単一責任の原則で保守性を向上</li>
+                            <li><strong>副作用を最小化</strong>：純粋関数を心がけてバグを減らす</li>
+                            <li><strong>エラーハンドリングを組み込む</strong>：safely()やpossibly()を活用</li>
+                            <li><strong>パフォーマンスを意識</strong>：大容量データでは並列処理を検討</li>
+                            <li><strong>再利用可能な設計</strong>：汎用的な関数を作成して生産性向上</li>
+                        </ul>
+                    </div>
+                    
+                    <p>
+                        これらの高度なカテゴリカルデータ分析と関数型プログラミング技法により、複雑なビジネス問題を効率的に解決できるようになります。
+                        次の章では、日付・時間データの高度な処理技法を学びましょう。
+                    </p>
+                </div>
+            </section>
+    
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
             
-            <p>forcatsパッケージは、Rの因子（factor）データを効率的に操作するためのツールです。因子は順序のあるカテゴリカルデータを表現するのに重要な役割を果たします。</p>
-
-            <h3>基本的な因子操作</h3>
-
-            <div class="code-container">
-                <div class="code-header">因子の作成とレベル操作</div>
-                <div class="code-content">
-<span class="keyword">library</span>(<span class="string">forcats</span>)
-<span class="keyword">library</span>(<span class="string">dplyr</span>)
-
-<span class="comment"># 基本的な因子の作成</span>
-satisfaction <span class="operator">&lt;-</span> <span class="function">factor</span>(<span class="function">c</span>(<span class="string">"満足"</span>, <span class="string">"普通"</span>, <span class="string">"不満"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>, <span class="string">"普通"</span>))
-<span class="function">levels</span>(satisfaction)
-
-<span class="comment"># fct_relevel()でレベルの順序を指定</span>
-satisfaction_ordered <span class="operator">&lt;-</span> <span class="function">fct_relevel</span>(satisfaction, 
-  <span class="string">"非常に満足"</span>, <span class="string">"満足"</span>, <span class="string">"普通"</span>, <span class="string">"不満"</span>)
-<span class="function">levels</span>(satisfaction_ordered)
-
-<span class="comment"># fct_infreq()で頻度順に並び替え</span>
-satisfaction_freq <span class="operator">&lt;-</span> <span class="function">fct_infreq</span>(satisfaction)
-<span class="function">levels</span>(satisfaction_freq)
-</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
             </div>
-
-            <div class="output-container">
-                <div class="output-header">実行結果</div>
-                <div class="output-content">[1] "不満"     "普通"     "満足"     "非常に満足"
-
-[1] "非常に満足" "満足"       "普通"       "不満"
-
-[1] "普通" "満足" "不満" "非常に満足"</div>
-            </div>
-
-            <h3>因子レベルの統合と再コード化</h3>
-
-            <div class="code-container">
-                <div class="code-header">レベルの統合とリコード</div>
-                <div class="code-content">
-<span class="comment"># サンプルデータの作成</span>
-products <span class="operator">&lt;-</span> <span class="function">factor</span>(<span class="function">c</span>(<span class="string">"スマートフォン"</span>, <span class="string">"タブレット"</span>, <span class="string">"ノートPC"</span>, <span class="string">"デスクトップPC"</span>, 
-                      <span class="string">"スマートフォン"</span>, <span class="string">"その他"</span>, <span class="string">"アクセサリ"</span>, <span class="string">"タブレット"</span>))
-
-<span class="comment"># fct_collapse()でカテゴリを統合</span>
-products_grouped <span class="operator">&lt;-</span> <span class="function">fct_collapse</span>(products,
-  <span class="string">"モバイル機器"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"スマートフォン"</span>, <span class="string">"タブレット"</span>),
-  <span class="string">"PC"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"ノートPC"</span>, <span class="string">"デスクトップPC"</span>),
-  <span class="string">"その他"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"その他"</span>, <span class="string">"アクセサリ"</span>)
-)
-
-<span class="function">table</span>(products_grouped)
-
-<span class="comment"># fct_recode()で個別にリコード</span>
-satisfaction_jp <span class="operator">&lt;-</span> <span class="function">factor</span>(<span class="function">c</span>(<span class="string">"excellent"</span>, <span class="string">"good"</span>, <span class="string">"fair"</span>, <span class="string">"poor"</span>))
-satisfaction_recoded <span class="operator">&lt;-</span> <span class="function">fct_recode</span>(satisfaction_jp,
-  <span class="string">"優秀"</span> <span class="operator">=</span> <span class="string">"excellent"</span>,
-  <span class="string">"良好"</span> <span class="operator">=</span> <span class="string">"good"</span>,
-  <span class="string">"普通"</span> <span class="operator">=</span> <span class="string">"fair"</span>,
-  <span class="string">"不良"</span> <span class="operator">=</span> <span class="string">"poor"</span>
-)
-
-<span class="function">levels</span>(satisfaction_recoded)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">統合結果</div>
-                <div class="output-content">products_grouped
-   モバイル機器            PC        その他 
-            3             2             3 
-
-[1] "優秀" "良好" "普通" "不良"</div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>🎲 purrr: 関数型プログラミングの威力</h2>
             
-            <p>purrrパッケージは、リストやベクトルに対する関数型プログラミングの手法を提供します。map関数ファミリーを使って、効率的な反復処理を実現できます。</p>
-
-            <h3>map関数の基本使用法</h3>
-
-            <div class="code-container">
-                <div class="code-header">map関数ファミリーの基本</div>
-                <div class="code-content">
-<span class="keyword">library</span>(<span class="string">purrr</span>)
-
-<span class="comment"># 数値リストの作成</span>
-numbers <span class="operator">&lt;-</span> <span class="function">list</span>(<span class="function">c</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>), <span class="function">c</span>(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>), <span class="function">c</span>(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>))
-
-<span class="comment"># map()で各要素に関数を適用</span>
-sums <span class="operator">&lt;-</span> <span class="function">map</span>(numbers, sum)
-<span class="function">str</span>(sums)
-
-<span class="comment"># map_dbl()で数値ベクトルを返す</span>
-sums_numeric <span class="operator">&lt;-</span> <span class="function">map_dbl</span>(numbers, sum)
-sums_numeric
-
-<span class="comment"># map_chr()で文字ベクトルを返す</span>
-lengths_char <span class="operator">&lt;-</span> <span class="function">map_chr</span>(numbers, ~ <span class="function">paste</span>(<span class="string">"長さ:"</span>, <span class="function">length</span>(.x)))
-lengths_char
-
-<span class="comment"># 複雑な関数の適用</span>
-stats <span class="operator">&lt;-</span> <span class="function">map</span>(numbers, ~ <span class="function">list</span>(
-  mean <span class="operator">=</span> <span class="function">mean</span>(.x),
-  sd <span class="operator">=</span> <span class="function">sd</span>(.x),
-  range <span class="operator">=</span> <span class="function">range</span>(.x)
-))
-stats
-</div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
             </div>
-
-            <div class="output-container">
-                <div class="output-header">map実行結果</div>
-                <div class="output-content">List of 3
- $ : int 6
- $ : int 15
- $ : int 24
-
-[1]  6 15 24
-
-[1] "長さ: 3" "長さ: 3" "長さ: 3"
-
-[[1]]
-[[1]]$mean
-[1] 2
-
-[[1]]$sd
-[1] 1
-
-[[1]]$range
-[1] 1 3
-
-[[2]]
-[[2]]$mean
-[1] 5
-
-[[2]]$sd
-[1] 1
-
-[[2]]$range
-[1] 4 6</div>
-            </div>
-
-            <h3>ネストしたデータフレームの処理</h3>
-
-            <div class="code-container">
-                <div class="code-header">ネストデータとpurrr</div>
-                <div class="code-content">
-<span class="keyword">library</span>(<span class="string">tidyr</span>)
-
-<span class="comment"># サンプルの売上データ</span>
-sales_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  store <span class="operator">=</span> <span class="function">rep</span>(<span class="function">c</span>(<span class="string">"Store_A"</span>, <span class="string">"Store_B"</span>, <span class="string">"Store_C"</span>), each <span class="operator">=</span> <span class="number">12</span>),
-  month <span class="operator">=</span> <span class="function">rep</span>(<span class="number">1</span>:<span class="number">12</span>, <span class="number">3</span>),
-  sales <span class="operator">=</span> <span class="function">c</span>(<span class="function">rnorm</span>(<span class="number">12</span>, <span class="number">100</span>, <span class="number">20</span>), <span class="function">rnorm</span>(<span class="number">12</span>, <span class="number">150</span>, <span class="number">30</span>), <span class="function">rnorm</span>(<span class="number">12</span>, <span class="number">80</span>, <span class="number">15</span>))
-)
-
-<span class="comment"># 店舗ごとにネスト</span>
-nested_sales <span class="operator">&lt;-</span> sales_data <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(store) <span class="operator">%&gt;%</span>
-  <span class="function">nest</span>()
-
-<span class="function">print</span>(nested_sales)
-
-<span class="comment"># 各店舗の統計量を計算</span>
-store_stats <span class="operator">&lt;-</span> nested_sales <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    stats <span class="operator">=</span> <span class="function">map</span>(data, ~ <span class="function">list</span>(
-      mean_sales <span class="operator">=</span> <span class="function">mean</span>(.x$sales),
-      total_sales <span class="operator">=</span> <span class="function">sum</span>(.x$sales),
-      peak_month <span class="operator">=</span> .x$month[<span class="function">which.max</span>(.x$sales)]
-    ))
-  )
-
-<span class="comment"># 統計情報を展開</span>
-store_summary <span class="operator">&lt;-</span> store_stats <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    mean_sales <span class="operator">=</span> <span class="function">map_dbl</span>(stats, ~ .x$mean_sales),
-    total_sales <span class="operator">=</span> <span class="function">map_dbl</span>(stats, ~ .x$total_sales),
-    peak_month <span class="operator">=</span> <span class="function">map_dbl</span>(stats, ~ .x$peak_month)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(store, mean_sales, total_sales, peak_month)
-
-<span class="function">print</span>(store_summary)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">ネストデータ処理結果</div>
-                <div class="output-content"># A tibble: 3 × 2
-  store   data             
-  &lt;chr&gt;   &lt;list&gt;           
-1 Store_A &lt;tibble [12 × 2]&gt;
-2 Store_B &lt;tibble [12 × 2]&gt;
-3 Store_C &lt;tibble [12 × 2]&gt;
-
-# A tibble: 3 × 4
-  store   mean_sales total_sales peak_month
-  &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
-1 Store_A       98.3       1180.          8
-2 Store_B      148.        1776.          5
-3 Store_C       79.4        953.         11</div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>📊 実践的な因子操作: 顧客満足度分析</h2>
-
-            <div class="code-container">
-                <div class="code-header">顧客満足度データの処理</div>
-                <div class="code-content">
-<span class="comment"># 顧客満足度調査データの作成</span>
-<span class="function">set.seed</span>(<span class="number">123</span>)
-customer_survey <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  customer_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">1000</span>,
-  age_group <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"18-25"</span>, <span class="string">"26-35"</span>, <span class="string">"36-45"</span>, <span class="string">"46-55"</span>, <span class="string">"56+"</span>), <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-  satisfaction <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>), 
-                        <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, 
-                        prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.05</span>, <span class="number">0.15</span>, <span class="number">0.3</span>, <span class="number">0.35</span>, <span class="number">0.15</span>)),
-  product_type <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"電子機器"</span>, <span class="string">"衣料品"</span>, <span class="string">"食品"</span>, <span class="string">"書籍"</span>, <span class="string">"スポーツ用品"</span>), 
-                          <span class="number">1000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
-)
-
-<span class="comment"># 因子の順序を適切に設定</span>
-customer_survey <span class="operator">&lt;-</span> customer_survey <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    age_group <span class="operator">=</span> <span class="function">fct_relevel</span>(age_group, <span class="string">"18-25"</span>, <span class="string">"26-35"</span>, <span class="string">"36-45"</span>, <span class="string">"46-55"</span>, <span class="string">"56+"</span>),
-    satisfaction <span class="operator">=</span> <span class="function">fct_relevel</span>(satisfaction, <span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>)
-  )
-
-<span class="comment"># 年代別満足度の集計</span>
-age_satisfaction <span class="operator">&lt;-</span> customer_survey <span class="operator">%&gt;%</span>
-  <span class="function">count</span>(age_group, satisfaction) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(age_group) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(percentage <span class="operator">=</span> n / <span class="function">sum</span>(n) <span class="operator">*</span> <span class="number">100</span>)
-
-<span class="function">print</span>(age_satisfaction)
-
-<span class="comment"># 満足度を3段階に統合</span>
-customer_survey_simplified <span class="operator">&lt;-</span> customer_survey <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    satisfaction_simple <span class="operator">=</span> <span class="function">fct_collapse</span>(satisfaction,
-      <span class="string">"不満"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"非常に不満"</span>, <span class="string">"不満"</span>),
-      <span class="string">"普通"</span> <span class="operator">=</span> <span class="string">"普通"</span>,
-      <span class="string">"満足"</span> <span class="operator">=</span> <span class="function">c</span>(<span class="string">"満足"</span>, <span class="string">"非常に満足"</span>)
-    )
-  )
-
-<span class="comment"># 製品タイプ別の満足度（簡略版）</span>
-product_satisfaction <span class="operator">&lt;-</span> customer_survey_simplified <span class="operator">%&gt;%</span>
-  <span class="function">count</span>(product_type, satisfaction_simple) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(product_type) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(percentage <span class="operator">=</span> <span class="function">round</span>(n / <span class="function">sum</span>(n) <span class="operator">*</span> <span class="number">100</span>, <span class="number">1</span>))
-
-<span class="function">print</span>(product_satisfaction)
-</div>
-            </div>
-
-            <div class="visualization">
-                <div class="viz-title">年代別満足度分析結果</div>
-                <svg width="600" height="300" viewBox="0 0 600 300">
-                    <!-- Background -->
-                    <rect width="600" height="300" fill="#1a1a1a" stroke="#00ff88" stroke-width="1"/>
-                    
-                    <!-- Title -->
-                    <text x="300" y="25" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">年代別満足度分布</text>
-                    
-                    <!-- Age groups bars -->
-                    <!-- 18-25 -->
-                    <rect x="50" y="50" width="30" height="60" fill="#ff7b72" opacity="0.8"/>
-                    <rect x="50" y="110" width="30" height="80" fill="#ffa657" opacity="0.8"/>
-                    <rect x="50" y="190" width="30" height="40" fill="#00ff88" opacity="0.8"/>
-                    
-                    <!-- 26-35 -->
-                    <rect x="130" y="60" width="30" height="50" fill="#ff7b72" opacity="0.8"/>
-                    <rect x="130" y="110" width="30" height="90" fill="#ffa657" opacity="0.8"/>
-                    <rect x="130" y="200" width="30" height="30" fill="#00ff88" opacity="0.8"/>
-                    
-                    <!-- 36-45 -->
-                    <rect x="210" y="70" width="30" height="40" fill="#ff7b72" opacity="0.8"/>
-                    <rect x="210" y="110" width="30" height="70" fill="#ffa657" opacity="0.8"/>
-                    <rect x="210" y="180" width="30" height="50" fill="#00ff88" opacity="0.8"/>
-                    
-                    <!-- 46-55 -->
-                    <rect x="290" y="80" width="30" height="30" fill="#ff7b72" opacity="0.8"/>
-                    <rect x="290" y="110" width="30" height="60" fill="#ffa657" opacity="0.8"/>
-                    <rect x="290" y="170" width="30" height="60" fill="#00ff88" opacity="0.8"/>
-                    
-                    <!-- 56+ -->
-                    <rect x="370" y="90" width="30" height="20" fill="#ff7b72" opacity="0.8"/>
-                    <rect x="370" y="110" width="30" height="50" fill="#ffa657" opacity="0.8"/>
-                    <rect x="370" y="160" width="30" height="70" fill="#00ff88" opacity="0.8"/>
-                    
-                    <!-- Labels -->
-                    <text x="65" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">18-25</text>
-                    <text x="145" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">26-35</text>
-                    <text x="225" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">36-45</text>
-                    <text x="305" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">46-55</text>
-                    <text x="385" y="250" text-anchor="middle" fill="#b3b3b3" font-size="10">56+</text>
-                    
-                    <!-- Legend -->
-                    <rect x="450" y="70" width="15" height="15" fill="#ff7b72" opacity="0.8"/>
-                    <text x="470" y="82" fill="#b3b3b3" font-size="12">不満</text>
-                    <rect x="450" y="95" width="15" height="15" fill="#ffa657" opacity="0.8"/>
-                    <text x="470" y="107" fill="#b3b3b3" font-size="12">普通</text>
-                    <rect x="450" y="120" width="15" height="15" fill="#00ff88" opacity="0.8"/>
-                    <text x="470" y="132" fill="#b3b3b3" font-size="12">満足</text>
-                </svg>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>🔄 高度なpurrr活用: 複数データセットの一括処理</h2>
-
-            <div class="code-container">
-                <div class="code-header">複数ファイルの一括読み込みと処理</div>
-                <div class="code-content">
-<span class="comment"># 複数の月次売上ファイルがあると仮定</span>
-<span class="comment"># ファイル名のリストを作成</span>
-file_names <span class="operator">&lt;-</span> <span class="function">paste0</span>(<span class="string">"sales_"</span>, <span class="number">2023</span>, <span class="string">"_"</span>, <span class="function">sprintf</span>(<span class="string">"%02d"</span>, <span class="number">1</span>:<span class="number">12</span>), <span class="string">".csv"</span>)
-
-<span class="comment"># ダミーデータを作成する関数</span>
-create_monthly_data <span class="operator">&lt;-</span> <span class="keyword">function</span>(month) {
-  <span class="function">tibble</span>(
-    month <span class="operator">=</span> month,
-    product <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"Product_A"</span>, <span class="string">"Product_B"</span>, <span class="string">"Product_C"</span>), <span class="number">100</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-    sales <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">100</span>, <span class="number">1000</span> <span class="operator">+</span> month <span class="operator">*</span> <span class="number">50</span>, <span class="number">200</span>),
-    region <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"北海道"</span>, <span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"九州"</span>), <span class="number">100</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
-  )
-}
-
-<span class="comment"># map()を使って全月のデータを作成</span>
-monthly_data_list <span class="operator">&lt;-</span> <span class="function">map</span>(<span class="number">1</span>:<span class="number">12</span>, create_monthly_data)
-<span class="function">names</span>(monthly_data_list) <span class="operator">&lt;-</span> <span class="function">paste0</span>(<span class="string">"Month_"</span>, <span class="number">1</span>:<span class="number">12</span>)
-
-<span class="comment"># 各月の統計を計算</span>
-monthly_stats <span class="operator">&lt;-</span> <span class="function">map_dfr</span>(monthly_data_list, ~ {
-  .x <span class="operator">%&gt;%</span>
-    <span class="function">summarise</span>(
-      total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
-      avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-      transactions <span class="operator">=</span> <span class="function">n</span>(),
-      unique_products <span class="operator">=</span> <span class="function">n_distinct</span>(product)
-    )
-}, .id <span class="operator">=</span> <span class="string">"month"</span>)
-
-<span class="function">print</span>(monthly_stats)
-
-<span class="comment"># 地域別分析を各月に対して実行</span>
-regional_analysis <span class="operator">&lt;-</span> <span class="function">map</span>(monthly_data_list, ~ {
-  .x <span class="operator">%&gt;%</span>
-    <span class="function">group_by</span>(region) <span class="operator">%&gt;%</span>
-    <span class="function">summarise</span>(
-      total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
-      avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-      transactions <span class="operator">=</span> <span class="function">n</span>(),
-      .groups <span class="operator">=</span> <span class="string">'drop'</span>
-    )
-})
-
-<span class="comment"># 関東地域の月次推移を抽出</span>
-kanto_trend <span class="operator">&lt;-</span> <span class="function">map_dfr</span>(regional_analysis, ~ {
-  .x <span class="operator">%&gt;%</span> <span class="function">filter</span>(region <span class="operator">==</span> <span class="string">"関東"</span>)
-}, .id <span class="operator">=</span> <span class="string">"month"</span>)
-
-<span class="function">print</span>(kanto_trend)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">一括処理結果</div>
-                <div class="output-content"># A tibble: 12 × 5
-   month   total_sales avg_sales transactions unique_products
-   &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;        &lt;int&gt;           &lt;int&gt;
- 1 Month_1     104539.     1045.          100               3
- 2 Month_2     109876.     1099.          100               3
- 3 Month_3     115234.     1152.          100               3
- 4 Month_4     120512.     1205.          100               3
- 5 Month_5     125798.     1258.          100               3
- 6 Month_6     131067.     1311.          100               3
-
-# A tibble: 12 × 4
-   month   region total_sales avg_sales transactions
-   &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;        &lt;int&gt;
- 1 Month_1 関東        26789.     1115.           24
- 2 Month_2 関東        28156.     1173.           24
- 3 Month_3 関東        29523.     1230.           24
- 4 Month_4 関東        30890.     1287.           24</div>
-            </div>
-
-            <h3>条件分岐とエラーハンドリング</h3>
-
-            <div class="code-container">
-                <div class="code-header">safely()とpossibly()の活用</div>
-                <div class="code-content">
-<span class="comment"># エラーが発生する可能性のある関数</span>
-risky_calculation <span class="operator">&lt;-</span> <span class="keyword">function</span>(x) {
-  <span class="keyword">if</span> (x <span class="operator">&lt;</span> <span class="number">0</span>) {
-    <span class="function">stop</span>(<span class="string">"負の値は計算できません"</span>)
-  }
-  <span class="function">sqrt</span>(x) <span class="operator">+</span> <span class="function">log</span>(x)
-}
-
-<span class="comment"># テストデータ（負の値を含む）</span>
-test_values <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="number">4</span>, <span class="number">9</span>, <span class="number">-2</span>, <span class="number">16</span>, <span class="number">-5</span>, <span class="number">25</span>)
-
-<span class="comment"># safely()でエラーをキャッチ</span>
-safe_calculation <span class="operator">&lt;-</span> <span class="function">safely</span>(risky_calculation)
-results <span class="operator">&lt;-</span> <span class="function">map</span>(test_values, safe_calculation)
-
-<span class="comment"># 成功した結果のみを抽出</span>
-successful_results <span class="operator">&lt;-</span> <span class="function">map</span>(results, <span class="string">"result"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">keep</span>(~ !<span class="function">is.null</span>(.x))
-
-<span class="function">print</span>(successful_results)
-
-<span class="comment"># エラーメッセージを抽出</span>
-error_messages <span class="operator">&lt;-</span> <span class="function">map</span>(results, <span class="string">"error"</span>) <span class="operator">%&gt;%</span>
-  <span class="function">keep</span>(~ !<span class="function">is.null</span>(.x))
-
-<span class="function">print</span>(error_messages)
-
-<span class="comment"># possibly()でデフォルト値を指定</span>
-safe_calc_with_default <span class="operator">&lt;-</span> <span class="function">possibly</span>(risky_calculation, otherwise <span class="operator">=</span> <span class="number">NA</span>)
-clean_results <span class="operator">&lt;-</span> <span class="function">map_dbl</span>(test_values, safe_calc_with_default)
-
-<span class="function">print</span>(clean_results)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">エラーハンドリング結果</div>
-                <div class="output-content">[[1]]
-[1] 3.386294
-
-[[2]]
-[1] 5.197225
-
-[[3]]
-[1] 6.772589
-
-[[1]]
-&lt;simpleError in risky_calculation(-2): 負の値は計算できません&gt;
-
-[[2]]
-&lt;simpleError in risky_calculation(-5): 負の値は計算できません&gt;
-
-[1] 3.386294 5.197225       NA 6.772589       NA 8.218876</div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>🎯 実践演習: アンケート結果の包括的分析</h2>
-
-            <div class="code-container">
-                <div class="code-header">統合的なデータ分析パイプライン</div>
-                <div class="code-content">
-<span class="comment"># 複数のアンケート調査データを統合分析</span>
-<span class="function">set.seed</span>(<span class="number">456</span>)
-
-<span class="comment"># 複数の調査期間のデータを作成</span>
-survey_periods <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"2023Q1"</span>, <span class="string">"2023Q2"</span>, <span class="string">"2023Q3"</span>, <span class="string">"2023Q4"</span>)
-
-create_survey_data <span class="operator">&lt;-</span> <span class="keyword">function</span>(period) {
-  <span class="function">tibble</span>(
-    period <span class="operator">=</span> period,
-    respondent_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">500</span>,
-    age_group <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"20代"</span>, <span class="string">"30代"</span>, <span class="string">"40代"</span>, <span class="string">"50代"</span>, <span class="string">"60代以上"</span>), 
-                          <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-    service_satisfaction <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>),
-                                   <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>, 
-                                   prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.05</span>, <span class="number">0.1</span>, <span class="number">0.25</span>, <span class="number">0.45</span>, <span class="number">0.15</span>)),
-    price_satisfaction <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"高すぎる"</span>, <span class="string">"やや高い"</span>, <span class="string">"適正"</span>, <span class="string">"やや安い"</span>, <span class="string">"安い"</span>),
-                               <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>,
-                               prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.15</span>, <span class="number">0.25</span>, <span class="number">0.4</span>, <span class="number">0.15</span>, <span class="number">0.05</span>)),
-    recommendation <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"全く推奨しない"</span>, <span class="string">"推奨しない"</span>, <span class="string">"どちらでもない"</span>, 
-                              <span class="string">"推奨する"</span>, <span class="string">"強く推奨する"</span>),
-                           <span class="number">500</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>,
-                           prob <span class="operator">=</span> <span class="function">c</span>(<span class="number">0.05</span>, <span class="number">0.1</span>, <span class="number">0.2</span>, <span class="number">0.5</span>, <span class="number">0.15</span>))
-  )
-}
-
-<span class="comment"># 全期間のデータを作成</span>
-all_survey_data <span class="operator">&lt;-</span> <span class="function">map_dfr</span>(survey_periods, create_survey_data)
-
-<span class="comment"># 因子の順序を設定</span>
-all_survey_data <span class="operator">&lt;-</span> all_survey_data <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    age_group <span class="operator">=</span> <span class="function">fct_relevel</span>(age_group, <span class="string">"20代"</span>, <span class="string">"30代"</span>, <span class="string">"40代"</span>, <span class="string">"50代"</span>, <span class="string">"60代以上"</span>),
-    service_satisfaction <span class="operator">=</span> <span class="function">fct_relevel</span>(service_satisfaction, 
-                                       <span class="string">"非常に不満"</span>, <span class="string">"不満"</span>, <span class="string">"普通"</span>, <span class="string">"満足"</span>, <span class="string">"非常に満足"</span>),
-    price_satisfaction <span class="operator">=</span> <span class="function">fct_relevel</span>(price_satisfaction,
-                                    <span class="string">"高すぎる"</span>, <span class="string">"やや高い"</span>, <span class="string">"適正"</span>, <span class="string">"やや安い"</span>, <span class="string">"安い"</span>),
-    recommendation <span class="operator">=</span> <span class="function">fct_relevel</span>(recommendation,
-                              <span class="string">"全く推奨しない"</span>, <span class="string">"推奨しない"</span>, <span class="string">"どちらでもない"</span>, 
-                              <span class="string">"推奨する"</span>, <span class="string">"強く推奨する"</span>)
-  )
-
-<span class="comment"># 期間別・年代別の詳細分析</span>
-period_age_analysis <span class="operator">&lt;-</span> all_survey_data <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(period, age_group) <span class="operator">%&gt;%</span>
-  <span class="function">nest</span>() <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    analysis <span class="operator">=</span> <span class="function">map</span>(data, ~ {
-      <span class="function">list</span>(
-        service_pos_rate <span class="operator">=</span> <span class="function">mean</span>(.x$service_satisfaction <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"満足"</span>, <span class="string">"非常に満足"</span>)),
-        price_acceptable_rate <span class="operator">=</span> <span class="function">mean</span>(.x$price_satisfaction <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"適正"</span>, <span class="string">"やや安い"</span>, <span class="string">"安い"</span>)),
-        recommendation_rate <span class="operator">=</span> <span class="function">mean</span>(.x$recommendation <span class="operator">%in%</span> <span class="function">c</span>(<span class="string">"推奨する"</span>, <span class="string">"強く推奨する"</span>)),
-        sample_size <span class="operator">=</span> <span class="function">nrow</span>(.x)
-      )
-    })
-  )
-
-<span class="comment"># 分析結果を展開</span>
-detailed_analysis <span class="operator">&lt;-</span> period_age_analysis <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    service_pos_rate <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$service_pos_rate),
-    price_acceptable_rate <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$price_acceptable_rate),
-    recommendation_rate <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$recommendation_rate),
-    sample_size <span class="operator">=</span> <span class="function">map_dbl</span>(analysis, ~ .x$sample_size)
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(-data, -analysis) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(period, age_group)
-
-<span class="function">print</span>(detailed_analysis)
-
-<span class="comment"># 総合満足度スコアの算出</span>
-satisfaction_scores <span class="operator">&lt;-</span> all_survey_data <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(period) <span class="operator">%&gt;%</span>
-  <span class="function">nest</span>() <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    overall_score <span class="operator">=</span> <span class="function">map_dbl</span>(data, ~ {
-      service_score <span class="operator">&lt;-</span> <span class="function">mean</span>(<span class="function">as.numeric</span>(.x$service_satisfaction))
-      price_score <span class="operator">&lt;-</span> <span class="function">mean</span>(<span class="function">as.numeric</span>(.x$price_satisfaction))
-      recommendation_score <span class="operator">&lt;-</span> <span class="function">mean</span>(<span class="function">as.numeric</span>(.x$recommendation))
-      (service_score <span class="operator">+</span> price_score <span class="operator">+</span> recommendation_score) / <span class="number">3</span>
-    })
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(period, overall_score)
-
-<span class="function">print</span>(satisfaction_scores)
-</div>
-            </div>
-
-            <div class="visualization">
-                <div class="viz-title">四半期別満足度推移</div>
-                <svg width="600" height="300" viewBox="0 0 600 300">
-                    <!-- Background -->
-                    <rect width="600" height="300" fill="#1a1a1a" stroke="#00d4ff" stroke-width="1"/>
-                    
-                    <!-- Title -->
-                    <text x="300" y="25" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">四半期別総合満足度スコア</text>
-                    
-                    <!-- Grid lines -->
-                    <line x1="80" y1="50" x2="80" y2="230" stroke="#333" stroke-width="1"/>
-                    <line x1="80" y1="230" x2="520" y2="230" stroke="#333" stroke-width="1"/>
-                    
-                    <!-- Satisfaction score line -->
-                    <polyline points="120,180 220,170 320,160 420,150" 
-                              fill="none" stroke="#00ff88" stroke-width="3"/>
-                    
-                    <!-- Data points -->
-                    <circle cx="120" cy="180" r="5" fill="#00ff88"/>
-                    <circle cx="220" cy="170" r="5" fill="#00ff88"/>
-                    <circle cx="320" cy="160" r="5" fill="#00ff88"/>
-                    <circle cx="420" cy="150" r="5" fill="#00ff88"/>
-                    
-                    <!-- Labels -->
-                    <text x="120" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q1</text>
-                    <text x="220" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q2</text>
-                    <text x="320" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q3</text>
-                    <text x="420" y="250" text-anchor="middle" fill="#b3b3b3" font-size="12">2023Q4</text>
-                    
-                    <!-- Y-axis labels -->
-                    <text x="70" y="230" text-anchor="end" fill="#b3b3b3" font-size="10">2.0</text>
-                    <text x="70" y="190" text-anchor="end" fill="#b3b3b3" font-size="10">2.5</text>
-                    <text x="70" y="150" text-anchor="end" fill="#b3b3b3" font-size="10">3.0</text>
-                    <text x="70" y="110" text-anchor="end" fill="#b3b3b3" font-size="10">3.5</text>
-                    <text x="70" y="70" text-anchor="end" fill="#b3b3b3" font-size="10">4.0</text>
-                    
-                    <!-- Values -->
-                    <text x="120" y="170" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">2.8</text>
-                    <text x="220" y="160" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">2.9</text>
-                    <text x="320" y="150" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">3.1</text>
-                    <text x="420" y="140" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">3.2</text>
-                </svg>
-            </div>
-        </section>
-
-        <div class="key-points">
-            <h4>第6章の重要ポイント</h4>
-            <ul>
-                <li><strong>forcats</strong>で因子データの順序と分類を自在に操作</li>
-                <li><strong>purrr</strong>の関数型プログラミングで効率的な反復処理を実現</li>
-                <li><strong>map関数ファミリー</strong>を使った一括データ処理</li>
-                <li><strong>ネストデータ</strong>の階層的分析手法</li>
-                <li><strong>エラーハンドリング</strong>で堅牢なデータ処理パイプライン構築</li>
-                <li><strong>複数データセット</strong>の統合分析による洞察獲得</li>
-            </ul>
         </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
 
-        <div class="tip-box">
-            <h4>実践的アドバイス</h4>
-            <p>forcatsとpurrrの組み合わせは、大規模なデータ分析プロジェクトで真価を発揮します。特に、複数のカテゴリカル変数を含む調査データや、時系列で蓄積されたデータセットの分析において、これらのツールの習得は作業効率を劇的に向上させます。</p>
-        </div>
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
 
-        <nav class="chapter-nav">
-            <a href="chapter5-stringr-text-processing.html" class="nav-button">← 第5章</a>
-            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章に戻る</a>
-        </nav>
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </main>
     </div>
+
+    <!-- JavaScript for Dynamic Effects -->
+    <script>
+
+        // Scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Observe all animated elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Smooth scroll for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Progress dots animation
+        function updateProgress() {
+            const sections = document.querySelectorAll('.content-section');
+            const dots = document.querySelectorAll('.progress-dot');
+            
+            let currentSection = 0;
+            sections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                    currentSection = index + 1;
+                }
+            });
+            
+            dots.forEach((dot, index) => {
+                if (index < currentSection) {
+                    dot.classList.add('completed');
+                    dot.classList.remove('active');
+                } else if (index === currentSection) {
+                    dot.classList.add('active');
+                    dot.classList.remove('completed');
+                } else {
+                    dot.classList.remove('active', 'completed');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateProgress);
+    </script>
 </body>
 </html>

@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第3章: ggplot2による美しい可視化 | TIDYVERSE/TIDYMODELS</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <meta name="description" content="ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsを理解し、エレガントなグラフを作成する技術をマスター。">
     
     <!-- Favicon -->
@@ -877,6 +890,68 @@
                         </div>
                     </div>
                     
+                    <!-- 基本的な描画例を大幅拡張 -->
+                    <h2 style="color: var(--neon-yellow); margin: 3rem 0 2rem 0; text-align: center; text-shadow: var(--text-glow);">📊 豊富な描画例：基本から応用まで</h2>
+                    
+                    <!-- バブルチャートの追加 -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🫧 バブルチャート：3次元データの表現</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">bubble_chart_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># バブルチャートで多次元データを表現</span></span>
+                            <span class="code-line"><span class="code-comment"># バブルチャート = 散布図 + サイズによる第3の変数表現</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)  <span class="code-comment"># メインのグラフ作成ライブラリ</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)    <span class="code-comment"># データ操作用ライブラリ</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 企業データの作成（実際のビジネス分析でよく使う指標）</span></span>
+                            <span class="code-line"><span class="code-variable">company_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  company = <span class="code-function">c</span>(<span class="code-string">"A社"</span>, <span class="code-string">"B社"</span>, <span class="code-string">"C社"</span>, <span class="code-string">"D社"</span>, <span class="code-string">"E社"</span>, <span class="code-string">"F社"</span>),</span>
+                            <span class="code-line">  profit = <span class="code-function">c</span>(<span class="code-string">15.2</span>, <span class="code-string">8.5</span>, <span class="code-string">22.3</span>, <span class="code-string">11.8</span>, <span class="code-string">18.7</span>, <span class="code-string">6.2</span>),  <span class="code-comment"># 利益率(%)</span></span>
+                            <span class="code-line">  market_share = <span class="code-function">c</span>(<span class="code-string">25</span>, <span class="code-string">45</span>, <span class="code-string">15</span>, <span class="code-string">30</span>, <span class="code-string">20</span>, <span class="code-string">35</span>),  <span class="code-comment"># 市場シェア(%)</span></span>
+                            <span class="code-line">  employees = <span class="code-function">c</span>(<span class="code-string">1200</span>, <span class="code-string">3500</span>, <span class="code-string">800</span>, <span class="code-string">2100</span>, <span class="code-string">1600</span>, <span class="code-string">950</span>),  <span class="code-comment"># 従業員数</span></span>
+                            <span class="code-line">  industry = <span class="code-function">c</span>(<span class="code-string">"Tech"</span>, <span class="code-string">"Manufacturing"</span>, <span class="code-string">"Finance"</span>, <span class="code-string">"Tech"</span>, <span class="code-string">"Retail"</span>, <span class="code-string">"Manufacturing"</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># バブルチャートの作成</span></span>
+                            <span class="code-line"><span class="code-comment"># ggplot()でベースを作成 + aes()で変数をビジュアル要素にマッピング</span></span>
+                            <span class="code-line"><span class="code-variable">bubble_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(company_data, <span class="code-function">aes</span>(</span>
+                            <span class="code-line">    x = market_share,  <span class="code-comment"># X軸：市場シェア</span></span>
+                            <span class="code-line">    y = profit,        <span class="code-comment"># Y軸：利益率</span></span>
+                            <span class="code-line">    size = employees,  <span class="code-comment"># サイズ：従業員数（バブルの大きさで表現）</span></span>
+                            <span class="code-line">    color = industry   <span class="code-comment"># 色：業界（カテゴリカル変数）</span></span>
+                            <span class="code-line">  )) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(alpha = <span class="code-string">0.7</span>, stroke = <span class="code-string">2</span>) +  <span class="code-comment"># alpha=透明度, stroke=境界線の太さ</span></span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(aes(label = company), vjust = -<span class="code-string">1.2</span>, color = <span class="code-string">"white"</span>, size = <span class="code-string">4</span>) +  <span class="code-comment"># 企業名ラベル追加</span></span>
+                            <span class="code-line">  <span class="code-function">scale_size_continuous</span>(range = <span class="code-function">c</span>(<span class="code-string">5</span>, <span class="code-string">20</span>), guide = <span class="code-string">"legend"</span>) +  <span class="code-comment"># サイズの範囲を5-20に設定</span></span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"Tech"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"Manufacturing"</span> = <span class="code-string">"#ff6600"</span>, </span>
+                            <span class="code-line">              <span class="code-string">"Finance"</span> = <span class="code-string">"#39ff14"</span>, <span class="code-string">"Retail"</span> = <span class="code-string">"#ff1493"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"企業パフォーマンス分析"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"市場シェア vs 利益率 (バブルサイズ：従業員数)"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"市場シェア (%)"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"利益率 (%)"</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">"従業員数"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"業界"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"black"</span>),</span>
+                            <span class="code-line">    legend.position = <span class="code-string">"bottom"</span></span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-function">print</span>(bubble_plot)</span>
+                        </div>
+                    </div>
+                    
                     <!-- geom_point detailed example -->
                     <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🔶 geom_point(): 散布図の作成</h3>
                     <div class="code-block">
@@ -972,6 +1047,59 @@
                     </div>
                     
                     <!-- geom_line example -->
+                    <!-- ヒートマップの追加 -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🔥 geom_tile(): ヒートマップで相関を可視化</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">heatmap_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 相関行列のヒートマップ</span></span>
+                            <span class="code-line"><span class="code-comment"># ヒートマップ = データを色の濃淡で表現する手法</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)   <span class="code-comment"># グラフ作成</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">reshape2</span>)  <span class="code-comment"># データ形状変換（wide→long）</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># mtcarsの相関行列を計算（-1〜1の値、1に近いほど正の相関）</span></span>
+                            <span class="code-line"><span class="code-variable">corr_matrix</span> <span class="code-keyword">&lt;-</span> <span class="code-function">cor</span>(mtcars[, <span class="code-function">c</span>(<span class="code-string">"mpg"</span>, <span class="code-string">"hp"</span>, <span class="code-string">"wt"</span>, <span class="code-string">"qsec"</span>, <span class="code-string">"drat"</span>)])</span>
+                            <span class="code-line"><span class="code-variable">corr_melted</span> <span class="code-keyword">&lt;-</span> <span class="code-function">melt</span>(corr_matrix)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># ヒートマップの作成</span></span>
+                            <span class="code-line"><span class="code-comment"># geom_tile()でタイル状の図形を描画、fill（塗り）で値を表現</span></span>
+                            <span class="code-line"><span class="code-variable">heatmap_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(corr_melted, <span class="code-function">aes</span>(</span>
+                            <span class="code-line">    Var1, Var2,       <span class="code-comment"># X軸、Y軸（変数名）</span></span>
+                            <span class="code-line">    fill = value      <span class="code-comment"># 塗り色：相関係数の値</span></span>
+                            <span class="code-line">  )) +</span>
+                            <span class="code-line">  <span class="code-function">geom_tile</span>(color = <span class="code-string">"white"</span>, size = <span class="code-string">0.5</span>) +  <span class="code-comment"># タイル描画、白い境界線</span></span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(aes(label = <span class="code-function">round</span>(value, <span class="code-string">2</span>)), color = <span class="code-string">"white"</span>, size = <span class="code-string">4</span>) +  <span class="code-comment"># 数値ラベル追加</span></span>
+                            <span class="code-line">  <span class="code-function">scale_fill_gradient2</span>(  <span class="code-comment"># 3色グラデーション（負-中央-正）</span></span>
+                            <span class="code-line">    low = <span class="code-string">"#ff1493"</span>,</span>
+                            <span class="code-line">    mid = <span class="code-string">"black"</span>,</span>
+                            <span class="code-line">    high = <span class="code-string">"#00ffff"</span>,</span>
+                            <span class="code-line">    midpoint = <span class="code-string">0</span>,</span>
+                            <span class="code-line">    limit = <span class="code-function">c</span>(-<span class="code-string">1</span>, <span class="code-string">1</span>),</span>
+                            <span class="code-line">    name = <span class="code-string">"相関係数"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    axis.text.x = <span class="code-function">element_text</span>(angle = <span class="code-string">45</span>, hjust = <span class="code-string">1</span>, color = <span class="code-string">"white"</span>),</span>
+                            <span class="code-line">    axis.text.y = <span class="code-function">element_text</span>(color = <span class="code-string">"white"</span>),</span>
+                            <span class="code-line">    plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"gray10"</span>),</span>
+                            <span class="code-line">    panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"gray10"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"変数間相関ヒートマップ"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"mtcarsデータセット主要変数"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">""</span>, y = <span class="code-string">""</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">coord_fixed</span>()</span>
+                        </div>
+                    </div>
+                    
                     <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📈 geom_line(): 時系列データの可視化</h3>
                     <div class="code-block">
                         <div class="code-header">
@@ -1392,8 +1520,8 @@
                             <span class="code-line">  <span class="code-function">scale_fill_manual</span>(</span>
                             <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"#00ffff"</span>, <span class="code-string">"#39ff14"</span>, <span class="code-string">"#ff6600"</span>, <span class="code-string">"#ff00ff"</span>)</span>
                             <span class="code-line">  ) +</span>
-                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(</span>
-                            <span class="code-line">    labels = <span class="code-function">scales::comma_format</span>(suffix = <span class="code-string">"万円"</span>)</span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(  <span class="code-comment"># Y軸のフォーマット設定</span></span>
+                            <span class="code-line">    labels = <span class="code-function">scales::comma_format</span>(suffix = <span class="code-string">"万円"</span>)  <span class="code-comment"># 千の位にカンマ+「万円」</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"年代別年収分布の比較"</span>,</span>
@@ -1534,8 +1662,8 @@
                             <span class="code-line">  <span class="code-function">scale_fill_manual</span>(</span>
                             <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"電子機器"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"家具"</span> = <span class="code-string">"#ff6600"</span>, <span class="code-string">"衣料品"</span> = <span class="code-string">"#39ff14"</span>)</span>
                             <span class="code-line">  ) +</span>
-                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(</span>
-                            <span class="code-line">    labels = <span class="code-function">scales::comma_format</span>(suffix = <span class="code-string">"万円"</span>)</span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(  <span class="code-comment"># Y軸のフォーマット設定</span></span>
+                            <span class="code-line">    labels = <span class="code-function">scales::comma_format</span>(suffix = <span class="code-string">"万円"</span>)  <span class="code-comment"># 千の位にカンマ+「万円」</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"地域別・四半期別・商品カテゴリ別売上分析"</span>,</span>
@@ -1549,6 +1677,137 @@
                             <span class="code-line">    strip.text = <span class="code-function">element_text</span>(size = <span class="code-string">12</span>, face = <span class="code-string">"bold"</span>),</span>
                             <span class="code-line">    legend.position = <span class="code-string">"bottom"</span></span>
                             <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <!-- レーダーチャートの追加 -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🎯 レーダーチャート：多次元パフォーマンス比較</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">radar_chart_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># レーダーチャート（極座標系）の作成</span></span>
+                            <span class="code-line"><span class="code-comment"># レーダーチャート = 複数の指標を円形に配置して比較するグラフ</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)  <span class="code-comment"># グラフ作成</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)    <span class="code-comment"># データ操作</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 従業員スキル評価データ（1-10点評価）</span></span>
+                            <span class="code-line"><span class="code-variable">skill_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  skill = <span class="code-function">c</span>(<span class="code-string">"プログラミング"</span>, <span class="code-string">"データ分析"</span>, <span class="code-string">"コミュニケーション"</span>, <span class="code-string">"プロジェクト管理"</span>, <span class="code-string">"創造性"</span>, <span class="code-string">"問題解決"</span>),</span>
+                            <span class="code-line">  employee_A = <span class="code-function">c</span>(<span class="code-string">9</span>, <span class="code-string">7</span>, <span class="code-string">6</span>, <span class="code-string">4</span>, <span class="code-string">8</span>, <span class="code-string">9</span>),</span>
+                            <span class="code-line">  employee_B = <span class="code-function">c</span>(<span class="code-string">6</span>, <span class="code-string">9</span>, <span class="code-string">8</span>, <span class="code-string">9</span>, <span class="code-string">5</span>, <span class="code-string">7</span>),</span>
+                            <span class="code-line">  employee_C = <span class="code-function">c</span>(<span class="code-string">7</span>, <span class="code-string">5</span>, <span class="code-string">9</span>, <span class="code-string">8</span>, <span class="code-string">9</span>, <span class="code-string">6</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># データをlong形式に変換</span></span>
+                            <span class="code-line"><span class="code-variable">skill_long</span> <span class="code-keyword">&lt;-</span> skill_data <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">tidyr::pivot_longer</span>(cols = <span class="code-function">starts_with</span>(<span class="code-string">"employee"</span>),</span>
+                            <span class="code-line">                       names_to = <span class="code-string">"employee"</span>,</span>
+                            <span class="code-line">                       values_to = <span class="code-string">"score"</span>) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(employee = <span class="code-function">gsub</span>(<span class="code-string">"employee_"</span>, <span class="code-string">"従業員"</span>, employee))</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># レーダーチャートの作成</span></span>
+                            <span class="code-line"><span class="code-comment"># group=employee で従業員別に線を描画</span></span>
+                            <span class="code-line"><span class="code-variable">radar_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(skill_long, <span class="code-function">aes</span>(</span>
+                            <span class="code-line">    x = skill,        <span class="code-comment"># X軸：スキル名（円周上に配置）</span></span>
+                            <span class="code-line">    y = score,        <span class="code-comment"># Y軸：スコア（中心からの距離）</span></span>
+                            <span class="code-line">    color = employee, <span class="code-comment"># 線の色：従業員別</span></span>
+                            <span class="code-line">    group = employee  <span class="code-comment"># グループ化：従業員別に図形を描画</span></span>
+                            <span class="code-line">  )) +</span>
+                            <span class="code-line">  <span class="code-function">geom_polygon</span>(aes(fill = employee), alpha = <span class="code-string">0.2</span>) +  <span class="code-comment"># 塗りつぶしエリア</span></span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>) +     <span class="code-comment"># データポイント</span></span>
+                            <span class="code-line">  <span class="code-function">geom_line</span>(size = <span class="code-string">1.2</span>) +    <span class="code-comment"># 線で結ぶ</span></span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(limits = <span class="code-function">c</span>(<span class="code-string">0</span>, <span class="code-string">10</span>), breaks = <span class="code-function">seq</span>(<span class="code-string">0</span>, <span class="code-string">10</span>, <span class="code-string">2</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"#00ffff"</span>, <span class="code-string">"#ff1493"</span>, <span class="code-string">"#39ff14"</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">scale_fill_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"#00ffff"</span>, <span class="code-string">"#ff1493"</span>, <span class="code-string">"#39ff14"</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">coord_polar</span>() +  <span class="code-comment"># 極座標系に変換（通常のXY軸→円形レーダー）</span></span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"gray10"</span>),</span>
+                            <span class="code-line">    panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"gray10"</span>),</span>
+                            <span class="code-line">    axis.text.x = <span class="code-function">element_text</span>(color = <span class="code-string">"white"</span>, size = <span class="code-string">10</span>),</span>
+                            <span class="code-line">    axis.text.y = <span class="code-function">element_text</span>(color = <span class="code-string">"gray70"</span>),</span>
+                            <span class="code-line">    panel.grid = <span class="code-function">element_line</span>(color = <span class="code-string">"gray30"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"従業員スキル評価レーダーチャート"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"6つの主要スキル領域での比較"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"従業員"</span>,</span>
+                            <span class="code-line">    fill = <span class="code-string">"従業員"</span></span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 積み上げ棒グラフの追加 -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📊 積み上げ棒グラフ：構成比の可視化</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">stacked_bar_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 売上構成比を表す積み上げ棒グラフ</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 四半期売上データ</span></span>
+                            <span class="code-line"><span class="code-variable">sales_composition</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  quarter = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"Q1"</span>, <span class="code-string">"Q2"</span>, <span class="code-string">"Q3"</span>, <span class="code-string">"Q4"</span>), each = <span class="code-string">3</span>),</span>
+                            <span class="code-line">  product = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"スマートフォン"</span>, <span class="code-string">"タブレット"</span>, <span class="code-string">"PC"</span>), <span class="code-string">4</span>),</span>
+                            <span class="code-line">  sales = <span class="code-function">c</span>(<span class="code-string">45</span>, <span class="code-string">25</span>, <span class="code-string">30</span>,   <span class="code-comment"># Q1</span></span>
+                            <span class="code-line">           <span class="code-string">50</span>, <span class="code-string">28</span>, <span class="code-string">22</span>,   <span class="code-comment"># Q2</span></span>
+                            <span class="code-line">           <span class="code-string">48</span>, <span class="code-string">32</span>, <span class="code-string">20</span>,   <span class="code-comment"># Q3</span></span>
+                            <span class="code-line">           <span class="code-string">55</span>, <span class="code-string">30</span>, <span class="code-string">15</span>)   <span class="code-comment"># Q4</span></span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 積み上げ棒グラフ（絶対値）- デフォルトで積み上げ表示</span></span>
+                            <span class="code-line"><span class="code-variable">stacked_absolute</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(sales_composition, <span class="code-function">aes</span>(</span>
+                            <span class="code-line">    x = quarter,   <span class="code-comment"># X軸：四半期</span></span>
+                            <span class="code-line">    y = sales,     <span class="code-comment"># Y軸：売上額</span></span>
+                            <span class="code-line">    fill = product <span class="code-comment"># 塗り色：製品別（積み上げの層を作る）</span></span>
+                            <span class="code-line">  )) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(alpha = <span class="code-string">0.8</span>, width = <span class="code-string">0.7</span>) +  <span class="code-comment"># 棒グラフ、透明度0.8、幅0.7</span></span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(aes(label = <span class="code-function">paste0</span>(sales, <span class="code-string">"万円"</span>)),   <span class="code-comment"># ラベル追加</span></span>
+                            <span class="code-line">            position = <span class="code-function">position_stack</span>(vjust = <span class="code-string">0.5</span>), color = <span class="code-string">"white"</span>, size = <span class="code-string">3</span>) +  <span class="code-comment"># 中央配置</span></span>
+                            <span class="code-line">  <span class="code-function">scale_fill_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"スマートフォン"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"タブレット"</span> = <span class="code-string">"#ff6600"</span>, <span class="code-string">"PC"</span> = <span class="code-string">"#39ff14"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"四半期別売上構成（絶対値）"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"四半期"</span>, y = <span class="code-string">"売上（万円）"</span>, fill = <span class="code-string">"製品"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 積み上げ棒グラフ（比率）- position="fill"で100%表示</span></span>
+                            <span class="code-line"><span class="code-variable">stacked_percentage</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(sales_composition, <span class="code-function">aes</span>(</span>
+                            <span class="code-line">    x = quarter,   <span class="code-comment"># X軸：四半期</span></span>
+                            <span class="code-line">    y = sales,     <span class="code-comment"># Y軸：売上額</span></span>
+                            <span class="code-line">    fill = product <span class="code-comment"># 塗り色：製品別</span></span>
+                            <span class="code-line">  )) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(position = <span class="code-string">"fill"</span>, alpha = <span class="code-string">0.8</span>, width = <span class="code-string">0.7</span>) +  <span class="code-comment"># "fill"で比率表示</span></span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(labels = <span class="code-function">scales::percent</span>) +  <span class="code-comment"># Y軸を％表示に変換</span></span>
+                            <span class="code-line">  <span class="code-function">scale_fill_manual</span>(</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"スマートフォン"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"タブレット"</span> = <span class="code-string">"#ff6600"</span>, <span class="code-string">"PC"</span> = <span class="code-string">"#39ff14"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"四半期別売上構成（比率）"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"四半期"</span>, y = <span class="code-string">"構成比"</span>, fill = <span class="code-string">"製品"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 2つのプロットを並べて表示</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">gridExtra</span>)</span>
+                            <span class="code-line"><span class="code-function">grid.arrange</span>(stacked_absolute, stacked_percentage, ncol = <span class="code-string">2</span>)</span>
                         </div>
                     </div>
                 </div>
@@ -2043,6 +2302,248 @@
                 </div>
             </section>
             
+            <!-- Advanced Visualization Techniques -->
+            <section class="content-section fade-in-up" id="advanced">
+                <h2 class="section-title">高度な可視化テクニック</h2>
+                <div class="section-content">
+                    
+                    <!-- 複合グラフ -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🌟 複合グラフ：複数の情報を1つのプロットに</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">composite_plot_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 売上と利益率の複合グラフ</span></span>
+                            <span class="code-line"><span class="code-comment"># 複合グラフ = 異なるスケールの指標を1つのプロットに組み合わせ</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)  <span class="code-comment"># グラフ作成</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)    <span class="code-comment"># データ操作</span></span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># ビジネスデータの作成（月別トレンド）</span></span>
+                            <span class="code-line"><span class="code-variable">business_monthly</span> <span class="code-keyword">&lt;-</span> <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">  month = <span class="code-function">factor</span>(<span class="code-function">month.abb</span>, levels = <span class="code-function">month.abb</span>),</span>
+                            <span class="code-line">  sales = <span class="code-function">c</span>(<span class="code-string">120</span>, <span class="code-string">135</span>, <span class="code-string">158</span>, <span class="code-string">142</span>, <span class="code-string">168</span>, <span class="code-string">195</span>, <span class="code-string">210</span>, <span class="code-string">198</span>, <span class="code-string">185</span>, <span class="code-string">172</span>, <span class="code-string">165</span>, <span class="code-string">148</span>),</span>
+                            <span class="code-line">  profit_rate = <span class="code-function">c</span>(<span class="code-string">12.5</span>, <span class="code-string">14.2</span>, <span class="code-string">16.8</span>, <span class="code-string">15.1</span>, <span class="code-string">18.3</span>, <span class="code-string">22.1</span>, <span class="code-string">25.4</span>, <span class="code-string">23.8</span>, <span class="code-string">21.2</span>, <span class="code-string">19.6</span>, <span class="code-string">17.8</span>, <span class="code-string">16.3</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 複合グラフの作成（レイヤーを重ねる）</span></span>
+                            <span class="code-line"><span class="code-variable">composite_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(business_monthly, <span class="code-function">aes</span>(x = month)) +</span>
+                            <span class="code-line">  <span class="code-comment"># レイヤー1: 棒グラフ（売上額）</span></span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(aes(y = sales), fill = <span class="code-string">"#00ffff"</span>, alpha = <span class="code-string">0.6</span>, width = <span class="code-string">0.7</span>) +</span>
+                            <span class="code-line">  <span class="code-comment"># レイヤー2: 線グラフ（利益率）- スケール調整が重要</span></span>
+                            <span class="code-line">  <span class="code-function">geom_line</span>(aes(y = profit_rate * <span class="code-string">8</span>, group = <span class="code-string">1</span>), color = <span class="code-string">"#ff1493"</span>, size = <span class="code-string">2</span>) +  <span class="code-comment"># *8でスケール調整</span></span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(y = profit_rate * <span class="code-string">8</span>), color = <span class="code-string">"#ff1493"</span>, size = <span class="code-string">4</span>) +  <span class="code-comment"># ポイント追加</span></span>
+                            <span class="code-line">  <span class="code-comment"># 2軸設定：異なる単位の数値を2軸で表示</span></span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(  <span class="code-comment"># 主軸（左側Y軸）の設定</span></span>
+                            <span class="code-line">    name = <span class="code-string">"売上（万円）"</span>,  <span class="code-comment"># 左Y軸ラベル</span></span>
+                            <span class="code-line">    sec.axis = <span class="code-function">sec_axis</span>(~.<span class="code-string">/8</span>, name = <span class="code-string">"利益率（%）"</span>)  <span class="code-comment"># 右Y軸：/8で元のスケールに戻す</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"月別売上と利益率の推移"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"棒グラフ（売上）+ 線グラフ（利益率）"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"月"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(  <span class="code-comment"># 視覚的な調整</span></span>
+                            <span class="code-line">    axis.title.y = <span class="code-function">element_text</span>(color = <span class="code-string">"#00ffff"</span>),        <span class="code-comment"># 左Y軸ラベル色</span></span>
+                            <span class="code-line">    axis.title.y.right = <span class="code-function">element_text</span>(color = <span class="code-string">"#ff1493"</span>),  <span class="code-comment"># 右Y軸ラベル色</span></span>
+                            <span class="code-line">    axis.text.x = <span class="code-function">element_text</span>(angle = <span class="code-string">45</span>, hjust = <span class="code-string">1</span>)    <span class="code-comment"># X軸ラベルの回転</span></span>
+                            <span class="code-line">  )</span>
+                        </div>
+                    </div>
+                    
+                    <!-- インタラクティブなアニメーション -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🎬 アニメーション：時間軸での変化</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">animated_plot_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># gganimate を使ったアニメーション</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">gganimate</span>)  <span class="code-comment"># install.packages("gganimate")</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 時系列データの作成</span></span>
+                            <span class="code-line"><span class="code-variable">company_growth</span> <span class="code-keyword">&lt;-</span> <span class="code-function">expand_grid</span>(</span>
+                            <span class="code-line">  company = <span class="code-function">c</span>(<span class="code-string">"Apple"</span>, <span class="code-string">"Google"</span>, <span class="code-string">"Microsoft"</span>, <span class="code-string">"Amazon"</span>, <span class="code-string">"Meta"</span>),</span>
+                            <span class="code-line">  year = <span class="code-string">2018</span>:<span class="code-string">2023</span></span>
+                            <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">    revenue = <span class="code-function">case_when</span>(</span>
+                            <span class="code-line">      company == <span class="code-string">"Apple"</span> ~ <span class="code-string">265</span> + (year - <span class="code-string">2018</span>) * <span class="code-string">45</span> + <span class="code-function">rnorm</span>(<span class="code-string">1</span>, <span class="code-string">0</span>, <span class="code-string">10</span>),</span>
+                            <span class="code-line">      company == <span class="code-string">"Google"</span> ~ <span class="code-string">136</span> + (year - <span class="code-string">2018</span>) * <span class="code-string">35</span> + <span class="code-function">rnorm</span>(<span class="code-string">1</span>, <span class="code-string">0</span>, <span class="code-string">8</span>),</span>
+                            <span class="code-line">      company == <span class="code-string">"Microsoft"</span> ~ <span class="code-string">110</span> + (year - <span class="code-string">2018</span>) * <span class="code-string">40</span> + <span class="code-function">rnorm</span>(<span class="code-string">1</span>, <span class="code-string">0</span>, <span class="code-string">12</span>),</span>
+                            <span class="code-line">      company == <span class="code-string">"Amazon"</span> ~ <span class="code-string">232</span> + (year - <span class="code-string">2018</span>) * <span class="code-string">55</span> + <span class="code-function">rnorm</span>(<span class="code-string">1</span>, <span class="code-string">0</span>, <span class="code-string">15</span>),</span>
+                            <span class="code-line">      company == <span class="code-string">"Meta"</span> ~ <span class="code-string">55</span> + (year - <span class="code-string">2018</span>) * <span class="code-string">25</span> + <span class="code-function">rnorm</span>(<span class="code-string">1</span>, <span class="code-string">0</span>, <span class="code-string">20</span>)</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># アニメーション付きバーチャートレース</span></span>
+                            <span class="code-line"><span class="code-variable">animated_plot</span> <span class="code-keyword">&lt;-</span> company_growth <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(year) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">arrange</span>(year, -revenue) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(rank = <span class="code-function">row_number</span>()) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">filter</span>(rank &lt;= <span class="code-string">5</span>) <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line">  <span class="code-function">ggplot</span>(aes(rank, group = company, fill = as.factor(company), color = as.factor(company))) +</span>
+                            <span class="code-line">  <span class="code-function">geom_tile</span>(aes(y = revenue/<span class="code-string">2</span>, height = revenue, width = <span class="code-string">0.9</span>), alpha = <span class="code-string">0.8</span>, color = <span class="code-string">NA</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(aes(y = <span class="code-string">0</span>, label = <span class="code-function">paste</span>(company, <span class="code-string">" "</span>)), vjust = <span class="code-string">0.2</span>, hjust = <span class="code-string">1</span>, size = <span class="code-string">5</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(aes(y = revenue, label = <span class="code-function">paste0</span>(<span class="code-string">" $"</span>, <span class="code-function">round</span>(revenue), <span class="code-string">"B"</span>)), hjust = <span class="code-string">0</span>, size = <span class="code-string">4</span>) +</span>
+                            <span class="code-line">  <span class="code-function">coord_flip</span>(clip = <span class="code-string">"off"</span>, expand = <span class="code-string">FALSE</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_y_continuous</span>(labels = <span class="code-function">scales::comma</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_x_reverse</span>() +</span>
+                            <span class="code-line">  <span class="code-function">guides</span>(color = <span class="code-string">FALSE</span>, fill = <span class="code-string">FALSE</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.title = <span class="code-function">element_text</span>(hjust = <span class="code-string">0</span>, size = <span class="code-string">22</span>),</span>
+                            <span class="code-line">    axis.ticks.y = <span class="code-function">element_blank</span>(),</span>
+                            <span class="code-line">    axis.text.y  = <span class="code-function">element_blank</span>(),</span>
+                            <span class="code-line">    plot.margin = <span class="code-function">margin</span>(<span class="code-string">1</span>,<span class="code-string">1</span>,<span class="code-string">1</span>,<span class="code-string">4</span>, <span class="code-string">"cm"</span>)</span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">transition_states</span>(year, transition_length = <span class="code-string">4</span>, state_length = <span class="code-string">1</span>) +</span>
+                            <span class="code-line">  <span class="code-function">view_follow</span>(fixed_x = <span class="code-string">TRUE</span>)  +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"Tech企業売上ランキング推移: {closest_state}年"</span>,</span>
+                            <span class="code-line">       subtitle  =  <span class="code-string">"売上高（十億ドル）"</span>,</span>
+                            <span class="code-line">       caption  = <span class="code-string">"データ: 公開財務諸表"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># アニメーションの実行</span></span>
+                            <span class="code-line"><span class="code-comment"># animate(animated_plot, width = 1200, height = 1000, fps = 25, duration = 10)</span></span>
+                        </div>
+                    </div>
+                    
+                    <!-- 3D風可視化 -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">🎯 擬似3D効果：奥行きのある表現</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pseudo_3d_example.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># 等高線と影を使った3D風プロット</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 3Dデータの作成（数学関数）</span></span>
+                            <span class="code-line"><span class="code-variable">create_3d_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">function</span>() {</span>
+                            <span class="code-line">  <span class="code-variable">x</span> <span class="code-keyword">&lt;-</span> <span class="code-function">seq</span>(-<span class="code-string">3</span>, <span class="code-string">3</span>, length.out = <span class="code-string">50</span>)</span>
+                            <span class="code-line">  <span class="code-variable">y</span> <span class="code-keyword">&lt;-</span> <span class="code-function">seq</span>(-<span class="code-string">3</span>, <span class="code-string">3</span>, length.out = <span class="code-string">50</span>)</span>
+                            <span class="code-line">  <span class="code-variable">grid</span> <span class="code-keyword">&lt;-</span> <span class="code-function">expand_grid</span>(x = x, y = y)</span>
+                            <span class="code-line">  grid$z <span class="code-keyword">&lt;-</span> <span class="code-function">with</span>(grid, <span class="code-function">sin</span>(<span class="code-function">sqrt</span>(x^<span class="code-string">2</span> + y^<span class="code-string">2</span>)) * <span class="code-function">exp</span>(-<span class="code-string">0.1</span> * (x^<span class="code-string">2</span> + y^<span class="code-string">2</span>)))</span>
+                            <span class="code-line">  <span class="code-keyword">return</span>(grid)</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-variable">surface_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">create_3d_data</span>()</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># 等高線プロット</span></span>
+                            <span class="code-line"><span class="code-variable">contour_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(surface_data, <span class="code-function">aes</span>(x = x, y = y, z = z)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_contour_filled</span>(alpha = <span class="code-string">0.8</span>, bins = <span class="code-string">15</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_contour</span>(color = <span class="code-string">"white"</span>, alpha = <span class="code-string">0.6</span>, bins = <span class="code-string">15</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_fill_viridis_d</span>(option = <span class="code-string">"plasma"</span>, direction = -<span class="code-string">1</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"3D数学関数の可視化"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"z = sin(√(x² + y²)) × e^(-0.1(x² + y²))"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"X軸"</span>, y = <span class="code-string">"Y軸"</span>,</span>
+                            <span class="code-line">    fill = <span class="code-string">"高度"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
+                            <span class="code-line">  <span class="code-function">theme</span>(</span>
+                            <span class="code-line">    plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"black"</span>),</span>
+                            <span class="code-line">    panel.grid = <span class="code-function">element_blank</span>(),</span>
+                            <span class="code-line">    legend.position = <span class="code-string">"bottom"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">coord_equal</span>()</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Interactive and Business Graphics -->
+            <section class="content-section fade-in-up" id="business">
+                <h2 class="section-title">ビジネス実用グラフ集</h2>
+                <div class="section-content">
+                    
+                    <!-- ダッシュボード風マルチプロット -->
+                    <h3 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">📊 ダッシュボード：KPI可視化パネル</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">business_dashboard.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"><span class="code-comment"># ビジネスダッシュボードの作成</span></span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">gridExtra</span>)</span>
+                            <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># KPIデータの作成</span></span>
+                            <span class="code-line"><span class="code-variable">kpi_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">list</span>(</span>
+                            <span class="code-line">  <span class="code-comment"># 売上推移</span></span>
+                            <span class="code-line">  sales_trend = <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">    date = <span class="code-function">seq</span>(<span class="code-function">as.Date</span>(<span class="code-string">"2023-01-01"</span>), <span class="code-function">as.Date</span>(<span class="code-string">"2023-12-31"</span>), by = <span class="code-string">"month"</span>),</span>
+                            <span class="code-line">    sales = <span class="code-function">c</span>(<span class="code-string">850</span>, <span class="code-string">920</span>, <span class="code-string">1100</span>, <span class="code-string">980</span>, <span class="code-string">1250</span>, <span class="code-string">1400</span>, <span class="code-string">1600</span>, <span class="code-string">1450</span>, <span class="code-string">1200</span>, <span class="code-string">1100</span>, <span class="code-string">1350</span>, <span class="code-string">1500</span>),</span>
+                            <span class="code-line">    target = <span class="code-string">1200</span></span>
+                            <span class="code-line">  ),</span>
+                            <span class="code-line">  <span class="code-comment"># 地域別売上</span></span>
+                            <span class="code-line">  regional_sales = <span class="code-function">data.frame</span>(</span>
+                            <span class="code-line">    region = <span class="code-function">c</span>(<span class="code-string">"東京"</span>, <span class="code-string">"大阪"</span>, <span class="code-string">"名古屋"</span>, <span class="code-string">"福岡"</span>, <span class="code-string">"札幌"</span>),</span>
+                            <span class="code-line">    sales = <span class="code-function">c</span>(<span class="code-string">3500</span>, <span class="code-string">2800</span>, <span class="code-string">1900</span>, <span class="code-string">1400</span>, <span class="code-string">1200</span>),</span>
+                            <span class="code-line">    growth = <span class="code-function">c</span>(<span class="code-string">15.2</span>, <span class="code-string">8.7</span>, <span class="code-string">22.1</span>, <span class="code-string">-3.4</span>, <span class="code-string">12.8</span>)</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># プロット1: 売上推移</span></span>
+                            <span class="code-line"><span class="code-variable">p1</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(kpi_data$sales_trend, <span class="code-function">aes</span>(x = date, y = sales)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_line</span>(color = <span class="code-string">"#00ffff"</span>, size = <span class="code-string">2</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(color = <span class="code-string">"#00ffff"</span>, size = <span class="code-string">3</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_hline</span>(yintercept = <span class="code-string">1200</span>, color = <span class="code-string">"#ff1493"</span>, linetype = <span class="code-string">"dashed"</span>, size = <span class="code-string">1</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_area</span>(alpha = <span class="code-string">0.3</span>, fill = <span class="code-string">"#00ffff"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">annotate</span>(<span class="code-string">"text"</span>, x = <span class="code-function">as.Date</span>(<span class="code-string">"2023-10-01"</span>), y = <span class="code-string">1220</span>, label = <span class="code-string">"目標ライン"</span>, color = <span class="code-string">"#ff1493"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"月別売上推移"</span>, x = <span class="code-string">"月"</span>, y = <span class="code-string">"売上（万円）"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() + <span class="code-function">theme</span>(plot.title = <span class="code-function">element_text</span>(size = <span class="code-string">14</span>, hjust = <span class="code-string">0.5</span>))</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># プロット2: 地域別売上</span></span>
+                            <span class="code-line"><span class="code-variable">p2</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(kpi_data$regional_sales, <span class="code-function">aes</span>(x = <span class="code-function">reorder</span>(region, sales), y = sales)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(fill = <span class="code-string">"#39ff14"</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(aes(label = <span class="code-function">scales::comma</span>(sales)), hjust = -<span class="code-string">0.1</span>, color = <span class="code-string">"black"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">coord_flip</span>() +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"地域別売上"</span>, x = <span class="code-string">"地域"</span>, y = <span class="code-string">"売上（万円）"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() + <span class="code-function">theme</span>(plot.title = <span class="code-function">element_text</span>(size = <span class="code-string">14</span>, hjust = <span class="code-string">0.5</span>))</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># プロット3: 成長率</span></span>
+                            <span class="code-line"><span class="code-variable">p3</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(kpi_data$regional_sales, <span class="code-function">aes</span>(x = region, y = growth)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(aes(fill = growth > <span class="code-string">0</span>), alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_fill_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"TRUE"</span> = <span class="code-string">"#39ff14"</span>, <span class="code-string">"FALSE"</span> = <span class="code-string">"#ff1493"</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_hline</span>(yintercept = <span class="code-string">0</span>, color = <span class="code-string">"white"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(aes(label = <span class="code-function">paste0</span>(growth, <span class="code-string">"%"</span>)), vjust = <span class="code-function">ifelse</span>(kpi_data$regional_sales$growth > <span class="code-string">0</span>, -<span class="code-string">0.5</span>, <span class="code-string">1.2</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"地域別成長率"</span>, x = <span class="code-string">"地域"</span>, y = <span class="code-string">"成長率 (%)"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>() + <span class="code-function">theme</span>(legend.position = <span class="code-string">"none"</span>, plot.title = <span class="code-function">element_text</span>(size = <span class="code-string">14</span>, hjust = <span class="code-string">0.5</span>))</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># ダッシュボード作成</span></span>
+                            <span class="code-line"><span class="code-function">grid.arrange</span>(p1, p2, p3, ncol = <span class="code-string">2</span>, nrow = <span class="code-string">2</span>,</span>
+                            <span class="code-line">             top = <span class="code-function">textGrob</span>(<span class="code-string">"📊 ビジネスKPIダッシュボード 2023"</span>, gp = <span class="code-function">gpar</span>(fontsize = <span class="code-string">18</span>, fontface = <span class="code-string">"bold"</span>)))</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
             <!-- Themes and Customization -->
             <section class="content-section fade-in-up" id="themes">
                 <h2 class="section-title">プロフェッショナルなテーマ設計</h2>
@@ -2097,6 +2598,52 @@
                             <span class="code-line">        size = <span class="code-function">rel</span>(<span class="code-string">1.1</span>),</span>
                             <span class="code-line">        hjust = <span class="code-string">0</span>,</span>
                             <span class="code-line">        margin = <span class="code-function">margin</span>(b = <span class="code-string">20</span>)</span>
+                            <span class="code-line">      ),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># 凡例</span></span>
+                            <span class="code-line">      legend.position = <span class="code-string">"bottom"</span>,</span>
+                            <span class="code-line">      legend.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"white"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      legend.key = <span class="code-function">element_blank</span>()</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># データサイエンス向けテーマ</span></span>
+                            <span class="code-line"><span class="code-variable">theme_data_science</span> <span class="code-keyword">&lt;-</span> <span class="code-function">function</span>(base_size = <span class="code-string">11</span>) {</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>(base_size = base_size) +</span>
+                            <span class="code-line">    <span class="code-function">theme</span>(</span>
+                            <span class="code-line">      <span class="code-comment"># 背景</span></span>
+                            <span class="code-line">      plot.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"#0e1117"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      panel.background = <span class="code-function">element_rect</span>(fill = <span class="code-string">"#0e1117"</span>, color = <span class="code-string">NA</span>),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># テキスト</span></span>
+                            <span class="code-line">      text = <span class="code-function">element_text</span>(color = <span class="code-string">"#c9d1d9"</span>),</span>
+                            <span class="code-line">      axis.text = <span class="code-function">element_text</span>(color = <span class="code-string">"#8b949e"</span>),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># グリッド</span></span>
+                            <span class="code-line">      panel.grid.major = <span class="code-function">element_line</span>(color = <span class="code-string">"#21262d"</span>, size = <span class="code-string">0.5</span>),</span>
+                            <span class="code-line">      panel.grid.minor = <span class="code-function">element_blank</span>(),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      <span class="code-comment"># タイトル</span></span>
+                            <span class="code-line">      plot.title = <span class="code-function">element_text</span>(</span>
+                            <span class="code-line">        color = <span class="code-string">"#f0f6fc"</span>,</span>
+                            <span class="code-line">        size = <span class="code-function">rel</span>(<span class="code-string">1.3</span>),</span>
+                            <span class="code-line">        face = <span class="code-string">"bold"</span>,</span>
+                            <span class="code-line">        margin = <span class="code-function">margin</span>(b = <span class="code-string">15</span>)</span>
+                            <span class="code-line">      )</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"><span class="code-comment"># テーマの使用例</span></span>
+                            <span class="code-line"><span class="code-variable">example_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg, color = factor(cyl))) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>) +</span>
+                            <span class="code-line">  <span class="code-function">scale_color_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"#ff7b7b"</span>, <span class="code-string">"#7bc7ff"</span>, <span class="code-string">"#7bff7b"</span>)) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(</span>
+                            <span class="code-line">    title = <span class="code-string">"カスタムテーマの適用例"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"企業ブランド vs データサイエンス"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"馬力"</span>, y = <span class="code-string">"燃費"</span>, color = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">  ) +</span>
+                            <span class="code-line">  <span class="code-function">theme_data_science</span>()  <span class="code-comment"># または theme_corporate()</span></span>
                             <span class="code-line">      ),</span>
                             <span class="code-line">      plot.caption = <span class="code-function">element_text</span>(</span>
                             <span class="code-line">        color = <span class="code-string">"gray50"</span>,</span>
@@ -2220,19 +2767,533 @@
                 </div>
             </section>
             
+            <!-- Graph Examples Section -->
+            <section class="content-section fade-in-up" id="graph-examples">
+                <h2 class="section-title">📈 実践的なグラフ作成例</h2>
+                <div class="section-content">
+                    <p>
+                        実際のデータを使ってggplot2でグラフを作成してみましょう。以下の例では、よく使われるグラフパターンとその出力結果を紹介します。
+                    </p>
+
+                    <!-- 散布図の例 -->
+                    <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: var(--neon-lime); margin-bottom: 1rem;">📊 散布図（Scatter Plot）</h3>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">scatter_plot_example.R</span>
+                            </div>
+                            <div class="code-content">
+<span class="code-line"><span class="code-comment"># mtcarsデータセットを使用した散布図</span></span>
+<span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># 基本的な散布図</span></span>
+<span class="code-line">p1 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">mtcars</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">wt</span>, <span class="code-identifier">y</span> = <span class="code-identifier">mpg</span>)) +</span>
+<span class="code-line">  <span class="code-function">geom_point</span>(<span class="code-identifier">size</span> = <span class="code-number">3</span>, <span class="code-identifier">alpha</span> = <span class="code-number">0.7</span>) +</span>
+<span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"車重と燃費の関係"</span>,</span>
+<span class="code-line">       <span class="code-identifier">x</span> = <span class="code-string">"車重 (1000 lbs)"</span>,</span>
+<span class="code-line">       <span class="code-identifier">y</span> = <span class="code-string">"燃費 (mpg)"</span>) +</span>
+<span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># 回帰直線を追加</span></span>
+<span class="code-line">p2 <span class="code-operator"><-</span> p1 + <span class="code-function">geom_smooth</span>(<span class="code-identifier">method</span> = <span class="code-string">"lm"</span>, <span class="code-identifier">se</span> = <span class="code-number">TRUE</span>, <span class="code-identifier">color</span> = <span class="code-string">"red"</span>)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-function">print</span>(p2)</span>
+                            </div>
+                        </div>
+
+                        <!-- グラフ出力例をSVGで表現 -->
+                        <div style="background: white; border-radius: 10px; padding: 2rem; margin: 1.5rem 0;">
+                            <h4 style="color: #333; margin-bottom: 1rem; text-align: center;">出力例：</h4>
+                            <svg width="100%" height="300" viewBox="0 0 500 300" style="background: #f8f9fa; border-radius: 8px;">
+                                <!-- グリッド線 -->
+                                <defs>
+                                    <pattern id="grid" width="50" height="30" patternUnits="userSpaceOnUse">
+                                        <path d="M 50 0 L 0 0 0 30" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                
+                                <!-- 軸 -->
+                                <line x1="60" y1="250" x2="450" y2="250" stroke="#333" stroke-width="2"/>
+                                <line x1="60" y1="250" x2="60" y2="30" stroke="#333" stroke-width="2"/>
+                                
+                                <!-- データポイント -->
+                                <circle cx="100" cy="80" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="120" cy="100" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="140" cy="120" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="160" cy="140" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="180" cy="160" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="200" cy="180" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="220" cy="190" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="240" cy="200" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="260" cy="210" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="280" cy="220" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="300" cy="200" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="320" cy="210" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="340" cy="220" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="360" cy="230" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="380" cy="225" r="4" fill="#2563eb" opacity="0.7"/>
+                                <circle cx="400" cy="235" r="4" fill="#2563eb" opacity="0.7"/>
+                                
+                                <!-- 回帰直線 -->
+                                <line x1="80" y1="70" x2="420" y2="240" stroke="#dc2626" stroke-width="2"/>
+                                
+                                <!-- 信頼区間 -->
+                                <path d="M 80 65 L 420 235 L 420 245 L 80 75 Z" fill="#dc2626" opacity="0.2"/>
+                                
+                                <!-- 軸ラベル -->
+                                <text x="250" y="280" text-anchor="middle" font-size="12" fill="#333">車重 (1000 lbs)</text>
+                                <text x="25" y="140" text-anchor="middle" transform="rotate(-90 25 140)" font-size="12" fill="#333">燃費 (mpg)</text>
+                                
+                                <!-- タイトル -->
+                                <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">車重と燃費の関係</text>
+                                
+                                <!-- 軸目盛り -->
+                                <text x="100" y="265" text-anchor="middle" font-size="10" fill="#666">2</text>
+                                <text x="200" y="265" text-anchor="middle" font-size="10" fill="#666">3</text>
+                                <text x="300" y="265" text-anchor="middle" font-size="10" fill="#666">4</text>
+                                <text x="400" y="265" text-anchor="middle" font-size="10" fill="#666">5</text>
+                                
+                                <text x="45" y="235" text-anchor="end" font-size="10" fill="#666">15</text>
+                                <text x="45" y="185" text-anchor="end" font-size="10" fill="#666">20</text>
+                                <text x="45" y="135" text-anchor="end" font-size="10" fill="#666">25</text>
+                                <text x="45" y="85" text-anchor="end" font-size="10" fill="#666">30</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- 棒グラフの例 -->
+                    <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: var(--neon-magenta); margin-bottom: 1rem;">📊 棒グラフ（Bar Chart）</h3>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">bar_chart_example.R</span>
+                            </div>
+                            <div class="code-content">
+<span class="code-line"><span class="code-comment"># diamondsデータセットを使用した棒グラフ</span></span>
+<span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># データ集計</span></span>
+<span class="code-line">diamond_summary <span class="code-operator"><-</span> <span class="code-identifier">diamonds</span> <span class="code-operator">%>%</span></span>
+<span class="code-line">  <span class="code-function">group_by</span>(<span class="code-identifier">cut</span>) <span class="code-operator">%>%</span></span>
+<span class="code-line">  <span class="code-function">summarise</span>(<span class="code-identifier">count</span> = <span class="code-function">n</span>(), <span class="code-identifier">.groups</span> = <span class="code-string">'drop'</span>)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># カラフルな棒グラフ</span></span>
+<span class="code-line">p3 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">diamond_summary</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">cut</span>, <span class="code-identifier">y</span> = <span class="code-identifier">count</span>, <span class="code-identifier">fill</span> = <span class="code-identifier">cut</span>)) +</span>
+<span class="code-line">  <span class="code-function">geom_col</span>() +</span>
+<span class="code-line">  <span class="code-function">scale_fill_viridis_d</span>() +</span>
+<span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"ダイヤモンドのカット別個数"</span>,</span>
+<span class="code-line">       <span class="code-identifier">x</span> = <span class="code-string">"カット品質"</span>,</span>
+<span class="code-line">       <span class="code-identifier">y</span> = <span class="code-string">"個数"</span>) +</span>
+<span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
+<span class="code-line">  <span class="code-function">theme</span>(<span class="code-identifier">legend.position</span> = <span class="code-string">"none"</span>)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-function">print</span>(p3)</span>
+                            </div>
+                        </div>
+
+                        <!-- 棒グラフ出力例 -->
+                        <div style="background: white; border-radius: 10px; padding: 2rem; margin: 1.5rem 0;">
+                            <h4 style="color: #333; margin-bottom: 1rem; text-align: center;">出力例：</h4>
+                            <svg width="100%" height="300" viewBox="0 0 500 300" style="background: #f8f9fa; border-radius: 8px;">
+                                <!-- グリッド線 -->
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                
+                                <!-- 軸 -->
+                                <line x1="60" y1="250" x2="450" y2="250" stroke="#333" stroke-width="2"/>
+                                <line x1="60" y1="250" x2="60" y2="30" stroke="#333" stroke-width="2"/>
+                                
+                                <!-- 棒グラフ -->
+                                <rect x="80" y="180" width="50" height="70" fill="#440154" opacity="0.8"/>
+                                <rect x="150" y="120" width="50" height="130" fill="#31688e" opacity="0.8"/>
+                                <rect x="220" y="90" width="50" height="160" fill="#35b779" opacity="0.8"/>
+                                <rect x="290" y="60" width="50" height="190" fill="#fde725" opacity="0.8"/>
+                                <rect x="360" y="40" width="50" height="210" fill="#ff6b35" opacity="0.8"/>
+                                
+                                <!-- 軸ラベル -->
+                                <text x="250" y="280" text-anchor="middle" font-size="12" fill="#333">カット品質</text>
+                                <text x="25" y="140" text-anchor="middle" transform="rotate(-90 25 140)" font-size="12" fill="#333">個数</text>
+                                
+                                <!-- タイトル -->
+                                <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">ダイヤモンドのカット別個数</text>
+                                
+                                <!-- X軸ラベル -->
+                                <text x="105" y="265" text-anchor="middle" font-size="10" fill="#666">Fair</text>
+                                <text x="175" y="265" text-anchor="middle" font-size="10" fill="#666">Good</text>
+                                <text x="245" y="265" text-anchor="middle" font-size="10" fill="#666">Very Good</text>
+                                <text x="315" y="265" text-anchor="middle" font-size="10" fill="#666">Premium</text>
+                                <text x="385" y="265" text-anchor="middle" font-size="10" fill="#666">Ideal</text>
+                                
+                                <!-- Y軸目盛り -->
+                                <text x="45" y="255" text-anchor="end" font-size="10" fill="#666">0</text>
+                                <text x="45" y="205" text-anchor="end" font-size="10" fill="#666">5000</text>
+                                <text x="45" y="155" text-anchor="end" font-size="10" fill="#666">10000</text>
+                                <text x="45" y="105" text-anchor="end" font-size="10" fill="#666">15000</text>
+                                <text x="45" y="55" text-anchor="end" font-size="10" fill="#666">20000</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- ヒストグラムの例 -->
+                    <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: var(--neon-orange); margin-bottom: 1rem;">📊 ヒストグラム（Histogram）</h3>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">histogram_example.R</span>
+                            </div>
+                            <div class="code-content">
+<span class="code-line"><span class="code-comment"># 正規分布データのヒストグラム</span></span>
+<span class="code-line"><span class="code-function">set.seed</span>(<span class="code-number">123</span>)</span>
+<span class="code-line">data <span class="code-operator"><-</span> <span class="code-function">data.frame</span>(</span>
+<span class="code-line">  <span class="code-identifier">value</span> = <span class="code-function">rnorm</span>(<span class="code-number">1000</span>, <span class="code-identifier">mean</span> = <span class="code-number">50</span>, <span class="code-identifier">sd</span> = <span class="code-number">15</span>)</span>
+<span class="code-line">)</span>
+<span class="code-line"></span>
+<span class="code-line">p4 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">data</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">value</span>)) +</span>
+<span class="code-line">  <span class="code-function">geom_histogram</span>(<span class="code-identifier">bins</span> = <span class="code-number">30</span>, <span class="code-identifier">fill</span> = <span class="code-string">"skyblue"</span>, </span>
+<span class="code-line">                   <span class="code-identifier">color</span> = <span class="code-string">"white"</span>, <span class="code-identifier">alpha</span> = <span class="code-number">0.7</span>) +</span>
+<span class="code-line">  <span class="code-function">geom_density</span>(<span class="code-function">aes</span>(<span class="code-identifier">y</span> = <span class="code-function">after_stat</span>(<span class="code-identifier">density</span>) * <span class="code-number">1000</span> * <span class="code-number">3</span>), </span>
+<span class="code-line">               <span class="code-identifier">color</span> = <span class="code-string">"red"</span>, <span class="code-identifier">size</span> = <span class="code-number">1</span>) +</span>
+<span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"データの分布（ヒストグラム + 密度曲線）"</span>,</span>
+<span class="code-line">       <span class="code-identifier">x</span> = <span class="code-string">"値"</span>,</span>
+<span class="code-line">       <span class="code-identifier">y</span> = <span class="code-string">"頻度"</span>) +</span>
+<span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-function">print</span>(p4)</span>
+                            </div>
+                        </div>
+
+                        <!-- ヒストグラム出力例 -->
+                        <div style="background: white; border-radius: 10px; padding: 2rem; margin: 1.5rem 0;">
+                            <h4 style="color: #333; margin-bottom: 1rem; text-align: center;">出力例：</h4>
+                            <svg width="100%" height="300" viewBox="0 0 500 300" style="background: #f8f9fa; border-radius: 8px;">
+                                <!-- グリッド線 -->
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                
+                                <!-- 軸 -->
+                                <line x1="60" y1="250" x2="450" y2="250" stroke="#333" stroke-width="2"/>
+                                <line x1="60" y1="250" x2="60" y2="30" stroke="#333" stroke-width="2"/>
+                                
+                                <!-- ヒストグラムのバー -->
+                                <rect x="70" y="240" width="12" height="10" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="85" y="230" width="12" height="20" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="100" y="220" width="12" height="30" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="115" y="200" width="12" height="50" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="130" y="180" width="12" height="70" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="145" y="160" width="12" height="90" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="160" y="140" width="12" height="110" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="175" y="120" width="12" height="130" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="190" y="100" width="12" height="150" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="205" y="90" width="12" height="160" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="220" y="80" width="12" height="170" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="235" y="70" width="12" height="180" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="250" y="60" width="12" height="190" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="265" y="70" width="12" height="180" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="280" y="80" width="12" height="170" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="295" y="90" width="12" height="160" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="310" y="100" width="12" height="150" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="325" y="120" width="12" height="130" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="340" y="140" width="12" height="110" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="355" y="160" width="12" height="90" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="370" y="180" width="12" height="70" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="385" y="200" width="12" height="50" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="400" y="220" width="12" height="30" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="415" y="230" width="12" height="20" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                <rect x="430" y="240" width="12" height="10" fill="#87ceeb" stroke="white" opacity="0.7"/>
+                                
+                                <!-- 密度曲線 -->
+                                <path d="M 80 240 Q 150 160 220 80 Q 280 60 350 80 Q 420 160 430 240" 
+                                      fill="none" stroke="red" stroke-width="2"/>
+                                
+                                <!-- 軸ラベル -->
+                                <text x="250" y="280" text-anchor="middle" font-size="12" fill="#333">値</text>
+                                <text x="25" y="140" text-anchor="middle" transform="rotate(-90 25 140)" font-size="12" fill="#333">頻度</text>
+                                
+                                <!-- タイトル -->
+                                <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">データの分布（ヒストグラム + 密度曲線）</text>
+                                
+                                <!-- X軸目盛り -->
+                                <text x="100" y="265" text-anchor="middle" font-size="10" fill="#666">20</text>
+                                <text x="175" y="265" text-anchor="middle" font-size="10" fill="#666">35</text>
+                                <text x="250" y="265" text-anchor="middle" font-size="10" fill="#666">50</text>
+                                <text x="325" y="265" text-anchor="middle" font-size="10" fill="#666">65</text>
+                                <text x="400" y="265" text-anchor="middle" font-size="10" fill="#666">80</text>
+                                
+                                <!-- Y軸目盛り -->
+                                <text x="45" y="255" text-anchor="end" font-size="10" fill="#666">0</text>
+                                <text x="45" y="205" text-anchor="end" font-size="10" fill="#666">25</text>
+                                <text x="45" y="155" text-anchor="end" font-size="10" fill="#666">50</text>
+                                <text x="45" y="105" text-anchor="end" font-size="10" fill="#666">75</text>
+                                <text x="45" y="55" text-anchor="end" font-size="10" fill="#666">100</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- 実践的なアドバイス -->
+                    <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #39ff14; margin-bottom: 1rem;">💡 グラフ作成のプロのコツ</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>目的を明確にする</strong>：何を伝えたいかを決めてからグラフの種類を選択</li>
+                            <li><strong>色の使い方</strong>：色覚多様性を考慮したカラーパレットを使用</li>
+                            <li><strong>軸の設定</strong>：適切な範囲とラベルで誤解を避ける</li>
+                            <li><strong>レイアウト</strong>：余白と文字サイズで読みやすさを向上</li>
+                            <li><strong>一貫性</strong>：シリーズ全体で統一されたスタイルを維持</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistical Visualization and ML Visualization -->
+            <section class="content-section fade-in-up" id="statistical-ml-viz">
+                <h2 class="section-title">📊 統計的可視化と機械学習可視化</h2>
+                <div class="section-content">
+                    <p>
+                        基本的なggplot2スキルを習得したら、統計分析や機械学習の結果を効果的に可視化する技法を学びましょう。
+                        データの背後にある統計的パターンを明確に伝える可視化は、分析結果の説得力を大幅に向上させます。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🔬 統計的推論のための可視化</h3>
+                    
+                    <p>
+                        統計的仮説検定や信頼区間などの概念を可視化することで、分析結果をより理解しやすく伝えることができます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">statistical_inference_plots.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 統計的推論の可視化</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(ggplot2)</span>
+                            <span class="code-line"><span class="code-function">library</span>(scales)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 1. 信頼区間の可視化</span>
+                            <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-number">123</span>)</span>
+                            <span class="code-line">sample_data <- <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  group = <span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-string">"A"</span>, <span class="code-string">"B"</span>, <span class="code-string">"C"</span>), each = <span class="code-number">100</span>),</span>
+                            <span class="code-line">  value = <span class="code-function">c</span>(<span class="code-function">rnorm</span>(<span class="code-number">100</span>, <span class="code-number">10</span>, <span class="code-number">2</span>), <span class="code-function">rnorm</span>(<span class="code-number">100</span>, <span class="code-number">12</span>, <span class="code-number">2.5</span>), <span class="code-function">rnorm</span>(<span class="code-number">100</span>, <span class="code-number">11</span>, <span class="code-number">1.8</span>))</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 信頼区間付きの平均値比較</span>
+                            <span class="code-line">confidence_plot <- sample_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">group_by</span>(group) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                            <span class="code-line">    mean_val = <span class="code-function">mean</span>(value),</span>
+                            <span class="code-line">    se = <span class="code-function">sd</span>(value) / <span class="code-function">sqrt</span>(<span class="code-function">n</span>()),</span>
+                            <span class="code-line">    ci_lower = mean_val - <span class="code-number">1.96</span> * se,</span>
+                            <span class="code-line">    ci_upper = mean_val + <span class="code-number">1.96</span> * se,</span>
+                            <span class="code-line">    .groups = <span class="code-string">'drop'</span></span>
+                            <span class="code-line">  ) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = group, y = mean_val, color = group)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-number">4</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_errorbar</span>(<span class="code-function">aes</span>(ymin = ci_lower, ymax = ci_upper), </span>
+                            <span class="code-line">                width = <span class="code-number">0.2</span>, size = <span class="code-number">1</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"グループ間平均値の比較（95%信頼区間）"</span>,</span>
+                            <span class="code-line">       y = <span class="code-string">"平均値"</span>, x = <span class="code-string">"グループ"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🤖 機械学習結果の可視化</h3>
+                    
+                    <p>
+                        機械学習モデルの性能評価、特徴量の重要度、予測結果などを効果的に可視化する方法を学びます。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">ml_visualization.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 機械学習結果の可視化</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidymodels)</span>
+                            <span class="code-line"><span class="code-function">library</span>(ggplot2)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 1. 特徴量重要度の可視化</span>
+                            <span class="code-line">feature_importance <- <span class="code-function">tibble</span>(</span>
+                            <span class="code-line">  feature = <span class="code-function">c</span>(<span class="code-string">"年齢"</span>, <span class="code-string">"収入"</span>, <span class="code-string">"教育レベル"</span>, <span class="code-string">"職業"</span>, <span class="code-string">"地域"</span>, </span>
+                            <span class="code-line">              <span class="code-string">"家族構成"</span>, <span class="code-string">"趣味"</span>, <span class="code-string">"購入履歴"</span>, <span class="code-string">"ウェブ行動"</span>, <span class="code-string">"季節性"</span>),</span>
+                            <span class="code-line">  importance = <span class="code-function">c</span>(<span class="code-number">0.15</span>, <span class="code-number">0.23</span>, <span class="code-number">0.12</span>, <span class="code-number">0.08</span>, <span class="code-number">0.05</span>, </span>
+                            <span class="code-line">                 <span class="code-number">0.07</span>, <span class="code-number">0.04</span>, <span class="code-number">0.18</span>, <span class="code-number">0.06</span>, <span class="code-number">0.02</span>)</span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line">importance_plot <- feature_importance <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">mutate</span>(feature = <span class="code-function">fct_reorder</span>(feature, importance)) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = importance, y = feature)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_col</span>(fill = <span class="code-string">"steelblue"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">geom_text</span>(<span class="code-function">aes</span>(label = scales::<span class="code-function">percent</span>(importance)), </span>
+                            <span class="code-line">            hjust = <span class="code-number">-0.1</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"機械学習モデル：特徴量重要度"</span>,</span>
+                            <span class="code-line">       x = <span class="code-string">"重要度"</span>, y = <span class="code-string">"特徴量"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🌐 高次元データの可視化</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">pca_visualization.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 主成分分析（PCA）の可視化</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(ggplot2)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 相関行列のヒートマップ</span>
+                            <span class="code-line">correlation_data <- mtcars <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">select_if</span>(is.numeric) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">cor</span>() <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">as.data.frame</span>() <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">rownames_to_column</span>(<span class="code-string">"var1"</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">pivot_longer</span>(-var1, names_to = <span class="code-string">"var2"</span>, values_to = <span class="code-string">"correlation"</span>)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line">correlation_heatmap <- correlation_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = var1, y = var2, fill = correlation)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_tile</span>() +</span>
+                            <span class="code-line">  <span class="code-function">scale_fill_gradient2</span>(low = <span class="code-string">"blue"</span>, mid = <span class="code-string">"white"</span>, high = <span class="code-string">"red"</span>,</span>
+                            <span class="code-line">                      midpoint = <span class="code-number">0</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"変数間相関関係ヒートマップ"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">💡 可視化のベストプラクティス</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #39ff14; margin-bottom: 1rem;">📊 統計的可視化の原則</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>不確実性を明示する</strong>：信頼区間やエラーバーで統計的不確実性を表現</li>
+                            <li><strong>適切なスケールを選択</strong>：対数スケールや標準化で比較しやすく</li>
+                            <li><strong>色使いに意味を持たせる</strong>：カテゴリや値の大小を直感的に表現</li>
+                            <li><strong>ストーリーを構築する</strong>：単なる数値の羅列ではなく、洞察に導く</li>
+                            <li><strong>対象者を考慮する</strong>：専門家向けか一般向けかで詳細度を調整</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%); border: 1px solid rgba(255, 102, 0, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #ff6600; margin-bottom: 1rem;">⚠️ よくある可視化の落とし穴</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>誤解を招くスケール</strong>：y軸の範囲操作で印象を歪めない</li>
+                            <li><strong>相関の錯覚</strong>：見かけ上の相関を因果関係と誤解させない</li>
+                            <li><strong>情報過多</strong>：一つのグラフに詰め込みすぎない</li>
+                            <li><strong>色覚への配慮不足</strong>：色覚多様性を考慮した色選択を</li>
+                            <li><strong>統計的有意性の誤解</strong>：p-hackingや多重比較の問題を理解する</li>
+                        </ul>
+                    </div>
+                    
+                    <p>
+                        これらの統計的可視化技法をマスターすることで、データの背後にある真の洞察を効果的に伝えることができます。
+                        美しいだけでなく、科学的に正確で意味のある可視化を心がけましょう。
+                    </p>
+                </div>
+            </section>
+
             <!-- Chapter Navigation -->
             <nav class="chapter-nav fade-in-up">
-                <a href="chapter2-dplyr-data-manipulation.html" class="nav-btn prev">
-                    ← 前の章
-                </a>
-                <div class="chapter-progress">
-                    第3章 / 全6章
-                </div>
-                <a href="chapter4-tidyr-data-reshaping.html" class="nav-btn next">
-                    次の章 →
-                </a>
+                <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">Chapter 4 →</a>
             </nav>
         </div>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </main>
     
     <script>

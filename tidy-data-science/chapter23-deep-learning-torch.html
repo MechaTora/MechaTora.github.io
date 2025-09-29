@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第23章: 深層学習とtorch | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family@Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-electric);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-electric);
+            border-color: var(--accent-electric);
+            box-shadow: 0 0 5px var(--accent-electric);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-electric);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-electric);
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.02);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.15);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-electric), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-electric);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-electric);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-electric);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1);
+        }
+
+        .code-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--accent-electric);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-electric);
+            opacity: 0.6;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+            background: #0d1117;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Syntax highlighting */
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+
+        /* Function Grid */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .function-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-electric) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .function-card:hover::before {
+            left: 0;
+        }
+
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+
+        .function-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-electric);
+            margin-bottom: 1rem;
+        }
+
+        .function-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .function-syntax {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        /* ML Workflow */
+        .ml-workflow {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .workflow-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-cyan);
+            text-align: center;
+        }
+
+        .step-number {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-electric);
+        }
+
+        .key-points h4 {
+            color: var(--accent-electric);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '💡';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 2px;
+                padding: 4px;
+            }
+
+            .nav-button {
+                padding: 1px 3px;
+                font-size: 0.6rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .code-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第23章: 深層学習とtorch</h1>
+            <p class="subtitle">Tidyverseエコシステムによる次世代ニューラルネットワーク</p>
+            <div class="chapter-meta">
+                <span>🧠 深層学習</span>
+                <span>🔥 Torchフレームワーク</span>
+                <span>🎯 GPU加速</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">第6章</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">第7章</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">第8章</a>
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">第9章</a>
+            <a href="chapter10-statistics-modeling.html" class="nav-button">第10章</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">第11章</a>
+            <a href="chapter12-time-series.html" class="nav-button">第12章</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">第13章</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">第14章</a>
+            <a href="chapter15-advanced-data-viz.html" class="nav-button">第15章</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">第16章</a>
+            <a href="chapter17-hyperparameter-tuning-simple.html" class="nav-button">第17章</a>
+            <a href="chapter18-model-evaluation-yardstick.html" class="nav-button">第18章</a>
+            <a href="chapter19-prediction-interpretation.html" class="nav-button">第19章</a>
+            <a href="chapter20-ensemble-learning-enhanced.html" class="nav-button">第20章</a>
+            <a href="chapter21-time-series-modeltime.html" class="nav-button">第21章</a>
+            <a href="chapter22-text-analysis-tidytext.html" class="nav-button">第22章</a>
+            <a href="#" class="nav-button current">第23章</a>
+        </nav>
+
+        <!-- TORCH ECOSYSTEM INTRODUCTION -->
+        <section class="section" id="torch-intro">
+            <h2>🔥 torch for Rの革新的深層学習</h2>
+                <p>
+                    torch for Rは、PyTorchのR移植版として、動的計算グラフと自動微分を提供する最先端の深層学習フレームワークです。tidymodelsエコシステムとの美しい統合により、R nativeな深層学習ワークフローを実現します。
+                </p>
+                
+                <!-- Deep Learning Theory Foundation -->
+                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-electric);">
+                    <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🧠 深層学習の理論的基盤と計算フロー</h4>
+                    
+                    <!-- ニューラルネットワーク構造図 -->
+                    <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-electric); border-radius: 15px; padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden;">
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <h5 style="color: var(--accent-cyan); margin-bottom: 1rem;">🧠 ニューラルネットワーク・アーキテクチャの構造</h5>
+                        </div>
+                        
+                        <svg viewBox="0 0 1200 800" style="width: 100%; height: auto; background: radial-gradient(circle at center, rgba(0,255,65,0.1) 0%, rgba(0,212,255,0.05) 100%);">
+                            <defs>
+                                <!-- ニューロン用グラデーション -->
+                                <radialGradient id="neuronGrad" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" style="stop-color:#00ff88;stop-opacity:0.9"/>
+                                    <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.3"/>
+                                </radialGradient>
+                                <radialGradient id="hiddenGrad" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" style="stop-color:#9d4edd;stop-opacity:0.9"/>
+                                    <stop offset="100%" style="stop-color:#ff8c42;stop-opacity:0.3"/>
+                                </radialGradient>
+                                <radialGradient id="outputGrad" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:0.9"/>
+                                    <stop offset="100%" style="stop-color:#00ff41;stop-opacity:0.3"/>
+                                </radialGradient>
+                                
+                                <!-- 矢印マーカー -->
+                                <marker id="arrowhead1" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#00ff88" opacity="0.8"/>
+                                </marker>
+                                <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#9d4edd" opacity="0.8"/>
+                                </marker>
+                            </defs>
+                            
+                            <!-- 入力層 -->
+                            <g transform="translate(100, 150)">
+                                <text x="40" y="-20" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">入力層 (Input)</text>
+                                <circle cx="40" cy="50" r="25" fill="url(#neuronGrad)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="40" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X₁</text>
+                                
+                                <circle cx="40" cy="120" r="25" fill="url(#neuronGrad)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="40" y="125" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X₂</text>
+                                
+                                <circle cx="40" cy="190" r="25" fill="url(#neuronGrad)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="40" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X₃</text>
+                                
+                                <circle cx="40" cy="260" r="25" fill="url(#neuronGrad)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="40" y="265" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X₄</text>
+                                
+                                <!-- 入力データ説明 -->
+                                <text x="40" y="310" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">特徴量データ</text>
+                                <text x="40" y="325" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">(4次元ベクトル)</text>
+                            </g>
+                            
+                            <!-- 隠れ層1 -->
+                            <g transform="translate(350, 100)">
+                                <text x="60" y="-20" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">隠れ層1 (Hidden1)</text>
+                                
+                                <circle cx="60" cy="30" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="35" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₁₁</text>
+                                
+                                <circle cx="60" cy="80" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="85" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₁₂</text>
+                                
+                                <circle cx="60" cy="130" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="135" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₁₃</text>
+                                
+                                <circle cx="60" cy="180" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="185" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₁₄</text>
+                                
+                                <circle cx="60" cy="230" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="235" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₁₅</text>
+                                
+                                <circle cx="60" cy="280" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="285" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₁₆</text>
+                                
+                                <!-- 活性化関数説明 -->
+                                <text x="60" y="320" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">ReLU活性化</text>
+                                <text x="60" y="335" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">f(x) = max(0,x)</text>
+                            </g>
+                            
+                            <!-- 隠れ層2 -->
+                            <g transform="translate(550, 120)">
+                                <text x="60" y="-20" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">隠れ層2 (Hidden2)</text>
+                                
+                                <circle cx="60" cy="40" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="45" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₂₁</text>
+                                
+                                <circle cx="60" cy="90" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="95" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₂₂</text>
+                                
+                                <circle cx="60" cy="140" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="145" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₂₃</text>
+                                
+                                <circle cx="60" cy="190" r="20" fill="url(#hiddenGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="60" y="195" text-anchor="middle" fill="white" font-size="10" font-weight="bold">H₂₄</text>
+                                
+                                <!-- ドロップアウト表示 -->
+                                <text x="60" y="230" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">Dropout(0.3)</text>
+                                <text x="60" y="245" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">過学習防止</text>
+                            </g>
+                            
+                            <!-- 出力層 -->
+                            <g transform="translate(800, 180)">
+                                <text x="40" y="-20" text-anchor="middle" fill="#ff8c42" font-size="16" font-weight="bold">出力層 (Output)</text>
+                                
+                                <circle cx="40" cy="50" r="25" fill="url(#outputGrad)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="40" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Y₁</text>
+                                
+                                <circle cx="40" cy="120" r="25" fill="url(#outputGrad)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="40" y="125" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Y₂</text>
+                                
+                                <!-- Softmax説明 -->
+                                <text x="40" y="170" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">Softmax</text>
+                                <text x="40" y="185" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">確率分布</text>
+                            </g>
+                            
+                            <!-- 接続線（重み） -->
+                            <!-- 入力層 → 隠れ層1 -->
+                            <g opacity="0.6">
+                                <path d="M165 200 L390 130" stroke="#00ff88" stroke-width="1.5" fill="none" marker-end="url(#arrowhead1)"/>
+                                <path d="M165 220 L390 160" stroke="#00ff88" stroke-width="1.5" fill="none" marker-end="url(#arrowhead1)"/>
+                                <path d="M165 240 L390 190" stroke="#00ff88" stroke-width="1.5" fill="none" marker-end="url(#arrowhead1)"/>
+                                <path d="M165 260 L390 220" stroke="#00ff88" stroke-width="1.5" fill="none" marker-end="url(#arrowhead1)"/>
+                                <!-- 重み表示 -->
+                                <text x="270" y="160" text-anchor="middle" fill="#00ff88" font-size="9">W₁</text>
+                                <text x="270" y="175" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8">(4×6行列)</text>
+                            </g>
+                            
+                            <!-- 隠れ層1 → 隠れ層2 -->
+                            <g opacity="0.6">
+                                <path d="M470 180 L590 160" stroke="#9d4edd" stroke-width="1.5" fill="none" marker-end="url(#arrowhead2)"/>
+                                <path d="M470 200 L590 180" stroke="#9d4edd" stroke-width="1.5" fill="none" marker-end="url(#arrowhead2)"/>
+                                <path d="M470 220 L590 200" stroke="#9d4edd" stroke-width="1.5" fill="none" marker-end="url(#arrowhead2)"/>
+                                <text x="530" y="185" text-anchor="middle" fill="#9d4edd" font-size="9">W₂</text>
+                                <text x="530" y="200" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8">(6×4行列)</text>
+                            </g>
+                            
+                            <!-- 隠れ層2 → 出力層 -->
+                            <g opacity="0.6">
+                                <path d="M670 230 L800 230" stroke="#ff8c42" stroke-width="1.5" fill="none" marker-end="url(#arrowhead1)"/>
+                                <path d="M670 240 L800 240" stroke="#ff8c42" stroke-width="1.5" fill="none" marker-end="url(#arrowhead1)"/>
+                                <text x="735" y="225" text-anchor="middle" fill="#ff8c42" font-size="9">W₃</text>
+                                <text x="735" y="240" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8">(4×2行列)</text>
+                            </g>
+                            
+                            <!-- 数式表示エリア -->
+                            <g transform="translate(100, 450)">
+                                <rect x="0" y="0" width="800" height="200" rx="15" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                <text x="400" y="30" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">🔢 順伝播の数式表現</text>
+                                
+                                <!-- 各層の計算 -->
+                                <g transform="translate(50, 60)">
+                                    <text x="0" y="20" fill="#00ff88" font-size="12" font-weight="bold">入力層:</text>
+                                    <text x="80" y="20" fill="white" font-size="11">x = [x₁, x₂, x₃, x₄]ᵀ</text>
+                                    
+                                    <text x="0" y="45" fill="#9d4edd" font-size="12" font-weight="bold">隠れ層1:</text>
+                                    <text x="80" y="45" fill="white" font-size="11">h₁ = ReLU(W₁ᵀx + b₁)</text>
+                                    
+                                    <text x="0" y="70" fill="#9d4edd" font-size="12" font-weight="bold">隠れ層2:</text>
+                                    <text x="80" y="70" fill="white" font-size="11">h₂ = ReLU(W₂ᵀh₁ + b₂)</text>
+                                    
+                                    <text x="0" y="95" fill="#ff8c42" font-size="12" font-weight="bold">出力層:</text>
+                                    <text x="80" y="95" fill="white" font-size="11">ŷ = Softmax(W₃ᵀh₂ + b₃)</text>
+                                    
+                                    <text x="0" y="120" fill="#00d4ff" font-size="12" font-weight="bold">損失関数:</text>
+                                    <text x="80" y="120" fill="white" font-size="11">L = -Σᵢ yᵢ log(ŷᵢ)  (交差エントロピー)</text>
+                                </g>
+                                
+                                <!-- 逆伝播説明 -->
+                                <g transform="translate(450, 60)">
+                                    <text x="0" y="20" fill="#ff6600" font-size="12" font-weight="bold">逆伝播 (Backpropagation):</text>
+                                    <text x="0" y="40" fill="white" font-size="10">∂L/∂W₃ = h₂ ⊗ δ₃</text>
+                                    <text x="0" y="55" fill="white" font-size="10">∂L/∂W₂ = h₁ ⊗ δ₂</text>
+                                    <text x="0" y="70" fill="white" font-size="10">∂L/∂W₁ = x ⊗ δ₁</text>
+                                    
+                                    <text x="0" y="95" fill="#00ff41" font-size="12" font-weight="bold">勾配降下法:</text>
+                                    <text x="0" y="115" fill="white" font-size="10">W ← W - η(∂L/∂W)</text>
+                                    <text x="0" y="130" fill="rgba(255,255,255,0.8)" font-size="9">η: 学習率</text>
+                                </g>
+                            </g>
+                            
+                            <!-- パフォーマンス指標 -->
+                            <g transform="translate(950, 50)">
+                                <rect x="0" y="0" width="180" height="320" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                <text x="90" y="25" text-anchor="middle" fill="#00ff88" font-size="12" font-weight="bold">📊 モデル性能</text>
+                                
+                                <!-- 精度バー -->
+                                <text x="10" y="50" fill="white" font-size="10">Training Accuracy:</text>
+                                <rect x="10" y="55" width="160" height="15" rx="7" fill="rgba(0,255,136,0.2)" stroke="#00ff88" stroke-width="1"/>
+                                <rect x="10" y="55" width="134" height="15" rx="7" fill="#00ff88"/>
+                                <text x="90" y="67" text-anchor="middle" fill="white" font-size="9">94.2%</text>
+                                
+                                <!-- 検証精度バー -->
+                                <text x="10" y="90" fill="white" font-size="10">Validation Accuracy:</text>
+                                <rect x="10" y="95" width="160" height="15" rx="7" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1"/>
+                                <rect x="10" y="95" width="144" height="15" rx="7" fill="#00d4ff"/>
+                                <text x="90" y="107" text-anchor="middle" fill="white" font-size="9">91.8%</text>
+                                
+                                <!-- 損失値 -->
+                                <text x="10" y="130" fill="white" font-size="10">Loss:</text>
+                                <text x="50" y="130" fill="#ff8c42" font-size="10">0.0847</text>
+                                
+                                <!-- エポック数 -->
+                                <text x="10" y="150" fill="white" font-size="10">Epochs:</text>
+                                <text x="70" y="150" fill="#9d4edd" font-size="10">150</text>
+                                
+                                <!-- 学習時間 -->
+                                <text x="10" y="170" fill="white" font-size="10">Training Time:</text>
+                                <text x="10" y="185" fill="#00ff41" font-size="10">2.3 min</text>
+                                
+                                <!-- パラメータ数 -->
+                                <text x="10" y="210" fill="white" font-size="10">Parameters:</text>
+                                <text x="10" y="225" fill="rgba(255,255,255,0.8)" font-size="9">4×6 + 6×4 + 4×2</text>
+                                <text x="10" y="240" fill="rgba(255,255,255,0.8)" font-size="9">= 56 params</text>
+                                
+                                <!-- GPU使用率 -->
+                                <text x="10" y="265" fill="white" font-size="10">GPU Utilization:</text>
+                                <rect x="10" y="270" width="160" height="12" rx="6" fill="rgba(255,140,66,0.2)" stroke="#ff8c42" stroke-width="1"/>
+                                <rect x="10" y="270" width="112" height="12" rx="6" fill="#ff8c42"/>
+                                <text x="90" y="280" text-anchor="middle" fill="white" font-size="9">70%</text>
+                                
+                                <!-- メモリ使用量 -->
+                                <text x="10" y="300" fill="white" font-size="10">Memory Usage:</text>
+                                <text x="100" y="300" fill="rgba(255,255,255,0.8)" font-size="9">1.2GB</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <svg width="100%" height="700" viewBox="0 0 1400 700" style="max-width: 100%; height: auto;">
+                        <!-- Background -->
+                        <rect width="1400" height="700" fill="#0a0a0f"/>
+                        
+                        <!-- Title -->
+                        <text x="700" y="30" text-anchor="middle" fill="#00ff88" font-size="18" font-weight="bold">Neural Network Computational Graph & Automatic Differentiation</text>
+                        
+                        <!-- Forward Pass -->
+                        <g transform="translate(50, 70)">
+                            <text x="650" y="0" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">📈 Forward Pass (順伝播)</text>
+                            
+                            <!-- Input Layer -->
+                            <g transform="translate(50, 30)">
+                                <circle cx="0" cy="40" r="20" fill="rgba(0, 255, 136, 0.3)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="0" y="45" text-anchor="middle" fill="#ffffff" font-size="10">x₁</text>
+                                <circle cx="0" cy="80" r="20" fill="rgba(0, 255, 136, 0.3)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="0" y="85" text-anchor="middle" fill="#ffffff" font-size="10">x₂</text>
+                                <circle cx="0" cy="120" r="20" fill="rgba(0, 255, 136, 0.3)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="0" y="125" text-anchor="middle" fill="#ffffff" font-size="10">x₃</text>
+                                <text x="0" y="10" text-anchor="middle" fill="#00ff88" font-size="12" font-weight="bold">Input</text>
+                            </g>
+                            
+                            <!-- Hidden Layer 1 -->
+                            <g transform="translate(200, 30)">
+                                <circle cx="0" cy="20" r="18" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="0" y="25" text-anchor="middle" fill="#ffffff" font-size="9">h₁</text>
+                                <circle cx="0" cy="60" r="18" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="0" y="65" text-anchor="middle" fill="#ffffff" font-size="9">h₂</text>
+                                <circle cx="0" cy="100" r="18" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="0" y="105" text-anchor="middle" fill="#ffffff" font-size="9">h₃</text>
+                                <circle cx="0" cy="140" r="18" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="0" y="145" text-anchor="middle" fill="#ffffff" font-size="9">h₄</text>
+                                <text x="0" y="10" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="bold">Hidden 1</text>
+                            </g>
+                            
+                            <!-- Hidden Layer 2 -->
+                            <g transform="translate(350, 30)">
+                                <circle cx="0" cy="30" r="18" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="0" y="35" text-anchor="middle" fill="#ffffff" font-size="9">h₅</text>
+                                <circle cx="0" cy="70" r="18" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="0" y="75" text-anchor="middle" fill="#ffffff" font-size="9">h₆</text>
+                                <circle cx="0" cy="110" r="18" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="0" y="115" text-anchor="middle" fill="#ffffff" font-size="9">h₇</text>
+                                <text x="0" y="10" text-anchor="middle" fill="#9d4edd" font-size="12" font-weight="bold">Hidden 2</text>
+                            </g>
+                            
+                            <!-- Output Layer -->
+                            <g transform="translate(500, 30)">
+                                <circle cx="0" cy="50" r="20" fill="rgba(255, 140, 66, 0.3)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="0" y="55" text-anchor="middle" fill="#ffffff" font-size="10">ŷ</text>
+                                <circle cx="0" cy="90" r="20" fill="rgba(255, 140, 66, 0.3)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="0" y="95" text-anchor="middle" fill="#ffffff" font-size="10">ŷ₂</text>
+                                <text x="0" y="10" text-anchor="middle" fill="#ff8c42" font-size="12" font-weight="bold">Output</text>
+                            </g>
+                            
+                            <!-- Forward connections -->
+                            <path d="M 70 70 L 182 40" stroke="#ffffff" stroke-width="1.5" opacity="0.7"/>
+                            <path d="M 70 110 L 182 80" stroke="#ffffff" stroke-width="1.5" opacity="0.7"/>
+                            <path d="M 218 50 L 332 60" stroke="#ffffff" stroke-width="1.5" opacity="0.7"/>
+                            <path d="M 218 90 L 332 100" stroke="#ffffff" stroke-width="1.5" opacity="0.7"/>
+                            <path d="M 368 80 L 480 80" stroke="#ffffff" stroke-width="1.5" opacity="0.7"/>
+                            
+                            <!-- Mathematical Operations -->
+                            <g transform="translate(600, 40)">
+                                <rect x="0" y="0" width="500" height="120" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="8"/>
+                                <text x="250" y="20" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">📐 Mathematical Operations</text>
+                                
+                                <!-- Linear transformation -->
+                                <text x="20" y="45" fill="#00d4ff" font-size="12" font-weight="bold">1. Linear Transformation:</text>
+                                <text x="30" y="60" fill="#ffffff" font-size="11">z = Wx + b</text>
+                                <text x="30" y="75" fill="#aaaaaa" font-size="9">W: weight matrix, b: bias vector</text>
+                                
+                                <!-- Activation -->
+                                <text x="250" y="45" fill="#9d4edd" font-size="12" font-weight="bold">2. Activation Function:</text>
+                                <text x="260" y="60" fill="#ffffff" font-size="11">a = σ(z) = ReLU(z) = max(0, z)</text>
+                                <text x="260" y="75" fill="#aaaaaa" font-size="9">Non-linearity introduction</text>
+                                
+                                <!-- Loss calculation -->
+                                <text x="20" y="100" fill="#ff8c42" font-size="12" font-weight="bold">3. Loss Calculation:</text>
+                                <text x="30" y="115" fill="#ffffff" font-size="11">L = ½(y - ŷ)² (MSE)</text>
+                                
+                                <text x="250" y="100" fill="#ff8c42" font-size="12" font-weight="bold">4. Regularization:</text>
+                                <text x="260" y="115" fill="#ffffff" font-size="11">L_total = L + λ||W||²</text>
+                            </g>
+                        </g>
+                        
+                        <!-- Backward Pass -->
+                        <g transform="translate(50, 250)">
+                            <text x="650" y="0" text-anchor="middle" fill="#ff6464" font-size="16" font-weight="bold">📉 Backward Pass (逆伝播) - Automatic Differentiation</text>
+                            
+                            <!-- Gradient Flow Visualization -->
+                            <g transform="translate(50, 30)">
+                                <!-- Loss gradient -->
+                                <circle cx="500" cy="70" r="25" fill="rgba(255, 100, 100, 0.3)" stroke="#ff6464" stroke-width="2"/>
+                                <text x="500" y="75" text-anchor="middle" fill="#ffffff" font-size="10">∂L</text>
+                                <text x="500" y="10" text-anchor="middle" fill="#ff6464" font-size="12" font-weight="bold">Loss Gradient</text>
+                                
+                                <!-- Output gradients -->
+                                <circle cx="350" cy="50" r="18" fill="rgba(255, 140, 66, 0.4)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="350" y="55" text-anchor="middle" fill="#ffffff" font-size="8">∂L/∂ŷ</text>
+                                <circle cx="350" cy="90" r="18" fill="rgba(255, 140, 66, 0.4)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="350" y="95" text-anchor="middle" fill="#ffffff" font-size="8">∂L/∂ŷ₂</text>
+                                
+                                <!-- Hidden gradients -->
+                                <circle cx="200" cy="30" r="15" fill="rgba(157, 78, 221, 0.4)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="200" y="35" text-anchor="middle" fill="#ffffff" font-size="7">∂L/∂h₅</text>
+                                <circle cx="200" cy="70" r="15" fill="rgba(157, 78, 221, 0.4)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="200" y="75" text-anchor="middle" fill="#ffffff" font-size="7">∂L/∂h₆</text>
+                                <circle cx="200" cy="110" r="15" fill="rgba(157, 78, 221, 0.4)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="200" y="115" text-anchor="middle" fill="#ffffff" font-size="7">∂L/∂h₇</text>
+                                
+                                <circle cx="50" cy="20" r="15" fill="rgba(0, 212, 255, 0.4)" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="50" y="25" text-anchor="middle" fill="#ffffff" font-size="7">∂L/∂h₁</text>
+                                <circle cx="50" cy="60" r="15" fill="rgba(0, 212, 255, 0.4)" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="50" y="65" text-anchor="middle" fill="#ffffff" font-size="7">∂L/∂h₂</text>
+                                
+                                <!-- Backward arrows -->
+                                <path d="M 475 70 L 375 70" stroke="#ff6464" stroke-width="2" marker-end="url(#backArrow)" stroke-dasharray="3,3"/>
+                                <path d="M 332 70 L 218 70" stroke="#ff8c42" stroke-width="2" marker-end="url(#backArrow)" stroke-dasharray="3,3"/>
+                                <path d="M 182 50 L 68 40" stroke="#9d4edd" stroke-width="2" marker-end="url(#backArrow)" stroke-dasharray="3,3"/>
+                            </g>
+                            
+                            <!-- Chain Rule Explanation -->
+                            <g transform="translate(600, 40)">
+                                <rect x="0" y="0" width="500" height="120" fill="rgba(255, 100, 100, 0.1)" stroke="#ff6464" stroke-width="1" rx="8"/>
+                                <text x="250" y="20" text-anchor="middle" fill="#ff6464" font-size="14" font-weight="bold">⛓️ Chain Rule Application</text>
+                                
+                                <!-- Chain rule formula -->
+                                <text x="20" y="45" fill="#ffffff" font-size="12" font-weight="bold">∂L/∂W₁ = ∂L/∂z₂ × ∂z₂/∂a₁ × ∂a₁/∂z₁ × ∂z₁/∂W₁</text>
+                                
+                                <!-- Components breakdown -->
+                                <text x="20" y="70" fill="#ff8c42" font-size="10">∂L/∂z₂: Output layer gradient</text>
+                                <text x="20" y="85" fill="#9d4edd" font-size="10">∂z₂/∂a₁: Weight contribution</text>
+                                <text x="20" y="100" fill="#00d4ff" font-size="10">∂a₁/∂z₁: Activation derivative (ReLU → 0 or 1)</text>
+                                <text x="20" y="115" fill="#00ff88" font-size="10">∂z₁/∂W₁: Input scaling factor</text>
+                                
+                                <!-- Computational efficiency note -->
+                                <text x="300" y="70" fill="#ffff00" font-size="11" font-weight="bold">💡 Automatic Differentiation:</text>
+                                <text x="310" y="85" fill="#ffffff" font-size="10">• Forward mode: 順方向計算と同時に微分</text>
+                                <text x="310" y="100" fill="#ffffff" font-size="10">• Reverse mode: 逆方向で効率的勾配計算</text>
+                                <text x="310" y="115" fill="#ffffff" font-size="10">• Computational graph: 動的構築・最適化</text>
+                            </g>
+                        </g>
+                        
+                        <!-- Optimization Process -->
+                        <g transform="translate(50, 420)">
+                            <text x="650" y="0" text-anchor="middle" fill="#00ffaa" font-size="16" font-weight="bold">⚡ Optimization Process (最適化プロセス)</text>
+                            
+                            <!-- Gradient Descent Visualization -->
+                            <g transform="translate(50, 30)">
+                                <!-- Loss surface -->
+                                <ellipse cx="200" cy="80" rx="150" ry="60" fill="none" stroke="#00ffaa" stroke-width="2" stroke-dasharray="5,5"/>
+                                <ellipse cx="200" cy="80" rx="100" ry="40" fill="none" stroke="#00ffaa" stroke-width="1" stroke-dasharray="3,3"/>
+                                <ellipse cx="200" cy="80" rx="50" ry="20" fill="none" stroke="#00ffaa" stroke-width="1"/>
+                                <circle cx="200" cy="80" r="5" fill="#00ffaa"/>
+                                <text x="200" y="95" text-anchor="middle" fill="#00ffaa" font-size="10">Global Minimum</text>
+                                
+                                <!-- Gradient descent path -->
+                                <circle cx="120" cy="50" r="4" fill="#ff6464"/>
+                                <text x="120" y="40" text-anchor="middle" fill="#ff6464" font-size="9">Start</text>
+                                
+                                <!-- Arrow path -->
+                                <path d="M 124 53 Q 140 60 155 65" stroke="#ff6464" stroke-width="2" marker-end="url(#optArrow)"/>
+                                <path d="M 158 67 Q 175 72 185 75" stroke="#ff6464" stroke-width="2" marker-end="url(#optArrow)"/>
+                                <path d="M 188 77 Q 195 78 200 80" stroke="#ff6464" stroke-width="2" marker-end="url(#optArrow)"/>
+                                
+                                <text x="150" y="50" fill="#ff6464" font-size="8">-α∇L</text>
+                                <text x="50" y="10" fill="#ffffff" font-size="12" font-weight="bold">Loss Landscape</text>
+                            </g>
+                            
+                            <!-- Optimizer Algorithms -->
+                            <g transform="translate(400, 30)">
+                                <rect x="0" y="0" width="800" height="140" fill="rgba(0, 255, 170, 0.1)" stroke="#00ffaa" stroke-width="1" rx="8"/>
+                                <text x="400" y="20" text-anchor="middle" fill="#00ffaa" font-size="14" font-weight="bold">🚀 Optimizer Algorithms</text>
+                                
+                                <!-- SGD -->
+                                <g transform="translate(20, 35)">
+                                    <text x="0" y="0" fill="#ff6464" font-size="12" font-weight="bold">SGD (Stochastic Gradient Descent)</text>
+                                    <text x="0" y="15" fill="#ffffff" font-size="10">θ_{t+1} = θ_t - α∇L(θ_t)</text>
+                                    <text x="0" y="30" fill="#aaaaaa" font-size="9">• Simple but effective</text>
+                                    <text x="0" y="45" fill="#aaaaaa" font-size="9">• Learning rate sensitive</text>
+                                </g>
+                                
+                                <!-- Adam -->
+                                <g transform="translate(250, 35)">
+                                    <text x="0" y="0" fill="#00d4ff" font-size="12" font-weight="bold">Adam (Adaptive Moment Estimation)</text>
+                                    <text x="0" y="15" fill="#ffffff" font-size="10">m_t = β₁m_{t-1} + (1-β₁)∇L</text>
+                                    <text x="0" y="30" fill="#ffffff" font-size="10">v_t = β₂v_{t-1} + (1-β₂)(∇L)²</text>
+                                    <text x="0" y="45" fill="#aaaaaa" font-size="9">• Adaptive learning rates</text>
+                                    <text x="0" y="60" fill="#aaaaaa" font-size="9">• Default choice for deep learning</text>
+                                </g>
+                                
+                                <!-- RMSprop -->
+                                <g transform="translate(520, 35)">
+                                    <text x="0" y="0" fill="#9d4edd" font-size="12" font-weight="bold">RMSprop</text>
+                                    <text x="0" y="15" fill="#ffffff" font-size="10">v_t = γv_{t-1} + (1-γ)(∇L)²</text>
+                                    <text x="0" y="30" fill="#ffffff" font-size="10">θ_{t+1} = θ_t - α/√(v_t + ε) × ∇L</text>
+                                    <text x="0" y="45" fill="#aaaaaa" font-size="9">• Addresses vanishing gradients</text>
+                                    <text x="0" y="60" fill="#aaaaaa" font-size="9">• Good for RNNs</text>
+                                </g>
+                                
+                                <!-- Learning rate scheduling -->
+                                <g transform="translate(20, 100)">
+                                    <text x="0" y="0" fill="#ffff00" font-size="11" font-weight="bold">📈 Learning Rate Scheduling:</text>
+                                    <text x="200" y="0" fill="#ffffff" font-size="10">Cosine Annealing, Step Decay, Exponential Decay</text>
+                                    <text x="0" y="20" fill="#aaaaaa" font-size="9">Dynamic adjustment for better convergence</text>
+                                </g>
+                            </g>
+                        </g>
+                        
+                        <!-- Regularization Techniques -->
+                        <g transform="translate(50, 580)">
+                            <text x="650" y="0" text-anchor="middle" fill="#ff8c42" font-size="16" font-weight="bold">🛡️ Regularization Techniques (正則化手法)</text>
+                            
+                            <g transform="translate(0, 25)">
+                                <!-- Dropout -->
+                                <g transform="translate(50, 0)">
+                                    <rect x="0" y="0" width="200" height="80" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                                    <text x="100" y="20" text-anchor="middle" fill="#ff8c42" font-size="12" font-weight="bold">Dropout</text>
+                                    <circle cx="30" cy="40" r="8" fill="#ff8c42" opacity="0.3"/>
+                                    <circle cx="70" cy="40" r="8" fill="#ff8c42"/>
+                                    <circle cx="110" cy="40" r="8" fill="#ff8c42" opacity="0.3"/>
+                                    <circle cx="150" cy="40" r="8" fill="#ff8c42"/>
+                                    <text x="100" y="65" text-anchor="middle" fill="#ffffff" font-size="9">50% neurons dropped</text>
+                                </g>
+                                
+                                <!-- Batch Normalization -->
+                                <g transform="translate(300, 0)">
+                                    <rect x="0" y="0" width="200" height="80" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="1" rx="5"/>
+                                    <text x="100" y="20" text-anchor="middle" fill="#9d4edd" font-size="12" font-weight="bold">Batch Normalization</text>
+                                    <text x="100" y="40" text-anchor="middle" fill="#ffffff" font-size="10">x̂ = (x - μ) / σ</text>
+                                    <text x="100" y="55" text-anchor="middle" fill="#ffffff" font-size="9">μ: batch mean</text>
+                                    <text x="100" y="70" text-anchor="middle" fill="#ffffff" font-size="9">σ: batch std</text>
+                                </g>
+                                
+                                <!-- Weight Decay -->
+                                <g transform="translate(550, 0)">
+                                    <rect x="0" y="0" width="200" height="80" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                                    <text x="100" y="20" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="bold">Weight Decay (L2)</text>
+                                    <text x="100" y="40" text-anchor="middle" fill="#ffffff" font-size="10">L = L_original + λ||W||²</text>
+                                    <text x="100" y="55" text-anchor="middle" fill="#ffffff" font-size="9">λ: regularization strength</text>
+                                    <text x="100" y="70" text-anchor="middle" fill="#ffffff" font-size="9">Prevents large weights</text>
+                                </g>
+                                
+                                <!-- Early Stopping -->
+                                <g transform="translate(800, 0)">
+                                    <rect x="0" y="0" width="200" height="80" fill="rgba(0, 255, 170, 0.1)" stroke="#00ffaa" stroke-width="1" rx="5"/>
+                                    <text x="100" y="20" text-anchor="middle" fill="#00ffaa" font-size="12" font-weight="bold">Early Stopping</text>
+                                    <text x="100" y="40" text-anchor="middle" fill="#ffffff" font-size="10">Monitor validation loss</text>
+                                    <text x="100" y="55" text-anchor="middle" fill="#ffffff" font-size="9">Stop when overfitting</text>
+                                    <text x="100" y="70" text-anchor="middle" fill="#ffffff" font-size="9">Patience mechanism</text>
+                                </g>
+                            </g>
+                        </g>
+                        
+                        <!-- Arrows and markers -->
+                        <defs>
+                            <marker id="backArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                                <polygon points="0 0, 8 3, 0 6" fill="#ff6464"/>
+                            </marker>
+                            <marker id="optArrow" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                                <polygon points="0 0, 6 2.5, 0 5" fill="#ff6464"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    
+                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00d4ff;">
+                            <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">📈 Forward Pass</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">入力データから予測値まで順次計算。線形変換→活性化関数→次層への伝播</p>
+                        </div>
+                        <div style="background: rgba(255, 100, 100, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ff6464;">
+                            <h5 style="color: #ff6464; margin-bottom: 0.5rem;">📉 Backward Pass</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">損失関数から各パラメータへの勾配を連鎖律で効率的に計算</p>
+                        </div>
+                        <div style="background: rgba(0, 255, 170, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00ffaa;">
+                            <h5 style="color: #00ffaa; margin-bottom: 0.5rem;">⚡ Optimization</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">勾配情報を用いてパラメータを更新。Adam、SGD等の最適化アルゴリズム</p>
+                        </div>
+                        <div style="background: rgba(255, 140, 66, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ff8c42;">
+                            <h5 style="color: #ff8c42; margin-bottom: 0.5rem;">🛡️ Regularization</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">過学習防止技術。Dropout、BatchNorm、Weight Decay等</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Core Components -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🔧 torchエコシステム</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">torch_ecosystem.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># torch エコシステムの読み込み</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidymodels</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">torch</span>)           <span class="code-comment"># コア深層学習</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">luz</span>)             <span class="code-comment"># 高レベル訓練API</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">torchvision</span>)     <span class="code-comment"># コンピュータビジョン</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tabnet</span>)          <span class="code-comment"># 表形式データ専用</span></span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># GPU利用可能性の確認</span></span>
+                        <span class="code-line"><span class="code-keyword">if</span> (<span class="code-function">cuda_is_available</span>()) {</span>
+                        <span class="code-line">  <span class="code-variable">device</span> <span class="code-keyword">&lt;-</span> <span class="code-function">torch_device</span>(<span class="code-string">"cuda"</span>)</span>
+                        <span class="code-line">  <span class="code-function">cat</span>(<span class="code-string">"🚀 GPU (CUDA) が利用可能です\\n"</span>)</span>
+                        <span class="code-line">} <span class="code-keyword">else</span> {</span>
+                        <span class="code-line">  <span class="code-variable">device</span> <span class="code-keyword">&lt;-</span> <span class="code-function">torch_device</span>(<span class="code-string">"cpu"</span>)</span>
+                        <span class="code-line">  <span class="code-function">cat</span>(<span class="code-string">"💻 CPU を使用します\\n"</span>)</span>
+                        <span class="code-line">}</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 基本的なテンソル操作</span></span>
+                        <span class="code-line"><span class="code-variable">x</span> <span class="code-keyword">&lt;-</span> <span class="code-function">torch_randn</span>(<span class="code-string">3</span>, <span class="code-string">4</span>, device = device)</span>
+                        <span class="code-line"><span class="code-variable">y</span> <span class="code-keyword">&lt;-</span> <span class="code-function">torch_ones</span>(<span class="code-string">3</span>, <span class="code-string">4</span>, device = device)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 自動微分の有効化</span></span>
+                        <span class="code-line">x$requires_grad_(<span class="code-string">TRUE</span>)</span>
+                        <span class="code-line"><span class="code-variable">z</span> <span class="code-keyword">&lt;-</span> (x * y)$sum()</span>
+                        <span class="code-line">z$backward()</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(<span class="code-string">"勾配:"</span>)</span>
+                        <span class="code-line"><span class="code-function">print</span>(x$grad)</span>
+                    </div>
+                </div>
+
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h3 class="function-title">🔥 torch</h3>
+                        <p class="function-description">
+                            PyTorchのR移植版。動的計算グラフと自動微分エンジンを提供。GPU加速対応でRネイティブな実装を実現。
+                        </p>
+                        <div class="function-syntax">
+                            torch_tensor(), torch_randn(), autograd system
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">⚡ luz</h3>
+                        <p class="function-description">
+                            Keras/fastai風のハイレベルAPI。訓練ループの自動化、コールバック機能、美しい進捗表示を提供。複雑な訓練プロセスを簡素化。
+                        </p>
+                        <div class="function-syntax">
+                            setup(), fit(), predict(), callbacks
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">📷 torchvision</h3>
+                        <p class="function-description">
+                            コンピュータビジョン専用パッケージ。事前訓練済みモデル、画像変換、データ拡張機能を統合。CNNの実装を大幅に効率化。
+                        </p>
+                        <div class="function-syntax">
+                            model_resnet18(), transform_*, dataset_*
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">📊 tabnet</h3>
+                        <p class="function-description">
+                            表形式データ専用の深層学習アーキテクチャ。解釈可能なアテンション機構により、従来のMLと深層学習の利点を統合。
+                        </p>
+                        <div class="function-syntax">
+                            tabnet(), tabnet_explain(), attention masks
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ml-workflow">
+                    <div class="workflow-title">🔄 深層学習ワークフロー</div>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <strong>データ準備</strong><br>
+                            <small>テンソル変換・前処理</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <strong>モデル定義</strong><br>
+                            <small>nn_module・アーキテクチャ</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <strong>訓練設定</strong><br>
+                            <small>loss・optimizer・metrics</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <strong>モデル訓練</strong><br>
+                            <small>luz fit・callbacks</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <strong>評価・診断</strong><br>
+                            <small>性能評価・可視化</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">6</div>
+                            <strong>推論・解釈</strong><br>
+                            <small>予測・Grad-CAM</small>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- NEURAL NETWORK ARCHITECTURES -->
+        <section class="section" id="neural-networks">
+            <h2>🧠 ニューラルネットワーク アーキテクチャ</h2>
+                <p>
+                    torchでは、nn_moduleを継承してカスタムニューラルネットワークを定義できます。feedforward、CNN、RNNなど様々なアーキテクチャを統一された方法で実装し、luzで効率的に訓練できます。
+                </p>
+                
+                <!-- Feedforward Networks -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📊 フィードフォワードネットワーク</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">feedforward_network.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># カスタムニューラルネットワークの定義</span></span>
+                        <span class="code-line"><span class="code-variable">deep_network</span> <span class="code-keyword">&lt;-</span> <span class="code-function">nn_module</span>(</span>
+                        <span class="code-line">  <span class="code-string">"DeepNetwork"</span>,</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  initialize = <span class="code-keyword">function</span>(input_size, hidden_sizes, output_size, dropout = <span class="code-string">0.2</span>) {</span>
+                        <span class="code-line">    self$layers <span class="code-keyword">&lt;-</span> <span class="code-function">nn_module_list</span>()</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 入力層</span></span>
+                        <span class="code-line">    self$layers$append(<span class="code-function">nn_linear</span>(input_size, hidden_sizes[<span class="code-string">1</span>]))</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 隠れ層の動的生成</span></span>
+                        <span class="code-line">    <span class="code-keyword">for</span> (i <span class="code-keyword">in</span> <span class="code-function">seq_along</span>(hidden_sizes[<span class="code-string">-1</span>])) {</span>
+                        <span class="code-line">      self$layers$append(</span>
+                        <span class="code-line">        <span class="code-function">nn_sequential</span>(</span>
+                        <span class="code-line">          <span class="code-function">nn_batch_norm1d</span>(hidden_sizes[i]),</span>
+                        <span class="code-line">          <span class="code-function">nn_relu</span>(),</span>
+                        <span class="code-line">          <span class="code-function">nn_dropout</span>(dropout),</span>
+                        <span class="code-line">          <span class="code-function">nn_linear</span>(hidden_sizes[i], hidden_sizes[i + <span class="code-string">1</span>])</span>
+                        <span class="code-line">        )</span>
+                        <span class="code-line">      )</span>
+                        <span class="code-line">    }</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 出力層</span></span>
+                        <span class="code-line">    self$output_layer <span class="code-keyword">&lt;-</span> <span class="code-function">nn_linear</span>(<span class="code-function">tail</span>(hidden_sizes, <span class="code-string">1</span>), output_size)</span>
+                        <span class="code-line">  },</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  forward = <span class="code-keyword">function</span>(x) {</span>
+                        <span class="code-line">    <span class="code-comment"># 全層を順次適用</span></span>
+                        <span class="code-line">    <span class="code-keyword">for</span> (layer <span class="code-keyword">in</span> self$layers) {</span>
+                        <span class="code-line">      x <span class="code-keyword">&lt;-</span> layer(x)</span>
+                        <span class="code-line">    }</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-keyword">return</span>(self$output_layer(x))</span>
+                        <span class="code-line">  }</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># luzによる訓練設定</span></span>
+                        <span class="code-line"><span class="code-variable">model</span> <span class="code-keyword">&lt;-</span> deep_network <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">setup</span>(</span>
+                        <span class="code-line">    loss = <span class="code-function">nn_mse_loss</span>(),</span>
+                        <span class="code-line">    optimizer = optim_adam,</span>
+                        <span class="code-line">    metrics = <span class="code-function">list</span>(<span class="code-function">luz_metric_mae</span>(), <span class="code-function">luz_metric_rmse</span>())</span>
+                        <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">set_hparams</span>(</span>
+                        <span class="code-line">    input_size = <span class="code-string">10</span>,</span>
+                        <span class="code-line">    hidden_sizes = <span class="code-function">c</span>(<span class="code-string">256</span>, <span class="code-string">128</span>, <span class="code-string">64</span>),</span>
+                        <span class="code-line">    output_size = <span class="code-string">1</span>,</span>
+                        <span class="code-line">    dropout = <span class="code-string">0.3</span></span>
+                        <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">set_opt_hparams</span>(lr = <span class="code-string">0.001</span>, weight_decay = <span class="code-string">1e-5</span>)</span>
+                    </div>
+                </div>
+
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h3 class="function-title">🏗️ nn_module</h3>
+                        <p class="function-description">
+                            torchのモデル定義の基底クラス。initialize()で層を定義し、forward()で計算グラフを記述。動的で柔軟なアーキテクチャ構築が可能。
+                        </p>
+                        <div class="function-syntax">
+                            nn_module("ModelName", initialize, forward)
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">📊 nn_sequential</h3>
+                        <p class="function-description">
+                            層を順次実行するコンテナ。シンプルなパイプライン構築に最適。バッチ正規化、活性化、ドロップアウトの組み合わせが簡潔。
+                        </p>
+                        <div class="function-syntax">
+                            nn_sequential(layer1, layer2, ...)
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">⚡ luz setup</h3>
+                        <p class="function-description">
+                            モデルの訓練設定を統合。損失関数、オプティマイザー、評価指標を一括設定。Keras風のシンプルなAPIで複雑な訓練を簡素化。
+                        </p>
+                        <div class="function-syntax">
+                            setup(loss, optimizer, metrics)
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🎛️ callbacks</h3>
+                        <p class="function-description">
+                            訓練プロセスのカスタマイズ。早期停止、学習率スケジューリング、チェックポイント保存など。柔軟な訓練制御を実現。
+                        </p>
+                        <div class="function-syntax">
+                            luz_callback_early_stopping(), luz_callback_lr_scheduler()
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- COMPUTER VISION -->
+        <section class="section" id="computer-vision">
+            <h2>📷 コンピュータビジョンとCNN</h2>
+                <p>
+                    torchvisionパッケージにより、畳み込みニューラルネットワーク（CNN）の実装が大幅に簡素化されます。事前訓練済みモデルを活用した転移学習により、少ないデータで高精度な画像分類を実現できます。
+                </p>
+                
+                <!-- CNN Architecture Theory -->
+                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-purple);">
+                    <h4 style="color: var(--accent-purple); text-align: center; margin-bottom: 1.5rem;">🏗️ CNN アーキテクチャの理論と実装</h4>
+                    
+                    <!-- CNN構造図 -->
+                    <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-purple); border-radius: 15px; padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden;">
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <h5 style="color: var(--accent-cyan); margin-bottom: 1rem;">📸 畳み込みニューラルネットワーク (CNN) の動作原理</h5>
+                        </div>
+                        
+                        <svg viewBox="0 0 1400 700" style="width: 100%; height: auto; background: radial-gradient(circle at center, rgba(157,78,221,0.1) 0%, rgba(255,140,66,0.05) 100%);">
+                            <defs>
+                                <!-- CNNレイヤー用グラデーション -->
+                                <linearGradient id="inputImageGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00ff88;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.4"/>
+                                </linearGradient>
+                                <linearGradient id="convGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#9d4edd;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#ff8c42;stop-opacity:0.4"/>
+                                </linearGradient>
+                                <linearGradient id="poolGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#00ff41;stop-opacity:0.4"/>
+                                </linearGradient>
+                                <linearGradient id="fcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00ff41;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.4"/>
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- 入力画像 -->
+                            <g transform="translate(50, 100)">
+                                <text x="60" y="-10" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">入力画像</text>
+                                <rect x="10" y="10" width="100" height="100" rx="5" fill="url(#inputImageGrad)" stroke="#00ff88" stroke-width="2"/>
+                                <text x="60" y="65" text-anchor="middle" fill="white" font-size="12" font-weight="bold">32×32×3</text>
+                                <text x="60" y="80" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">RGB画像</text>
+                                
+                                <!-- ピクセル詳細 -->
+                                <g transform="translate(15, 15)">
+                                    <rect x="0" y="0" width="8" height="8" fill="#ff6b6b" opacity="0.7"/>
+                                    <rect x="8" y="0" width="8" height="8" fill="#4ecdc4" opacity="0.7"/>
+                                    <rect x="16" y="0" width="8" height="8" fill="#45b7d1" opacity="0.7"/>
+                                    <rect x="0" y="8" width="8" height="8" fill="#96ceb4" opacity="0.7"/>
+                                    <rect x="8" y="8" width="8" height="8" fill="#ffeaa7" opacity="0.7"/>
+                                    <rect x="16" y="8" width="8" height="8" fill="#dda0dd" opacity="0.7"/>
+                                </g>
+                                <text x="60" y="130" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">高: 32px</text>
+                                <text x="60" y="145" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">幅: 32px</text>
+                                <text x="60" y="160" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">チャンネル: 3</text>
+                            </g>
+                            
+                            <!-- 畳み込み層1 -->
+                            <g transform="translate(250, 80)">
+                                <text x="70" y="-10" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">Conv2D (1)</text>
+                                <rect x="20" y="10" width="100" height="80" rx="5" fill="url(#convGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="70" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">28×28×32</text>
+                                <text x="70" y="70" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">32フィルタ</text>
+                                
+                                <!-- フィルタ詳細 -->
+                                <rect x="30" y="100" width="30" height="30" rx="3" fill="rgba(157,78,221,0.3)" stroke="#9d4edd" stroke-width="1"/>
+                                <text x="45" y="118" text-anchor="middle" fill="white" font-size="9" font-weight="bold">5×5</text>
+                                <text x="45" y="130" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">kernel</text>
+                                
+                                <rect x="80" y="100" width="30" height="20" rx="3" fill="rgba(157,78,221,0.2)" stroke="#9d4edd" stroke-width="1"/>
+                                <text x="95" y="113" text-anchor="middle" fill="white" font-size="8">ReLU</text>
+                                
+                                <!-- パラメータ -->
+                                <text x="70" y="150" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Stride: 1</text>
+                                <text x="70" y="165" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Padding: 0</text>
+                            </g>
+                            
+                            <!-- プーリング層1 -->
+                            <g transform="translate(420, 100)">
+                                <text x="60" y="-10" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">MaxPool2D</text>
+                                <rect x="20" y="10" width="80" height="60" rx="5" fill="url(#poolGrad)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="60" y="45" text-anchor="middle" fill="white" font-size="12" font-weight="bold">14×14×32</text>
+                                <text x="60" y="60" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">1/2サイズ</text>
+                                
+                                <!-- プーリング詳細 -->
+                                <rect x="30" y="80" width="25" height="25" rx="3" fill="rgba(255,140,66,0.3)" stroke="#ff8c42" stroke-width="1"/>
+                                <text x="42.5" y="95" text-anchor="middle" fill="white" font-size="9" font-weight="bold">2×2</text>
+                                <text x="42.5" y="105" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">pool</text>
+                                
+                                <text x="60" y="125" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Stride: 2</text>
+                            </g>
+                            
+                            <!-- 畳み込み層2 -->
+                            <g transform="translate(570, 80)">
+                                <text x="70" y="-10" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">Conv2D (2)</text>
+                                <rect x="20" y="10" width="100" height="80" rx="5" fill="url(#convGrad)" stroke="#9d4edd" stroke-width="2"/>
+                                <text x="70" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">10×10×64</text>
+                                <text x="70" y="70" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">64フィルタ</text>
+                                
+                                <!-- フィルタ詳細 -->
+                                <rect x="30" y="100" width="30" height="30" rx="3" fill="rgba(157,78,221,0.3)" stroke="#9d4edd" stroke-width="1"/>
+                                <text x="45" y="118" text-anchor="middle" fill="white" font-size="9" font-weight="bold">5×5</text>
+                                <text x="45" y="130" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">kernel</text>
+                                
+                                <text x="70" y="150" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Stride: 1</text>
+                                <text x="70" y="165" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Padding: 0</text>
+                            </g>
+                            
+                            <!-- プーリング層2 -->
+                            <g transform="translate(740, 100)">
+                                <text x="60" y="-10" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">MaxPool2D</text>
+                                <rect x="20" y="10" width="80" height="60" rx="5" fill="url(#poolGrad)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="60" y="45" text-anchor="middle" fill="white" font-size="12" font-weight="bold">5×5×64</text>
+                                <text x="60" y="60" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">1/2サイズ</text>
+                                
+                                <text x="60" y="90" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Stride: 2</text>
+                            </g>
+                            
+                            <!-- フラット化 -->
+                            <g transform="translate(880, 110)">
+                                <text x="50" y="-10" text-anchor="middle" fill="#00ff41" font-size="14" font-weight="bold">Flatten</text>
+                                <rect x="20" y="10" width="60" height="40" rx="5" fill="rgba(0,255,65,0.3)" stroke="#00ff41" stroke-width="2"/>
+                                <text x="50" y="33" text-anchor="middle" fill="white" font-size="11" font-weight="bold">1600</text>
+                                <text x="50" y="70" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">5×5×64=1600</text>
+                            </g>
+                            
+                            <!-- 全結合層 -->
+                            <g transform="translate(1000, 90)">
+                                <text x="80" y="-10" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="bold">Dense Layer</text>
+                                <rect x="30" y="10" width="100" height="80" rx="5" fill="url(#fcGrad)" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="80" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">120 units</text>
+                                <text x="80" y="70" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">ReLU</text>
+                                
+                                <text x="80" y="110" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Dropout(0.5)</text>
+                            </g>
+                            
+                            <!-- 出力層 -->
+                            <g transform="translate(1200, 110)">
+                                <text x="60" y="-10" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">Output</text>
+                                <rect x="20" y="10" width="80" height="40" rx="5" fill="url(#outputGrad)" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="60" y="33" text-anchor="middle" fill="white" font-size="12" font-weight="bold">10 classes</text>
+                                
+                                <text x="60" y="70" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9">Softmax</text>
+                            </g>
+                            
+                            <!-- データフロー矢印 -->
+                            <path d="M160 150 L240 150" stroke="#00ff88" stroke-width="3" fill="none" marker-end="url(#arrowCNN)"/>
+                            <path d="M360 140 L410 140" stroke="#9d4edd" stroke-width="3" fill="none" marker-end="url(#arrowCNN)"/>
+                            <path d="M510 130 L560 130" stroke="#ff8c42" stroke-width="3" fill="none" marker-end="url(#arrowCNN)"/>
+                            <path d="M680 140 L730 140" stroke="#9d4edd" stroke-width="3" fill="none" marker-end="url(#arrowCNN)"/>
+                            <path d="M830 130 L870 130" stroke="#ff8c42" stroke-width="3" fill="none" marker-end="url(#arrowCNN)"/>
+                            <path d="M950 130 L990 130" stroke="#00ff41" stroke-width="3" fill="none" marker-end="url(#arrowCNN)"/>
+                            <path d="M1140 130 L1190 130" stroke="#00d4ff" stroke-width="3" fill="none" marker-end="url(#arrowCNN)"/>
+                            
+                            <!-- 矢印マーカー -->
+                            <defs>
+                                <marker id="arrowCNN" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#00ff88"/>
+                                </marker>
+                            </defs>
+                            
+                            <!-- 畳み込み演算の詳細説明 -->
+                            <g transform="translate(50, 300)">
+                                <rect x="0" y="0" width="600" height="200" rx="15" fill="rgba(0,0,0,0.4)" stroke="rgba(157,78,221,0.3)" stroke-width="2"/>
+                                <text x="300" y="25" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">🔍 畳み込み演算の仕組み</text>
+                                
+                                <!-- 入力特徴マップ -->
+                                <g transform="translate(50, 50)">
+                                    <text x="30" y="-5" text-anchor="middle" fill="#00ff88" font-size="12" font-weight="bold">Input</text>
+                                    <rect x="0" y="0" width="60" height="60" rx="3" fill="rgba(0,255,136,0.2)" stroke="#00ff88" stroke-width="1"/>
+                                    <!-- ピクセル値表示 -->
+                                    <text x="10" y="15" fill="white" font-size="8">1</text>
+                                    <text x="25" y="15" fill="white" font-size="8">2</text>
+                                    <text x="40" y="15" fill="white" font-size="8">1</text>
+                                    <text x="10" y="30" fill="white" font-size="8">0</text>
+                                    <text x="25" y="30" fill="white" font-size="8">1</text>
+                                    <text x="40" y="30" fill="white" font-size="8">2</text>
+                                    <text x="10" y="45" fill="white" font-size="8">1</text>
+                                    <text x="25" y="45" fill="white" font-size="8">0</text>
+                                    <text x="40" y="45" fill="white" font-size="8">1</text>
+                                    <text x="30" y="80" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9">5×5 feature</text>
+                                </g>
+                                
+                                <!-- カーネル/フィルタ -->
+                                <g transform="translate(200, 60)">
+                                    <text x="15" y="-5" text-anchor="middle" fill="#9d4edd" font-size="12" font-weight="bold">Kernel</text>
+                                    <rect x="0" y="0" width="30" height="30" rx="3" fill="rgba(157,78,221,0.3)" stroke="#9d4edd" stroke-width="2"/>
+                                    <text x="5" y="12" fill="white" font-size="8">1</text>
+                                    <text x="15" y="12" fill="white" font-size="8">0</text>
+                                    <text x="25" y="12" fill="white" font-size="8">-1</text>
+                                    <text x="5" y="22" fill="white" font-size="8">1</text>
+                                    <text x="15" y="22" fill="white" font-size="8">0</text>
+                                    <text x="25" y="22" fill="white" font-size="8">-1</text>
+                                    <text x="15" y="50" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9">3×3 filter</text>
+                                </g>
+                                
+                                <!-- 演算記号 -->
+                                <g transform="translate(260, 75)">
+                                    <circle cx="15" cy="15" r="12" fill="rgba(255,140,66,0.3)" stroke="#ff8c42" stroke-width="2"/>
+                                    <text x="15" y="19" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">*</text>
+                                </g>
+                                
+                                <!-- 出力特徴マップ -->
+                                <g transform="translate(350, 60)">
+                                    <text x="15" y="-5" text-anchor="middle" fill="#ff8c42" font-size="12" font-weight="bold">Output</text>
+                                    <rect x="0" y="0" width="30" height="30" rx="3" fill="rgba(255,140,66,0.2)" stroke="#ff8c42" stroke-width="1"/>
+                                    <text x="5" y="12" fill="white" font-size="8">2</text>
+                                    <text x="15" y="12" fill="white" font-size="8">1</text>
+                                    <text x="25" y="12" fill="white" font-size="8">0</text>
+                                    <text x="5" y="22" fill="white" font-size="8">1</text>
+                                    <text x="15" y="22" fill="white" font-size="8">3</text>
+                                    <text x="25" y="22" fill="white" font-size="8">2</text>
+                                    <text x="15" y="50" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9">3×3 result</text>
+                                </g>
+                                
+                                <!-- 計算式 -->
+                                <g transform="translate(450, 40)">
+                                    <text x="0" y="15" fill="#00d4ff" font-size="11" font-weight="bold">計算例:</text>
+                                    <text x="0" y="35" fill="white" font-size="10">2 = (1×1)+(2×0)+(1×-1)+</text>
+                                    <text x="0" y="50" fill="white" font-size="10">    (0×1)+(1×0)+(2×-1)+</text>
+                                    <text x="0" y="65" fill="white" font-size="10">    (1×1)+(0×0)+(1×-1)</text>
+                                    <text x="0" y="80" fill="white" font-size="10">  = 1+0-1+0+0-2+1+0-1</text>
+                                    <text x="0" y="95" fill="#ff8c42" font-size="10" font-weight="bold">  = -2 → ReLU(0)</text>
+                                </g>
+                            </g>
+                            
+                            <!-- CNN特徴量学習の説明 -->
+                            <g transform="translate(700, 300)">
+                                <rect x="0" y="0" width="600" height="200" rx="15" fill="rgba(0,0,0,0.4)" stroke="rgba(0,255,65,0.3)" stroke-width="2"/>
+                                <text x="300" y="25" text-anchor="middle" fill="#00ff41" font-size="16" font-weight="bold">🎯 CNN特徴量学習の階層構造</text>
+                                
+                                <!-- レイヤー1 -->
+                                <g transform="translate(50, 50)">
+                                    <rect x="0" y="0" width="100" height="40" rx="5" fill="rgba(0,255,136,0.2)" stroke="#00ff88" stroke-width="1"/>
+                                    <text x="50" y="15" text-anchor="middle" fill="#00ff88" font-size="11" font-weight="bold">Layer 1</text>
+                                    <text x="50" y="30" text-anchor="middle" fill="white" font-size="9">エッジ検出</text>
+                                    <text x="50" y="55" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">水平線、垂直線</text>
+                                    <text x="50" y="70" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">斜線、曲線</text>
+                                </g>
+                                
+                                <!-- レイヤー2 -->
+                                <g transform="translate(200, 50)">
+                                    <rect x="0" y="0" width="100" height="40" rx="5" fill="rgba(157,78,221,0.2)" stroke="#9d4edd" stroke-width="1"/>
+                                    <text x="50" y="15" text-anchor="middle" fill="#9d4edd" font-size="11" font-weight="bold">Layer 2</text>
+                                    <text x="50" y="30" text-anchor="middle" fill="white" font-size="9">形状・パターン</text>
+                                    <text x="50" y="55" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">角、円、テクスチャ</text>
+                                    <text x="50" y="70" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">より複雑な形状</text>
+                                </g>
+                                
+                                <!-- レイヤー3 -->
+                                <g transform="translate(350, 50)">
+                                    <rect x="0" y="0" width="100" height="40" rx="5" fill="rgba(255,140,66,0.2)" stroke="#ff8c42" stroke-width="1"/>
+                                    <text x="50" y="15" text-anchor="middle" fill="#ff8c42" font-size="11" font-weight="bold">Layer 3+</text>
+                                    <text x="50" y="30" text-anchor="middle" fill="white" font-size="9">オブジェクト</text>
+                                    <text x="50" y="55" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">顔、車、動物</text>
+                                    <text x="50" y="70" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">高レベル特徴</text>
+                                </g>
+                                
+                                <!-- 矢印 -->
+                                <path d="M150 70 L190 70" stroke="#00ff88" stroke-width="2" fill="none" marker-end="url(#arrowCNN)"/>
+                                <path d="M300 70 L340 70" stroke="#9d4edd" stroke-width="2" fill="none" marker-end="url(#arrowCNN)"/>
+                                
+                                <!-- 学習プロセス -->
+                                <g transform="translate(50, 120)">
+                                    <text x="0" y="15" fill="#00d4ff" font-size="12" font-weight="bold">💡 学習の特徴:</text>
+                                    <text x="0" y="35" fill="white" font-size="10">• 階層的特徴量学習 - 単純→複雑</text>
+                                    <text x="0" y="50" fill="white" font-size="10">• 平行移動不変性 - 位置に関係なく検出</text>
+                                    <text x="0" y="65" fill="white" font-size="10">• パラメータ共有 - 効率的な学習</text>
+                                </g>
+                            </g>
+                            
+                            <!-- パフォーマンス指標 -->
+                            <g transform="translate(50, 550)">
+                                <text x="0" y="15" fill="#00ff88" font-size="14" font-weight="bold">📊 CNN性能指標</text>
+                                <text x="200" y="15" fill="#9d4edd" font-size="12" font-weight="bold">Accuracy: 97.8%</text>
+                                <text x="350" y="15" fill="#ff8c42" font-size="12" font-weight="bold">Loss: 0.032</text>
+                                <text x="480" y="15" fill="#00d4ff" font-size="12" font-weight="bold">Parameters: 1.2M</text>
+                                
+                                <text x="0" y="35" fill="rgba(255,255,255,0.8)" font-size="10">Training Time: 45 min (GPU)</text>
+                                <text x="200" y="35" fill="rgba(255,255,255,0.8)" font-size="10">Memory Usage: 3.8GB</text>
+                                <text x="380" y="35" fill="rgba(255,255,255,0.8)" font-size="10">FLOPs: 2.1G</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <svg width="100%" height="600" viewBox="0 0 1400 600" style="max-width: 100%; height: auto;">
+                        <!-- Background -->
+                        <rect width="1400" height="600" fill="#0a0a0f"/>
+                        
+                        <!-- Title -->
+                        <text x="700" y="30" text-anchor="middle" fill="#9d4edd" font-size="18" font-weight="bold">Convolutional Neural Network Architecture & Feature Learning</text>
+                        
+                        <!-- Input Image -->
+                        <g transform="translate(50, 60)">
+                            <text x="50" y="0" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">Input Image</text>
+                            <rect x="0" y="20" width="100" height="100" fill="rgba(0, 255, 136, 0.2)" stroke="#00ff88" stroke-width="2" rx="5"/>
+                            
+                            <!-- RGB channels visualization -->
+                            <rect x="10" y="30" width="80" height="25" fill="rgba(255, 0, 0, 0.3)" stroke="#ff0000"/>
+                            <text x="50" y="47" text-anchor="middle" fill="#ffffff" font-size="9">R</text>
+                            <rect x="10" y="55" width="80" height="25" fill="rgba(0, 255, 0, 0.3)" stroke="#00ff00"/>
+                            <text x="50" y="72" text-anchor="middle" fill="#ffffff" font-size="9">G</text>
+                            <rect x="10" y="80" width="80" height="25" fill="rgba(0, 0, 255, 0.3)" stroke="#0000ff"/>
+                            <text x="50" y="97" text-anchor="middle" fill="#ffffff" font-size="9">B</text>
+                            
+                            <text x="50" y="140" text-anchor="middle" fill="#ffffff" font-size="10">224×224×3</text>
+                        </g>
+                        
+                        <!-- Convolution Layer 1 -->
+                        <g transform="translate(200, 60)">
+                            <text x="60" y="0" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="bold">Conv2D + ReLU</text>
+                            
+                            <!-- Feature maps -->
+                            <rect x="0" y="20" width="30" height="80" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                            <rect x="35" y="20" width="30" height="80" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                            <rect x="70" y="20" width="30" height="80" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                            <rect x="105" y="20" width="30" height="80" fill="rgba(0, 212, 255, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                            
+                            <!-- Convolution operation visualization -->
+                            <g transform="translate(10, 110)">
+                                <rect x="0" y="0" width="100" height="40" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="3"/>
+                                <text x="50" y="15" text-anchor="middle" fill="#ffffff" font-size="9">Kernel: 3×3</text>
+                                <text x="50" y="30" text-anchor="middle" fill="#ffffff" font-size="9">Filters: 64</text>
+                            </g>
+                            
+                            <text x="60" y="170" text-anchor="middle" fill="#ffffff" font-size="10">112×112×64</text>
+                        </g>
+                        
+                        <!-- Max Pooling -->
+                        <g transform="translate(360, 60)">
+                            <text x="40" y="0" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">MaxPool</text>
+                            
+                            <!-- Pooled feature maps -->
+                            <rect x="0" y="20" width="20" height="40" fill="rgba(255, 140, 66, 0.3)" stroke="#ff8c42" stroke-width="2"/>
+                            <rect x="25" y="20" width="20" height="40" fill="rgba(255, 140, 66, 0.3)" stroke="#ff8c42" stroke-width="2"/>
+                            <rect x="50" y="20" width="20" height="40" fill="rgba(255, 140, 66, 0.3)" stroke="#ff8c42" stroke-width="2"/>
+                            
+                            <!-- Pooling operation -->
+                            <g transform="translate(10, 70)">
+                                <rect x="0" y="0" width="60" height="30" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="3"/>
+                                <text x="30" y="15" text-anchor="middle" fill="#ffffff" font-size="9">2×2 pool</text>
+                                <text x="30" y="25" text-anchor="middle" fill="#ffffff" font-size="9">stride=2</text>
+                            </g>
+                            
+                            <text x="40" y="120" text-anchor="middle" fill="#ffffff" font-size="10">56×56×64</text>
+                        </g>
+                        
+                        <!-- Deeper Convolution -->
+                        <g transform="translate(480, 60)">
+                            <text x="50" y="0" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">Conv2D Block</text>
+                            
+                            <!-- Multiple deeper feature maps -->
+                            <rect x="0" y="20" width="15" height="60" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="1"/>
+                            <rect x="18" y="20" width="15" height="60" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="1"/>
+                            <rect x="36" y="20" width="15" height="60" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="1"/>
+                            <rect x="54" y="20" width="15" height="60" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="1"/>
+                            <rect x="72" y="20" width="15" height="60" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="1"/>
+                            <rect x="90" y="20" width="15" height="60" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd" stroke-width="1"/>
+                            
+                            <text x="50" y="100" text-anchor="middle" fill="#ffffff" font-size="10">28×28×128</text>
+                        </g>
+                        
+                        <!-- Global Average Pooling -->
+                        <g transform="translate(620, 60)">
+                            <text x="40" y="0" text-anchor="middle" fill="#00ffaa" font-size="14" font-weight="bold">Global Pool</text>
+                            
+                            <!-- Flattened representation -->
+                            <rect x="10" y="20" width="60" height="8" fill="rgba(0, 255, 170, 0.3)" stroke="#00ffaa" stroke-width="1"/>
+                            <rect x="10" y="32" width="60" height="8" fill="rgba(0, 255, 170, 0.3)" stroke="#00ffaa" stroke-width="1"/>
+                            <rect x="10" y="44" width="60" height="8" fill="rgba(0, 255, 170, 0.3)" stroke="#00ffaa" stroke-width="1"/>
+                            <rect x="10" y="56" width="60" height="8" fill="rgba(0, 255, 170, 0.3)" stroke="#00ffaa" stroke-width="1"/>
+                            
+                            <text x="40" y="80" text-anchor="middle" fill="#ffffff" font-size="10">1×1×128</text>
+                        </g>
+                        
+                        <!-- Fully Connected -->
+                        <g transform="translate(750, 60)">
+                            <text x="50" y="0" text-anchor="middle" fill="#ffff00" font-size="14" font-weight="bold">Classifier</text>
+                            
+                            <circle cx="25" cy="30" r="8" fill="rgba(255, 255, 0, 0.3)" stroke="#ffff00"/>
+                            <circle cx="25" cy="50" r="8" fill="rgba(255, 255, 0, 0.3)" stroke="#ffff00"/>
+                            <circle cx="25" cy="70" r="8" fill="rgba(255, 255, 0, 0.3)" stroke="#ffff00"/>
+                            
+                            <circle cx="75" cy="40" r="10" fill="rgba(255, 255, 0, 0.5)" stroke="#ffff00" stroke-width="2"/>
+                            <circle cx="75" cy="60" r="10" fill="rgba(255, 255, 0, 0.5)" stroke="#ffff00" stroke-width="2"/>
+                            
+                            <!-- Connections -->
+                            <line x1="33" y1="30" x2="67" y2="40" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+                            <line x1="33" y1="50" x2="67" y2="50" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+                            <line x1="33" y1="70" x2="67" y2="60" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+                            
+                            <text x="50" y="95" text-anchor="middle" fill="#ffffff" font-size="10">Classes: 1000</text>
+                        </g>
+                        
+                        <!-- Mathematical Operations Explanation -->
+                        <g transform="translate(50, 200)">
+                            <rect x="0" y="0" width="1300" height="160" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="10"/>
+                            <text x="650" y="25" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold">🧮 CNN Mathematical Operations</text>
+                            
+                            <!-- Convolution Operation -->
+                            <g transform="translate(50, 40)">
+                                <text x="0" y="0" fill="#00d4ff" font-size="14" font-weight="bold">1. Convolution Operation</text>
+                                <text x="0" y="20" fill="#ffffff" font-size="12">(f * g)(x,y) = ΣΣ f(i,j) × g(x-i, y-j)</text>
+                                <text x="0" y="35" fill="#aaaaaa" font-size="10">• Kernel slides across input</text>
+                                <text x="0" y="50" fill="#aaaaaa" font-size="10">• Element-wise multiplication & sum</text>
+                                <text x="0" y="65" fill="#aaaaaa" font-size="10">• Feature detection (edges, textures)</text>
+                                <text x="0" y="80" fill="#aaaaaa" font-size="10">• Parameters: kernel_size, stride, padding</text>
+                                
+                                <!-- Visual convolution -->
+                                <g transform="translate(300, 0)">
+                                    <rect x="0" y="10" width="30" height="30" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff"/>
+                                    <text x="15" y="30" text-anchor="middle" fill="#ffffff" font-size="8">Input</text>
+                                    <text x="50" y="25" fill="#ffffff" font-size="12">*</text>
+                                    <rect x="70" y="15" width="20" height="20" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42"/>
+                                    <text x="80" y="30" text-anchor="middle" fill="#ffffff" font-size="8">Kernel</text>
+                                    <text x="110" y="25" fill="#ffffff" font-size="12">=</text>
+                                    <circle cx="140" cy="25" r="10" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd"/>
+                                    <text x="140" y="30" text-anchor="middle" fill="#ffffff" font-size="8">Output</text>
+                                </g>
+                            </g>
+                            
+                            <!-- Pooling Operation -->
+                            <g transform="translate(600, 40)">
+                                <text x="0" y="0" fill="#ff8c42" font-size="14" font-weight="bold">2. Pooling Operation</text>
+                                <text x="0" y="20" fill="#ffffff" font-size="12">MaxPool: max(region), AvgPool: mean(region)</text>
+                                <text x="0" y="35" fill="#aaaaaa" font-size="10">• Downsampling for translation invariance</text>
+                                <text x="0" y="50" fill="#aaaaaa" font-size="10">• Reduces spatial dimensions</text>
+                                <text x="0" y="65" fill="#aaaaaa" font-size="10">• Computational efficiency</text>
+                                <text x="0" y="80" fill="#aaaaaa" font-size="10">• Common: 2×2 with stride 2</text>
+                            </g>
+                            
+                            <!-- Receptive Field -->
+                            <g transform="translate(50, 110)">
+                                <text x="0" y="0" fill="#9d4edd" font-size="14" font-weight="bold">3. Receptive Field Growth</text>
+                                <text x="0" y="20" fill="#ffffff" font-size="12">RF_l = RF_{l-1} + (kernel_size - 1) × stride_product</text>
+                                <text x="0" y="35" fill="#aaaaaa" font-size="10">• Early layers: local features (edges)</text>
+                                <text x="0" y="50" fill="#aaaaaa" font-size="10">• Deep layers: global features (objects)</text>
+                            </g>
+                            
+                            <!-- Parameter Calculation -->
+                            <g transform="translate(600, 110)">
+                                <text x="0" y="0" fill="#00ffaa" font-size="14" font-weight="bold">4. Parameter Count</text>
+                                <text x="0" y="20" fill="#ffffff" font-size="12">Conv: (K×K×C_in + 1) × C_out</text>
+                                <text x="0" y="35" fill="#aaaaaa" font-size="10">• K: kernel size, C: channels</text>
+                                <text x="0" y="50" fill="#aaaaaa" font-size="10">• +1 for bias term</text>
+                            </g>
+                        </g>
+                        
+                        <!-- Feature Hierarchy -->
+                        <g transform="translate(50, 380)">
+                            <rect x="0" y="0" width="1300" height="180" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="1" rx="10"/>
+                            <text x="650" y="25" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">🎯 Hierarchical Feature Learning</text>
+                            
+                            <!-- Layer 1: Low-level features -->
+                            <g transform="translate(100, 40)">
+                                <text x="100" y="0" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="bold">Layer 1-2: Low-level Features</text>
+                                <rect x="0" y="20" width="50" height="50" fill="none" stroke="#00d4ff" stroke-width="2"/>
+                                <line x1="25" y1="20" x2="25" y2="70" stroke="#00d4ff" stroke-width="3"/>
+                                <text x="25" y="85" text-anchor="middle" fill="#ffffff" font-size="9">Vertical Edge</text>
+                                
+                                <rect x="70" y="20" width="50" height="50" fill="none" stroke="#00d4ff" stroke-width="2"/>
+                                <line x1="70" y1="45" x2="120" y2="45" stroke="#00d4ff" stroke-width="3"/>
+                                <text x="95" y="85" text-anchor="middle" fill="#ffffff" font-size="9">Horizontal Edge</text>
+                                
+                                <rect x="140" y="20" width="50" height="50" fill="none" stroke="#00d4ff" stroke-width="2"/>
+                                <circle cx="165" cy="45" r="15" fill="none" stroke="#00d4ff" stroke-width="2"/>
+                                <text x="165" y="85" text-anchor="middle" fill="#ffffff" font-size="9">Circular Edge</text>
+                            </g>
+                            
+                            <!-- Layer 2: Mid-level features -->
+                            <g transform="translate(450, 40)">
+                                <text x="100" y="0" text-anchor="middle" fill="#ff8c42" font-size="12" font-weight="bold">Layer 3-4: Mid-level Features</text>
+                                <rect x="0" y="20" width="60" height="50" fill="none" stroke="#ff8c42" stroke-width="2"/>
+                                <path d="M 10 40 Q 30 25 50 40" fill="none" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="30" y="85" text-anchor="middle" fill="#ffffff" font-size="9">Curves & Shapes</text>
+                                
+                                <rect x="80" y="20" width="60" height="50" fill="none" stroke="#ff8c42" stroke-width="2"/>
+                                <rect x="90" y="30" width="40" height="30" fill="none" stroke="#ff8c42" stroke-width="2"/>
+                                <text x="110" y="85" text-anchor="middle" fill="#ffffff" font-size="9">Corners</text>
+                            </g>
+                            
+                            <!-- Layer 3: High-level features -->
+                            <g transform="translate(750, 40)">
+                                <text x="120" y="0" text-anchor="middle" fill="#00ffaa" font-size="12" font-weight="bold">Layer 5+: High-level Features</text>
+                                <rect x="0" y="20" width="80" height="50" fill="none" stroke="#00ffaa" stroke-width="2"/>
+                                <circle cx="20" cy="35" r="8" fill="none" stroke="#00ffaa" stroke-width="2"/>
+                                <circle cx="60" cy="35" r="8" fill="none" stroke="#00ffaa" stroke-width="2"/>
+                                <path d="M 15 50 Q 40 60 65 50" fill="none" stroke="#00ffaa" stroke-width="2"/>
+                                <text x="40" y="85" text-anchor="middle" fill="#ffffff" font-size="9">Face Parts</text>
+                                
+                                <rect x="100" y="20" width="80" height="50" fill="none" stroke="#00ffaa" stroke-width="2"/>
+                                <rect x="110" y="30" width="60" height="30" fill="none" stroke="#00ffaa" stroke-width="2"/>
+                                <rect x="120" y="35" width="40" height="20" fill="none" stroke="#00ffaa" stroke-width="1"/>
+                                <text x="140" y="85" text-anchor="middle" fill="#ffffff" font-size="9">Objects</text>
+                            </g>
+                            
+                            <!-- Abstraction arrow -->
+                            <g transform="translate(50, 120)">
+                                <path d="M 50 20 L 1200 20" stroke="#ffffff" stroke-width="2" marker-end="url(#abstractArrow)"/>
+                                <text x="625" y="15" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Increasing Abstraction & Semantic Content</text>
+                                <text x="100" y="40" fill="#00d4ff" font-size="10">Local Features</text>
+                                <text x="600" y="40" fill="#ff8c42" font-size="10">Part-based Features</text>
+                                <text x="1100" y="40" fill="#00ffaa" font-size="10">Object-level Features</text>
+                            </g>
+                        </g>
+                        
+                        <!-- Flow arrows -->
+                        <path d="M 150 120 L 190 120" stroke="#ffffff" stroke-width="2" marker-end="url(#flowArrow)"/>
+                        <path d="M 290 120 L 350 120" stroke="#ffffff" stroke-width="2" marker-end="url(#flowArrow)"/>
+                        <path d="M 430 90 L 470 90" stroke="#ffffff" stroke-width="2" marker-end="url(#flowArrow)"/>
+                        <path d="M 580 80 L 610 80" stroke="#ffffff" stroke-width="2" marker-end="url(#flowArrow)"/>
+                        <path d="M 700 80 L 740 80" stroke="#ffffff" stroke-width="2" marker-end="url(#flowArrow)"/>
+                        
+                        <defs>
+                            <marker id="flowArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                                <polygon points="0 0, 8 3, 0 6" fill="#ffffff"/>
+                            </marker>
+                            <marker id="abstractArrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    
+                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00d4ff;">
+                            <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">🔍 Convolution</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">局所的特徴抽出。カーネルによる畳み込み演算で エッジ・テクスチャ等を検出</p>
+                        </div>
+                        <div style="background: rgba(255, 140, 66, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ff8c42;">
+                            <h5 style="color: #ff8c42; margin-bottom: 0.5rem;">📉 Pooling</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">空間次元削減と平行移動不変性。計算効率向上と過学習抑制</p>
+                        </div>
+                        <div style="background: rgba(157, 78, 221, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #9d4edd;">
+                            <h5 style="color: #9d4edd; margin-bottom: 0.5rem;">🏗️ Hierarchy</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">階層的特徴学習。低次→高次の抽象化で複雑なパターン認識</p>
+                        </div>
+                        <div style="background: rgba(0, 255, 170, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00ffaa;">
+                            <h5 style="color: #00ffaa; margin-bottom: 0.5rem;">🎯 Receptive Field</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">受容野の拡大。深い層ほど広域の情報を統合して判断</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transfer Learning -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🔄 転移学習による画像分類</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">transfer_learning.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 事前訓練済みResNet18の読み込み</span></span>
+                        <span class="code-line"><span class="code-variable">pretrained_model</span> <span class="code-keyword">&lt;-</span> <span class="code-function">model_resnet18</span>(pretrained = <span class="code-string">TRUE</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 転移学習モデルの定義</span></span>
+                        <span class="code-line"><span class="code-variable">transfer_classifier</span> <span class="code-keyword">&lt;-</span> <span class="code-function">nn_module</span>(</span>
+                        <span class="code-line">  <span class="code-string">"TransferClassifier"</span>,</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  initialize = <span class="code-keyword">function</span>(num_classes, freeze_backbone = <span class="code-string">TRUE</span>) {</span>
+                        <span class="code-line">    self$backbone <span class="code-keyword">&lt;-</span> pretrained_model</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># バックボーンの重みを固定</span></span>
+                        <span class="code-line">    <span class="code-keyword">if</span> (freeze_backbone) {</span>
+                        <span class="code-line">      <span class="code-keyword">for</span> (param <span class="code-keyword">in</span> self$backbone$parameters) {</span>
+                        <span class="code-line">        param$requires_grad_(<span class="code-string">FALSE</span>)</span>
+                        <span class="code-line">      }</span>
+                        <span class="code-line">    }</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># カスタム分類ヘッド</span></span>
+                        <span class="code-line">    <span class="code-variable">feature_size</span> <span class="code-keyword">&lt;-</span> self$backbone$fc$in_features</span>
+                        <span class="code-line">    self$backbone$fc <span class="code-keyword">&lt;-</span> <span class="code-function">nn_identity</span>()</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    self$classifier <span class="code-keyword">&lt;-</span> <span class="code-function">nn_sequential</span>(</span>
+                        <span class="code-line">      <span class="code-function">nn_dropout</span>(<span class="code-string">0.5</span>),</span>
+                        <span class="code-line">      <span class="code-function">nn_linear</span>(feature_size, <span class="code-string">256</span>),</span>
+                        <span class="code-line">      <span class="code-function">nn_relu</span>(),</span>
+                        <span class="code-line">      <span class="code-function">nn_dropout</span>(<span class="code-string">0.3</span>),</span>
+                        <span class="code-line">      <span class="code-function">nn_linear</span>(<span class="code-string">256</span>, num_classes)</span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">  },</span>
+                        <span class="code-line">  </span>
+                        <span class="code-line">  forward = <span class="code-keyword">function</span>(x) {</span>
+                        <span class="code-line">    <span class="code-variable">features</span> <span class="code-keyword">&lt;-</span> self$backbone(x)</span>
+                        <span class="code-line">    <span class="code-keyword">return</span>(self$classifier(features))</span>
+                        <span class="code-line">  }</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># データ拡張の定義</span></span>
+                        <span class="code-line"><span class="code-variable">train_transforms</span> <span class="code-keyword">&lt;-</span> <span class="code-keyword">function</span>(img) {</span>
+                        <span class="code-line">  img <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">transform_to_tensor</span>() <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">transform_random_horizontal_flip</span>(p = <span class="code-string">0.5</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">transform_random_crop</span>(size = <span class="code-function">c</span>(<span class="code-string">224</span>, <span class="code-string">224</span>), padding = <span class="code-string">4</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">    <span class="code-function">transform_normalize</span>(mean = <span class="code-function">c</span>(<span class="code-string">0.485</span>, <span class="code-string">0.456</span>, <span class="code-string">0.406</span>), </span>
+                        <span class="code-line">                       std = <span class="code-function">c</span>(<span class="code-string">0.229</span>, <span class="code-string">0.224</span>, <span class="code-string">0.225</span>))</span>
+                        <span class="code-line">}</span>
+                    </div>
+                </div>
+
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h3 class="function-title">🏗️ 事前訓練モデル</h3>
+                        <p class="function-description">
+                            ImageNetで訓練済みのResNet、VGG、EfficientNetなど。豊富な特徴量表現を活用し、少ないデータで高精度な分類を実現。
+                        </p>
+                        <div class="function-syntax">
+                            model_resnet18(), model_vgg16(), model_efficientnet_b0()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🔄 転移学習戦略</h3>
+                        <p class="function-description">
+                            バックボーン固定→分類層訓練→全体ファインチューニングの段階的アプローチ。効率的な学習と過学習防止を両立。
+                        </p>
+                        <div class="function-syntax">
+                            requires_grad_(FALSE), freeze/unfreeze layers
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🎨 データ拡張</h3>
+                        <p class="function-description">
+                            画像の回転、反転、クロップなどによるデータ増強。過学習を防ぎ、モデルの汎化性能を向上。torchvisionの豊富な変換関数を活用。
+                        </p>
+                        <div class="function-syntax">
+                            transform_random_horizontal_flip(), transform_random_crop()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">👁️ Grad-CAM</h3>
+                        <p class="function-description">
+                            CNNの判断根拠を視覚化。勾配情報を利用して、モデルが注目している画像領域をヒートマップで表示。解釈可能性を向上。
+                        </p>
+                        <div class="function-syntax">
+                            register_forward_hook(), register_backward_hook()
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第23章の重要ポイント</h4>
+            <ul>
+                <li><strong>torch for R</strong>：PyTorchのR native実装</li>
+                <li><strong>luz API</strong>：Keras風のシンプルな訓練インターフェース</li>
+                <li><strong>GPU加速</strong>：CUDA対応による高速計算</li>
+                <li><strong>転移学習</strong>：事前訓練モデルを活用した効率的学習</li>
+                <li><strong>TabNet</strong>：表形式データの解釈可能な深層学習</li>
+                <li><strong>tidymodels統合</strong>：既存ワークフローとの美しい連携</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>torch for Rは、Pythonに依存しないR nativeな深層学習を実現する画期的なフレームワークです。luzパッケージにより、複雑な訓練ループが自動化され、美しい進捗表示とコールバック機能を享受できます。tidymodelsとの統合により、従来の機械学習と深層学習を統一されたワークフローで扱えることが最大の利点です。GPU加速と豊富な事前訓練モデルにより、実用的な深層学習アプリケーションの開発が大幅に効率化されます。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter22-text-analysis-tidytext.html" class="nav-button">← 第22章</a>
+            <a href="index.html" class="nav-button">📁 目次へ戻る</a>
+        </nav>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </div>
+</body>
+</html>

@@ -5,7 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIDYVERSE/TIDYMODELS | データサイエンスのためのRパッケージエコシステム</title>
     <meta name="description" content="Tidyverse・Tidymodelsを活用したデータサイエンス。dplyr, ggplot2, tidymodelsでデータ分析を効率化。">
-    
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     
@@ -753,107 +766,1009 @@
         </div>
     </section>
     
-    <!-- Chapters Section -->
-    <section class="chapters-showcase" id="chapters">
-        <div class="chapters-container">
-            <h2 class="section-title fade-in-up">LEARNING CHAPTERS</h2>
+    <!-- What R Can Do Section -->
+    <section class="r-applications" style="padding: 8rem 2rem; background: linear-gradient(135deg, rgba(57, 255, 20, 0.05) 0%, rgba(0, 128, 255, 0.05) 100%);">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <h2 class="section-title fade-in-up">Rで何ができるか？具体的な活用例</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Rは単なる統計ソフトウェアではありません。現代のビジネス、研究、意思決定を支える強力なデータサイエンスプラットフォームです。
+            </p>
             
-            <!-- メイン目次アイコンエリア -->
-            <div class="toc-icons-row fade-in-up">
-                <div class="toc-icon" data-chapter="1">
-                    <img src="https://tidyverse.tidyverse.org/logo.png" alt="Tidyverse">
-                    <span class="toc-number">01</span>
+            <!-- Business Applications Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; margin-bottom: 6rem;">
+                
+                <!-- Financial Analysis -->
+                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 128, 255, 0.05) 100%);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">💰</div>
+                        <h3 class="feature-title" style="margin: 0;">金融・投資分析</h3>
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;"><strong>株価予測モデル:</strong> 時系列分析でTOPIX・日経225の動向を予測</p>
+                        <p style="margin-bottom: 1rem;"><strong>ポートフォリオ最適化:</strong> リスク分散投資の最適配分を数学的に計算</p>
+                        <p style="margin-bottom: 1rem;"><strong>信用リスク評価:</strong> 機械学習で貸し倒れ確率を予測</p>
+                        <div style="background: rgba(0, 255, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-cyan);">
+                            <strong>実例:</strong> 某金融機関では、Rによるリスク評価モデルで貸し倒れ率を30%削減
+                        </div>
+                    </div>
                 </div>
-                <div class="toc-icon" data-chapter="2">
-                    <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr">
-                    <span class="toc-number">02</span>
+                
+                <!-- Marketing Analytics -->
+                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(255, 0, 255, 0.1) 0%, rgba(128, 0, 255, 0.05) 100%);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">📈</div>
+                        <h3 class="feature-title" style="margin: 0;">マーケティング分析</h3>
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;"><strong>顧客セグメンテーション:</strong> RFM分析でVIP顧客を特定</p>
+                        <p style="margin-bottom: 1rem;"><strong>A/Bテスト:</strong> 統計的検定で広告効果を科学的に評価</p>
+                        <p style="margin-bottom: 1rem;"><strong>推薦システム:</strong> 協調フィルタリングで個人化商品推薦</p>
+                        <div style="background: rgba(255, 0, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-magenta);">
+                            <strong>実例:</strong> ECサイトでRベースの推薦エンジンが売上を25%向上
+                        </div>
+                    </div>
                 </div>
-                <div class="toc-icon" data-chapter="3">
-                    <img src="https://ggplot2.tidyverse.org/logo.png" alt="ggplot2">
-                    <span class="toc-number">03</span>
+                
+                <!-- Healthcare Analytics -->
+                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 0, 0.05) 100%);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🏥</div>
+                        <h3 class="feature-title" style="margin: 0;">医療・ヘルスケア</h3>
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;"><strong>疫学調査:</strong> 疾病の感染拡大モデルをシミュレーション</p>
+                        <p style="margin-bottom: 1rem;"><strong>臨床試験分析:</strong> 薬効評価の統計解析で新薬開発を支援</p>
+                        <p style="margin-bottom: 1rem;"><strong>遺伝子解析:</strong> バイオインフォマティクスでゲノム研究</p>
+                        <div style="background: rgba(57, 255, 20, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-lime);">
+                            <strong>実例:</strong> COVID-19の感染予測モデルで政策決定を科学的に支援
+                        </div>
+                    </div>
                 </div>
-                <div class="toc-icon" data-chapter="4">
-                    <img src="https://tidyr.tidyverse.org/logo.png" alt="tidyr">
-                    <span class="toc-number">04</span>
+                
+                <!-- Manufacturing Analytics -->
+                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🏭</div>
+                        <h3 class="feature-title" style="margin: 0;">製造・品質管理</h3>
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;"><strong>予知保全:</strong> センサーデータから機械の故障を事前予測</p>
+                        <p style="margin-bottom: 1rem;"><strong>品質管理:</strong> 統計的プロセス制御で不良品率を最小化</p>
+                        <p style="margin-bottom: 1rem;"><strong>サプライチェーン最適化:</strong> 在庫管理と需要予測を連携</p>
+                        <div style="background: rgba(255, 102, 0, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-orange);">
+                            <strong>実例:</strong> 自動車メーカーでR予知保全システムがダウンタイム40%削減
+                        </div>
+                    </div>
                 </div>
-                <div class="toc-icon" data-chapter="5">
-                    <img src="https://readr.tidyverse.org/logo.png" alt="readr">
-                    <span class="toc-number">05</span>
+                
+                <!-- Academic Research -->
+                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(128, 0, 255, 0.1) 0%, rgba(255, 0, 255, 0.05) 100%);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🎓</div>
+                        <h3 class="feature-title" style="margin: 0;">学術研究</h3>
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;"><strong>社会科学調査:</strong> アンケート分析で社会現象を定量化</p>
+                        <p style="margin-bottom: 1rem;"><strong>心理学実験:</strong> 行動データの統計モデリング</p>
+                        <p style="margin-bottom: 1rem;"><strong>自然科学:</strong> 物理・化学・生物学の実験データ解析</p>
+                        <div style="background: rgba(128, 0, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--plasma-purple);">
+                            <strong>実例:</strong> 論文引用数上位のNature誌でRを用いた分析が急増中
+                        </div>
+                    </div>
                 </div>
-                <div class="toc-icon" data-chapter="6">
-                    <img src="https://tidymodels.org/images/tidymodels.png" alt="tidymodels">
-                    <span class="toc-number">06</span>
+                
+                <!-- Digital Marketing -->
+                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(0, 128, 255, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">📱</div>
+                        <h3 class="feature-title" style="margin: 0;">デジタルマーケティング</h3>
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;"><strong>Web解析:</strong> Google Analytics データから顧客行動を分析</p>
+                        <p style="margin-bottom: 1rem;"><strong>ソーシャル分析:</strong> SNSの感情分析でブランドイメージを測定</p>
+                        <p style="margin-bottom: 1rem;"><strong>アトリビューション分析:</strong> 各チャネルの広告効果を正確に評価</p>
+                        <div style="background: rgba(0, 128, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--electric-blue);">
+                            <strong>実例:</strong> 広告代理店でRダッシュボードがROAS(広告費対効果)を35%改善
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <!-- チャプター詳細情報 -->
-            <div class="chapter-details">
-                <div class="chapter-detail active" id="chapter-1">
-                    <h3 class="chapter-title">Tidyverse概要とインストール</h3>
-                    <p class="chapter-description">Tidyverseエコシステムの全体像を把握。データサイエンスの哲学、Tidy Dataの原則、パッケージのインストール方法を学び、美しいデータ分析の第一歩を踏み出す。</p>
-                    <div class="chapter-tags">
-                        <span class="chapter-tag">Tidyverse概要</span>
-                        <span class="chapter-tag">インストール</span>
-                        <span class="chapter-tag">Tidy Data</span>
-                        <span class="chapter-tag">パイプ演算子</span>
+            
+            <!-- Why R is Chosen -->
+            <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 4rem; backdrop-filter: blur(20px); text-align: center;">
+                <h3 style="font-family: var(--font-tech); font-size: 2rem; color: var(--neon-cyan); margin-bottom: 2rem;">なぜ世界中の専門家がRを選ぶのか？</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; text-align: left;">
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; margin-right: 1rem;">🆓</div>
+                            <h4 style="color: var(--neon-lime); margin: 0;">完全無料のオープンソース</h4>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">高価なライセンス不要。世界中の研究者が開発する15,000以上のパッケージを自由に利用可能</p>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; margin-right: 1rem;">🌍</div>
+                            <h4 style="color: var(--neon-cyan); margin: 0;">グローバルコミュニティ</h4>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">500万人以上のユーザー、Stack Overflowでの質問数は常に上位。豊富な学習リソースとサポート</p>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; margin-right: 1rem;">🎯</div>
+                            <h4 style="color: var(--neon-magenta); margin: 0;">統計・機械学習に特化</h4>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">統計学者が設計した言語。最新のAI・機械学習手法が最初にR向けに実装される傾向</p>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; margin-right: 1rem;">📊</div>
+                            <h4 style="color: var(--electric-blue); margin: 0;">美しいデータ可視化</h4>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">ggplot2による美しいグラフ作成。論文・プレゼン・レポートで使える高品質なビジュアル</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA Section -->
+            <div style="text-align: center; margin-top: 4rem;">
+                <h3 style="font-family: var(--font-tech); font-size: 1.8rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem;">
+                    あなたもRでデータの力を解き放ちませんか？
+                </h3>
+                <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#chapters" class="cta-btn cta-primary" style="text-decoration: none;">今すぐ学習を始める</a>
+                    <a href="chapter1-tidyverse-overview.html" class="cta-btn cta-secondary" style="text-decoration: none;">第1章から読む</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 統計・機械学習手法選択ガイド -->
+    <section class="method-selection" style="padding: 8rem 2rem; background: linear-gradient(135deg, rgba(128, 0, 255, 0.05) 0%, rgba(0, 255, 255, 0.05) 100%);">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <h2 class="section-title fade-in-up">📊 統計・機械学習手法選択ナビゲーター</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                データの特性に応じた最適な分析手法を素早く見つけられる完全ガイド。どんな状況でも迷わない分析手法検索システム。
+            </p>
+            
+            <!-- メイン手法選択フローチャート -->
+            <div class="method-flow-container" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 3rem; backdrop-filter: blur(20px); margin-bottom: 4rem;">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 1rem;">🎯 データ特性別手法選択フロー</h3>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;">3ステップで最適な分析手法を特定</p>
+                </div>
+                
+                <!-- シンプルな手法選択フローチャート -->
+                <div style="display: grid; gap: 3rem; margin-bottom: 3rem;">
+                    
+                    <!-- STEP 1: データタイプの判定 -->
+                    <div style="background: var(--glass-bg); border: 2px solid #00ffff; border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px);">
+                        <div style="text-align: center; margin-bottom: 3rem;">
+                            <div style="color: #00ffff; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem;">STEP 1</div>
+                            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem; font-family: var(--font-tech);">🎯 データタイプを特定</h3>
+                            <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">まず、分析対象データの種類を判別します</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                            <!-- 数値データ -->
+                            <div style="background: rgba(0,128,255,0.15); border: 2px solid #0080ff; border-radius: 20px; padding: 2rem; text-align: center;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
+                                <h4 style="color: #0080ff; font-size: 1.3rem; margin-bottom: 1rem;">数値データ</h4>
+                                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 1.5rem;">
+                                    <strong>連続値:</strong> 身長、体重、売上<br>
+                                    <strong>離散値:</strong> 注文数、来客数
+                                </div>
+                                <div style="background: rgba(0,128,255,0.2); padding: 1rem; border-radius: 10px; border-left: 4px solid #0080ff;">
+                                    <strong style="color: #00ffff;">推奨手法:</strong><br>
+                                    回帰分析、相関分析
+                                </div>
+                            </div>
+                            
+                            <!-- カテゴリカルデータ -->
+                            <div style="background: rgba(255,0,255,0.15); border: 2px solid #ff00ff; border-radius: 20px; padding: 2rem; text-align: center;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🏷️</div>
+                                <h4 style="color: #ff00ff; font-size: 1.3rem; margin-bottom: 1rem;">カテゴリカルデータ</h4>
+                                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 1.5rem;">
+                                    <strong>二値:</strong> 購入/未購入、合格/不合格<br>
+                                    <strong>多値:</strong> 職業、地域、商品カテゴリ
+                                </div>
+                                <div style="background: rgba(255,0,255,0.2); padding: 1rem; border-radius: 10px; border-left: 4px solid #ff00ff;">
+                                    <strong style="color: #ff00ff;">推奨手法:</strong><br>
+                                    分類分析、判別分析
+                                </div>
+                            </div>
+                            
+                            <!-- 時系列データ -->
+                            <div style="background: rgba(57,255,20,0.15); border: 2px solid #39ff14; border-radius: 20px; padding: 2rem; text-align: center;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
+                                <h4 style="color: #39ff14; font-size: 1.3rem; margin-bottom: 1rem;">時系列データ</h4>
+                                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 1.5rem;">
+                                    <strong>時間順序:</strong> 株価、気温、売上推移<br>
+                                    <strong>周期性:</strong> 季節変動、曜日効果
+                                </div>
+                                <div style="background: rgba(57,255,20,0.2); padding: 1rem; border-radius: 10px; border-left: 4px solid #39ff14;">
+                                    <strong style="color: #39ff14;">推奨手法:</strong><br>
+                                    時系列予測、トレンド分析
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 2: データ特性の確認 -->
+                    <div style="background: var(--glass-bg); border: 2px solid #ff6600; border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px);">
+                        <div style="text-align: center; margin-bottom: 3rem;">
+                            <div style="color: #ff6600; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem;">STEP 2</div>
+                            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem; font-family: var(--font-tech);">🔍 データ特性をチェック</h3>
+                            <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">データの品質と分布を確認して適切な前処理を選択</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                            <!-- 分布の形状 -->
+                            <div style="background: rgba(0,255,255,0.1); border: 1px solid #00ffff; border-radius: 15px; padding: 2rem;">
+                                <h4 style="color: #00ffff; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                                    <span style="font-size: 1.5rem; margin-right: 0.5rem;">📊</span>
+                                    分布の形状
+                                </h4>
+                                <div style="color: rgba(255,255,255,0.9); line-height: 1.8;">
+                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(0,255,255,0.1); border-radius: 8px;">
+                                        <strong>正規分布</strong> → 線形回帰, t検定
+                                    </div>
+                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(255,0,255,0.1); border-radius: 8px;">
+                                        <strong>歪んだ分布</strong> → Box-Cox変換, ロバスト回帰
+                                    </div>
+                                    <div style="padding: 0.8rem; background: rgba(57,255,20,0.1); border-radius: 8px;">
+                                        <strong>多峰性</strong> → 混合モデル, クラスタリング
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- データ品質 -->
+                            <div style="background: rgba(255,0,255,0.1); border: 1px solid #ff00ff; border-radius: 15px; padding: 2rem;">
+                                <h4 style="color: #ff00ff; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                                    <span style="font-size: 1.5rem; margin-right: 0.5rem;">🔧</span>
+                                    データ品質
+                                </h4>
+                                <div style="color: rgba(255,255,255,0.9); line-height: 1.8;">
+                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(128,0,255,0.1); border-radius: 8px;">
+                                        <strong>欠損値あり</strong> → mice, VIM で補完
+                                    </div>
+                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(255,102,0,0.1); border-radius: 8px;">
+                                        <strong>外れ値あり</strong> → 除外 or ロバスト手法
+                                    </div>
+                                    <div style="padding: 0.8rem; background: rgba(0,128,255,0.1); border-radius: 8px;">
+                                        <strong>多重共線性</strong> → Ridge, Lasso 正則化
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- クラス不均衡 -->
+                            <div style="background: rgba(57,255,20,0.1); border: 1px solid #39ff14; border-radius: 15px; padding: 2rem;">
+                                <h4 style="color: #39ff14; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                                    <span style="font-size: 1.5rem; margin-right: 0.5rem;">⚖️</span>
+                                    クラス不均衡
+                                </h4>
+                                <div style="color: rgba(255,255,255,0.9); line-height: 1.8;">
+                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(0,255,255,0.1); border-radius: 8px;">
+                                        <strong>軽度 (1:2-5)</strong> → 重み付き学習
+                                    </div>
+                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(255,0,255,0.1); border-radius: 8px;">
+                                        <strong>中度 (1:10-50)</strong> → SMOTE, ROSE
+                                    </div>
+                                    <div style="padding: 0.8rem; background: rgba(255,102,0,0.1); border-radius: 8px;">
+                                        <strong>重度 (1:100+)</strong> → 異常検知手法
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 3: 目的と制約の整理 -->
+                    <div style="background: var(--glass-bg); border: 2px solid #39ff14; border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px);">
+                        <div style="text-align: center; margin-bottom: 3rem;">
+                            <div style="color: #39ff14; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem;">STEP 3</div>
+                            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem; font-family: var(--font-tech);">⚡ 目的と制約を整理</h3>
+                            <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">分析の目的と制約条件に応じて最適な手法を選択</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                            <!-- 解釈性重視 -->
+                            <div style="background: rgba(0,255,255,0.15); border: 2px solid #00ffff; border-radius: 15px; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔍</div>
+                                <h4 style="color: #00ffff; margin-bottom: 1rem;">解釈性重視</h4>
+                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
+                                    「なぜその結果になったのか」<br>
+                                    説明できることが重要
+                                </div>
+                                <div style="background: rgba(0,255,255,0.2); padding: 1rem; border-radius: 10px;">
+                                    <strong>推奨:</strong><br>
+                                    線形回帰, GAM, 決定木
+                                </div>
+                            </div>
+                            
+                            <!-- 予測精度重視 -->
+                            <div style="background: rgba(255,0,255,0.15); border: 2px solid #ff00ff; border-radius: 15px; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
+                                <h4 style="color: #ff00ff; margin-bottom: 1rem;">予測精度重視</h4>
+                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
+                                    とにかく高い予測精度を<br>
+                                    達成することが目標
+                                </div>
+                                <div style="background: rgba(255,0,255,0.2); padding: 1rem; border-radius: 10px;">
+                                    <strong>推奨:</strong><br>
+                                    RandomForest, XGBoost, SVM
+                                </div>
+                            </div>
+                            
+                            <!-- 高速処理重視 -->
+                            <div style="background: rgba(57,255,20,0.15); border: 2px solid #39ff14; border-radius: 15px; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚡</div>
+                                <h4 style="color: #39ff14; margin-bottom: 1rem;">高速処理重視</h4>
+                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
+                                    リアルタイム処理や<br>
+                                    大量データの高速処理
+                                </div>
+                                <div style="background: rgba(57,255,20,0.2); padding: 1rem; border-radius: 10px;">
+                                    <strong>推奨:</strong><br>
+                                    線形モデル, Naive Bayes
+                                </div>
+                            </div>
+                            
+                            <!-- 大規模データ対応 -->
+                            <div style="background: rgba(255,102,0,0.15); border: 2px solid #ff6600; border-radius: 15px; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔄</div>
+                                <h4 style="color: #ff6600; margin-bottom: 1rem;">大規模データ</h4>
+                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
+                                    メモリに収まらない<br>
+                                    巨大データセット
+                                </div>
+                                <div style="background: rgba(255,102,0,0.2); padding: 1rem; border-radius: 10px;">
+                                    <strong>推奨:</strong><br>
+                                    SGD, Online Learning
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 迷った時のクイックガイド -->
+                    <div style="background: var(--glass-bg); border: 2px solid var(--neon-lime); border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px); text-align: center;">
+                        <h3 style="color: var(--neon-lime); font-size: 1.8rem; margin-bottom: 2rem; font-family: var(--font-tech);">💡 迷った時のクイックガイド</h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                            <div style="background: rgba(0,255,255,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #00ffff;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎲</div>
+                                <strong style="color: #00ffff;">初心者の場合</strong><br>
+                                <span style="color: rgba(255,255,255,0.8);">まずはランダムフォレスト</span>
+                            </div>
+                            <div style="background: rgba(255,0,255,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #ff00ff;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                                <strong style="color: #ff00ff;">線形関係がありそう</strong><br>
+                                <span style="color: rgba(255,255,255,0.8);">線形回帰から始める</span>
+                            </div>
+                            <div style="background: rgba(57,255,20,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #39ff14;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔬</div>
+                                <strong style="color: #39ff14;">探索的分析</strong><br>
+                                <span style="color: rgba(255,255,255,0.8);">可視化 + 基本統計</span>
+                            </div>
+                            <div style="background: rgba(255,102,0,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #ff6600;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                                <strong style="color: #ff6600;">カテゴリ予測</strong><br>
+                                <span style="color: rgba(255,255,255,0.8);">ロジスティック回帰</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                            <h4 style="color: white; margin-bottom: 1rem;">🚀 効率的な分析アプローチ</h4>
+                            <div style="color: rgba(255,255,255,0.9); text-align: left; max-width: 600px; margin: 0 auto; line-height: 1.8;">
+                                <strong>1. 可視化でデータを理解</strong> → ggplot2でパターンを探る<br>
+                                <strong>2. シンプルな手法から開始</strong> → 線形回帰、ロジスティック回帰<br>
+                                <strong>3. 複雑な手法で精度向上</strong> → ランダムフォレスト、XGBoost<br>
+                                <strong>4. クロスバリデーションで評価</strong> → rsampleで性能を測定
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- 詳細手法マトリックス -->
+            <div class="method-matrix" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+                
+                <!-- 回帰問題 -->
+                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(0,128,255,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 2.5rem; margin-right: 1rem;">📈</div>
+                        <h3 style="color: #0080ff; margin: 0; font-family: var(--font-tech);">回帰問題</h3>
+                    </div>
+                    
+                    <div class="method-list" style="space-y: 1rem;">
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(0,128,255,0.1); border-radius: 10px; border-left: 4px solid #0080ff;">
+                            <div style="color: #00ffff; font-weight: bold; margin-bottom: 0.5rem;">線形関係</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>標準:</strong> lm(), glm()<br>
+                                • <strong>正則化:</strong> ridge, lasso, elastic_net<br>
+                                • <strong>ロバスト:</strong> rlm(), Huber回帰<br>
+                                • <strong>ベイズ:</strong> rstanarm::stan_glm()
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(0,128,255,0.1); border-radius: 10px; border-left: 4px solid #ff00ff;">
+                            <div style="color: #ff00ff; font-weight: bold; margin-bottom: 0.5rem;">非線形関係</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>スプライン:</strong> mgcv::gam(), splines::bs()<br>
+                                • <strong>カーネル:</strong> kernlab::gausspr()<br>
+                                • <strong>木系:</strong> randomForest(), xgboost()<br>
+                                • <strong>ニューラル:</strong> nnet(), torch()
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="chapter-detail" id="chapter-2">
-                    <h3 class="chapter-title">データ操作マスタリー</h3>
-                    <p class="chapter-description">dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装。</p>
-                    <div class="chapter-tags">
-                        <span class="chapter-tag">dplyr</span>
-                        <span class="chapter-tag">データ操作</span>
-                        <span class="chapter-tag">グループ化</span>
+                <!-- 分類問題 -->
+                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(255,0,255,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 2.5rem; margin-right: 1rem;">🏷️</div>
+                        <h3 style="color: #ff00ff; margin: 0; font-family: var(--font-tech);">分類問題</h3>
+                    </div>
+                    
+                    <div class="method-list">
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,0,255,0.1); border-radius: 10px; border-left: 4px solid #ff00ff;">
+                            <div style="color: #ff00ff; font-weight: bold; margin-bottom: 0.5rem;">バランス済み</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>線形:</strong> glm(family=binomial), svm(linear)<br>
+                                • <strong>非線形:</strong> randomForest(), svm(rbf)<br>
+                                • <strong>確率的:</strong> mgcv::gam(), rstanarm
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,0,255,0.1); border-radius: 10px; border-left: 4px solid #39ff14;">
+                            <div style="color: #39ff14; font-weight: bold; margin-bottom: 0.5rem;">不均衡データ</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>軽度:</strong> weighted_glm(), cost_sensitive<br>
+                                • <strong>中度:</strong> ROSE::ROSE(), DMwR::SMOTE()<br>
+                                • <strong>重度:</strong> isolationForest(), autoencoder()
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="chapter-detail" id="chapter-3">
-                    <h3 class="chapter-title">データ可視化の芸術</h3>
-                    <p class="chapter-description">ggplot2の力でデータを美しいストーリーに変換。Grammar of Graphicsの哲学で、洞察を直感的に伝えるビジュアルを作成。</p>
-                    <div class="chapter-tags">
-                        <span class="chapter-tag">ggplot2</span>
-                        <span class="chapter-tag">可視化</span>
-                        <span class="chapter-tag">グラフィックス</span>
+                <!-- 時系列問題 -->
+                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(57,255,20,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 2.5rem; margin-right: 1rem;">📅</div>
+                        <h3 style="color: #39ff14; margin: 0; font-family: var(--font-tech);">時系列分析</h3>
+                    </div>
+                    
+                    <div class="method-list">
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(57,255,20,0.1); border-radius: 10px; border-left: 4px solid #39ff14;">
+                            <div style="color: #39ff14; font-weight: bold; margin-bottom: 0.5rem;">単変量</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>線形:</strong> arima(), auto.arima()<br>
+                                • <strong>非線形:</strong> forecast::nnetar()<br>
+                                • <strong>状態空間:</strong> dlm::dlm(), KFAS::SSModel()
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(57,255,20,0.1); border-radius: 10px; border-left: 4px solid #00ffff;">
+                            <div style="color: #00ffff; font-weight: bold; margin-bottom: 0.5rem;">多変量・高頻度</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>VAR:</strong> vars::VAR(), tsDyn::lineVar()<br>
+                                • <strong>GARCH:</strong> rugarch::ugarchfit()<br>
+                                • <strong>Prophet:</strong> prophet::prophet()
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="chapter-detail" id="chapter-4">
-                    <h3 class="chapter-title">Tidy Dataの哲学</h3>
-                    <p class="chapter-description">tidyrでデータを整然とした形に変換。pivot_longer, pivot_widerでデータ構造を自在に操作し、分析に最適化。</p>
-                    <div class="chapter-tags">
-                        <span class="chapter-tag">tidyr</span>
-                        <span class="chapter-tag">データ整理</span>
-                        <span class="chapter-tag">reshape</span>
+                <!-- クラスタリング・次元削減 -->
+                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(255,102,0,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 2.5rem; margin-right: 1rem;">🔍</div>
+                        <h3 style="color: #ff6600; margin: 0; font-family: var(--font-tech);">クラスタリング・次元削減</h3>
+                    </div>
+                    
+                    <div class="method-list">
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,102,0,0.1); border-radius: 10px; border-left: 4px solid #ff6600;">
+                            <div style="color: #ff6600; font-weight: bold; margin-bottom: 0.5rem;">クラスタリング</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>距離ベース:</strong> kmeans(), hclust()<br>
+                                • <strong>密度ベース:</strong> dbscan(), optics()<br>
+                                • <strong>モデルベース:</strong> mixtools::normalmixEM()
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,102,0,0.1); border-radius: 10px; border-left: 4px solid #8000ff;">
+                            <div style="color: #8000ff; font-weight: bold; margin-bottom: 0.5rem;">次元削減</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
+                                • <strong>線形:</strong> prcomp(), princomp()<br>
+                                • <strong>非線形:</strong> Rtsne::Rtsne(), umap::umap()<br>
+                                • <strong>特徴選択:</strong> Boruta::Boruta(), glmnet
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="chapter-detail" id="chapter-5">
-                    <h3 class="chapter-title">データ読み込みマスタリー</h3>
-                    <p class="chapter-description">readr, readxl, havenで多種多様なデータソースを統合。CSV、Excel、SAS、SPSS、StataのデータをRにシームレスに取り込み、分析の第一步を効率化。</p>
-                    <div class="chapter-tags">
-                        <span class="chapter-tag">readr</span>
-                        <span class="chapter-tag">readxl</span>
-                        <span class="chapter-tag">haven</span>
-                        <span class="chapter-tag">データ読込</span>
+            </div>
+            
+            <!-- クイック診断ツール -->
+            <div class="quick-diagnosis" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 3rem; backdrop-filter: blur(20px); text-align: center;">
+                <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem;">⚡ クイック診断チェックリスト</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; text-align: left;">
+                    <div style="padding: 1.5rem; background: rgba(0,255,255,0.1); border-radius: 15px; border-left: 4px solid #00ffff;">
+                        <h4 style="color: #00ffff; margin-bottom: 1rem; display: flex; align-items: center;">
+                            <span style="font-size: 1.5rem; margin-right: 0.5rem;">📊</span>
+                            データ基本情報
+                        </h4>
+                        <ul style="color: rgba(255,255,255,0.9); line-height: 1.8; margin: 0; padding-left: 1.5rem;">
+                            <li>目的変数の型は？（数値/カテゴリ/時系列）</li>
+                            <li>サンプルサイズ vs 変数数の比率は？</li>
+                            <li>欠損データの割合と種類は？</li>
+                            <li>外れ値の存在と影響度は？</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="padding: 1.5rem; background: rgba(255,0,255,0.1); border-radius: 15px; border-left: 4px solid #ff00ff;">
+                        <h4 style="color: #ff00ff; margin-bottom: 1rem; display: flex; align-items: center;">
+                            <span style="font-size: 1.5rem; margin-right: 0.5rem;">📈</span>
+                            分布・関係性
+                        </h4>
+                        <ul style="color: rgba(255,255,255,0.9); line-height: 1.8; margin: 0; padding-left: 1.5rem;">
+                            <li>データの分布形状は？（正規/歪み/多峰性）</li>
+                            <li>変数間の関係は？（線形/非線形）</li>
+                            <li>クラス不均衡の程度は？</li>
+                            <li>多重共線性の有無は？</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="padding: 1.5rem; background: rgba(57,255,20,0.1); border-radius: 15px; border-left: 4px solid #39ff14;">
+                        <h4 style="color: #39ff14; margin-bottom: 1rem; display: flex; align-items: center;">
+                            <span style="font-size: 1.5rem; margin-right: 0.5rem;">🎯</span>
+                            目的・制約
+                        </h4>
+                        <ul style="color: rgba(255,255,255,0.9); line-height: 1.8; margin: 0; padding-left: 1.5rem;">
+                            <li>予測精度 vs 解釈性の優先度は？</li>
+                            <li>計算時間・リソースの制約は？</li>
+                            <li>リアルタイム処理の必要性は？</li>
+                            <li>モデル更新の頻度は？</li>
+                        </ul>
                     </div>
                 </div>
                 
-                <div class="chapter-detail" id="chapter-6">
-                    <h3 class="chapter-title">Tidymodels機械学習</h3>
-                    <p class="chapter-description">tidymodelsの統一APIで機械学習パイプラインを構築。recipesで前処理、parsnipでモデル構築、yardstickで評価を一貫したワークフローで実行。</p>
-                    <div class="chapter-tags">
-                        <span class="chapter-tag">tidymodels</span>
-                        <span class="chapter-tag">recipes</span>
-                        <span class="chapter-tag">parsnip</span>
-                        <span class="chapter-tag">機械学習</span>
+                <div style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h4 style="color: var(--neon-lime); margin-bottom: 1rem; font-size: 1.3rem;">💡 迷った時の黄金ルール</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; text-align: center;">
+                        <div style="color: rgba(255,255,255,0.9);">
+                            <strong style="color: #00ffff;">解釈性重視</strong><br>
+                            <span style="font-size: 0.9rem;">→ 線形回帰, GAM, 決定木</span>
+                        </div>
+                        <div style="color: rgba(255,255,255,0.9);">
+                            <strong style="color: #ff00ff;">予測精度重視</strong><br>
+                            <span style="font-size: 0.9rem;">→ RandomForest, XGBoost</span>
+                        </div>
+                        <div style="color: rgba(255,255,255,0.9);">
+                            <strong style="color: #39ff14;">高速処理重視</strong><br>
+                            <span style="font-size: 0.9rem;">→ 線形モデル, Naive Bayes</span>
+                        </div>
+                        <div style="color: rgba(255,255,255,0.9);">
+                            <strong style="color: #ff6600;">不明な場合</strong><br>
+                            <span style="font-size: 0.9rem;">→ まずランダムフォレスト</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     
+    <!-- Chapters Section -->
+    <section class="chapters-showcase" id="chapters">
+        <div class="chapters-container">
+            <h2 class="section-title fade-in-up">LEARNING CHAPTERS - 全24章完全ガイド</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 4rem;">
+                基礎から実践まで、Tidyverse/Tidymodelsの完全習得を目指す24章構成
+            </p>
+            
+            <!-- 全章グリッド表示 -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+                
+                <!-- Chapter 1 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter1-tidyverse-overview.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://tidyverse.tidyverse.org/logo.png" alt="Tidyverse" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 01</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">Tidyverse概要とインストール</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">データサイエンス哲学とTidy Dataの原則</p>
+                </div>
+                
+                <!-- Chapter 2 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter2-dplyr-data-manipulation.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://readr.tidyverse.org/logo.png" alt="readr" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 02</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">dplyrによるデータ操作</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">高速データ読み込みとパース技術</p>
+                </div>
+                
+                <!-- Chapter 3 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter3-ggplot2-visualization.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://tidyr.tidyverse.org/logo.png" alt="tidyr" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 03</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">ggplot2による美しい可視化</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">pivot操作でデータ形状を自在に変換</p>
+                </div>
+                
+                <!-- Chapter 4 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter4-tidyr-data-reshaping.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 04</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">tidyrによるデータ再構造化</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">5つの動詞で直感的データ操作</p>
+                </div>
+                
+                <!-- Chapter 5 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter5-stringr-text-processing.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr joins" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 05</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">stringrによるテキスト処理</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">リレーショナルデータの結合技術</p>
+                </div>
+                
+                <!-- Chapter 6 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter6-forcats-purrr-advanced.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://ggplot2.tidyverse.org/logo.png" alt="ggplot2" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 06</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">forcats & purrr 因子とリスト操作</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">Grammar of Graphicsで美しいビジュアル</p>
+                </div>
+                
+                <!-- Chapter 7 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter7-lubridate-datetime.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://purrr.tidyverse.org/logo.png" alt="purrr" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 07</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">lubridate - 日付・時間データの完全マスター</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">map関数族で効率的リスト操作</p>
+                </div>
+                
+                <!-- Chapter 8 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter8-readr-data-import.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">📊</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 08</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">readr - データ読み込みとパースの完全ガイド</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">データパターンと洞察の発見</p>
+                </div>
+                
+                <!-- Chapter 9 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter9-tibble-modern-dataframe.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🔬</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 09</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">tibble - モダンなデータフレーム操作</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">現代的統計手法と仮説検定</p>
+                </div>
+                
+                <!-- Chapter 10 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter10-statistics-modeling.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">📈</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 10</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">統計モデリング基礎</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">線形・非線形モデルの構築</p>
+                </div>
+                
+                <!-- Chapter 11 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter11-machine-learning.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🤖</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 11</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">機械学習とtidymodels</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">効率的なモデル比較と選択</p>
+                </div>
+                
+                <!-- Chapter 12 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter12-time-series.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://tidymodels.org/images/tidymodels.png" alt="tidymodels" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 12</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">時系列予測の魔法</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">統一MLワークフローの構築</p>
+                </div>
+                
+                <!-- Chapter 13 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter13-advanced-ggplot2.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">⚗️</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 13</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">高度なggplot2とカスタム可視化</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">スケーラブルな特徴量エンジニアリング</p>
+                </div>
+                
+                <!-- Chapter 14 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter14-interactive-visualization.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🎯</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 14</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">インタラクティブ可視化とplotly</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">統一APIで多様なアルゴリズム</p>
+                </div>
+                
+                <!-- Chapter 15 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter15-advanced-data-viz.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🔄</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 15</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">高度なデータ可視化統合</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">workflows パッケージで効率化</p>
+                </div>
+                
+                <!-- Chapter 16 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter16-resampling-rsample.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🔀</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 16</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">リサンプリング - rsample</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">CV・Bootstrap戦略をマスター</p>
+                </div>
+                
+                <!-- Chapter 17 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter17-hyperparameter-tuning-simple.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">⚙️</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 17</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">ハイパーパラメータチューニング - tune</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">自動チューニングで性能最大化</p>
+                </div>
+                
+                <!-- Chapter 18 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter18-model-evaluation-yardstick.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">📏</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 18</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">モデル評価の極意 - yardstick</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">包括的性能評価の極意</p>
+                </div>
+                
+                <!-- Chapter 19 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter19-prediction-interpretation.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🔮</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 19</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">予測と解釈</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">実用的予測とモデル解釈可能性</p>
+                </div>
+                
+                <!-- Chapter 20 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter20-ensemble-learning-enhanced.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🏗️</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 20</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">アンサンブル学習の極意 - stacks</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">複数モデルの組み合わせで精度向上</p>
+                </div>
+                
+                <!-- Chapter 21 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter21-time-series-modeltime.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">📅</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 21</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">時系列分析 - modeltime</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">時系列予測の現代的アプローチ</p>
+                </div>
+                
+                <!-- Chapter 22 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter22-text-analysis-tidytext.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">📝</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 22</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">テキスト分析 - tidytext</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">自然言語処理をTidyに実装</p>
+                </div>
+                
+                <!-- Chapter 23 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter23-deep-learning-torch.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🧠</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 23</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">深層学習 - torch</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">PyTorch統合とニューラルネット</p>
+                </div>
+                
+                <!-- Chapter 24 -->
+                <div class="feature-card fade-in-up" onclick="window.open('chapter24-practical-projects-enhanced.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem; margin-right: 1rem;">🏆</div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 24</div>
+                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">実践プロジェクト集</h3>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">現実課題の解決とMLOps実装</p>
+                </div>
+                
+            </div>
+            
+            <!-- 学習の流れ -->
+            <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 3rem; backdrop-filter: blur(20px); text-align: center; margin-top: 4rem;">
+                <h3 style="font-family: var(--font-tech); font-size: 1.8rem; color: var(--neon-cyan); margin-bottom: 2rem;">💡 効率的な学習の流れ</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: left;">
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; margin-right: 1rem;">🏁</div>
+                            <h4 style="color: var(--neon-lime); margin: 0;">基礎編（1-7章）</h4>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">Tidyverse コアパッケージの習得。データ操作・可視化の基本スキルを身につける</p>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; margin-right: 1rem;">⚡</div>
+                            <h4 style="color: var(--neon-cyan); margin: 0;">統計・ML編（8-20章）</h4>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">統計分析とTidymodelsによる機械学習パイプライン構築をマスター</p>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; margin-right: 1rem;">🚀</div>
+                            <h4 style="color: var(--neon-magenta); margin: 0;">応用・実践編（21-24章）</h4>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">時系列・テキスト・深層学習の特殊領域と実践プロジェクトで完全習得</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="chapters-container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
     
     <!-- Footer -->
     <footer>

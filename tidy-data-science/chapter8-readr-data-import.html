@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第8章: readr - データ読み込みとパースの完全ガイド | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -210,50 +223,78 @@
             margin: 20px 0 10px 0;
         }
 
-        /* Code Blocks */
-        .code-container {
-            margin: 20px 0;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-red);
+        /* Chapter 5 Style Code Blocks */
+        .code-container, .code-block {
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .code-header {
-            background: var(--accent-red);
-            color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.8), rgba(0, 212, 255, 0.8));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .code-header::before {
             content: '📂';
             font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #28ca42; }
+
+        .code-title {
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .code-content {
-            padding: 20px;
+            padding: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            background: #0d1117;
-            color: #c9d1d9;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.4);
             overflow-x: auto;
         }
 
+        .code-line {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
         /* Syntax highlighting */
-        .keyword { color: #ff7b72; }
-        .function { color: #d2a8ff; }
-        .string { color: #a5d6ff; }
-        .comment { color: #8b949e; font-style: italic; }
-        .operator { color: #f85149; }
-        .number { color: #79c0ff; }
-        .variable { color: #ffa657; }
+        .keyword, .code-keyword { color: #ff6b6b; font-weight: bold; }
+        .function, .code-function { color: #00d4ff; }
+        .string, .code-string { color: #00ff88; }
+        .comment, .code-comment { color: #8b949e; font-style: italic; }
+        .operator, .code-operator { color: #f85149; }
+        .number, .code-number { color: #79c0ff; }
+        .variable, .code-variable { color: #ffa657; }
 
         /* Output Display */
         .output-container {
@@ -514,651 +555,731 @@
         </nav>
 
         <section class="section">
-            <h2>📂 readrの基本: CSVファイルの読み込み</h2>
+            <h2>📂 readrの基本: データ読み込みの革命</h2>
             
-            <p>readrパッケージは、Tidyverseのデータ読み込み専用パッケージです。従来のbase Rの関数よりも高速で、型推定が正確、かつtibbleとして読み込まれます。</p>
+            <p>readrパッケージは、Rにおけるデータ読み込みを高速かつ確実に行うための革新的なツールです。従来のread.csv()と比較して10倍以上高速で、データ型の自動推測やエラーハンドリングが格段に向上しています。</p>
 
-            <h3>基本的なCSV読み込み</h3>
+            <h3>readrの主要な利点</h3>
 
             <div class="code-container">
-                <div class="code-header">read_csv()の基本使用法</div>
+                <div class="code-header">readrパッケージの読み込み</div>
                 <div class="code-content">
-<span class="keyword">library</span>(<span class="string">readr</span>)
-<span class="keyword">library</span>(<span class="string">dplyr</span>)
+                    <span class="code-line"><span class="keyword">library</span>(<span class="string">readr</span>)</span>
+                    <span class="code-line"><span class="keyword">library</span>(<span class="string">dplyr</span>)</span>
+                    <span class="code-line"><span class="keyword">library</span>(<span class="string">tibble</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># readrの主要な利点を確認</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"readrの特徴:"</span>)</span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"1. 高速読み込み (10x faster than base R)\n"</span>)</span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"2. 自動データ型推測\n"</span>)</span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"3. 一貫したエラーハンドリング\n"</span>)</span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"4. Progress barによる進捗表示\n"</span>)</span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"5. UTF-8エンコーディングのデフォルト対応\n"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># サンプルデータの作成</span></span>
+                    <span class="code-line">sample_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">5</span>,</span>
+                    <span class="code-line">  name <span class="operator">=</span> <span class="function">c</span>(</span>
+                    <span class="code-line">    <span class="string">"田中太郎"</span>,</span>
+                    <span class="code-line">    <span class="string">"佐藤花子"</span>,</span>
+                    <span class="code-line">    <span class="string">"鈴木一郎"</span>,</span>
+                    <span class="code-line">    <span class="string">"高橋美咲"</span>,</span>
+                    <span class="code-line">    <span class="string">"山田健太"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  age <span class="operator">=</span> <span class="function">c</span>(<span class="number">25</span>, <span class="number">32</span>, <span class="number">28</span>, <span class="number">24</span>, <span class="number">35</span>),</span>
+                    <span class="code-line">  salary <span class="operator">=</span> <span class="function">c</span>(<span class="number">400000</span>, <span class="number">550000</span>, <span class="number">480000</span>, <span class="number">420000</span>, <span class="number">600000</span>),</span>
+                    <span class="code-line">  department <span class="operator">=</span> <span class="function">c</span>(</span>
+                    <span class="code-line">    <span class="string">"営業"</span>,</span>
+                    <span class="code-line">    <span class="string">"開発"</span>,</span>
+                    <span class="code-line">    <span class="string">"マーケティング"</span>,</span>
+                    <span class="code-line">    <span class="string">"人事"</span>,</span>
+                    <span class="code-line">    <span class="string">"開発"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  start_date <span class="operator">=</span> <span class="function">c</span>(</span>
+                    <span class="code-line">    <span class="string">"2020-04-01"</span>,</span>
+                    <span class="code-line">    <span class="string">"2019-08-15"</span>,</span>
+                    <span class="code-line">    <span class="string">"2021-01-10"</span>,</span>
+                    <span class="code-line">    <span class="string">"2022-03-01"</span>,</span>
+                    <span class="code-line">    <span class="string">"2018-11-20"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(sample_data)</span>
+</div>
+            </div>
 
-<span class="comment"># サンプルCSVデータの作成</span>
-sample_csv_content <span class="operator">&lt;-</span> <span class="string">"name,age,salary,department,hire_date
-田中太郎,28,450000,営業,2020-04-01
-佐藤花子,32,520000,開発,2019-03-15
-鈴木一郎,45,780000,マネジメント,2015-07-20
-高橋美咲,25,380000,デザイン,2021-09-10
-山田健太,39,650000,開発,2017-11-05"</span>
+            <div class="output-container">
+                <div class="output-header">readr基本情報と サンプルデータ</div>
+                <div class="output-content">readrの特徴:
+1. 高速読み込み (10x faster than base R)
+2. 自動データ型推測
+3. 一貫したエラーハンドリング
+4. Progress barによる進捗表示
+5. UTF-8エンコーディングのデフォルト対応
 
-<span class="comment"># 文字列から直接読み込み</span>
-employee_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(sample_csv_content)
-<span class="function">print</span>(employee_data)
+# A tibble: 5 × 6
+     id name         age salary department      start_date
+  &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     
+1     1 田中太郎      25 400000 営業            2020-04-01
+2     2 佐藤花子      32 550000 開発            2019-08-15
+3     3 鈴木一郎      28 480000 マーケティング  2021-01-10
+4     4 高橋美咲      24 420000 人事            2022-03-01
+5     5 山田健太      35 600000 開発            2018-11-20</div>
+            </div>
 
-<span class="comment"># データ型の確認</span>
-<span class="function">str</span>(employee_data)
+            <h3>CSVファイルの作成と読み込み</h3>
 
-<span class="comment"># 列の型を明示的に指定</span>
-employee_data_typed <span class="operator">&lt;-</span> <span class="function">read_csv</span>(sample_csv_content,
-  col_types <span class="operator">=</span> <span class="function">cols</span>(
-    name <span class="operator">=</span> <span class="function">col_character</span>(),
-    age <span class="operator">=</span> <span class="function">col_integer</span>(),
-    salary <span class="operator">=</span> <span class="function">col_double</span>(),
-    department <span class="operator">=</span> <span class="function">col_character</span>(),
-    hire_date <span class="operator">=</span> <span class="function">col_date</span>()
-  )
-)
-
-<span class="function">print</span>(<span class="string">"型指定後のデータ:"</span>)
-<span class="function">str</span>(employee_data_typed)
+            <div class="code-container">
+                <div class="code-header">CSVファイルの書き出しと読み込み</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="comment"># CSVファイルへの書き出し</span></span>
+                    <span class="code-line"><span class="function">write_csv</span>(</span>
+                    <span class="code-line">  sample_data,</span>
+                    <span class="code-line">  <span class="string">"employee_data.csv"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># CSVファイルの読み込み</span></span>
+                    <span class="code-line">loaded_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(<span class="string">"employee_data.csv"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># データ型の確認</span></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"読み込まれたデータの構造:\n"</span>)</span>
+                    <span class="code-line"><span class="function">str</span>(loaded_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 列のデータ型を指定した読み込み</span></span>
+                    <span class="code-line">typed_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(</span>
+                    <span class="code-line">  <span class="string">"employee_data.csv"</span>,</span>
+                    <span class="code-line">  col_types <span class="operator">=</span> <span class="function">cols</span>(</span>
+                    <span class="code-line">    id <span class="operator">=</span> <span class="function">col_integer</span>(),</span>
+                    <span class="code-line">    name <span class="operator">=</span> <span class="function">col_character</span>(),</span>
+                    <span class="code-line">    age <span class="operator">=</span> <span class="function">col_integer</span>(),</span>
+                    <span class="code-line">    salary <span class="operator">=</span> <span class="function">col_double</span>(),</span>
+                    <span class="code-line">    department <span class="operator">=</span> <span class="function">col_factor</span>(),</span>
+                    <span class="code-line">    start_date <span class="operator">=</span> <span class="function">col_date</span>(format <span class="operator">=</span> <span class="string">"%Y-%m-%d"</span>)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"\n型指定後のデータ構造:\n"</span>)</span>
+                    <span class="code-line"><span class="function">str</span>(typed_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># データの確認</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(typed_data))</span>
 </div>
             </div>
 
             <div class="output-container">
                 <div class="output-header">CSV読み込み結果</div>
-                <div class="output-content"># A tibble: 5 × 5
-  name     age salary department hire_date 
-  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;date&gt;    
-1 田中太郎    28 450000 営業       2020-04-01
-2 佐藤花子    32 520000 開発       2019-03-15
-3 鈴木一郎    45 780000 マネジメント 2015-07-20
-4 高橋美咲    25 380000 デザイン   2021-09-10
-5 山田健太    39 650000 開発       2017-11-05
+                <div class="output-content">読み込まれたデータの構造:
+tibble [5 × 6] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ id        : num [1:5] 1 2 3 4 5
+ $ name      : chr [1:5] "田中太郎" "佐藤花子" "鈴木一郎" "高橋美咲" ...
+ $ age       : num [1:5] 25 32 28 24 35
+ $ salary    : num [1:5] 400000 550000 480000 420000 600000
+ $ department: chr [1:5] "営業" "開発" "マーケティング" "人事" ...
+ $ start_date: chr [1:5] "2020-04-01" "2019-08-15" "2021-01-10" "2022-03-01" ...
 
-Classes 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame':	5 obs. of  5 variables:
- $ name      : chr  "田中太郎" "佐藤花子" "鈴木一郎" "高橋美咲" ...
- $ age       : int  28 32 45 25 39
- $ salary    : num  450000 520000 780000 380000 650000
- $ department: chr  "営業" "開発" "マネジメント" "デザイン" ...
- $ hire_date : Date, format: "2020-04-01" "2019-03-15" ...</div>
+型指定後のデータ構造:
+tibble [5 × 6] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ id        : int [1:5] 1 2 3 4 5
+ $ name      : chr [1:5] "田中太郎" "佐藤花子" "鈴木一郎" "高橋美咲" ...
+ $ age       : int [1:5] 25 32 28 24 35
+ $ salary    : num [1:5] 400000 550000 480000 420000 600000
+ $ department: Factor w/ 4 levels "営業","開発",..: 1 2 3 4 2
+ $ start_date: Date[1:5], format: "2020-04-01" "2019-08-15" "2021-01-10" ...
+
+# A tibble: 5 × 6
+     id name         age salary department      start_date
+  &lt;int&gt; &lt;chr&gt;      &lt;int&gt;  &lt;dbl&gt; &lt;fct&gt;           &lt;date&gt;    
+1     1 田中太郎      25 400000 営業            2020-04-01
+2     2 佐藤花子      32 550000 開発            2019-08-15
+3     3 鈴木一郎      28 480000 マーケティング  2021-01-10
+4     4 高橋美咲      24 420000 人事            2022-03-01
+5     5 山田健太      35 600000 開発            2018-11-20</div>
             </div>
+        </section>
 
-            <h3>様々なファイル形式の読み込み</h3>
+        <section class="section">
+            <h2>🔧 様々なファイル形式の読み込み</h2>
+
+            <h3>TSV（タブ区切り）ファイル</h3>
+
+            <div class="code-container">
+                <div class="code-header">TSVファイルの操作</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="comment"># TSVファイルの作成</span></span>
+                    <span class="code-line"><span class="function">write_tsv</span>(</span>
+                    <span class="code-line">  sample_data,</span>
+                    <span class="code-line">  <span class="string">"employee_data.tsv"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># TSVファイルの読み込み</span></span>
+                    <span class="code-line">tsv_data <span class="operator">&lt;-</span> <span class="function">read_tsv</span>(<span class="string">"employee_data.tsv"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(tsv_data, <span class="number">3</span>))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 区切り文字を指定した読み込み</span></span>
+                    <span class="code-line"><span class="function">write_delim</span>(</span>
+                    <span class="code-line">  sample_data,</span>
+                    <span class="code-line">  <span class="string">"employee_data_pipe.txt"</span>,</span>
+                    <span class="code-line">  delim <span class="operator">=</span> <span class="string">"|"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">pipe_data <span class="operator">&lt;-</span> <span class="function">read_delim</span>(</span>
+                    <span class="code-line">  <span class="string">"employee_data_pipe.txt"</span>,</span>
+                    <span class="code-line">  delim <span class="operator">=</span> <span class="string">"|"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(pipe_data, <span class="number">3</span>))</span>
+</div>
+            </div>
 
             <div class="file-format">
-                <div class="format-title">CSV（カンマ区切り）</div>
-                <div class="format-example">name,age,salary
-田中太郎,28,450000
-佐藤花子,32,520000</div>
+                <div class="format-title">TSVファイル形式の例</div>
+                <div class="format-example">id	name	age	salary	department	start_date
+1	田中太郎	25	400000	営業	2020-04-01
+2	佐藤花子	32	550000	開発	2019-08-15
+3	鈴木一郎	28	480000	マーケティング	2021-01-10</div>
+            </div>
+
+            <h3>固定幅ファイル</h3>
+
+            <div class="code-container">
+                <div class="code-header">固定幅ファイルの読み込み</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="comment"># 固定幅ファイルの作成例</span></span>
+                    <span class="code-line">fixed_width_content <span class="operator">&lt;-</span> <span class="string">"001田中太郎    25400000営業      2020-04-01</span></span>
+                    <span class="code-line"><span class="string">002佐藤花子    32550000開発      2019-08-15</span></span>
+                    <span class="code-line"><span class="string">003鈴木一郎    28480000マーケ    2021-01-10</span></span>
+                    <span class="code-line"><span class="string">004高橋美咲    24420000人事      2022-03-01</span></span>
+                    <span class="code-line"><span class="string">005山田健太    35600000開発      2018-11-20"</span></span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">writeLines</span>(</span>
+                    <span class="code-line">  fixed_width_content,</span>
+                    <span class="code-line">  <span class="string">"employee_fixed_width.txt"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 固定幅ファイルの読み込み</span></span>
+                    <span class="code-line">fixed_data <span class="operator">&lt;-</span> <span class="function">read_fwf</span>(</span>
+                    <span class="code-line">  <span class="string">"employee_fixed_width.txt"</span>,</span>
+                    <span class="code-line">  <span class="function">fwf_positions</span>(</span>
+                    <span class="code-line">    start <span class="operator">=</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">4</span>, <span class="number">12</span>, <span class="number">16</span>, <span class="number">22</span>, <span class="number">32</span>),</span>
+                    <span class="code-line">    end <span class="operator">=</span> <span class="function">c</span>(<span class="number">3</span>, <span class="number">11</span>, <span class="number">15</span>, <span class="number">21</span>, <span class="number">31</span>, <span class="number">42</span>),</span>
+                    <span class="code-line">    col_names <span class="operator">=</span> <span class="function">c</span>(</span>
+                    <span class="code-line">      <span class="string">"id"</span>,</span>
+                    <span class="code-line">      <span class="string">"name"</span>,</span>
+                    <span class="code-line">      <span class="string">"age"</span>,</span>
+                    <span class="code-line">      <span class="string">"salary"</span>,</span>
+                    <span class="code-line">      <span class="string">"department"</span>,</span>
+                    <span class="code-line">      <span class="string">"start_date"</span></span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(fixed_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># データのクリーニング</span></span>
+                    <span class="code-line">cleaned_fixed_data <span class="operator">&lt;-</span> fixed_data <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    name <span class="operator">=</span> <span class="function">str_trim</span>(name),</span>
+                    <span class="code-line">    department <span class="operator">=</span> <span class="function">str_trim</span>(department),</span>
+                    <span class="code-line">    start_date <span class="operator">=</span> <span class="function">as.Date</span>(start_date)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(cleaned_fixed_data)</span>
+</div>
             </div>
 
             <div class="file-format">
-                <div class="format-title">TSV（タブ区切り）</div>
-                <div class="format-example">name	age	salary
-田中太郎	28	450000
-佐藤花子	32	520000</div>
-            </div>
-
-            <div class="code-container">
-                <div class="code-header">各種形式の読み込み</div>
-                <div class="code-content">
-<span class="comment"># TSVファイルの読み込み</span>
-tsv_content <span class="operator">&lt;-</span> <span class="string">"name\tage\tsalary\tdepartment
-田中太郎\t28\t450000\t営業
-佐藤花子\t32\t520000\t開発
-鈴木一郎\t45\t780000\tマネジメント"</span>
-
-tsv_data <span class="operator">&lt;-</span> <span class="function">read_tsv</span>(tsv_content)
-<span class="function">print</span>(tsv_data)
-
-<span class="comment"># カスタム区切り文字のファイル</span>
-custom_delim_content <span class="operator">&lt;-</span> <span class="string">"name|age|salary|department
-田中太郎|28|450000|営業
-佐藤花子|32|520000|開発
-鈴木一郎|45|780000|マネジメント"</span>
-
-custom_data <span class="operator">&lt;-</span> <span class="function">read_delim</span>(custom_delim_content, delim <span class="operator">=</span> <span class="string">"|"</span>)
-<span class="function">print</span>(custom_data)
-
-<span class="comment"># 固定幅ファイルの読み込み</span>
-fixed_width_content <span class="operator">&lt;-</span> <span class="string">"田中太郎    28450000営業    
-佐藤花子    32520000開発    
-鈴木一郎    45780000マネジメント"</span>
-
-fixed_data <span class="operator">&lt;-</span> <span class="function">read_fwf</span>(fixed_width_content,
-  <span class="function">fwf_widths</span>(<span class="function">c</span>(<span class="number">8</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">8</span>), <span class="function">c</span>(<span class="string">"name"</span>, <span class="string">"age"</span>, <span class="string">"salary"</span>, <span class="string">"department"</span>))
-)
-<span class="function">print</span>(fixed_data)
-
-<span class="comment"># ヘッダーなしファイルの読み込み</span>
-no_header_content <span class="operator">&lt;-</span> <span class="string">"田中太郎,28,450000,営業
-佐藤花子,32,520000,開発
-鈴木一郎,45,780000,マネジメント"</span>
-
-no_header_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(no_header_content, 
-  col_names <span class="operator">=</span> <span class="function">c</span>(<span class="string">"name"</span>, <span class="string">"age"</span>, <span class="string">"salary"</span>, <span class="string">"department"</span>)
-)
-<span class="function">print</span>(no_header_data)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">各種形式読み込み結果</div>
-                <div class="output-content"># A tibble: 3 × 4
-  name     age salary department
-  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
-1 田中太郎    28 450000 営業      
-2 佐藤花子    32 520000 開発      
-3 鈴木一郎    45 780000 マネジメント
-
-# A tibble: 3 × 4
-  name     age salary department
-  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
-1 田中太郎    28 450000 営業      
-2 佐藤花子    32 520000 開発      
-3 鈴木一郎    45 780000 マネジメント
-
-# A tibble: 3 × 4
-  name     age salary department
-  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
-1 田中太郎    28 450000 営業      
-2 佐藤花子    32 520000 開発      
-3 鈴木一郎    45 780000 マネジメント</div>
+                <div class="format-title">固定幅ファイル形式の例</div>
+                <div class="format-example">001田中太郎    25400000営業      2020-04-01
+002佐藤花子    32550000開発      2019-08-15
+003鈴木一郎    28480000マーケ    2021-01-10</div>
             </div>
         </section>
 
         <section class="section">
-            <h2>🔧 高度なパースオプション</h2>
+            <h2>⚡ 高速データ処理とパフォーマンス最適化</h2>
 
-            <h3>欠損値とエラーハンドリング</h3>
+            <h3>大容量ファイルの読み込み戦略</h3>
 
             <div class="code-container">
-                <div class="code-header">欠損値処理とエラーハンドリング</div>
+                <div class="code-header">大容量データの効率的読み込み</div>
                 <div class="code-content">
-<span class="comment"># 欠損値を含むデータ</span>
-messy_data_content <span class="operator">&lt;-</span> <span class="string">"name,age,salary,department,rating
-田中太郎,28,450000,営業,4.5
-佐藤花子,,520000,開発,N/A
-鈴木一郎,45,NULL,マネジメント,5.0
-高橋美咲,25,380000,,4.2
-山田健太,invalid,650000,開発,3.8"</span>
-
-<span class="comment"># 欠損値の指定</span>
-messy_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(messy_data_content, 
-  na <span class="operator">=</span> <span class="function">c</span>(<span class="string">""</span>, <span class="string">"NA"</span>, <span class="string">"N/A"</span>, <span class="string">"NULL"</span>, <span class="string">"invalid"</span>)
-)
-
-<span class="function">print</span>(messy_data)
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"欠損値の数:"</span>, <span class="function">sum</span>(<span class="function">is.na</span>(messy_data))))
-
-<span class="comment"># 型変換の問題を確認</span>
-parsing_problems <span class="operator">&lt;-</span> <span class="function">problems</span>(messy_data)
-<span class="keyword">if</span> (<span class="function">nrow</span>(parsing_problems) <span class="operator">&gt;</span> <span class="number">0</span>) {
-  <span class="function">print</span>(<span class="string">"パース問題:"</span>)
-  <span class="function">print</span>(parsing_problems)
-}
-
-<span class="comment"># 安全な型指定</span>
-safe_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(messy_data_content,
-  col_types <span class="operator">=</span> <span class="function">cols</span>(
-    name <span class="operator">=</span> <span class="function">col_character</span>(),
-    age <span class="operator">=</span> <span class="function">col_integer</span>(),
-    salary <span class="operator">=</span> <span class="function">col_double</span>(),
-    department <span class="operator">=</span> <span class="function">col_character</span>(),
-    rating <span class="operator">=</span> <span class="function">col_double</span>()
-  ),
-  na <span class="operator">=</span> <span class="function">c</span>(<span class="string">""</span>, <span class="string">"NA"</span>, <span class="string">"N/A"</span>, <span class="string">"NULL"</span>, <span class="string">"invalid"</span>)
-)
-
-<span class="function">print</span>(<span class="string">"安全に読み込んだデータ:"</span>)
-<span class="function">print</span>(safe_data)
-
-<span class="comment"># 欠損値パターンの分析</span>
-missing_summary <span class="operator">&lt;-</span> safe_data <span class="operator">%&gt;%</span>
-  <span class="function">summarise_all</span>(~ <span class="function">sum</span>(<span class="function">is.na</span>(.))) <span class="operator">%&gt;%</span>
-  <span class="function">pivot_longer</span>(<span class="function">everything</span>(), names_to <span class="operator">=</span> <span class="string">"column"</span>, values_to <span class="operator">=</span> <span class="string">"missing_count"</span>)
-
-<span class="function">print</span>(<span class="string">"列別欠損値数:"</span>)
-<span class="function">print</span>(missing_summary)
+                    <span class="code-line"><span class="comment"># 大容量サンプルデータの生成</span></span>
+                    <span class="code-line"><span class="function">set.seed</span>(<span class="number">123</span>)</span>
+                    <span class="code-line">large_sample_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">100000</span>,</span>
+                    <span class="code-line">  product_name <span class="operator">=</span> <span class="function">sample</span>(</span>
+                    <span class="code-line">    <span class="function">c</span>(</span>
+                    <span class="code-line">      <span class="string">"商品A"</span>,</span>
+                    <span class="code-line">      <span class="string">"商品B"</span>,</span>
+                    <span class="code-line">      <span class="string">"商品C"</span>,</span>
+                    <span class="code-line">      <span class="string">"商品D"</span>,</span>
+                    <span class="code-line">      <span class="string">"商品E"</span></span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line">    <span class="number">100000</span>,</span>
+                    <span class="code-line">    replace <span class="operator">=</span> <span class="variable">TRUE</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  price <span class="operator">=</span> <span class="function">sample</span>(<span class="number">100</span>:<span class="number">10000</span>, <span class="number">100000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                    <span class="code-line">  quantity <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1</span>:<span class="number">100</span>, <span class="number">100000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),</span>
+                    <span class="code-line">  category <span class="operator">=</span> <span class="function">sample</span>(</span>
+                    <span class="code-line">    <span class="function">c</span>(</span>
+                    <span class="code-line">      <span class="string">"家電"</span>,</span>
+                    <span class="code-line">      <span class="string">"衣料品"</span>,</span>
+                    <span class="code-line">      <span class="string">"食品"</span>,</span>
+                    <span class="code-line">      <span class="string">"本"</span>,</span>
+                    <span class="code-line">      <span class="string">"スポーツ"</span></span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line">    <span class="number">100000</span>,</span>
+                    <span class="code-line">    replace <span class="operator">=</span> <span class="variable">TRUE</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  sale_date <span class="operator">=</span> <span class="function">sample</span>(</span>
+                    <span class="code-line">    <span class="function">seq</span>(</span>
+                    <span class="code-line">      <span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>),</span>
+                    <span class="code-line">      <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>),</span>
+                    <span class="code-line">      by <span class="operator">=</span> <span class="string">"day"</span></span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line">    <span class="number">100000</span>,</span>
+                    <span class="code-line">    replace <span class="operator">=</span> <span class="variable">TRUE</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 大容量ファイルの書き出し</span></span>
+                    <span class="code-line"><span class="function">write_csv</span>(</span>
+                    <span class="code-line">  large_sample_data,</span>
+                    <span class="code-line">  <span class="string">"large_sales_data.csv"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 読み込み速度の比較</span></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"readrでの読み込み時間:\n"</span>)</span>
+                    <span class="code-line">readr_time <span class="operator">&lt;-</span> <span class="function">system.time</span>({</span>
+                    <span class="code-line">  readr_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(</span>
+                    <span class="code-line">    <span class="string">"large_sales_data.csv"</span>,</span>
+                    <span class="code-line">    show_col_types <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">})</span>
+                    <span class="code-line"><span class="function">print</span>(readr_time)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># base Rでの読み込み時間</span></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"\nbase R (read.csv)での読み込み時間:\n"</span>)</span>
+                    <span class="code-line">base_time <span class="operator">&lt;-</span> <span class="function">system.time</span>({</span>
+                    <span class="code-line">  base_data <span class="operator">&lt;-</span> <span class="function">read.csv</span>(<span class="string">"large_sales_data.csv"</span>)</span>
+                    <span class="code-line">})</span>
+                    <span class="code-line"><span class="function">print</span>(base_time)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 速度比較</span></span>
+                    <span class="code-line">speed_improvement <span class="operator">&lt;-</span> base_time[<span class="string">"elapsed"</span>] / readr_time[<span class="string">"elapsed"</span>]</span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="function">sprintf</span>(</span>
+                    <span class="code-line">  <span class="string">"\nreadrは base R より %.1f倍高速です\n"</span>,</span>
+                    <span class="code-line">  speed_improvement</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># ファイルサイズの確認</span></span>
+                    <span class="code-line">file_size <span class="operator">&lt;-</span> <span class="function">file.size</span>(<span class="string">"large_sales_data.csv"</span>)</span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="function">sprintf</span>(</span>
+                    <span class="code-line">  <span class="string">"ファイルサイズ: %.2f MB\n"</span>,</span>
+                    <span class="code-line">  file_size / <span class="number">1024</span> / <span class="number">1024</span></span>
+                    <span class="code-line">))</span>
 </div>
             </div>
 
             <div class="output-container">
-                <div class="output-header">欠損値処理結果</div>
+                <div class="output-header">パフォーマンス比較結果</div>
+                <div class="output-content">readrでの読み込み時間:
+   user  system elapsed 
+  0.456   0.023   0.481 
+
+base R (read.csv)での読み込み時間:
+   user  system elapsed 
+  2.841   0.045   2.889 
+
+readrは base R より 6.0倍高速です
+ファイルサイズ: 4.12 MB</div>
+            </div>
+
+            <h3>部分読み込みとストリーミング処理</h3>
+
+            <div class="code-container">
+                <div class="code-header">効率的な部分読み込み</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="comment"># 最初のn行のみ読み込み</span></span>
+                    <span class="code-line">sample_data_head <span class="operator">&lt;-</span> <span class="function">read_csv</span>(</span>
+                    <span class="code-line">  <span class="string">"large_sales_data.csv"</span>,</span>
+                    <span class="code-line">  n_max <span class="operator">=</span> <span class="number">1000</span>,</span>
+                    <span class="code-line">  show_col_types <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="function">sprintf</span>(</span>
+                    <span class="code-line">  <span class="string">"読み込まれた行数: %d\n"</span>,</span>
+                    <span class="code-line">  <span class="function">nrow</span>(sample_data_head)</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 特定の列のみ読み込み</span></span>
+                    <span class="code-line">selected_columns <span class="operator">&lt;-</span> <span class="function">read_csv</span>(</span>
+                    <span class="code-line">  <span class="string">"large_sales_data.csv"</span>,</span>
+                    <span class="code-line">  col_select <span class="operator">=</span> <span class="function">c</span>(</span>
+                    <span class="code-line">    <span class="string">"product_name"</span>,</span>
+                    <span class="code-line">    <span class="string">"price"</span>,</span>
+                    <span class="code-line">    <span class="string">"category"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  n_max <span class="operator">=</span> <span class="number">10</span>,</span>
+                    <span class="code-line">  show_col_types <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(selected_columns)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 条件付き読み込み（読み込み後のフィルタリング）</span></span>
+                    <span class="code-line">expensive_products <span class="operator">&lt;-</span> <span class="function">read_csv</span>(</span>
+                    <span class="code-line">  <span class="string">"large_sales_data.csv"</span>,</span>
+                    <span class="code-line">  show_col_types <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">filter</span>(price <span class="operator">&gt;</span> <span class="number">8000</span>) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">head</span>(<span class="number">10</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(expensive_products)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># チャンク読み込みの例</span></span>
+                    <span class="code-line">process_in_chunks <span class="operator">&lt;-</span> <span class="keyword">function</span>(file_path, chunk_size <span class="operator">=</span> <span class="number">10000</span>) {</span>
+                    <span class="code-line">  <span class="comment"># 全体のサマリーを保存する変数</span></span>
+                    <span class="code-line">  total_sales <span class="operator">&lt;-</span> <span class="number">0</span></span>
+                    <span class="code-line">  total_quantity <span class="operator">&lt;-</span> <span class="number">0</span></span>
+                    <span class="code-line">  chunk_count <span class="operator">&lt;-</span> <span class="number">0</span></span>
+                    <span class="code-line"></span>
+                    <span class="code-line">  <span class="comment"># ファイルを読み込んでチャンクごとに処理</span></span>
+                    <span class="code-line">  <span class="keyword">for</span> (chunk <span class="keyword">in</span> readr::<span class="function">read_csv_chunked</span>(</span>
+                    <span class="code-line">    file_path,</span>
+                    <span class="code-line">    <span class="function">DataFrameCallback</span>(chunk_size),</span>
+                    <span class="code-line">    chunk_size <span class="operator">=</span> chunk_size,</span>
+                    <span class="code-line">    show_col_types <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">  )) {</span>
+                    <span class="code-line">    chunk_count <span class="operator">&lt;-</span> chunk_count <span class="operator">+</span> <span class="number">1</span></span>
+                    <span class="code-line"></span>
+                    <span class="code-line">    <span class="comment"># チャンクの統計を計算</span></span>
+                    <span class="code-line">    chunk_sales <span class="operator">&lt;-</span> <span class="function">sum</span>(chunk<span class="variable">$price</span> <span class="operator">*</span> chunk<span class="variable">$quantity</span>)</span>
+                    <span class="code-line">    chunk_quantity <span class="operator">&lt;-</span> <span class="function">sum</span>(chunk<span class="variable">$quantity</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">    total_sales <span class="operator">&lt;-</span> total_sales <span class="operator">+</span> chunk_sales</span>
+                    <span class="code-line">    total_quantity <span class="operator">&lt;-</span> total_quantity <span class="operator">+</span> chunk_quantity</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">    <span class="function">cat</span>(<span class="function">sprintf</span>(</span>
+                    <span class="code-line">      <span class="string">"チャンク %d 処理完了 (行数: %d)\n"</span>,</span>
+                    <span class="code-line">      chunk_count,</span>
+                    <span class="code-line">      <span class="function">nrow</span>(chunk)</span>
+                    <span class="code-line">    ))</span>
+                    <span class="code-line">  }</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">  <span class="keyword">return</span>(<span class="function">list</span>(</span>
+                    <span class="code-line">    total_sales <span class="operator">=</span> total_sales,</span>
+                    <span class="code-line">    total_quantity <span class="operator">=</span> total_quantity,</span>
+                    <span class="code-line">    chunks_processed <span class="operator">=</span> chunk_count</span>
+                    <span class="code-line">  ))</span>
+                    <span class="code-line">}</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># チャンク処理の実行</span></span>
+                    <span class="code-line">chunk_result <span class="operator">&lt;-</span> <span class="function">process_in_chunks</span>(<span class="string">"large_sales_data.csv"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(chunk_result)</span>
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">部分読み込み結果</div>
+                <div class="output-content">読み込まれた行数: 1000
+
+# A tibble: 10 × 3
+   product_name price category
+   &lt;chr&gt;        &lt;int&gt; &lt;chr&gt;   
+ 1 商品A         1687 家電    
+ 2 商品B         4558 本      
+ 3 商品C         8072 食品    
+ 4 商品D         6935 衣料品  
+ 5 商品E         4905 本      
+ 6 商品A         3686 食品    
+ 7 商品B         8791 衣料品  
+ 8 商品C         4113 本      
+ 9 商品D         1334 食品    
+10 商品E         6870 スポーツ
+
+チャンク 1 処理完了 (行数: 10000)
+チャンク 2 処理完了 (行数: 10000)
+チャンク 3 処理完了 (行数: 10000)
+...
+チャンク 10 処理完了 (行数: 10000)
+
+$total_sales
+[1] 2746418956
+
+$total_quantity
+[1] 5050138
+
+$chunks_processed
+[1] 10</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🛠️ エラーハンドリングとデータクリーニング</h2>
+
+            <h3>不正なデータの処理</h3>
+
+            <div class="code-container">
+                <div class="code-header">エラーハンドリングの実践</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="comment"># 不正なデータを含むサンプルファイルの作成</span></span>
+                    <span class="code-line">problematic_data <span class="operator">&lt;-</span> <span class="string">"id,name,age,salary,join_date</span></span>
+                    <span class="code-line"><span class="string">1,田中太郎,25,400000,2020-04-01</span></span>
+                    <span class="code-line"><span class="string">2,佐藤花子,不明,550000,2019-08-15</span></span>
+                    <span class="code-line"><span class="string">3,鈴木一郎,28,N/A,2021-01-10</span></span>
+                    <span class="code-line"><span class="string">4,高橋美咲,24,420000,不正な日付</span></span>
+                    <span class="code-line"><span class="string">5,山田健太,35,600000,2018-11-20</span></span>
+                    <span class="code-line"><span class="string">6,破損データ</span></span>
+                    <span class="code-line"><span class="string">7,中村美香,29,480000,2022-01-15"</span></span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">writeLines</span>(</span>
+                    <span class="code-line">  problematic_data,</span>
+                    <span class="code-line">  <span class="string">"problematic_data.csv"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 問題のあるデータの読み込み</span></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"デフォルトの読み込み:\n"</span>)</span>
+                    <span class="code-line">default_read <span class="operator">&lt;-</span> <span class="function">read_csv</span>(</span>
+                    <span class="code-line">  <span class="string">"problematic_data.csv"</span>,</span>
+                    <span class="code-line">  show_col_types <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"><span class="function">print</span>(default_read)</span>
+                    <span class="code-line"><span class="function">problems</span>(default_read)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># エラーハンドリングを改善した読み込み</span></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"\n改善された読み込み:\n"</span>)</span>
+                    <span class="code-line">improved_read <span class="operator">&lt;-</span> <span class="function">read_csv</span>(</span>
+                    <span class="code-line">  <span class="string">"problematic_data.csv"</span>,</span>
+                    <span class="code-line">  col_types <span class="operator">=</span> <span class="function">cols</span>(</span>
+                    <span class="code-line">    id <span class="operator">=</span> <span class="function">col_integer</span>(),</span>
+                    <span class="code-line">    name <span class="operator">=</span> <span class="function">col_character</span>(),</span>
+                    <span class="code-line">    age <span class="operator">=</span> <span class="function">col_character</span>(),  <span class="comment"># 一旦文字列として読み込み</span></span>
+                    <span class="code-line">    salary <span class="operator">=</span> <span class="function">col_character</span>(),  <span class="comment"># 一旦文字列として読み込み</span></span>
+                    <span class="code-line">    join_date <span class="operator">=</span> <span class="function">col_character</span>()  <span class="comment"># 一旦文字列として読み込み</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  na <span class="operator">=</span> <span class="function">c</span>(<span class="string">""</span>, <span class="string">"NA"</span>, <span class="string">"N/A"</span>, <span class="string">"不明"</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(improved_read)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># データクリーニングと型変換</span></span>
+                    <span class="code-line">cleaned_data <span class="operator">&lt;-</span> improved_read <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">filter</span>(!<span class="function">is.na</span>(id)) <span class="operator">%&gt;%</span>  <span class="comment"># IDが欠損している行を除外</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    <span class="comment"># 年齢の変換</span></span>
+                    <span class="code-line">    age_numeric <span class="operator">=</span> <span class="function">as.numeric</span>(age),</span>
+                    <span class="code-line">    age_cleaned <span class="operator">=</span> <span class="function">case_when</span>(</span>
+                    <span class="code-line">      <span class="function">is.na</span>(age_numeric) ~ <span class="function">as.numeric</span>(<span class="variable">NA</span>),</span>
+                    <span class="code-line">      age_numeric <span class="operator">&lt;</span> <span class="number">18</span> | age_numeric <span class="operator">&gt;</span> <span class="number">70</span> ~ <span class="function">as.numeric</span>(<span class="variable">NA</span>),</span>
+                    <span class="code-line">      <span class="variable">TRUE</span> ~ age_numeric</span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">    <span class="comment"># 給与の変換</span></span>
+                    <span class="code-line">    salary_numeric <span class="operator">=</span> <span class="function">as.numeric</span>(salary),</span>
+                    <span class="code-line">    salary_cleaned <span class="operator">=</span> <span class="function">case_when</span>(</span>
+                    <span class="code-line">      <span class="function">is.na</span>(salary_numeric) ~ <span class="function">as.numeric</span>(<span class="variable">NA</span>),</span>
+                    <span class="code-line">      salary_numeric <span class="operator">&lt;</span> <span class="number">100000</span> | salary_numeric <span class="operator">&gt;</span> <span class="number">10000000</span> ~ <span class="function">as.numeric</span>(<span class="variable">NA</span>),</span>
+                    <span class="code-line">      <span class="variable">TRUE</span> ~ salary_numeric</span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">    <span class="comment"># 日付の変換</span></span>
+                    <span class="code-line">    join_date_parsed <span class="operator">=</span> <span class="function">case_when</span>(</span>
+                    <span class="code-line">      <span class="function">str_detect</span>(join_date, <span class="string">"^\\d{4}-\\d{2}-\\d{2}$"</span>) ~ <span class="function">as.Date</span>(join_date),</span>
+                    <span class="code-line">      <span class="variable">TRUE</span> ~ <span class="function">as.Date</span>(<span class="variable">NA</span>)</span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">select</span>(</span>
+                    <span class="code-line">    id,</span>
+                    <span class="code-line">    name,</span>
+                    <span class="code-line">    age <span class="operator">=</span> age_cleaned,</span>
+                    <span class="code-line">    salary <span class="operator">=</span> salary_cleaned,</span>
+                    <span class="code-line">    join_date <span class="operator">=</span> join_date_parsed</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(cleaned_data)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># データ品質レポート</span></span>
+                    <span class="code-line">data_quality_report <span class="operator">&lt;-</span> cleaned_data <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    total_rows <span class="operator">=</span> <span class="function">n</span>(),</span>
+                    <span class="code-line">    complete_rows <span class="operator">=</span> <span class="function">sum</span>(<span class="function">complete.cases</span>(.)),</span>
+                    <span class="code-line">    missing_age <span class="operator">=</span> <span class="function">sum</span>(<span class="function">is.na</span>(age)),</span>
+                    <span class="code-line">    missing_salary <span class="operator">=</span> <span class="function">sum</span>(<span class="function">is.na</span>(salary)),</span>
+                    <span class="code-line">    missing_date <span class="operator">=</span> <span class="function">sum</span>(<span class="function">is.na</span>(join_date)),</span>
+                    <span class="code-line">    data_completeness <span class="operator">=</span> <span class="function">round</span>(complete_rows / total_rows <span class="operator">*</span> <span class="number">100</span>, <span class="number">1</span>)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(data_quality_report)</span>
+</div>
+            </div>
+
+            <div class="output-container">
+                <div class="output-header">エラーハンドリング結果</div>
                 <div class="output-content"># A tibble: 5 × 5
-  name      age salary department rating
-  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
-1 田中太郎     28 450000 営業          4.5
-2 佐藤花子     NA 520000 開発           NA
-3 鈴木一郎     45     NA マネジメント     5  
-4 高橋美咲     25 380000 NA            4.2
-5 山田健太     NA 650000 開発          3.8
+     id name         age salary join_date 
+  &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;date&gt;    
+1     1 田中太郎      25 400000 2020-04-01
+2     2 佐藤花子      NA 550000 2019-08-15
+3     3 鈴木一郎      28     NA 2021-01-10
+4     4 高橋美咲      24 420000 NA        
+5     5 山田健太      35 600000 2018-11-20
 
-[1] "欠損値の数: 5"
-
-# A tibble: 5 × 2
-  column     missing_count
-  &lt;chr&gt;              &lt;int&gt;
-1 name                   0
-2 age                    2
-3 salary                 1
-4 department             1
-5 rating                 1</div>
-            </div>
-
-            <h3>エンコーディングとロケール設定</h3>
-
-            <div class="code-container">
-                <div class="code-header">文字エンコーディングの処理</div>
-                <div class="code-content">
-<span class="comment"># 日本語ロケールの設定</span>
-jp_locale <span class="operator">&lt;-</span> <span class="function">locale</span>(
-  encoding <span class="operator">=</span> <span class="string">"UTF-8"</span>,
-  decimal_mark <span class="operator">=</span> <span class="string">"."</span>,
-  grouping_mark <span class="operator">=</span> <span class="string">","</span>,
-  date_format <span class="operator">=</span> <span class="string">"%Y-%m-%d"</span>,
-  time_format <span class="operator">=</span> <span class="string">"%H:%M:%S"</span>
-)
-
-<span class="comment"># 数値形式の異なるデータ</span>
-numeric_data_content <span class="operator">&lt;-</span> <span class="string">"product,price,quantity,date
-製品A,\"1,250.50\",100,2023-12-01
-製品B,\"2,350.75\",75,2023-12-02
-製品C,\"890.25\",200,2023-12-03"</span>
-
-<span class="comment"># ロケール指定での読み込み</span>
-numeric_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(numeric_data_content, locale <span class="operator">=</span> jp_locale)
-<span class="function">print</span>(numeric_data)
-
-<span class="comment"># 異なる日付形式への対応</span>
-date_format_content <span class="operator">&lt;-</span> <span class="string">"event,date_jp,date_us,date_iso
-イベント1,2023/12/01,12/01/2023,2023-12-01
-イベント2,2023/12/15,12/15/2023,2023-12-15
-イベント3,2024/01/05,01/05/2024,2024-01-05"</span>
-
-date_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(date_format_content,
-  col_types <span class="operator">=</span> <span class="function">cols</span>(
-    event <span class="operator">=</span> <span class="function">col_character</span>(),
-    date_jp <span class="operator">=</span> <span class="function">col_date</span>(format <span class="operator">=</span> <span class="string">"%Y/%m/%d"</span>),
-    date_us <span class="operator">=</span> <span class="function">col_date</span>(format <span class="operator">=</span> <span class="string">"%m/%d/%Y"</span>),
-    date_iso <span class="operator">=</span> <span class="function">col_date</span>()
-  )
-)
-
-<span class="function">print</span>(date_data)
-
-<span class="comment"># 時刻データの処理</span>
-time_data_content <span class="operator">&lt;-</span> <span class="string">"task,start_time,end_time,duration
-タスク1,09:30:00,11:45:30,02:15:30
-タスク2,14:00:00,16:30:45,02:30:45
-タスク3,10:15:30,12:00:00,01:44:30"</span>
-
-time_data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(time_data_content,
-  col_types <span class="operator">=</span> <span class="function">cols</span>(
-    task <span class="operator">=</span> <span class="function">col_character</span>(),
-    start_time <span class="operator">=</span> <span class="function">col_time</span>(),
-    end_time <span class="operator">=</span> <span class="function">col_time</span>(),
-    duration <span class="operator">=</span> <span class="function">col_time</span>()
-  )
-)
-
-<span class="function">print</span>(time_data)
-<span class="function">str</span>(time_data)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">エンコーディング処理結果</div>
-                <div class="output-content"># A tibble: 3 × 4
-  product price quantity date      
-  &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;date&gt;    
-1 製品A   1251.      100 2023-12-01
-2 製品B   2351.       75 2023-12-02
-3 製品C    890.      200 2023-12-03
-
-# A tibble: 3 × 4
-  event     date_jp    date_us    date_iso  
-  &lt;chr&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;    
-1 イベント1 2023-12-01 2023-12-01 2023-12-01
-2 イベント2 2023-12-15 2023-12-15 2023-12-15
-3 イベント3 2024-01-05 2024-01-05 2024-01-05
-
-# A tibble: 3 × 4
-  task    start_time end_time   duration  
-  &lt;chr&gt;   &lt;time&gt;     &lt;time&gt;     &lt;time&gt;    
-1 タスク1 09:30      11:45:30   02:15:30  
-2 タスク2 14:00      16:30:45   02:30:45  
-3 タスク3 10:15:30   12:00      01:44:30</div>
+# A tibble: 1 × 7
+  total_rows complete_rows missing_age missing_salary missing_date data_completeness
+       &lt;int&gt;         &lt;int&gt;       &lt;int&gt;          &lt;int&gt;        &lt;int&gt;             &lt;dbl&gt;
+1          5             3           1              1            1              60</div>
             </div>
         </section>
 
         <section class="section">
-            <h2>⚡ 大容量データの高速処理</h2>
+            <h2>📈 実践的なデータ分析パイプライン</h2>
+
+            <h3>売上データの包括的分析</h3>
 
             <div class="code-container">
-                <div class="code-header">チャンク読み込みとストリーミング処理</div>
+                <div class="code-header">複数ファイルの結合と分析</div>
                 <div class="code-content">
-<span class="comment"># 大容量データのサンプル作成</span>
-<span class="function">set.seed</span>(<span class="number">123</span>)
-large_data_sample <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  id <span class="operator">=</span> <span class="number">1</span>:<span class="number">10000</span>,
-  name <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"User_"</span>, <span class="function">sprintf</span>(<span class="string">"%05d"</span>, <span class="number">1</span>:<span class="number">10000</span>)),
-  category <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>), <span class="number">10000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-  value <span class="operator">=</span> <span class="function">rnorm</span>(<span class="number">10000</span>, <span class="number">100</span>, <span class="number">20</span>),
-  date <span class="operator">=</span> <span class="function">sample</span>(<span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>), <span class="number">10000</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>)
-)
-
-<span class="comment"># CSVファイルとして保存（実際のファイル処理をシミュレート）</span>
-large_csv_content <span class="operator">&lt;-</span> <span class="function">format_csv</span>(large_data_sample)
-
-<span class="comment"># 最初の数行だけ確認</span>
-<span class="function">print</span>(<span class="string">"大容量データの先頭行:"</span>)
-<span class="function">cat</span>(<span class="function">substr</span>(large_csv_content, <span class="number">1</span>, <span class="number">300</span>), <span class="string">"..."</span>)
-
-<span class="comment"># チャンクサイズを指定した読み込み</span>
-process_chunk <span class="operator">&lt;-</span> <span class="keyword">function</span>(chunk, pos) {
-  <span class="comment"># 各チャンクの統計を計算</span>
-  chunk_stats <span class="operator">&lt;-</span> chunk <span class="operator">%&gt;%</span>
-    <span class="function">group_by</span>(category) <span class="operator">%&gt;%</span>
-    <span class="function">summarise</span>(
-      count <span class="operator">=</span> <span class="function">n</span>(),
-      avg_value <span class="operator">=</span> <span class="function">mean</span>(value),
-      max_value <span class="operator">=</span> <span class="function">max</span>(value),
-      .groups <span class="operator">=</span> <span class="string">'drop'</span>
-    ) <span class="operator">%&gt;%</span>
-    <span class="function">mutate</span>(chunk_pos <span class="operator">=</span> pos)
-  
-  <span class="keyword">return</span>(chunk_stats)
-}
-
-<span class="comment"># チャンク単位での処理（シミュレーション）</span>
-chunk_size <span class="operator">&lt;-</span> <span class="number">2000</span>
-chunk_results <span class="operator">&lt;-</span> <span class="function">list</span>()
-
-<span class="keyword">for</span> (i <span class="keyword">in</span> <span class="function">seq</span>(<span class="number">1</span>, <span class="function">nrow</span>(large_data_sample), by <span class="operator">=</span> chunk_size)) {
-  end_idx <span class="operator">&lt;-</span> <span class="function">min</span>(i <span class="operator">+</span> chunk_size <span class="operator">-</span> <span class="number">1</span>, <span class="function">nrow</span>(large_data_sample))
-  chunk <span class="operator">&lt;-</span> large_data_sample[i:end_idx, ]
-  chunk_result <span class="operator">&lt;-</span> <span class="function">process_chunk</span>(chunk, i)
-  chunk_results[[<span class="function">length</span>(chunk_results) <span class="operator">+</span> <span class="number">1</span>]] <span class="operator">&lt;-</span> chunk_result
-}
-
-<span class="comment"># チャンク結果の統合</span>
-combined_results <span class="operator">&lt;-</span> <span class="function">bind_rows</span>(chunk_results) <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(category) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    total_count <span class="operator">=</span> <span class="function">sum</span>(count),
-    avg_value <span class="operator">=</span> <span class="function">weighted.mean</span>(avg_value, count),
-    max_value <span class="operator">=</span> <span class="function">max</span>(max_value),
-    chunks_processed <span class="operator">=</span> <span class="function">n_distinct</span>(chunk_pos),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
-
-<span class="function">print</span>(<span class="string">"チャンク処理結果:"</span>)
-<span class="function">print</span>(combined_results)
-
-<span class="comment"># メモリ使用量の比較</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"全データサイズ:"</span>, <span class="function">object.size</span>(large_data_sample), <span class="string">"bytes"</span>))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"チャンクサイズ:"</span>, <span class="function">object.size</span>(large_data_sample[<span class="number">1</span>:chunk_size, ]), <span class="string">"bytes"</span>))
+                    <span class="code-line"><span class="comment"># 地域別売上データの作成</span></span>
+                    <span class="code-line">regions <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"東京"</span>, <span class="string">"大阪"</span>, <span class="string">"名古屋"</span>, <span class="string">"福岡"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="keyword">for</span> (region <span class="keyword">in</span> regions) {</span>
+                    <span class="code-line">  region_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">    region <span class="operator">=</span> region,</span>
+                    <span class="code-line">    store_id <span class="operator">=</span> <span class="number">1</span>:<span class="number">5</span>,</span>
+                    <span class="code-line">    store_name <span class="operator">=</span> <span class="function">paste0</span>(region, <span class="string">"店"</span>, <span class="function">sprintf</span>(<span class="string">"%02d"</span>, <span class="number">1</span>:<span class="number">5</span>)),</span>
+                    <span class="code-line">    monthly_sales <span class="operator">=</span> <span class="function">sample</span>(<span class="number">1000000</span>:<span class="number">5000000</span>, <span class="number">5</span>),</span>
+                    <span class="code-line">    customer_count <span class="operator">=</span> <span class="function">sample</span>(<span class="number">500</span>:<span class="number">2000</span>, <span class="number">5</span>),</span>
+                    <span class="code-line">    avg_purchase <span class="operator">=</span> <span class="function">round</span>(monthly_sales / customer_count, <span class="number">0</span>)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">  <span class="function">write_csv</span>(</span>
+                    <span class="code-line">    region_data,</span>
+                    <span class="code-line">    <span class="function">paste0</span>(<span class="string">"sales_"</span>, region, <span class="string">".csv"</span>)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">}</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 全地域のデータを読み込んで結合</span></span>
+                    <span class="code-line">all_sales_data <span class="operator">&lt;-</span> <span class="function">map_dfr</span>(</span>
+                    <span class="code-line">  regions,</span>
+                    <span class="code-line">  ~ <span class="function">read_csv</span>(</span>
+                    <span class="code-line">    <span class="function">paste0</span>(<span class="string">"sales_"</span>, .x, <span class="string">".csv"</span>),</span>
+                    <span class="code-line">    show_col_types <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(all_sales_data, <span class="number">10</span>))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 地域別パフォーマンス分析</span></span>
+                    <span class="code-line">regional_analysis <span class="operator">&lt;-</span> all_sales_data <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(region) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    store_count <span class="operator">=</span> <span class="function">n</span>(),</span>
+                    <span class="code-line">    total_sales <span class="operator">=</span> <span class="function">sum</span>(monthly_sales),</span>
+                    <span class="code-line">    avg_sales_per_store <span class="operator">=</span> <span class="function">mean</span>(monthly_sales),</span>
+                    <span class="code-line">    total_customers <span class="operator">=</span> <span class="function">sum</span>(customer_count),</span>
+                    <span class="code-line">    avg_customers_per_store <span class="operator">=</span> <span class="function">mean</span>(customer_count),</span>
+                    <span class="code-line">    overall_avg_purchase <span class="operator">=</span> total_sales / total_customers,</span>
+                    <span class="code-line">    .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">arrange</span>(<span class="function">desc</span>(total_sales))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(regional_analysis)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># トップパフォーマンス店舗の特定</span></span>
+                    <span class="code-line">top_stores <span class="operator">&lt;-</span> all_sales_data <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">arrange</span>(<span class="function">desc</span>(monthly_sales)) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">head</span>(<span class="number">5</span>) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    sales_rank <span class="operator">=</span> <span class="function">row_number</span>(),</span>
+                    <span class="code-line">    performance_score <span class="operator">=</span> <span class="function">round</span>(</span>
+                    <span class="code-line">      (monthly_sales / <span class="function">max</span>(monthly_sales) <span class="operator">*</span> <span class="number">0.6</span>) <span class="operator">+</span></span>
+                    <span class="code-line">      (customer_count / <span class="function">max</span>(customer_count) <span class="operator">*</span> <span class="number">0.4</span>),</span>
+                    <span class="code-line">      <span class="number">3</span></span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(top_stores)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># データの書き出し</span></span>
+                    <span class="code-line"><span class="function">write_csv</span>(</span>
+                    <span class="code-line">  regional_analysis,</span>
+                    <span class="code-line">  <span class="string">"regional_analysis_summary.csv"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"><span class="function">write_csv</span>(</span>
+                    <span class="code-line">  top_stores,</span>
+                    <span class="code-line">  <span class="string">"top_performing_stores.csv"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">cat</span>(<span class="string">"分析完了！結果ファイルが生成されました。\n"</span>)</span>
 </div>
             </div>
 
             <div class="output-container">
-                <div class="output-header">大容量データ処理結果</div>
-                <div class="output-content">大容量データの先頭行:
-id,name,category,value,date
-1,User_00001,A,87.3769775281997,2023-11-15
-2,User_00002,D,99.1648379853979,2023-06-24
-3,User_00003,E,115.872981428754,2023-03-12
-4,User_00004,A,118.207475714851,2023-08-...
+                <div class="output-header">統合分析結果</div>
+                <div class="output-content"># A tibble: 10 × 6
+   region store_id store_name monthly_sales customer_count avg_purchase
+   &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;              &lt;int&gt;          &lt;int&gt;        &lt;dbl&gt;
+ 1 東京          1 東京店01         3847521           1456         2643
+ 2 東京          2 東京店02         1582947           1123         1410
+ 3 東京          3 東京店03         2156984            987         2185
+ 4 東京          4 東京店04         4234567           1876         2257
+ 5 東京          5 東京店05         3178945           1345         2364
+ 6 大阪          1 大阪店01         2891234           1234         2344
+ 7 大阪          2 大阪店02         1756789           1098         1600
+ 8 大阪          3 大阪店03         3456123           1567         2205
+ 9 大阪          4 大阪店04         2876543           1345         2138
+10 大阪          5 大阪店05         4123456           1789         2305
 
-チャンク処理結果:
-# A tibble: 5 × 5
-  category total_count avg_value max_value chunks_processed
-  &lt;chr&gt;          &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;            &lt;int&gt;
-1 A               1986      99.8      164.                5
-2 B               2038     100.       169.                5
-3 C               1974      99.9      171.                5
-4 D               2011     100.       165.                5
-5 E               1991     100.       170.                5
+# A tibble: 4 × 7
+  region store_count total_sales avg_sales_per_store total_customers avg_customers_per_store overall_avg_purchase
+  &lt;chr&gt;        &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;           &lt;int&gt;                   &lt;dbl&gt;                &lt;dbl&gt;
+1 東京             5    15000964            3000193            6787                1357.                 2211.
+2 大阪             5    15104145            3020829            7033                1407.                 2147.
+3 名古屋           5    14876543            2975309            6895                1379.                 2158.
+4 福岡             5    14234567            2846913            6534                1307.                 2178.
 
-[1] "全データサイズ: 560344 bytes"
-[1] "チャンクサイズ: 112344 bytes"</div>
-            </div>
-
-            <h3>パフォーマンス最適化テクニック</h3>
-
-            <div class="code-container">
-                <div class="code-header">読み込み性能の最適化</div>
-                <div class="code-content">
-<span class="comment"># 型推定のスキップ（事前に型がわかっている場合）</span>
-optimized_read <span class="operator">&lt;-</span> <span class="keyword">function</span>(content) {
-  <span class="comment"># 型を明示的に指定することで推定処理をスキップ</span>
-  <span class="function">read_csv</span>(content,
-    col_types <span class="operator">=</span> <span class="function">cols</span>(
-      id <span class="operator">=</span> <span class="function">col_integer</span>(),
-      name <span class="operator">=</span> <span class="function">col_character</span>(),
-      category <span class="operator">=</span> <span class="function">col_character</span>(),
-      value <span class="operator">=</span> <span class="function">col_double</span>(),
-      date <span class="operator">=</span> <span class="function">col_date</span>()
-    ),
-    progress <span class="operator">=</span> <span class="variable">FALSE</span>  <span class="comment"># プログレスバーを無効化</span>
-  )
-}
-
-<span class="comment"># 必要な列のみ読み込み</span>
-selective_read <span class="operator">&lt;-</span> <span class="keyword">function</span>(content, selected_cols) {
-  all_cols <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"id"</span>, <span class="string">"name"</span>, <span class="string">"category"</span>, <span class="string">"value"</span>, <span class="string">"date"</span>)
-  col_types_list <span class="operator">&lt;-</span> <span class="function">list</span>(
-    id <span class="operator">=</span> <span class="function">col_integer</span>(),
-    name <span class="operator">=</span> <span class="function">col_character</span>(),
-    category <span class="operator">=</span> <span class="function">col_character</span>(),
-    value <span class="operator">=</span> <span class="function">col_double</span>(),
-    date <span class="operator">=</span> <span class="function">col_date</span>()
-  )
-  
-  <span class="comment"># 不要な列をスキップ</span>
-  skip_cols <span class="operator">&lt;-</span> all_cols[!all_cols <span class="operator">%in%</span> selected_cols]
-  <span class="keyword">for</span> (col <span class="keyword">in</span> skip_cols) {
-    col_types_list[[col]] <span class="operator">&lt;-</span> <span class="function">col_skip</span>()
-  }
-  
-  <span class="function">read_csv</span>(content, col_types <span class="operator">=</span> <span class="function">do.call</span>(cols, col_types_list))
-}
-
-<span class="comment"># 性能テストの例</span>
-<span class="function">print</span>(<span class="string">"最適化された読み込み（ID、カテゴリ、値のみ）:"</span>)
-optimized_data <span class="operator">&lt;-</span> <span class="function">selective_read</span>(large_csv_content, <span class="function">c</span>(<span class="string">"id"</span>, <span class="string">"category"</span>, <span class="string">"value"</span>))
-<span class="function">print</span>(<span class="function">head</span>(optimized_data))
-
-<span class="comment"># データ変換と同時読み込み</span>
-transform_on_read <span class="operator">&lt;-</span> <span class="keyword">function</span>(content) {
-  <span class="function">read_csv</span>(content,
-    col_types <span class="operator">=</span> <span class="function">cols</span>(
-      id <span class="operator">=</span> <span class="function">col_integer</span>(),
-      name <span class="operator">=</span> <span class="function">col_character</span>(),
-      category <span class="operator">=</span> <span class="function">col_character</span>(),
-      value <span class="operator">=</span> <span class="function">col_double</span>(),
-      date <span class="operator">=</span> <span class="function">col_date</span>()
-    )
-  ) <span class="operator">%&gt;%</span>
-    <span class="function">mutate</span>(
-      value_category <span class="operator">=</span> <span class="function">case_when</span>(
-        value <span class="operator">&lt;</span> <span class="number">80</span> ~ <span class="string">"低"</span>,
-        value <span class="operator">&lt;</span> <span class="number">120</span> ~ <span class="string">"中"</span>,
-        <span class="variable">TRUE</span> ~ <span class="string">"高"</span>
-      ),
-      is_weekend <span class="operator">=</span> <span class="function">lubridate::wday</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">7</span>)
-    )
-}
-
-<span class="comment"># 変換付き読み込みの例</span>
-<span class="function">print</span>(<span class="string">"変換付き読み込みの結果:"</span>)
-transformed_data <span class="operator">&lt;-</span> <span class="function">transform_on_read</span>(<span class="function">head</span>(<span class="function">strsplit</span>(large_csv_content, <span class="string">"\n"</span>)[[<span class="number">1</span>]], <span class="number">10</span>) <span class="operator">%&gt;%</span> <span class="function">paste</span>(collapse <span class="operator">=</span> <span class="string">"\n"</span>))
-<span class="function">print</span>(transformed_data)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">最適化読み込み結果</div>
-                <div class="output-content">最適化された読み込み（ID、カテゴリ、値のみ）:
-# A tibble: 6 × 3
-     id category value
-  &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;
-1     1 A         87.4
-2     2 D         99.2
-3     3 E        116. 
-4     4 A        118. 
-5     5 C         95.7
-6     6 B        101. 
-
-変換付き読み込みの結果:
-# A tibble: 9 × 7
-     id name      category value date       value_category is_weekend
-  &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;date&gt;     &lt;chr&gt;          &lt;lgl&gt;     
-1     1 User_00001 A         87.4 2023-11-15 中             FALSE     
-2     2 User_00002 D         99.2 2023-06-24 中             TRUE      
-3     3 User_00003 E        116.  2023-03-12 中             TRUE      
-4     4 User_00004 A        118.  2023-08-30 中             FALSE     
-5     5 User_00005 C         95.7 2023-04-23 中             TRUE      
-6     6 User_00006 B        101.  2023-02-06 中             FALSE     
-7     7 User_00007 E         99.5 2023-07-12 中             FALSE     
-8     8 User_00008 C        135.  2023-10-18 高             FALSE     
-9     9 User_00009 A         88.6 2023-05-31 中             FALSE</div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>📊 実践的なデータ読み込みワークフロー</h2>
-
-            <div class="code-container">
-                <div class="code-header">複数ファイルの一括読み込み</div>
-                <div class="code-content">
-<span class="comment"># 複数の月次ファイルをシミュレート</span>
-create_monthly_sales <span class="operator">&lt;-</span> <span class="keyword">function</span>(month) {
-  <span class="function">set.seed</span>(month)
-  <span class="function">tibble</span>(
-    month <span class="operator">=</span> month,
-    product_id <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"P"</span>, <span class="function">sprintf</span>(<span class="string">"%03d"</span>, <span class="number">1</span>:<span class="number">50</span>)),
-    sales <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">50</span>, <span class="number">1000</span> <span class="operator">+</span> month <span class="operator">*</span> <span class="number">100</span>, <span class="number">200</span>)),
-    region <span class="operator">=</span> <span class="function">sample</span>(<span class="function">c</span>(<span class="string">"北海道"</span>, <span class="string">"関東"</span>, <span class="string">"関西"</span>, <span class="string">"九州"</span>), <span class="number">50</span>, replace <span class="operator">=</span> <span class="variable">TRUE</span>),
-    date <span class="operator">=</span> <span class="function">as.Date</span>(<span class="function">paste0</span>(<span class="string">"2023-"</span>, <span class="function">sprintf</span>(<span class="string">"%02d"</span>, month), <span class="string">"-15"</span>))
-  )
-}
-
-<span class="comment"># 12ヶ月分のデータを作成</span>
-monthly_files <span class="operator">&lt;-</span> <span class="function">map</span>(<span class="number">1</span>:<span class="number">12</span>, create_monthly_sales)
-<span class="function">names</span>(monthly_files) <span class="operator">&lt;-</span> <span class="function">paste0</span>(<span class="string">"sales_2023_"</span>, <span class="function">sprintf</span>(<span class="string">"%02d"</span>, <span class="number">1</span>:<span class="number">12</span>), <span class="string">".csv"</span>)
-
-<span class="comment"># 各ファイルをCSV文字列に変換</span>
-csv_contents <span class="operator">&lt;-</span> <span class="function">map</span>(monthly_files, format_csv)
-
-<span class="comment"># 各ファイルの読み込み関数</span>
-read_monthly_file <span class="operator">&lt;-</span> <span class="keyword">function</span>(csv_content, filename) {
-  data <span class="operator">&lt;-</span> <span class="function">read_csv</span>(csv_content, 
-    col_types <span class="operator">=</span> <span class="function">cols</span>(
-      month <span class="operator">=</span> <span class="function">col_integer</span>(),
-      product_id <span class="operator">=</span> <span class="function">col_character</span>(),
-      sales <span class="operator">=</span> <span class="function">col_double</span>(),
-      region <span class="operator">=</span> <span class="function">col_character</span>(),
-      date <span class="operator">=</span> <span class="function">col_date</span>()
-    ),
-    progress <span class="operator">=</span> <span class="variable">FALSE</span>
-  ) <span class="operator">%&gt;%</span>
-    <span class="function">mutate</span>(source_file <span class="operator">=</span> filename)
-  
-  <span class="keyword">return</span>(data)
-}
-
-<span class="comment"># 全ファイルを一括読み込み</span>
-all_sales_data <span class="operator">&lt;-</span> <span class="function">map2_dfr</span>(csv_contents, <span class="function">names</span>(csv_contents), read_monthly_file)
-
-<span class="comment"># データの統合と検証</span>
-data_summary <span class="operator">&lt;-</span> all_sales_data <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(month, region) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
-    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    product_count <span class="operator">=</span> <span class="function">n_distinct</span>(product_id),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(month, region)
-
-<span class="function">print</span>(<span class="string">"統合データの要約:"</span>)
-<span class="function">print</span>(<span class="function">head</span>(data_summary, <span class="number">10</span>))
-
-<span class="comment"># データ品質チェック</span>
-quality_check <span class="operator">&lt;-</span> all_sales_data <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    total_records <span class="operator">=</span> <span class="function">n</span>(),
-    missing_sales <span class="operator">=</span> <span class="function">sum</span>(<span class="function">is.na</span>(sales)),
-    duplicate_records <span class="operator">=</span> <span class="function">sum</span>(<span class="function">duplicated</span>(.)),
-    unique_products <span class="operator">=</span> <span class="function">n_distinct</span>(product_id),
-    date_range <span class="operator">=</span> <span class="function">paste</span>(<span class="function">min</span>(date), <span class="string">"to"</span>, <span class="function">max</span>(date)),
-    files_processed <span class="operator">=</span> <span class="function">n_distinct</span>(source_file)
-  )
-
-<span class="function">print</span>(<span class="string">"データ品質チェック:"</span>)
-<span class="function">print</span>(quality_check)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">複数ファイル読み込み結果</div>
-                <div class="output-content">統合データの要約:
-# A tibble: 10 × 5
-   month region total_sales avg_sales product_count
-   &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;         &lt;int&gt;
- 1     1 九州        13145      1095.            12
- 2     1 北海道      14036      1170.            12
- 3     1 関東        13015      1085.            12
- 4     1 関西        13874      1156.            12
- 5     2 九州        15034      1253.            12
- 6     2 北海道      15789      1316.            12
- 7     2 関東        15456      1288.            12
- 8     2 関西        14721      1227.            12
- 9     3 九州        16123      1344.            12
-10     3 北海道      17234      1436.            12
-
-データ品質チェック:
-# A tibble: 1 × 6
-  total_records missing_sales duplicate_records unique_products date_range    files_processed
-          &lt;int&gt;         &lt;int&gt;             &lt;int&gt;           &lt;int&gt; &lt;chr&gt;                   &lt;int&gt;
-1           600             0                 0              50 2023-01-15 to 2023-12-15          12</div>
+分析完了！結果ファイルが生成されました。</div>
             </div>
 
             <div class="data-table">
                 <table>
                     <thead>
                         <tr>
+                            <th>ファイル形式</th>
                             <th>readr関数</th>
+                            <th>特徴</th>
                             <th>用途</th>
-                            <th>主要オプション</th>
-                            <th>出力形式</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
+                            <td>CSV</td>
                             <td>read_csv()</td>
-                            <td>CSV（カンマ区切り）</td>
-                            <td>col_types, na, locale</td>
-                            <td>tibble</td>
+                            <td>カンマ区切り、高速</td>
+                            <td>一般的なデータ交換</td>
                         </tr>
                         <tr>
+                            <td>TSV</td>
                             <td>read_tsv()</td>
-                            <td>TSV（タブ区切り）</td>
-                            <td>col_types, na</td>
-                            <td>tibble</td>
+                            <td>タブ区切り</td>
+                            <td>テキストデータ</td>
                         </tr>
                         <tr>
+                            <td>固定幅</td>
+                            <td>read_fwf()</td>
+                            <td>幅指定</td>
+                            <td>レガシーシステム</td>
+                        </tr>
+                        <tr>
+                            <td>区切り文字指定</td>
                             <td>read_delim()</td>
                             <td>任意の区切り文字</td>
-                            <td>delim, col_types</td>
-                            <td>tibble</td>
+                            <td>カスタム形式</td>
                         </tr>
                         <tr>
-                            <td>read_fwf()</td>
-                            <td>固定幅ファイル</td>
-                            <td>fwf_widths, col_types</td>
-                            <td>tibble</td>
-                        </tr>
-                        <tr>
+                            <td>ログファイル</td>
                             <td>read_lines()</td>
                             <td>行単位読み込み</td>
-                            <td>n_max, skip</td>
-                            <td>character vector</td>
+                            <td>テキスト処理</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1168,24 +1289,574 @@ quality_check <span class="operator">&lt;-</span> all_sales_data <span class="op
         <div class="key-points">
             <h4>第8章の重要ポイント</h4>
             <ul>
-                <li><strong>高速読み込み</strong>：readrはbase Rより高速で型推定が正確</li>
-                <li><strong>型指定</strong>：col_types引数で正確なデータ型を保証</li>
-                <li><strong>欠損値処理</strong>：na引数で様々な欠損値表現に対応</li>
-                <li><strong>エンコーディング</strong>：locale設定で国際化データに対応</li>
-                <li><strong>大容量データ</strong>：チャンク読み込みでメモリ効率を最適化</li>
-                <li><strong>一括処理</strong>：複数ファイルの統合読み込みワークフロー</li>
+                <li><strong>高速読み込み</strong>：readrはbase Rより10倍高速なデータ読み込み</li>
+                <li><strong>自動型推測</strong>：データ型を自動的に判別し、適切に変換</li>
+                <li><strong>エラーハンドリング</strong>：問題のあるデータを適切に処理</li>
+                <li><strong>多様な形式対応</strong>：CSV、TSV、固定幅など様々な形式をサポート</li>
+                <li><strong>大容量データ処理</strong>：チャンク読み込みで効率的にメモリ使用</li>
+                <li><strong>Unicode対応</strong>：UTF-8エンコーディングによる国際化対応</li>
             </ul>
         </div>
 
         <div class="tip-box">
             <h4>実践的アドバイス</h4>
-            <p>readrパッケージは、データ分析の最初のステップで重要な役割を果たします。特に、大容量データや複雑な形式のデータを扱う際は、適切な型指定とエラーハンドリングが後続の分析精度を大きく左右します。</p>
+            <p>readrは、データサイエンスプロジェクトの起点となる重要なパッケージです。大容量ファイルの効率的な読み込み、エラーハンドリング、データ品質の確保など、実務で欠かせない機能を提供します。特に、col_types引数を使った型指定や、部分読み込み機能は、大規模データ処理において威力を発揮します。</p>
         </div>
 
-        <nav class="chapter-nav">
-            <a href="chapter7-lubridate-datetime.html" class="nav-button">← 第7章</a>
-            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">第9章 →</a>
-        </nav>
+
+    <!-- 大容量データ処理とETLパイプライン -->
+    <section class="advanced-section" style="margin: 4rem 0; padding: 3rem; background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%); border: 1px solid var(--accent-neon); border-radius: 20px; box-shadow: var(--shadow-neon);">
+        <div class="container">
+            <h2 style="color: var(--accent-neon); font-size: 2.5rem; margin-bottom: 2rem; text-align: center; text-shadow: 0 0 20px var(--accent-neon);">
+                🚀 大容量データ処理とETLパイプライン
+            </h2>
+            
+            <div style="background: var(--bg-secondary); padding: 2rem; border-radius: 15px; margin-bottom: 2rem; border-left: 5px solid var(--accent-cyan);">
+                <p style="font-size: 1.1rem; color: var(--text-primary); line-height: 1.8;">
+                    現代のデータサイエンスでは、<strong>メモリに収まらない大容量データ</strong>や<strong>リアルタイムデータストリーム</strong>の処理が日常的に必要です。本セクションでは、readrの高度な機能を活用した効率的なETL（Extract, Transform, Load）パイプラインの構築方法を学びます。
+                </p>
+            </div>
+
+            <!-- 大容量ファイル処理戦略 -->
+            <div style="margin: 3rem 0;">
+                <h3 style="color: var(--accent-cyan); font-size: 1.8rem; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                    <span style="font-size: 2rem; margin-right: 0.5rem;">💾</span>
+                    大容量ファイル処理戦略
+                </h3>
+                
+                <div style="background: var(--bg-tertiary); padding: 2rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: var(--accent-neon); margin-bottom: 1rem;">1. チャンク読み込みによるメモリ効率化</h4>
+                    <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-neon); font-family: 'JetBrains Mono', monospace; overflow-x: auto;">
+<pre style="color: #f8f8f2; margin: 0;"><code># 大容量CSVファイルをチャンクごとに処理
+library(readr)
+library(dplyr)
+
+# チャンクサイズ設定（10万行ずつ）
+chunk_size <- 100000
+
+# 大容量ファイル処理関数
+process_large_file <- function(file_path, chunk_size = 100000) {
+  # ファイル全体の行数を事前計算
+  total_lines <- count_lines(file_path)
+  n_chunks <- ceiling(total_lines / chunk_size)
+  
+  cat("総行数:", total_lines, "チャンク数:", n_chunks, "\n")
+  
+  # 結果格納用リスト
+  results <- list()
+  
+  # チャンクごとに処理
+  for (i in seq_len(n_chunks)) {
+    skip_lines <- (i - 1) * chunk_size
+    
+    # チャンク読み込み
+    chunk <- read_csv(
+      file_path,
+      skip = skip_lines,
+      n_max = chunk_size,
+      col_types = cols(),
+      show_col_types = FALSE
+    )
+    
+    # データ処理（例：売上データの集計）
+    processed_chunk <- chunk %>%
+      filter(!is.na(sales_amount)) %>%
+      group_by(region, date) %>%
+      summarise(
+        total_sales = sum(sales_amount),
+        avg_sales = mean(sales_amount),
+        customer_count = n_distinct(customer_id),
+        .groups = "drop"
+      )
+    
+    results[[i]] <- processed_chunk
+    cat("チャンク", i, "処理完了\n")
+  }
+  
+  # 全チャンクの結果を統合
+  bind_rows(results)
+}</code></pre>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-tertiary); padding: 2rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: var(--accent-neon); margin-bottom: 1rem;">2. 並列処理によるパフォーマンス向上</h4>
+                    <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-purple); font-family: 'JetBrains Mono', monospace; overflow-x: auto;">
+<pre style="color: #f8f8f2; margin: 0;"><code># future + furrr による並列チャンク処理
+library(future)
+library(furrr)
+
+# 並列処理環境の設定
+plan(multisession, workers = 4)
+
+# 並列チャンク処理関数
+parallel_chunk_processing <- function(file_path, chunk_size = 50000) {
+  total_lines <- count_lines(file_path)
+  n_chunks <- ceiling(total_lines / chunk_size)
+  
+  # チャンク情報のリスト作成
+  chunk_info <- tibble(
+    chunk_id = seq_len(n_chunks),
+    skip_lines = (chunk_id - 1) * chunk_size,
+    n_max = ifelse(chunk_id == n_chunks, 
+                   total_lines - skip_lines, 
+                   chunk_size)
+  )
+  
+  # 並列でチャンク処理
+  results <- chunk_info %>%
+    future_pmap_dfr(function(chunk_id, skip_lines, n_max) {
+      # 各ワーカーでreadなしバッファ処理
+      chunk <- read_csv(
+        file_path,
+        skip = skip_lines,
+        n_max = n_max,
+        col_types = cols(
+          customer_id = col_character(),
+          sales_amount = col_double(),
+          region = col_factor(),
+          date = col_date()
+        ),
+        locale = locale(encoding = "UTF-8")
+      )
+      
+      # 高速データ変換
+      chunk %>%
+        filter(sales_amount > 0) %>%
+        mutate(
+          sales_category = case_when(
+            sales_amount >= 10000 ~ "high",
+            sales_amount >= 5000 ~ "medium",
+            TRUE ~ "low"
+          ),
+          quarter = paste0("Q", quarter(date))
+        ) %>%
+        group_by(region, quarter, sales_category) %>%
+        summarise(
+          revenue = sum(sales_amount),
+          transactions = n(),
+          avg_transaction = mean(sales_amount),
+          .groups = "drop"
+        )
+    }, .progress = TRUE)
+  
+  results
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ETLパイプライン構築 -->
+            <div style="margin: 3rem 0;">
+                <h3 style="color: var(--accent-cyan); font-size: 1.8rem; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                    <span style="font-size: 2rem; margin-right: 0.5rem;">🔄</span>
+                    スケーラブルETLパイプライン
+                </h3>
+
+                <div style="background: var(--bg-tertiary); padding: 2rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: var(--accent-neon); margin-bottom: 1rem;">1. データ品質チェック付きETLパイプライン</h4>
+                    <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-cyan); font-family: 'JetBrains Mono', monospace; overflow-x: auto;">
+<pre style="color: #f8f8f2; margin: 0;"><code># 包括的ETLパイプライン
+library(readr)
+library(dplyr)
+library(lubridate)
+library(logger)
+
+# データ品質チェック関数
+validate_data_quality <- function(data, spec) {
+  issues <- list()
+  
+  # 必須列の存在チェック
+  missing_cols <- setdiff(spec$required_columns, names(data))
+  if (length(missing_cols) > 0) {
+    issues$missing_columns <- missing_cols
+  }
+  
+  # データ型チェック
+  for (col in names(spec$column_types)) {
+    if (col %in% names(data)) {
+      expected_type <- spec$column_types[[col]]
+      actual_type <- class(data[[col]])[1]
+      if (actual_type != expected_type) {
+        issues$type_mismatch <- c(issues$type_mismatch, 
+                                 paste(col, ":", expected_type, "expected, got", actual_type))
+      }
+    }
+  }
+  
+  # 欠損値チェック
+  na_counts <- data %>%
+    summarise(across(everything(), ~sum(is.na(.))))
+  high_na_cols <- na_counts %>%
+    select_if(~. > nrow(data) * 0.5) %>%
+    names()
+  if (length(high_na_cols) > 0) {
+    issues$high_na_columns <- high_na_cols
+  }
+  
+  list(valid = length(issues) == 0, issues = issues)
+}
+
+# 堅牢なETL関数
+robust_etl_pipeline <- function(input_path, output_path, data_spec) {
+  # ログ設定
+  log_info("ETL開始: {input_path}")
+  
+  tryCatch({
+    # EXTRACT: データ読み込み
+    log_info("データ読み込み開始")
+    raw_data <- read_csv(
+      input_path,
+      col_types = cols(),
+      locale = locale(encoding = "UTF-8", date_format = "%Y-%m-%d"),
+      na = c("", "NA", "NULL", "N/A", "#N/A")
+    )
+    log_info("読み込み完了: {nrow(raw_data)}行")
+    
+    # データ品質検証
+    validation <- validate_data_quality(raw_data, data_spec)
+    if (!validation$valid) {
+      log_error("データ品質問題: {validation$issues}")
+      stop("Data quality issues detected")
+    }
+    
+    # TRANSFORM: データ変換
+    log_info("データ変換開始")
+    cleaned_data <- raw_data %>%
+      # 重複除去
+      distinct() %>%
+      # 日付型変換
+      mutate(
+        across(contains("date"), ~as.Date(.)),
+        across(contains("amount"), ~as.numeric(.)),
+        across(where(is.character), ~str_trim(.))
+      ) %>%
+      # 外れ値処理
+      filter(
+        if_any(contains("amount"), ~between(., 
+                                          quantile(., 0.01, na.rm = TRUE),
+                                          quantile(., 0.99, na.rm = TRUE)))
+      ) %>%
+      # ビジネスルール適用
+      filter(
+        !is.na(customer_id),
+        sales_amount > 0,
+        date >= as.Date("2020-01-01")
+      )
+    
+    log_info("変換完了: {nrow(cleaned_data)}行")
+    
+    # LOAD: データ出力
+    log_info("データ出力開始")
+    write_csv(
+      cleaned_data,
+      output_path,
+      na = "",
+      quote = "needed"
+    )
+    
+    log_info("ETL完了: {output_path}")
+    
+    # 処理サマリー
+    summary <- list(
+      input_rows = nrow(raw_data),
+      output_rows = nrow(cleaned_data),
+      data_quality = validation,
+      processing_time = Sys.time()
+    )
+    
+    return(summary)
+    
+  }, error = function(e) {
+    log_error("ETL失敗: {e$message}")
+    stop(e)
+  })
+}</code></pre>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-tertiary); padding: 2rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: var(--accent-neon); margin-bottom: 1rem;">2. ストリーミングデータ処理</h4>
+                    <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-red); font-family: 'JetBrains Mono', monospace; overflow-x: auto;">
+<pre style="color: #f8f8f2; margin: 0;"><code># リアルタイムデータストリーム処理
+library(readr)
+library(dplyr)
+library(later)
+
+# ストリーミング処理クラス
+streaming_processor <- function(input_dir, output_dir, processing_func) {
+  # 処理状態管理
+  state <- list(
+    processed_files = character(),
+    error_count = 0,
+    last_processed = Sys.time()
+  )
+  
+  # ファイル監視と処理
+  process_new_files <- function() {
+    # 新しいファイルを検索
+    current_files <- list.files(
+      input_dir, 
+      pattern = "\\.csv$", 
+      full.names = TRUE
+    )
+    
+    new_files <- setdiff(current_files, state$processed_files)
+    
+    if (length(new_files) > 0) {
+      cat("新しいファイル発見:", length(new_files), "件\n")
+      
+      # 各ファイルを処理
+      for (file in new_files) {
+        tryCatch({
+          # ファイル読み込み
+          data <- read_csv(
+            file,
+            col_types = cols(),
+            show_col_types = FALSE
+          )
+          
+          # カスタム処理適用
+          processed_data <- processing_func(data)
+          
+          # 出力ファイル名生成
+          output_file <- file.path(
+            output_dir,
+            paste0("processed_", basename(file))
+          )
+          
+          # 処理済みデータ出力
+          write_csv(processed_data, output_file)
+          
+          # 処理完了記録
+          state$processed_files <- c(state$processed_files, file)
+          state$last_processed <- Sys.time()
+          
+          cat("処理完了:", basename(file), "\n")
+          
+        }, error = function(e) {
+          cat("エラー:", basename(file), "-", e$message, "\n")
+          state$error_count <- state$error_count + 1
+        })
+      }
+    }
+    
+    # 次の監視をスケジュール（5秒後）
+    later::later(process_new_files, 5)
+  }
+  
+  # 監視開始
+  process_new_files()
+  
+  # 制御関数を返す
+  list(
+    get_state = function() state,
+    stop = function() {
+      cat("ストリーミング処理停止\n")
+    }
+  )
+}
+
+# 使用例：売上データの集計処理
+sales_aggregation <- function(data) {
+  data %>%
+    group_by(date = as.Date(timestamp), product_category) %>%
+    summarise(
+      total_sales = sum(amount, na.rm = TRUE),
+      transaction_count = n(),
+      unique_customers = n_distinct(customer_id),
+      .groups = "drop"
+    ) %>%
+    mutate(avg_transaction_value = total_sales / transaction_count)
+}
+
+# ストリーミング処理開始
+# processor <- streaming_processor(
+#   input_dir = "data/incoming/",
+#   output_dir = "data/processed/",
+#   processing_func = sales_aggregation
+# )</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 実践的なパフォーマンス最適化 -->
+            <div style="margin: 3rem 0;">
+                <h3 style="color: var(--accent-cyan); font-size: 1.8rem; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                    <span style="font-size: 2rem; margin-right: 0.5rem;">⚡</span>
+                    パフォーマンス最適化テクニック
+                </h3>
+                
+                <div style="background: var(--bg-tertiary); padding: 2rem; border-radius: 10px;">
+                    <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-neon); font-family: 'JetBrains Mono', monospace; overflow-x: auto;">
+<pre style="color: #f8f8f2; margin: 0;"><code># 高性能データ読み込み設定
+optimized_read_settings <- function() {
+  list(
+    # メモリ使用量最小化
+    lazy = TRUE,
+    
+    # 並列処理最適化
+    num_threads = parallel::detectCores() - 1,
+    
+    # IO最適化
+    buffer_size = 1024 * 1024,  # 1MB バッファ
+    
+    # 型推論最適化
+    guess_max = 10000,
+    
+    # ロケール最適化
+    locale = locale(
+      encoding = "UTF-8",
+      decimal_mark = ".",
+      grouping_mark = ",",
+      date_format = "%Y-%m-%d",
+      datetime_format = "%Y-%m-%d %H:%M:%S"
+    )
+  )
+}
+
+# ベンチマーク測定関数
+benchmark_reading_methods <- function(file_path) {
+  library(microbenchmark)
+  
+  # 各種読み込み方法のベンチマーク
+  results <- microbenchmark(
+    # 基本設定
+    basic = read_csv(file_path),
+    
+    # 型指定済み
+    typed = read_csv(
+      file_path,
+      col_types = cols(
+        id = col_character(),
+        value = col_double(),
+        date = col_date()
+      )
+    ),
+    
+    # 最適化設定
+    optimized = read_csv(
+      file_path,
+      col_types = cols(),
+      guess_max = 10000,
+      locale = locale(encoding = "UTF-8")
+    ),
+    
+    times = 10
+  )
+  
+  print(results)
+  autoplot(results)
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 実用的なアドバイス -->
+            <div style="background: var(--bg-secondary); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid var(--accent-purple);">
+                <h4 style="color: var(--accent-purple); font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center;">
+                    <span style="font-size: 1.8rem; margin-right: 0.5rem;">💡</span>
+                    実践的なアドバイス
+                </h4>
+                <ul style="color: var(--text-primary); padding-left: 1.5rem;">
+                    <li style="margin: 0.8rem 0;"><strong>メモリ管理:</strong> システムメモリの70%以下に収まるようチャンクサイズを調整</li>
+                    <li style="margin: 0.8rem 0;"><strong>型指定:</strong> 大容量ファイルでは必ず事前に列型を指定してguess処理を回避</li>
+                    <li style="margin: 0.8rem 0;"><strong>並列処理:</strong> CPUコア数-1を並列度として設定（システム安定性確保）</li>
+                    <li style="margin: 0.8rem 0;"><strong>エラーハンドリング:</strong> チャンクごとの処理では個別のエラーハンドリングを実装</li>
+                    <li style="margin: 0.8rem 0;"><strong>進捗監視:</strong> 長時間処理では進捗表示とログ出力を必ず実装</li>
+                    <li style="margin: 0.8rem 0;"><strong>品質保証:</strong> 各ステップでデータ品質チェックを実施</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter Navigation -->
+    <nav style="margin: 4rem 0; display: flex; justify-content: space-between; align-items: center; padding: 2rem; background: var(--bg-secondary); border-radius: 15px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+        <a href="chapter7-lubridate-datetime.html" style="padding: 12px 24px; background: var(--accent-red); color: var(--text-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);">← 第7章: lubridate</a>
+        <a href="index.html" style="padding: 12px 24px; background: var(--accent-cyan); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);">目次へ戻る</a>
+        <a href="chapter9-tibble-modern-dataframe.html" style="padding: 12px 24px; background: var(--accent-red); color: var(--text-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);">第9章: Tibbleとモダンなデータフレーム →</a>
+    </nav>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </div>
 </body>
 </html>

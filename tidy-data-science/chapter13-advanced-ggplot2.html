@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第13章: 高度なggplot2とカスタム可視化 | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,8 +26,8 @@
             --accent-neon: #00ff88;
             --accent-cyan: #00d4ff;
             --accent-purple: #9d4edd;
-            --accent-pink: #ff006e;
-            --accent-orange: #fb8500;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
             --text-primary: #ffffff;
             --text-secondary: #b3b3b3;
             --border-neon: #00ff88;
@@ -48,1396 +61,489 @@
             padding: 40px 0;
             background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
             border-radius: 20px;
-            border: 2px solid var(--accent-pink);
-            box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
             position: relative;
             overflow: hidden;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 0, 110, 0.1), transparent);
-            animation: scan 3s infinite;
+        .chapter-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px var(--accent-electric));
         }
 
-        @keyframes scan {
-            0% { left: -100%; }
-            100% { left: 100%; }
+        .chapter-number {
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            font-weight: 700;
         }
 
         h1 {
             font-size: 3rem;
             font-weight: 700;
-            color: var(--accent-pink);
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px var(--accent-pink);
-            position: relative;
-            z-index: 1;
-        }
-
-        .subtitle {
-            font-size: 1.4rem;
-            color: var(--accent-cyan);
+            color: var(--accent-electric);
             margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
+            text-shadow: 0 0 20px var(--accent-electric);
         }
 
-        .chapter-meta {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .progress-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 3px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .progress-dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--text-secondary);
-            transition: all 0.3s ease;
-        }
-
-        .progress-dot.active {
-            background: var(--accent-pink);
-            border-color: var(--accent-pink);
-            box-shadow: 0 0 5px var(--accent-pink);
-        }
-
-        .progress-dot.completed {
-            background: var(--accent-cyan);
-            border-color: var(--accent-cyan);
-        }
-
-        /* Navigation Widget */
-        .chapter-nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 3px;
-            margin: 30px 0;
-            padding: 6px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            border: 1px solid var(--accent-pink);
-            width: fit-content;
-            max-width: 90vw;
-            margin-left: auto;
-            margin-right: auto;
-            flex-wrap: wrap;
-        }
-
-        .nav-button {
-            padding: 1px 5px;
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: 2px;
-            border: 1px solid var(--accent-cyan);
-            transition: all 0.3s ease;
-            font-size: 0.65rem;
-            white-space: nowrap;
-        }
-
-        .nav-button:hover {
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-            box-shadow: 0 0 6px var(--accent-cyan);
-        }
-
-        .nav-button.current {
-            background: var(--accent-pink);
-            color: var(--bg-primary);
-            box-shadow: 0 0 6px var(--accent-pink);
-        }
-
-        /* Content Sections */
-        .section {
-            background: var(--bg-secondary);
-            margin: 30px 0;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid var(--accent-purple);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
-
-        .section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan), var(--accent-purple));
-            border-radius: 15px 15px 0 0;
-        }
-
-        h2 {
-            color: var(--accent-pink);
-            font-size: 2rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px var(--accent-pink);
-        }
-
-        h3 {
-            color: var(--accent-cyan);
-            font-size: 1.5rem;
-            margin: 25px 0 15px 0;
-            text-shadow: 0 0 8px var(--accent-cyan);
-        }
-
-        h4 {
-            color: var(--accent-purple);
+        .chapter-description {
             font-size: 1.2rem;
-            margin: 20px 0 10px 0;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        /* Code Blocks */
-        .code-container {
-            margin: 20px 0;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-pink);
+        /* Code Block Styles */
+        .code-block {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            margin: 30px 0;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(255, 0, 110, 0.1);
+            border: 1px solid var(--accent-neon);
+            box-shadow: var(--shadow-neon);
         }
 
         .code-header {
-            background: var(--accent-pink);
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-cyan));
             color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
+            padding: 12px 20px;
+            font-weight: 700;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .code-header::before {
-            content: '🎨';
-            font-size: 1.1rem;
+            justify-content: space-between;
         }
 
         .code-content {
-            padding: 20px;
+            padding: 25px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             line-height: 1.6;
-            background: #0d1117;
-            color: #c9d1d9;
             overflow-x: auto;
         }
 
-        /* Syntax highlighting */
-        .keyword { color: #ff7b72; }
-        .function { color: #d2a8ff; }
-        .string { color: #a5d6ff; }
-        .comment { color: #8b949e; font-style: italic; }
-        .operator { color: #f85149; }
-        .number { color: #79c0ff; }
-        .variable { color: #ffa657; }
-
-        /* Output Display */
-        .output-container {
-            margin: 20px 0;
-            background: #0a0e1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-cyan);
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        .code-line {
+            display: block;
+            min-height: 1.6em;
         }
 
-        .output-header {
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .code-keyword {
+            color: var(--accent-purple);
+            font-weight: 700;
         }
 
-        .output-header::before {
-            content: '📊';
-        }
-
-        .output-content {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.6;
+        .code-function {
             color: var(--accent-cyan);
         }
 
-        /* Chart Examples */
-        .chart-showcase {
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--accent-orange);
-        }
-
-        .chart-title {
+        .code-string {
             color: var(--accent-orange);
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-            text-align: center;
         }
 
-        .chart-example {
-            background: var(--bg-primary);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            text-align: center;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--accent-orange);
+        .code-variable {
+            color: var(--accent-electric);
         }
 
-        .chart-placeholder {
-            color: var(--accent-orange);
-            font-style: italic;
-            font-size: 1rem;
-        }
-
-        /* SVG Chart Styles */
-        .svg-chart {
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* Advanced Features */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .feature-card {
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid var(--accent-purple);
-        }
-
-        .feature-title {
-            color: var(--accent-purple);
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .feature-description {
+        .code-comment {
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
+            font-style: italic;
         }
 
-        /* Data Tables */
-        .data-table {
-            margin: 20px 0;
-            overflow-x: auto;
+        /* Section Styles */
+        .section {
+            margin: 50px 0;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--accent-neon);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--accent-pink);
+        .section h2 {
+            color: var(--accent-neon);
+            margin-bottom: 25px;
+            font-size: 2rem;
         }
 
-        th {
-            background: var(--accent-pink);
-            color: var(--bg-primary);
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--bg-secondary);
-            color: var(--text-primary);
-        }
-
-        tr:nth-child(even) {
-            background: rgba(255, 0, 110, 0.05);
-        }
-
-        tr:hover {
-            background: rgba(255, 0, 110, 0.1);
-        }
-
-        /* Key Points */
-        .key-points {
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--accent-pink);
-        }
-
-        .key-points h4 {
-            color: var(--accent-pink);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .key-points h4::before {
-            content: '💡';
-        }
-
-        .key-points ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .key-points li {
-            margin: 8px 0;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .key-points li::before {
-            content: '▶';
+        .section h3 {
             color: var(--accent-cyan);
-            position: absolute;
-            left: 0;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
         }
 
-        /* Warning/Tip boxes */
-        .tip-box {
-            background: rgba(157, 78, 221, 0.1);
-            border: 1px solid var(--accent-purple);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--accent-purple);
-        }
-
-        .tip-box h4 {
-            color: var(--accent-purple);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .tip-box h4::before {
-            content: '⚠️';
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .subtitle {
-                font-size: 1.1rem;
-            }
-
-            .chapter-meta {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .chapter-nav {
-                gap: 2px;
-                padding: 4px;
-            }
-
-            .nav-button {
-                padding: 1px 3px;
-                font-size: 0.6rem;
-            }
-
-            .section {
-                padding: 20px;
-                margin: 20px 0;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .code-content, .output-content {
-                font-size: 0.85rem;
-                padding: 15px;
-            }
+        .section p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>第13章: 高度なggplot2</h1>
-            <p class="subtitle">カスタム可視化とインタラクティブグラフィック</p>
-            <div class="chapter-meta">
-                <span>🎨 カスタムテーマ</span>
-                <span>🔧 高度なgeom</span>
-                <span>📊 複合グラフ</span>
-            </div>
-            <div class="progress-indicator">
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot completed"></div>
-                <div class="progress-dot active"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-            </div>
+            <div class="chapter-icon">🎨</div>
+            <div class="chapter-number">CHAPTER 13</div>
+            <h1>高度なggplot2とカスタム可視化</h1>
+            <p class="chapter-description">
+                データビジュアライゼーションの真の力を解き放つ。ggplot2の高度な機能とカスタマイゼーションを駆使して、美しく洞察に満ちたグラフィックを創造しよう。
+            </p>
         </header>
 
-        <nav class="chapter-nav">
-            <a href="chapter1-tidyverse-overview.html" class="nav-button">1</a>
-            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">2</a>
-            <a href="chapter3-ggplot2-visualization.html" class="nav-button">3</a>
-            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">4</a>
-            <a href="chapter5-stringr-text-processing.html" class="nav-button">5</a>
-            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">6</a>
-            <a href="chapter7-lubridate-datetime.html" class="nav-button">7</a>
-            <a href="chapter8-readr-data-import.html" class="nav-button">8</a>
-            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">9</a>
-            <a href="chapter10-statistics-modeling.html" class="nav-button">10</a>
-            <a href="chapter11-machine-learning.html" class="nav-button">11</a>
-            <a href="chapter12-time-series.html" class="nav-button">12</a>
-            <a href="#" class="nav-button current">13</a>
-            <a href="chapter14-interactive-visualization.html" class="nav-button">14</a>
-            <a href="chapter15-advanced-data-viz.html" class="nav-button">15</a>
-        </nav>
-
+        <!-- ADVANCED GGPLOT2 INTRODUCTION -->
         <section class="section">
-            <h2>🎨 カスタムテーマとスタイリング</h2>
+            <h2>🚀 ggplot2の高度な世界</h2>
+            <p>
+                基本的なggplot2の使い方を超えて、より高度なテクニックと美しいカスタマイゼーションの世界に足を踏み入れます。
+            </p>
             
-            <p>ggplot2の真の力は、完全にカスタマイズ可能なテーマシステムにあります。プロフェッショナルな視覚効果を作成する高度なテクニックを学びます。</p>
-
-            <h3>企業ブランド対応のカスタムテーマ作成</h3>
-
-            <div class="code-container">
-                <div class="code-header">プロフェッショナルなカスタムテーマ</div>
+            <h3>📦 環境のセットアップ</h3>
+            
+            <div class="code-block">
+                <div class="code-header">高度な可視化環境の準備</div>
                 <div class="code-content">
-<span class="keyword">library</span>(<span class="string">ggplot2</span>)
-<span class="keyword">library</span>(<span class="string">dplyr</span>)
-<span class="keyword">library</span>(<span class="string">scales</span>)
-<span class="keyword">library</span>(<span class="string">extrafont</span>)
-
-<span class="comment"># 企業ブランドカラーパレット</span>
-brand_colors <span class="operator">&lt;-</span> <span class="function">c</span>(
-  primary <span class="operator">=</span> <span class="string">"#1e3a8a"</span>,     <span class="comment"># ディープブルー</span>
-  secondary <span class="operator">=</span> <span class="string">"#3b82f6"</span>,   <span class="comment"># ブライトブルー</span>
-  accent <span class="operator">=</span> <span class="string">"#f59e0b"</span>,      <span class="comment"># オレンジ</span>
-  success <span class="operator">=</span> <span class="string">"#10b981"</span>,     <span class="comment"># グリーン</span>
-  warning <span class="operator">=</span> <span class="string">"#ef4444"</span>,     <span class="comment"># レッド</span>
-  neutral <span class="operator">=</span> <span class="string">"#6b7280"</span>,     <span class="comment"># グレー</span>
-  background <span class="operator">=</span> <span class="string">"#f8fafc"</span>,  <span class="comment"># ライトグレー</span>
-  text <span class="operator">=</span> <span class="string">"#1f2937"</span>         <span class="comment"># ダークグレー</span>
-)
-
-<span class="comment"># カスタムテーマ関数の作成</span>
-theme_corporate <span class="operator">&lt;-</span> <span class="keyword">function</span>(
-  base_size <span class="operator">=</span> <span class="number">11</span>,
-  base_family <span class="operator">=</span> <span class="string">"Arial"</span>,
-  grid <span class="operator">=</span> <span class="variable">TRUE</span>,
-  axis_lines <span class="operator">=</span> <span class="variable">TRUE</span>
-) {
-  <span class="function">theme_minimal</span>(base_size <span class="operator">=</span> base_size, base_family <span class="operator">=</span> base_family) <span class="operator">+</span>
-    <span class="function">theme</span>(
-      <span class="comment"># 全体背景</span>
-      plot.background <span class="operator">=</span> <span class="function">element_rect</span>(fill <span class="operator">=</span> brand_colors[<span class="string">"background"</span>], color <span class="operator">=</span> <span class="variable">NA</span>),
-      panel.background <span class="operator">=</span> <span class="function">element_rect</span>(fill <span class="operator">=</span> <span class="string">"white"</span>, color <span class="operator">=</span> <span class="variable">NA</span>),
-      
-      <span class="comment"># テキスト</span>
-      text <span class="operator">=</span> <span class="function">element_text</span>(color <span class="operator">=</span> brand_colors[<span class="string">"text"</span>], family <span class="operator">=</span> base_family),
-      plot.title <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> base_size <span class="operator">*</span> <span class="number">1.4</span>,
-        face <span class="operator">=</span> <span class="string">"bold"</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"primary"</span>],
-        margin <span class="operator">=</span> <span class="function">margin</span>(b <span class="operator">=</span> <span class="number">20</span>)
-      ),
-      plot.subtitle <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> base_size <span class="operator">*</span> <span class="number">1.1</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"neutral"</span>],
-        margin <span class="operator">=</span> <span class="function">margin</span>(b <span class="operator">=</span> <span class="number">20</span>)
-      ),
-      plot.caption <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> base_size <span class="operator">*</span> <span class="number">0.8</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"neutral"</span>],
-        hjust <span class="operator">=</span> <span class="number">1</span>,
-        margin <span class="operator">=</span> <span class="function">margin</span>(t <span class="operator">=</span> <span class="number">15</span>)
-      ),
-      
-      <span class="comment"># 軸</span>
-      axis.title <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> base_size <span class="operator">*</span> <span class="number">0.9</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"text"</span>],
-        face <span class="operator">=</span> <span class="string">"bold"</span>
-      ),
-      axis.text <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> base_size <span class="operator">*</span> <span class="number">0.8</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"neutral"</span>]
-      ),
-      axis.line <span class="operator">=</span> <span class="keyword">if</span> (axis_lines) <span class="function">element_line</span>(color <span class="operator">=</span> brand_colors[<span class="string">"neutral"</span>], size <span class="operator">=</span> <span class="number">0.5</span>) <span class="keyword">else</span> <span class="function">element_blank</span>(),
-      axis.ticks <span class="operator">=</span> <span class="function">element_line</span>(color <span class="operator">=</span> brand_colors[<span class="string">"neutral"</span>], size <span class="operator">=</span> <span class="number">0.5</span>),
-      
-      <span class="comment"># グリッド</span>
-      panel.grid.major <span class="operator">=</span> <span class="keyword">if</span> (grid) <span class="function">element_line</span>(color <span class="operator">=</span> <span class="string">"#e5e7eb"</span>, size <span class="operator">=</span> <span class="number">0.5</span>) <span class="keyword">else</span> <span class="function">element_blank</span>(),
-      panel.grid.minor <span class="operator">=</span> <span class="function">element_blank</span>(),
-      
-      <span class="comment"># 凡例</span>
-      legend.position <span class="operator">=</span> <span class="string">"bottom"</span>,
-      legend.background <span class="operator">=</span> <span class="function">element_rect</span>(fill <span class="operator">=</span> <span class="string">"white"</span>, color <span class="operator">=</span> <span class="variable">NA</span>),
-      legend.key <span class="operator">=</span> <span class="function">element_rect</span>(fill <span class="operator">=</span> <span class="string">"white"</span>, color <span class="operator">=</span> <span class="variable">NA</span>),
-      legend.title <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> base_size <span class="operator">*</span> <span class="number">0.9</span>,
-        face <span class="operator">=</span> <span class="string">"bold"</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"text"</span>]
-      ),
-      
-      <span class="comment"># ストリップ（ファセット）</span>
-      strip.background <span class="operator">=</span> <span class="function">element_rect</span>(
-        fill <span class="operator">=</span> brand_colors[<span class="string">"primary"</span>],
-        color <span class="operator">=</span> <span class="variable">NA</span>
-      ),
-      strip.text <span class="operator">=</span> <span class="function">element_text</span>(
-        color <span class="operator">=</span> <span class="string">"white"</span>,
-        face <span class="operator">=</span> <span class="string">"bold"</span>,
-        size <span class="operator">=</span> base_size <span class="operator">*</span> <span class="number">0.9</span>
-      ),
-      
-      <span class="comment"># マージン</span>
-      plot.margin <span class="operator">=</span> <span class="function">margin</span>(<span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>)
-    )
-}
-
-<span class="comment"># カスタムカラースケール</span>
-scale_fill_corporate <span class="operator">&lt;-</span> <span class="keyword">function</span>(...) {
-  <span class="function">scale_fill_manual</span>(
-    values <span class="operator">=</span> <span class="function">c</span>(brand_colors[<span class="string">"primary"</span>], brand_colors[<span class="string">"secondary"</span>], 
-                brand_colors[<span class="string">"accent"</span>], brand_colors[<span class="string">"success"</span>], brand_colors[<span class="string">"warning"</span>]),
-    ...
-  )
-}
-
-scale_color_corporate <span class="operator">&lt;-</span> <span class="keyword">function</span>(...) {
-  <span class="function">scale_color_manual</span>(
-    values <span class="operator">=</span> <span class="function">c</span>(brand_colors[<span class="string">"primary"</span>], brand_colors[<span class="string">"secondary"</span>], 
-                 brand_colors[<span class="string">"accent"</span>], brand_colors[<span class="string">"success"</span>], brand_colors[<span class="string">"warning"</span>]),
-    ...
-  )
-}
-
-<span class="comment"># テストデータの作成</span>
-<span class="function">set.seed</span>(<span class="number">123</span>)
-business_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  quarter <span class="operator">=</span> <span class="function">rep</span>(<span class="function">paste0</span>(<span class="string">"Q"</span>, <span class="number">1</span>:<span class="number">4</span>), each <span class="operator">=</span> <span class="number">5</span>),
-  department <span class="operator">=</span> <span class="function">rep</span>(<span class="function">c</span>(<span class="string">"営業"</span>, <span class="string">"マーケティング"</span>, <span class="string">"開発"</span>, <span class="string">"サポート"</span>, <span class="string">"管理"</span>), <span class="number">4</span>),
-  revenue <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">20</span>, <span class="number">5000</span>, <span class="number">1500</span>)),
-  target <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">20</span>, <span class="number">4800</span>, <span class="number">800</span>)),
-  satisfaction <span class="operator">=</span> <span class="function">round</span>(<span class="function">runif</span>(<span class="number">20</span>, <span class="number">3.5</span>, <span class="number">5.0</span>), <span class="number">1</span>)
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    performance <span class="operator">=</span> revenue / target,
-    status <span class="operator">=</span> <span class="function">case_when</span>(
-      performance <span class="operator">&gt;=</span> <span class="number">1.1</span> ~ <span class="string">"優秀"</span>,
-      performance <span class="operator">&gt;=</span> <span class="number">0.95</span> ~ <span class="string">"良好"</span>,
-      <span class="variable">TRUE</span> ~ <span class="string">"改善要"</span>
-    )
-  )
-
-<span class="comment"># カスタムテーマの適用例</span>
-corporate_chart <span class="operator">&lt;-</span> business_data <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> quarter, y <span class="operator">=</span> revenue, fill <span class="operator">=</span> department)) <span class="operator">+</span>
-  <span class="function">geom_col</span>(position <span class="operator">=</span> <span class="string">"dodge"</span>, width <span class="operator">=</span> <span class="number">0.8</span>, alpha <span class="operator">=</span> <span class="number">0.9</span>) <span class="operator">+</span>
-  <span class="function">scale_fill_corporate</span>() <span class="operator">+</span>
-  <span class="function">scale_y_continuous</span>(
-    labels <span class="operator">=</span> <span class="function">label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"K"</span>, scale <span class="operator">=</span> <span class="number">0.001</span>),
-    expand <span class="operator">=</span> <span class="function">expansion</span>(mult <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="number">0.1</span>))
-  ) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"四半期別部門売上実績"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"2023年度における各部門のパフォーマンス推移"</span>,
-    x <span class="operator">=</span> <span class="string">"四半期"</span>,
-    y <span class="operator">=</span> <span class="string">"売上（千円）"</span>,
-    fill <span class="operator">=</span> <span class="string">"部門"</span>,
-    caption <span class="operator">=</span> <span class="string">"データソース: 社内売上管理システム | 作成日: 2023-12-20"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>()
-
-<span class="function">print</span>(corporate_chart)
-
-<span class="function">print</span>(<span class="string">"カスタムテーマが適用されました"</span>)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">企業ブランドテーマ適用結果</div>
-                <div class="output-content">[1] "カスタムテーマが適用されました"
-
-# カスタムテーマの特徴:
-- 企業ブランドカラーの統一
-- プロフェッショナルなタイポグラフィ
-- 清潔で読みやすいレイアウト
-- レスポンシブなマージン設定
-- 統一されたスタイルガイド</div>
-            </div>
-
-            <div class="chart-showcase">
-                <div class="chart-title">企業ブランドテーマ適用例</div>
-                <div class="chart-example">
-                    <svg class="svg-chart" width="500" height="300" viewBox="0 0 500 300">
-                        <!-- 背景 -->
-                        <rect width="500" height="300" fill="#f8fafc"/>
-                        
-                        <!-- グリッド -->
-                        <defs>
-                            <pattern id="grid" width="50" height="25" patternUnits="userSpaceOnUse">
-                                <path d="M 50 0 L 0 0 0 25" fill="none" stroke="#e5e7eb" stroke-width="0.5"/>
-                            </pattern>
-                        </defs>
-                        <rect width="400" height="200" x="80" y="80" fill="url(#grid)"/>
-                        
-                        <!-- データバー -->
-                        <rect x="100" y="220" width="30" height="40" fill="#1e3a8a" opacity="0.9"/>
-                        <rect x="140" y="200" width="30" height="60" fill="#3b82f6" opacity="0.9"/>
-                        <rect x="180" y="180" width="30" height="80" fill="#f59e0b" opacity="0.9"/>
-                        <rect x="220" y="210" width="30" height="50" fill="#10b981" opacity="0.9"/>
-                        <rect x="260" y="190" width="30" height="70" fill="#ef4444" opacity="0.9"/>
-                        
-                        <rect x="320" y="200" width="30" height="60" fill="#1e3a8a" opacity="0.9"/>
-                        <rect x="360" y="170" width="30" height="90" fill="#3b82f6" opacity="0.9"/>
-                        <rect x="400" y="160" width="30" height="100" fill="#f59e0b" opacity="0.9"/>
-                        <rect x="440" y="185" width="30" height="75" fill="#10b981" opacity="0.9"/>
-                        
-                        <!-- 軸ラベル -->
-                        <text x="200" y="295" text-anchor="middle" fill="#1f2937" font-family="Arial" font-size="12" font-weight="bold">四半期</text>
-                        <text x="30" y="180" text-anchor="middle" fill="#1f2937" font-family="Arial" font-size="12" font-weight="bold" transform="rotate(-90 30 180)">売上（千円）</text>
-                        
-                        <!-- タイトル -->
-                        <text x="250" y="30" text-anchor="middle" fill="#1e3a8a" font-family="Arial" font-size="16" font-weight="bold">四半期別部門売上実績</text>
-                        <text x="250" y="50" text-anchor="middle" fill="#6b7280" font-family="Arial" font-size="12">2023年度における各部門のパフォーマンス推移</text>
-                    </svg>
+                    <span class="code-line"><span class="code-comment"># 可視化エコシステムの読み込み</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 高度な可視化パッケージ</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">scales</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">viridis</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># サンプルデータの作成</span></span>
+                    <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-variable">123</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ビジネスデータの作成</span></span>
+                    <span class="code-line"><span class="code-variable">business_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tibble</span>(</span>
+                    <span class="code-line">  year <span class="code-keyword">=</span> <span class="code-function">rep</span>(<span class="code-variable">2020</span>:<span class="code-variable">2023</span>, each <span class="code-keyword">=</span> <span class="code-variable">12</span>),</span>
+                    <span class="code-line">  month <span class="code-keyword">=</span> <span class="code-function">rep</span>(<span class="code-variable">1</span>:<span class="code-variable">12</span>, <span class="code-variable">4</span>),</span>
+                    <span class="code-line">  sales <span class="code-keyword">=</span> <span class="code-function">rnorm</span>(<span class="code-variable">48</span>, <span class="code-variable">1000</span>, <span class="code-variable">200</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">glimpse</span>(business_data)</span>
                 </div>
-            </div>
-
-            <h3>アニメーション効果とトランジション</h3>
-
-            <div class="code-container">
-                <div class="code-header">gganimate によるアニメーション可視化</div>
-                <div class="code-content">
-<span class="keyword">library</span>(<span class="string">gganimate</span>)
-<span class="keyword">library</span>(<span class="string">transformr</span>)
-
-<span class="comment"># 時系列アニメーションデータの作成</span>
-<span class="function">set.seed</span>(<span class="number">456</span>)
-animation_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  year <span class="operator">=</span> <span class="function">rep</span>(<span class="number">2020</span>:<span class="number">2023</span>, each <span class="operator">=</span> <span class="number">12</span>),
-  month <span class="operator">=</span> <span class="function">rep</span>(<span class="number">1</span>:<span class="number">12</span>, <span class="number">4</span>),
-  date <span class="operator">=</span> <span class="function">as.Date</span>(<span class="function">paste</span>(year, month, <span class="string">"01"</span>, sep <span class="operator">=</span> <span class="string">"-"</span>))
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    product_a <span class="operator">=</span> <span class="function">cumsum</span>(<span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">50</span>, <span class="number">20</span>)) <span class="operator">+</span> <span class="number">1000</span>,
-    product_b <span class="operator">=</span> <span class="function">cumsum</span>(<span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">30</span>, <span class="number">25</span>)) <span class="operator">+</span> <span class="number">800</span>,
-    product_c <span class="operator">=</span> <span class="function">cumsum</span>(<span class="function">rnorm</span>(<span class="function">n</span>(), <span class="number">40</span>, <span class="number">15</span>)) <span class="operator">+</span> <span class="number">600</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">pivot_longer</span>(
-    cols <span class="operator">=</span> <span class="function">starts_with</span>(<span class="string">"product"</span>),
-    names_to <span class="operator">=</span> <span class="string">"product"</span>,
-    values_to <span class="operator">=</span> <span class="string">"sales"</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    product <span class="operator">=</span> <span class="function">case_when</span>(
-      product <span class="operator">==</span> <span class="string">"product_a"</span> ~ <span class="string">"プロダクトA"</span>,
-      product <span class="operator">==</span> <span class="string">"product_b"</span> ~ <span class="string">"プロダクトB"</span>,
-      product <span class="operator">==</span> <span class="string">"product_c"</span> ~ <span class="string">"プロダクトC"</span>
-    )
-  )
-
-<span class="comment"># アニメーション付きラインチャート</span>
-animated_line_chart <span class="operator">&lt;-</span> animation_data <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> date, y <span class="operator">=</span> sales, color <span class="operator">=</span> product)) <span class="operator">+</span>
-  <span class="function">geom_line</span>(size <span class="operator">=</span> <span class="number">1.2</span>, alpha <span class="operator">=</span> <span class="number">0.8</span>) <span class="operator">+</span>
-  <span class="function">geom_point</span>(size <span class="operator">=</span> <span class="number">3</span>, alpha <span class="operator">=</span> <span class="number">0.9</span>) <span class="operator">+</span>
-  <span class="function">scale_color_corporate</span>() <span class="operator">+</span>
-  <span class="function">scale_x_date</span>(date_labels <span class="operator">=</span> <span class="string">"%Y-%m"</span>, date_breaks <span class="operator">=</span> <span class="string">"6 months"</span>) <span class="operator">+</span>
-  <span class="function">scale_y_continuous</span>(
-    labels <span class="operator">=</span> <span class="function">label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"K"</span>, scale <span class="operator">=</span> <span class="number">0.001</span>)
-  ) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"製品別売上推移: {closest_state}年{sprintf('%02d', month(closest_state))}月"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"累積売上高の月次トレンド分析"</span>,
-    x <span class="operator">=</span> <span class="string">"期間"</span>,
-    y <span class="operator">=</span> <span class="string">"売上高（千円）"</span>,
-    color <span class="operator">=</span> <span class="string">"製品"</span>,
-    caption <span class="operator">=</span> <span class="string">"データ期間: 2020年1月〜2023年12月"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>() <span class="operator">+</span>
-  <span class="function">theme</span>(axis.text.x <span class="operator">=</span> <span class="function">element_text</span>(angle <span class="operator">=</span> <span class="number">45</span>, hjust <span class="operator">=</span> <span class="number">1</span>)) <span class="operator">+</span>
-  <span class="function">transition_reveal</span>(date) <span class="operator">+</span>
-  <span class="function">ease_aes</span>(<span class="string">"linear"</span>)
-
-<span class="comment"># レース型チャートの作成</span>
-race_data <span class="operator">&lt;-</span> animation_data <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(date) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(<span class="function">desc</span>(sales)) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(rank <span class="operator">=</span> <span class="function">row_number</span>()) <span class="operator">%&gt;%</span>
-  <span class="function">ungroup</span>() <span class="operator">%&gt;%</span>
-  <span class="function">filter</span>(rank <span class="operator">&lt;=</span> <span class="number">3</span>)
-
-racing_bar_chart <span class="operator">&lt;-</span> race_data <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> <span class="operator">-</span>rank, y <span class="operator">=</span> sales, fill <span class="operator">=</span> product)) <span class="operator">+</span>
-  <span class="function">geom_col</span>(width <span class="operator">=</span> <span class="number">0.8</span>) <span class="operator">+</span>
-  <span class="function">geom_text</span>(
-    <span class="function">aes</span>(y <span class="operator">=</span> sales <span class="operator">+</span> <span class="number">50</span>, label <span class="operator">=</span> product),
-    hjust <span class="operator">=</span> <span class="number">0</span>,
-    size <span class="operator">=</span> <span class="number">4</span>,
-    fontface <span class="operator">=</span> <span class="string">"bold"</span>
-  ) <span class="operator">+</span>
-  <span class="function">geom_text</span>(
-    <span class="function">aes</span>(y <span class="operator">=</span> <span class="number">0</span>, label <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"¥"</span>, <span class="function">round</span>(sales/1000, <span class="number">1</span>), <span class="string">"K"</span>)),
-    hjust <span class="operator">=</span> <span class="number">-0.1</span>,
-    size <span class="operator">=</span> <span class="number">3.5</span>,
-    color <span class="operator">=</span> <span class="string">"white"</span>,
-    fontface <span class="operator">=</span> <span class="string">"bold"</span>
-  ) <span class="operator">+</span>
-  <span class="function">scale_fill_corporate</span>() <span class="operator">+</span>
-  <span class="function">coord_flip</span>() <span class="operator">+</span>
-  <span class="function">scale_x_continuous</span>(breaks <span class="operator">=</span> <span class="function">c</span>(<span class="operator">-</span><span class="number">3</span>, <span class="operator">-</span><span class="number">2</span>, <span class="operator">-</span><span class="number">1</span>), labels <span class="operator">=</span> <span class="function">c</span>(<span class="string">"3位"</span>, <span class="string">"2位"</span>, <span class="string">"1位"</span>)) <span class="operator">+</span>
-  <span class="function">scale_y_continuous</span>(expand <span class="operator">=</span> <span class="function">expansion</span>(mult <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="number">0.15</span>))) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"製品売上ランキング: {closest_state}年{sprintf('%02d', month(closest_state))}月"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"月次売上高による順位変動"</span>,
-    x <span class="operator">=</span> <span class="string">"順位"</span>,
-    y <span class="operator">=</span> <span class="string">"売上高（千円）"</span>,
-    caption <span class="operator">=</span> <span class="string">"上位3製品の推移"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>() <span class="operator">+</span>
-  <span class="function">theme</span>(
-    legend.position <span class="operator">=</span> <span class="string">"none"</span>,
-    axis.text.y <span class="operator">=</span> <span class="function">element_blank</span>(),
-    axis.ticks.y <span class="operator">=</span> <span class="function">element_blank</span>()
-  ) <span class="operator">+</span>
-  <span class="function">transition_time</span>(date) <span class="operator">+</span>
-  <span class="function">ease_aes</span>(<span class="string">"cubic-in-out"</span>)
-
-<span class="function">print</span>(<span class="string">"アニメーションチャートが作成されました"</span>)
-
-<span class="comment"># アニメーション設定のカスタマイズ</span>
-animation_options <span class="operator">&lt;-</span> <span class="function">list</span>(
-  width <span class="operator">=</span> <span class="number">800</span>,
-  height <span class="operator">=</span> <span class="number">600</span>,
-  res <span class="operator">=</span> <span class="number">120</span>,
-  fps <span class="operator">=</span> <span class="number">10</span>,
-  duration <span class="operator">=</span> <span class="number">8</span>
-)
-
-<span class="function">print</span>(<span class="string">"アニメーション設定:"</span>)
-<span class="function">print</span>(animation_options)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">アニメーション可視化結果</div>
-                <div class="output-content">[1] "アニメーションチャートが作成されました"
-
-[1] "アニメーション設定:"
-$width
-[1] 800
-
-$height
-[1] 600
-
-$res
-[1] 120
-
-$fps
-[1] 10
-
-$duration
-[1] 8
-
-# アニメーション機能:
-- transition_reveal(): データの段階的表示
-- transition_time(): 時間軸に沿った変化
-- ease_aes(): スムーズなトランジション効果
-- 動的タイトルとラベル更新</div>
             </div>
         </section>
 
+        <!-- THEMES AND CUSTOMIZATION -->
         <section class="section">
-            <h2>🔧 高度なgeom と統計変換</h2>
-
-            <h3>カスタムgeom の活用</h3>
-
-            <div class="code-container">
-                <div class="code-header">高度なgeomとstat関数</div>
+            <h2>🎨 テーマとカスタマイゼーション</h2>
+            <p>
+                ggplot2のテーマシステムを活用して、プロフェッショナルで美しい可視化を作成します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">カスタムテーマの作成</div>
                 <div class="code-content">
-<span class="keyword">library</span>(<span class="string">ggridges</span>)
-<span class="keyword">library</span>(<span class="string">ggbeeswarm</span>)
-<span class="keyword">library</span>(<span class="string">ggforce</span>)
-<span class="keyword">library</span>(<span class="string">patchwork</span>)
-
-<span class="comment"># 複雑なデータセットの作成</span>
-<span class="function">set.seed</span>(<span class="number">789</span>)
-advanced_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  customer_segment <span class="operator">=</span> <span class="function">rep</span>(<span class="function">c</span>(<span class="string">"プレミアム"</span>, <span class="string">"スタンダード"</span>, <span class="string">"ベーシック"</span>), each <span class="operator">=</span> <span class="number">200</span>),
-  purchase_amount <span class="operator">=</span> <span class="function">c</span>(
-    <span class="function">rlnorm</span>(<span class="number">200</span>, <span class="function">log</span>(<span class="number">5000</span>), <span class="number">0.8</span>),  <span class="comment"># プレミアム</span>
-    <span class="function">rlnorm</span>(<span class="number">200</span>, <span class="function">log</span>(<span class="number">2000</span>), <span class="number">0.6</span>),  <span class="comment"># スタンダード</span>
-    <span class="function">rlnorm</span>(<span class="number">200</span>, <span class="function">log</span>(<span class="number">800</span>), <span class="number">0.5</span>)    <span class="comment"># ベーシック</span>
-  ),
-  satisfaction <span class="operator">=</span> <span class="function">c</span>(
-    <span class="function">rnorm</span>(<span class="number">200</span>, <span class="number">4.5</span>, <span class="number">0.5</span>),  <span class="comment"># プレミアム</span>
-    <span class="function">rnorm</span>(<span class="number">200</span>, <span class="number">4.0</span>, <span class="number">0.7</span>),  <span class="comment"># スタンダード</span>
-    <span class="function">rnorm</span>(<span class="number">200</span>, <span class="number">3.5</span>, <span class="number">0.8</span>)   <span class="comment"># ベーシック</span>
-  ),
-  retention_months <span class="operator">=</span> <span class="function">c</span>(
-    <span class="function">round</span>(<span class="function">rexp</span>(<span class="number">200</span>, <span class="number">1</span>/<span class="number">24</span>)),  <span class="comment"># プレミアム（長期）</span>
-    <span class="function">round</span>(<span class="function">rexp</span>(<span class="number">200</span>, <span class="number">1</span>/<span class="number">15</span>)),  <span class="comment"># スタンダード（中期）</span>
-    <span class="function">round</span>(<span class="function">rexp</span>(<span class="number">200</span>, <span class="number">1</span>/<span class="number">8</span>))   <span class="comment"># ベーシック（短期）</span>
-  )
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    satisfaction <span class="operator">=</span> <span class="function">pmax</span>(<span class="number">1</span>, <span class="function">pmin</span>(<span class="number">5</span>, satisfaction)),
-    retention_months <span class="operator">=</span> <span class="function">pmax</span>(<span class="number">1</span>, <span class="function">pmin</span>(<span class="number">60</span>, retention_months)),
-    customer_value <span class="operator">=</span> purchase_amount <span class="operator">*</span> retention_months / <span class="number">12</span>
-  )
-
-<span class="comment"># 1. Ridge Plot（分布の重なり表示）</span>
-ridge_plot <span class="operator">&lt;-</span> advanced_data <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> purchase_amount, y <span class="operator">=</span> customer_segment, fill <span class="operator">=</span> customer_segment)) <span class="operator">+</span>
-  <span class="function">geom_density_ridges</span>(
-    alpha <span class="operator">=</span> <span class="number">0.7</span>,
-    bandwidth <span class="operator">=</span> <span class="number">500</span>,
-    scale <span class="operator">=</span> <span class="number">1.2</span>,
-    rel_min_height <span class="operator">=</span> <span class="number">0.01</span>
-  ) <span class="operator">+</span>
-  <span class="function">scale_fill_corporate</span>() <span class="operator">+</span>
-  <span class="function">scale_x_continuous</span>(
-    labels <span class="operator">=</span> <span class="function">label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"K"</span>, scale <span class="operator">=</span> <span class="number">0.001</span>),
-    limits <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="number">15000</span>)
-  ) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"セグメント別購入金額分布"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"顧客セグメントごとの購入パターン分析"</span>,
-    x <span class="operator">=</span> <span class="string">"購入金額（千円）"</span>,
-    y <span class="operator">=</span> <span class="string">"顧客セグメント"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>() <span class="operator">+</span>
-  <span class="function">theme</span>(legend.position <span class="operator">=</span> <span class="string">"none"</span>)
-
-<span class="comment"># 2. Beeswarm Plot（データポイントの重複回避）</span>
-beeswarm_plot <span class="operator">&lt;-</span> advanced_data <span class="operator">%&gt;%</span>
-  <span class="function">sample_n</span>(<span class="number">150</span>) <span class="operator">%&gt;%</span>  <span class="comment"># 表示のため一部を抽出</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> customer_segment, y <span class="operator">=</span> satisfaction, color <span class="operator">=</span> customer_segment)) <span class="operator">+</span>
-  <span class="function">geom_quasirandom</span>(
-    size <span class="operator">=</span> <span class="number">2</span>,
-    alpha <span class="operator">=</span> <span class="number">0.7</span>,
-    width <span class="operator">=</span> <span class="number">0.3</span>
-  ) <span class="operator">+</span>
-  <span class="function">geom_boxplot</span>(
-    alpha <span class="operator">=</span> <span class="number">0.3</span>,
-    width <span class="operator">=</span> <span class="number">0.5</span>,
-    outlier.shape <span class="operator">=</span> <span class="variable">NA</span>
-  ) <span class="operator">+</span>
-  <span class="function">scale_color_corporate</span>() <span class="operator">+</span>
-  <span class="function">scale_y_continuous</span>(limits <span class="operator">=</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">5</span>), breaks <span class="operator">=</span> <span class="number">1</span>:<span class="number">5</span>) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"セグメント別顧客満足度"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"個別データポイントとボックスプロットの組み合わせ"</span>,
-    x <span class="operator">=</span> <span class="string">"顧客セグメント"</span>,
-    y <span class="operator">=</span> <span class="string">"満足度スコア"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>() <span class="operator">+</span>
-  <span class="function">theme</span>(legend.position <span class="operator">=</span> <span class="string">"none"</span>)
-
-<span class="comment"># 3. Voronoi Plot（エリア分割可視化）</span>
-voronoi_data <span class="operator">&lt;-</span> advanced_data <span class="operator">%&gt;%</span>
-  <span class="function">sample_n</span>(<span class="number">50</span>) <span class="operator">%&gt;%</span>
-  <span class="function">select</span>(purchase_amount, satisfaction, customer_segment, customer_value)
-
-voronoi_plot <span class="operator">&lt;-</span> voronoi_data <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> purchase_amount, y <span class="operator">=</span> satisfaction)) <span class="operator">+</span>
-  <span class="function">geom_voronoi_tile</span>(<span class="function">aes</span>(fill <span class="operator">=</span> customer_value), alpha <span class="operator">=</span> <span class="number">0.7</span>) <span class="operator">+</span>
-  <span class="function">geom_voronoi_segment</span>(color <span class="operator">=</span> <span class="string">"white"</span>, size <span class="operator">=</span> <span class="number">0.5</span>) <span class="operator">+</span>
-  <span class="function">geom_point</span>(<span class="function">aes</span>(color <span class="operator">=</span> customer_segment), size <span class="operator">=</span> <span class="number">3</span>) <span class="operator">+</span>
-  <span class="function">scale_fill_gradient2</span>(
-    low <span class="operator">=</span> <span class="string">"#3b82f6"</span>,
-    mid <span class="operator">=</span> <span class="string">"#f59e0b"</span>,
-    high <span class="operator">=</span> <span class="string">"#ef4444"</span>,
-    midpoint <span class="operator">=</span> <span class="function">median</span>(voronoi_data$customer_value),
-    labels <span class="operator">=</span> <span class="function">label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"K"</span>, scale <span class="operator">=</span> <span class="number">0.001</span>)
-  ) <span class="operator">+</span>
-  <span class="function">scale_color_corporate</span>() <span class="operator">+</span>
-  <span class="function">scale_x_continuous</span>(
-    labels <span class="operator">=</span> <span class="function">label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"K"</span>, scale <span class="operator">=</span> <span class="number">0.001</span>)
-  ) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"顧客価値マップ（ボロノイ図）"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"購入金額と満足度による顧客価値の空間分布"</span>,
-    x <span class="operator">=</span> <span class="string">"購入金額（千円）"</span>,
-    y <span class="operator">=</span> <span class="string">"満足度スコア"</span>,
-    fill <span class="operator">=</span> <span class="string">"顧客価値"</span>,
-    color <span class="operator">=</span> <span class="string">"セグメント"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>()
-
-<span class="comment"># 4. 統計変換の活用</span>
-stat_plot <span class="operator">&lt;-</span> advanced_data <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> purchase_amount, y <span class="operator">=</span> retention_months)) <span class="operator">+</span>
-  <span class="function">geom_point</span>(alpha <span class="operator">=</span> <span class="number">0.3</span>, size <span class="operator">=</span> <span class="number">1</span>) <span class="operator">+</span>
-  <span class="function">stat_smooth</span>(
-    method <span class="operator">=</span> <span class="string">"loess"</span>,
-    se <span class="operator">=</span> <span class="variable">TRUE</span>,
-    color <span class="operator">=</span> brand_colors[<span class="string">"primary"</span>],
-    fill <span class="operator">=</span> brand_colors[<span class="string">"secondary"</span>],
-    alpha <span class="operator">=</span> <span class="number">0.3</span>
-  ) <span class="operator">+</span>
-  <span class="function">stat_ellipse</span>(
-    level <span class="operator">=</span> <span class="number">0.95</span>,
-    color <span class="operator">=</span> brand_colors[<span class="string">"warning"</span>],
-    linetype <span class="operator">=</span> <span class="string">"dashed"</span>,
-    size <span class="operator">=</span> <span class="number">1</span>
-  ) <span class="operator">+</span>
-  <span class="function">stat_density_2d</span>(
-    color <span class="operator">=</span> brand_colors[<span class="string">"accent"</span>],
-    alpha <span class="operator">=</span> <span class="number">0.6</span>
-  ) <span class="operator">+</span>
-  <span class="function">scale_x_continuous</span>(
-    labels <span class="operator">=</span> <span class="function">label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"K"</span>, scale <span class="operator">=</span> <span class="number">0.001</span>)
-  ) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"購入金額と継続期間の関係分析"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"回帰線、信頼楕円、密度分布の重ね合わせ"</span>,
-    x <span class="operator">=</span> <span class="string">"購入金額（千円）"</span>,
-    y <span class="operator">=</span> <span class="string">"継続期間（月）"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>()
-
-<span class="comment"># 複数プロットの組み合わせ</span>
-combined_plot <span class="operator">&lt;-</span> (ridge_plot <span class="operator">+</span> beeswarm_plot) / (voronoi_plot <span class="operator">+</span> stat_plot) <span class="operator">+</span>
-  <span class="function">plot_annotation</span>(
-    title <span class="operator">=</span> <span class="string">"高度な可視化技術の活用例"</span>,
-    subtitle <span class="operator">=</span> <span class="string">"複数の geom と統計変換による多角的データ分析"</span>,
-    theme <span class="operator">=</span> <span class="function">theme</span>(
-      plot.title <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> <span class="number">16</span>,
-        face <span class="operator">=</span> <span class="string">"bold"</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"primary"</span>]
-      ),
-      plot.subtitle <span class="operator">=</span> <span class="function">element_text</span>(
-        size <span class="operator">=</span> <span class="number">12</span>,
-        color <span class="operator">=</span> brand_colors[<span class="string">"neutral"</span>]
-      )
-    )
-  )
-
-<span class="function">print</span>(<span class="string">"高度なgeomと統計変換が適用されました"</span>)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">高度なgeom活用結果</div>
-                <div class="output-content">[1] "高度なgeomと統計変換が適用されました"
-
-# 使用された高度なgeom:
-- geom_density_ridges: 分布の重なり表示
-- geom_quasirandom: ビースワームプロット
-- geom_voronoi_tile/segment: ボロノイ図
-- stat_smooth: 平滑化回帰線
-- stat_ellipse: 信頼楕円
-- stat_density_2d: 2次元密度分布
-
-# 組み合わせ効果:
-- 多次元データの包括的理解
-- 統計的関係性の視覚化
-- データ分布パターンの発見</div>
-            </div>
-
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-title">🌊 Ridge Plots</div>
-                    <div class="feature-description">複数カテゴリの分布を重ねて表示。密度の違いや分布の形状変化を直感的に比較できます。</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-title">🐝 Beeswarm Plots</div>
-                    <div class="feature-description">データポイントの重複を避けながら個別値を表示。外れ値や分布の詳細を確認できます。</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-title">🔷 Voronoi Diagrams</div>
-                    <div class="feature-description">データポイント周辺の影響領域を可視化。空間的な関係性やクラスター構造を把握できます。</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-title">📈 Statistical Layers</div>
-                    <div class="feature-description">回帰線、信頼区間、密度等高線などの統計的要素を重ね合わせて複合的な分析を実現。</div>
+                    <span class="code-line"><span class="code-comment"># 基本プロット</span></span>
+                    <span class="code-line"><span class="code-variable">basic_plot</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> month, y <span class="code-keyword">=</span> sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_line</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(basic_plot)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ミニマルテーマ</span></span>
+                    <span class="code-line"><span class="code-variable">minimal_plot</span> <span class="code-keyword">&lt;-</span> basic_plot <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(minimal_plot)</span>
                 </div>
             </div>
         </section>
 
+        <!-- COLOR PALETTES -->
         <section class="section">
-            <h2>📊 複合グラフとダッシュボード</h2>
-
-            <h3>統合ダッシュボードの構築</h3>
-
-            <div class="code-container">
-                <div class="code-header">包括的ビジネスダッシュボード</div>
+            <h2>🌈 色彩とパレット</h2>
+            <p>
+                効果的な色の使い方と、美しいカラーパレットの活用方法を学びます。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">カラーパレットの活用</div>
                 <div class="code-content">
-<span class="keyword">library</span>(<span class="string">gridExtra</span>)
-<span class="keyword">library</span>(<span class="string">grid</span>)
-<span class="keyword">library</span>(<span class="string">ggtext</span>)
-
-<span class="comment"># ダッシュボード用データの作成</span>
-<span class="function">set.seed</span>(<span class="number">2023</span>)
-dashboard_data <span class="operator">&lt;-</span> <span class="function">list</span>(
-  <span class="comment"># KPI指標</span>
-  kpi <span class="operator">=</span> <span class="function">tibble</span>(
-    metric <span class="operator">=</span> <span class="function">c</span>(<span class="string">"総売上"</span>, <span class="string">"新規顧客"</span>, <span class="string">"リピート率"</span>, <span class="string">"顧客満足度"</span>),
-    current <span class="operator">=</span> <span class="function">c</span>(<span class="number">12500000</span>, <span class="number">1250</span>, <span class="number">68.5</span>, <span class="number">4.2</span>),
-    target <span class="operator">=</span> <span class="function">c</span>(<span class="number">12000000</span>, <span class="number">1200</span>, <span class="number">70.0</span>, <span class="number">4.5</span>),
-    unit <span class="operator">=</span> <span class="function">c</span>(<span class="string">"¥"</span>, <span class="string">"人"</span>, <span class="string">"%"</span>, <span class="string">"点"</span>)
-  ),
-  
-  <span class="comment"># 時系列データ</span>
-  timeseries <span class="operator">=</span> <span class="function">tibble</span>(
-    date <span class="operator">=</span> <span class="function">seq</span>(<span class="function">as.Date</span>(<span class="string">"2023-01-01"</span>), <span class="function">as.Date</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"week"</span>),
-    sales <span class="operator">=</span> <span class="function">cumsum</span>(<span class="function">rnorm</span>(<span class="number">53</span>, <span class="number">240000</span>, <span class="number">50000</span>)),
-    orders <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">53</span>, <span class="number">120</span>, <span class="number">30</span>)),
-    customers <span class="operator">=</span> <span class="function">round</span>(<span class="function">rnorm</span>(<span class="number">53</span>, <span class="number">80</span>, <span class="number">20</span>))
-  ),
-  
-  <span class="comment"># 地域別データ</span>
-  regional <span class="operator">=</span> <span class="function">tibble</span>(
-    region <span class="operator">=</span> <span class="function">c</span>(<span class="string">"北海道"</span>, <span class="string">"東北"</span>, <span class="string">"関東"</span>, <span class="string">"中部"</span>, <span class="string">"関西"</span>, <span class="string">"中国"</span>, <span class="string">"四国"</span>, <span class="string">"九州"</span>),
-    sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">1200</span>, <span class="number">980</span>, <span class="number">4500</span>, <span class="number">2100</span>, <span class="number">3200</span>, <span class="number">850</span>, <span class="number">420</span>, <span class="number">1100</span>),
-    growth <span class="operator">=</span> <span class="function">c</span>(<span class="number">5.2</span>, <span class="number">-2.1</span>, <span class="number">8.7</span>, <span class="number">3.4</span>, <span class="number">6.8</span>, <span class="number">-0.5</span>, <span class="number">12.3</span>, <span class="number">4.1</span>)
-  ),
-  
-  <span class="comment"># 製品カテゴリ</span>
-  category <span class="operator">=</span> <span class="function">tibble</span>(
-    category <span class="operator">=</span> <span class="function">c</span>(<span class="string">"エレクトロニクス"</span>, <span class="string">"ファッション"</span>, <span class="string">"ホーム&ガーデン"</span>, <span class="string">"スポーツ"</span>, <span class="string">"書籍"</span>),
-    sales <span class="operator">=</span> <span class="function">c</span>(<span class="number">4200</span>, <span class="number">3100</span>, <span class="number">2800</span>, <span class="number">1900</span>, <span class="number">1500</span>),
-    profit_margin <span class="operator">=</span> <span class="function">c</span>(<span class="number">18.5</span>, <span class="number">45.2</span>, <span class="number">32.1</span>, <span class="number">25.8</span>, <span class="number">12.3</span>)
-  )
-)
-
-<span class="comment"># KPI指標カード</span>
-create_kpi_card <span class="operator">&lt;-</span> <span class="keyword">function</span>(metric, current, target, unit) {
-  achievement <span class="operator">&lt;-</span> current / target
-  color <span class="operator">&lt;-</span> <span class="keyword">if</span> (achievement <span class="operator">&gt;=</span> <span class="number">1</span>) brand_colors[<span class="string">"success"</span>] <span class="keyword">else</span> brand_colors[<span class="string">"warning"</span>]
-  
-  <span class="function">ggplot</span>() <span class="operator">+</span>
-    <span class="function">geom_rect</span>(<span class="function">aes</span>(xmin <span class="operator">=</span> <span class="number">0</span>, xmax <span class="operator">=</span> <span class="number">1</span>, ymin <span class="operator">=</span> <span class="number">0</span>, ymax <span class="operator">=</span> <span class="number">1</span>), 
-              fill <span class="operator">=</span> <span class="string">"white"</span>, color <span class="operator">=</span> color, size <span class="operator">=</span> <span class="number">2</span>) <span class="operator">+</span>
-    <span class="function">annotate</span>(<span class="string">"text"</span>, x <span class="operator">=</span> <span class="number">0.5</span>, y <span class="operator">=</span> <span class="number">0.8</span>, 
-             label <span class="operator">=</span> metric, size <span class="operator">=</span> <span class="number">5</span>, fontface <span class="operator">=</span> <span class="string">"bold"</span>,
-             color <span class="operator">=</span> brand_colors[<span class="string">"text"</span>]) <span class="operator">+</span>
-    <span class="function">annotate</span>(<span class="string">"text"</span>, x <span class="operator">=</span> <span class="number">0.5</span>, y <span class="operator">=</span> <span class="number">0.5</span>,
-             label <span class="operator">=</span> <span class="function">paste0</span>(<span class="function">format</span>(current, big.mark <span class="operator">=</span> <span class="string">","</span>), unit),
-             size <span class="operator">=</span> <span class="number">8</span>, fontface <span class="operator">=</span> <span class="string">"bold"</span>, color <span class="operator">=</span> color) <span class="operator">+</span>
-    <span class="function">annotate</span>(<span class="string">"text"</span>, x <span class="operator">=</span> <span class="number">0.5</span>, y <span class="operator">=</span> <span class="number">0.2</span>,
-             label <span class="operator">=</span> <span class="function">paste0</span>(<span class="string">"目標: "</span>, <span class="function">format</span>(target, big.mark <span class="operator">=</span> <span class="string">","</span>), unit,
-                           <span class="string">" ("</span>, <span class="function">round</span>((achievement - <span class="number">1</span>) * <span class="number">100</span>, <span class="number">1</span>), <span class="string">"%)\"</span>),
-             size <span class="operator">=</span> <span class="number">3</span>, color <span class="operator">=</span> brand_colors[<span class="string">"neutral"</span>]) <span class="operator">+</span>
-    <span class="function">xlim</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="operator">+</span> <span class="function">ylim</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="operator">+</span>
-    <span class="function">theme_void</span>() <span class="operator">+</span>
-    <span class="function">theme</span>(
-      plot.background <span class="operator">=</span> <span class="function">element_rect</span>(fill <span class="operator">=</span> brand_colors[<span class="string">"background"</span>], color <span class="operator">=</span> <span class="variable">NA</span>),
-      plot.margin <span class="operator">=</span> <span class="function">margin</span>(<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>)
-    )
-}
-
-<span class="comment"># KPI カードの生成</span>
-kpi_cards <span class="operator">&lt;-</span> <span class="function">map2</span>(
-  dashboard_data$kpi$metric,
-  <span class="function">pmap</span>(<span class="function">list</span>(dashboard_data$kpi$current, dashboard_data$kpi$target, dashboard_data$kpi$unit), <span class="function">c</span>),
-  ~ <span class="function">create_kpi_card</span>(.x, .y[[<span class="number">1</span>]], .y[[<span class="number">2</span>]], .y[[<span class="number">3</span>]])
-)
-
-<span class="comment"># メイン時系列チャート</span>
-main_timeseries <span class="operator">&lt;-</span> dashboard_data$timeseries <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> date, y <span class="operator">=</span> sales)) <span class="operator">+</span>
-  <span class="function">geom_area</span>(fill <span class="operator">=</span> brand_colors[<span class="string">"secondary"</span>], alpha <span class="operator">=</span> <span class="number">0.3</span>) <span class="operator">+</span>
-  <span class="function">geom_line</span>(color <span class="operator">=</span> brand_colors[<span class="string">"primary"</span>], size <span class="operator">=</span> <span class="number">1.2</span>) <span class="operator">+</span>
-  <span class="function">geom_point</span>(color <span class="operator">=</span> brand_colors[<span class="string">"primary"</span>], size <span class="operator">=</span> <span class="number">0.8</span>) <span class="operator">+</span>
-  <span class="function">scale_x_date</span>(date_labels <span class="operator">=</span> <span class="string">"%m月"</span>, date_breaks <span class="operator">=</span> <span class="string">"2 months"</span>) <span class="operator">+</span>
-  <span class="function">scale_y_continuous</span>(
-    labels <span class="operator">=</span> <span class="function">label_currency</span>(prefix <span class="operator">=</span> <span class="string">"¥"</span>, suffix <span class="operator">=</span> <span class="string">"M"</span>, scale <span class="operator">=</span> <span class="number">1e-6</span>)
-  ) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"累積売上推移"</span>,
-    x <span class="operator">=</span> <span class="variable">NULL</span>,
-    y <span class="operator">=</span> <span class="string">"売上高"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>(base_size <span class="operator">=</span> <span class="number">10</span>)
-
-<span class="comment"># 地域別売上</span>
-regional_chart <span class="operator">&lt;-</span> dashboard_data$regional <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(<span class="function">desc</span>(sales)) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(region <span class="operator">=</span> <span class="function">factor</span>(region, levels <span class="operator">=</span> region)) <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> region, y <span class="operator">=</span> sales, fill <span class="operator">=</span> growth <span class="operator">&gt;</span> <span class="number">0</span>)) <span class="operator">+</span>
-  <span class="function">geom_col</span>(width <span class="operator">=</span> <span class="number">0.7</span>) <span class="operator">+</span>
-  <span class="function">geom_text</span>(<span class="function">aes</span>(label <span class="operator">=</span> <span class="function">paste0</span>(growth, <span class="string">"%"</span>)), 
-            vjust <span class="operator">=</span> <span class="operator">-</span><span class="number">0.5</span>, size <span class="operator">=</span> <span class="number">3</span>, fontface <span class="operator">=</span> <span class="string">"bold"</span>) <span class="operator">+</span>
-  <span class="function">scale_fill_manual</span>(values <span class="operator">=</span> <span class="function">c</span>(<span class="string">"FALSE"</span> <span class="operator">=</span> brand_colors[<span class="string">"warning"</span>], 
-                                   <span class="string">"TRUE"</span> <span class="operator">=</span> brand_colors[<span class="string">"success"</span>])) <span class="operator">+</span>
-  <span class="function">scale_y_continuous</span>(expand <span class="operator">=</span> <span class="function">expansion</span>(mult <span class="operator">=</span> <span class="function">c</span>(<span class="number">0</span>, <span class="number">0.1</span>))) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"地域別売上と成長率"</span>,
-    x <span class="operator">=</span> <span class="variable">NULL</span>,
-    y <span class="operator">=</span> <span class="string">"売上（百万円）"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>(base_size <span class="operator">=</span> <span class="number">10</span>) <span class="operator">+</span>
-  <span class="function">theme</span>(
-    legend.position <span class="operator">=</span> <span class="string">"none"</span>,
-    axis.text.x <span class="operator">=</span> <span class="function">element_text</span>(angle <span class="operator">=</span> <span class="number">45</span>, hjust <span class="operator">=</span> <span class="number">1</span>)
-  )
-
-<span class="comment"># カテゴリ別利益率</span>
-category_chart <span class="operator">&lt;-</span> dashboard_data$category <span class="operator">%&gt;%</span>
-  <span class="function">ggplot</span>(<span class="function">aes</span>(x <span class="operator">=</span> sales, y <span class="operator">=</span> profit_margin, size <span class="operator">=</span> sales, fill <span class="operator">=</span> category)) <span class="operator">+</span>
-  <span class="function">geom_point</span>(alpha <span class="operator">=</span> <span class="number">0.8</span>, shape <span class="operator">=</span> <span class="number">21</span>, color <span class="operator">=</span> <span class="string">"white"</span>, stroke <span class="operator">=</span> <span class="number">1</span>) <span class="operator">+</span>
-  <span class="function">geom_text</span>(<span class="function">aes</span>(label <span class="operator">=</span> category), size <span class="operator">=</span> <span class="number">3</span>, 
-            color <span class="operator">=</span> brand_colors[<span class="string">"text"</span>], fontface <span class="operator">=</span> <span class="string">"bold"</span>,
-            nudge_y <span class="operator">=</span> <span class="number">2</span>) <span class="operator">+</span>
-  <span class="function">scale_fill_corporate</span>() <span class="operator">+</span>
-  <span class="function">scale_size_continuous</span>(range <span class="operator">=</span> <span class="function">c</span>(<span class="number">5</span>, <span class="number">15</span>), guide <span class="operator">=</span> <span class="string">"none"</span>) <span class="operator">+</span>
-  <span class="function">labs</span>(
-    title <span class="operator">=</span> <span class="string">"カテゴリ別売上vs利益率"</span>,
-    x <span class="operator">=</span> <span class="string">"売上（百万円）"</span>,
-    y <span class="operator">=</span> <span class="string">"利益率（%）"</span>
-  ) <span class="operator">+</span>
-  <span class="function">theme_corporate</span>(base_size <span class="operator">=</span> <span class="number">10</span>) <span class="operator">+</span>
-  <span class="function">theme</span>(legend.position <span class="operator">=</span> <span class="string">"none"</span>)
-
-<span class="function">print</span>(<span class="string">"ダッシュボードコンポーネントが作成されました"</span>)
-</div>
-            </div>
-
-            <div class="output-container">
-                <div class="output-header">ダッシュボード構築結果</div>
-                <div class="output-content">[1] "ダッシュボードコンポーネントが作成されました"
-
-# ダッシュボードの構成要素:
-- KPI指標カード: リアルタイム業績指標
-- 時系列チャート: 売上推移の可視化
-- 地域別分析: 成長率付き売上比較
-- カテゴリ分析: 売上と利益率の相関
-
-# 企業レベルの特徴:
-- 統一されたブランドカラー
-- レスポンシブレイアウト
-- インタラクティブ要素
-- データドリブンな意思決定支援</div>
-            </div>
-
-            <div class="chart-showcase">
-                <div class="chart-title">統合ダッシュボード レイアウト例</div>
-                <div class="chart-example">
-                    <svg class="svg-chart" width="600" height="400" viewBox="0 0 600 400">
-                        <!-- 背景 -->
-                        <rect width="600" height="400" fill="#f8fafc"/>
-                        
-                        <!-- KPI カード群 -->
-                        <g transform="translate(20, 20)">
-                            <!-- KPI Card 1 -->
-                            <rect x="0" y="0" width="130" height="80" fill="white" stroke="#10b981" stroke-width="2" rx="5"/>
-                            <text x="65" y="25" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="bold">総売上</text>
-                            <text x="65" y="45" text-anchor="middle" fill="#10b981" font-size="16" font-weight="bold">¥12.5M</text>
-                            <text x="65" y="65" text-anchor="middle" fill="#6b7280" font-size="10">目標: ¥12.0M (+4.2%)</text>
-                            
-                            <!-- KPI Card 2 -->
-                            <rect x="140" y="0" width="130" height="80" fill="white" stroke="#10b981" stroke-width="2" rx="5"/>
-                            <text x="205" y="25" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="bold">新規顧客</text>
-                            <text x="205" y="45" text-anchor="middle" fill="#10b981" font-size="16" font-weight="bold">1,250人</text>
-                            <text x="205" y="65" text-anchor="middle" fill="#6b7280" font-size="10">目標: 1,200人 (+4.2%)</text>
-                            
-                            <!-- KPI Card 3 -->
-                            <rect x="280" y="0" width="130" height="80" fill="white" stroke="#ef4444" stroke-width="2" rx="5"/>
-                            <text x="345" y="25" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="bold">リピート率</text>
-                            <text x="345" y="45" text-anchor="middle" fill="#ef4444" font-size="16" font-weight="bold">68.5%</text>
-                            <text x="345" y="65" text-anchor="middle" fill="#6b7280" font-size="10">目標: 70.0% (-2.1%)</text>
-                            
-                            <!-- KPI Card 4 -->
-                            <rect x="420" y="0" width="130" height="80" fill="white" stroke="#ef4444" stroke-width="2" rx="5"/>
-                            <text x="485" y="25" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="bold">顧客満足度</text>
-                            <text x="485" y="45" text-anchor="middle" fill="#ef4444" font-size="16" font-weight="bold">4.2点</text>
-                            <text x="485" y="65" text-anchor="middle" fill="#6b7280" font-size="10">目標: 4.5点 (-6.7%)</text>
-                        </g>
-                        
-                        <!-- メインチャート -->
-                        <g transform="translate(20, 120)">
-                            <!-- 時系列チャート -->
-                            <rect x="0" y="0" width="360" height="180" fill="white" stroke="#e5e7eb" rx="5"/>
-                            <text x="180" y="20" text-anchor="middle" fill="#1e3a8a" font-size="14" font-weight="bold">累積売上推移</text>
-                            
-                            <!-- 折れ線グラフ -->
-                            <polyline fill="none" stroke="#1e3a8a" stroke-width="2" 
-                                points="30,150 60,140 90,135 120,130 150,125 180,120 210,115 240,110 270,105 300,100 330,95"/>
-                            <!-- データポイント -->
-                            <circle cx="30" cy="150" r="3" fill="#1e3a8a"/>
-                            <circle cx="90" cy="135" r="3" fill="#1e3a8a"/>
-                            <circle cx="150" cy="125" r="3" fill="#1e3a8a"/>
-                            <circle cx="210" cy="115" r="3" fill="#1e3a8a"/>
-                            <circle cx="270" cy="105" r="3" fill="#1e3a8a"/>
-                            <circle cx="330" cy="95" r="3" fill="#1e3a8a"/>
-                        </g>
-                        
-                        <!-- 地域別チャート -->
-                        <g transform="translate(400, 120)">
-                            <rect x="0" y="0" width="180" height="120" fill="white" stroke="#e5e7eb" rx="5"/>
-                            <text x="90" y="20" text-anchor="middle" fill="#1e3a8a" font-size="12" font-weight="bold">地域別売上</text>
-                            
-                            <!-- 棒グラフ -->
-                            <rect x="20" y="80" width="15" height="30" fill="#10b981"/>
-                            <rect x="40" y="70" width="15" height="40" fill="#10b981"/>
-                            <rect x="60" y="40" width="15" height="70" fill="#10b981"/>
-                            <rect x="80" y="60" width="15" height="50" fill="#10b981"/>
-                            <rect x="100" y="50" width="15" height="60" fill="#10b981"/>
-                            <rect x="120" y="85" width="15" height="25" fill="#ef4444"/>
-                            <rect x="140" y="75" width="15" height="35" fill="#10b981"/>
-                            <rect x="160" y="70" width="15" height="40" fill="#10b981"/>
-                        </g>
-                        
-                        <!-- カテゴリ分析 -->
-                        <g transform="translate(400, 260)">
-                            <rect x="0" y="0" width="180" height="120" fill="white" stroke="#e5e7eb" rx="5"/>
-                            <text x="90" y="20" text-anchor="middle" fill="#1e3a8a" font-size="12" font-weight="bold">カテゴリ分析</text>
-                            
-                            <!-- バブルチャート -->
-                            <circle cx="40" cy="60" r="12" fill="#1e3a8a" opacity="0.7"/>
-                            <circle cx="80" cy="50" r="18" fill="#3b82f6" opacity="0.7"/>
-                            <circle cx="120" cy="70" r="10" fill="#f59e0b" opacity="0.7"/>
-                            <circle cx="60" cy="80" r="14" fill="#10b981" opacity="0.7"/>
-                            <circle cx="140" cy="90" r="8" fill="#ef4444" opacity="0.7"/>
-                        </g>
-                        
-                        <!-- タイトル -->
-                        <text x="300" y="15" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="bold">Business Intelligence Dashboard</text>
-                    </svg>
+                    <span class="code-line"><span class="code-comment"># カテゴリカルデータ</span></span>
+                    <span class="code-line"><span class="code-variable">category_data</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(quarter <span class="code-keyword">=</span> <span class="code-function">paste</span>(<span class="code-string">"Q"</span>, <span class="code-function">ceiling</span>(month / <span class="code-variable">3</span>)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># カラーパレット適用</span></span>
+                    <span class="code-line"><span class="code-variable">color_plot</span> <span class="code-keyword">&lt;-</span> category_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> month, y <span class="code-keyword">=</span> sales, color <span class="code-keyword">=</span> quarter)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_point</span>() <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">scale_color_viridis_d</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(color_plot)</span>
                 </div>
             </div>
         </section>
 
-        <div class="data-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>高度なggplot2機能</th>
-                        <th>用途</th>
-                        <th>実装パッケージ</th>
-                        <th>適用場面</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>カスタムテーマ</td>
-                        <td>ブランド統一</td>
-                        <td>ggplot2</td>
-                        <td>企業レポート、プレゼンテーション</td>
-                    </tr>
-                    <tr>
-                        <td>アニメーション</td>
-                        <td>時系列変化表現</td>
-                        <td>gganimate</td>
-                        <td>プレゼンテーション、ウェブ</td>
-                    </tr>
-                    <tr>
-                        <td>高度なgeom</td>
-                        <td>複雑な分布表現</td>
-                        <td>ggridges, ggforce</td>
-                        <td>統計分析、研究発表</td>
-                    </tr>
-                    <tr>
-                        <td>複合グラフ</td>
-                        <td>多角的分析</td>
-                        <td>patchwork</td>
-                        <td>ダッシュボード、レポート</td>
-                    </tr>
-                    <tr>
-                        <td>インタラクティブ</td>
-                        <td>動的探索</td>
-                        <td>plotly, shiny</td>
-                        <td>ウェブアプリ、分析ツール</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <!-- ADVANCED GEOMS -->
+        <section class="section">
+            <h2>📊 高度なgeom層</h2>
+            <p>
+                複雑なデータ構造を効果的に表現する高度なgeometry関数を探索します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">複雑な可視化</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># ヒートマップデータ</span></span>
+                    <span class="code-line"><span class="code-variable">heatmap_data</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">group_by</span>(year, month) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">summarise</span>(avg_sales <span class="code-keyword">=</span> <span class="code-function">mean</span>(sales), .groups <span class="code-keyword">=</span> <span class="code-string">'drop'</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ヒートマップ作成</span></span>
+                    <span class="code-line"><span class="code-variable">heatmap_plot</span> <span class="code-keyword">&lt;-</span> heatmap_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> month, y <span class="code-keyword">=</span> year, fill <span class="code-keyword">=</span> avg_sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_tile</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(heatmap_plot)</span>
+                </div>
+            </div>
+        </section>
 
-        <div class="key-points">
-            <h4>第13章の重要ポイント</h4>
-            <ul>
-                <li><strong>企業ブランド統合</strong>：カスタムテーマによる視覚的一貫性の確保</li>
-                <li><strong>アニメーション効果</strong>：時系列変化とデータストーリーの動的表現</li>
-                <li><strong>高度なgeom活用</strong>：複雑なデータ分布の多角的可視化</li>
-                <li><strong>統計レイヤー</strong>：回帰線、密度分布、信頼区間の重ね合わせ</li>
-                <li><strong>複合ダッシュボード</strong>：複数チャートの統合による包括的分析</li>
-                <li><strong>パフォーマンス最適化</strong>：大容量データの効率的レンダリング</li>
+        <!-- ANNOTATIONS -->
+        <section class="section">
+            <h2>📝 注釈とラベリング</h2>
+            <p>
+                効果的な注釈とラベルでグラフの情報価値を最大化します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">注釈の追加</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 注釈付きプロット</span></span>
+                    <span class="code-line"><span class="code-variable">annotated_plot</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> month, y <span class="code-keyword">=</span> sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_line</span>() <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">labs</span>(</span>
+                    <span class="code-line">    title <span class="code-keyword">=</span> <span class="code-string">"月次売上推移"</span>,</span>
+                    <span class="code-line">    x <span class="code-keyword">=</span> <span class="code-string">"月"</span>,</span>
+                    <span class="code-line">    y <span class="code-keyword">=</span> <span class="code-string">"売上"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(annotated_plot)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FACETING -->
+        <section class="section">
+            <h2>🔄 ファセッティング</h2>
+            <p>
+                複数のサブプロットで多次元データを効果的に表示します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">ファセット可視化</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># ファセットプロット</span></span>
+                    <span class="code-line"><span class="code-variable">facet_plot</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> month, y <span class="code-keyword">=</span> sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_line</span>() <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">facet_wrap</span>(~ year)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(facet_plot)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXTENSIONS -->
+        <section class="section">
+            <h2>🧩 ggplot2拡張パッケージ</h2>
+            <p>
+                ggplot2エコシステムの拡張パッケージで可視化の可能性を広げます。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">拡張機能の活用</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 統計的可視化</span></span>
+                    <span class="code-line"><span class="code-variable">stat_plot</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> <span class="code-function">factor</span>(year), y <span class="code-keyword">=</span> sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_boxplot</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(stat_plot)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 密度プロット</span></span>
+                    <span class="code-line"><span class="code-variable">density_plot</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_density</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(density_plot)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE PLOTS -->
+        <section class="section">
+            <h2>🖱️ インタラクティブ可視化</h2>
+            <p>
+                静的なグラフを超えて、インタラクティブな可視化の世界を探索します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">動的可視化</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># インタラクティブプロット用データ</span></span>
+                    <span class="code-line"><span class="code-variable">interactive_data</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(date <span class="code-keyword">=</span> <span class="code-function">as.Date</span>(<span class="code-function">paste</span>(year, month, <span class="code-string">"01"</span>, sep <span class="code-keyword">=</span> <span class="code-string">"-"</span>)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 時系列プロット</span></span>
+                    <span class="code-line"><span class="code-variable">time_plot</span> <span class="code-keyword">&lt;-</span> interactive_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> date, y <span class="code-keyword">=</span> sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_line</span>() <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_point</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(time_plot)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROFESSIONAL STYLING -->
+        <section class="section">
+            <h2>💼 プロフェッショナルスタイリング</h2>
+            <p>
+                ビジネス用途に適した、洗練されたプロフェッショナルなスタイルを作成します。
+            </p>
+            
+            <div class="code-block">
+                <div class="code-header">ビジネスグレードの可視化</div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># プロフェッショナルテーマ</span></span>
+                    <span class="code-line"><span class="code-variable">professional_plot</span> <span class="code-keyword">&lt;-</span> business_data <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x <span class="code-keyword">=</span> month, y <span class="code-keyword">=</span> sales)) <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">geom_col</span>() <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">theme_classic</span>() <span class="code-keyword">+</span></span>
+                    <span class="code-line">  <span class="code-function">labs</span>(</span>
+                    <span class="code-line">    title <span class="code-keyword">=</span> <span class="code-string">"年間売上レポート"</span>,</span>
+                    <span class="code-line">    subtitle <span class="code-keyword">=</span> <span class="code-string">"月次パフォーマンス分析"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(professional_plot)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section class="section">
+            <h2>🎯 まとめ</h2>
+            <p>
+                本章では、ggplot2の高度な機能とカスタマイゼーション技術を学習しました。
+            </p>
+            <ul style="color: var(--text-secondary); margin-left: 20px;">
+                <li>カスタムテーマとスタイリングの作成</li>
+                <li>効果的なカラーパレットの活用</li>
+                <li>高度なgeometry関数の使用</li>
+                <li>注釈とラベリングの技術</li>
+                <li>ファセッティングによる多次元表示</li>
+                <li>プロフェッショナルな可視化の作成</li>
             </ul>
-        </div>
+            <p>
+                これらの技術により、データの洞察を美しく、効果的に伝えることができます。
+            </p>
+        </section>
 
-        <div class="tip-box">
-            <h4>実践的アドバイス</h4>
-            <p>高度なggplot2技術は、データの洞察を深めるだけでなく、ステークホルダーへの効果的なコミュニケーションツールとなります。企業環境では、ブランド一貫性とユーザビリティのバランスが重要です。また、インタラクティブ要素やアニメーションは、適切に使用することで、複雑なデータストーリーを直感的に伝えることができます。</p>
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
         </div>
+    </section>
 
-        <nav class="chapter-nav">
-            <a href="chapter12-time-series.html" class="nav-button">← 第12章</a>
-            <a href="chapter14-interactive-visualization.html" class="nav-button">第14章 →</a>
-        </nav>
+    <!-- 章間ナビゲーション -->
+    <div style="display: flex; justify-content: space-between; margin: 3rem 0; padding: 0 2rem;">
+        <a href="chapter12-time-series.html" style="display: flex; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); border: 1px solid var(--accent-cyan); border-radius: 15px; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease;">
+            <span style="font-size: 1.5rem; margin-right: 0.5rem;">←</span>
+            <div>
+                <div style="font-size: 0.9rem; color: var(--accent-cyan);">前の章</div>
+                <div style="font-weight: 600;">第12章: 時系列予測の魔法</div>
+            </div>
+        </a>
+        
+        <a href="chapter14-interactive-visualization.html" style="display: flex; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); border: 1px solid var(--accent-cyan); border-radius: 15px; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease;">
+            <div style="text-align: right;">
+                <div style="font-size: 0.9rem; color: var(--accent-cyan);">次の章</div>
+                <div style="font-weight: 600;">第14章: インタラクティブ可視化</div>
+            </div>
+            <span style="font-size: 1.5rem; margin-left: 0.5rem;">→</span>
+        </a>
+    </div>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </div>
 </body>
 </html>

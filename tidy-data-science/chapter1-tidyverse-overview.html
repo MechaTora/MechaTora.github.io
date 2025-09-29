@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第1章: Tidyverse概要とインストール | TIDYVERSE/TIDYMODELS</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <meta name="description" content="Tidyverseエコシステムの全体像を把握。データサイエンスの哲学、Tidy Dataの原則、パッケージのインストール方法を学習。">
     
     <!-- Favicon -->
@@ -604,9 +617,202 @@
                 </p>
             </header>
             
+            <!-- R and RStudio Installation -->
+            <section class="content-section fade-in-up" id="r-rstudio-install">
+                <h2 class="section-title">🚀 Step 1: RとRStudioのインストール</h2>
+                <div class="section-content">
+                    <div style="background: linear-gradient(135deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%); border: 1px solid rgba(255, 102, 0, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #ff6600; margin-bottom: 1rem;">⚠️ 重要：Tidyverseを使用する前に</h3>
+                        <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            Tidyverseを学習する前に、まずR言語本体とRStudio（統合開発環境）をインストールする必要があります。
+                            この2つがないと、Tidyverseは動作しません。
+                        </p>
+                    </div>
+
+                    <h3 style="color: var(--neon-cyan); margin: 3rem 0 2rem 0;">💻 インストール手順（3ステップ）</h3>
+                    
+                    <!-- Step 1: R Installation -->
+                    <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; margin: 2rem 0; backdrop-filter: blur(20px);">
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <div style="background: linear-gradient(45deg, #4ade80, #22c55e); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">1</div>
+                            <h4 style="color: #4ade80; margin: 0; font-size: 1.4rem;">R言語本体のインストール</h4>
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 1rem;">
+                                <strong>公式サイト：</strong> <a href="https://cran.r-project.org/" style="color: #4ade80; text-decoration: underline;">https://cran.r-project.org/</a>
+                            </p>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                                <!-- Windows -->
+                                <div style="border: 1px solid rgba(68, 222, 128, 0.3); border-radius: 10px; padding: 1.5rem; background: rgba(68, 222, 128, 0.05);">
+                                    <h5 style="color: #4ade80; margin: 0 0 1rem 0; display: flex; align-items: center;">
+                                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🪟</span>
+                                        Windows
+                                    </h5>
+                                    <ol style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; padding-left: 1.5rem;">
+                                        <li>「Download R for Windows」をクリック</li>
+                                        <li>「base」をクリック</li>
+                                        <li>「Download R X.X.X for Windows」をクリック</li>
+                                        <li>ダウンロードしたR-X.X.X-win.exeを実行</li>
+                                        <li>デフォルト設定でインストール完了</li>
+                                    </ol>
+                                </div>
+                                
+                                <!-- Mac -->
+                                <div style="border: 1px solid rgba(68, 222, 128, 0.3); border-radius: 10px; padding: 1.5rem; background: rgba(68, 222, 128, 0.05);">
+                                    <h5 style="color: #4ade80; margin: 0 0 1rem 0; display: flex; align-items: center;">
+                                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🍎</span>
+                                        Mac
+                                    </h5>
+                                    <ol style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; padding-left: 1.5rem;">
+                                        <li>「Download R for macOS」をクリック</li>
+                                        <li>CPUに応じて選択：
+                                            <ul style="margin: 0.5rem 0;">
+                                                <li>Apple Silicon: 「R-X.X.X-arm64.pkg」</li>
+                                                <li>Intel Mac: 「R-X.X.X.pkg」</li>
+                                            </ul>
+                                        </li>
+                                        <li>ダウンロードしたpkgファイルを実行</li>
+                                        <li>指示に従ってインストール完了</li>
+                                    </ol>
+                                </div>
+                                
+                                <!-- Linux -->
+                                <div style="border: 1px solid rgba(68, 222, 128, 0.3); border-radius: 10px; padding: 1.5rem; background: rgba(68, 222, 128, 0.05);">
+                                    <h5 style="color: #4ade80; margin: 0 0 1rem 0; display: flex; align-items: center;">
+                                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🐧</span>
+                                        Linux (Ubuntu/Debian)
+                                    </h5>
+                                    <div class="code-block" style="margin: 1rem 0;">
+                                        <div class="code-content">
+                                            <span class="code-line">sudo apt update</span>
+                                            <span class="code-line">sudo apt install r-base</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: RStudio Installation -->
+                    <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; margin: 2rem 0; backdrop-filter: blur(20px);">
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <div style="background: linear-gradient(45deg, #64b5f6, #2196f3); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">2</div>
+                            <h4 style="color: #64b5f6; margin: 0; font-size: 1.4rem;">RStudio Desktop のインストール</h4>
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 1rem;">
+                                <strong>公式サイト：</strong> <a href="https://posit.co/download/rstudio-desktop/" style="color: #64b5f6; text-decoration: underline;">https://posit.co/download/rstudio-desktop/</a>
+                            </p>
+                            
+                            <div style="background: rgba(100, 181, 246, 0.15); border: 1px solid rgba(100, 181, 246, 0.3); border-radius: 10px; padding: 1.5rem; margin: 1rem 0;">
+                                <h5 style="color: #64b5f6; margin: 0 0 1rem 0;">💡 RStudioとは？</h5>
+                                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin: 0;">
+                                    RStudioは、R言語専用の統合開発環境（IDE）です。コード編集、実行、デバッグ、可視化などを
+                                    一つの画面で効率的に行えるため、R初心者から上級者まで必須のツールです。
+                                </p>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                                <!-- Windows RStudio -->
+                                <div style="border: 1px solid rgba(100, 181, 246, 0.3); border-radius: 10px; padding: 1.5rem; background: rgba(100, 181, 246, 0.05);">
+                                    <h5 style="color: #64b5f6; margin: 0 0 1rem 0;">🪟 Windows</h5>
+                                    <ol style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; padding-left: 1.5rem;">
+                                        <li>「Download RStudio Desktop」をクリック</li>
+                                        <li>Windows用のexeファイルをダウンロード</li>
+                                        <li>ダウンロードしたファイルを実行</li>
+                                        <li>デフォルト設定でインストール</li>
+                                    </ol>
+                                </div>
+                                
+                                <!-- Mac RStudio -->
+                                <div style="border: 1px solid rgba(100, 181, 246, 0.3); border-radius: 10px; padding: 1.5rem; background: rgba(100, 181, 246, 0.05);">
+                                    <h5 style="color: #64b5f6; margin: 0 0 1rem 0;">🍎 Mac</h5>
+                                    <ol style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; padding-left: 1.5rem;">
+                                        <li>「Download RStudio Desktop」をクリック</li>
+                                        <li>macOS用のdmgファイルをダウンロード</li>
+                                        <li>ダウンロードしたdmgファイルを開く</li>
+                                        <li>RStudioアプリをApplicationsフォルダにドラッグ</li>
+                                    </ol>
+                                </div>
+                                
+                                <!-- Linux RStudio -->
+                                <div style="border: 1px solid rgba(100, 181, 246, 0.3); border-radius: 10px; padding: 1.5rem; background: rgba(100, 181, 246, 0.05);">
+                                    <h5 style="color: #64b5f6; margin: 0 0 1rem 0;">🐧 Linux</h5>
+                                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem;">Ubuntu/Debian の場合：</p>
+                                    <div class="code-block">
+                                        <div class="code-content" style="font-size: 0.85rem;">
+                                            <span class="code-line">wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-2023.XX.X-amd64.deb</span>
+                                            <span class="code-line">sudo dpkg -i rstudio-*.deb</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Verification -->
+                    <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; margin: 2rem 0; backdrop-filter: blur(20px);">
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <div style="background: linear-gradient(45deg, #ff6600, #ff8533); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">3</div>
+                            <h4 style="color: #ff6600; margin: 0; font-size: 1.4rem;">インストール確認</h4>
+                        </div>
+                        
+                        <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem;">
+                            RStudioを起動し、以下のコードを実行してインストールが正常に完了しているか確認しましょう。
+                        </p>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <div class="code-dots">
+                                    <div class="code-dot"></div>
+                                    <div class="code-dot"></div>
+                                    <div class="code-dot"></div>
+                                </div>
+                                <div class="code-title">RStudio Console</div>
+                            </div>
+                            <div class="code-content">
+                                <span class="code-line"><span class="code-comment"># Rのバージョン確認</span></span>
+                                <span class="code-line"><span class="code-function">R.version.string</span></span>
+                                <span class="code-line"><span class="code-output">[1] "R version 4.3.0 (2023-04-21)"</span></span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-comment"># 基本的な計算のテスト</span></span>
+                                <span class="code-line"><span class="code-number">2</span> <span class="code-operator">+</span> <span class="code-number">3</span></span>
+                                <span class="code-line"><span class="code-output">[1] 5</span></span>
+                                <span class="code-line"></span>
+                                <span class="code-line"><span class="code-comment"># 簡単なベクトル作成</span></span>
+                                <span class="code-line"><span class="code-variable">x</span> <span class="code-operator">&lt;-</span> <span class="code-function">c</span>(<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>)</span>
+                                <span class="code-line"><span class="code-function">mean</span>(<span class="code-variable">x</span>)</span>
+                                <span class="code-line"><span class="code-output">[1] 3</span></span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(76, 175, 80, 0.15); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
+                            <h5 style="color: #4caf50; margin: 0 0 1rem 0;">✅ 成功の確認項目</h5>
+                            <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">
+                                <li>RStudioが正常に起動する</li>
+                                <li>Consoleでコードが実行できる</li>
+                                <li>R.version.string でバージョンが表示される</li>
+                                <li>基本的な計算（2+3=5）が動作する</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 128, 255, 0.05) 100%); border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 20px; padding: 2rem; margin: 3rem 0;">
+                        <h3 style="color: #00ffff; margin-bottom: 1rem;">🎉 準備完了！</h3>
+                        <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.7; margin: 0;">
+                            RとRStudioのインストールが完了したら、いよいよTidyverseの世界に足を踏み入れる準備が整いました。
+                            次のセクションでTidyverseとは何かを学び、その後実際にインストールして使い始めましょう！
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             <!-- Tidyverse Overview -->
             <section class="content-section fade-in-up" id="overview">
-                <h2 class="section-title">Tidyverseとは何か？</h2>
+                <h2 class="section-title">🌟 Tidyverseとは何か？</h2>
                 <div class="section-content">
                     <p>
                         <strong>Tidyverse</strong>は、データサイエンスのワークフロー全体を統一的な文法で扱うためのRパッケージ群です。Hadley Wickhamを中心とした開発チームにより設計され、データの取り込み、整理、変換、可視化、モデリングを一貫した哲学の下で実行できます。
@@ -958,20 +1164,222 @@
                     </p>
                 </div>
             </section>
+
+            <!-- Statistical Thinking and Data Science -->
+            <section class="content-section fade-in-up" id="statistical-thinking">
+                <h2 class="section-title">🧠 統計的思考とデータサイエンス</h2>
+                <div class="section-content">
+                    <p>
+                        Tidyverseを使ったデータ分析では、単にツールを覚えるだけでなく、<strong>統計的思考</strong>を身につけることが重要です。
+                        データから意味のある洞察を得るために、科学的なアプローチでデータに向き合いましょう。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">📊 データサイエンスの基本ワークフロー</h3>
+                    
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h3 class="concept-title">1️⃣ 質問の定義</h3>
+                            <p class="concept-description">
+                                「何を知りたいのか」を明確にする。曖昧な質問からは曖昧な答えしか得られません。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">2️⃣ データの収集</h3>
+                            <p class="concept-description">
+                                適切なデータを適切な方法で集める。サンプリングバイアスに注意が必要です。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">3️⃣ 探索的データ分析</h3>
+                            <p class="concept-description">
+                                データの構造、分布、異常値を理解する。仮説を立てる前にデータを「見る」ことが重要。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">4️⃣ モデリング</h3>
+                            <p class="concept-description">
+                                パターンを発見し、予測や推論を行う。複雑すぎるモデルは過学習の危険があります。
+                            </p>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3 class="concept-title">5️⃣ 検証と伝達</h3>
+                            <p class="concept-description">
+                                結果の妥当性を確認し、分かりやすく伝える。美しい可視化は強力な武器です。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🔬 探索的データ分析（EDA）の実践</h3>
+                    
+                    <p>
+                        探索的データ分析は、データサイエンスの出発点です。Tidyverseを使って、データの「第一印象」を効率的に把握しましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">eda_workflow.R</div>
+                        </div>
+                        <pre><code class="language-r"># EDAの基本ワークフロー
+library(tidyverse)
+
+# サンプルデータで実践
+sales_data <- read_csv("sales_data.csv")
+
+# Step 1: データの概要把握
+sales_data %>%
+  glimpse()  # 構造の確認
+
+sales_data %>%
+  summary() # 基本統計の確認
+
+# Step 2: 欠損値と異常値の確認
+sales_data %>%
+  map_dfr(~sum(is.na(.))) %>%  # 欠損値数
+  pivot_longer(everything(), names_to = "column", values_to = "missing_count")
+
+# Step 3: 分布の確認
+sales_data %>%
+  ggplot(aes(x = sales_amount)) +
+  geom_histogram(bins = 30, alpha = 0.7) +
+  labs(title = "売上金額の分布")
+
+# Step 4: 相関関係の調査
+sales_data %>%
+  select_if(is.numeric) %>%
+  cor() %>%
+  corrplot::corrplot(method = "color")
+
+# Step 5: 仮説の構築
+# データを見て「なぜこうなっているのか」を考える</code></pre>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">⚠️ データの落とし穴に注意</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%); border: 1px solid rgba(255, 102, 0, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #ff6600; margin-bottom: 1rem;">⚠️ よくある統計的誤解</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>相関と因果の混同</strong>：相関があっても因果関係があるとは限りません</li>
+                            <li><strong>サンプルサイズの無視</strong>：小さなサンプルからの結論は危険です</li>
+                            <li><strong>生存者バイアス</strong>：成功例だけを見て判断していませんか？</li>
+                            <li><strong>確証バイアス</strong>：自分の仮説に都合の良いデータだけ見ていませんか？</li>
+                        </ul>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🎯 実践的アドバイス</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #39ff14; margin-bottom: 1rem;">💡 データサイエンティストの心得</h3>
+                        <ol style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>常に懐疑的であれ</strong>：データは嘘をつくことがあります</li>
+                            <li><strong>可視化を重視せよ</strong>：グラフ一枚は数値百個に勝ります</li>
+                            <li><strong>シンプルに始めよ</strong>：複雑なモデルより、シンプルで理解可能なものを</li>
+                            <li><strong>ドメイン知識を活用せよ</strong>：その分野の専門知識は強力な武器です</li>
+                            <li><strong>再現可能性を確保せよ</strong>：他の人（未来の自分を含む）が再実行できるコードを書く</li>
+                        </ol>
+                    </div>
+                    
+                    <p>
+                        この統計的思考を身につけることで、Tidyverseの各ツールをより効果的に活用できるようになります。
+                        次の章からは、これらの原則を実践しながら具体的なパッケージの使い方を学んでいきましょう。
+                    </p>
+                </div>
+            </section>
             
             <!-- Chapter Navigation -->
             <nav class="chapter-nav fade-in-up">
-                <a href="#" class="nav-btn prev disabled">
-                    ← 前の章
-                </a>
-                <div class="chapter-progress">
-                    第1章 / 全6章
-                </div>
-                <a href="chapter2-dplyr-data-manipulation.html" class="nav-btn next">
-                    次の章 →
-                </a>
+                <a href="chapter8-readr-data-import.html" class="nav-button">Chapter 2 →</a>
             </nav>
         </div>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </main>
     
     <script>

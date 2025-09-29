@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第2章: dplyrによるデータ操作 | TIDYVERSE/TIDYMODELS</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <meta name="description" content="dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装。">
     
     <!-- Favicon -->
@@ -1070,19 +1083,355 @@
                 </div>
             </section>
             
+            <!-- Advanced dplyr Techniques and Statistical Processing -->
+            <section class="content-section fade-in-up" id="advanced-dplyr">
+                <h2 class="section-title">🚀 高度なdplyr技法と統計前処理</h2>
+                <div class="section-content">
+                    <p>
+                        基本的なdplyr操作を習得したら、より高度な技法を学習しましょう。
+                        特に統計分析や機械学習に向けたデータ前処理は、分析の成否を大きく左右します。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">📊 時系列データの高度な操作</h3>
+                    
+                    <p>
+                        ビジネス分析では時系列データの処理が頻繁に必要になります。dplyrとslider、lubridateパッケージを組み合わせて効率的に処理しましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">time_series_advanced.R</div>
+                        </div>
+                        <pre><code class="language-r"># 時系列データの高度な処理
+library(tidyverse)
+library(slider)
+library(lubridate)
+
+sales_data <- tibble(
+  date = seq(ymd("2020-01-01"), ymd("2023-12-31"), by = "day"),
+  sales = runif(length(date), 1000, 5000)
+)
+
+# 移動平均とトレンド分析
+sales_processed <- sales_data %>%
+  mutate(
+    year = year(date),
+    month = month(date),
+    weekday = wday(date, label = TRUE),
+    
+    # 移動平均（7日、30日）
+    ma_7 = slide_dbl(sales, mean, .before = 6, .complete = TRUE),
+    ma_30 = slide_dbl(sales, mean, .before = 29, .complete = TRUE),
+    
+    # 前年同期比較
+    yoy_growth = (sales - lag(sales, 365)) / lag(sales, 365) * 100,
+    
+    # 季節調整（月平均との比較）
+    monthly_avg = ave(sales, year, month, FUN = mean),
+    seasonal_adj = sales / monthly_avg,
+    
+    # 異常値検出（統計的手法）
+    z_score = abs((sales - mean(sales)) / sd(sales)),
+    is_outlier = z_score > 2.5,
+    
+    # トレンド分解
+    detrended = sales - ma_30
+  ) %>%
+  # 欠損値の処理
+  fill(ma_7, ma_30, .direction = "down")</code></pre>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🔬 統計的データ変換</h3>
+                    
+                    <p>
+                        機械学習モデルの性能向上のため、データの正規化・標準化・特徴量エンジニアリングを実践しましょう。
+                    </p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">statistical_preprocessing.R</div>
+                        </div>
+                        <pre><code class="language-r"># 統計的データ前処理のベストプラクティス
+library(tidyverse)
+
+# サンプルデータ
+customer_data <- tibble(
+  customer_id = 1:1000,
+  age = rnorm(1000, 35, 10),
+  income = rlnorm(1000, 10.5, 0.5),
+  purchase_count = rpois(1000, 5),
+  category = sample(c("A", "B", "C"), 1000, replace = TRUE)
+)
+
+# 統計的変換の実践
+processed_data <- customer_data %>%
+  mutate(
+    # 1. 正規化（Min-Max スケーリング）
+    age_normalized = (age - min(age)) / (max(age) - min(age)),
+    
+    # 2. 標準化（Z-score）
+    income_standardized = (income - mean(income)) / sd(income),
+    
+    # 3. 対数変換（歪んだ分布の修正）
+    income_log = log(income),
+    
+    # 4. 四分位区間によるロバストスケーリング
+    age_robust = (age - median(age)) / IQR(age),
+    
+    # 5. カテゴリカル変数のエンコーディング
+    # ワンホットエンコーディング
+    category_A = as.numeric(category == "A"),
+    category_B = as.numeric(category == "B"),
+    category_C = as.numeric(category == "C"),
+    
+    # 6. 特徴量エンジニアリング
+    # 購入頻度カテゴリ
+    purchase_frequency = case_when(
+      purchase_count <= 2 ~ "Low",
+      purchase_count <= 5 ~ "Medium",
+      TRUE ~ "High"
+    ),
+    
+    # 収入年齢比
+    income_age_ratio = income / age,
+    
+    # 7. ビニング（連続値の離散化）
+    age_group = cut(age, 
+                   breaks = c(0, 25, 35, 50, 100),
+                   labels = c("Young", "Adult", "Middle", "Senior"),
+                   include.lowest = TRUE),
+    
+    # 8. 異常値の処理（Winsorization）
+    income_winsorized = pmax(pmin(income, 
+                                  quantile(income, 0.95, na.rm = TRUE)),
+                             quantile(income, 0.05, na.rm = TRUE))
+  )</code></pre>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🧠 高度なdplyrパターン</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">advanced_dplyr_patterns.R</div>
+                        </div>
+                        <pre><code class="language-r"># プロフェッショナルなdplyrパターン
+
+# 1. 条件付き変換のエレガントな方法
+data %>%
+  mutate(
+    new_column = case_when(
+      condition1 ~ value1,
+      condition2 ~ value2,
+      condition3 ~ value3,
+      TRUE ~ default_value  # else句
+    )
+  )
+
+# 2. 複数列に対する同じ処理
+data %>%
+  mutate(across(where(is.numeric), ~ scale(.)[,1]))  # 数値列を標準化
+
+# 3. 動的な列選択
+columns_to_analyze <- c("sales", "profit", "quantity")
+data %>%
+  select(all_of(columns_to_analyze)) %>%
+  summarise(across(everything(), list(mean = mean, sd = sd), na.rm = TRUE))
+
+# 4. グループ内でのランキング
+data %>%
+  group_by(category) %>%
+  mutate(
+    rank_within_group = row_number(desc(sales)),
+    percentile = percent_rank(sales),
+    top_10_percent = ntile(sales, 10) >= 9
+  ) %>%
+  ungroup()
+
+# 5. ウィンドウ関数の活用
+data %>%
+  arrange(date) %>%
+  mutate(
+    # 累積統計
+    cumulative_sales = cumsum(sales),
+    running_avg = cumsum(sales) / row_number(),
+    
+    # 前後の値との比較
+    sales_change = sales - lag(sales),
+    sales_change_pct = (sales - lag(sales)) / lag(sales) * 100,
+    
+    # 前後N期間の統計
+    sales_ma = (lag(sales, 2) + lag(sales, 1) + sales + 
+                lead(sales, 1) + lead(sales, 2)) / 5
+  )
+
+# 6. ネストしたデータとmap関数
+nested_analysis <- data %>%
+  group_by(region) %>%
+  nest() %>%
+  mutate(
+    # 各グループに対して線形回帰
+    model = map(data, ~ lm(sales ~ advertising, data = .)),
+    # 予測値の計算
+    predictions = map2(model, data, predict),
+    # モデルの要約統計
+    r_squared = map_dbl(model, ~ summary(.)$r.squared)
+  )</code></pre>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">⚠️ データ品質管理</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%); border: 1px solid rgba(255, 102, 0, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #ff6600; margin-bottom: 1rem;">🔍 データ品質チェックリスト</h3>
+                        
+                        <div class="code-block">
+                            <pre><code class="language-r"># 包括的なデータ品質チェック
+quality_check <- function(df) {
+  df %>%
+    summarise(
+      # 基本情報
+      n_rows = n(),
+      n_cols = ncol(.),
+      
+      # 欠損値情報
+      across(everything(), 
+             list(missing_count = ~ sum(is.na(.)),
+                  missing_pct = ~ round(sum(is.na(.)) / n() * 100, 2)),
+             .names = "{.col}_{.fn}"),
+      
+      # 重複行の確認
+      duplicate_rows = sum(duplicated(.)),
+      
+      # 数値列の統計サマリー
+      across(where(is.numeric),
+             list(min = min, max = max, mean = mean, sd = sd),
+             na.rm = TRUE,
+             .names = "{.col}_{.fn}")
+    ) %>%
+    pivot_longer(everything()) %>%
+    separate(name, into = c("column", "metric"), sep = "_(?=[^_]*$)")
+}</code></pre>
+                    </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">💡 実践的アドバイス</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #39ff14; margin-bottom: 1rem;">📊 データ前処理のプロのコツ</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>変換前にデータを理解する</strong>：分布を可視化してから適切な変換を選択</li>
+                            <li><strong>パイプラインを記録する</strong>：再現可能な前処理パイプラインを構築</li>
+                            <li><strong>検証用データで変換を確認</strong>：テストデータに同じ変換を適用可能か確認</li>
+                            <li><strong>ドメイン知識を活用する</strong>：業務知識に基づく特徴量エンジニアリング</li>
+                            <li><strong>処理時間を意識する</strong>：大容量データでは計算効率も重要</li>
+                        </ul>
+                    </div>
+                    
+                    <p>
+                        これらの高度なdplyr技法をマスターすることで、複雑な実世界のデータ分析プロジェクトに対応できるようになります。
+                        次の章では、これらの前処理されたデータを美しく効果的に可視化する方法を学びましょう。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 学習におすすめの書籍 -->
+            <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+            </section>
+
             <!-- Chapter Navigation -->
             <nav class="chapter-nav fade-in-up">
-                <a href="chapter1-tidyverse-overview.html" class="nav-btn prev">
-                    ← 前の章
-                </a>
-                <div class="chapter-progress">
-                    第2章 / 全6章
-                </div>
-                <a href="chapter3-ggplot2-visualization.html" class="nav-btn next">
-                    次の章 →
-                </a>
+                <a href="chapter3-ggplot2-visualization.html" class="nav-button">Chapter 3 →</a>
             </nav>
         </div>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </main>
     
     <script>

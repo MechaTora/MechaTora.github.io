@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第21章: 時系列分析とmodeltime | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family@Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-electric);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-electric);
+            border-color: var(--accent-electric);
+            box-shadow: 0 0 5px var(--accent-electric);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-electric);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-electric);
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.02);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.15);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-electric), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-electric);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-electric);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-electric);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1);
+        }
+
+        .code-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--accent-electric);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-electric);
+            opacity: 0.6;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+            background: #0d1117;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Syntax highlighting */
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+        .code-regex { color: #39ff14; font-weight: bold; }
+        .code-pattern { color: #ffff00; background: rgba(255, 255, 0, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+        /* Function Grid */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .function-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-electric) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .function-card:hover::before {
+            left: 0;
+        }
+
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+
+        .function-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-electric);
+            margin-bottom: 1rem;
+        }
+
+        .function-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .function-syntax {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        /* Output Display */
+        .output-container {
+            margin: 20px 0;
+            background: #0a0e1a;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .output-header {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-header::before {
+            content: '📈';
+        }
+
+        .output-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-cyan);
+        }
+
+        /* ML Workflow */
+        .ml-workflow {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .workflow-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-cyan);
+            text-align: center;
+        }
+
+        .step-number {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Data Tables */
+        .data-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-electric);
+        }
+
+        th {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-electric);
+        }
+
+        .key-points h4 {
+            color: var(--accent-electric);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-points h4::before {
+            content: '💡';
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '▶';
+            color: var(--accent-cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Warning/Tip boxes */
+        .tip-box {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .tip-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box h4::before {
+            content: '⚠️';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .chapter-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chapter-nav {
+                gap: 2px;
+                padding: 4px;
+            }
+
+            .nav-button {
+                padding: 1px 3px;
+                font-size: 0.6rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .code-content, .output-content {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>第21章: 時系列分析とmodeltime</h1>
+            <p class="subtitle">Tidyverseエコシステムによる高度な時系列予測</p>
+            <div class="chapter-meta">
+                <span>📈 時系列モデリング</span>
+                <span>🔮 予測と評価</span>
+                <span>⚡ アンサンブル学習</span>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="chapter1-tidyverse-overview.html" class="nav-button">第1章</a>
+            <a href="chapter2-dplyr-data-manipulation.html" class="nav-button">第2章</a>
+            <a href="chapter3-ggplot2-visualization.html" class="nav-button">第3章</a>
+            <a href="chapter4-tidyr-data-reshaping.html" class="nav-button">第4章</a>
+            <a href="chapter5-stringr-text-processing.html" class="nav-button">第5章</a>
+            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">第6章</a>
+            <a href="chapter7-lubridate-datetime.html" class="nav-button">第7章</a>
+            <a href="chapter8-readr-data-import.html" class="nav-button">第8章</a>
+            <a href="chapter9-tibble-modern-dataframe.html" class="nav-button">第9章</a>
+            <a href="chapter10-statistics-modeling.html" class="nav-button">第10章</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">第11章</a>
+            <a href="chapter12-time-series.html" class="nav-button">第12章</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">第13章</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">第14章</a>
+            <a href="chapter15-advanced-data-viz.html" class="nav-button">第15章</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">第16章</a>
+            <a href="chapter17-hyperparameter-tuning-simple.html" class="nav-button">第17章</a>
+            <a href="chapter18-model-evaluation-yardstick.html" class="nav-button">第18章</a>
+            <a href="chapter19-prediction-interpretation.html" class="nav-button">第19章</a>
+            <a href="chapter20-ensemble-learning-enhanced.html" class="nav-button">第20章</a>
+            <a href="#" class="nav-button current">第21章</a>
+            <a href="chapter22-text-analysis-tidytext.html" class="nav-button">第22章</a>
+        </nav>
+
+        <!-- MODELTIME INTRODUCTION -->
+        <section class="section" id="modeltime-intro">
+            <h2>📈 modeltimeの革新的時系列分析</h2>
+                <p>
+                    modeltimeは、時系列予測のためのtidymodelsエコシステム拡張パッケージです。ARIMA、Prophet、機械学習モデルを統一されたインターフェースで操作し、美しい時系列分析ワークフローを実現します。
+                </p>
+
+                <!-- 時系列分析概要図 -->
+                <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-cyan); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+                    <h4 style="color: var(--accent-cyan); text-align: center; margin-bottom: 1.5rem;">📈 Modeltime時系列分析エコシステム</h4>
+                    <svg viewBox="0 0 1200 800" style="width: 100%; height: auto;">
+                        <defs>
+                            <linearGradient id="timeseriesGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:1"/>
+                                <stop offset="25%" style="stop-color:#9d4edd;stop-opacity:1"/>
+                                <stop offset="50%" style="stop-color:#00ff88;stop-opacity:1"/>
+                                <stop offset="75%" style="stop-color:#00d4ff;stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:#ffff41;stop-opacity:1"/>
+                            </linearGradient>
+                            <filter id="timeGlow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge> 
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                            <pattern id="timePattern" patternUnits="userSpaceOnUse" width="10" height="10">
+                                <rect width="10" height="10" fill="rgba(0,255,136,0.1)"/>
+                                <path d="M 0,10 L 10,0" stroke="rgba(0,255,136,0.3)" stroke-width="1"/>
+                            </pattern>
+                        </defs>
+                        
+                        <!-- メインタイトル -->
+                        <text x="600" y="30" text-anchor="middle" fill="#00d4ff" font-size="18" font-weight="bold">📈 Modeltime時系列分析統合フレームワーク</text>
+                        
+                        <!-- 時系列データの例 -->
+                        <text x="600" y="65" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">🔄 時系列分析の基本概念</text>
+                        
+                        <!-- 時系列グラフの描画 -->
+                        <rect x="50" y="80" width="1100" height="150" rx="10" fill="rgba(0, 0, 0, 0.3)" stroke="#00d4ff" stroke-width="2"/>
+                        
+                        <!-- 時系列データのプロット -->
+                        <g transform="translate(80, 100)">
+                            <!-- X軸 -->
+                            <line x1="0" y1="100" x2="1040" y2="100" stroke="#ffffff" stroke-width="1"/>
+                            <text x="520" y="120" text-anchor="middle" fill="white" font-size="11">時間軸 (Time)</text>
+                            
+                            <!-- Y軸 -->
+                            <line x1="0" y1="0" x2="0" y2="100" stroke="#ffffff" stroke-width="1"/>
+                            <text x="-40" y="50" text-anchor="middle" fill="white" font-size="11" transform="rotate(-90, -40, 50)">値 (Value)</text>
+                            
+                            <!-- 時系列データのライン -->
+                            <path d="M 0,80 Q 100,60 200,50 Q 300,40 400,55 Q 500,70 600,45 Q 700,30 800,35 Q 900,50 1000,40" 
+                                  stroke="#00ff88" stroke-width="3" fill="none" filter="url(#timeGlow)"/>
+                            
+                            <!-- データポイント -->
+                            <circle cx="0" cy="80" r="3" fill="#00ff88" stroke="white" stroke-width="1"/>
+                            <circle cx="200" cy="50" r="3" fill="#00ff88" stroke="white" stroke-width="1"/>
+                            <circle cx="400" cy="55" r="3" fill="#00ff88" stroke="white" stroke-width="1"/>
+                            <circle cx="600" cy="45" r="3" fill="#00ff88" stroke="white" stroke-width="1"/>
+                            <circle cx="800" cy="35" r="3" fill="#00ff88" stroke="white" stroke-width="1"/>
+                            <circle cx="1000" cy="40" r="3" fill="#00ff88" stroke="white" stroke-width="1"/>
+                            
+                            <!-- トレンドライン -->
+                            <path d="M 0,75 L 1000,35" stroke="#ff8c42" stroke-width="2" stroke-dasharray="5,5" opacity="0.7"/>
+                            <text x="500" y="25" text-anchor="middle" fill="#ff8c42" font-size="10">トレンド</text>
+                            
+                            <!-- 季節性の表示 -->
+                            <path d="M 100,60 Q 150,50 200,60 Q 250,70 300,60 Q 350,50 400,60 Q 450,70 500,60 Q 550,50 600,60 Q 650,70 700,60 Q 750,50 800,60 Q 850,70 900,60" 
+                                  stroke="#9d4edd" stroke-width="2" fill="none" opacity="0.6"/>
+                            <text x="500" y="85" text-anchor="middle" fill="#9d4edd" font-size="10">季節性</text>
+                            
+                            <!-- 時間軸のラベル -->
+                            <text x="0" y="115" text-anchor="middle" fill="white" font-size="9">2020</text>
+                            <text x="250" y="115" text-anchor="middle" fill="white" font-size="9">2021</text>
+                            <text x="500" y="115" text-anchor="middle" fill="white" font-size="9">2022</text>
+                            <text x="750" y="115" text-anchor="middle" fill="white" font-size="9">2023</text>
+                            <text x="1000" y="115" text-anchor="middle" fill="white" font-size="9">2024</text>
+                        </g>
+                        
+                        <!-- Modeltime コンポーネント -->
+                        <text x="600" y="270" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🛠️ Modeltimeコンポーネント構成</text>
+                        
+                        <!-- モデル群 -->
+                        <rect x="50" y="290" width="200" height="180" rx="15" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="2" filter="url(#timeGlow)"/>
+                        <text x="150" y="315" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">📊 統計モデル</text>
+                        
+                        <!-- ARIMA -->
+                        <rect x="70" y="330" width="160" height="30" rx="5" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1"/>
+                        <text x="150" y="350" text-anchor="middle" fill="white" font-size="11" font-weight="bold">ARIMA</text>
+                        
+                        <!-- ETS -->
+                        <rect x="70" y="370" width="160" height="30" rx="5" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1"/>
+                        <text x="150" y="390" text-anchor="middle" fill="white" font-size="11" font-weight="bold">ETS (指数平滑)</text>
+                        
+                        <!-- STL -->
+                        <rect x="70" y="410" width="160" height="30" rx="5" fill="rgba(0, 255, 136, 0.2)" stroke="#00ff88" stroke-width="1"/>
+                        <text x="150" y="430" text-anchor="middle" fill="white" font-size="11" font-weight="bold">STL分解</text>
+                        
+                        <!-- Prophet -->
+                        <rect x="280" y="290" width="200" height="180" rx="15" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="2" filter="url(#timeGlow)"/>
+                        <text x="380" y="315" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">🔮 Prophet</text>
+                        
+                        <!-- Prophetの特徴 -->
+                        <text x="290" y="340" fill="white" font-size="11">• 非線形トレンド</text>
+                        <text x="290" y="360" fill="white" font-size="11">• 年次・週次季節性</text>
+                        <text x="290" y="380" fill="white" font-size="11">• 祝日効果</text>
+                        <text x="290" y="400" fill="white" font-size="11">• 変化点検出</text>
+                        <text x="290" y="420" fill="white" font-size="11">• 頑健な外れ値処理</text>
+                        <text x="290" y="440" fill="white" font-size="11">• 不規則間隔データ対応</text>
+                        
+                        <!-- 機械学習モデル -->
+                        <rect x="510" y="290" width="200" height="180" rx="15" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" filter="url(#timeGlow)"/>
+                        <text x="610" y="315" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">🤖 機械学習</text>
+                        
+                        <!-- Random Forest -->
+                        <rect x="530" y="330" width="160" height="25" rx="5" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1"/>
+                        <text x="610" y="347" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Random Forest</text>
+                        
+                        <!-- XGBoost -->
+                        <rect x="530" y="365" width="160" height="25" rx="5" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1"/>
+                        <text x="610" y="382" text-anchor="middle" fill="white" font-size="10" font-weight="bold">XGBoost</text>
+                        
+                        <!-- LSTM -->
+                        <rect x="530" y="400" width="160" height="25" rx="5" fill="rgba(255, 255, 65, 0.2)" stroke="#ffff41" stroke-width="1"/>
+                        <text x="610" y="417" text-anchor="middle" fill="white" font-size="10" font-weight="bold">LSTM (Neural Net)</text>
+                        
+                        <!-- SVM -->
+                        <rect x="530" y="435" width="160" height="25" rx="5" fill="rgba(255, 0, 127, 0.2)" stroke="#ff007f" stroke-width="1"/>
+                        <text x="610" y="452" text-anchor="middle" fill="white" font-size="10" font-weight="bold">SVM</text>
+                        
+                        <!-- アンサンブル -->
+                        <rect x="740" y="290" width="200" height="180" rx="15" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="2" filter="url(#timeGlow)"/>
+                        <text x="840" y="315" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="bold">🎯 アンサンブル</text>
+                        
+                        <!-- アンサンブル手法 -->
+                        <text x="750" y="340" fill="white" font-size="11">• 平均アンサンブル</text>
+                        <text x="750" y="360" fill="white" font-size="11">• 加重平均</text>
+                        <text x="750" y="380" fill="white" font-size="11">• スタッキング</text>
+                        <text x="750" y="400" fill="white" font-size="11">• メタ学習</text>
+                        <text x="750" y="420" fill="white" font-size="11">• 動的重み調整</text>
+                        <text x="750" y="440" fill="white" font-size="11">• モデル選択</text>
+                        
+                        <!-- 評価・検証 -->
+                        <rect x="970" y="290" width="180" height="180" rx="15" fill="rgba(255, 255, 65, 0.1)" stroke="#ffff41" stroke-width="2" filter="url(#timeGlow)"/>
+                        <text x="1060" y="315" text-anchor="middle" fill="#ffff41" font-size="14" font-weight="bold">📊 評価・検証</text>
+                        
+                        <!-- 評価指標 -->
+                        <text x="980" y="340" fill="white" font-size="10">• MAE (平均絶対誤差)</text>
+                        <text x="980" y="355" fill="white" font-size="10">• RMSE (二乗平均平方根誤差)</text>
+                        <text x="980" y="370" fill="white" font-size="10">• MAPE (平均絶対パーセント誤差)</text>
+                        <text x="980" y="385" fill="white" font-size="10">• Time Series CV</text>
+                        <text x="980" y="400" fill="white" font-size="10">• バックテスト</text>
+                        <text x="980" y="415" fill="white" font-size="10">• フォワードテスト</text>
+                        <text x="980" y="430" fill="white" font-size="10">• 信頼区間評価</text>
+                        <text x="980" y="445" fill="white" font-size="10">• 残差分析</text>
+                        
+                        <!-- ワークフロー -->
+                        <text x="600" y="510" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🔄 Modeltime分析ワークフロー</text>
+                        
+                        <!-- ステップ1: データ準備 -->
+                        <rect x="50" y="530" width="140" height="70" rx="10" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="2"/>
+                        <text x="120" y="550" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📚 データ準備</text>
+                        <text x="120" y="570" text-anchor="middle" fill="white" font-size="10">• 時系列フォーマット</text>
+                        <text x="120" y="585" text-anchor="middle" fill="white" font-size="10">• 欠損値処理・外れ値</text>
+                        
+                        <!-- 矢印1 -->
+                        <polygon points="210,565 250,550 250,580" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
+                        
+                        <!-- ステップ2: モデル構築 -->
+                        <rect x="270" y="530" width="140" height="70" rx="10" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="2"/>
+                        <text x="340" y="550" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🔧 モデル構築</text>
+                        <text x="340" y="570" text-anchor="middle" fill="white" font-size="10">• モデル定義</text>
+                        <text x="340" y="585" text-anchor="middle" fill="white" font-size="10">• パラメータ調整</text>
+                        
+                        <!-- 矢印2 -->
+                        <polygon points="430,565 470,550 470,580" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
+                        
+                        <!-- ステップ3: モデルテーブル -->
+                        <rect x="490" y="530" width="140" height="70" rx="10" fill="rgba(0, 255, 136, 0.2)" stroke="#00ff88" stroke-width="2"/>
+                        <text x="560" y="550" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📋 テーブル化</text>
+                        <text x="560" y="570" text-anchor="middle" fill="white" font-size="10">• modeltime_table()</text>
+                        <text x="560" y="585" text-anchor="middle" fill="white" font-size="10">• モデル管理</text>
+                        
+                        <!-- 矢印3 -->
+                        <polygon points="650,565 690,550 690,580" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
+                        
+                        <!-- ステップ4: キャリブレーション -->
+                        <rect x="710" y="530" width="140" height="70" rx="10" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="2"/>
+                        <text x="780" y="550" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🎯 キャリブレーション</text>
+                        <text x="780" y="570" text-anchor="middle" fill="white" font-size="10">• 検証データ適用</text>
+                        <text x="780" y="585" text-anchor="middle" fill="white" font-size="10">• 精度測定</text>
+                        
+                        <!-- 矢印4 -->
+                        <polygon points="870,565 910,550 910,580" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
+                        
+                        <!-- ステップ5: 予測・可視化 -->
+                        <rect x="930" y="530" width="140" height="70" rx="10" fill="rgba(255, 255, 65, 0.2)" stroke="#ffff41" stroke-width="2"/>
+                        <text x="1000" y="550" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📈 予測</text>
+                        <text x="1000" y="570" text-anchor="middle" fill="white" font-size="10">• 未来予測</text>
+                        <text x="1000" y="585" text-anchor="middle" fill="white" font-size="10">• 信頼区間</text>
+                        
+                        <!-- 詳細機能 -->
+                        <text x="600" y="650" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">🎯 Modeltime高度機能</text>
+                        
+                        <!-- 機能詳細 -->
+                        <rect x="50" y="670" width="230" height="100" rx="10" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="1"/>
+                        <text x="165" y="690" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🔄 自動化機能</text>
+                        <text x="60" y="710" fill="#ff8c42" font-size="10">• Auto ARIMA パラメータ選択</text>
+                        <text x="60" y="725" fill="#ff8c42" font-size="10">• Cross-validation 自動実行</text>
+                        <text x="60" y="740" fill="#ff8c42" font-size="10">• ハイパーパラメータ最適化</text>
+                        <text x="60" y="755" fill="#ff8c42" font-size="10">• 並列処理対応</text>
+                        
+                        <rect x="300" y="670" width="230" height="100" rx="10" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="1"/>
+                        <text x="415" y="690" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📊 可視化機能</text>
+                        <text x="310" y="710" fill="#00ff88" font-size="10">• 対話的プロット (plotly)</text>
+                        <text x="310" y="725" fill="#00ff88" font-size="10">• 残差診断チャート</text>
+                        <text x="310" y="740" fill="#00ff88" font-size="10">• モデル比較ダッシュボード</text>
+                        <text x="310" y="755" fill="#00ff88" font-size="10">• 予測信頼区間表示</text>
+                        
+                        <rect x="550" y="670" width="230" height="100" rx="10" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="1"/>
+                        <text x="665" y="690" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🎯 精度向上</text>
+                        <text x="560" y="710" fill="#00d4ff" font-size="10">• Ensemble Model 構築</text>
+                        <text x="560" y="725" fill="#00d4ff" font-size="10">• Feature Engineering 自動化</text>
+                        <text x="560" y="740" fill="#00d4ff" font-size="10">• 外部回帰子組み込み</text>
+                        <text x="560" y="755" fill="#00d4ff" font-size="10">• オンライン学習対応</text>
+                        
+                        <rect x="800" y="670" width="230" height="100" rx="10" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="1"/>
+                        <text x="915" y="690" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🚀 プロダクション</text>
+                        <text x="810" y="710" fill="#9d4edd" font-size="10">• Shiny アプリケーション</text>
+                        <text x="810" y="725" fill="#9d4edd" font-size="10">• API エンドポイント</text>
+                        <text x="810" y="740" fill="#9d4edd" font-size="10">• スケジュール実行</text>
+                        <text x="810" y="755" fill="#9d4edd" font-size="10">• モデル管理・バージョニング</text>
+                    </svg>
+                </div>
+                
+                <!-- Core Packages -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📦 modeltimeコアパッケージ</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">modeltime_setup.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># modeltimeエコシステムの読み込み</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidymodels</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">modeltime</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">modeltime.ensemble</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">timetk</span>)</span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># サンプル時系列データの準備</span></span>
+                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyquant</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 株価データの取得例</span></span>
+                        <span class="code-line"><span class="code-variable">stock_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">tq_get</span>(<span class="code-string">"AAPL"</span>, get = <span class="code-string">"stock.prices"</span>,</span>
+                        <span class="code-line">                     from = <span class="code-string">"2020-01-01"</span>, to = <span class="code-string">"2023-12-31"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(date, adjusted) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">rename</span>(value = adjusted)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">glimpse</span>(stock_data)</span>
+                    </div>
+                </div>
+
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h3 class="function-title">📊 modeltime</h3>
+                        <p class="function-description">
+                            時系列予測の統一フレームワーク。ARIMA、Prophet、機械学習モデルを同じインターフェースで操作可能。モデル比較と選択を簡素化。
+                        </p>
+                        <div class="function-syntax">
+                            modeltime_table(), modeltime_calibrate(), modeltime_forecast()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🔧 timetk</h3>
+                        <p class="function-description">
+                            時系列データの操作と可視化。特徴量エンジニアリング、季節分解、異常検知など包括的な時系列分析ツール。
+                        </p>
+                        <div class="function-syntax">
+                            plot_time_series(), tk_augment_timeseries_signature()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🎯 modeltime.ensemble</h3>
+                        <p class="function-description">
+                            時系列アンサンブル学習。複数の時系列モデルを組み合わせて予測精度を向上。平均、重み付き平均、スタッキングをサポート。
+                        </p>
+                        <div class="function-syntax">
+                            ensemble_average(), ensemble_weighted()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">⏰ rsample</h3>
+                        <p class="function-description">
+                            時系列専用のリサンプリング。時間順序を考慮した訓練・テスト分割とクロスバリデーション。データリークを防止。
+                        </p>
+                        <div class="function-syntax">
+                            time_series_split(), time_series_cv()
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ml-workflow">
+                    <div class="workflow-title">🔄 時系列分析ワークフロー</div>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <strong>データ準備</strong><br>
+                            <small>時系列読み込み・前処理</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <strong>探索的分析</strong><br>
+                            <small>季節性・トレンド分析</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <strong>特徴量生成</strong><br>
+                            <small>ラグ・移動平均・周期特徴量</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <strong>モデル構築</strong><br>
+                            <small>ARIMA・Prophet・ML</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <strong>評価・選択</strong><br>
+                            <small>クロスバリデーション</small>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">6</div>
+                            <strong>アンサンブル</strong><br>
+                            <small>複数モデル統合</small>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- TIME SERIES DATA SPLITTING -->
+        <section class="section" id="time-series-splitting">
+            <h2>⏰ 時系列データ分割とリサンプリング</h2>
+                <p>
+                    時系列分析では、時間順序を考慮したデータ分割が重要です。rsampleとtimetkパッケージは、時系列専用の分割とクロスバリデーション手法を提供します。
+                </p>
+                
+                <!-- Time Series Split -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📊 時系列データ分割</h3>
+                
+                <!-- Time Series Split Visualization -->
+                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-cyan);">
+                    <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🎯 時系列データ分割の概念図</h4>
+                    <svg width="100%" height="300" viewBox="0 0 1000 300" style="max-width: 100%; height: auto;">
+                        <!-- Background Grid -->
+                        <defs>
+                            <pattern id="timeGrid" width="50" height="25" patternUnits="userSpaceOnUse">
+                                <path d="M 50 0 L 0 0 0 25" fill="none" stroke="#00ff4120" stroke-width="0.5"/>
+                            </pattern>
+                            <linearGradient id="trainGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0.3" />
+                                <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.1" />
+                            </linearGradient>
+                            <linearGradient id="testGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:0.3" />
+                                <stop offset="100%" style="stop-color:#ff8c42;stop-opacity:0.1" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Background -->
+                        <rect width="1000" height="300" fill="url(#timeGrid)"/>
+                        
+                        <!-- Time Axis -->
+                        <line x1="100" y1="250" x2="900" y2="250" stroke="#00ff88" stroke-width="2"/>
+                        
+                        <!-- Training Data Region -->
+                        <rect x="120" y="80" width="600" height="140" fill="url(#trainGradient)" stroke="#00d4ff" stroke-width="2" rx="10"/>
+                        <text x="420" y="160" text-anchor="middle" fill="#00d4ff" font-size="18" font-weight="bold">Training Data (80%)</text>
+                        <text x="420" y="180" text-anchor="middle" fill="#00d4ff" font-size="14">2020-01-01 ~ 2022-12-31</text>
+                        
+                        <!-- Test Data Region -->
+                        <rect x="720" y="80" width="150" height="140" fill="url(#testGradient)" stroke="#ff8c42" stroke-width="2" rx="10"/>
+                        <text x="795" y="160" text-anchor="middle" fill="#ff8c42" font-size="18" font-weight="bold">Test Data</text>
+                        <text x="795" y="180" text-anchor="middle" fill="#ff8c42" font-size="14">(20%)</text>
+                        <text x="795" y="200" text-anchor="middle" fill="#ff8c42" font-size="12">2023-01-01~</text>
+                        
+                        <!-- Time Labels -->
+                        <text x="120" y="270" text-anchor="middle" fill="#00ff88" font-size="12">2020</text>
+                        <text x="320" y="270" text-anchor="middle" fill="#00ff88" font-size="12">2021</text>
+                        <text x="520" y="270" text-anchor="middle" fill="#00ff88" font-size="12">2022</text>
+                        <text x="720" y="270" text-anchor="middle" fill="#00ff88" font-size="12">2023</text>
+                        <text x="870" y="270" text-anchor="middle" fill="#00ff88" font-size="12">Future</text>
+                        
+                        <!-- Arrows and Annotations -->
+                        <path d="M 870 140 Q 920 120 950 140" fill="none" stroke="#9d4edd" stroke-width="3" marker-end="url(#arrowhead)"/>
+                        <text x="950" y="135" fill="#9d4edd" font-size="14" font-weight="bold">Prediction</text>
+                        
+                        <!-- Arrow Marker Definition -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#9d4edd"/>
+                            </marker>
+                        </defs>
+                        
+                        <!-- Data Leakage Warning -->
+                        <circle cx="680" cy="50" r="20" fill="#ff4444" opacity="0.8"/>
+                        <text x="680" y="57" text-anchor="middle" fill="white" font-size="24" font-weight="bold">⚠</text>
+                        <text x="680" y="30" text-anchor="middle" fill="#ff4444" font-size="12" font-weight="bold">Data Leakage</text>
+                        <text x="680" y="20" text-anchor="middle" fill="#ff4444" font-size="12">を防ぐ</text>
+                        
+                        <!-- Title -->
+                        <text x="500" y="30" text-anchor="middle" fill="#00ff88" font-size="20" font-weight="bold">時系列データの適切な分割</text>
+                    </svg>
+                    
+                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 20px; height: 15px; background: linear-gradient(90deg, #00d4ff, #00d4ff40); border-radius: 3px;"></div>
+                            <span style="color: #00d4ff; font-size: 0.9rem;">訓練期間（過去データ）</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 20px; height: 15px; background: linear-gradient(90deg, #ff8c42, #ff8c4240); border-radius: 3px;"></div>
+                            <span style="color: #ff8c42; font-size: 0.9rem;">テスト期間（最新データ）</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 20px; height: 15px; background: #9d4edd; border-radius: 3px;"></div>
+                            <span style="color: #9d4edd; font-size: 0.9rem;">予測対象（未来）</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">time_series_split.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 時系列データの分割（最後の12か月をテスト用）</span></span>
+                        <span class="code-line"><span class="code-variable">splits</span> <span class="code-keyword">&lt;-</span> stock_data <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">time_series_split</span>(</span>
+                        <span class="code-line">    assess = <span class="code-string">"12 months"</span>,</span>
+                        <span class="code-line">    cumulative = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 分割結果の可視化</span></span>
+                        <span class="code-line">splits <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">tk_time_series_cv_plan</span>() <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">plot_time_series_cv_plan</span>(date, value, .interactive = <span class="code-string">TRUE</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 訓練・テストデータの取得</span></span>
+                        <span class="code-line"><span class="code-variable">train_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(splits)</span>
+                        <span class="code-line"><span class="code-variable">test_data</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(splits)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"訓練データ期間:"</span>, <span class="code-function">min</span>(train_data$date), <span class="code-string">"〜"</span>, <span class="code-function">max</span>(train_data$date), <span class="code-string">"\\n"</span>)</span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"テストデータ期間:"</span>, <span class="code-function">min</span>(test_data$date), <span class="code-string">"〜"</span>, <span class="code-function">max</span>(test_data$date), <span class="code-string">"\\n"</span>)</span>
+                    </div>
+                </div>
+
+                <!-- Cross-Validation -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🔄 時系列クロスバリデーション</h3>
+                
+                <!-- Time Series CV Visualization -->
+                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-purple);">
+                    <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🎯 ウォークフォワード・クロスバリデーション</h4>
+                    <svg width="100%" height="400" viewBox="0 0 1000 400" style="max-width: 100%; height: auto;">
+                        <!-- Background -->
+                        <rect width="1000" height="400" fill="#0a0a0f"/>
+                        
+                        <!-- CV Fold Definitions -->
+                        <defs>
+                            <linearGradient id="cvTrain" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0.6" />
+                                <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.3" />
+                            </linearGradient>
+                            <linearGradient id="cvTest" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:0.6" />
+                                <stop offset="100%" style="stop-color:#ff8c42;stop-opacity:0.3" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Title -->
+                        <text x="500" y="30" text-anchor="middle" fill="#00ff88" font-size="18" font-weight="bold">Time Series Cross-Validation: 6 Folds</text>
+                        
+                        <!-- Time Axis -->
+                        <line x1="100" y1="370" x2="900" y2="370" stroke="#00ff88" stroke-width="1"/>
+                        <text x="100" y="390" text-anchor="middle" fill="#00ff88" font-size="10">2020</text>
+                        <text x="300" y="390" text-anchor="middle" fill="#00ff88" font-size="10">2021</text>
+                        <text x="500" y="390" text-anchor="middle" fill="#00ff88" font-size="10">2022</text>
+                        <text x="700" y="390" text-anchor="middle" fill="#00ff88" font-size="10">2023</text>
+                        <text x="900" y="390" text-anchor="middle" fill="#00ff88" font-size="10">2024</text>
+                        
+                        <!-- CV Fold 1 -->
+                        <g transform="translate(0, 60)">
+                            <text x="70" y="25" fill="#ffffff" font-size="12" font-weight="bold">Fold 1</text>
+                            <rect x="100" y="10" width="400" height="30" fill="url(#cvTrain)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <rect x="520" y="10" width="100" height="30" fill="url(#cvTest)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="300" y="30" text-anchor="middle" fill="#00d4ff" font-size="10">Training (3 years)</text>
+                            <text x="570" y="30" text-anchor="middle" fill="#ff8c42" font-size="10">Test (1 year)</text>
+                        </g>
+                        
+                        <!-- CV Fold 2 -->
+                        <g transform="translate(0, 110)">
+                            <text x="70" y="25" fill="#ffffff" font-size="12" font-weight="bold">Fold 2</text>
+                            <rect x="100" y="10" width="450" height="30" fill="url(#cvTrain)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <rect x="570" y="10" width="100" height="30" fill="url(#cvTest)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="325" y="30" text-anchor="middle" fill="#00d4ff" font-size="10">Training (Cumulative)</text>
+                            <text x="620" y="30" text-anchor="middle" fill="#ff8c42" font-size="10">Test</text>
+                        </g>
+                        
+                        <!-- CV Fold 3 -->
+                        <g transform="translate(0, 160)">
+                            <text x="70" y="25" fill="#ffffff" font-size="12" font-weight="bold">Fold 3</text>
+                            <rect x="100" y="10" width="500" height="30" fill="url(#cvTrain)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <rect x="620" y="10" width="100" height="30" fill="url(#cvTest)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="350" y="30" text-anchor="middle" fill="#00d4ff" font-size="10">Training (Cumulative)</text>
+                            <text x="670" y="30" text-anchor="middle" fill="#ff8c42" font-size="10">Test</text>
+                        </g>
+                        
+                        <!-- CV Fold 4 -->
+                        <g transform="translate(0, 210)">
+                            <text x="70" y="25" fill="#ffffff" font-size="12" font-weight="bold">Fold 4</text>
+                            <rect x="100" y="10" width="550" height="30" fill="url(#cvTrain)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <rect x="670" y="10" width="100" height="30" fill="url(#cvTest)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="375" y="30" text-anchor="middle" fill="#00d4ff" font-size="10">Training (Cumulative)</text>
+                            <text x="720" y="30" text-anchor="middle" fill="#ff8c42" font-size="10">Test</text>
+                        </g>
+                        
+                        <!-- CV Fold 5 -->
+                        <g transform="translate(0, 260)">
+                            <text x="70" y="25" fill="#ffffff" font-size="12" font-weight="bold">Fold 5</text>
+                            <rect x="100" y="10" width="600" height="30" fill="url(#cvTrain)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <rect x="720" y="10" width="100" height="30" fill="url(#cvTest)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="400" y="30" text-anchor="middle" fill="#00d4ff" font-size="10">Training (Cumulative)</text>
+                            <text x="770" y="30" text-anchor="middle" fill="#ff8c42" font-size="10">Test</text>
+                        </g>
+                        
+                        <!-- CV Fold 6 -->
+                        <g transform="translate(0, 310)">
+                            <text x="70" y="25" fill="#ffffff" font-size="12" font-weight="bold">Fold 6</text>
+                            <rect x="100" y="10" width="650" height="30" fill="url(#cvTrain)" stroke="#00d4ff" stroke-width="1" rx="5"/>
+                            <rect x="770" y="10" width="100" height="30" fill="url(#cvTest)" stroke="#ff8c42" stroke-width="1" rx="5"/>
+                            <text x="425" y="30" text-anchor="middle" fill="#00d4ff" font-size="10">Training (Cumulative)</text>
+                            <text x="820" y="30" text-anchor="middle" fill="#ff8c42" font-size="10">Test</text>
+                        </g>
+                        
+                        <!-- Skip Annotation -->
+                        <path d="M 520 85 L 570 135" stroke="#9d4edd" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="545" y="105" fill="#9d4edd" font-size="10" transform="rotate(-45 545 105)">skip: 3ヶ月</text>
+                        
+                        <!-- Progressive Training Arrow -->
+                        <path d="M 150 50 L 750 50" stroke="#00ff88" stroke-width="2" marker-end="url(#progressArrow)"/>
+                        <text x="450" y="45" text-anchor="middle" fill="#00ff88" font-size="12" font-weight="bold">累積的な訓練データ拡張</text>
+                        
+                        <defs>
+                            <marker id="progressArrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#00ff88"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    
+                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00d4ff;">
+                            <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">✅ Cumulative Training</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">各フォールドで訓練データを累積的に増やし、実際の時系列予測環境をシミュレート</p>
+                        </div>
+                        <div style="background: rgba(255, 140, 66, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ff8c42;">
+                            <h5 style="color: #ff8c42; margin-bottom: 0.5rem;">🎯 Fixed Test Window</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">一定期間のテストデータで一貫した評価。実用的な予測性能を測定</p>
+                        </div>
+                        <div style="background: rgba(157, 78, 221, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #9d4edd;">
+                            <h5 style="color: #9d4edd; margin-bottom: 0.5rem;">⏭️ Skip Parameter</h5>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">オーバーラップを避けるために訓練期間を段階的にスキップ</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">time_series_cv.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 時系列クロスバリデーション設定</span></span>
+                        <span class="code-line"><span class="code-variable">resamples</span> <span class="code-keyword">&lt;-</span> stock_data <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">time_series_cv</span>(</span>
+                        <span class="code-line">    initial = <span class="code-string">"3 years"</span>,</span>
+                        <span class="code-line">    assess = <span class="code-string">"12 months"</span>, </span>
+                        <span class="code-line">    skip = <span class="code-string">"3 months"</span>,</span>
+                        <span class="code-line">    cumulative = <span class="code-string">TRUE</span>,</span>
+                        <span class="code-line">    slice_limit = <span class="code-string">6</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># CV分割の可視化</span></span>
+                        <span class="code-line">resamples <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">tk_time_series_cv_plan</span>() <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">plot_time_series_cv_plan</span>(</span>
+                        <span class="code-line">    date, value,</span>
+                        <span class="code-line">    .facet_ncol = <span class="code-string">2</span>,</span>
+                        <span class="code-line">    .interactive = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(resamples)</span>
+                    </div>
+                </div>
+
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h3 class="function-title">Time Series Split</h3>
+                        <p class="function-description">
+                            時間順序を保持した訓練・テスト分割。最新のデータをテストセットとして確保し、過去のデータで訓練。実用的な予測性能評価を実現。
+                        </p>
+                        <div class="function-syntax">
+                            time_series_split(data, assess = "12 months", cumulative = TRUE)
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">Time Series CV</h3>
+                        <p class="function-description">
+                            時系列専用クロスバリデーション。ウォークフォワード分析により、各時点での予測性能を評価。モデル選択の信頼性を向上。
+                        </p>
+                        <div class="function-syntax">
+                            time_series_cv(data, initial, assess, skip, cumulative)
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">Data Leakage防止</h3>
+                        <p class="function-description">
+                            未来情報の漏洩を防ぐ仕組み。訓練時に未来のデータを使用せず、実際の予測状況を再現。時系列分析の信頼性を確保。
+                        </p>
+                        <div class="function-syntax">
+                            tk_time_series_cv_plan(), plot_time_series_cv_plan()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">Rolling Window</h3>
+                        <p class="function-description">
+                            動的な時間窓による評価。固定サイズまたは累積的な訓練期間を選択可能。データの時間変化に対する頑健性を測定。
+                        </p>
+                        <div class="function-syntax">
+                            rolling_origin(data, initial, assess, skip)
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- TIME SERIES FEATURE ENGINEERING -->
+        <section class="section" id="feature-engineering">
+            <h2>🔬 時系列特徴量エンジニアリング</h2>
+                <p>
+                    timetkパッケージは、時系列データから豊富な特徴量を自動生成できます。日付・時刻の分解から、ラグ特徴量、移動平均、フーリエ変換まで、包括的な特徴量エンジニアリングを支援します。
+                </p>
+                
+                <!-- Basic Feature Engineering -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📅 日付時刻特徴量の生成</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">time_series_features.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 時系列署名の生成</span></span>
+                        <span class="code-line"><span class="code-variable">ts_features</span> <span class="code-keyword">&lt;-</span> train_data <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">tk_augment_timeseries_signature</span>(date) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(-<span class="code-function">contains</span>(<span class="code-string">"hour|minute|second|am.pm"</span>)) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># ラグ特徴量</span></span>
+                        <span class="code-line">    lag_1 = <span class="code-function">lag_vec</span>(value, <span class="code-string">1</span>),</span>
+                        <span class="code-line">    lag_7 = <span class="code-function">lag_vec</span>(value, <span class="code-string">7</span>),</span>
+                        <span class="code-line">    lag_14 = <span class="code-function">lag_vec</span>(value, <span class="code-string">14</span>),</span>
+                        <span class="code-line">    lag_30 = <span class="code-function">lag_vec</span>(value, <span class="code-string">30</span>),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 移動平均特徴量  </span></span>
+                        <span class="code-line">    ma_7 = <span class="code-function">slide_vec</span>(value, mean, .before = <span class="code-string">6</span>, .complete = <span class="code-string">TRUE</span>),</span>
+                        <span class="code-line">    ma_14 = <span class="code-function">slide_vec</span>(value, mean, .before = <span class="code-string">13</span>, .complete = <span class="code-string">TRUE</span>),</span>
+                        <span class="code-line">    ma_30 = <span class="code-function">slide_vec</span>(value, mean, .before = <span class="code-string">29</span>, .complete = <span class="code-string">TRUE</span>),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 差分特徴量</span></span>
+                        <span class="code-line">    diff_1 = <span class="code-function">diff_vec</span>(value, lag = <span class="code-string">1</span>),</span>
+                        <span class="code-line">    diff_7 = <span class="code-function">diff_vec</span>(value, lag = <span class="code-string">7</span>),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 変化率特徴量</span></span>
+                        <span class="code-line">    pct_change_1 = (value / <span class="code-function">lag_vec</span>(value, <span class="code-string">1</span>) - <span class="code-string">1</span>) * <span class="code-string">100</span>,</span>
+                        <span class="code-line">    pct_change_7 = (value / <span class="code-function">lag_vec</span>(value, <span class="code-string">7</span>) - <span class="code-string">1</span>) * <span class="code-string">100</span></span>
+                        <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">filter</span>(!<span class="code-function">is.na</span>(lag_30))</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">glimpse</span>(ts_features)</span>
+                    </div>
+                </div>
+
+                <!-- Advanced Feature Engineering -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🔬 高度な特徴量生成</h3>
+                
+                <!-- Feature Engineering Visualization -->
+                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-electric);">
+                    <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">📈 時系列特徴量の全体像</h4>
+                    <svg width="100%" height="500" viewBox="0 0 1200 500" style="max-width: 100%; height: auto;">
+                        <!-- Background -->
+                        <rect width="1200" height="500" fill="#0a0a0f"/>
+                        
+                        <!-- Original Time Series -->
+                        <g transform="translate(50, 50)">
+                            <text x="0" y="0" fill="#00ff88" font-size="14" font-weight="bold">🎯 元時系列データ</text>
+                            <path d="M 0 30 Q 50 20 100 40 Q 150 60 200 35 Q 250 15 300 45 Q 350 55 400 25 Q 450 10 500 40" 
+                                  fill="none" stroke="#00ff88" stroke-width="3"/>
+                            <circle cx="100" cy="40" r="3" fill="#00ff88"/>
+                            <circle cx="200" cy="35" r="3" fill="#00ff88"/>
+                            <circle cx="300" cy="45" r="3" fill="#00ff88"/>
+                            <circle cx="400" cy="25" r="3" fill="#00ff88"/>
+                        </g>
+                        
+                        <!-- Lag Features -->
+                        <g transform="translate(50, 150)">
+                            <text x="0" y="0" fill="#00d4ff" font-size="14" font-weight="bold">⏪ ラグ特徴量</text>
+                            <path d="M 50 30 Q 100 20 150 40 Q 200 60 250 35 Q 300 15 350 45 Q 400 55 450 25" 
+                                  fill="none" stroke="#00d4ff" stroke-width="2" stroke-dasharray="5,5"/>
+                            <path d="M 100 35 Q 150 25 200 45 Q 250 65 300 40 Q 350 20 400 50 Q 450 60 500 30" 
+                                  fill="none" stroke="#0099cc" stroke-width="2" stroke-dasharray="3,3"/>
+                            <text x="520" y="25" fill="#00d4ff" font-size="10">lag_1</text>
+                            <text x="520" y="40" fill="#0099cc" font-size="10">lag_7</text>
+                        </g>
+                        
+                        <!-- Moving Average -->
+                        <g transform="translate(50, 230)">
+                            <text x="0" y="0" fill="#ff8c42" font-size="14" font-weight="bold">📊 移動平均</text>
+                            <path d="M 0 30 Q 50 25 100 35 Q 150 40 200 30 Q 250 25 300 35 Q 350 40 400 30 Q 450 25 500 35" 
+                                  fill="none" stroke="#ff8c42" stroke-width="3"/>
+                            <rect x="0" y="35" width="100" height="5" fill="#ff8c4240" opacity="0.5"/>
+                            <rect x="50" y="35" width="100" height="5" fill="#ff8c4240" opacity="0.5"/>
+                            <rect x="100" y="35" width="100" height="5" fill="#ff8c4240" opacity="0.5"/>
+                            <text x="520" y="30" fill="#ff8c42" font-size="10">7日移動平均</text>
+                        </g>
+                        
+                        <!-- Fourier Transform -->
+                        <g transform="translate(650, 50)">
+                            <text x="0" y="0" fill="#9d4edd" font-size="14" font-weight="bold">〰️ フーリエ変換特徴量</text>
+                            <!-- Sine waves -->
+                            <path d="M 0 40 Q 25 20 50 40 Q 75 60 100 40 Q 125 20 150 40 Q 175 60 200 40 Q 225 20 250 40" 
+                                  fill="none" stroke="#9d4edd" stroke-width="2"/>
+                            <path d="M 0 35 Q 37.5 55 75 35 Q 112.5 15 150 35 Q 187.5 55 225 35" 
+                                  fill="none" stroke="#bb6eff" stroke-width="2" stroke-dasharray="3,3"/>
+                            <text x="270" y="35" fill="#9d4edd" font-size="10">年周期</text>
+                            <text x="270" y="50" fill="#bb6eff" font-size="10">半年周期</text>
+                        </g>
+                        
+                        <!-- Calendar Features -->
+                        <g transform="translate(650, 150)">
+                            <text x="0" y="0" fill="#ffff00" font-size="14" font-weight="bold">📅 カレンダー特徴量</text>
+                            <!-- Calendar grid -->
+                            <rect x="10" y="20" width="30" height="20" fill="#ffff0040" stroke="#ffff00"/>
+                            <rect x="50" y="20" width="30" height="20" fill="#ffff0040" stroke="#ffff00"/>
+                            <rect x="90" y="20" width="30" height="20" fill="#ffff0080" stroke="#ffff00"/>
+                            <rect x="130" y="20" width="30" height="20" fill="#ffff0080" stroke="#ffff00"/>
+                            <rect x="170" y="20" width="30" height="20" fill="#ffff0040" stroke="#ffff00"/>
+                            <text x="25" y="35" text-anchor="middle" fill="#000" font-size="8">月</text>
+                            <text x="65" y="35" text-anchor="middle" fill="#000" font-size="8">火</text>
+                            <text x="105" y="35" text-anchor="middle" fill="#000" font-size="8">土</text>
+                            <text x="145" y="35" text-anchor="middle" fill="#000" font-size="8">日</text>
+                            <text x="185" y="35" text-anchor="middle" fill="#000" font-size="8">月</text>
+                            <text x="220" y="30" fill="#ffff00" font-size="10">週末検知</text>
+                        </g>
+                        
+                        <!-- Technical Indicators -->
+                        <g transform="translate(650, 230)">
+                            <text x="0" y="0" fill="#00ffaa" font-size="14" font-weight="bold">📈 技術指標</text>
+                            <!-- RSI visualization -->
+                            <rect x="0" y="20" width="200" height="30" fill="#1a1a1a" stroke="#00ffaa"/>
+                            <rect x="10" y="25" width="120" height="20" fill="#ff444440"/>
+                            <rect x="130" y="25" width="60" height="20" fill="#00ffaa40"/>
+                            <text x="70" y="38" text-anchor="middle" fill="#ff4444" font-size="10">売られすぎ</text>
+                            <text x="160" y="38" text-anchor="middle" fill="#00ffaa" font-size="10">適正</text>
+                            <text x="220" y="30" fill="#00ffaa" font-size="10">RSI</text>
+                            <text x="0" y="65" fill="#00ffaa" font-size="8">0</text>
+                            <text x="65" y="65" fill="#00ffaa" font-size="8">30</text>
+                            <text x="130" y="65" fill="#00ffaa" font-size="8">70</text>
+                            <text x="190" y="65" fill="#00ffaa" font-size="8">100</text>
+                        </g>
+                        
+                        <!-- Feature Combination Arrow -->
+                        <g transform="translate(450, 350)">
+                            <rect x="0" y="0" width="300" height="60" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" rx="10"/>
+                            <text x="150" y="20" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">🔄 統合された特徴量セット</text>
+                            <text x="150" y="40" text-anchor="middle" fill="#ffffff" font-size="12">機械学習モデルへの入力</text>
+                            <text x="150" y="55" text-anchor="middle" fill="#aaaaaa" font-size="10">50+ features → Predictive Model</text>
+                        </g>
+                        
+                        <!-- Arrows showing flow -->
+                        <path d="M 250 350 Q 300 320 350 350" fill="none" stroke="#00ff88" stroke-width="2" marker-end="url(#featureArrow)"/>
+                        <path d="M 750 350 Q 700 320 650 350" fill="none" stroke="#00ff88" stroke-width="2" marker-end="url(#featureArrow)"/>
+                        
+                        <defs>
+                            <marker id="featureArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                                <polygon points="0 0, 8 3, 0 6" fill="#00ff88"/>
+                            </marker>
+                        </defs>
+                        
+                        <!-- Legend -->
+                        <g transform="translate(50, 420)">
+                            <text x="0" y="0" fill="#ffffff" font-size="12" font-weight="bold">特徴量の種類:</text>
+                            <circle cx="20" cy="25" r="5" fill="#00d4ff"/>
+                            <text x="35" y="30" fill="#00d4ff" font-size="10">時間依存特徴量（ラグ、移動平均、差分）</text>
+                            
+                            <circle cx="250" cy="25" r="5" fill="#9d4edd"/>
+                            <text x="265" y="30" fill="#9d4edd" font-size="10">周期性特徴量（フーリエ、季節性）</text>
+                            
+                            <circle cx="480" cy="25" r="5" fill="#ffff00"/>
+                            <text x="495" y="30" fill="#ffff00" font-size="10">カレンダー特徴量（曜日、月、祝日）</text>
+                            
+                            <circle cx="720" cy="25" r="5" fill="#00ffaa"/>
+                            <text x="735" y="30" fill="#00ffaa" font-size="10">技術指標（RSI、MACD、ボリンジャー）</text>
+                        </g>
+                    </svg>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">advanced_features.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># フーリエ変換特徴量の生成</span></span>
+                        <span class="code-line"><span class="code-variable">fourier_features</span> <span class="code-keyword">&lt;-</span> ts_features <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">tk_augment_fourier</span>(date, .periods = <span class="code-function">c</span>(<span class="code-string">365.25</span>, <span class="code-string">365.25/2</span>), .K = <span class="code-string">2</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 滞留期間特徴量</span></span>
+                        <span class="code-line"><span class="code-variable">holiday_features</span> <span class="code-keyword">&lt;-</span> fourier_features <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">tk_augment_holiday_signature</span>(date) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">    <span class="code-comment"># カスタム特徴量</span></span>
+                        <span class="code-line">    is_weekend = <span class="code-function">ifelse</span>(wday.lbl <span class="code-keyword">%in%</span> <span class="code-function">c</span>(<span class="code-string">"Saturday"</span>, <span class="code-string">"Sunday"</span>), <span class="code-string">1</span>, <span class="code-string">0</span>),</span>
+                        <span class="code-line">    is_month_end = <span class="code-function">ifelse</span>(mday == <span class="code-function">days_in_month</span>(date), <span class="code-string">1</span>, <span class="code-string">0</span>),</span>
+                        <span class="code-line">    quarter_start = <span class="code-function">ifelse</span>(month <span class="code-keyword">%in%</span> <span class="code-function">c</span>(<span class="code-string">1</span>, <span class="code-string">4</span>, <span class="code-string">7</span>, <span class="code-string">10</span>) &amp; mday == <span class="code-string">1</span>, <span class="code-string">1</span>, <span class="code-string">0</span>),</span>
+                        <span class="code-line">    </span>
+                        <span class="code-line">    <span class="code-comment"># 技術指標風の特徴量</span></span>
+                        <span class="code-line">    rsi_14 = <span class="code-function">slide_vec</span>(pct_change_1, ~<span class="code-function">{</span></span>
+                        <span class="code-line">      gains <span class="code-keyword">&lt;-</span> <span class="code-function">pmax</span>(.x, <span class="code-string">0</span>)</span>
+                        <span class="code-line">      losses <span class="code-keyword">&lt;-</span> <span class="code-function">pmax</span>(-.x, <span class="code-string">0</span>)</span>
+                        <span class="code-line">      avg_gain <span class="code-keyword">&lt;-</span> <span class="code-function">mean</span>(gains, na.rm = <span class="code-string">TRUE</span>)</span>
+                        <span class="code-line">      avg_loss <span class="code-keyword">&lt;-</span> <span class="code-function">mean</span>(losses, na.rm = <span class="code-string">TRUE</span>)</span>
+                        <span class="code-line">      rs <span class="code-keyword">&lt;-</span> avg_gain / avg_loss</span>
+                        <span class="code-line">      rsi <span class="code-keyword">&lt;-</span> <span class="code-string">100</span> - (<span class="code-string">100</span> / (<span class="code-string">1</span> + rs))</span>
+                        <span class="code-line">      <span class="code-function">return</span>(rsi)</span>
+                        <span class="code-line">    <span class="code-function">}</span>, .before = <span class="code-string">13</span>, .complete = <span class="code-string">TRUE</span>)</span>
+                        <span class="code-line">  )</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 特徴量重要性の確認</span></span>
+                        <span class="code-line"><span class="code-variable">feature_names</span> <span class="code-keyword">&lt;-</span> holiday_features <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">select</span>(-date, -value) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">names</span>()</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"生成された特徴量数:"</span>, <span class="code-function">length</span>(feature_names), <span class="code-string">"\\n"</span>)</span>
+                    </div>
+                </div>
+
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h3 class="function-title">🕐 時間特徴量</h3>
+                        <p class="function-description">
+                            日付から年、月、曜日、四半期など基本的な時間特徴量を自動抽出。周期性やトレンドの捕捉に重要な役割を果たします。
+                        </p>
+                        <div class="function-syntax">
+                            tk_augment_timeseries_signature(), year, month, wday
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">📈 ラグ・差分特徴量</h3>
+                        <p class="function-description">
+                            過去の値との関係を表現する重要な特徴量。自己回帰的なパターンや変化率の情報を機械学習モデルで活用できます。
+                        </p>
+                        <div class="function-syntax">
+                            lag_vec(), diff_vec(), slide_vec()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">〰️ フーリエ変換</h3>
+                        <p class="function-description">
+                            周期的なパターンを三角関数で表現。季節性や循環的な変動を正弦波と余弦波の組み合わせで効果的にモデル化します。
+                        </p>
+                        <div class="function-syntax">
+                            tk_augment_fourier(), .periods, .K
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🎄 祝日・イベント特徴量</h3>
+                        <p class="function-description">
+                            祝日、週末、月末、四半期開始など、ビジネスに影響するイベント情報を特徴量として追加。外部要因の効果を考慮。
+                        </p>
+                        <div class="function-syntax">
+                            tk_augment_holiday_signature(), is_weekend, is_month_end
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- MODELTIME TABLE AND FORECASTING -->
+        <section class="section" id="modeltime-forecasting">
+            <h2>🤖 modeltimeテーブルと統合予測</h2>
+                <p>
+                    modeltimeの真の力は、ARIMA、Prophet、機械学習モデルを統一されたテーブルで管理し、一括で比較・評価・予測できることです。美しいワークフローで時系列分析を効率化します。
+                </p>
+                
+                <!-- Model Building -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🏗️ 複数モデルの構築</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">modeltime_models.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 1. ARIMAモデル</span></span>
+                        <span class="code-line"><span class="code-variable">model_arima</span> <span class="code-keyword">&lt;-</span> <span class="code-function">arima_reg</span>() <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"auto_arima"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">fit</span>(value ~ date, data = train_data)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 2. Prophetモデル</span></span>
+                        <span class="code-line"><span class="code-variable">model_prophet</span> <span class="code-keyword">&lt;-</span> <span class="code-function">prophet_reg</span>(</span>
+                        <span class="code-line">  seasonality_yearly = <span class="code-string">TRUE</span>,</span>
+                        <span class="code-line">  seasonality_weekly = <span class="code-string">FALSE</span>,</span>
+                        <span class="code-line">  seasonality_daily = <span class="code-string">FALSE</span></span>
+                        <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"prophet"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">fit</span>(value ~ date, data = train_data)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 3. 機械学習モデル（Random Forest）</span></span>
+                        <span class="code-line"><span class="code-variable">recipe_ts</span> <span class="code-keyword">&lt;-</span> <span class="code-function">recipe</span>(value ~ date, data = train_data) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">step_timeseries_signature</span>(date) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">step_rm</span>(<span class="code-function">contains</span>(<span class="code-string">"hour|minute|second|am.pm"</span>)) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">step_normalize</span>(<span class="code-function">all_numeric_predictors</span>()) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">step_dummy</span>(<span class="code-function">all_nominal_predictors</span>())</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-variable">model_rf</span> <span class="code-keyword">&lt;-</span> <span class="code-function">rand_forest</span>(trees = <span class="code-string">500</span>, min_n = <span class="code-string">10</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"ranger"</span>) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"regression"</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-variable">wflow_rf</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow</span>() <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">add_recipe</span>(recipe_ts) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">add_model</span>(model_rf) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">fit</span>(train_data)</span>
+                    </div>
+                </div>
+
+                <!-- Modeltime Table -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📋 modeltimeテーブルの作成と評価</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">modeltime_table.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># modeltimeテーブルの作成</span></span>
+                        <span class="code-line"><span class="code-variable">model_table</span> <span class="code-keyword">&lt;-</span> <span class="code-function">modeltime_table</span>(</span>
+                        <span class="code-line">  model_arima,</span>
+                        <span class="code-line">  model_prophet,</span>
+                        <span class="code-line">  wflow_rf</span>
+                        <span class="code-line">)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># テストデータでのキャリブレーション</span></span>
+                        <span class="code-line"><span class="code-variable">calibration_table</span> <span class="code-keyword">&lt;-</span> model_table <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">modeltime_calibrate</span>(new_data = test_data)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 精度指標の計算</span></span>
+                        <span class="code-line"><span class="code-variable">accuracy_table</span> <span class="code-keyword">&lt;-</span> calibration_table <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">modeltime_accuracy</span>()</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(accuracy_table)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 予測結果の可視化</span></span>
+                        <span class="code-line">calibration_table <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">modeltime_forecast</span>(</span>
+                        <span class="code-line">    new_data = test_data,</span>
+                        <span class="code-line">    actual_data = train_data,</span>
+                        <span class="code-line">    keep_data = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">plot_modeltime_forecast</span>(</span>
+                        <span class="code-line">    .facet_ncol = <span class="code-string">2</span>,</span>
+                        <span class="code-line">    .interactive = <span class="code-string">TRUE</span></span>
+                        <span class="code-line">  )</span>
+                    </div>
+                </div>
+
+                <!-- Ensemble Learning -->
+                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 アンサンブル学習</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">ensemble_models.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"><span class="code-comment"># 平均アンサンブルの作成</span></span>
+                        <span class="code-line"><span class="code-variable">ensemble_avg</span> <span class="code-keyword">&lt;-</span> calibration_table <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">ensemble_average</span>(type = <span class="code-string">"mean"</span>)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 重み付きアンサンブル（精度逆数重み）</span></span>
+                        <span class="code-line"><span class="code-variable">weights</span> <span class="code-keyword">&lt;-</span> <span class="code-string">1</span> / accuracy_table$mae</span>
+                        <span class="code-line">weights <span class="code-keyword">&lt;-</span> weights / <span class="code-function">sum</span>(weights)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-variable">ensemble_weighted</span> <span class="code-keyword">&lt;-</span> calibration_table <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">ensemble_weighted</span>(loadings = weights)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># 最終モデルテーブル</span></span>
+                        <span class="code-line"><span class="code-variable">final_table</span> <span class="code-keyword">&lt;-</span> <span class="code-function">modeltime_table</span>(</span>
+                        <span class="code-line">  ensemble_avg,</span>
+                        <span class="code-line">  ensemble_weighted</span>
+                        <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">combine_modeltime_tables</span>(calibration_table) <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">modeltime_calibrate</span>(new_data = test_data)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-comment"># アンサンブル結果の評価</span></span>
+                        <span class="code-line"><span class="code-variable">final_accuracy</span> <span class="code-keyword">&lt;-</span> final_table <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">modeltime_accuracy</span>() <span class="code-keyword">%&gt;%</span></span>
+                        <span class="code-line">  <span class="code-function">arrange</span>(mae)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"><span class="code-function">print</span>(final_accuracy)</span>
+                    </div>
+                </div>
+
+                <!-- Model Performance Visualization -->
+                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-electric);">
+                    <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🏆 モデル性能比較チャート</h4>
+                    <svg width="100%" height="400" viewBox="0 0 1000 400" style="max-width: 100%; height: auto;">
+                        <!-- Background -->
+                        <rect width="1000" height="400" fill="#0a0a0f"/>
+                        
+                        <!-- Chart Title -->
+                        <text x="500" y="30" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">Mean Absolute Error (MAE) 比較</text>
+                        
+                        <!-- Y-axis -->
+                        <line x1="100" y1="60" x2="100" y2="320" stroke="#ffffff" stroke-width="1"/>
+                        <text x="90" y="65" text-anchor="end" fill="#ffffff" font-size="10">4.0</text>
+                        <text x="90" y="110" text-anchor="end" fill="#ffffff" font-size="10">3.5</text>
+                        <text x="90" y="155" text-anchor="end" fill="#ffffff" font-size="10">3.0</text>
+                        <text x="90" y="200" text-anchor="end" fill="#ffffff" font-size="10">2.5</text>
+                        <text x="90" y="245" text-anchor="end" fill="#ffffff" font-size="10">2.0</text>
+                        <text x="90" y="290" text-anchor="end" fill="#ffffff" font-size="10">1.5</text>
+                        <text x="90" y="325" text-anchor="end" fill="#ffffff" font-size="10">1.0</text>
+                        
+                        <!-- X-axis -->
+                        <line x1="100" y1="320" x2="900" y2="320" stroke="#ffffff" stroke-width="1"/>
+                        
+                        <!-- Performance Bars -->
+                        <!-- Ensemble Weighted (Best) -->
+                        <rect x="150" y="240" width="80" height="80" fill="#00ff88" opacity="0.8"/>
+                        <text x="190" y="285" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">2.14</text>
+                        <text x="190" y="340" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">Ensemble</text>
+                        <text x="190" y="355" text-anchor="middle" fill="#00ff88" font-size="10">Weighted</text>
+                        
+                        <!-- Ensemble Mean -->
+                        <rect x="250" y="238" width="80" height="82" fill="#00d4ff" opacity="0.8"/>
+                        <text x="290" y="284" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">2.18</text>
+                        <text x="290" y="340" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="bold">Ensemble</text>
+                        <text x="290" y="355" text-anchor="middle" fill="#00d4ff" font-size="10">Mean</text>
+                        
+                        <!-- ARIMA -->
+                        <rect x="350" y="220" width="80" height="100" fill="#9d4edd" opacity="0.8"/>
+                        <text x="390" y="275" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">2.45</text>
+                        <text x="390" y="340" text-anchor="middle" fill="#9d4edd" font-size="10" font-weight="bold">ARIMA</text>
+                        <text x="390" y="355" text-anchor="middle" fill="#9d4edd" font-size="10">(0,1,1)</text>
+                        
+                        <!-- Prophet -->
+                        <rect x="450" y="195" width="80" height="125" fill="#ff8c42" opacity="0.8"/>
+                        <text x="490" y="263" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">2.67</text>
+                        <text x="490" y="340" text-anchor="middle" fill="#ff8c42" font-size="10" font-weight="bold">Prophet</text>
+                        
+                        <!-- Random Forest -->
+                        <rect x="550" y="160" width="80" height="160" fill="#ff4444" opacity="0.8"/>
+                        <text x="590" y="245" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">3.15</text>
+                        <text x="590" y="340" text-anchor="middle" fill="#ff4444" font-size="10" font-weight="bold">Random</text>
+                        <text x="590" y="355" text-anchor="middle" fill="#ff4444" font-size="10">Forest</text>
+                        
+                        <!-- Winner Crown -->
+                        <text x="190" y="225" text-anchor="middle" fill="#ffff00" font-size="20">👑</text>
+                        <text x="190" y="215" text-anchor="middle" fill="#ffff00" font-size="12" font-weight="bold">BEST</text>
+                        
+                        <!-- Performance Improvement Annotation -->
+                        <path d="M 590 160 Q 650 140 700 160" fill="none" stroke="#ff4444" stroke-width="2"/>
+                        <path d="M 190 240 Q 130 220 80 240" fill="none" stroke="#00ff88" stroke-width="2"/>
+                        <text x="720" y="150" fill="#ff4444" font-size="12">ベースライン</text>
+                        <text x="60" y="230" fill="#00ff88" font-size="12">47%改善</text>
+                        
+                        <!-- Legend Box -->
+                        <g transform="translate(650, 80)">
+                            <rect x="0" y="0" width="300" height="120" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="8"/>
+                            <text x="150" y="20" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">性能指標サマリー</text>
+                            
+                            <text x="10" y="40" fill="#00ff88" font-size="10">• Ensemble Weighted: MAE=2.14, R²=0.95</text>
+                            <text x="10" y="55" fill="#00d4ff" font-size="10">• Ensemble Mean: MAE=2.18, R²=0.95</text>
+                            <text x="10" y="70" fill="#9d4edd" font-size="10">• ARIMA: MAE=2.45, R²=0.94</text>
+                            <text x="10" y="85" fill="#ff8c42" font-size="10">• Prophet: MAE=2.67, R²=0.93</text>
+                            <text x="10" y="100" fill="#ff4444" font-size="10">• Random Forest: MAE=3.15, R²=0.91</text>
+                        </g>
+                    </svg>
+                </div>
+                
+                <div class="output-container">
+                    <div class="output-header">
+                        Time Series Model Performance Comparison
+                    </div>
+                    <div class="output-content">
+# A tibble: 5 × 9
+  .model_id .model_desc     .type   mae  mape  mase smape  rmse   rsq
+      &lt;int&gt; &lt;chr&gt;           &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1         4 ENSEMBLE (WEI…  Test   2.14  1.63  0.52  1.61  2.89  0.95
+2         3 ENSEMBLE (MEA…  Test   2.18  1.66  0.53  1.64  2.94  0.95
+3         1 ARIMA(0,1,1)    Test   2.45  1.87  0.60  1.85  3.12  0.94
+4         2 PROPHET         Test   2.67  2.03  0.65  2.01  3.34  0.93
+5         5 RANDOMFOREST    Test   3.15  2.41  0.77  2.39  4.02  0.91
+
+# ✨ アンサンブルが最高性能を達成！
+                    </div>
+                </div>
+
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h3 class="function-title">📊 統一インターフェース</h3>
+                        <p class="function-description">
+                            異なる時系列モデルを同じワークフローで操作。ARIMA、Prophet、機械学習を統一されたテーブルで管理し、一括比較を実現。
+                        </p>
+                        <div class="function-syntax">
+                            modeltime_table(), modeltime_calibrate()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🎯 自動評価</h3>
+                        <p class="function-description">
+                            複数の精度指標を自動計算。MAE、MAPE、RMSE、RSQなど、時系列予測に特化した評価指標で包括的な性能評価。
+                        </p>
+                        <div class="function-syntax">
+                            modeltime_accuracy(), modeltime_forecast()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">🏆 アンサンブル学習</h3>
+                        <p class="function-description">
+                            複数モデルの予測を統合。平均、重み付き平均、メディアンなど様々なアンサンブル手法で予測精度を向上。
+                        </p>
+                        <div class="function-syntax">
+                            ensemble_average(), ensemble_weighted()
+                        </div>
+                    </div>
+                    <div class="function-card">
+                        <h3 class="function-title">📈 美しい可視化</h3>
+                        <p class="function-description">
+                            インタラクティブな予測結果プロット。実測値、予測値、信頼区間を美しくプロット。複数モデルの比較も直感的。
+                        </p>
+                        <div class="function-syntax">
+                            plot_modeltime_forecast(), .interactive = TRUE
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <div class="key-points">
+            <h4>第21章の重要ポイント</h4>
+            <ul>
+                <li><strong>modeltime統合</strong>：時系列予測の統一フレームワーク</li>
+                <li><strong>時系列分割</strong>：データリーケージを防ぐ適切な評価手法</li>
+                <li><strong>特徴量エンジニアリング</strong>：timetkによる包括的な特徴量生成</li>
+                <li><strong>モデル比較</strong>：ARIMA、Prophet、機械学習の一括評価</li>
+                <li><strong>アンサンブル学習</strong>：複数モデルの統合で精度向上</li>
+                <li><strong>美しいワークフロー</strong>：Tidyverseの原則に基づく時系列分析</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <h4>実践的アドバイス</h4>
+            <p>modeltimeは、時系列予測のベストプラクティスを自然に身につけられるよう設計されています。データの時間順序を考慮した分割、適切なクロスバリデーション、多様なモデル手法の統合など、実務で重要な要素が美しく組み込まれています。従来の時系列分析と比較して、より効率的で再現性の高い予測分析が可能になります。</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a href="chapter20-ensemble-learning-enhanced.html" class="nav-button">← 第20章</a>
+            <a href="chapter22-text-analysis-tidytext.html" class="nav-button">第22章 →</a>
+        </nav>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </div>
+</body>
+</html>

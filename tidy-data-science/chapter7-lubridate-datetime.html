@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第7章: lubridate - 日付・時間データの完全マスター | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -210,50 +223,78 @@
             margin: 20px 0 10px 0;
         }
 
-        /* Code Blocks */
-        .code-container {
-            margin: 20px 0;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 1px solid var(--accent-orange);
+        /* Chapter 5 Style Code Blocks */
+        .code-container, .code-block {
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(255, 140, 66, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .code-header {
-            background: var(--accent-orange);
-            color: var(--bg-primary);
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.8), rgba(0, 212, 255, 0.8));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .code-header::before {
             content: '🕐';
             font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #28ca42; }
+
+        .code-title {
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .code-content {
-            padding: 20px;
+            padding: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            background: #0d1117;
-            color: #c9d1d9;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.4);
             overflow-x: auto;
         }
 
+        .code-line {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
         /* Syntax highlighting */
-        .keyword { color: #ff7b72; }
-        .function { color: #d2a8ff; }
-        .string { color: #a5d6ff; }
-        .comment { color: #8b949e; font-style: italic; }
-        .operator { color: #f85149; }
-        .number { color: #79c0ff; }
-        .variable { color: #ffa657; }
+        .keyword, .code-keyword { color: #ff8c42; font-weight: bold; }
+        .function, .code-function { color: #00d4ff; }
+        .string, .code-string { color: #00ff88; }
+        .comment, .code-comment { color: #8b949e; font-style: italic; }
+        .operator, .code-operator { color: #f85149; }
+        .number, .code-number { color: #79c0ff; }
+        .variable, .code-variable { color: #ffa657; }
 
         /* Output Display */
         .output-container {
@@ -561,39 +602,39 @@
             <div class="code-container">
                 <div class="code-header">基本的な日付操作</div>
                 <div class="code-content">
-<span class="keyword">library</span>(<span class="string">lubridate</span>)
-<span class="keyword">library</span>(<span class="string">dplyr</span>)
-
-<span class="comment"># 現在の日時</span>
-current_time <span class="operator">&lt;-</span> <span class="function">now</span>()
-current_date <span class="operator">&lt;-</span> <span class="function">today</span>()
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"現在時刻:"</span>, current_time))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"今日の日付:"</span>, current_date))
-
-<span class="comment"># 様々な形式の日付文字列を解析</span>
-dates_ymd <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"2023-12-25"</span>, <span class="string">"2023/12/31"</span>, <span class="string">"20231201"</span>)
-parsed_ymd <span class="operator">&lt;-</span> <span class="function">ymd</span>(dates_ymd)
-<span class="function">print</span>(parsed_ymd)
-
-<span class="comment"># 日付の順序が異なる場合</span>
-dates_dmy <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"25-12-2023"</span>, <span class="string">"31/12/2023"</span>, <span class="string">"01122023"</span>)
-parsed_dmy <span class="operator">&lt;-</span> <span class="function">dmy</span>(dates_dmy)
-<span class="function">print</span>(parsed_dmy)
-
-<span class="comment"># 月-日-年の形式</span>
-dates_mdy <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"12-25-2023"</span>, <span class="string">"12/31/2023"</span>)
-parsed_mdy <span class="operator">&lt;-</span> <span class="function">mdy</span>(dates_mdy)
-<span class="function">print</span>(parsed_mdy)
-
-<span class="comment"># 時間を含む日時の解析</span>
-datetime_strings <span class="operator">&lt;-</span> <span class="function">c</span>(
-  <span class="string">"2023-12-25 14:30:00"</span>,
-  <span class="string">"2023/12/31 23:59:59"</span>,
-  <span class="string">"2023-01-01 00:00:00"</span>
-)
-parsed_datetime <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(datetime_strings)
-<span class="function">print</span>(parsed_datetime)
+                    <span class="code-line"><span class="keyword">library</span>(<span class="string">lubridate</span>)</span>
+                    <span class="code-line"><span class="keyword">library</span>(<span class="string">dplyr</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 現在の日時</span></span>
+                    <span class="code-line">current_time <span class="operator">&lt;-</span> <span class="function">now</span>()</span>
+                    <span class="code-line">current_date <span class="operator">&lt;-</span> <span class="function">today</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"現在時刻:"</span>, current_time))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"今日の日付:"</span>, current_date))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 様々な形式の日付文字列を解析</span></span>
+                    <span class="code-line">dates_ymd <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"2023-12-25"</span>, <span class="string">"2023/12/31"</span>, <span class="string">"20231201"</span>)</span>
+                    <span class="code-line">parsed_ymd <span class="operator">&lt;-</span> <span class="function">ymd</span>(dates_ymd)</span>
+                    <span class="code-line"><span class="function">print</span>(parsed_ymd)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 日付の順序が異なる場合</span></span>
+                    <span class="code-line">dates_dmy <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"25-12-2023"</span>, <span class="string">"31/12/2023"</span>, <span class="string">"01122023"</span>)</span>
+                    <span class="code-line">parsed_dmy <span class="operator">&lt;-</span> <span class="function">dmy</span>(dates_dmy)</span>
+                    <span class="code-line"><span class="function">print</span>(parsed_dmy)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 月-日-年の形式</span></span>
+                    <span class="code-line">dates_mdy <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"12-25-2023"</span>, <span class="string">"12/31/2023"</span>)</span>
+                    <span class="code-line">parsed_mdy <span class="operator">&lt;-</span> <span class="function">mdy</span>(dates_mdy)</span>
+                    <span class="code-line"><span class="function">print</span>(parsed_mdy)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 時間を含む日時の解析</span></span>
+                    <span class="code-line">datetime_strings <span class="operator">&lt;-</span> <span class="function">c</span>(</span>
+                    <span class="code-line">    <span class="string">"2023-12-25 14:30:00"</span>,</span>
+                    <span class="code-line">    <span class="string">"2023/12/31 23:59:59"</span>,</span>
+                    <span class="code-line">    <span class="string">"2023-01-01 00:00:00"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line">parsed_datetime <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(datetime_strings)</span>
+                    <span class="code-line"><span class="function">print</span>(parsed_datetime)</span>
 </div>
             </div>
 
@@ -616,30 +657,30 @@ parsed_datetime <span class="operator">&lt;-</span> <span class="function">ymd_h
             <div class="code-container">
                 <div class="code-header">日付構成要素の取得</div>
                 <div class="code-content">
-<span class="comment"># サンプル日時データ</span>
-sample_datetime <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-25 14:30:45"</span>)
-
-<span class="comment"># 年、月、日の抽出</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年:"</span>, <span class="function">year</span>(sample_datetime)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"月:"</span>, <span class="function">month</span>(sample_datetime)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"日:"</span>, <span class="function">day</span>(sample_datetime)))
-
-<span class="comment"># 時、分、秒の抽出</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"時:"</span>, <span class="function">hour</span>(sample_datetime)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"分:"</span>, <span class="function">minute</span>(sample_datetime)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"秒:"</span>, <span class="function">second</span>(sample_datetime)))
-
-<span class="comment"># 曜日と週番号</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"曜日:"</span>, <span class="function">wday</span>(sample_datetime, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年の週番号:"</span>, <span class="function">week</span>(sample_datetime)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年の日番号:"</span>, <span class="function">yday</span>(sample_datetime)))
-
-<span class="comment"># 四半期と半期</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"四半期:"</span>, <span class="function">quarter</span>(sample_datetime)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"半期:"</span>, <span class="function">semester</span>(sample_datetime)))
-
-<span class="comment"># 月名の取得</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"月名:"</span>, <span class="function">month</span>(sample_datetime, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>)))
+                    <span class="code-line"><span class="comment"># サンプル日時データ</span></span>
+                    <span class="code-line">sample_datetime <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-25 14:30:45"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 年、月、日の抽出</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年:"</span>, <span class="function">year</span>(sample_datetime)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"月:"</span>, <span class="function">month</span>(sample_datetime)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"日:"</span>, <span class="function">day</span>(sample_datetime)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 時、分、秒の抽出</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"時:"</span>, <span class="function">hour</span>(sample_datetime)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"分:"</span>, <span class="function">minute</span>(sample_datetime)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"秒:"</span>, <span class="function">second</span>(sample_datetime)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 曜日と週番号</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"曜日:"</span>, <span class="function">wday</span>(sample_datetime, label = <span class="variable">TRUE</span>, abbr = <span class="variable">FALSE</span>)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年の週番号:"</span>, <span class="function">week</span>(sample_datetime)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年の日番号:"</span>, <span class="function">yday</span>(sample_datetime)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 四半期と半期</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"四半期:"</span>, <span class="function">quarter</span>(sample_datetime)))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"半期:"</span>, <span class="function">semester</span>(sample_datetime)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 月名の取得</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(<span class="string">"月名:"</span>, <span class="function">month</span>(sample_datetime, label = <span class="variable">TRUE</span>, abbr = <span class="variable">FALSE</span>)))</span>
 </div>
             </div>
 
@@ -717,38 +758,65 @@ sample_datetime <span class="operator">&lt;-</span> <span class="function">ymd_h
             <div class="code-container">
                 <div class="code-header">時間間隔の計算</div>
                 <div class="code-content">
-<span class="comment"># 基準日時の設定</span>
-start_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-01-01 00:00:00"</span>)
-end_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-31 23:59:59"</span>)
-
-<span class="comment"># 期間の計算</span>
-time_difference <span class="operator">&lt;-</span> end_date <span class="operator">-</span> start_date
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"時間差:"</span>, time_difference))
-
-<span class="comment"># 様々な単位での期間表現</span>
-duration_seconds <span class="operator">&lt;-</span> <span class="function">as.duration</span>(time_difference)
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"秒数:"</span>, duration_seconds))
-
-<span class="comment"># 期間の短縮記法</span>
-one_year <span class="operator">&lt;-</span> <span class="function">dyears</span>(<span class="number">1</span>)
-one_month <span class="operator">&lt;-</span> <span class="function">dmonths</span>(<span class="number">1</span>)
-one_week <span class="operator">&lt;-</span> <span class="function">dweeks</span>(<span class="number">1</span>)
-one_day <span class="operator">&lt;-</span> <span class="function">ddays</span>(<span class="number">1</span>)
-one_hour <span class="operator">&lt;-</span> <span class="function">dhours</span>(<span class="number">1</span>)
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"1年 ="</span>, one_year, <span class="string">"秒"</span>))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"1ヶ月 ="</span>, one_month, <span class="string">"秒"</span>))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"1週間 ="</span>, one_week, <span class="string">"秒"</span>))
-
-<span class="comment"># インターバルの作成</span>
-project_start <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-04-01"</span>)
-project_end <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-09-30"</span>)
-project_interval <span class="operator">&lt;-</span> <span class="function">interval</span>(project_start, project_end)
-
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"プロジェクト期間:"</span>, project_interval))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"プロジェクト日数:"</span>, project_interval / <span class="function">ddays</span>(<span class="number">1</span>)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"プロジェクト週数:"</span>, project_interval / <span class="function">dweeks</span>(<span class="number">1</span>)))
-</div>
+                    <span class="code-line"><span class="comment"># 基準日時の設定</span></span>
+                    <span class="code-line">start_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-01-01 00:00:00"</span>)</span>
+                    <span class="code-line">end_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-31 23:59:59"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 期間の計算</span></span>
+                    <span class="code-line">time_difference <span class="operator">&lt;-</span> end_date <span class="operator">-</span> start_date</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"時間差:"</span>, </span>
+                    <span class="code-line">  time_difference</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 様々な単位での期間表現</span></span>
+                    <span class="code-line">duration_seconds <span class="operator">&lt;-</span> <span class="function">as.duration</span>(time_difference)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"秒数:"</span>, </span>
+                    <span class="code-line">  duration_seconds</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 期間の短縮記法</span></span>
+                    <span class="code-line">one_year <span class="operator">&lt;-</span> <span class="function">dyears</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">one_month <span class="operator">&lt;-</span> <span class="function">dmonths</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">one_week <span class="operator">&lt;-</span> <span class="function">dweeks</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">one_day <span class="operator">&lt;-</span> <span class="function">ddays</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">one_hour <span class="operator">&lt;-</span> <span class="function">dhours</span>(<span class="number">1</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"1年 ="</span>, </span>
+                    <span class="code-line">  one_year, </span>
+                    <span class="code-line">  <span class="string">"秒"</span></span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"1ヶ月 ="</span>, </span>
+                    <span class="code-line">  one_month, </span>
+                    <span class="code-line">  <span class="string">"秒"</span></span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"1週間 ="</span>, </span>
+                    <span class="code-line">  one_week, </span>
+                    <span class="code-line">  <span class="string">"秒"</span></span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># インターバルの作成</span></span>
+                    <span class="code-line">project_start <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-04-01"</span>)</span>
+                    <span class="code-line">project_end <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-09-30"</span>)</span>
+                    <span class="code-line">project_interval <span class="operator">&lt;-</span> <span class="function">interval</span>(project_start, project_end)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"プロジェクト期間:"</span>, </span>
+                    <span class="code-line">  project_interval</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"プロジェクト日数:"</span>, </span>
+                    <span class="code-line">  project_interval / <span class="function">ddays</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"プロジェクト週数:"</span>, </span>
+                    <span class="code-line">  project_interval / <span class="function">dweeks</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">))</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -768,43 +836,51 @@ project_interval <span class="operator">&lt;-</span> <span class="function">inte
             <div class="code-container">
                 <div class="code-header">日付の加算・減算</div>
                 <div class="code-content">
-<span class="comment"># 基準日</span>
-base_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-06-15"</span>)
-
-<span class="comment"># 日付の加算</span>
-future_dates <span class="operator">&lt;-</span> <span class="function">list</span>(
-  <span class="string">"1週間後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">weeks</span>(<span class="number">1</span>),
-  <span class="string">"1ヶ月後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">months</span>(<span class="number">1</span>),
-  <span class="string">"3ヶ月後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">months</span>(<span class="number">3</span>),
-  <span class="string">"1年後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">years</span>(<span class="number">1</span>)
-)
-
-<span class="keyword">for</span> (period <span class="keyword">in</span> <span class="function">names</span>(future_dates)) {
-  <span class="function">print</span>(<span class="function">paste</span>(period, <span class="string">":"</span>, future_dates[[period]]))
-}
-
-<span class="comment"># 日付の減算</span>
-past_dates <span class="operator">&lt;-</span> <span class="function">list</span>(
-  <span class="string">"1週間前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">weeks</span>(<span class="number">1</span>),
-  <span class="string">"1ヶ月前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">months</span>(<span class="number">1</span>),
-  <span class="string">"6ヶ月前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">months</span>(<span class="number">6</span>),
-  <span class="string">"1年前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">years</span>(<span class="number">1</span>)
-)
-
-<span class="keyword">for</span> (period <span class="keyword">in</span> <span class="function">names</span>(past_dates)) {
-  <span class="function">print</span>(<span class="function">paste</span>(period, <span class="string">":"</span>, past_dates[[period]]))
-}
-
-<span class="comment"># 月末日の処理</span>
-month_end_dates <span class="operator">&lt;-</span> <span class="function">c</span>(
-  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">1</span>),  <span class="comment"># 2月末は28日</span>
-  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">2</span>),  <span class="comment"># 3月末は31日</span>
-  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">3</span>)   <span class="comment"># 4月末は30日</span>
-)
-
-<span class="function">print</span>(<span class="string">"月末日の調整:"</span>)
-<span class="function">print</span>(month_end_dates)
-</div>
+                    <span class="code-line"><span class="comment"># 基準日</span></span>
+                    <span class="code-line">base_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-06-15"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 日付の加算</span></span>
+                    <span class="code-line">future_dates <span class="operator">&lt;-</span> <span class="function">list</span>(</span>
+                    <span class="code-line">  <span class="string">"1週間後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">weeks</span>(<span class="number">1</span>),</span>
+                    <span class="code-line">  <span class="string">"1ヶ月後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">months</span>(<span class="number">1</span>),</span>
+                    <span class="code-line">  <span class="string">"3ヶ月後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">months</span>(<span class="number">3</span>),</span>
+                    <span class="code-line">  <span class="string">"1年後"</span> <span class="operator">=</span> base_date <span class="operator">+</span> <span class="function">years</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="keyword">for</span> (period <span class="keyword">in</span> <span class="function">names</span>(future_dates)) {</span>
+                    <span class="code-line">  <span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">    period, </span>
+                    <span class="code-line">    <span class="string">":"</span>, </span>
+                    <span class="code-line">    future_dates[[period]]</span>
+                    <span class="code-line">  ))</span>
+                    <span class="code-line">}</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 日付の減算</span></span>
+                    <span class="code-line">past_dates <span class="operator">&lt;-</span> <span class="function">list</span>(</span>
+                    <span class="code-line">  <span class="string">"1週間前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">weeks</span>(<span class="number">1</span>),</span>
+                    <span class="code-line">  <span class="string">"1ヶ月前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">months</span>(<span class="number">1</span>),</span>
+                    <span class="code-line">  <span class="string">"6ヶ月前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">months</span>(<span class="number">6</span>),</span>
+                    <span class="code-line">  <span class="string">"1年前"</span> <span class="operator">=</span> base_date <span class="operator">-</span> <span class="function">years</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="keyword">for</span> (period <span class="keyword">in</span> <span class="function">names</span>(past_dates)) {</span>
+                    <span class="code-line">  <span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">    period, </span>
+                    <span class="code-line">    <span class="string">":"</span>, </span>
+                    <span class="code-line">    past_dates[[period]]</span>
+                    <span class="code-line">  ))</span>
+                    <span class="code-line">}</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 月末日の処理</span></span>
+                    <span class="code-line">month_end_dates <span class="operator">&lt;-</span> <span class="function">c</span>(</span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">1</span>),  <span class="comment"># 2月末は28日</span></span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">2</span>),  <span class="comment"># 3月末は31日</span></span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"2023-01-31"</span>) <span class="operator">+</span> <span class="function">months</span>(<span class="number">3</span>)   <span class="comment"># 4月末は30日</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"月末日の調整:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(month_end_dates)</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -828,39 +904,100 @@ month_end_dates <span class="operator">&lt;-</span> <span class="function">c</sp
             <div class="code-container">
                 <div class="code-header">タイムゾーン変換</div>
                 <div class="code-content">
-<span class="comment"># UTC時刻の作成</span>
-utc_time <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-25 12:00:00"</span>, tz <span class="operator">=</span> <span class="string">"UTC"</span>)
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"UTC時刻:"</span>, utc_time))
-
-<span class="comment"># 各地のタイムゾーンに変換</span>
-timezones <span class="operator">&lt;-</span> <span class="function">list</span>(
-  <span class="string">"東京"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"Asia/Tokyo"</span>),
-  <span class="string">"ニューヨーク"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"America/New_York"</span>),
-  <span class="string">"ロンドン"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"Europe/London"</span>),
-  <span class="string">"シドニー"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"Australia/Sydney"</span>),
-  <span class="string">"ロサンゼルス"</span> <span class="operator">=</span> <span class="function">with_tz</span>(utc_time, <span class="string">"America/Los_Angeles"</span>)
-)
-
-<span class="keyword">for</span> (city <span class="keyword">in</span> <span class="function">names</span>(timezones)) {
-  <span class="function">print</span>(<span class="function">paste</span>(city, <span class="string">":"</span>, timezones[[city]]))
-}
-
-<span class="comment"># 現地時刻の指定</span>
-tokyo_time <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-12-25 21:00:00"</span>, tz <span class="operator">=</span> <span class="string">"Asia/Tokyo"</span>)
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"東京時刻:"</span>, tokyo_time))
-
-<span class="comment"># 他のタイムゾーンでの同時刻</span>
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"UTC時刻:"</span>, <span class="function">with_tz</span>(tokyo_time, <span class="string">"UTC"</span>)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"NY時刻:"</span>, <span class="function">with_tz</span>(tokyo_time, <span class="string">"America/New_York"</span>)))
-
-<span class="comment"># サマータイムの確認</span>
-summer_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-07-15 12:00:00"</span>, tz <span class="operator">=</span> <span class="string">"UTC"</span>)
-winter_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(<span class="string">"2023-01-15 12:00:00"</span>, tz <span class="operator">=</span> <span class="string">"UTC"</span>)
-
-<span class="function">print</span>(<span class="string">"サマータイムの影響:"</span>)
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"夏のNY時刻:"</span>, <span class="function">with_tz</span>(summer_date, <span class="string">"America/New_York"</span>)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"冬のNY時刻:"</span>, <span class="function">with_tz</span>(winter_date, <span class="string">"America/New_York"</span>)))
-</div>
+                    <span class="code-line"><span class="comment"># UTC時刻の作成</span></span>
+                    <span class="code-line">utc_time <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(</span>
+                    <span class="code-line">  <span class="string">"2023-12-25 12:00:00"</span>, </span>
+                    <span class="code-line">  tz <span class="operator">=</span> <span class="string">"UTC"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"UTC時刻:"</span>, </span>
+                    <span class="code-line">  utc_time</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 各地のタイムゾーンに変換</span></span>
+                    <span class="code-line">timezones <span class="operator">&lt;-</span> <span class="function">list</span>(</span>
+                    <span class="code-line">  <span class="string">"東京"</span> <span class="operator">=</span> <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    utc_time, </span>
+                    <span class="code-line">    <span class="string">"Asia/Tokyo"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  <span class="string">"ニューヨーク"</span> <span class="operator">=</span> <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    utc_time, </span>
+                    <span class="code-line">    <span class="string">"America/New_York"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  <span class="string">"ロンドン"</span> <span class="operator">=</span> <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    utc_time, </span>
+                    <span class="code-line">    <span class="string">"Europe/London"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  <span class="string">"シドニー"</span> <span class="operator">=</span> <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    utc_time, </span>
+                    <span class="code-line">    <span class="string">"Australia/Sydney"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  <span class="string">"ロサンゼルス"</span> <span class="operator">=</span> <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    utc_time, </span>
+                    <span class="code-line">    <span class="string">"America/Los_Angeles"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="keyword">for</span> (city <span class="keyword">in</span> <span class="function">names</span>(timezones)) {</span>
+                    <span class="code-line">  <span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">    city, </span>
+                    <span class="code-line">    <span class="string">":"</span>, </span>
+                    <span class="code-line">    timezones[[city]]</span>
+                    <span class="code-line">  ))</span>
+                    <span class="code-line">}</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 現地時刻の指定</span></span>
+                    <span class="code-line">tokyo_time <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(</span>
+                    <span class="code-line">  <span class="string">"2023-12-25 21:00:00"</span>, </span>
+                    <span class="code-line">  tz <span class="operator">=</span> <span class="string">"Asia/Tokyo"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"東京時刻:"</span>, </span>
+                    <span class="code-line">  tokyo_time</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 他のタイムゾーンでの同時刻</span></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"UTC時刻:"</span>, </span>
+                    <span class="code-line">  <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    tokyo_time, </span>
+                    <span class="code-line">    <span class="string">"UTC"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"NY時刻:"</span>, </span>
+                    <span class="code-line">  <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    tokyo_time, </span>
+                    <span class="code-line">    <span class="string">"America/New_York"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># サマータイムの確認</span></span>
+                    <span class="code-line">summer_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(</span>
+                    <span class="code-line">  <span class="string">"2023-07-15 12:00:00"</span>, </span>
+                    <span class="code-line">  tz <span class="operator">=</span> <span class="string">"UTC"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line">winter_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</span>(</span>
+                    <span class="code-line">  <span class="string">"2023-01-15 12:00:00"</span>, </span>
+                    <span class="code-line">  tz <span class="operator">=</span> <span class="string">"UTC"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="string">"サマータイムの影響:"</span>)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"夏のNY時刻:"</span>, </span>
+                    <span class="code-line">  <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    summer_date, </span>
+                    <span class="code-line">    <span class="string">"America/New_York"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"冬のNY時刻:"</span>, </span>
+                    <span class="code-line">  <span class="function">with_tz</span>(</span>
+                    <span class="code-line">    winter_date, </span>
+                    <span class="code-line">    <span class="string">"America/New_York"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">))</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -886,67 +1023,100 @@ winter_date <span class="operator">&lt;-</span> <span class="function">ymd_hms</
             <div class="code-container">
                 <div class="code-header">売上データの時系列分析</div>
                 <div class="code-content">
-<span class="comment"># サンプル売上データの作成</span>
-<span class="function">set.seed</span>(<span class="number">123</span>)
-sales_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  date <span class="operator">=</span> <span class="function">seq</span>(<span class="function">ymd</span>(<span class="string">"2023-01-01"</span>), <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>),
-  sales <span class="operator">=</span> <span class="number">1000</span> <span class="operator">+</span> 
-          <span class="number">200</span> <span class="operator">*</span> <span class="function">sin</span>(<span class="number">2</span> <span class="operator">*</span> pi <span class="operator">*</span> <span class="function">yday</span>(<span class="function">seq</span>(<span class="function">ymd</span>(<span class="string">"2023-01-01"</span>), <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>), by <span class="operator">=</span> <span class="string">"day"</span>)) / <span class="number">365</span>) <span class="operator">+</span>
-          <span class="function">rnorm</span>(<span class="number">365</span>, <span class="number">0</span>, <span class="number">50</span>)
-)
-
-<span class="comment"># 日付情報の追加</span>
-sales_enhanced <span class="operator">&lt;-</span> sales_data <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    year <span class="operator">=</span> <span class="function">year</span>(date),
-    month <span class="operator">=</span> <span class="function">month</span>(date),
-    month_name <span class="operator">=</span> <span class="function">month</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>),
-    day_of_week <span class="operator">=</span> <span class="function">wday</span>(date, label <span class="operator">=</span> <span class="variable">TRUE</span>, abbr <span class="operator">=</span> <span class="variable">FALSE</span>),
-    quarter <span class="operator">=</span> <span class="function">quarter</span>(date),
-    week_of_year <span class="operator">=</span> <span class="function">week</span>(date),
-    is_weekend <span class="operator">=</span> <span class="function">wday</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(<span class="number">1</span>, <span class="number">7</span>)  <span class="comment"># 日曜日=1, 土曜日=7</span>
-  )
-
-<span class="comment"># 月別売上集計</span>
-monthly_sales <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(year, month, month_name) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
-    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    max_sales <span class="operator">=</span> <span class="function">max</span>(sales),
-    min_sales <span class="operator">=</span> <span class="function">min</span>(sales),
-    days_count <span class="operator">=</span> <span class="function">n</span>(),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
-
-<span class="function">print</span>(<span class="function">head</span>(monthly_sales, <span class="number">6</span>))
-
-<span class="comment"># 曜日別売上分析</span>
-weekday_sales <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(day_of_week, is_weekend) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
-    days_count <span class="operator">=</span> <span class="function">n</span>(),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  ) <span class="operator">%&gt;%</span>
-  <span class="function">arrange</span>(<span class="function">desc</span>(avg_sales))
-
-<span class="function">print</span>(weekday_sales)
-
-<span class="comment"># 四半期別パフォーマンス</span>
-quarterly_performance <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span>
-  <span class="function">group_by</span>(quarter) <span class="operator">%&gt;%</span>
-  <span class="function">summarise</span>(
-    quarter_sales <span class="operator">=</span> <span class="function">sum</span>(sales),
-    avg_daily_sales <span class="operator">=</span> <span class="function">mean</span>(sales),
-    peak_day <span class="operator">=</span> date[<span class="function">which.max</span>(sales)],
-    peak_sales <span class="operator">=</span> <span class="function">max</span>(sales),
-    .groups <span class="operator">=</span> <span class="string">'drop'</span>
-  )
-
-<span class="function">print</span>(quarterly_performance)
-</div>
+                    <span class="code-line"><span class="comment"># サンプル売上データの作成</span></span>
+                    <span class="code-line"><span class="function">set.seed</span>(<span class="number">123</span>)</span>
+                    <span class="code-line">sales_data <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  date <span class="operator">=</span> <span class="function">seq</span>(</span>
+                    <span class="code-line">    <span class="function">ymd</span>(<span class="string">"2023-01-01"</span>), </span>
+                    <span class="code-line">    <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>), </span>
+                    <span class="code-line">    by <span class="operator">=</span> <span class="string">"day"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  sales <span class="operator">=</span> <span class="number">1000</span> <span class="operator">+</span> </span>
+                    <span class="code-line">    <span class="number">200</span> <span class="operator">*</span> <span class="function">sin</span>(</span>
+                    <span class="code-line">      <span class="number">2</span> <span class="operator">*</span> pi <span class="operator">*</span> <span class="function">yday</span>(</span>
+                    <span class="code-line">        <span class="function">seq</span>(</span>
+                    <span class="code-line">          <span class="function">ymd</span>(<span class="string">"2023-01-01"</span>), </span>
+                    <span class="code-line">          <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>), </span>
+                    <span class="code-line">          by <span class="operator">=</span> <span class="string">"day"</span></span>
+                    <span class="code-line">        )</span>
+                    <span class="code-line">      ) / <span class="number">365</span></span>
+                    <span class="code-line">    ) <span class="operator">+</span> </span>
+                    <span class="code-line">    <span class="function">rnorm</span>(<span class="number">365</span>, <span class="number">0</span>, <span class="number">50</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 日付情報の追加</span></span>
+                    <span class="code-line">sales_enhanced <span class="operator">&lt;-</span> sales_data <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    year <span class="operator">=</span> <span class="function">year</span>(date),</span>
+                    <span class="code-line">    month <span class="operator">=</span> <span class="function">month</span>(date),</span>
+                    <span class="code-line">    month_name <span class="operator">=</span> <span class="function">month</span>(</span>
+                    <span class="code-line">      date, </span>
+                    <span class="code-line">      label <span class="operator">=</span> <span class="variable">TRUE</span>, </span>
+                    <span class="code-line">      abbr <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line">    day_of_week <span class="operator">=</span> <span class="function">wday</span>(</span>
+                    <span class="code-line">      date, </span>
+                    <span class="code-line">      label <span class="operator">=</span> <span class="variable">TRUE</span>, </span>
+                    <span class="code-line">      abbr <span class="operator">=</span> <span class="variable">FALSE</span></span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line">    quarter <span class="operator">=</span> <span class="function">quarter</span>(date),</span>
+                    <span class="code-line">    week_of_year <span class="operator">=</span> <span class="function">week</span>(date),</span>
+                    <span class="code-line">    is_weekend <span class="operator">=</span> <span class="function">wday</span>(date) <span class="operator">%in%</span> <span class="function">c</span>(</span>
+                    <span class="code-line">      <span class="number">1</span>, </span>
+                    <span class="code-line">      <span class="number">7</span></span>
+                    <span class="code-line">    )  <span class="comment"># 日曜日=1, 土曜日=7</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 月別売上集計</span></span>
+                    <span class="code-line">monthly_sales <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(</span>
+                    <span class="code-line">    year, </span>
+                    <span class="code-line">    month, </span>
+                    <span class="code-line">    month_name</span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),</span>
+                    <span class="code-line">    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),</span>
+                    <span class="code-line">    max_sales <span class="operator">=</span> <span class="function">max</span>(sales),</span>
+                    <span class="code-line">    min_sales <span class="operator">=</span> <span class="function">min</span>(sales),</span>
+                    <span class="code-line">    days_count <span class="operator">=</span> <span class="function">n</span>(),</span>
+                    <span class="code-line">    .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">head</span>(</span>
+                    <span class="code-line">  monthly_sales, </span>
+                    <span class="code-line">  <span class="number">6</span></span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 曜日別売上分析</span></span>
+                    <span class="code-line">weekday_sales <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(</span>
+                    <span class="code-line">    day_of_week, </span>
+                    <span class="code-line">    is_weekend</span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    avg_sales <span class="operator">=</span> <span class="function">mean</span>(sales),</span>
+                    <span class="code-line">    total_sales <span class="operator">=</span> <span class="function">sum</span>(sales),</span>
+                    <span class="code-line">    days_count <span class="operator">=</span> <span class="function">n</span>(),</span>
+                    <span class="code-line">    .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                    <span class="code-line">  ) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">arrange</span>(<span class="function">desc</span>(avg_sales))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(weekday_sales)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 四半期別パフォーマンス</span></span>
+                    <span class="code-line">quarterly_performance <span class="operator">&lt;-</span> sales_enhanced <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">group_by</span>(quarter) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">summarise</span>(</span>
+                    <span class="code-line">    quarter_sales <span class="operator">=</span> <span class="function">sum</span>(sales),</span>
+                    <span class="code-line">    avg_daily_sales <span class="operator">=</span> <span class="function">mean</span>(sales),</span>
+                    <span class="code-line">    peak_day <span class="operator">=</span> date[<span class="function">which.max</span>(sales)],</span>
+                    <span class="code-line">    peak_sales <span class="operator">=</span> <span class="function">max</span>(sales),</span>
+                    <span class="code-line">    .groups <span class="operator">=</span> <span class="string">'drop'</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(quarterly_performance)</span>
+                </div>
             </div>
 
             <div class="output-container">
@@ -1046,71 +1216,125 @@ quarterly_performance <span class="operator">&lt;-</span> sales_enhanced <span c
             <div class="code-container">
                 <div class="code-header">営業日の計算と祝日処理</div>
                 <div class="code-content">
-<span class="comment"># 営業日の計算関数</span>
-is_business_day <span class="operator">&lt;-</span> <span class="keyword">function</span>(date) {
-  <span class="comment"># 平日（月-金）かつ祝日でない日を営業日とする</span>
-  weekday <span class="operator">&lt;-</span> <span class="function">wday</span>(date)
-  <span class="keyword">return</span>(weekday <span class="operator">&gt;=</span> <span class="number">2</span> <span class="operator">&amp;&amp;</span> weekday <span class="operator">&lt;=</span> <span class="number">6</span>)  <span class="comment"># 月曜=2, 金曜=6</span>
-}
+                    <span class="code-line"><span class="comment"># 営業日の計算関数</span></span>
+                    <span class="code-line">is_business_day <span class="operator">&lt;-</span> <span class="keyword">function</span>(date) {</span>
+                    <span class="code-line">  <span class="comment"># 平日（月-金）かつ祝日でない日を営業日とする</span></span>
+                    <span class="code-line">  weekday <span class="operator">&lt;-</span> <span class="function">wday</span>(date)</span>
+                    <span class="code-line">  <span class="keyword">return</span>(</span>
+                    <span class="code-line">    weekday <span class="operator">&gt;=</span> <span class="number">2</span> <span class="operator">&amp;&amp;</span> weekday <span class="operator">&lt;=</span> <span class="number">6</span></span>
+                    <span class="code-line">  )  <span class="comment"># 月曜=2, 金曜=6</span></span>
+                    <span class="code-line">}</span>
 
-<span class="comment"># 営業日の範囲を生成</span>
-start_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-12-01"</span>)
-end_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>)
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 営業日の範囲を生成</span></span>
+                    <span class="code-line">start_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-12-01"</span>)</span>
+                    <span class="code-line">end_date <span class="operator">&lt;-</span> <span class="function">ymd</span>(<span class="string">"2023-12-31"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">date_range <span class="operator">&lt;-</span> <span class="function">seq</span>(</span>
+                    <span class="code-line">  start_date, </span>
+                    <span class="code-line">  end_date, </span>
+                    <span class="code-line">  by <span class="operator">=</span> <span class="string">"day"</span></span>
+                    <span class="code-line">)</span>
+                    <span class="code-line">business_days <span class="operator">&lt;-</span> date_range[</span>
+                    <span class="code-line">  <span class="function">sapply</span>(date_range, is_business_day)</span>
+                    <span class="code-line">]</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"12月の営業日数:"</span>, </span>
+                    <span class="code-line">  <span class="function">length</span>(business_days)</span>
+                    <span class="code-line">))</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"12月の総日数:"</span>, </span>
+                    <span class="code-line">  <span class="function">length</span>(date_range)</span>
+                    <span class="code-line">))</span>
 
-date_range <span class="operator">&lt;-</span> <span class="function">seq</span>(start_date, end_date, by <span class="operator">=</span> <span class="string">"day"</span>)
-business_days <span class="operator">&lt;-</span> date_range[<span class="function">sapply</span>(date_range, is_business_day)]
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 月初・月末の計算</span></span>
+                    <span class="code-line">sample_dates <span class="operator">&lt;-</span> <span class="function">c</span>(</span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"2023-03-15"</span>),</span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"2023-07-22"</span>),</span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"2023-11-03"</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">month_boundaries <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  original_date <span class="operator">=</span> sample_dates,</span>
+                    <span class="code-line">  month_start <span class="operator">=</span> <span class="function">floor_date</span>(</span>
+                    <span class="code-line">    sample_dates, </span>
+                    <span class="code-line">    <span class="string">"month"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  month_end <span class="operator">=</span> <span class="function">ceiling_date</span>(</span>
+                    <span class="code-line">    sample_dates, </span>
+                    <span class="code-line">    <span class="string">"month"</span></span>
+                    <span class="code-line">  ) <span class="operator">-</span> <span class="function">days</span>(<span class="number">1</span>),</span>
+                    <span class="code-line">  quarter_start <span class="operator">=</span> <span class="function">floor_date</span>(</span>
+                    <span class="code-line">    sample_dates, </span>
+                    <span class="code-line">    <span class="string">"quarter"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  year_start <span class="operator">=</span> <span class="function">floor_date</span>(</span>
+                    <span class="code-line">    sample_dates, </span>
+                    <span class="code-line">    <span class="string">"year"</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(month_boundaries)</span>
 
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"12月の営業日数:"</span>, <span class="function">length</span>(business_days)))
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"12月の総日数:"</span>, <span class="function">length</span>(date_range)))
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 年齢計算の関数</span></span>
+                    <span class="code-line">calculate_age <span class="operator">&lt;-</span> <span class="keyword">function</span>(</span>
+                    <span class="code-line">  birth_date, </span>
+                    <span class="code-line">  reference_date <span class="operator">=</span> <span class="function">today</span>()</span>
+                    <span class="code-line">) {</span>
+                    <span class="code-line">  age_interval <span class="operator">&lt;-</span> <span class="function">interval</span>(</span>
+                    <span class="code-line">    birth_date, </span>
+                    <span class="code-line">    reference_date</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">  <span class="keyword">return</span>(</span>
+                    <span class="code-line">    age_interval %/% <span class="function">years</span>(<span class="number">1</span>)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">}</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># 年齢計算の例</span></span>
+                    <span class="code-line">birth_dates <span class="operator">&lt;-</span> <span class="function">c</span>(</span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"1990-05-15"</span>),</span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"1985-11-22"</span>),</span>
+                    <span class="code-line">  <span class="function">ymd</span>(<span class="string">"2000-03-08"</span>)</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line">ages <span class="operator">&lt;-</span> <span class="function">sapply</span>(</span>
+                    <span class="code-line">  birth_dates, </span>
+                    <span class="code-line">  calculate_age</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"><span class="function">print</span>(<span class="function">paste</span>(</span>
+                    <span class="code-line">  <span class="string">"年齢:"</span>, </span>
+                    <span class="code-line">  ages</span>
+                    <span class="code-line">))</span>
 
-<span class="comment"># 月初・月末の計算</span>
-sample_dates <span class="operator">&lt;-</span> <span class="function">c</span>(
-  <span class="function">ymd</span>(<span class="string">"2023-03-15"</span>),
-  <span class="function">ymd</span>(<span class="string">"2023-07-22"</span>),
-  <span class="function">ymd</span>(<span class="string">"2023-11-03"</span>)
-)
-
-month_boundaries <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  original_date <span class="operator">=</span> sample_dates,
-  month_start <span class="operator">=</span> <span class="function">floor_date</span>(sample_dates, <span class="string">"month"</span>),
-  month_end <span class="operator">=</span> <span class="function">ceiling_date</span>(sample_dates, <span class="string">"month"</span>) <span class="operator">-</span> <span class="function">days</span>(<span class="number">1</span>),
-  quarter_start <span class="operator">=</span> <span class="function">floor_date</span>(sample_dates, <span class="string">"quarter"</span>),
-  year_start <span class="operator">=</span> <span class="function">floor_date</span>(sample_dates, <span class="string">"year"</span>)
-)
-
-<span class="function">print</span>(month_boundaries)
-
-<span class="comment"># 年齢計算の関数</span>
-calculate_age <span class="operator">&lt;-</span> <span class="keyword">function</span>(birth_date, reference_date <span class="operator">=</span> <span class="function">today</span>()) {
-  age_interval <span class="operator">&lt;-</span> <span class="function">interval</span>(birth_date, reference_date)
-  <span class="keyword">return</span>(age_interval %/% <span class="function">years</span>(<span class="number">1</span>))
-}
-
-<span class="comment"># 年齢計算の例</span>
-birth_dates <span class="operator">&lt;-</span> <span class="function">c</span>(
-  <span class="function">ymd</span>(<span class="string">"1990-05-15"</span>),
-  <span class="function">ymd</span>(<span class="string">"1985-11-22"</span>),
-  <span class="function">ymd</span>(<span class="string">"2000-03-08"</span>)
-)
-
-ages <span class="operator">&lt;-</span> <span class="function">sapply</span>(birth_dates, calculate_age)
-<span class="function">print</span>(<span class="function">paste</span>(<span class="string">"年齢:"</span>, ages))
-
-<span class="comment"># イベントまでの日数計算</span>
-events <span class="operator">&lt;-</span> <span class="function">tibble</span>(
-  event_name <span class="operator">=</span> <span class="function">c</span>(<span class="string">"クリスマス"</span>, <span class="string">"新年"</span>, <span class="string">"バレンタイン"</span>),
-  event_date <span class="operator">=</span> <span class="function">c</span>(
-    <span class="function">ymd</span>(<span class="string">"2023-12-25"</span>),
-    <span class="function">ymd</span>(<span class="string">"2024-01-01"</span>),
-    <span class="function">ymd</span>(<span class="string">"2024-02-14"</span>)
-  )
-) <span class="operator">%&gt;%</span>
-  <span class="function">mutate</span>(
-    days_until <span class="operator">=</span> <span class="function">as.numeric</span>(event_date <span class="operator">-</span> <span class="function">today</span>()),
-    weeks_until <span class="operator">=</span> <span class="function">round</span>(days_until / <span class="number">7</span>, <span class="number">1</span>)
-  )
-
-<span class="function">print</span>(events)
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="comment"># イベントまでの日数計算</span></span>
+                    <span class="code-line">events <span class="operator">&lt;-</span> <span class="function">tibble</span>(</span>
+                    <span class="code-line">  event_name <span class="operator">=</span> <span class="function">c</span>(</span>
+                    <span class="code-line">    <span class="string">"クリスマス"</span>, </span>
+                    <span class="code-line">    <span class="string">"新年"</span>, </span>
+                    <span class="code-line">    <span class="string">"バレンタイン"</span></span>
+                    <span class="code-line">  ),</span>
+                    <span class="code-line">  event_date <span class="operator">=</span> <span class="function">c</span>(</span>
+                    <span class="code-line">    <span class="function">ymd</span>(<span class="string">"2023-12-25"</span>),</span>
+                    <span class="code-line">    <span class="function">ymd</span>(<span class="string">"2024-01-01"</span>),</span>
+                    <span class="code-line">    <span class="function">ymd</span>(<span class="string">"2024-02-14"</span>)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line">) <span class="operator">%&gt;%</span></span>
+                    <span class="code-line">  <span class="function">mutate</span>(</span>
+                    <span class="code-line">    days_until <span class="operator">=</span> <span class="function">as.numeric</span>(</span>
+                    <span class="code-line">      event_date <span class="operator">-</span> <span class="function">today</span>()</span>
+                    <span class="code-line">    ),</span>
+                    <span class="code-line">    weeks_until <span class="operator">=</span> <span class="function">round</span>(</span>
+                    <span class="code-line">      days_until / <span class="number">7</span>, </span>
+                    <span class="code-line">      <span class="number">1</span></span>
+                    <span class="code-line">    )</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">print</span>(events)</span>
+                </div>
 </div>
             </div>
 
@@ -1193,10 +1417,214 @@ events <span class="operator">&lt;-</span> <span class="function">tibble</span>(
             <p>lubridateは、財務分析、プロジェクト管理、マーケティング分析など、あらゆるビジネス分野で重要な役割を果たします。特に、営業日計算や期間分析は、実際のビジネス判断に直結する重要なスキルです。</p>
         </div>
 
-        <nav class="chapter-nav">
-            <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">← 第6章</a>
-            <a href="chapter8-readr-data-import.html" class="nav-button">第8章 →</a>
-        </nav>
+
+        <!-- Advanced Time Series Analysis and Forecasting -->
+        <section class="content-section fade-in-up" id="advanced-time-series">
+            <h2 class="section-title">📈 時系列分析と予測モデリングの実践</h2>
+            <div class="section-content">
+                <p>
+                    lubridateの基本操作を習得したら、時系列データの統計分析と予測モデリングに挑戦しましょう。
+                    ビジネスの未来を見据えた意思決定には、時系列の高度な分析技法が不可欠です。
+                </p>
+                
+                <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">⏰ 時系列の特徴量エンジニアリング</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">time_series_feature_engineering.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"># 時系列特徴量エンジニアリング</span>
+                        <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                        <span class="code-line"><span class="code-function">library</span>(lubridate)</span>
+                        <span class="code-line"><span class="code-function">library</span>(slider)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"># 包括的な時系列特徴量作成</span>
+                        <span class="code-line">create_time_features <- <span class="code-function">function</span>(data, date_col, value_col) {</span>
+                        <span class="code-line">  data <span class="code-operator">%>%</span></span>
+                        <span class="code-line">    <span class="code-function">arrange</span>({{date_col}}) <span class="code-operator">%>%</span></span>
+                        <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">      # 基本的な時間特徴量</span>
+                        <span class="code-line">      year = <span class="code-function">year</span>({{date_col}}),</span>
+                        <span class="code-line">      month = <span class="code-function">month</span>({{date_col}}),</span>
+                        <span class="code-line">      weekday = <span class="code-function">wday</span>({{date_col}}, label = <span class="code-boolean">TRUE</span>),</span>
+                        <span class="code-line">      is_weekend = <span class="code-function">wday</span>({{date_col}}) <span class="code-operator">%in%</span> <span class="code-function">c</span>(<span class="code-number">1</span>, <span class="code-number">7</span>),</span>
+                        <span class="code-line">      </span>
+                        <span class="code-line">      # 循環特徴量（正弦・余弦変換）</span>
+                        <span class="code-line">      month_sin = <span class="code-function">sin</span>(<span class="code-number">2</span> * pi * month / <span class="code-number">12</span>),</span>
+                        <span class="code-line">      month_cos = <span class="code-function">cos</span>(<span class="code-number">2</span> * pi * month / <span class="code-number">12</span>),</span>
+                        <span class="code-line">      </span>
+                        <span class="code-line">      # 移動統計</span>
+                        <span class="code-line">      ma_7 = <span class="code-function">slide_dbl</span>({{value_col}}, mean, .before = <span class="code-number">6</span>),</span>
+                        <span class="code-line">      ma_30 = <span class="code-function">slide_dbl</span>({{value_col}}, mean, .before = <span class="code-number">29</span>),</span>
+                        <span class="code-line">      </span>
+                        <span class="code-line">      # ラグ特徴量</span>
+                        <span class="code-line">      lag_1 = <span class="code-function">lag</span>({{value_col}}, <span class="code-number">1</span>),</span>
+                        <span class="code-line">      lag_7 = <span class="code-function">lag</span>({{value_col}}, <span class="code-number">7</span>),</span>
+                        <span class="code-line">      </span>
+                        <span class="code-line">      # 差分特徴量</span>
+                        <span class="code-line">      diff_1 = {{value_col}} - <span class="code-function">lag</span>({{value_col}}, <span class="code-number">1</span>),</span>
+                        <span class="code-line">      pct_change = ({{value_col}} - <span class="code-function">lag</span>({{value_col}}, <span class="code-number">1</span>)) / <span class="code-function">lag</span>({{value_col}}, <span class="code-number">1</span>) * <span class="code-number">100</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">}</span>
+                    </div>
+                </div>
+                
+                <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">📊 季節性と異常値検出</h3>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                        </div>
+                        <div class="code-title">seasonality_anomaly_detection.R</div>
+                    </div>
+                    <div class="code-content">
+                        <span class="code-line"># 季節性分析と異常値検出</span>
+                        <span class="code-line"><span class="code-function">library</span>(forecast)</span>
+                        <span class="code-line"><span class="code-function">library</span>(anomalize)</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"># 統計的異常値検出</span>
+                        <span class="code-line">detect_anomalies <- <span class="code-function">function</span>(data, date_col, value_col) {</span>
+                        <span class="code-line">  data <span class="code-operator">%>%</span></span>
+                        <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                        <span class="code-line">      # 移動平均からの偏差</span>
+                        <span class="code-line">      rolling_mean = <span class="code-function">slide_dbl</span>({{value_col}}, mean, .before = <span class="code-number">30</span>),</span>
+                        <span class="code-line">      rolling_sd = <span class="code-function">slide_dbl</span>({{value_col}}, sd, .before = <span class="code-number">30</span>),</span>
+                        <span class="code-line">      </span>
+                        <span class="code-line">      # Z-score方法</span>
+                        <span class="code-line">      z_score = <span class="code-function">abs</span>(({{value_col}} - rolling_mean) / rolling_sd),</span>
+                        <span class="code-line">      is_anomaly = z_score > <span class="code-number">3</span> & !<span class="code-function">is.na</span>(z_score)</span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">}</span>
+                        <span class="code-line"></span>
+                        <span class="code-line"># 季節性分析</span>
+                        <span class="code-line">analyze_seasonality <- <span class="code-function">function</span>(data, date_col, value_col) {</span>
+                        <span class="code-line">  data <span class="code-operator">%>%</span></span>
+                        <span class="code-line">    <span class="code-function">group_by</span>(month = <span class="code-function">month</span>({{date_col}})) <span class="code-operator">%>%</span></span>
+                        <span class="code-line">    <span class="code-function">summarise</span>(</span>
+                        <span class="code-line">      avg_value = <span class="code-function">mean</span>({{value_col}}, na.rm = <span class="code-boolean">TRUE</span>),</span>
+                        <span class="code-line">      seasonal_index = avg_value / <span class="code-function">mean</span>(data[[<span class="code-function">quo_name</span>(<span class="code-function">enquo</span>(value_col))]], na.rm = <span class="code-boolean">TRUE</span>),</span>
+                        <span class="code-line">      .groups = <span class="code-string">"drop"</span></span>
+                        <span class="code-line">    )</span>
+                        <span class="code-line">}</span>
+                    </div>
+                </div>
+                
+                <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">💡 実践的アドバイス</h3>
+                
+                <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                    <h3 style="color: #39ff14; margin-bottom: 1rem;">⏰ 時系列分析の成功法則</h3>
+                    <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                        <li><strong>データの質を確保</strong>：欠損値や異常値の適切な処理が精度を左右</li>
+                        <li><strong>季節性を理解</strong>：ビジネスサイクルや外部要因の影響を考慮</li>
+                        <li><strong>複数モデルを比較</strong>：単一モデルに依存せず、アンサンブルも検討</li>
+                        <li><strong>検証を徹底</strong>：時系列分割でのクロスバリデーションを実施</li>
+                        <li><strong>解釈しやすさを重視</strong>：ビジネス判断に活用できる説明可能性を確保</li>
+                    </ul>
+                </div>
+                
+                <p>
+                    これらの時系列分析と予測モデリング技法により、データに基づいた将来予測と意思決定支援が可能になります。
+                    次の章では、大容量データの効率的な読み込みと処理技法を学びましょう。
+                </p>
+            </div>
+        </section>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter Navigation -->
+    <nav style="margin: 4rem 0; display: flex; justify-content: space-between; align-items: center; padding: 2rem; background: var(--bg-secondary); border-radius: 15px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+        <a href="chapter6-forcats-purrr-advanced.html" style="padding: 12px 24px; background: var(--accent-orange); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);">← 第6章: forcats & purrr</a>
+        <a href="index.html" style="padding: 12px 24px; background: var(--accent-cyan); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);">目次へ戻る</a>
+        <a href="chapter8-readr-data-import.html" style="padding: 12px 24px; background: var(--accent-orange); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);">第8章: readr →</a>
+    </nav>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </div>
 </body>
 </html>

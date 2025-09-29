@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第20章: アンサンブル学習の極意 - stacks | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff8c42;
+            --accent-electric: #00ff41;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-electric);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-electric);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-electric);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-electric);
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.02);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.15);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-electric), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-electric);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-electric);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-electric);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1);
+        }
+
+        .code-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--accent-electric);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-electric);
+            opacity: 0.6;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+            background: #0d1117;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Syntax highlighting */
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+        .code-regex { color: #39ff14; font-weight: bold; }
+        .code-pattern { color: #ffff00; background: rgba(255, 255, 0, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+        /* Function Grid */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .function-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-electric) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .function-card:hover::before {
+            left: 0;
+        }
+
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+
+        .function-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-electric);
+            margin-bottom: 1rem;
+        }
+
+        .function-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .function-syntax {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        /* Ensemble Workflow */
+        .ensemble-workflow {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .workflow-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--accent-electric);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: var(--accent-electric);
+            color: var(--bg-primary);
+        }
+
+        .step-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Model Cards */
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .model-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .model-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .model-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .model-name {
+            font-weight: bold;
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+        }
+
+        .model-weight {
+            background: linear-gradient(45deg, var(--accent-electric), var(--accent-cyan));
+            color: var(--bg-primary);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .performance-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .performance-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .excellent-perf { background: linear-gradient(90deg, var(--accent-electric), var(--accent-cyan)); }
+        .good-perf { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); }
+        .moderate-perf { background: linear-gradient(90deg, var(--accent-orange), #f59e0b); }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-button {
+                width: 200px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏆 アンサンブル学習の極意 - stacks</h1>
+            <div class="subtitle">第20章: 複数モデルを統合して最強の予測システムを構築する</div>
+            <div class="chapter-meta">
+                <span>🔗 Stacking Ensemble</span>
+                <span>🎯 Meta-Learning</span>
+                <span>🚀 Performance Boost</span>
+            </div>
+            <p class="chapter-description">
+                stacksパッケージでアンサンブル学習をマスター。複数の機械学習モデルを組み合わせ、単体モデルを上回る予測精度を実現する高度な技術を実践的に学習しよう。
+            </p>
+        </header>
+
+        <!-- Navigation Widget -->
+        <nav class="chapter-nav">
+            <a href="chapter10-advanced-dplyr.html" class="nav-button">Ch10: dplyr応用</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">Ch11: 機械学習</a>
+            <a href="chapter12-model-evaluation.html" class="nav-button">Ch12: モデル評価</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">Ch13: ggplot2応用</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">Ch14: 対話的可視化</a>
+            <a href="chapter15-big-data.html" class="nav-button">Ch15: ビッグデータ</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">Ch16: リサンプリング</a>
+            <a href="chapter17-hyperparameter-tuning.html" class="nav-button">Ch17: チューニング</a>
+            <a href="chapter18-model-evaluation-yardstick.html" class="nav-button">Ch18: モデル評価</a>
+            <a href="chapter19-prediction-interpretation.html" class="nav-button">Ch19: 予測解釈</a>
+            <a href="chapter20-ensemble-learning-enhanced.html" class="nav-button current">Ch20: アンサンブル学習</a>
+        </nav>
+
+        <!-- LEARNING OBJECTIVES -->
+        <section class="section">
+            <h2>🎯 学習目標</h2>
+            <p>
+                本章では、stacksパッケージを使用したアンサンブル学習の実装を学習し、複数のモデルを効果的に組み合わせる技術を習得します。
+            </p>
+
+            <!-- アンサンブル学習概念図 -->
+            <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-electric); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+                <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🏆 アンサンブル学習アーキテクチャ</h4>
+                <svg viewBox="0 0 1200 900" style="width: 100%; height: auto;">
+                    <defs>
+                        <linearGradient id="ensembleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:1"/>
+                            <stop offset="33%" style="stop-color:#9d4edd;stop-opacity:1"/>
+                            <stop offset="66%" style="stop-color:#00ff88;stop-opacity:1"/>
+                            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
+                        </linearGradient>
+                        <filter id="ensembleGlow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge> 
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <radialGradient id="modelGlow">
+                            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1"/>
+                            <stop offset="100%" style="stop-color:#00ff88;stop-opacity:0.6"/>
+                        </radialGradient>
+                    </defs>
+                    
+                    <!-- メインタイトル -->
+                    <text x="600" y="30" text-anchor="middle" fill="#00ff88" font-size="18" font-weight="bold">🏆 Stacks アンサンブル学習フレームワーク</text>
+                    
+                    <!-- 入力データ -->
+                    <text x="600" y="65" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">📊 入力データ & 特徴量エンジニアリング</text>
+                    
+                    <rect x="200" y="80" width="800" height="60" rx="10" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="2"/>
+                    <text x="600" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">訓練データ (Training Set)</text>
+                    <text x="600" y="125" text-anchor="middle" fill="white" font-size="11">特徴量: X₁, X₂, ..., Xₙ   目的変数: y</text>
+                    
+                    <!-- データ分割 -->
+                    <text x="600" y="175" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">🔄 データ分割 & クロスバリデーション</text>
+                    
+                    <rect x="100" y="190" width="150" height="50" rx="8" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1"/>
+                    <text x="175" y="210" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Fold 1</text>
+                    <text x="175" y="225" text-anchor="middle" fill="white" font-size="10">Train: 80% | Val: 20%</text>
+                    
+                    <rect x="275" y="190" width="150" height="50" rx="8" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1"/>
+                    <text x="350" y="210" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Fold 2</text>
+                    <text x="350" y="225" text-anchor="middle" fill="white" font-size="10">Train: 80% | Val: 20%</text>
+                    
+                    <rect x="450" y="190" width="150" height="50" rx="8" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1"/>
+                    <text x="525" y="210" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Fold 3</text>
+                    <text x="525" y="225" text-anchor="middle" fill="white" font-size="10">Train: 80% | Val: 20%</text>
+                    
+                    <rect x="625" y="190" width="150" height="50" rx="8" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1"/>
+                    <text x="700" y="210" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Fold 4</text>
+                    <text x="700" y="225" text-anchor="middle" fill="white" font-size="10">Train: 80% | Val: 20%</text>
+                    
+                    <rect x="800" y="190" width="150" height="50" rx="8" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1"/>
+                    <text x="875" y="210" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Fold 5</text>
+                    <text x="875" y="225" text-anchor="middle" fill="white" font-size="10">Train: 80% | Val: 20%</text>
+                    
+                    <!-- ベースモデル群 -->
+                    <text x="600" y="285" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🤖 ベースモデル (Base Learners)</text>
+                    
+                    <!-- Random Forest -->
+                    <rect x="50" y="300" width="160" height="100" rx="15" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="130" y="325" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">🌲 Random Forest</text>
+                    <text x="130" y="345" text-anchor="middle" fill="white" font-size="10">• バギング手法</text>
+                    <text x="130" y="360" text-anchor="middle" fill="white" font-size="10">• 特徴量サブセット</text>
+                    <text x="130" y="375" text-anchor="middle" fill="white" font-size="10">• 高バリアンス対応</text>
+                    <text x="130" y="390" text-anchor="middle" fill="white" font-size="10">精度: 85.2%</text>
+                    
+                    <!-- XGBoost -->
+                    <rect x="230" y="300" width="160" height="100" rx="15" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="310" y="325" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="bold">⚡ XGBoost</text>
+                    <text x="310" y="345" text-anchor="middle" fill="white" font-size="10">• ブースティング手法</text>
+                    <text x="310" y="360" text-anchor="middle" fill="white" font-size="10">• 勾配最適化</text>
+                    <text x="310" y="375" text-anchor="middle" fill="white" font-size="10">• 高バイアス対応</text>
+                    <text x="310" y="390" text-anchor="middle" fill="white" font-size="10">精度: 87.1%</text>
+                    
+                    <!-- SVM -->
+                    <rect x="410" y="300" width="160" height="100" rx="15" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="490" y="325" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">🎯 SVM</text>
+                    <text x="490" y="345" text-anchor="middle" fill="white" font-size="10">• サポートベクター</text>
+                    <text x="490" y="360" text-anchor="middle" fill="white" font-size="10">• カーネルトリック</text>
+                    <text x="490" y="375" text-anchor="middle" fill="white" font-size="10">• 非線形境界</text>
+                    <text x="490" y="390" text-anchor="middle" fill="white" font-size="10">精度: 83.7%</text>
+                    
+                    <!-- Neural Network -->
+                    <rect x="590" y="300" width="160" height="100" rx="15" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="670" y="325" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">🧠 Neural Net</text>
+                    <text x="670" y="345" text-anchor="middle" fill="white" font-size="10">• 多層パーセプトロン</text>
+                    <text x="670" y="360" text-anchor="middle" fill="white" font-size="10">• 非線形活性化</text>
+                    <text x="670" y="375" text-anchor="middle" fill="white" font-size="10">• 複雑パターン学習</text>
+                    <text x="670" y="390" text-anchor="middle" fill="white" font-size="10">精度: 86.5%</text>
+                    
+                    <!-- Logistic Regression -->
+                    <rect x="770" y="300" width="160" height="100" rx="15" fill="rgba(255, 255, 65, 0.1)" stroke="#ffff41" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="850" y="325" text-anchor="middle" fill="#ffff41" font-size="14" font-weight="bold">📈 Logistic Reg</text>
+                    <text x="850" y="345" text-anchor="middle" fill="white" font-size="10">• 線形境界</text>
+                    <text x="850" y="360" text-anchor="middle" fill="white" font-size="10">• 確率的出力</text>
+                    <text x="850" y="375" text-anchor="middle" fill="white" font-size="10">• 解釈性高</text>
+                    <text x="850" y="390" text-anchor="middle" fill="white" font-size="10">精度: 82.3%</text>
+                    
+                    <!-- K-NN -->
+                    <rect x="950" y="300" width="160" height="100" rx="15" fill="rgba(255, 0, 127, 0.1)" stroke="#ff007f" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="1030" y="325" text-anchor="middle" fill="#ff007f" font-size="14" font-weight="bold">🏠 K-NN</text>
+                    <text x="1030" y="345" text-anchor="middle" fill="white" font-size="10">• 近傍ベース</text>
+                    <text x="1030" y="360" text-anchor="middle" fill="white" font-size="10">• 非パラメトリック</text>
+                    <text x="1030" y="375" text-anchor="middle" fill="white" font-size="10">• 局所的決定境界</text>
+                    <text x="1030" y="390" text-anchor="middle" fill="white" font-size="10">精度: 81.9%</text>
+                    
+                    <!-- 予測結果の統合 -->
+                    <text x="600" y="445" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">📊 予測結果の生成</text>
+                    
+                    <!-- 矢印 (ベースモデル → 予測結果) -->
+                    <g>
+                        <polygon points="130,420 130,450 140,445" fill="#ff8c42" stroke="#ff8c42" stroke-width="1"/>
+                        <polygon points="310,420 310,450 320,445" fill="#00d4ff" stroke="#00d4ff" stroke-width="1"/>
+                        <polygon points="490,420 490,450 500,445" fill="#9d4edd" stroke="#9d4edd" stroke-width="1"/>
+                        <polygon points="670,420 670,450 680,445" fill="#00ff88" stroke="#00ff88" stroke-width="1"/>
+                        <polygon points="850,420 850,450 860,445" fill="#ffff41" stroke="#ffff41" stroke-width="1"/>
+                        <polygon points="1030,420 1030,450 1040,445" fill="#ff007f" stroke="#ff007f" stroke-width="1"/>
+                    </g>
+                    
+                    <!-- 予測結果マトリックス -->
+                    <rect x="300" y="460" width="600" height="80" rx="10" fill="rgba(0, 0, 0, 0.3)" stroke="#9d4edd" stroke-width="2"/>
+                    <text x="600" y="485" text-anchor="middle" fill="white" font-size="12" font-weight="bold">予測結果マトリックス (Out-of-Fold Predictions)</text>
+                    
+                    <!-- 予測結果の表示 -->
+                    <text x="320" y="510" fill="#ff8c42" font-size="10">RF: [0.7, 0.9, 0.6, ...]</text>
+                    <text x="320" y="525" fill="#00d4ff" font-size="10">XGB: [0.8, 0.85, 0.7, ...]</text>
+                    <text x="520" y="510" fill="#9d4edd" font-size="10">SVM: [0.75, 0.8, 0.65, ...]</text>
+                    <text x="520" y="525" fill="#00ff88" font-size="10">NN: [0.72, 0.88, 0.68, ...]</text>
+                    <text x="720" y="510" fill="#ffff41" font-size="10">LR: [0.69, 0.82, 0.63, ...]</text>
+                    <text x="720" y="525" fill="#ff007f" font-size="10">KNN: [0.71, 0.79, 0.61, ...]</text>
+                    
+                    <!-- メタラーナー -->
+                    <text x="600" y="585" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">🎯 メタラーナー (Meta-Learner)</text>
+                    
+                    <!-- 矢印 (予測結果 → メタラーナー) -->
+                    <polygon points="600,560 600,590 610,585" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
+                    
+                    <rect x="400" y="600" width="400" height="120" rx="15" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="600" y="625" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="bold">🔮 スタッキング最適化</text>
+                    
+                    <!-- 重み最適化の可視化 -->
+                    <text x="420" y="650" fill="white" font-size="11">最適重み:</text>
+                    <text x="420" y="670" fill="#ff8c42" font-size="10">w₁ = 0.21 (RF)</text>
+                    <text x="420" y="685" fill="#00d4ff" font-size="10">w₂ = 0.28 (XGB)</text>
+                    <text x="420" y="700" fill="#9d4edd" font-size="10">w₃ = 0.15 (SVM)</text>
+                    
+                    <text x="600" y="670" fill="#00ff88" font-size="10">w₄ = 0.19 (NN)</text>
+                    <text x="600" y="685" fill="#ffff41" font-size="10">w₅ = 0.11 (LR)</text>
+                    <text x="600" y="700" fill="#ff007f" font-size="10">w₆ = 0.06 (KNN)</text>
+                    
+                    <!-- 制約条件 -->
+                    <text x="720" y="650" fill="white" font-size="11">制約条件:</text>
+                    <text x="720" y="670" fill="#ffffff" font-size="10">Σwᵢ = 1</text>
+                    <text x="720" y="685" fill="#ffffff" font-size="10">wᵢ ≥ 0</text>
+                    <text x="720" y="700" fill="#ffffff" font-size="10">minimize: Loss(y, Σwᵢpᵢ)</text>
+                    
+                    <!-- 最終予測 -->
+                    <text x="600" y="755" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🏆 最終アンサンブル予測</text>
+                    
+                    <!-- 矢印 (メタラーナー → 最終予測) -->
+                    <polygon points="600,740 600,770 610,765" fill="#00d4ff" stroke="#00d4ff" stroke-width="2"/>
+                    
+                    <rect x="350" y="780" width="500" height="80" rx="15" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" filter="url(#ensembleGlow)"/>
+                    <text x="600" y="805" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">🎯 Ensemble Prediction</text>
+                    <text x="600" y="825" text-anchor="middle" fill="white" font-size="12">予測値 = Σ(wᵢ × pᵢ)</text>
+                    <text x="600" y="845" text-anchor="middle" fill="#00ff88" font-size="13" font-weight="bold">最終精度: 89.3% (+2.2% 向上!)</text>
+                    
+                    <!-- パフォーマンス向上の可視化 -->
+                    <text x="100" y="755" fill="#9d4edd" font-size="12" font-weight="bold">📈 性能向上効果</text>
+                    
+                    <rect x="50" y="760" width="250" height="100" rx="10" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="1"/>
+                    
+                    <!-- バーチャート風の表示 -->
+                    <rect x="70" y="780" width="15" height="50" fill="#ff8c42"/>
+                    <text x="77" y="840" text-anchor="middle" fill="white" font-size="8">RF</text>
+                    <text x="77" y="850" text-anchor="middle" fill="white" font-size="8">85.2%</text>
+                    
+                    <rect x="100" y="775" width="15" height="55" fill="#00d4ff"/>
+                    <text x="107" y="840" text-anchor="middle" fill="white" font-size="8">XGB</text>
+                    <text x="107" y="850" text-anchor="middle" fill="white" font-size="8">87.1%</text>
+                    
+                    <rect x="130" y="785" width="15" height="45" fill="#9d4edd"/>
+                    <text x="137" y="840" text-anchor="middle" fill="white" font-size="8">SVM</text>
+                    <text x="137" y="850" text-anchor="middle" fill="white" font-size="8">83.7%</text>
+                    
+                    <rect x="160" y="780" width="15" height="50" fill="#00ff88"/>
+                    <text x="167" y="840" text-anchor="middle" fill="white" font-size="8">NN</text>
+                    <text x="167" y="850" text-anchor="middle" fill="white" font-size="8">86.5%</text>
+                    
+                    <rect x="190" y="790" width="15" height="40" fill="#ffff41"/>
+                    <text x="197" y="840" text-anchor="middle" fill="white" font-size="8">LR</text>
+                    <text x="197" y="850" text-anchor="middle" fill="white" font-size="8">82.3%</text>
+                    
+                    <rect x="220" y="795" width="15" height="35" fill="#ff007f"/>
+                    <text x="227" y="840" text-anchor="middle" fill="white" font-size="8">KNN</text>
+                    <text x="227" y="850" text-anchor="middle" fill="white" font-size="8">81.9%</text>
+                    
+                    <rect x="250" y="770" width="20" height="60" fill="#00ff88" stroke="#ffffff" stroke-width="2"/>
+                    <text x="260" y="840" text-anchor="middle" fill="white" font-size="8" font-weight="bold">Ensemble</text>
+                    <text x="260" y="850" text-anchor="middle" fill="white" font-size="8" font-weight="bold">89.3%</text>
+                    
+                    <!-- アンサンブル学習の利点 -->
+                    <text x="950" y="755" fill="#ffff41" font-size="12" font-weight="bold">💡 アンサンブルの利点</text>
+                    
+                    <rect x="900" y="760" width="250" height="100" rx="10" fill="rgba(255, 255, 65, 0.1)" stroke="#ffff41" stroke-width="1"/>
+                    
+                    <text x="920" y="780" fill="white" font-size="10">✓ バイアス・バリアンス削減</text>
+                    <text x="920" y="795" fill="white" font-size="10">✓ 過学習の抑制</text>
+                    <text x="920" y="810" fill="white" font-size="10">✓ 汎化性能の向上</text>
+                    <text x="920" y="825" fill="white" font-size="10">✓ ロバストネスの増加</text>
+                    <text x="920" y="840" fill="white" font-size="10">✓ 多様な予測パターン活用</text>
+                    <text x="920" y="855" fill="white" font-size="10">✓ モデル解釈性の向上</text>
+                </svg>
+            </div>
+
+            <div class="ensemble-workflow">
+                <div class="workflow-title">🔄 アンサンブル学習ワークフロー</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-number">1️⃣</div>
+                        <div>ベースモデル構築</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2️⃣</div>
+                        <div>モデル多様性確保</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3️⃣</div>
+                        <div>スタッキング実装</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4️⃣</div>
+                        <div>メタラーナー訓練</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">5️⃣</div>
+                        <div>性能評価・比較</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">6️⃣</div>
+                        <div>最終モデル構築</div>
+                    </div>
+                </div>
+            </div>
+
+            <ul>
+                <li><strong>スタッキング（Stacking）</strong>の理論と実装</li>
+                <li><strong>複数アルゴリズム</strong>の効果的な組み合わせ</li>
+                <li><strong>メタラーナー</strong>による最適な重み付け</li>
+                <li><strong>アンサンブル性能</strong>の評価と解釈</li>
+                <li><strong>実践的な最適化</strong>テクニック</li>
+            </ul>
+        </section>
+
+        <!-- KEY FUNCTIONS -->
+        <section class="section">
+            <h2>⚙️ 主要なstacks関数</h2>
+            <p>
+                stacksパッケージの主要関数を理解し、効果的なアンサンブル学習を実現しましょう。
+            </p>
+            
+            <div class="function-grid">
+                <div class="function-card">
+                    <div class="function-title">stacks()</div>
+                    <div class="function-description">
+                        アンサンブルスタックを初期化。複数のモデル候補を統合するためのコンテナを作成する基本関数。
+                    </div>
+                    <div class="function-syntax">stack_obj <- stacks()</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">add_candidates()</div>
+                    <div class="function-description">
+                        チューニング済みモデルをスタックに追加。各モデルの予測結果を候補として登録し、アンサンブルの材料とする。
+                    </div>
+                    <div class="function-syntax">stack_obj %>% add_candidates(model_results)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">blend_predictions()</div>
+                    <div class="function-description">
+                        メタラーナーによる最適な重み付けを実行。正則化回帰でモデルの重要度を自動決定。
+                    </div>
+                    <div class="function-syntax">blend_predictions(penalty = c(0.01, 0.1))</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">fit_members()</div>
+                    <div class="function-description">
+                        選択されたモデルメンバーを最終訓練。ブレンディング後の最適なモデル組み合わせを完全に学習。
+                    </div>
+                    <div class="function-syntax">ensemble_fit <- fit_members(blend_obj)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">collect_parameters()</div>
+                    <div class="function-description">
+                        アンサンブルの重み係数を抽出。どのモデルが最終予測にどの程度寄与しているかを確認。
+                    </div>
+                    <div class="function-syntax">collect_parameters(ensemble_fit)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">control_stack_*()</div>
+                    <div class="function-description">
+                        スタッキング用の制御オプション設定。計算効率やメモリ使用量を最適化するための設定関数群。
+                    </div>
+                    <div class="function-syntax">control_stack_grid(), control_stack_bayes()</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BASIC STACKING -->
+        <section class="section">
+            <h2>🚀 基本的なスタッキング実装</h2>
+            
+            <h3>1. 環境のセットアップ</h3>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">アンサンブル環境準備</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># アンサンブル学習エコシステムの読み込み</span></span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidymodels</span>)</span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">stacks</span>)</span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">finetune</span>)</span>
+                    <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># データ準備 - Boston住宅価格データセット</span></span>
+                    <span class="code-line"><span class="code-function">data</span>(<span class="code-string">"Boston"</span>, package = <span class="code-string">"MASS"</span>)</span>
+                    <span class="code-line"><span class="code-variable">boston_data</span> <span class="code-keyword">&lt;-</span> Boston <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">as_tibble</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(medv_log = <span class="code-function">log</span>(medv)) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">select</span>(-medv)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># データ分割</span></span>
+                    <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-variable">123</span>)</span>
+                    <span class="code-line"><span class="code-variable">boston_split</span> <span class="code-keyword">&lt;-</span> <span class="code-function">initial_split</span>(boston_data, prop = <span class="code-variable">0.8</span>, strata = medv_log)</span>
+                    <span class="code-line"><span class="code-variable">boston_train</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(boston_split)</span>
+                    <span class="code-line"><span class="code-variable">boston_test</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(boston_split)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 交差検証設定</span></span>
+                    <span class="code-line"><span class="code-variable">boston_folds</span> <span class="code-keyword">&lt;-</span> <span class="code-function">vfold_cv</span>(boston_train, v = <span class="code-variable">5</span>, strata = medv_log)</span>
+                </div>
+            </div>
+
+            <h3>2. 多様なベースモデルの構築</h3>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">ベースモデル定義</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 前処理レシピ</span></span>
+                    <span class="code-line"><span class="code-variable">boston_recipe</span> <span class="code-keyword">&lt;-</span> <span class="code-function">recipe</span>(medv_log ~ ., data = boston_train) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">step_normalize</span>(<span class="code-function">all_numeric_predictors</span>()) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">step_corr</span>(<span class="code-function">all_numeric_predictors</span>(), threshold = <span class="code-variable">0.9</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">step_zv</span>(<span class="code-function">all_predictors</span>())</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 1. 線形回帰 (Elastic Net)</span></span>
+                    <span class="code-line"><span class="code-variable">linear_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">linear_reg</span>(penalty = <span class="code-function">tune</span>(), mixture = <span class="code-function">tune</span>()) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"glmnet"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"regression"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 2. Random Forest</span></span>
+                    <span class="code-line"><span class="code-variable">rf_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">rand_forest</span>(</span>
+                    <span class="code-line">  trees = <span class="code-variable">1000</span>,</span>
+                    <span class="code-line">  mtry = <span class="code-function">tune</span>(),</span>
+                    <span class="code-line">  min_n = <span class="code-function">tune</span>()</span>
+                    <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"ranger"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"regression"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 3. XGBoost</span></span>
+                    <span class="code-line"><span class="code-variable">xgb_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">boost_tree</span>(</span>
+                    <span class="code-line">  trees = <span class="code-function">tune</span>(),</span>
+                    <span class="code-line">  tree_depth = <span class="code-function">tune</span>(),</span>
+                    <span class="code-line">  learn_rate = <span class="code-function">tune</span>()</span>
+                    <span class="code-line">) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"xgboost"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"regression"</span>)</span>
+                </div>
+            </div>
+
+            <h3>3. モデルチューニングとスタッキング準備</h3>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">スタッキング用チューニング</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># スタッキング用制御オプション</span></span>
+                    <span class="code-line"><span class="code-variable">control_stack</span> <span class="code-keyword">&lt;-</span> <span class="code-function">control_stack_grid</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 線形回帰のチューニング</span></span>
+                    <span class="code-line"><span class="code-variable">linear_res</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_recipe</span>(boston_recipe) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_model</span>(linear_spec) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tune_grid</span>(</span>
+                    <span class="code-line">    resamples = boston_folds,</span>
+                    <span class="code-line">    grid = <span class="code-variable">15</span>,</span>
+                    <span class="code-line">    control = control_stack,</span>
+                    <span class="code-line">    metrics = <span class="code-function">metric_set</span>(rmse, mae, rsq)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># Random Forestのチューニング</span></span>
+                    <span class="code-line"><span class="code-variable">rf_res</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_recipe</span>(boston_recipe) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_model</span>(rf_spec) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tune_grid</span>(</span>
+                    <span class="code-line">    resamples = boston_folds,</span>
+                    <span class="code-line">    grid = <span class="code-variable">12</span>,</span>
+                    <span class="code-line">    control = control_stack,</span>
+                    <span class="code-line">    metrics = <span class="code-function">metric_set</span>(rmse, mae, rsq)</span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># XGBoostのチューニング</span></span>
+                    <span class="code-line"><span class="code-variable">xgb_res</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_recipe</span>(boston_recipe) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_model</span>(xgb_spec) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">tune_grid</span>(</span>
+                    <span class="code-line">    resamples = boston_folds,</span>
+                    <span class="code-line">    grid = <span class="code-variable">15</span>,</span>
+                    <span class="code-line">    control = control_stack,</span>
+                    <span class="code-line">    metrics = <span class="code-function">metric_set</span>(rmse, mae, rsq)</span>
+                    <span class="code-line">  )</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- STACKING IMPLEMENTATION -->
+        <section class="section">
+            <h2>🔮 スタッキングの実装</h2>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">アンサンブルモデル構築</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># スタッキングモデルの構築</span></span>
+                    <span class="code-line"><span class="code-variable">boston_stack</span> <span class="code-keyword">&lt;-</span> <span class="code-function">stacks</span>() <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_candidates</span>(linear_res) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_candidates</span>(rf_res) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">add_candidates</span>(xgb_res)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">cat</span>(<span class="code-string">"候補モデル数:"</span>, <span class="code-function">length</span>(boston_stack), <span class="code-string">"\n"</span>)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># メタラーナー（Lasso）でのブレンディング</span></span>
+                    <span class="code-line"><span class="code-variable">boston_blend</span> <span class="code-keyword">&lt;-</span> boston_stack <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">blend_predictions</span>(</span>
+                    <span class="code-line">    penalty = <span class="code-variable">10</span>^<span class="code-function">seq</span>(-<span class="code-variable">4</span>, -<span class="code-variable">0.5</span>, <span class="code-variable">0.25</span>),</span>
+                    <span class="code-line">    mixture = <span class="code-variable">1</span>  <span class="code-comment"># Lasso回帰</span></span>
+                    <span class="code-line">  )</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 最終アンサンブルの学習</span></span>
+                    <span class="code-line"><span class="code-variable">boston_ensemble</span> <span class="code-keyword">&lt;-</span> boston_blend <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">fit_members</span>()</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># テストデータでの評価</span></span>
+                    <span class="code-line"><span class="code-variable">ensemble_pred</span> <span class="code-keyword">&lt;-</span> <span class="code-function">predict</span>(boston_ensemble, boston_test) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">bind_cols</span>(boston_test)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 性能指標の計算</span></span>
+                    <span class="code-line"><span class="code-variable">ensemble_metrics</span> <span class="code-keyword">&lt;-</span> ensemble_pred <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">metrics</span>(truth = medv_log, estimate = .pred)</span>
+                </div>
+            </div>
+
+            <h3>ベースモデルの性能比較</h3>
+
+            <div class="model-grid">
+                <div class="model-card">
+                    <div class="model-header">
+                        <div class="model-name">🔵 Linear Regression</div>
+                        <div class="model-weight">15%</div>
+                    </div>
+                    <div class="performance-bar">
+                        <div class="performance-fill moderate-perf" style="width: 75%;"></div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem;">
+                        <div>RMSE: 0.284</div>
+                        <div>R²: 0.812</div>
+                    </div>
+                </div>
+
+                <div class="model-card">
+                    <div class="model-header">
+                        <div class="model-name">🌳 Random Forest</div>
+                        <div class="model-weight">32%</div>
+                    </div>
+                    <div class="performance-bar">
+                        <div class="performance-fill good-perf" style="width: 88%;"></div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem;">
+                        <div>RMSE: 0.241</div>
+                        <div>R²: 0.843</div>
+                    </div>
+                </div>
+
+                <div class="model-card">
+                    <div class="model-header">
+                        <div class="model-name">🚀 XGBoost</div>
+                        <div class="model-weight">45%</div>
+                    </div>
+                    <div class="performance-bar">
+                        <div class="performance-fill excellent-perf" style="width: 94%;"></div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem;">
+                        <div>RMSE: 0.238</div>
+                        <div>R²: 0.851</div>
+                    </div>
+                </div>
+
+                <div class="model-card" style="border: 2px solid var(--accent-electric);">
+                    <div class="model-header">
+                        <div class="model-name">🏆 Stacked Ensemble</div>
+                        <div class="model-weight">100%</div>
+                    </div>
+                    <div class="performance-bar">
+                        <div class="performance-fill excellent-perf" style="width: 100%;"></div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--accent-electric); font-weight: bold;">
+                        <div>RMSE: 0.216</div>
+                        <div>R²: 0.874</div>
+                        <div style="color: var(--accent-electric); font-size: 0.8rem;">+9.2% 改善</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVANCED ANALYSIS -->
+        <section class="section">
+            <h2>🧪 詳細分析と解釈</h2>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">アンサンブル分析</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># モデルの重みを確認</span></span>
+                    <span class="code-line"><span class="code-variable">model_weights</span> <span class="code-keyword">&lt;-</span> <span class="code-function">collect_parameters</span>(boston_ensemble, <span class="code-string">"blend_predictions"</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">filter</span>(coef != <span class="code-variable">0</span>) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(<span class="code-function">abs</span>(coef)))</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-function">print</span>(model_weights)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 予測の信頼性分析</span></span>
+                    <span class="code-line"><span class="code-variable">prediction_reliability</span> <span class="code-keyword">&lt;-</span> ensemble_pred <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">mutate</span>(</span>
+                    <span class="code-line">    residual = medv_log - .pred,</span>
+                    <span class="code-line">    abs_residual = <span class="code-function">abs</span>(residual),</span>
+                    <span class="code-line">    relative_error = abs_residual / medv_log * <span class="code-variable">100</span></span>
+                    <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
+                    <span class="code-line">  <span class="code-function">summarise</span>(</span>
+                    <span class="code-line">    mean_residual = <span class="code-function">mean</span>(residual),</span>
+                    <span class="code-line">    std_residual = <span class="code-function">sd</span>(residual),</span>
+                    <span class="code-line">    mean_abs_error = <span class="code-function">mean</span>(abs_residual),</span>
+                    <span class="code-line">    median_rel_error = <span class="code-function">median</span>(relative_error),</span>
+                    <span class="code-line">    q90_rel_error = <span class="code-function">quantile</span>(relative_error, <span class="code-variable">0.9</span>)</span>
+                    <span class="code-line">  )</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHEN TO USE STACKS -->
+        <section class="section">
+            <h2>🎯 Stacksの利用シーンと使い分け戦略</h2>
+            
+            <h3>💡 アンサンブル学習が効果的なケース</h3>
+            
+            <div class="function-grid">
+                <div class="function-card" style="border: 2px solid var(--accent-electric);">
+                    <div class="function-title">📈 予測精度が最重要</div>
+                    <div class="function-description">
+                        <strong>適用場面:</strong> Kaggleコンペ、重要な意思決定支援<br>
+                        <strong>理由:</strong> 単体モデルの限界を超える精度向上<br>
+                        <strong>期待効果:</strong> 2-10%の性能改善が一般的<br>
+                        <strong>注意点:</strong> 計算コストと解釈可能性のトレードオフ
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">🌊 データに多様性がある</div>
+                    <div class="function-description">
+                        <strong>適用場面:</strong> 複数のデータソース、異なる特徴量群<br>
+                        <strong>理由:</strong> 各モデルが異なるパターンを捉える<br>
+                        <strong>具体例:</strong> テキスト+数値+画像の統合予測<br>
+                        <strong>効果:</strong> 単体モデルでは見逃すパターンを補完
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">⚖️ リスク分散が重要</div>
+                    <div class="function-description">
+                        <strong>適用場面:</strong> 金融リスク評価、医療診断支援<br>
+                        <strong>理由:</strong> 単一モデルの失敗リスクを軽減<br>
+                        <strong>メリット:</strong> 予測の安定性と信頼性向上<br>
+                        <strong>実装:</strong> 複数の独立したアプローチを組み合わせ
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">🔄 継続的改善が必要</div>
+                    <div class="function-description">
+                        <strong>適用場面:</strong> 推薦システム、動的価格設定<br>
+                        <strong>理由:</strong> 新しいモデルを段階的に統合可能<br>
+                        <strong>実装:</strong> オンライン学習との組み合わせ<br>
+                        <strong>利点:</strong> システム停止なしでの性能向上
+                    </div>
+                </div>
+            </div>
+            
+            <h3>⚠️ Stacksを避けるべきケース</h3>
+            
+            <div class="function-grid">
+                <div class="function-card" style="border: 2px solid #ff4444;">
+                    <div class="function-title">⏱️ 推論速度が最優先</div>
+                    <div class="function-description">
+                        <strong>問題:</strong> アンサンブルは複数モデルを実行<br>
+                        <strong>影響:</strong> 推論時間が線形に増加<br>
+                        <strong>代替案:</strong> 知識蒸留でアンサンブル知識を単一モデルに集約<br>
+                        <strong>適用例:</strong> リアルタイム広告配信、IoTエッジ処理
+                    </div>
+                </div>
+                
+                <div class="function-card" style="border: 2px solid #ff4444;">
+                    <div class="function-title">📖 解釈可能性が必須</div>
+                    <div class="function-description">
+                        <strong>問題:</strong> 複数モデルの組み合わせは解釈が困難<br>
+                        <strong>影響:</strong> ブラックボックス化の進行<br>
+                        <strong>代替案:</strong> GLM、決定木など単純なモデル<br>
+                        <strong>適用例:</strong> 法的要件がある金融審査、医療診断
+                    </div>
+                </div>
+                
+                <div class="function-card" style="border: 2px solid #ff4444;">
+                    <div class="function-title">💾 リソース制約が厳しい</div>
+                    <div class="function-description">
+                        <strong>問題:</strong> メモリ・計算量が大幅に増加<br>
+                        <strong>影響:</strong> システムリソースの逼迫<br>
+                        <strong>代替案:</strong> 軽量なモデルの最適化<br>
+                        <strong>適用例:</strong> モバイルアプリ、組み込みシステム
+                    </div>
+                </div>
+                
+                <div class="function-card" style="border: 2px solid #ff4444;">
+                    <div class="function-title">📏 データ量が少ない</div>
+                    <div class="function-description">
+                        <strong>問題:</strong> 複数モデル訓練に十分なデータがない<br>
+                        <strong>影響:</strong> 過学習リスクの増大<br>
+                        <strong>代替案:</strong> 正則化を強めた単一モデル<br>
+                        <strong>適用例:</strong> 小規模実験、希少事例予測
+                    </div>
+                </div>
+            </div>
+            
+            <h3>🔀 アルゴリズム選択の指針</h3>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                    <div class="code-title">戦略的モデル選択</div>
+                </div>
+                <div class="code-content">
+                    <span class="code-line"><span class="code-comment"># 問題特性に応じたベースモデル選択戦略</span></span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 🔢 数値データ中心の場合</span></span>
+                    <span class="code-line"><span class="code-variable">numeric_focused_models</span> <span class="code-keyword">&lt;-</span> <span class="code-function">list</span>(</span>
+                    <span class="code-line">  <span class="code-comment"># 線形関係を捉える</span></span>
+                    <span class="code-line">  linear = <span class="code-function">linear_reg</span>(penalty = <span class="code-function">tune</span>(), mixture = <span class="code-function">tune</span>()),</span>
+                    <span class="code-line">  <span class="code-comment"># 非線形関係を捉える</span></span>
+                    <span class="code-line">  spline = <span class="code-function">gen_additive_mod</span>(select_features = <span class="code-function">tune</span>()),</span>
+                    <span class="code-line">  <span class="code-comment"># 複雑な相互作用</span></span>
+                    <span class="code-line">  xgboost = <span class="code-function">boost_tree</span>(trees = <span class="code-function">tune</span>(), tree_depth = <span class="code-function">tune</span>())</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># 📊 カテゴリカルデータ多い場合</span></span>
+                    <span class="code-line"><span class="code-variable">categorical_focused_models</span> <span class="code-keyword">&lt;-</span> <span class="code-function">list</span>(</span>
+                    <span class="code-line">  <span class="code-comment"># カテゴリ処理に強い</span></span>
+                    <span class="code-line">  random_forest = <span class="code-function">rand_forest</span>(mtry = <span class="code-function">tune</span>(), trees = <span class="code-variable">1000</span>),</span>
+                    <span class="code-line">  <span class="code-comment"># カテゴリ埋め込み</span></span>
+                    <span class="code-line">  lightgbm = <span class="code-function">boost_tree</span>(engine = <span class="code-string">"lightgbm"</span>),</span>
+                    <span class="code-line">  <span class="code-comment"># ナイーブベイズ</span></span>
+                    <span class="code-line">  naive_bayes = <span class="code-function">naive_Bayes</span>(smoothness = <span class="code-function">tune</span>())</span>
+                    <span class="code-line">)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-comment"># ⏰ 時系列データの場合</span></span>
+                    <span class="code-line"><span class="code-variable">timeseries_focused_models</span> <span class="code-keyword">&lt;-</span> <span class="code-function">list</span>(</span>
+                    <span class="code-line">  <span class="code-comment"># トレンド・季節性</span></span>
+                    <span class="code-line">  prophet = <span class="code-function">prophet_reg</span>(seasonality_yearly = <span class="code-function">tune</span>()),</span>
+                    <span class="code-line">  <span class="code-comment"># 自己回帰</span></span>
+                    <span class="code-line">  arima = <span class="code-function">arima_reg</span>(),</span>
+                    <span class="code-line">  <span class="code-comment"># 機械学習アプローチ</span></span>
+                    <span class="code-line">  mars = <span class="code-function">mars</span>(num_terms = <span class="code-function">tune</span>(), prod_degree = <span class="code-function">tune</span>())</span>
+                    <span class="code-line">)</span>
+                </div>
+            </div>
+            
+            <h3>📋 実践的チェックリスト</h3>
+            
+            <div style="background: rgba(0, 255, 65, 0.1); border-radius: 15px; padding: 25px; border: 1px solid var(--accent-electric); margin: 20px 0;">
+                <h4 style="color: var(--accent-electric); margin-bottom: 15px;">🔍 事前評価チェック</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div>
+                        <h5 style="color: var(--accent-cyan); margin-bottom: 10px;">データ要件</h5>
+                        <ul style="margin: 0; padding-left: 20px; color: rgba(255, 255, 255, 0.9);">
+                            <li>サンプル数 > 1000（推奨5000+）</li>
+                            <li>特徴量数 < サンプル数/10</li>
+                            <li>クラス不均衡 < 1:20</li>
+                            <li>欠損値率 < 30%</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--accent-cyan); margin-bottom: 10px;">リソース要件</h5>
+                        <ul style="margin: 0; padding-left: 20px; color: rgba(255, 255, 255, 0.9);">
+                            <li>訓練時間許容度（×3-5倍）</li>
+                            <li>推論時間許容度（×N倍、Nはモデル数）</li>
+                            <li>メモリ使用量（×2-3倍）</li>
+                            <li>モデル保存容量（×N倍）</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--accent-cyan); margin-bottom: 10px;">ビジネス要件</h5>
+                        <ul style="margin: 0; padding-left: 20px; color: rgba(255, 255, 255, 0.9);">
+                            <li>精度向上の価値評価</li>
+                            <li>解釈可能性の重要度</li>
+                            <li>運用・保守の複雑性許容度</li>
+                            <li>規制・コンプライアンス要件</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENSEMBLE STRATEGIES -->
+        <section class="section">
+            <h2>🛠️ アンサンブル戦略とベストプラクティス</h2>
+            
+            <div class="function-grid">
+                <div class="function-card">
+                    <div class="function-title">🎲 多様性の確保</div>
+                    <div class="function-description">
+                        <strong>アルゴリズムの多様性:</strong> 線形、木ベース、カーネル法を組み合わせ<br>
+                        <strong>特徴量の多様性:</strong> 異なる前処理や特徴選択<br>
+                        <strong>ハイパーパラメータの多様性:</strong> 幅広いパラメータ空間
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">⚖️ 品質管理</div>
+                    <div class="function-description">
+                        <strong>最低性能基準:</strong> R² < 0.7のモデルは除外<br>
+                        <strong>過学習検出:</strong> 訓練・検証性能の差をモニタ<br>
+                        <strong>相関分析:</strong> 高相関モデルの冗長性を回避
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">🔧 計算効率</div>
+                    <div class="function-description">
+                        <strong>並列処理:</strong> future_*パッケージで高速化<br>
+                        <strong>メモリ最適化:</strong> 不要な中間結果の削除<br>
+                        <strong>早期停止:</strong> 改善が見込めない場合の処理中断
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">📊 解釈可能性</div>
+                    <div class="function-description">
+                        <strong>重み可視化:</strong> モデル寄与度のプロット<br>
+                        <strong>予測分解:</strong> 個別予測の要因分析<br>
+                        <strong>SHAP値:</strong> 特徴量重要度の統合的理解
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section class="section">
+            <h2>🎆 章のまとめ</h2>
+            <p>
+                本章では、stacksパッケージを使用したアンサンブル学習技術をマスターしました。複数のモデルを統合し、単体モデルを上回る予測精度を実現する高度な技術を習得しました。
+            </p>
+            
+            <h3>📚 学習した主要ポイント</h3>
+            <div class="function-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div class="function-card">
+                    <div class="function-title">基本実装</div>
+                    <div class="function-description">
+                        • stacks()でアンサンブル初期化<br>
+                        • add_candidates()でモデル追加<br>
+                        • blend_predictions()で重み最適化
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">高度な分析</div>
+                    <div class="function-description">
+                        • メタラーナーによる自動重み付け<br>
+                        • 予測分散の削減効果<br>
+                        • collect_parameters()で重み解釈
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">実用的テクニック</div>
+                    <div class="function-description">
+                        • モデル多様性の確保戦略<br>
+                        • 計算効率の最適化<br>
+                        • 解釈可能性の維持手法
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(0, 255, 65, 0.1); border-radius: 15px; border: 1px solid var(--accent-electric);">
+                <p><strong>アンサンブル学習のベストプラクティス:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>多様性を確保するため異なるアルゴリズムを組み合わせる</li>
+                    <li>適切な正則化でメタラーナーの過学習を防ぐ</li>
+                    <li>計算コストと予測精度のトレードオフを考慮する</li>
+                    <li>本番環境での推論速度とメモリ使用量を最適化する</li>
+                </ul>
+            </div>
+            
+            <p style="margin-top: 30px; font-size: 1.1rem; color: var(--accent-electric); text-align: center;">
+                🚀 <strong>これであなたもアンサンブル学習のエキスパートです！</strong>
+            </p>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="chapter-nav" style="margin-top: 40px;">
+            <a href="chapter10-advanced-dplyr.html" class="nav-button">Ch10: dplyr応用</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">Ch11: 機械学習</a>
+            <a href="chapter12-model-evaluation.html" class="nav-button">Ch12: モデル評価</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">Ch13: ggplot2応用</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">Ch14: 対話的可視化</a>
+            <a href="chapter15-big-data.html" class="nav-button">Ch15: ビッグデータ</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">Ch16: リサンプリング</a>
+            <a href="chapter17-hyperparameter-tuning.html" class="nav-button">Ch17: チューニング</a>
+            <a href="chapter18-model-evaluation-yardstick.html" class="nav-button">Ch18: モデル評価</a>
+            <a href="chapter19-prediction-interpretation.html" class="nav-button">Ch19: 予測解釈</a>
+            <a href="chapter20-ensemble-learning-enhanced.html" class="nav-button current">Ch20: アンサンブル学習</a>
+        </nav>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </div>
+</body>
+</html>

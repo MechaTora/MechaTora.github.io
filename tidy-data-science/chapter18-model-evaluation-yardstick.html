@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第18章: モデル評価の極意 - yardstick | Tidyverse完全マスター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent-neon: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #9d4edd;
+            --accent-emerald: #10d9c4;
+            --accent-lime: #84cc16;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-neon: #00ff88;
+            --shadow-neon: 0 0 20px #00ff8840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 20px;
+            border: 2px solid var(--accent-neon);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-neon);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--accent-neon);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .chapter-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation Widget */
+        .chapter-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 30px 0;
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-neon);
+            width: fit-content;
+            max-width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 1px 5px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .nav-button.current {
+            background: var(--accent-neon);
+            color: var(--bg-primary);
+            box-shadow: 0 0 6px var(--accent-neon);
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.02);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-cyan), var(--accent-purple));
+            border-radius: 15px 15px 0 0;
+        }
+
+        h2 {
+            color: var(--accent-neon);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-neon);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-neon);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 255, 136, 0.1);
+        }
+
+        .code-header {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--accent-neon);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .code-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-neon);
+            opacity: 0.6;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            overflow-x: auto;
+            background: #0d1117;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Syntax highlighting */
+        .code-comment { color: #8b949e; }
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+        .code-regex { color: #39ff14; font-weight: bold; }
+        .code-pattern { color: #ffff00; background: rgba(255, 255, 0, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+        pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-neon);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+        }
+
+        pre::before {
+            content: '💻 R Code';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--bg-secondary);
+            color: var(--accent-neon);
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        code {
+            color: var(--accent-neon);
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* List Styles */
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Special Boxes */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), var(--bg-tertiary));
+            border: 1px solid var(--accent-neon);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .tip-box::before {
+            content: '💡 Tip';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--bg-secondary);
+            color: var(--accent-neon);
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ff444420, var(--bg-tertiary));
+            border: 1px solid #ff4444;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .warning-box::before {
+            content: '⚠️ 注意';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--bg-secondary);
+            color: #ff4444;
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* Function Grid */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .function-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-neon) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            opacity: 0.1;
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .function-card:hover::before {
+            left: 0;
+        }
+
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .function-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-neon);
+            margin-bottom: 1rem;
+        }
+
+        .function-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .function-syntax {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        /* Evaluation Workflow */
+        .evaluation-workflow {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .workflow-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--accent-neon);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: var(--accent-neon);
+            color: var(--bg-primary);
+        }
+
+        .step-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-button {
+                width: 200px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 モデル評価の極意 - yardstick</h1>
+            <div class="subtitle">第18章: 包括的なモデル性能評価をマスターする</div>
+            <div class="chapter-meta">
+                <span>🔍 Comprehensive Evaluation</span>
+                <span>📊 Metrics & Visualization</span>
+                <span>🎯 ROC/PR Curves</span>
+            </div>
+            <p class="chapter-description">
+                yardstickパッケージでモデル性能を多角的に評価。回帰・分類問題の主要指標からカスタムメトリックまで、実用的な評価手法を完全マスターしよう。
+            </p>
+        </header>
+
+        <!-- Navigation Widget -->
+        <nav class="chapter-nav">
+            <a href="chapter10-advanced-dplyr.html" class="nav-button">Ch10: dplyr応用</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">Ch11: 機械学習</a>
+            <a href="chapter12-model-evaluation.html" class="nav-button">Ch12: モデル評価</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">Ch13: ggplot2応用</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">Ch14: 対話的可視化</a>
+            <a href="chapter15-big-data.html" class="nav-button">Ch15: ビッグデータ</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">Ch16: リサンプリング</a>
+            <a href="chapter17-hyperparameter-tuning.html" class="nav-button">Ch17: チューニング</a>
+            <a href="chapter18-model-evaluation-yardstick.html" class="nav-button current">Ch18: モデル評価</a>
+            <a href="chapter19-prediction-interpretation.html" class="nav-button">Ch19: 予測解釈</a>
+            <a href="chapter20-best-practices.html" class="nav-button">Ch20: ベストプラクティス</a>
+        </nav>
+
+        <div class="section">
+            <h2>🎯 Chapter 18の学習目標</h2>
+            <p>
+                本章では、yardstickパッケージを使用した包括的なモデル評価手法を学習し、実用的な評価システムを構築します。
+            </p>
+
+            <div class="evaluation-workflow">
+                <div class="workflow-title">🔄 モデル評価ワークフロー</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-number">1️⃣</div>
+                        <div>データ準備</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2️⃣</div>
+                        <div>基本指標計算</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3️⃣</div>
+                        <div>混同行列作成</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4️⃣</div>
+                        <div>ROC/PR曲線</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">5️⃣</div>
+                        <div>閾値最適化</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">6️⃣</div>
+                        <div>レポート作成</div>
+                    </div>
+                </div>
+            </div>
+
+            <ul>
+                <li><strong>yardstickパッケージ</strong>による包括的なモデル評価</li>
+                <li><strong>回帰問題</strong>の評価指標（RMSE、MAE、R²）の理解と実装</li>
+                <li><strong>分類問題</strong>の評価指標（Accuracy、Precision、Recall、F1、AUC）</li>
+                <li><strong>多クラス分類</strong>の特殊な評価手法</li>
+                <li><strong>ROC曲線・PR曲線</strong>の作成と解釈</li>
+                <li><strong>カスタム評価指標</strong>の作成</li>
+            </ul>
+        </div>
+
+        <!-- KEY FUNCTIONS -->
+        <div class="section">
+            <h2>⚙️ 主要な評価関数</h2>
+            <p>
+                yardstickパッケージの主要関数を理解し、効果的なモデル評価を実現しましょう。
+            </p>
+            
+            <div class="function-grid">
+                <div class="function-card">
+                    <div class="function-title">metrics()</div>
+                    <div class="function-description">
+                        モデルの基本的な評価指標を一括計算。回帰、分類問題で適切な指標を自動選択。
+                    </div>
+                    <div class="function-syntax">metrics(truth, estimate, ...)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">conf_mat()</div>
+                    <div class="function-description">
+                        混同行列（Confusion Matrix）を作成。分類モデルの詳細な性能分析の基礎。
+                    </div>
+                    <div class="function-syntax">conf_mat(truth, estimate)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">roc_curve()</div>
+                    <div class="function-description">
+                        ROC曲線を作成し、モデルの判別能力を評価。二値分類の標準的な評価手法。
+                    </div>
+                    <div class="function-syntax">roc_curve(truth, prob_col)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">pr_curve()</div>
+                    <div class="function-description">
+                        Precision-Recall曲線を作成。不均衡データセットで特に有用な評価指標。
+                    </div>
+                    <div class="function-syntax">pr_curve(truth, prob_col)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">metric_set()</div>
+                    <div class="function-description">
+                        カスタムメトリックセットを作成。特定の用途に合わせた評価指標をグループ化。
+                    </div>
+                    <div class="function-syntax">metric_set(rmse, mae, rsq)</div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">autoplot()</div>
+                    <div class="function-description">
+                        評価結果の自動可視化。混同行列、ROC曲線などを簡単にグラフ化。
+                    </div>
+                    <div class="function-syntax">autoplot(conf_matrix)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 yardstickパッケージとは</h2>
+            <p>yardstickは、機械学習モデルの性能評価のための統一されたAPIを提供するTidymodelsの中核パッケージです。</p>
+
+            <h3>主な機能</h3>
+            <ul>
+                <li>豊富な<strong>評価指標</strong>の提供</li>
+                <li><strong>分類・回帰</strong>両対応</li>
+                <li><strong>多クラス・二値分類</strong>の自動対応</li>
+                <li><strong>可視化</strong>との緊密な連携</li>
+                <li><strong>カスタム指標</strong>の作成支援</li>
+            </ul>
+
+            <pre>
+# 基本セットアップ
+library(tidymodels)
+library(tidyverse)
+library(yardstick)
+
+# サンプルデータの準備
+data("ames", package = "modeldata")
+data("two_class_dat", package = "modeldata")
+data("hpc_data", package = "modeldata")
+
+# 回帰用データ
+ames_sample <- ames |> 
+  select(Sale_Price, Lot_Area, Year_Built, Overall_Qual) |>
+  mutate(log_price = log10(Sale_Price)) |>
+  slice_sample(n = 1000)
+
+# 予測結果のシミュレーション
+set.seed(123)
+ames_predictions <- ames_sample |>
+  mutate(
+    .pred = log_price + rnorm(n(), 0, 0.1),
+    residuals = log_price - .pred
+  )
+
+# 分類用データの準備
+classification_sample <- two_class_dat |>
+  rename(truth = Class, estimate = predicted) |>
+  mutate(
+    .pred_Class1 = 1 - .pred_Class2,
+    .pred_Class2 = .pred_Class2
+  )
+</pre>
+        </div>
+
+        <div class="section">
+            <h2>📈 回帰問題の評価指標</h2>
+            
+            <h3>1. 基本的な評価指標</h3>
+            <p>回帰問題における代表的な評価指標を理解します。</p>
+
+            <pre>
+# 主要な回帰指標の計算
+regression_metrics <- ames_predictions |>
+  metrics(truth = log_price, estimate = .pred)
+
+regression_metrics
+
+# 個別指標の計算
+rmse_value <- ames_predictions |> rmse(truth = log_price, estimate = .pred)
+mae_value <- ames_predictions |> mae(truth = log_price, estimate = .pred)
+rsq_value <- ames_predictions |> rsq(truth = log_price, estimate = .pred)
+mape_value <- ames_predictions |> mape(truth = log_price, estimate = .pred)
+
+# 結果のまとめ
+tibble(
+  Metric = c("RMSE", "MAE", "R²", "MAPE"),
+  Value = c(rmse_value$.estimate, mae_value$.estimate, 
+            rsq_value$.estimate, mape_value$.estimate)
+)
+</pre>
+
+            <h3>2. カスタム評価指標セット</h3>
+            <p>特定の用途に応じた評価指標セットを作成できます。</p>
+
+            <pre>
+# カスタム指標セットの作成
+custom_regression_metrics <- metric_set(
+  rmse, mae, rsq, mape, 
+  ccc,  # 一致相関係数
+  rpiq, # 四分位範囲に対する予測性能比
+  huber_loss  # Huber損失
+)
+
+# カスタム指標での評価
+custom_results <- ames_predictions |>
+  custom_regression_metrics(truth = log_price, estimate = .pred)
+
+custom_results
+</pre>
+
+            <h3>3. グループ別評価</h3>
+            <pre>
+# 建築年代別の評価
+ames_grouped <- ames_predictions |>
+  mutate(
+    era = case_when(
+      Year_Built < 1950 ~ "Pre-1950",
+      Year_Built < 1980 ~ "1950-1979",
+      Year_Built < 2000 ~ "1980-1999",
+      TRUE ~ "2000+"
+    )
+  )
+
+# グループ別評価
+grouped_metrics <- ames_grouped |>
+  group_by(era) |>
+  metrics(truth = log_price, estimate = .pred) |>
+  ungroup()
+
+# 可視化
+grouped_metrics |>
+  filter(.metric == "rmse") |>
+  ggplot(aes(x = era, y = .estimate)) +
+  geom_col(fill = "lightblue") +
+  geom_text(aes(label = round(.estimate, 3)), vjust = -0.3) +
+  labs(title = "RMSE by Construction Era",
+       x = "Era", y = "RMSE") +
+  theme_minimal()
+</pre>
+
+            <h3>4. 残差分析</h3>
+            <pre>
+# 残差の詳細分析
+residual_analysis <- ames_predictions |>
+  mutate(
+    abs_residuals = abs(residuals),
+    squared_residuals = residuals^2,
+    standardized_residuals = residuals / sd(residuals)
+  )
+
+# 残差プロット
+p1 <- residual_analysis |>
+  ggplot(aes(x = .pred, y = residuals)) +
+  geom_point(alpha = 0.6) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  geom_smooth(se = FALSE) +
+  labs(title = "Residuals vs Fitted", x = "Fitted", y = "Residuals")
+
+p2 <- residual_analysis |>
+  ggplot(aes(sample = standardized_residuals)) +
+  stat_qq() + stat_qq_line() +
+  labs(title = "Q-Q Plot of Standardized Residuals")
+
+library(patchwork)
+p1 + p2
+</pre>
+        </div>
+
+        <div class="section">
+            <h2>🎯 二値分類問題の評価</h2>
+            
+            <h3>1. 基本的な分類指標</h3>
+            <p>二値分類における主要な評価指標を学習します。</p>
+
+            <pre>
+# 基本的な分類指標
+binary_metrics <- classification_sample |>
+  metrics(truth = truth, estimate = estimate, .pred_Class1)
+
+binary_metrics
+
+# 混同行列（Confusion Matrix）
+conf_matrix <- classification_sample |>
+  conf_mat(truth = truth, estimate = estimate)
+
+conf_matrix
+
+# 混同行列の可視化
+autoplot(conf_matrix, type = "heatmap") +
+  scale_fill_gradient(low = "white", high = "lightblue") +
+  theme_minimal()
+</pre>
+
+            <h3>2. 精度・再現率・F1スコア</h3>
+            <pre>
+# 詳細な分類指標
+detailed_metrics <- classification_sample |>
+  summarise(
+    accuracy = accuracy_vec(truth, estimate),
+    precision = precision_vec(truth, estimate),
+    recall = recall_vec(truth, estimate),
+    f1_score = f_meas_vec(truth, estimate),
+    specificity = specificity_vec(truth, estimate),
+    sensitivity = sensitivity_vec(truth, estimate)
+  )
+
+detailed_metrics
+
+# 指標の解釈
+interpretation <- tribble(
+  ~Metric, ~Formula, ~Interpretation,
+  "Accuracy", "(TP + TN) / (TP + TN + FP + FN)", "全体的な正解率",
+  "Precision", "TP / (TP + FP)", "陽性予測の正確さ",
+  "Recall (Sensitivity)", "TP / (TP + FN)", "実際の陽性の検出率",
+  "Specificity", "TN / (TN + FP)", "実際の陰性の検出率",
+  "F1 Score", "2 * (Precision * Recall) / (Precision + Recall)", "精度と再現率の調和平均"
+)
+
+interpretation
+</pre>
+
+            <h3>3. ROC曲線とAUC</h3>
+            <pre>
+# ROC曲線の作成
+roc_curve_data <- classification_sample |>
+  roc_curve(truth = truth, .pred_Class1)
+
+# ROC曲線の可視化
+roc_plot <- roc_curve_data |>
+  ggplot(aes(x = 1 - specificity, y = sensitivity)) +
+  geom_line(size = 1.2, color = "blue") +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  coord_equal() +
+  labs(title = "ROC Curve",
+       x = "False Positive Rate (1 - Specificity)",
+       y = "True Positive Rate (Sensitivity)") +
+  theme_minimal()
+
+roc_plot
+
+# AUC値の計算
+auc_value <- classification_sample |>
+  roc_auc(truth = truth, .pred_Class1)
+
+auc_value
+</pre>
+
+            <h3>4. PR曲線（Precision-Recall曲線）</h3>
+            <pre>
+# PR曲線の作成
+pr_curve_data <- classification_sample |>
+  pr_curve(truth = truth, .pred_Class1)
+
+# PR曲線の可視化
+pr_plot <- pr_curve_data |>
+  ggplot(aes(x = recall, y = precision)) +
+  geom_line(size = 1.2, color = "green") +
+  labs(title = "Precision-Recall Curve",
+       x = "Recall", y = "Precision") +
+  theme_minimal()
+
+pr_plot
+
+# PR-AUC値の計算
+pr_auc_value <- classification_sample |>
+  pr_auc(truth = truth, .pred_Class1)
+
+pr_auc_value
+
+# ROCとPRの比較
+library(patchwork)
+(roc_plot + labs(subtitle = paste("AUC =", round(auc_value$.estimate, 3)))) +
+(pr_plot + labs(subtitle = paste("PR-AUC =", round(pr_auc_value$.estimate, 3))))
+</pre>
+
+            <div class="tip-box">
+                <p><strong>ROC vs PR曲線の使い分け：</strong></p>
+                <ul>
+                    <li><strong>ROC曲線</strong>: バランスの取れたデータセットに適している</li>
+                    <li><strong>PR曲線</strong>: 不均衡データセット（陽性サンプルが少ない）に適している</li>
+                    <li>両方を併用することで、モデルの性能を多角的に評価可能</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎨 多クラス分類の評価</h2>
+            
+            <h3>1. 多クラス分類指標</h3>
+            <p>3つ以上のクラスがある分類問題の評価方法を学習します。</p>
+
+            <pre>
+# 多クラス分類データの準備
+multiclass_sample <- hpc_data |>
+  select(obs, pred, VF:L) |>
+  slice_sample(n = 500)
+
+# 基本的な多クラス指標
+multiclass_metrics <- multiclass_sample |>
+  metrics(truth = obs, estimate = pred, VF:L)
+
+multiclass_metrics
+
+# クラス別詳細評価
+class_metrics <- multiclass_sample |>
+  summarise(
+    accuracy = accuracy_vec(obs, pred),
+    kappa = kap_vec(obs, pred),
+    mcc = mcc_vec(obs, pred)  # Matthews correlation coefficient
+  )
+
+class_metrics
+</pre>
+
+            <h3>2. マクロ・マイクロ平均</h3>
+            <pre>
+# マクロ平均とマイクロ平均の計算
+macro_micro_comparison <- tribble(
+  ~averaging, ~precision, ~recall, ~f1,
+  "macro", 
+  precision_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "macro"),
+  recall_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "macro"),
+  f_meas_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "macro"),
+  "micro",
+  precision_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "micro"),
+  recall_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "micro"),
+  f_meas_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "micro")
+)
+
+macro_micro_comparison
+</pre>
+
+            <h3>3. クラス別詳細分析</h3>
+            <pre>
+# クラス別の混同行列
+multiclass_conf <- multiclass_sample |>
+  conf_mat(truth = obs, estimate = pred)
+
+multiclass_conf
+
+# 混同行列の可視化
+autoplot(multiclass_conf, type = "heatmap") +
+  scale_fill_gradient(low = "white", high = "darkblue") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# クラス別の精度・再現率
+class_by_class_metrics <- multiclass_sample |>
+  group_by(obs) |>
+  summarise(
+    count = n(),
+    correct = sum(obs == pred),
+    accuracy = correct / count
+  ) |>
+  arrange(desc(accuracy))
+
+class_by_class_metrics
+</pre>
+        </div>
+
+        <div class="section">
+            <h2>📊 閾値の最適化</h2>
+            
+            <h3>1. 最適閾値の探索</h3>
+            <p>分類問題において、予測確率を二値に変換する最適な閾値を見つけます。</p>
+
+            <pre>
+# 異なる閾値でのメトリクス計算
+threshold_analysis <- tibble(
+  threshold = seq(0.1, 0.9, by = 0.05)
+) |>
+  mutate(
+    metrics = map(threshold, ~ {
+      classification_sample |>
+        mutate(
+          pred_class = if_else(.pred_Class1 >= .x, "Class1", "Class2"),
+          pred_class = factor(pred_class, levels = levels(truth))
+        ) |>
+        summarise(
+          accuracy = accuracy_vec(truth, pred_class),
+          precision = precision_vec(truth, pred_class),
+          recall = recall_vec(truth, pred_class),
+          f1 = f_meas_vec(truth, pred_class)
+        )
+    })
+  ) |>
+  unnest(metrics)
+
+# 最適閾値の可視化
+threshold_plot <- threshold_analysis |>
+  pivot_longer(accuracy:f1, names_to = "metric", values_to = "value") |>
+  ggplot(aes(x = threshold, y = value, color = metric)) +
+  geom_line(size = 1) +
+  geom_point() +
+  labs(title = "Metrics vs Threshold",
+       x = "Threshold", y = "Metric Value",
+       color = "Metric") +
+  theme_minimal()
+
+threshold_plot
+
+# 最適閾値の特定
+optimal_thresholds <- threshold_analysis |>
+  summarise(
+    best_accuracy = threshold[which.max(accuracy)],
+    best_f1 = threshold[which.max(f1)],
+    best_precision = threshold[which.max(precision)],
+    best_recall = threshold[which.max(recall)]
+  )
+
+optimal_thresholds
+</pre>
+
+            <h3>2. Youden's J統計量</h3>
+            <pre>
+# Youden's J統計量による最適閾値
+# J = Sensitivity + Specificity - 1
+youden_analysis <- tibble(
+  threshold = seq(0.01, 0.99, by = 0.01)
+) |>
+  mutate(
+    j_stat = map_dbl(threshold, ~ {
+      pred_class <- if_else(classification_sample$.pred_Class1 >= .x, 
+                           "Class1", "Class2")
+      pred_class <- factor(pred_class, levels = levels(classification_sample$truth))
+      
+      sens <- sensitivity_vec(classification_sample$truth, pred_class)
+      spec <- specificity_vec(classification_sample$truth, pred_class)
+      
+      sens + spec - 1
+    })
+  )
+
+# 最適閾値の特定
+optimal_youden <- youden_analysis |>
+  slice_max(j_stat, n = 1)
+
+# Youden統計量の可視化
+youden_plot <- youden_analysis |>
+  ggplot(aes(x = threshold, y = j_stat)) +
+  geom_line(size = 1, color = "blue") +
+  geom_vline(xintercept = optimal_youden$threshold, 
+             color = "red", linetype = "dashed") +
+  geom_text(x = optimal_youden$threshold + 0.1, 
+            y = optimal_youden$j_stat, 
+            label = paste("Optimal =", round(optimal_youden$threshold, 3))) +
+  labs(title = "Youden's J Statistic vs Threshold",
+       x = "Threshold", y = "J Statistic") +
+  theme_minimal()
+
+youden_plot
+</pre>
+        </div>
+
+        <div class="section">
+            <h2>🛠️ カスタム評価指標の作成</h2>
+            
+            <h3>1. 基本的なカスタム指標</h3>
+            <p>ビジネス要件に応じた独自の評価指標を作成できます。</p>
+
+            <pre>
+# カスタム指標の例：加重精度
+weighted_accuracy <- function(data, truth, estimate, class_weights = NULL, ...) {
+  # デフォルトの重み（全て1）
+  if (is.null(class_weights)) {
+    class_weights <- rep(1, length(levels(data[[truth]])))
+    names(class_weights) <- levels(data[[truth]])
+  }
+  
+  # 混同行列の作成
+  cm <- table(data[[truth]], data[[estimate]])
+  
+  # 各クラスの正解数に重みを適用
+  weighted_correct <- sum(diag(cm) * class_weights[rownames(cm)])
+  total_weighted <- sum(cm * outer(class_weights[rownames(cm)], 
+                                  class_weights[colnames(cm)]))
+  
+  # 結果を返す
+  tibble(
+    .metric = "weighted_accuracy",
+    .estimator = "multiclass",
+    .estimate = weighted_correct / sum(cm)
+  )
+}
+
+# カスタム指標の使用例
+custom_weights <- c("Class1" = 2, "Class2" = 1)  # Class1を重視
+
+weighted_result <- weighted_accuracy(
+  classification_sample, 
+  "truth", 
+  "estimate", 
+  class_weights = custom_weights
+)
+
+weighted_result
+</pre>
+
+            <h3>2. ビジネス指標の実装</h3>
+            <pre>
+# コスト考慮評価指標
+cost_sensitive_metric <- function(data, truth, estimate, 
+                                 fn_cost = 1, fp_cost = 1, ...) {
+  cm <- conf_mat_vec(data[[truth]], data[[estimate]])
+  
+  # 混同行列から各要素を抽出
+  tp <- cm[1, 1]  # True Positive
+  tn <- cm[2, 2]  # True Negative  
+  fp <- cm[2, 1]  # False Positive
+  fn <- cm[1, 2]  # False Negative
+  
+  # 総コストの計算
+  total_cost <- fn * fn_cost + fp * fp_cost
+  total_cases <- sum(cm)
+  
+  # コスト per case
+  cost_per_case <- total_cost / total_cases
+  
+  tibble(
+    .metric = "cost_per_case",
+    .estimator = "binary",
+    .estimate = cost_per_case
+  )
+}
+
+# 使用例：偽陰性のコストが偽陽性の5倍の場合
+cost_result <- cost_sensitive_metric(
+  classification_sample,
+  "truth",
+  "estimate", 
+  fn_cost = 5,
+  fp_cost = 1
+)
+
+cost_result
+</pre>
+        </div>
+
+        <div class="section">
+            <h2>📋 包括的なモデル評価レポート</h2>
+            
+            <h3>1. 自動レポート生成</h3>
+            <pre>
+# 包括的評価関数
+comprehensive_evaluation <- function(data, truth_col, pred_col, pred_prob_col) {
+  
+  # 基本統計
+  basic_stats <- data |>
+    summarise(
+      n_samples = n(),
+      n_classes = n_distinct(!!sym(truth_col)),
+      class_balance = list(table(!!sym(truth_col)))
+    )
+  
+  # 基本メトリクス
+  basic_metrics <- data |>
+    metrics(truth = !!sym(truth_col), 
+            estimate = !!sym(pred_col),
+            !!sym(pred_prob_col))
+  
+  # 混同行列
+  conf_matrix <- data |>
+    conf_mat(truth = !!sym(truth_col), estimate = !!sym(pred_col))
+  
+  # ROC & PR曲線データ
+  roc_data <- data |>
+    roc_curve(truth = !!sym(truth_col), !!sym(pred_prob_col))
+  
+  pr_data <- data |>
+    pr_curve(truth = !!sym(truth_col), !!sym(pred_prob_col))
+  
+  # 結果をリストで返す
+  list(
+    basic_stats = basic_stats,
+    metrics = basic_metrics,
+    confusion_matrix = conf_matrix,
+    roc_curve = roc_data,
+    pr_curve = pr_data
+  )
+}
+
+# 使用例
+evaluation_report <- comprehensive_evaluation(
+  classification_sample,
+  "truth",
+  "estimate", 
+  ".pred_Class1"
+)
+
+# レポートの表示
+evaluation_report$basic_stats
+evaluation_report$metrics
+</pre>
+
+            <h3>2. 可視化付きレポート</h3>
+            <pre>
+# 可視化関数
+create_evaluation_plots <- function(eval_report) {
+  # ROC曲線
+  roc_plot <- eval_report$roc_curve |>
+    ggplot(aes(x = 1 - specificity, y = sensitivity)) +
+    geom_line(size = 1.2, color = "blue") +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    coord_equal() +
+    labs(title = "ROC Curve", x = "FPR", y = "TPR") +
+    theme_minimal()
+  
+  # PR曲線
+  pr_plot <- eval_report$pr_curve |>
+    ggplot(aes(x = recall, y = precision)) +
+    geom_line(size = 1.2, color = "green") +
+    labs(title = "Precision-Recall Curve") +
+    theme_minimal()
+  
+  # 混同行列
+  conf_plot <- autoplot(eval_report$confusion_matrix, type = "heatmap") +
+    scale_fill_gradient(low = "white", high = "lightblue") +
+    labs(title = "Confusion Matrix") +
+    theme_minimal()
+  
+  # メトリクス棒グラフ
+  metrics_plot <- eval_report$metrics |>
+    filter(.metric %in% c("accuracy", "precision", "recall", "f_meas")) |>
+    ggplot(aes(x = .metric, y = .estimate)) +
+    geom_col(fill = "lightcoral") +
+    geom_text(aes(label = round(.estimate, 3)), vjust = -0.3) +
+    ylim(0, 1) +
+    labs(title = "Key Metrics", x = "Metric", y = "Value") +
+    theme_minimal()
+  
+  # 4つのプロットを組み合わせ
+  library(patchwork)
+  (roc_plot + pr_plot) / (conf_plot + metrics_plot)
+}
+
+# 可視化実行
+evaluation_plots <- create_evaluation_plots(evaluation_report)
+evaluation_plots
+</pre>
+        </div>
+
+        <!-- EVALUATION STRATEGIES -->
+        <div class="section">
+            <h2>🎯 評価戦略の選択指針</h2>
+            <p>
+                異なる問題タイプやデータの性質に応じた最適な評価戦略を選択しましょう。
+            </p>
+            
+            <div class="function-grid">
+                <div class="function-card">
+                    <div class="function-title">📊 回帰問題</div>
+                    <div class="function-description">
+                        <strong>主要指標:</strong> RMSE, MAE, R²<br>
+                        <strong>選択指針:</strong> RMSE（解釈しやすい）、MAE（外れ値に頑健）<br>
+                        <strong>注意点:</strong> スケールや分布を考慮
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">⚖️ バランス分類</div>
+                    <div class="function-description">
+                        <strong>主要指標:</strong> Accuracy, F1-score<br>
+                        <strong>適用ケース:</strong> 各クラスのサンプル数が同程度<br>
+                        <strong>可視化:</strong> ROC曲線が効果的
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">⚠️ 不均衡分類</div>
+                    <div class="function-description">
+                        <strong>主要指標:</strong> Precision, Recall, PR-AUC<br>
+                        <strong>適用ケース:</strong> 陣性サンプルが少ない場合<br>
+                        <strong>可視化:</strong> PR曲線を優先
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">🏢 ビジネス指標</div>
+                    <div class="function-description">
+                        <strong>主要指標:</strong> カスタムメトリック<br>
+                        <strong>適用ケース:</strong> コスト考慮、ROI重視<br>
+                        <strong>特徴:</strong> ビジネス要件を直接反映
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎆 章のまとめ</h2>
+            <p>
+                本章では、yardstickパッケージを使用した包括的なモデル評価技術をマスターしました。実用的な機械学習プロジェクトでの評価技術を習得しました。
+            </p>
+            
+            <h3>📚 学習した主要ポイント</h3>
+            <div class="function-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div class="function-card">
+                    <div class="function-title">基本評価</div>
+                    <div class="function-description">
+                        • yardstickパッケージの統一API<br>
+                        • 回帰・分類指標の理解<br>
+                        • metrics()関数で一括評価
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">高度な可視化</div>
+                    <div class="function-description">
+                        • ROC曲線とPR曲線の作成<br>
+                        • 混同行列のヒートマップ<br>
+                        • autoplot()で簡単可視化
+                    </div>
+                </div>
+                
+                <div class="function-card">
+                    <div class="function-title">実用的テクニック</div>
+                    <div class="function-description">
+                        • 闾値最適化手法<br>
+                        • カスタムメトリック作成<br>
+                        • 自動レポート生成
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 30px; font-size: 1.1rem; color: var(--accent-neon); text-align: center;">
+                🚀 <strong>これであなたもモデル評価のエキスパートです！</strong>
+            </p>
+        </div>
+
+        <!-- LEGACY SECTION - keeping for reference -->
+        <div class="section" style="display:none;">
+            <h2>🎯 まとめと次のステップ</h2>
+            
+            <h3>Chapter 18で学んだこと</h3>
+            <ul>
+                <li>yardstickパッケージによる包括的なモデル評価</li>
+                <li>回帰・分類問題それぞれの重要な評価指標</li>
+                <li>多クラス分類の特殊な評価手法</li>
+                <li>ROC・PR曲線による性能の可視化</li>
+                <li>最適閾値の決定方法</li>
+                <li>カスタム評価指標の作成</li>
+                <li>包括的な評価レポートの自動生成</li>
+            </ul>
+
+            <h3>評価指標選択のガイドライン</h3>
+            <div class="tip-box">
+                <ul>
+                    <li><strong>回帰問題</strong>: RMSE（解釈しやすい）、MAE（外れ値に頑健）</li>
+                    <li><strong>バランス分類</strong>: Accuracy、F1-score</li>
+                    <li><strong>不均衡分類</strong>: Precision、Recall、PR-AUC</li>
+                    <li><strong>コスト考慮</strong>: カスタム指標（ビジネス要件反映）</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <p><strong>評価の注意点：</strong></p>
+                <ul>
+                    <li>単一指標だけでなく複数の観点から評価する</li>
+                    <li>データの性質（不均衡、外れ値等）を考慮する</li>
+                    <li>ビジネス目標と技術的指標を整合させる</li>
+                    <li>交差検証での安定性も確認する</li>
+                </ul>
+            </div>
+
+            <h3>次の章への準備</h3>
+            <p>次の第19章では、評価済みモデルを使った<strong>予測と解釈</strong>を学習します。実際の予測タスクでの活用方法と、モデルの解釈可能性について深く理解しましょう。</p>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="chapter-nav" style="margin-top: 40px;">
+            <a href="chapter10-advanced-dplyr.html" class="nav-button">Ch10: dplyr応用</a>
+            <a href="chapter11-machine-learning.html" class="nav-button">Ch11: 機械学習</a>
+            <a href="chapter12-model-evaluation.html" class="nav-button">Ch12: モデル評価</a>
+            <a href="chapter13-advanced-ggplot2.html" class="nav-button">Ch13: ggplot2応用</a>
+            <a href="chapter14-interactive-visualization.html" class="nav-button">Ch14: 対話的可視化</a>
+            <a href="chapter15-big-data.html" class="nav-button">Ch15: ビッグデータ</a>
+            <a href="chapter16-resampling-rsample.html" class="nav-button">Ch16: リサンプリング</a>
+            <a href="chapter17-hyperparameter-tuning.html" class="nav-button">Ch17: チューニング</a>
+            <a href="chapter18-model-evaluation-yardstick.html" class="nav-button current">Ch18: モデル評価</a>
+            <a href="chapter19-prediction-interpretation.html" class="nav-button">Ch19: 予測解釈</a>
+            <a href="chapter20-best-practices.html" class="nav-button">Ch20: ベストプラクティス</a>
+        </nav>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
+    </div>
+</body>
+</html>

@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第5章: stringrによるテキスト処理 | TIDYVERSE/TIDYMODELS</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    
     <meta name="description" content="stringrで文字列を自在に操る。正規表現、パターンマッチング、テキストマイニングの技術をマスターし、データの隠れた価値を発見しよう。">
     
     <!-- Favicon -->
@@ -1247,19 +1260,349 @@
                 </div>
             </section>
             
+            <!-- Advanced Text Analytics and NLP -->
+            <section class="content-section fade-in-up" id="advanced-text-analytics">
+                <h2 class="section-title">🔍 高度なテキスト分析と自然言語処理</h2>
+                <div class="section-content">
+                    <p>
+                        基本的なstringr操作を習得したら、より高度なテキスト分析と自然言語処理に挑戦しましょう。
+                        現代のデータ分析では、テキストデータからの洞察抽出が重要な競争優位となります。
+                    </p>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">📊 テキストデータの統計分析</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">text_statistical_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># テキストの統計的分析</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidytext)</span>
+                            <span class="code-line"><span class="code-function">library</span>(stringr)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># テキストデータの統計的特徴量抽出</span>
+                            <span class="code-line">extract_text_features <- <span class="code-function">function</span>(text_data) {</span>
+                            <span class="code-line">  text_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">      # 基本統計</span>
+                            <span class="code-line">      char_count = <span class="code-function">str_length</span>(text),</span>
+                            <span class="code-line">      word_count = <span class="code-function">str_count</span>(text, <span class="code-string">"\\S+"</span>),</span>
+                            <span class="code-line">      sentence_count = <span class="code-function">str_count</span>(text, <span class="code-string">"[.!?]+"</span>),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      # 複雑性指標</span>
+                            <span class="code-line">      avg_word_length = char_count / word_count,</span>
+                            <span class="code-line">      avg_sentence_length = word_count / sentence_count,</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      # 読みやすさスコア（Flesch Reading Ease近似）</span>
+                            <span class="code-line">      readability = <span class="code-number">206.835</span> - (<span class="code-number">1.015</span> * avg_sentence_length) - (<span class="code-number">84.6</span> * avg_word_length),</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      # 感情分析指標</span>
+                            <span class="code-line">      exclamation_ratio = <span class="code-function">str_count</span>(text, <span class="code-string">"!"</span>) / sentence_count,</span>
+                            <span class="code-line">      question_ratio = <span class="code-function">str_count</span>(text, <span class="code-string">"\\?"</span>) / sentence_count,</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      # 大文字使用率</span>
+                            <span class="code-line">      uppercase_ratio = <span class="code-function">str_count</span>(text, <span class="code-string">"[A-Z]"</span>) / char_count,</span>
+                            <span class="code-line">      </span>
+                            <span class="code-line">      # 数値含有率</span>
+                            <span class="code-line">      digit_ratio = <span class="code-function">str_count</span>(text, <span class="code-string">"\\d"</span>) / char_count</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># N-gramとキーワード分析</span>
+                            <span class="code-line">analyze_text_patterns <- <span class="code-function">function</span>(text_data, n = <span class="code-number">2</span>) {</span>
+                            <span class="code-line">  text_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">unnest_tokens</span>(word, text) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">anti_join</span>(stop_words) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    # N-gram生成</span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(ngram = <span class="code-function">paste</span>(word, <span class="code-function">lead</span>(word, n<span class="code-number">-1</span>), sep = <span class="code-string">" "</span>)) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">count</span>(ngram, sort = <span class="code-boolean">TRUE</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">head</span>(<span class="code-number">20</span>)</span>
+                            <span class="code-line">}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🧠 感情分析と意見マイニング</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">sentiment_analysis.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 感情分析と意見マイニング</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidytext)</span>
+                            <span class="code-line"><span class="code-function">library</span>(textdata)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 多次元感情分析</span>
+                            <span class="code-line">comprehensive_sentiment <- <span class="code-function">function</span>(text_data) {</span>
+                            <span class="code-line">  # AFINNレキシコン（-5から+5の感情スコア）</span>
+                            <span class="code-line">  afinn_sentiment <- text_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">unnest_tokens</span>(word, text) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">inner_join</span>(<span class="code-function">get_sentiments</span>(<span class="code-string">"afinn"</span>)) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">group_by</span>(document_id) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">summarise</span>(</span>
+                            <span class="code-line">      afinn_score = <span class="code-function">sum</span>(value),</span>
+                            <span class="code-line">      afinn_mean = <span class="code-function">mean</span>(value),</span>
+                            <span class="code-line">      .groups = <span class="code-string">"drop"</span></span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # NRCレキシコン（感情カテゴリ）</span>
+                            <span class="code-line">  nrc_emotions <- text_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">unnest_tokens</span>(word, text) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">inner_join</span>(<span class="code-function">get_sentiments</span>(<span class="code-string">"nrc"</span>)) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">count</span>(document_id, sentiment) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">pivot_wider</span>(names_from = sentiment, values_from = n, values_fill = <span class="code-number">0</span>)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # 結果の統合</span>
+                            <span class="code-line">  <span class="code-function">left_join</span>(afinn_sentiment, nrc_emotions, by = <span class="code-string">"document_id"</span>)</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># トピックモデリング準備</span>
+                            <span class="code-line">prepare_topic_modeling <- <span class="code-function">function</span>(text_data) {</span>
+                            <span class="code-line">  text_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">unnest_tokens</span>(word, text) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">anti_join</span>(stop_words) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">filter</span>(<span class="code-function">str_length</span>(word) > <span class="code-number">3</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">count</span>(document_id, word) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">cast_dtm</span>(document_id, word, n)</span>
+                            <span class="code-line">}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🔍 高度な正規表現パターン</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">advanced_regex_patterns.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 実用的な高度な正規表現パターン</span>
+                            <span class="code-line"><span class="code-function">library</span>(stringr)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># ビジネスデータ抽出パターン</span>
+                            <span class="code-line">business_patterns <- <span class="code-function">list</span>(</span>
+                            <span class="code-line">  # 日本の郵便番号（123-4567形式）</span>
+                            <span class="code-line">  postal_code = <span class="code-string">"\\d{3}-\\d{4}"</span>,</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # 電話番号（複数形式対応）</span>
+                            <span class="code-line">  phone = <span class="code-string">"(\\d{2,4}[-\\s]?\\d{2,4}[-\\s]?\\d{4}|\\d{10,11})"</span>,</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # メールアドレス</span>
+                            <span class="code-line">  email = <span class="code-string">"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"</span>,</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # URL（http/https）</span>
+                            <span class="code-line">  url = <span class="code-string">"https?://[\\w\\.-]+(?:/[\\w\\.-]*)*(?:\\?[\\w&=%\\.-]*)?(?:#[\\w\\.-]*)?"</span>,</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # 金額（円、カンマ区切り）</span>
+                            <span class="code-line">  amount_yen = <span class="code-string">"¥?[0-9,]+円?"</span>,</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # 日付（YYYY/MM/DD, YYYY-MM-DD形式）</span>
+                            <span class="code-line">  date = <span class="code-string">"\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}"</span>,</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # IPアドレス</span>
+                            <span class="code-line">  ip_address = <span class="code-string">"\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"</span></span>
+                            <span class="code-line">)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># データクリーニング関数</span>
+                            <span class="code-line">clean_business_data <- <span class="code-function">function</span>(text_vector) {</span>
+                            <span class="code-line">  text_vector <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    # 全角数字を半角に変換</span>
+                            <span class="code-line">    <span class="code-function">str_replace_all</span>(<span class="code-string">"[０-９]"</span>, <span class="code-function">function</span>(x) <span class="code-function">as.character</span>(<span class="code-function">utf8ToInt</span>(x) - <span class="code-function">utf8ToInt</span>(<span class="code-string">"０"</span>) + <span class="code-function">utf8ToInt</span>(<span class="code-string">"0"</span>))) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    # 全角英字を半角に変換</span>
+                            <span class="code-line">    <span class="code-function">str_replace_all</span>(<span class="code-string">"[Ａ-Ｚａ-ｚ]"</span>, <span class="code-function">function</span>(x) <span class="code-function">intToUtf8</span>(<span class="code-function">utf8ToInt</span>(x) - <span class="code-function">utf8ToInt</span>(<span class="code-string">"Ａ"</span>) + <span class="code-function">utf8ToInt</span>(<span class="code-string">"A"</span>))) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    # 不要な空白を削除</span>
+                            <span class="code-line">    <span class="code-function">str_trim</span>() <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">str_squish</span>()</span>
+                            <span class="code-line">}</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># エンティティ抽出関数</span>
+                            <span class="code-line">extract_entities <- <span class="code-function">function</span>(text, pattern_name) {</span>
+                            <span class="code-line">  pattern <- business_patterns[[pattern_name]]</span>
+                            <span class="code-line">  <span class="code-function">str_extract_all</span>(text, pattern) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">map</span>(<span class="code-operator">~</span> <span class="code-function">if</span>(<span class="code-function">length</span>(.x) > <span class="code-number">0</span>) .x <span class="code-function">else</span> <span class="code-constant">NA_character_</span>)</span>
+                            <span class="code-line">}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">🚀 テキストマイニングワークフロー</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                                <div class="code-dot"></div>
+                            </div>
+                            <div class="code-title">text_mining_workflow.R</div>
+                        </div>
+                        <div class="code-content">
+                            <span class="code-line"># 包括的なテキストマイニングワークフロー</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+                            <span class="code-line"><span class="code-function">library</span>(tidytext)</span>
+                            <span class="code-line"><span class="code-function">library</span>(wordcloud)</span>
+                            <span class="code-line"></span>
+                            <span class="code-line"># 統合テキスト分析パイプライン</span>
+                            <span class="code-line">text_mining_pipeline <- <span class="code-function">function</span>(data, text_column) {</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # Step 1: データクリーニング</span>
+                            <span class="code-line">  cleaned_data <- data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(</span>
+                            <span class="code-line">      text_clean = {{text_column}} <span class="code-operator">%>%</span></span>
+                            <span class="code-line">        <span class="code-function">str_to_lower</span>() <span class="code-operator">%>%</span></span>
+                            <span class="code-line">        <span class="code-function">str_remove_all</span>(<span class="code-string">"[^\\w\\s]"</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">        <span class="code-function">str_squish</span>()</span>
+                            <span class="code-line">    )</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # Step 2: トークン化と基本統計</span>
+                            <span class="code-line">  tokens <- cleaned_data <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">unnest_tokens</span>(word, text_clean) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">anti_join</span>(stop_words)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # Step 3: 頻度分析</span>
+                            <span class="code-line">  word_freq <- tokens <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">count</span>(word, sort = <span class="code-boolean">TRUE</span>) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">mutate</span>(proportion = n / <span class="code-function">sum</span>(n))</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # Step 4: TF-IDF分析</span>
+                            <span class="code-line">  tfidf <- tokens <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">count</span>(document_id, word) <span class="code-operator">%>%</span></span>
+                            <span class="code-line">    <span class="code-function">bind_tf_idf</span>(word, document_id, n)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  # Step 5: 感情分析</span>
+                            <span class="code-line">  sentiment <- <span class="code-function">comprehensive_sentiment</span>(cleaned_data)</span>
+                            <span class="code-line">  </span>
+                            <span class="code-line">  <span class="code-function">list</span>(</span>
+                            <span class="code-line">    cleaned_data = cleaned_data,</span>
+                            <span class="code-line">    word_freq = word_freq,</span>
+                            <span class="code-line">    tfidf = tfidf,</span>
+                            <span class="code-line">    sentiment = sentiment</span>
+                            <span class="code-line">  )</span>
+                            <span class="code-line">}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-cyan); margin: 2rem 0 1rem 0;">💡 実践的アドバイス</h3>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 20px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #39ff14; margin-bottom: 1rem;">🔍 テキスト分析の成功法則</h3>
+                        <ul style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                            <li><strong>ドメイン知識を活用</strong>：業界特有の用語や表現を理解する</li>
+                            <li><strong>データ品質を重視</strong>：ノイズの多いテキストは前処理が鍵</li>
+                            <li><strong>多角的なアプローチ</strong>：複数の手法を組み合わせて検証</li>
+                            <li><strong>可視化で洞察を深める</strong>：ワードクラウドやネットワーク図を活用</li>
+                            <li><strong>継続的な改善</strong>：結果をフィードバックして手法を改良</li>
+                        </ul>
+                    </div>
+                    
+                    <p>
+                        これらの高度なテキスト分析技法により、文書データから価値ある洞察を効率的に抽出できるようになります。
+                        次の章では、カテゴリカルデータと関数型プログラミングの活用法を学びましょう。
+                    </p>
+                </div>
+            </section>
+
             <!-- Chapter Navigation -->
             <nav class="chapter-nav fade-in-up">
-                <a href="chapter4-tidyr-data-reshaping.html" class="nav-btn prev">
-                    ← 前の章
-                </a>
-                <div class="chapter-progress">
-                    第5章 / 全6章
-                </div>
-                <a href="chapter6-lubridate-dates.html" class="nav-btn next">
-                    次の章 →
-                </a>
+                <a href="chapter6-forcats-purrr-advanced.html" class="nav-button">Chapter 6 →</a>
             </nav>
         </div>
+
+    <!-- 学習におすすめの書籍 -->
+    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
+        <div class="container">
+            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
+                📚 学習におすすめの書籍
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                
+                <!-- Book 1 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/48d9vpc" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-lime); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🔥 RユーザのためのRStudio[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidyverseの基礎から実践まで網羅した日本語決定版。RStudioとtidyverseでデータ分析をマスター。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-cyber); color: var(--void-black); padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <a href="https://amzn.to/3IfcanU" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
+                        <div style="display: flex; flex-direction: column; height: 100%;">
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--neon-magenta); font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-tech);">
+                                    🤖 Rユーザのためのtidymodels[実践]入門
+                                </h4>
+                                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+                                    tidymodelsで機械学習を実践するための日本語ガイド。モデル構築から評価まで完全網羅。
+                                </p>
+                            </div>
+                            <div style="background: var(--gradient-plasma); color: white; padding: 0.8rem 1.5rem; border-radius: 25px; text-align: center; font-weight: 600; font-family: var(--font-tech); margin-top: auto;">
+                                Amazonで詳細を見る →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
+                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        border-color: var(--neon-cyan);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .book-card:hover::before {
+        left: 100%;
+    }
+    </style>
+
     </main>
     
     <script>
