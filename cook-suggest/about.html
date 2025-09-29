@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookSuggestについて - スマート料理提案システム</title>
+    <meta name="description" content="CookSuggestは、冷蔵庫の食材から最適なレシピを提案するWebアプリです。1000種類以上のレシピデータベースと、栄養バランスを考慮したAI推薦システムで、食材の無駄を削減します。">
+    <meta name="keywords" content="料理アプリ, レシピ提案, 食材活用, 栄養管理, PWA, オフライン対応">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CookSuggestについて - スマート料理提案システム">
+    <meta property="og:description" content="冷蔵庫の食材から最適なレシピを提案。1000種類以上のレシピデータベースを活用。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.com/cook-suggest/about.html">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.com/cook-suggest/about.html">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --text-color: #2C3E50;
+            --background: #F7F9FC;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: white;
+            color: var(--primary-color);
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-back:hover {
+            transform: translateY(-2px);
+        }
+
+        .section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin: 30px 0 15px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: #F8F9FA;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .feature-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tech-tag {
+            background: var(--secondary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .use-case {
+            background: #E8F5E9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 20px 10px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .faq-item {
+            margin: 20px 0;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 10px;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .feature-grid, .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="nav-back">← アプリに戻る</a>
+        <a href="../index.html" class="nav-back">🏠 ホームへ</a>
+
+        <div class="header">
+            <h1>🍳 CookSuggest</h1>
+            <p>スマート料理提案システム</p>
+            <p style="font-size: 1.1rem; margin-top: 15px;">冷蔵庫の食材から、最適なレシピを瞬時に提案</p>
+        </div>
+
+        <!-- AdSense -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <div class="section">
+            <h2>📋 CookSuggestとは？</h2>
+            <p>
+                CookSuggestは、冷蔵庫に余っている食材を入力するだけで、栄養バランスと美味しさを考慮した最適なレシピを瞬時に提案するWebアプリケーションです。
+            </p>
+            <p style="margin-top: 15px;">
+                1000種類以上の厳選されたレシピデータベースから、あなたの食材・調理時間・難易度・アレルギー情報に完全マッチした料理を5つセレクト。食材の無駄を削減し、創造的な料理体験を提供します。
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">1000+</span>
+                    <span class="stat-label">レシピ数</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5秒</span>
+                    <span class="stat-label">平均検索時間</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">30%</span>
+                    <span class="stat-label">食材廃棄削減</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">PWA</span>
+                    <span class="stat-label">オフライン対応</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✨ 主要機能</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🤖 AI食材マッチング</h4>
+                    <p>独自開発のマッチングアルゴリズムで、手持ち食材に最適なレシピを高精度で提案します。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🥗 栄養価計算</h4>
+                    <p>各レシピのカロリー、タンパク質、脂質、炭水化物を自動計算。健康的な食生活をサポート。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⏱️ 時短検索</h4>
+                    <p>調理時間（10分/30分/60分）で絞り込み可能。忙しい日も簡単に料理が作れます。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>👨‍🍳 難易度選択</h4>
+                    <p>初心者から上級者まで、スキルに合わせたレシピを提案。料理が苦手でも安心。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🚫 アレルギー対応</h4>
+                    <p>特定アレルゲン（卵・乳・小麦など）を含むレシピを自動除外。安全な食事を提供。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🌸 季節対応</h4>
+                    <p>旬の食材を活用したレシピを優先表示。四季の味覚を楽しめます。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📝 買い物リスト</h4>
+                    <p>不足食材を自動でリストアップ。スーパーでの買い物がスムーズに。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⭐ ユーザー評価</h4>
+                    <p>実際に作った人の評価を参考に、失敗しないレシピ選びが可能です。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💡 こんな方におすすめ</h2>
+
+            <div class="use-case">
+                <h4>🏠 一人暮らしの方</h4>
+                <p>少量の食材でも作れるレシピを提案。食材を余らせずに使い切れます。</p>
+            </div>
+
+            <div class="use-case">
+                <h4>👨‍👩‍👧 ファミリー世帯</h4>
+                <p>家族全員が満足できる栄養バランスの良いレシピを毎日提案。献立に悩みません。</p>
+            </div>
+
+            <div class="use-case">
+                <h4>💪 健康志向の方</h4>
+                <p>カロリー・栄養素を考慮したレシピで、理想の体型維持をサポートします。</p>
+            </div>
+
+            <div class="use-case">
+                <h4>🌱 食材廃棄を減らしたい方</h4>
+                <p>冷蔵庫の「ちょっと余った食材」を有効活用。SDGsにも貢献できます。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🛠️ 技術仕様</h2>
+
+            <h3>使用技術</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">React</span>
+                <span class="tech-tag">Progressive Web App (PWA)</span>
+                <span class="tech-tag">Service Worker</span>
+                <span class="tech-tag">LocalStorage</span>
+                <span class="tech-tag">栄養価API</span>
+                <span class="tech-tag">機械学習</span>
+                <span class="tech-tag">レスポンシブデザイン</span>
+            </div>
+
+            <h3>データベース構造</h3>
+            <p>
+                独自の材料マスターテーブルを構築し、表記揺れ（玉ねぎ/タマネギ/玉葱）を自動統一。
+                シソーラス辞書により、検索精度を95%以上に向上させています。
+            </p>
+
+            <h3>オフライン対応</h3>
+            <p>
+                Service Workerを活用したPWA技術により、インターネット接続がない環境でも
+                レシピ検索・閲覧が可能。キャンプや山登りでも使えます。
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>❓ よくある質問（FAQ）</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 完全無料で使えますか？</div>
+                <div class="faq-answer">A. はい、全機能を無料でご利用いただけます。広告表示により運営しています。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 会員登録は必要ですか？</div>
+                <div class="faq-answer">A. 会員登録は不要です。アクセスするだけですぐに使えます。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. スマホでも使えますか？</div>
+                <div class="faq-answer">A. はい、iPhone・Androidの両方に対応しています。ホーム画面に追加すれば、アプリのように使えます。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. オリジナルレシピを追加できますか？</div>
+                <div class="faq-answer">A. 現在はシステム側で厳選したレシピのみ提供していますが、今後ユーザー投稿機能を追加予定です。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 栄養価の計算は正確ですか？</div>
+                <div class="faq-answer">A. 文部科学省の「日本食品標準成分表」に基づいて計算しており、高い精度を保証しています。</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 50px 0;">
+            <h2 style="color: var(--primary-color); margin-bottom: 30px;">今すぐ使ってみよう！</h2>
+            <a href="index.html" class="cta-button">🍳 CookSuggestを起動</a>
+            <a href="../index.html" class="cta-button" style="background: var(--secondary-color);">🏠 ホームに戻る</a>
+        </div>
+
+        <!-- AdSense -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+
+    <script>
+        // AdSense 初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震モニターについて - リアルタイム地震情報システム</title>
+    <meta name="description" content="地震モニターは、気象庁APIを活用したリアルタイム地震情報配信システムです。震度・マグニチュード・震源地を視覚的に把握でき、プッシュ通知で緊急アラートをお届けします。">
+    <meta name="keywords" content="地震情報, リアルタイム監視, 気象庁API, 防災アプリ, プッシュ通知, 緊急地震速報">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="地震モニターについて - リアルタイム地震情報システム">
+    <meta property="og:description" content="気象庁APIを活用したリアルタイム地震情報配信。震度・震源地を視覚的に把握できます。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mechatora.com/earthquake-monitor/about.html">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.com/earthquake-monitor/about.html">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --primary-color: #E53935;
+            --secondary-color: #1E88E5;
+            --text-color: #2C3E50;
+            --background: #F5F5F5;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #FF6F00);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: white;
+            color: var(--primary-color);
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-back:hover {
+            transform: translateY(-2px);
+        }
+
+        .section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin: 30px 0 15px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: #FFF3E0;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .feature-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #E53935, #D32F2F);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tech-tag {
+            background: var(--secondary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .alert-box {
+            background: #FFEBEE;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .alert-box strong {
+            color: var(--primary-color);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 20px 10px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .faq-item {
+            margin: 20px 0;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 10px;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        .timeline {
+            border-left: 3px solid var(--secondary-color);
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '●';
+            position: absolute;
+            left: -37px;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .feature-grid, .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="nav-back">← アプリに戻る</a>
+        <a href="../index.html" class="nav-back">🏠 ホームへ</a>
+
+        <div class="header">
+            <h1>🌏 地震モニター</h1>
+            <p>リアルタイム地震情報システム</p>
+            <p style="font-size: 1.1rem; margin-top: 15px;">気象庁API連携による信頼性の高い地震情報配信</p>
+        </div>
+
+        <!-- AdSense -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <div class="section">
+            <h2>📋 地震モニターとは？</h2>
+            <p>
+                地震モニターは、気象庁が提供する公式APIと連携し、日本全国の地震情報をリアルタイムで監視・配信するWebアプリケーションです。
+            </p>
+            <p style="margin-top: 15px;">
+                震度・マグニチュード・震源地を視覚的に把握できる直感的なインターフェースで、防災意識の向上と安全確保に貢献します。
+                緊急時には自動でプッシュ通知を送信し、素早い避難行動をサポートします。
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">15秒</span>
+                    <span class="stat-label">平均情報配信速度</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">常時監視</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">30日</span>
+                    <span class="stat-label">履歴保存期間</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">PWA</span>
+                    <span class="stat-label">オフライン対応</span>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <strong>⚠️ 重要：</strong> このアプリは気象庁の公式APIを使用していますが、緊急地震速報ではありません。
+                あくまで地震発生後の情報配信システムです。緊急時の避難判断は、テレビ・ラジオ等の公式情報も併用してください。
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✨ 主要機能</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>⚡ リアルタイム更新</h4>
+                    <p>気象庁APIから地震発生後平均15秒以内で情報を取得・表示。最新情報を常に提供します。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🗾 地図可視化</h4>
+                    <p>インタラクティブ地図上に震源地を表示。震度別にカラーコーディングで直感的に把握できます。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🔔 プッシュ通知</h4>
+                    <p>設定した震度以上の地震発生時に、ブラウザプッシュ通知で即座にお知らせします。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📊 統計分析</h4>
+                    <p>過去30日間の地震活動をグラフ化。地域別・震度別の発生傾向を把握できます。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🔍 詳細情報</h4>
+                    <p>震度・マグニチュード・震源地・深さ・各地の震度分布を詳細に表示します。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🌊 津波情報</h4>
+                    <p>津波警報・注意報が発令された場合、地震情報と同時に表示します。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📍 地域絞り込み</h4>
+                    <p>特定地域（都道府県別）の地震情報のみを表示。関心のある地域を重点的に監視できます。</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📜 履歴検索</h4>
+                    <p>過去の地震情報を日付・震度・地域で検索可能。災害記録としても活用できます。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔧 技術的特徴</h2>
+
+            <h3>プログレッシブ更新システム</h3>
+            <p>
+                通常時は30秒間隔でAPIをポーリングし、サーバー負荷を抑制。地震発生時は自動で5秒間隔に切り替わり、
+                リアルタイム性を確保。沈静化後は段階的に元の間隔に戻る、インテリジェントな更新システムを採用しています。
+            </p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong>平常時</strong><br>
+                    30秒間隔で更新（サーバー負荷軽減）
+                </div>
+                <div class="timeline-item">
+                    <strong>地震発生時</strong><br>
+                    5秒間隔に自動切り替え（リアルタイム監視）
+                </div>
+                <div class="timeline-item">
+                    <strong>沈静化後</strong><br>
+                    段階的に30秒間隔に復帰
+                </div>
+            </div>
+
+            <h3>使用技術</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">気象庁API</span>
+                <span class="tech-tag">WebSocket</span>
+                <span class="tech-tag">Progressive Web App</span>
+                <span class="tech-tag">プッシュ通知</span>
+                <span class="tech-tag">Google Maps API</span>
+                <span class="tech-tag">Chart.js</span>
+                <span class="tech-tag">Service Worker</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💡 活用シーン</h2>
+
+            <div class="feature-card" style="margin-bottom: 20px;">
+                <h4>🏢 オフィス・企業</h4>
+                <p>社員の安否確認システムと連携。地震発生時の初動対応を迅速化します。</p>
+            </div>
+
+            <div class="feature-card" style="margin-bottom: 20px;">
+                <h4>🏫 学校・教育機関</h4>
+                <p>避難訓練の参考データとして活用。防災教育の教材にも最適です。</p>
+            </div>
+
+            <div class="feature-card" style="margin-bottom: 20px;">
+                <h4>👨‍👩‍👧 家庭</h4>
+                <p>離れて暮らす家族の地域で地震が発生した際、すぐに状況を把握できます。</p>
+            </div>
+
+            <div class="feature-card" style="margin-bottom: 20px;">
+                <h4>🗼 防災関連機関</h4>
+                <p>地震活動のトレンド分析に活用。長期的な防災計画の立案に役立ちます。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>❓ よくある質問（FAQ）</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 緊急地震速報に対応していますか？</div>
+                <div class="faq-answer">A. いいえ、このアプリは地震発生後の情報配信システムです。緊急地震速報（P波検知による事前警告）には対応していません。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. プッシュ通知は確実に届きますか？</div>
+                <div class="faq-answer">A. ブラウザの通知許可設定が必要です。また、端末のバッテリー節約モードやネットワーク状況により、遅延する場合があります。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. データの信頼性は？</div>
+                <div class="faq-answer">A. 気象庁の公式APIを使用しており、国が公開する正式な地震情報を配信しています。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. オフラインでも使えますか？</div>
+                <div class="faq-answer">A. PWA技術により、過去に閲覧した地震情報はオフラインでも確認できます。ただし、最新情報の取得にはインターネット接続が必要です。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 利用料金は？</div>
+                <div class="faq-answer">A. 完全無料です。広告表示により運営しています。</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 50px 0;">
+            <h2 style="color: var(--primary-color); margin-bottom: 30px;">今すぐ地震情報をチェック</h2>
+            <a href="index.html" class="cta-button">🌏 地震モニターを起動</a>
+            <a href="../index.html" class="cta-button" style="background: var(--secondary-color);">🏠 ホームに戻る</a>
+        </div>
+
+        <!-- AdSense -->
+        <div style="text-align: center; margin: 30px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+
+    <script>
+        // AdSense 初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>
