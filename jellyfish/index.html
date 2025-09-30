@@ -21,13 +21,6 @@
     <meta name="twitter:player:width" content="1280">
     <meta name="twitter:player:height" content="720">
     
-    <!-- Video-specific Meta Tags -->
-    <meta property="video:duration" content="1800">
-    <meta property="video:width" content="1920">
-    <meta property="video:height" content="1080">
-    <meta property="video:type" content="video/mp4">
-    <meta property="video:url" content="https://mechatora.com/jellyfish/213616_medium.mp4">
-    
     <!-- Canonical URL -->
     <link rel="canonical" href="https://mechatora.com/jellyfish/">
     
@@ -69,39 +62,34 @@
     }
     </script>
     
-    <!-- Video Structured Data -->
+    <!-- WebApplication Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "VideoObject",
-        "name": "深海のクラゲ瞑想体験",
-        "description": "美しく漂うクラゲの映像で心を癒すリラクゼーション体験。深海の神秘的な環境音と共に、日々のストレスから解放される癒しの時間を提供します。",
-        "thumbnailUrl": "https://mechatora.com/jellyfish/jellyfish-thumbnail.jpg",
-        "uploadDate": "2024-01-01T00:00:00Z",
-        "duration": "PT30M",
-        "contentUrl": "https://mechatora.com/jellyfish/213616_medium.mp4",
-        "embedUrl": "https://mechatora.com/jellyfish/",
+        "@type": "WebApplication",
+        "name": "クラゲアクアリウム - 海洋セラピー＆ADHD集中支援",
+        "description": "水族館効果の科学的実証。クラゲのゆったりとした動きで血圧・心拍数を低下させ、ADHD支援・不安軽減に効果的なWebアプリケーション。",
+        "url": "https://mechatora.com/jellyfish/",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+        },
         "publisher": {
             "@type": "Organization",
             "name": "MechaTora",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://mechatora.com/logo.png"
-            }
+            "url": "https://mechatora.com"
         },
         "creator": {
             "@type": "Organization",
             "name": "MechaTora",
             "url": "https://mechatora.com"
         },
-        "keywords": ["クラゲ", "瞑想", "癒し", "リラックス", "深海", "jellyfish", "meditation", "healing", "relaxation", "ocean"],
-        "genre": ["自然", "癒し", "瞑想"],
+        "keywords": ["クラゲ", "海洋セラピー", "ADHD支援", "リラックス", "血圧低下", "不安軽減"],
         "isFamilyFriendly": true,
-        "inLanguage": "ja",
-        "potentialAction": {
-            "@type": "WatchAction",
-            "target": "https://mechatora.com/jellyfish/"
-        }
+        "inLanguage": "ja"
     }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -962,19 +950,9 @@
         <!-- ビデオ -->
         <div class="video-container">
             <video class="jellyfish-video" id="video" loop muted autoplay playsinline preload="auto"
-                   poster="jellyfish-thumbnail.jpg"
-                   itemprop="video"
-                   itemscope 
-                   itemtype="https://schema.org/VideoObject">
+                   poster="jellyfish-thumbnail.jpg">
                 <source src="./213616_medium.mp4" type="video/mp4">
                 <source src="213616_medium.mp4" type="video/mp4">
-                <meta itemprop="name" content="深海のクラゲ瞑想体験">
-                <meta itemprop="description" content="美しく漂うクラゲの映像で心を癒すリラクゼーション体験">
-                <meta itemprop="thumbnailUrl" content="https://mechatora.com/jellyfish/jellyfish-thumbnail.jpg">
-                <meta itemprop="contentUrl" content="https://mechatora.com/jellyfish/213616_medium.mp4">
-                <meta itemprop="embedUrl" content="https://mechatora.com/jellyfish/">
-                <meta itemprop="uploadDate" content="2024-01-01">
-                <meta itemprop="duration" content="PT30M">
                 <p>お使いのブラウザは動画をサポートしていません。</p>
             </video>
             <div class="video-fallback" id="fallback" style="display: none;">
