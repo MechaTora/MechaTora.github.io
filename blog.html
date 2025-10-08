@@ -88,11 +88,27 @@
         }
         
         .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 30px;
             margin-bottom: 30px;
         }
+
+        /* 日付順でソート（新しい順） */
+        .blog-post:nth-child(1) { order: 1; }  /* 10月7日 */
+        .blog-post:nth-child(2) { order: 2; }  /* 10月5日 */
+        .blog-post:nth-child(14) { order: 3; } /* 9月25日 */
+        .blog-post:nth-child(13) { order: 4; } /* 9月18日 */
+        .blog-post:nth-child(12) { order: 5; } /* 9月10日 */
+        .blog-post:nth-child(11) { order: 6; } /* 9月3日 */
+        .blog-post:nth-child(10) { order: 7; } /* 8月7日 */
+        .blog-post:nth-child(9) { order: 8; }  /* 8月5日 */
+        .blog-post:nth-child(8) { order: 9; }  /* 8月3日 */
+        .blog-post:nth-child(7) { order: 10; } /* 8月1日 */
+        .blog-post:nth-child(6) { order: 11; } /* 7月26日 */
+        .blog-post:nth-child(5) { order: 12; } /* 7月20日 */
+        .blog-post:nth-child(4) { order: 13; } /* 7月15日 */
+        .blog-post:nth-child(3) { order: 14; } /* 7月11日 */
         
         .blog-post {
             background: white;
