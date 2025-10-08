@@ -2366,7 +2366,7 @@
                     
                     <div class="recipe-tips">
                         <h4>💡 このレシピについて</h4>
-                        <p>詳細なレシピは準備中です。基本的な${recipe.cuisine}料理として楽しんでいただけます。</p>
+                        <p>基本的な${recipe.cuisine}料理として楽しんでいただけます。詳しい作り方は料理サイトでご確認ください。</p>
                     </div>
                     
                     ${createRatingSection(recipe)}
@@ -2831,7 +2831,7 @@
                         console.log('✅ 条件検索を開始します');
                     }
 
-                    document.querySelector('#loading p').textContent = '美味しそうな料理を準備中...';
+                    document.querySelector('#loading p').textContent = '美味しそうな料理を検索中...';
                     document.getElementById('loading').style.display = 'block';
                     document.getElementById('resultSection').style.display = 'none';
                     
