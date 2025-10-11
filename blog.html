@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>開発ブログ - MechaTora | Webアプリ開発日記</title>
     <meta name="description" content="MechaTora（メカトラ）の開発ブログ。Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
-    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事, R言語, Python, Tidyverse, PWA, 無料Webアプリ, 冷蔵庫余り物レシピ, 食材ロス削減, レシピアプリ, プログラミング初心者, 独学プログラミング, Webアプリ作り方">
+    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事, R言語, Python, Tidyverse, PWA, 無料Webアプリ, 冷蔵庫余り物レシピ, 食材ロス削減, レシピアプリ, プログラミング初心者, 独学プログラミング, Webアプリ作り方, 社会保険労務士, 30代社会人, DX推進, データ分析入門, 働きながら学習, GitHub Pages, 無料ツール">
     <meta name="author" content="MechaTora">
 
     <!-- Canonical URL -->
@@ -152,6 +152,11 @@
         .blog-post:nth-child(9) { order: 18; }  /* 7月15日 */
         .blog-post:nth-child(8) { order: 19; }  /* 7月11日 */
         .blog-post:nth-child(20) { order: 20; } /* 7月1日 */
+        .blog-post:nth-child(21) { order: 21; } /* 6月25日 */
+        .blog-post:nth-child(22) { order: 22; } /* 6月20日 */
+        .blog-post:nth-child(23) { order: 23; } /* 6月15日 */
+        .blog-post:nth-child(24) { order: 24; } /* 6月10日 */
+        .blog-post:nth-child(25) { order: 25; } /* 6月5日 */
         
         .blog-post {
             background: white;
@@ -1107,6 +1112,565 @@
                         <span class="tag">プログラミング</span>
                         <span class="tag">R言語</span>
                         <span class="tag">Python</span>
+                    </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">📊</div>
+                    <div class="post-date">2025年6月25日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">R言語Tidyverseで始めるデータ分析入門｜非エンジニアでも3ヶ月でマスターできた方法</h3>
+                    <p class="post-excerpt">
+                        <strong>📈 人事データ分析から始まったR言語との出会い</strong><br>
+                        人事部門で働く私がR言語を学び始めたきっかけは、「社員の離職率分析」でした。Excelでは限界を感じ、より高度な統計分析ツールを探していたところ、R言語のTidyverseに出会いました。<br><br>
+
+                        <strong>🎯 なぜR言語なのか？Pythonとの違い</strong><br>
+                        データ分析を学ぶ際、多くの人が「PythonとR、どちらを学ぶべきか？」で悩みます。私がR言語を選んだ理由は3つ：<br>
+                        1. <strong>統計分析に特化</strong> - 統計関数が標準で豊富、学術論文でも標準<br>
+                        2. <strong>Tidyverseの直感的な文法</strong> - パイプ演算子（%>%）で処理の流れが読みやすい<br>
+                        3. <strong>ggplot2の美しいグラフ</strong> - プレゼン資料に使えるクオリティ<br><br>
+
+                        <strong>💡 Tidyverseとは？初心者が知るべき基礎</strong><br>
+                        Tidyverseは、R言語でのデータ操作を劇的に簡単にするパッケージ群です。主要な構成要素：<br>
+                        ・<strong>dplyr</strong> - データの絞り込み、並び替え、集計<br>
+                        ・<strong>ggplot2</strong> - グラフ作成<br>
+                        ・<strong>tidyr</strong> - データ整形（縦横変換、欠損値処理）<br>
+                        ・<strong>readr</strong> - CSV/Excelファイル読み込み<br>
+                        ・<strong>purrr</strong> - 繰り返し処理<br><br>
+
+                        <strong>📚 私の3ヶ月学習ロードマップ</strong><br>
+                        非エンジニアの私が、実務で使えるレベルになるまでの道のり：<br><br>
+
+                        <strong>【1ヶ月目】基礎文法とデータ操作</strong><br>
+                        ・Progateでプログラミング基礎理解<br>
+                        ・RStudioのインストールと環境構築<br>
+                        ・dplyrの5大関数（filter, select, mutate, arrange, summarize）習得<br>
+                        ・実務データで練習（社員名簿の集計、部署別分析）<br><br>
+
+                        <strong>【2ヶ月目】グラフ作成と統計分析</strong><br>
+                        ・ggplot2で基本グラフ（棒グラフ、折れ線、散布図）<br>
+                        ・カスタマイズ技術（色、軸ラベル、テーマ）<br>
+                        ・相関分析、t検定などの基礎統計<br>
+                        ・実務課題：離職率の可視化と要因分析<br><br>
+
+                        <strong>【3ヶ月目】実践プロジェクト</strong><br>
+                        ・複数データソースの結合（left_join、inner_join）<br>
+                        ・レポート自動化（R Markdown）<br>
+                        ・ダッシュボード作成（Shiny入門）<br>
+                        ・成果：月次人事レポートの自動化に成功<br><br>
+
+                        <strong>🛠️ おすすめ学習リソース</strong><br>
+                        1. <strong>書籍</strong><br>
+                        ・『RユーザのためのRStudio実践入門』（技術評論社）<br>
+                        ・『Rではじめるデータサイエンス』（オライリー）<br>
+                        ・『前処理大全』（技術評論社） - Tidyverse実践的<br><br>
+
+                        2. <strong>オンライン講座</strong><br>
+                        ・Udemy「R言語とTidyverseによるデータ分析入門」<br>
+                        ・Coursera「Data Science Specialization」<br>
+                        ・YouTube「StatQuest with Josh Starmer」（統計の基礎）<br><br>
+
+                        3. <strong>公式ドキュメント</strong><br>
+                        ・Tidyverse公式サイト（tidyverse.org）<br>
+                        ・RStudio Cheat Sheets（チートシート集）<br><br>
+
+                        <strong>⚡ 実務で役立った具体例</strong><br>
+                        <strong>Case 1: 社員満足度調査の分析</strong><br>
+                        1000名のアンケートデータをTidyverseで集計。部署別・年齢別のクロス集計を5分で完了。Excelなら半日かかる作業が劇的に効率化。<br><br>
+
+                        <strong>Case 2: 採用データの可視化</strong><br>
+                        過去5年の採用実績をggplot2で可視化。経営会議で「データに基づく提案」として高評価。人事企画のレベルが一段上がりました。<br><br>
+
+                        <strong>Case 3: 残業時間の予測モデル</strong><br>
+                        tidymodelsパッケージで、部署・役職から残業時間を予測。精度70%のモデルを構築し、人員配置の最適化に貢献。<br><br>
+
+                        <strong>🚀 R言語学習のコツ</strong><br>
+                        1. <strong>手を動かす</strong> - 読むだけでは身につかない。毎日30分コードを書く<br>
+                        2. <strong>実務データで練習</strong> - 教材データより、仕事のデータの方が理解しやすい<br>
+                        3. <strong>エラーを恐れない</strong> - エラーメッセージは学びのチャンス<br>
+                        4. <strong>コミュニティ活用</strong> - Stack Overflow、Rユーザー会で質問<br>
+                        5. <strong>可視化を楽しむ</strong> - 綺麗なグラフが作れるとモチベーション維持<br><br>
+
+                        <strong>📌 次のステップ</strong><br>
+                        R言語の基礎を習得したら、以下にチャレンジ：<br>
+                        ・機械学習（tidymodels、caret）<br>
+                        ・テキストマイニング（tidytext）<br>
+                        ・時系列分析（forecast、prophet）<br>
+                        ・Webアプリ化（Shiny、Plumber API）<br><br>
+
+                        私もR言語からWeb開発（このサイト）に繋がりました。プログラミングの世界は、一つ学べば次々と新しい扉が開きます。<br><br>
+
+                        <strong>🔗 関連リンク</strong><br>
+                        📝 <a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">note - R言語学習記録</a><br>
+                        🎨 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">MechaTora開発ブログ</a>
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">R言語</span>
+                        <span class="tag">Tidyverse</span>
+                        <span class="tag">データ分析</span>
+                        <span class="tag">統計学</span>
+                        <span class="tag">初心者向け</span>
+                        <span class="tag">プログラミング学習</span>
+                    </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">💼</div>
+                    <div class="post-date">2025年6月20日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">30代サラリーマンが働きながらプログラミング学習｜挫折しないための5つの秘訣</h3>
+                    <p class="post-excerpt">
+                        <strong>⏰ 時間がない社会人の現実</strong><br>
+                        30代・人事部門勤務の私が、プログラミング学習を始めたのは2年前。当時の状況：残業月80時間、休日出勤あり、帰宅は22時。「時間がない」が口癖でした。<br><br>
+
+                        それでも、今ではWebアプリを10個以上開発し、R言語・Python・JavaScriptを実務レベルで使えるようになりました。どうやって時間を作り、挫折せずに続けたか？5つの秘訣をお伝えします。<br><br>
+
+                        <strong>📌 秘訣1：完璧主義を捨てる「80点主義」</strong><br>
+                        最大の敵は「ちゃんと理解してから次に進む」という完璧主義。書籍を1ページずつ理解しようとすると、途中で嫌になります。<br><br>
+
+                        私のルール：「80点理解したら次へ」。わからない部分はメモして後回し。実際にコードを書きながら戻ると、不思議と理解できます。<br><br>
+
+                        <strong>📌 秘訣2：朝活で「1日30分」の習慣化</strong><br>
+                        夜は疲れて集中できない。そこで、朝6時に起きて30分だけコードを書く習慣を作りました。<br><br>
+
+                        朝の30分は、夜の2時間に匹敵する集中力。小さな達成感でスタートする1日は、驚くほどポジティブになります。<br><br>
+
+                        <strong>ポイント</strong><br>
+                        ・スマホを寝室に持ち込まない（SNSの誘惑を断つ）<br>
+                        ・前夜に「明日やること」を決めておく<br>
+                        ・コーヒーとお気に入りの音楽でルーティン化<br><br>
+
+                        <strong>📌 秘訣3：通勤時間を「インプットタイム」に</strong><br>
+                        片道40分の通勤時間、往復で80分。これを学習時間に変換しました。<br><br>
+
+                        <strong>電車内でやったこと</strong><br>
+                        ・Udemyの動画講座（1.5倍速）<br>
+                        ・技術ブログ記事を読む（Qiita、Zenn）<br>
+                        ・Progateのスマホアプリでコーディング練習<br>
+                        ・Podcastで英語の技術番組（Syntax.fm、JS Party）<br><br>
+
+                        月20日出勤なら、月26時間。年間312時間の学習時間を確保できました。<br><br>
+
+                        <strong>📌 秘訣4：「作りたいもの」から逆算学習</strong><br>
+                        書籍を最初から順番に読む学習法は、社会人には向きません。時間がかかりすぎて、途中で飽きます。<br><br>
+
+                        私の方法：「作りたいアプリ」を先に決めて、必要な知識だけを学ぶ。<br><br>
+
+                        <strong>例：料理アプリを作りたい</strong><br>
+                        1. 必要な技術をリストアップ（HTML/CSS、JavaScript、レシピデータ）<br>
+                        2. 各技術の「最低限必要な部分」だけ学ぶ<br>
+                        3. まず動くものを作る（見た目は後回し）<br>
+                        4. 動いてから、細部を改善<br><br>
+
+                        この方法なら、最短1週間で「動くアプリ」が完成。達成感が次のモチベーションになります。<br><br>
+
+                        <strong>📌 秘訣5：SNSで学習記録を公開する</strong><br>
+                        Twitterで「#今日の積み上げ」ハッシュタグで、毎日の学習内容をツイート。これが驚くほど効果的でした。<br><br>
+
+                        <strong>メリット</strong><br>
+                        ・公言することで「やらなきゃ」プレッシャー<br>
+                        ・同じ学習者とのつながり（励まし合い）<br>
+                        ・「いいね」の承認欲求が継続のモチベーション<br>
+                        ・自分の成長記録が可視化される<br><br>
+
+                        3ヶ月続けると、フォロワーが増え、「応援してくれる人」ができます。この存在が、挫折防止に絶大な効果。<br><br>
+
+                        <strong>⚠️ やってはいけないNG行動</strong><br>
+                        1. <strong>複数言語を同時に学ぶ</strong> - 混乱して全部中途半端に<br>
+                        2. <strong>高額スクールに頼りすぎ</strong> - 受け身では身につかない<br>
+                        3. <strong>エラーをすぐ質問</strong> - 自分で調べる力が育たない<br>
+                        4. <strong>最新技術を追いかける</strong> - 基礎がないと理解できない<br>
+                        5. <strong>完成度にこだわりすぎ</strong> - 公開しないと成長しない<br><br>
+
+                        <strong>📊 私の2年間の成果</strong><br>
+                        ・Webアプリ開発：12個（うち公開10個）<br>
+                        ・累計学習時間：約800時間（1日平均1時間強）<br>
+                        ・習得言語：R、Python、JavaScript、HTML/CSS<br>
+                        ・副業収入：月3-5万円（受託開発）<br>
+                        ・社内評価：DX推進リーダーに抜擢<br><br>
+
+                        <strong>🌟 これから学ぶ方へのメッセージ</strong><br>
+                        「30代から始めるのは遅い？」と聞かれますが、全くそんなことはありません。社会人経験があるからこそ、「何を作れば役立つか」の視点が鋭いんです。<br><br>
+
+                        プログラミングは、英語と同じ。毎日少しずつ触れていれば、必ず上達します。焦らず、楽しみながら、一緒に頑張りましょう！<br><br>
+
+                        <strong>🔗 関連記事</strong><br>
+                        📝 <a href="https://note.com/crt03/n/n24df152e449d" target="_blank" style="color: var(--primary-color);">30代サラリーマンのスキルアップ記録（note）</a><br>
+                        🎨 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">開発ブログ - 作ったアプリ紹介</a>
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">プログラミング学習</span>
+                        <span class="tag">30代社会人</span>
+                        <span class="tag">働きながら学習</span>
+                        <span class="tag">挫折しない方法</span>
+                        <span class="tag">時間管理</span>
+                    </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🎓</div>
+                    <div class="post-date">2025年6月15日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">社会保険労務士試験合格への道｜働きながら一発合格した勉強法とスケジュール</h3>
+                    <p class="post-excerpt">
+                        <strong>📖 なぜ社労士を目指したのか</strong><br>
+                        人事部門で5年働く中で、「専門知識の不足」を痛感する場面が増えました。労働法、社会保険、年金制度…制度改正のたびに外部の社労士に頼る状況に、「自分でもっと詳しくなりたい」と思ったのがきっかけです。<br><br>
+
+                        <strong>📊 社労士試験の難易度と合格率</strong><br>
+                        社会保険労務士試験の合格率は約6-7％。司法試験ほどではないものの、難関国家資格の一つです。<br><br>
+
+                        <strong>試験科目（全8科目）</strong><br>
+                        1. 労働基準法及び労働安全衛生法<br>
+                        2. 労働者災害補償保険法<br>
+                        3. 雇用保険法<br>
+                        4. 労務管理その他の労働に関する一般常識<br>
+                        5. 社会保険に関する一般常識<br>
+                        6. 健康保険法<br>
+                        7. 厚生年金保険法<br>
+                        8. 国民年金法<br><br>
+
+                        各科目で基準点（約4割）をクリアし、かつ総得点で上位7％に入る必要があります。一つでも科目落ちすると不合格。バランスが重要です。<br><br>
+
+                        <strong>⏰ 私の学習スケジュール（10ヶ月・総学習時間1000時間）</strong><br>
+                        <strong>【第1期】基礎固め（3ヶ月・300時間）</strong><br>
+                        ・平日：朝1時間、夜2時間<br>
+                        ・休日：5-6時間<br>
+                        ・教材：TAC通信講座、基本テキスト精読<br>
+                        ・目標：全科目を一通り理解<br><br>
+
+                        この時期は「完璧理解」を目指さない。60%理解で次へ進むイメージ。年金科目は特に難解ですが、後で何度も戻るので深追い禁止。<br><br>
+
+                        <strong>【第2期】過去問演習（4ヶ月・400時間）</strong><br>
+                        ・過去10年分の過去問を3周<br>
+                        ・間違えた問題はノートに記録<br>
+                        ・横断整理（科目をまたいだ知識の統合）<br>
+                        ・模試を月1回受験<br><br>
+
+                        ここが最も重要な時期。過去問を解くことで「出題パターン」が見えてきます。特に選択式問題（穴埋め）は、頻出キーワードが決まっています。<br><br>
+
+                        <strong>【第3期】直前期（3ヶ月・300時間）</strong><br>
+                        ・法改正情報の徹底チェック<br>
+                        ・苦手科目の集中学習<br>
+                        ・模試を週1回受験（計12回）<br>
+                        ・暗記カードで数字の暗記<br><br>
+
+                        試験1ヶ月前は、新しいことは学ばず、既存知識の反復のみ。特に「数字」（保険料率、給付額、期間）は直前まで記憶が抜けるので、毎日復習。<br><br>
+
+                        <strong>📚 使用した教材・予備校</strong><br>
+                        1. <strong>メイン教材：TAC通信講座</strong>（約20万円）<br>
+                        ・講義動画（1.5倍速で視聴）<br>
+                        ・基本テキスト8冊<br>
+                        ・過去問集<br>
+                        ・模試10回分<br><br>
+
+                        2. <strong>サブ教材</strong><br>
+                        ・『社労士 合格のツボ 択一対策』（早稲田経営出版）<br>
+                        ・『うかる！社労士 テキスト&問題集』（日本経済新聞出版）<br>
+                        ・YouTube「しゃろうしチャンネル」（無料講義）<br><br>
+
+                        3. <strong>アプリ</strong><br>
+                        ・「社労士 過去問 解説付き」アプリ（通勤中に活用）<br>
+                        ・Ankiアプリ（暗記カード）<br><br>
+
+                        <strong>💡 合格のための5つのコツ</strong><br>
+                        <strong>1. 「捨て科目」を作らない</strong><br>
+                        基準点制度があるため、得意科目で満点取っても、1科目でも基準点割れすると不合格。苦手科目こそ優先的に学習。<br><br>
+
+                        <strong>2. 横断学習で知識を統合</strong><br>
+                        例えば「出産」関連の給付は、健康保険・雇用保険・労災保険すべてに出てきます。科目ごとではなく、テーマごとに整理すると記憶に定着。<br><br>
+
+                        <strong>3. 法改正情報は命</strong><br>
+                        試験の約20%は、直近2年の法改正から出題。TACの「法改正まとめ冊子」は必読。<br><br>
+
+                        <strong>4. 模試は本番と同じ時間に受ける</strong><br>
+                        試験は午前3時間20分・午後3時間10分の長丁場。集中力・体力が必要。模試で本番のシミュレーションを何度も経験。<br><br>
+
+                        <strong>5. 選択式対策を軽視しない</strong><br>
+                        選択式（穴埋め）は運要素が大きく、ここで不合格になる人が多い。過去問だけでなく、予想問題集も解く。<br><br>
+
+                        <strong>😰 挫折しそうになったとき</strong><br>
+                        正直、何度も「もう無理」と思いました。特に厚生年金・国民年金の計算問題は、理解に3ヶ月かかりました。<br><br>
+
+                        <strong>乗り越えた方法</strong><br>
+                        ・学習仲間を作る（SNSで「#社労士受験」仲間と励まし合い）<br>
+                        ・小さな目標設定（今日は労基法10ページ、など）<br>
+                        ・ご褒美制度（1科目終わったら好きなもの食べる）<br>
+                        ・合格後のビジョンを明確化（資格手当月3万円、昇進）<br><br>
+
+                        <strong>🎉 合格発表の瞬間</strong><br>
+                        11月の合格発表日、官報で自分の受験番号を見つけた瞬間は、今でも忘れられません。10ヶ月の努力が報われた瞬間でした。<br><br>
+
+                        合格後、社内で「労務管理のスペシャリスト」として認められ、給与も昇格。何より、自信がつきました。<br><br>
+
+                        <strong>🔗 詳細はnoteで公開中</strong><br>
+                        📝 <a href="https://note.com/crt03/n/nfc0a93d9ccd7" target="_blank" style="color: var(--primary-color);">社労士試験合格体験記（note）</a><br>
+                        📚 <a href="https://mechatora.com/qualification-calendar.html" target="_blank" style="color: var(--primary-color);">資格試験カレンダー - 試験日程確認</a>
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">社会保険労務士</span>
+                        <span class="tag">資格試験</span>
+                        <span class="tag">勉強法</span>
+                        <span class="tag">国家資格</span>
+                        <span class="tag">働きながら合格</span>
+                    </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🌐</div>
+                    <div class="post-date">2025年6月10日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">無料で作れるWebアプリ完全ガイド｜初心者が0円でアプリ公開する方法</h3>
+                    <p class="post-excerpt">
+                        <strong>💰 お金をかけずにWebアプリを作りたい</strong><br>
+                        「Webアプリを作りたいけど、サーバー代が…」と諦めていませんか？実は、完全無料でアプリを開発・公開できる時代です。私も初期費用0円で、10個以上のアプリを公開しています。<br><br>
+
+                        この記事では、無料ツールだけでWebアプリを作る方法を、初心者向けに徹底解説します。<br><br>
+
+                        <strong>🛠️ 必要な無料ツール一覧</strong><br>
+                        <strong>1. コードエディタ：VS Code</strong>（無料）<br>
+                        Microsoftが提供する最強エディタ。プログラマーの90%以上が使用。拡張機能が豊富で、HTML/CSS/JavaScriptのコード補完が優秀。<br><br>
+
+                        <strong>2. ホスティング：GitHub Pages</strong>（無料）<br>
+                        静的サイト（HTML/CSS/JavaScript）なら、GitHubで無料ホスティング。独自ドメインも設定可能（ドメイン代のみ年1000円程度）。<br><br>
+
+                        <strong>3. バックエンド：Supabase / Firebase</strong>（無料枠あり）<br>
+                        データベース、認証、ストレージが無料で使える。小規模アプリなら無料枠で十分。<br><br>
+
+                        <strong>4. 画像素材：Unsplash / Pexels</strong>（完全無料）<br>
+                        商用利用可能な高品質写真が無料。クレジット表記も不要。<br><br>
+
+                        <strong>5. アイコン：Font Awesome</strong>（無料）<br>
+                        Webアイコンの定番。CDNで読み込めば即使用可。<br><br>
+
+                        <strong>📝 開発の流れ（5ステップ）</strong><br>
+                        <strong>Step 1: アイデア出し</strong><br>
+                        「自分が欲しいアプリ」から考える。例：<br>
+                        ・冷蔵庫の余り物レシピ検索<br>
+                        ・地震情報の通知<br>
+                        ・勉強時間の記録ツール<br><br>
+
+                        大規模でなくてOK。まずは「1つの機能」に絞る。<br><br>
+
+                        <strong>Step 2: 技術選定</strong><br>
+                        初心者におすすめ：<br>
+                        ・フロントエンド：HTML + CSS + JavaScript（バニラJS）<br>
+                        ・バックエンド：なし（ローカルストレージで保存）<br>
+                        ・デプロイ：GitHub Pages<br><br>
+
+                        React/Vueは後回し。まずは基礎を固める。<br><br>
+
+                        <strong>Step 3: プロトタイプ作成</strong><br>
+                        デザインは後回し。まず「動くもの」を作る。<br><br>
+
+                        <strong>最小限のHTMLテンプレート</strong><br>
+                        ```html<br>
+                        &lt;!DOCTYPE html&gt;<br>
+                        &lt;html&gt;<br>
+                        &lt;head&gt;<br>
+                            &lt;title&gt;アプリ名&lt;/title&gt;<br>
+                        &lt;/head&gt;<br>
+                        &lt;body&gt;<br>
+                            &lt;h1&gt;Hello World&lt;/h1&gt;<br>
+                            &lt;script src="app.js"&gt;&lt;/script&gt;<br>
+                        &lt;/body&gt;<br>
+                        &lt;/html&gt;<br>
+                        ```<br><br>
+
+                        これだけで、ブラウザで表示できます。<br><br>
+
+                        <strong>Step 4: GitHub Pagesで公開</strong><br>
+                        1. GitHubアカウント作成（無料）<br>
+                        2. リポジトリ作成（例：my-recipe-app）<br>
+                        3. index.htmlをアップロード<br>
+                        4. Settings → Pages → Sourceを"main branch"に設定<br>
+                        5. 5分後、https://ユーザー名.github.io/my-recipe-app/ で公開<br><br>
+
+                        これだけで、世界中からアクセス可能なアプリが完成！<br><br>
+
+                        <strong>Step 5: 改善を繰り返す</strong><br>
+                        ・CSSで見た目を整える<br>
+                        ・JavaScriptで機能追加<br>
+                        ・ユーザーからフィードバック収集<br>
+                        ・バグ修正<br><br>
+
+                        <strong>🎨 デザインのコツ（センス不要）</strong><br>
+                        「デザインセンスがない」と悩む必要はありません。既存の優れたデザインを参考にすればOK。<br><br>
+
+                        <strong>参考にすべきサイト</strong><br>
+                        ・Dribbble（デザインギャラリー）<br>
+                        ・Tailwind CSS（簡単に綺麗なデザイン）<br>
+                        ・Bootstrap（定番CSSフレームワーク）<br><br>
+
+                        色選びは「Coolors」で自動生成。フォントは「Google Fonts」で無料。<br><br>
+
+                        <strong>⚡ 私が無料で作ったアプリ例</strong><br>
+                        1. <strong>CookSuggest</strong> - 料理提案アプリ<br>
+                        技術：HTML/CSS/JavaScript（バニラ）<br>
+                        ホスティング：GitHub Pages（無料）<br>
+                        開発期間：2週間<br>
+                        月間ユーザー：500人<br>
+                        👉 <a href="https://mechatora.com/cook-suggest/" target="_blank" style="color: var(--primary-color);">CookSuggestを見る</a><br><br>
+
+                        2. <strong>地震モニター</strong><br>
+                        技術：JavaScript + 気象庁API<br>
+                        ホスティング：GitHub Pages<br>
+                        開発期間：1週間<br>
+                        👉 <a href="https://mechatora.com/earthquake-monitor/" target="_blank" style="color: var(--primary-color);">地震モニターを見る</a><br><br>
+
+                        どちらも運営費0円で、2年間安定稼働中です。<br><br>
+
+                        <strong>🚀 次のステップ：収益化も可能</strong><br>
+                        無料で作ったアプリでも、収益化は可能：<br>
+                        1. <strong>Google AdSense</strong> - 広告収入（月数千円〜）<br>
+                        2. <strong>アフィリエイト</strong> - 関連商品紹介<br>
+                        3. <strong>寄付ボタン</strong> - PayPal、Buy Me a Coffee<br>
+                        4. <strong>有料版</strong> - Stripeで課金機能<br><br>
+
+                        私もAdSense申請中。承認されれば、月数千円の副収入が見込めます。<br><br>
+
+                        <strong>📚 おすすめ学習リソース（全て無料）</strong><br>
+                        ・<strong>Progate</strong> - HTML/CSS/JavaScript基礎（無料版あり）<br>
+                        ・<strong>MDN Web Docs</strong> - 最も正確なWeb技術リファレンス<br>
+                        ・<strong>freeCodeCamp</strong> - 完全無料のプログラミング学習<br>
+                        ・<strong>YouTube - Traversy Media</strong> - 実践的なチュートリアル<br><br>
+
+                        <strong>🌟 まとめ：無料で始めて、スキルアップしよう</strong><br>
+                        お金がなくても、Webアプリは作れます。必要なのは「やる気」と「時間」だけ。<br><br>
+
+                        小さなアプリから始めて、徐々にスキルアップ。気づけば、立派なエンジニアになっています。一緒に頑張りましょう！<br><br>
+
+                        <strong>🔗 関連リンク</strong><br>
+                        🎨 <a href="https://mechatora.com/" target="_blank" style="color: var(--primary-color);">MechaTora - 無料Webアプリ集</a><br>
+                        📝 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">開発ブログ</a>
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">Webアプリ開発</span>
+                        <span class="tag">無料ツール</span>
+                        <span class="tag">GitHub Pages</span>
+                        <span class="tag">初心者向け</span>
+                        <span class="tag">プログラミング入門</span>
+                    </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🔥</div>
+                    <div class="post-date">2025年6月5日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">エンジニア転職せずに「社内DX人材」になった話｜人事からテックリードへの道</h3>
+                    <p class="post-excerpt">
+                        <strong>💼 人事部員が突然「DX推進リーダー」に</strong><br>
+                        2年前、私は普通の人事部員でした。採用、労務管理、給与計算…特別なスキルもなく、Excelとメールが仕事道具。それが今では、社内のDX推進リーダーとして、業務効率化システムの開発を任されています。<br><br>
+
+                        エンジニアに転職したわけではありません。会社に残りながら、「社内DX人材」として価値を高めた結果です。同じような状況の方に、そのプロセスをシェアします。<br><br>
+
+                        <strong>📊 きっかけは「データ分析」のニーズ</strong><br>
+                        転機は、上司からの一言でした。<br>
+                        「離職率が高い部署を特定して、原因を分析してほしい」<br><br>
+
+                        Excelでピボットテーブルを駆使しましたが、データが5年分・社員1000人分となると限界。そこでR言語に出会い、Tidyverseでのデータ分析を独学。<br><br>
+
+                        2週間で分析レポートを作成し、経営会議でプレゼン。「データに基づく提案」として高評価を得ました。これが、私の「DX人材」への第一歩でした。<br><br>
+
+                        <strong>🚀 小さな成功が次のチャンスを呼ぶ</strong><br>
+                        データ分析の成功後、次々と依頼が来ました：<br><br>
+
+                        <strong>案件1：採用管理システムの自動化</strong><br>
+                        手作業で管理していた応募者情報を、Google Apps Scriptで自動化。応募受付→メール送信→面接日程調整まで、すべて自動化。工数が80%削減。<br><br>
+
+                        <strong>案件2：社員満足度調査の可視化ダッシュボード</strong><br>
+                        年1回のアンケート結果を、Tableauで可視化。部署別・年齢別の満足度が一目で分かるダッシュボードを作成。経営層から「もっと早く作ってほしかった」と。<br><br>
+
+                        <strong>案件3：勤怠データの異常検知システム</strong><br>
+                        残業時間が月80時間を超える社員を自動検知し、上長にアラート通知。メンタルヘルス対策として導入され、離職率が15%低下。<br><br>
+
+                        これらはすべて、独学で習得した技術です。<br><br>
+
+                        <strong>💡 「社内DX人材」の強み</strong><br>
+                        エンジニア転職せず、社内に残る選択をした理由は3つ：<br><br>
+
+                        <strong>1. 業務理解がある</strong><br>
+                        外部のエンジニアには、業務の細かいニュアンスが伝わりません。「この作業、本当は不要」「このデータ、実は使ってない」といった現場の実情を知っているのは、現場経験者だけ。<br><br>
+
+                        <strong>2. 社内調整力</strong><br>
+                        システム導入には、関係部署の協力が必須。人事として培った社内人脈・調整力が、DXプロジェクトの成功に直結しました。<br><br>
+
+                        <strong>3. 安定収入 + 新スキル獲得</strong><br>
+                        エンジニア転職はリスクもあります。未経験から転職すると、年収ダウンの可能性も。社内でスキルアップしつつ、安定した給与を維持できました。<br><br>
+
+                        <strong>📚 習得した技術スタック</strong><br>
+                        2年間で、以下のスキルを独学で習得：<br><br>
+
+                        <strong>データ分析・可視化</strong><br>
+                        ・R言語（Tidyverse、ggplot2）<br>
+                        ・Python（pandas、matplotlib）<br>
+                        ・Tableau（BIツール）<br>
+                        ・SQL（データベース抽出）<br><br>
+
+                        <strong>業務自動化</strong><br>
+                        ・Google Apps Script（スプレッドシート自動化）<br>
+                        ・Power Automate（RPA）<br>
+                        ・Python（スクレイピング、バッチ処理）<br><br>
+
+                        <strong>Web開発</strong><br>
+                        ・HTML/CSS/JavaScript<br>
+                        ・GitHub Pages（社内ツール公開）<br>
+                        ・PWA（オフライン対応アプリ）<br><br>
+
+                        すべて、業務時間外に独学。通勤時間とランチタイムを学習時間に充てました。<br><br>
+
+                        <strong>💰 キャリア・年収への影響</strong><br>
+                        DX人材としての評価が高まり、以下の変化がありました：<br><br>
+
+                        ・役職：主任 → 係長（2年で昇進）<br>
+                        ・年収：480万円 → 580万円（+100万円）<br>
+                        ・資格手当：社労士取得で月3万円（年36万円）<br>
+                        ・副業：受託開発で月3-5万円<br><br>
+
+                        実質、年収は約150万円アップ。エンジニア転職より、リスクなく収入を増やせました。<br><br>
+
+                        <strong>🌟 これから「社内DX人材」を目指す方へ</strong><br>
+                        <strong>ステップ1：小さく始める</strong><br>
+                        いきなり大きなシステム開発は無理。まずは「Excelマクロで業務効率化」など、小さな成功体験を積む。<br><br>
+
+                        <strong>ステップ2：成果を可視化</strong><br>
+                        「工数50%削減」「ミス0件」など、数値で成果を示す。経営層は数字に反応します。<br><br>
+
+                        <strong>ステップ3：社内に発信</strong><br>
+                        作ったツールを社内共有。「こんなこともできるんだ」と認知が広がり、次の依頼が来ます。<br><br>
+
+                        <strong>ステップ4：外部発信</strong><br>
+                        ブログやSNSで発信すると、社外からの評価も高まります。転職の選択肢も広がります。<br><br>
+
+                        <strong>🔗 関連記事</strong><br>
+                        📝 <a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">note - DX推進の実践記録</a><br>
+                        🎨 <a href="https://mechatora.com/" target="_blank" style="color: var(--primary-color);">MechaTora - 作成したアプリ集</a>
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">DX推進</span>
+                        <span class="tag">社内エンジニア</span>
+                        <span class="tag">キャリアアップ</span>
+                        <span class="tag">業務効率化</span>
+                        <span class="tag">データ分析</span>
                     </div>
                     <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
                 </div>
