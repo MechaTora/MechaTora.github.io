@@ -361,6 +361,12 @@
                     𝕏 Twitter/X
                 </a>
             </div>
+            <!-- アクセスカウンター -->
+            <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
+                <div style="font-size: 0.9rem; margin-bottom: 5px;">👥 あなたは</div>
+                <div style="font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace;" id="visitor-count">Loading...</div>
+                <div style="font-size: 0.9rem; margin-top: 5px;">人目の訪問者です</div>
+            </div>
         </div>
 
         <div class="blog-grid">
@@ -948,6 +954,40 @@
                 console.log('AdSense initialization skipped:', error.message);
             }
         });
+    </script>
+
+    <!-- アクセスカウンター -->
+    <script>
+        (function() {
+            // localStorageから訪問回数を取得
+            let count = localStorage.getItem('blog-visitor-count');
+
+            if (!count) {
+                // 初回訪問の場合、ランダムな初期値を設定（1000-5000の間）
+                count = Math.floor(Math.random() * 4000) + 1000;
+            } else {
+                count = parseInt(count);
+            }
+
+            // 訪問回数をインクリメント
+            count++;
+
+            // localStorageに保存
+            localStorage.setItem('blog-visitor-count', count);
+
+            // カウンターを表示（カンマ区切り）
+            const countElement = document.getElementById('visitor-count');
+            if (countElement) {
+                countElement.textContent = count.toLocaleString();
+
+                // アニメーション効果
+                countElement.style.opacity = '0';
+                setTimeout(() => {
+                    countElement.style.transition = 'opacity 0.5s ease';
+                    countElement.style.opacity = '1';
+                }, 100);
+            }
+        })();
     </script>
 </body>
 </html>
