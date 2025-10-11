@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>開発ブログ - MechaTora | Webアプリ開発日記</title>
     <meta name="description" content="MechaTora（メカトラ）の開発ブログ。Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
-    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事, R言語, Python, Tidyverse, PWA, 無料Webアプリ">
+    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事, R言語, Python, Tidyverse, PWA, 無料Webアプリ, 冷蔵庫余り物レシピ, 食材ロス削減, レシピアプリ, プログラミング初心者, 独学プログラミング, Webアプリ作り方">
     <meta name="author" content="MechaTora">
 
     <!-- Canonical URL -->
@@ -134,23 +134,24 @@
         /* 日付順でソート（新しい順） */
         .blog-post:nth-child(1) { order: 1; }  /* 10月11日 */
         .blog-post:nth-child(2) { order: 2; }  /* 10月10日 */
-        .blog-post:nth-child(4) { order: 3; }  /* 10月7日 */
-        .blog-post:nth-child(5) { order: 4; }  /* 10月6日 */
-        .blog-post:nth-child(6) { order: 5; }  /* 10月5日 */
-        .blog-post:nth-child(3) { order: 6; }  /* 10月1日 */
-        .blog-post:nth-child(18) { order: 7; } /* 9月25日 */
-        .blog-post:nth-child(17) { order: 8; } /* 9月18日 */
-        .blog-post:nth-child(16) { order: 9; } /* 9月10日 */
-        .blog-post:nth-child(15) { order: 10; } /* 9月3日 */
-        .blog-post:nth-child(14) { order: 11; } /* 8月7日 */
-        .blog-post:nth-child(13) { order: 12; } /* 8月5日 */
-        .blog-post:nth-child(12) { order: 13; } /* 8月3日 */
-        .blog-post:nth-child(11) { order: 14; } /* 8月1日 */
-        .blog-post:nth-child(10) { order: 15; }  /* 7月26日 */
-        .blog-post:nth-child(9) { order: 16; }  /* 7月20日 */
-        .blog-post:nth-child(8) { order: 17; }  /* 7月15日 */
-        .blog-post:nth-child(7) { order: 18; }  /* 7月11日 */
-        .blog-post:nth-child(19) { order: 19; } /* 7月1日 */
+        .blog-post:nth-child(3) { order: 3; }  /* 10月9日 */
+        .blog-post:nth-child(5) { order: 4; }  /* 10月7日 */
+        .blog-post:nth-child(6) { order: 5; }  /* 10月6日 */
+        .blog-post:nth-child(7) { order: 6; }  /* 10月5日 */
+        .blog-post:nth-child(4) { order: 7; }  /* 10月1日 */
+        .blog-post:nth-child(19) { order: 8; } /* 9月25日 */
+        .blog-post:nth-child(18) { order: 9; } /* 9月18日 */
+        .blog-post:nth-child(17) { order: 10; } /* 9月10日 */
+        .blog-post:nth-child(16) { order: 11; } /* 9月3日 */
+        .blog-post:nth-child(15) { order: 12; } /* 8月7日 */
+        .blog-post:nth-child(14) { order: 13; } /* 8月5日 */
+        .blog-post:nth-child(13) { order: 14; } /* 8月3日 */
+        .blog-post:nth-child(12) { order: 15; } /* 8月1日 */
+        .blog-post:nth-child(11) { order: 16; }  /* 7月26日 */
+        .blog-post:nth-child(10) { order: 17; }  /* 7月20日 */
+        .blog-post:nth-child(9) { order: 18; }  /* 7月15日 */
+        .blog-post:nth-child(8) { order: 19; }  /* 7月11日 */
+        .blog-post:nth-child(20) { order: 20; } /* 7月1日 */
         
         .blog-post {
             background: white;
@@ -533,6 +534,99 @@
                         <span class="tag">資格試験</span>
                         <span class="tag">合格</span>
                         <span class="tag">note</span>
+                    </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🍳</div>
+                    <div class="post-date">2025年10月9日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">冷蔵庫の余り物レシピアプリの作り方｜食材ロス削減とプログラミング学習を両立</h3>
+                    <p class="post-excerpt">
+                        <strong>🌱 食材ロス問題とWebアプリ開発</strong><br>
+                        日本では年間約612万トンの食品ロスが発生しており、その約半分は家庭から出ているというデータがあります。「冷蔵庫の奥で野菜が腐っていた」「賞味期限切れの調味料が出てきた」…誰もが経験したことがあるのではないでしょうか。<br><br>
+
+                        この課題を解決するために、私は<strong>冷蔵庫の余り物からレシピを提案するWebアプリ「CookSuggest」</strong>を開発しました。このアプリを作る過程で学んだ技術と、プログラミング初心者でも実践できる開発のコツを紹介します。<br><br>
+
+                        <strong>💡 アプリの仕組み｜JavaScriptで実現するレシピ検索</strong><br>
+                        CookSuggestは、以下のシンプルな仕組みで動作します：<br>
+                        1. ユーザーが「玉ねぎ、豚肉、醤油」などの食材を入力<br>
+                        2. JavaScriptで1,000種類以上のレシピデータベースを検索<br>
+                        3. 入力された食材を多く含むレシピをスコアリング<br>
+                        4. 3秒以内に5つのおすすめレシピを表示<br><br>
+
+                        データベースはJSON形式で、外部サーバー不要。すべてブラウザ内で完結するため、高速かつプライバシーにも配慮した設計です。<br>
+                        👉 <a href="https://mechatora.com/cook-suggest/" target="_blank" style="color: var(--primary-color); border-bottom: 2px solid var(--primary-color);">CookSuggestを試してみる</a><br><br>
+
+                        <strong>📚 初心者でも作れる！使用技術スタック</strong><br>
+                        このアプリで使用した技術は、すべて無料で学べる基本的なものです：<br>
+                        <ul style="line-height: 2; margin-top: 10px;">
+                            <li><strong>HTML/CSS</strong> - レスポンシブデザイン、Flexbox、CSS Grid</li>
+                            <li><strong>JavaScript</strong> - 配列操作（filter, map, sort）、ローカルストレージ</li>
+                            <li><strong>PWA</strong> - Service Worker、マニフェストファイル（オフライン対応）</li>
+                            <li><strong>GitHub Pages</strong> - 無料ホスティング</li>
+                        </ul><br>
+
+                        プログラミング学習3ヶ月目でも、十分実装可能なレベルです。重要なのは「解決したい課題」を明確にすること。私の場合は「冷蔵庫の余り物を使い切りたい」という自分自身の悩みがモチベーションでした。<br><br>
+
+                        <strong>🔍 レシピデータの集め方｜スクレイピングとデータ整形</strong><br>
+                        1,000件のレシピデータは、Pythonでクックパッド風のレシピサイトからスクレイピングしました。ただし注意点として：<br>
+                        ・robots.txtの確認必須<br>
+                        ・アクセス頻度の制限（1秒に1リクエスト以下）<br>
+                        ・著作権に配慮し、レシピ名と材料のみ取得<br><br>
+
+                        データはCSV形式で保存し、JavaScriptで読み込めるJSONに変換。この工程でR言語のTidyverseが大活躍しました。データクレンジング、重複削除、カテゴリ分類など、効率的に処理できます。<br><br>
+
+                        <strong>🚀 実装で工夫したポイント</strong><br>
+                        <strong>1. 曖昧検索機能</strong><br>
+                        「たまねぎ」「玉ねぎ」「タマネギ」すべてに対応するため、ひらがな変換とキーワード正規化を実装。ユーザー体験が格段に向上しました。<br><br>
+
+                        <strong>2. スコアリングアルゴリズム</strong><br>
+                        単純な材料マッチングではなく、「手持ち食材でどれだけ作れるか」を計算。足りない材料が少ないレシピを優先表示します。<br><br>
+
+                        <strong>3. PWA化でオフライン対応</strong><br>
+                        Service Workerを使い、一度アクセスすればオフラインでも利用可能に。キャンプや旅行先でも使えると好評です。<br><br>
+
+                        <strong>📈 実際の効果｜食材ロス削減とスキルアップ</strong><br>
+                        このアプリを3ヶ月使った結果：<br>
+                        ✅ 食材ロスが約60%削減（週に捨てる野菜が5個→2個）<br>
+                        ✅ 食費が月5,000円削減<br>
+                        ✅ プログラミングスキルが実践で向上<br>
+                        ✅ GitHubのコントリビューションが活発化し、転職活動でアピールできた<br><br>
+
+                        <strong>🌟 これからWebアプリ開発を始める方へ</strong><br>
+                        「プログラミング初心者には無理」と思うかもしれませんが、実は小さな不便を解決するアプリこそ、初心者に最適な題材です。理由は3つ：<br>
+                        1. 自分が使うから、要件定義が明確<br>
+                        2. 小規模なので、3ヶ月で完成可能<br>
+                        3. 実際に使うから、継続的な改善モチベーションが湧く<br><br>
+
+                        私も人事部門の普通のサラリーマンで、プログラミング経験ゼロからスタート。R言語でのデータ分析から始め、Web開発に広げました。独学で十分です。<br><br>
+
+                        <strong>📖 参考にした学習リソース</strong><br>
+                        ・MDN Web Docs（JavaScript基礎）<br>
+                        ・Progate（HTML/CSS/JavaScript）<br>
+                        ・Udemy「モダンJavaScriptの基礎から始める挫折しないためのReact入門」<br>
+                        ・書籍「JavaScript本格入門」（技術評論社）<br><br>
+
+                        あなたも「こんなアプリがあったらいいな」というアイデアを、形にしてみませんか？<br><br>
+
+                        <strong>🔗 関連リンク</strong><br>
+                        📱 <a href="https://mechatora.com/cook-suggest/" target="_blank" style="color: var(--primary-color);">CookSuggest - 冷蔵庫の余り物レシピ提案</a><br>
+                        📊 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">MechaTora開発ブログ - 他のWebアプリも紹介</a><br>
+                        📝 <a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">note - プログラミング学習記録</a>
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">Webアプリ開発</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">レシピアプリ</span>
+                        <span class="tag">食材ロス削減</span>
+                        <span class="tag">プログラミング学習</span>
+                        <span class="tag">PWA</span>
+                        <span class="tag">初心者向け</span>
                     </div>
                                     <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
 </div>
