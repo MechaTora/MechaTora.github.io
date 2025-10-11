@@ -112,6 +112,7 @@
         .blog-post:nth-child(8) { order: 15; }  /* 7月20日 */
         .blog-post:nth-child(7) { order: 16; }  /* 7月15日 */
         .blog-post:nth-child(6) { order: 17; }  /* 7月11日 */
+        .blog-post:nth-child(18) { order: 18; } /* 7月1日 */
         
         .blog-post {
             background: white;
@@ -343,6 +344,25 @@
             <a href="#" class="category-button">Tips</a>
         </div>
         
+        <!-- プロフィールセクション（固定表示） -->
+        <div style="background: white; border-radius: 15px; padding: 20px; margin-bottom: 30px; box-shadow: var(--card-shadow); text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">👤</div>
+            <h3 style="color: var(--primary-color); margin-bottom: 15px;">運営者について</h3>
+            <p style="color: #666; line-height: 1.7; margin-bottom: 15px;">
+                30代・人事部門勤務のサラリーマンエンジニア。<br>
+                社労士資格取得をきっかけにプログラミングと出会い、R言語・Python・Web開発を独学中。<br>
+                「日常の小さな不便を解決する」をテーマに、Webアプリケーションを開発・公開しています。
+            </p>
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+                <a href="https://note.com/crt03" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; background: #41C9B4; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; transition: opacity 0.3s;">
+                    📝 note
+                </a>
+                <a href="https://x.com/xORMRha7Ck16551" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; background: #1DA1F2; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; transition: opacity 0.3s;">
+                    𝕏 Twitter/X
+                </a>
+            </div>
+        </div>
+
         <div class="blog-grid">
             <!-- Regular Posts -->
             <article class="blog-post">
@@ -830,8 +850,62 @@
                                     <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
 </div>
             </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🚀</div>
+                    <div class="post-date">2025年7月1日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">ブログ始めます！私のスキルセットと開発スタイル</h3>
+                    <p class="post-excerpt">
+                        このブログでは、Webアプリ開発の記録や技術的な気づき、日々の学びを綴っていきます。まずは自己紹介から。<br><br>
+
+                        <strong>📊 私のスキルセット</strong><br>
+                        30代・人事部門勤務のサラリーマンです。もともと「勉強嫌い」で資格とは無縁の生活を送っていましたが、コロナ禍をきっかけに一念発起。社会保険労務士の資格を取得したことで、人生が大きく変わりました。<br><br>
+
+                        <strong>💻 プログラミングとの出会い</strong><br>
+                        人事データの分析業務でR言語を使い始めたのがプログラミングとの出会い。Tidyverseの美しさに感動し、データ分析にのめり込みました。その後、Pythonも独学で習得。最近はWeb開発にも手を広げ、JavaScriptでWebアプリケーションを作っています。<br><br>
+
+                        <strong>🛠️ 技術スタック</strong><br>
+                        ・<strong>R言語</strong> - Tidyverse、ggplot2、tidymodels（機械学習）<br>
+                        ・<strong>Python</strong> - データ分析、スクレイピング、自動化<br>
+                        ・<strong>Web開発</strong> - HTML/CSS/JavaScript、PWA<br>
+                        ・<strong>その他</strong> - Git/GitHub、WSL、Claude Code（AI支援開発）<br><br>
+
+                        <strong>🎯 開発スタイル</strong><br>
+                        私の開発スタイルは「日常の小さな不便を解決する」こと。例えば：<br>
+                        ・冷蔵庫の余り物から料理を提案してくれるアプリ<br>
+                        ・リアルタイムで地震情報を通知するモニター<br>
+                        ・間隔反復学習理論に基づいた暗記アプリ<br><br>
+
+                        大規模なシステムではなく、「自分が使いたいもの」を作る。それが私のモチベーションです。<br><br>
+
+                        <strong>📝 詳しいプロフィール</strong><br>
+                        もっと詳しい経歴やスキル習得の過程は、noteに書いています：<br>
+                        <a href="https://note.com/crt03/n/n24df152e449d" target="_blank" style="color: var(--primary-color); text-decoration: none; border-bottom: 2px solid var(--primary-color);">【自己紹介】30代サラリーマンのスキルアップ記録</a><br><br>
+
+                        <strong>🌐 各種アカウント</strong><br>
+                        ・<strong>note</strong> - 技術記事や学習記録を投稿：<a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">@crt03</a><br>
+                        ・<strong>X (Twitter)</strong> - 開発の進捗や日常：<a href="https://x.com/xORMRha7Ck16551" target="_blank" style="color: var(--primary-color);">@xORMRha7Ck16551</a><br><br>
+
+                        <strong>🎓 これからの目標</strong><br>
+                        このブログでは、開発中のアプリ紹介だけでなく、技術的なTips、失敗談、学習記録なども書いていきます。非エンジニア出身だからこそ伝えられる「プログラミング学習のリアル」を発信したい。<br><br>
+
+                        同じように働きながら開発を楽しんでいる方、これからプログラミングを始めたい方に、少しでも参考になれば嬉しいです。よろしくお願いします！
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">自己紹介</span>
+                        <span class="tag">スキルセット</span>
+                        <span class="tag">プログラミング</span>
+                        <span class="tag">R言語</span>
+                        <span class="tag">Python</span>
+                    </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+            </article>
         </div>
-        
+
         <!-- AdSense Middle -->
         <div style="text-align: center; margin: 30px 0;">
             <ins class="adsbygoogle"
