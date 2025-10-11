@@ -5,13 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>開発ブログ - MechaTora | Webアプリ開発日記</title>
     <meta name="description" content="MechaTora（メカトラ）の開発ブログ。Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
-    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事">
-    
+    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事, R言語, Python, Tidyverse, PWA, 無料Webアプリ">
+    <meta name="author" content="MechaTora">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.com/blog.html">
+
     <!-- Open Graph -->
-    <meta property="og:title" content="開発ブログ - MechaTora">
-    <meta property="og:description" content="Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
+    <meta property="og:title" content="開発ブログ - MechaTora | Webアプリ開発日記">
+    <meta property="og:description" content="料理アプリ、地震モニター、R言語解説など、日常を便利にするWebアプリ開発の記録。30代サラリーマンエンジニアの技術ブログ。">
     <meta property="og:type" content="blog">
     <meta property="og:url" content="https://mechatora.com/blog.html">
+    <meta property="og:site_name" content="MechaTora">
+    <meta property="og:locale" content="ja_JP">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="開発ブログ - MechaTora">
+    <meta name="twitter:description" content="Webアプリ開発の舞台裏、技術解説、日々の学びを綴る開発ブログ">
+    <meta name="twitter:site" content="@xORMRha7Ck16551">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "MechaTora 開発ブログ",
+      "description": "日常を便利にする無料Webアプリケーション開発の記録",
+      "url": "https://mechatora.com/blog.html",
+      "author": {
+        "@type": "Person",
+        "name": "MechaTora",
+        "url": "https://mechatora.com/about.html",
+        "sameAs": [
+          "https://note.com/crt03",
+          "https://x.com/xORMRha7Ck16551"
+        ]
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "MechaTora",
+        "url": "https://mechatora.com/"
+      }
+    }
+    </script>
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
@@ -98,21 +135,22 @@
         .blog-post:nth-child(1) { order: 1; }  /* 10月11日 */
         .blog-post:nth-child(2) { order: 2; }  /* 10月10日 */
         .blog-post:nth-child(4) { order: 3; }  /* 10月7日 */
-        .blog-post:nth-child(5) { order: 4; }  /* 10月5日 */
-        .blog-post:nth-child(3) { order: 5; }  /* 10月1日 */
-        .blog-post:nth-child(17) { order: 6; } /* 9月25日 */
-        .blog-post:nth-child(16) { order: 7; } /* 9月18日 */
-        .blog-post:nth-child(15) { order: 8; } /* 9月10日 */
-        .blog-post:nth-child(14) { order: 9; } /* 9月3日 */
-        .blog-post:nth-child(13) { order: 10; } /* 8月7日 */
-        .blog-post:nth-child(12) { order: 11; } /* 8月5日 */
-        .blog-post:nth-child(11) { order: 12; } /* 8月3日 */
-        .blog-post:nth-child(10) { order: 13; } /* 8月1日 */
-        .blog-post:nth-child(9) { order: 14; }  /* 7月26日 */
-        .blog-post:nth-child(8) { order: 15; }  /* 7月20日 */
-        .blog-post:nth-child(7) { order: 16; }  /* 7月15日 */
-        .blog-post:nth-child(6) { order: 17; }  /* 7月11日 */
-        .blog-post:nth-child(18) { order: 18; } /* 7月1日 */
+        .blog-post:nth-child(5) { order: 4; }  /* 10月6日 */
+        .blog-post:nth-child(6) { order: 5; }  /* 10月5日 */
+        .blog-post:nth-child(3) { order: 6; }  /* 10月1日 */
+        .blog-post:nth-child(18) { order: 7; } /* 9月25日 */
+        .blog-post:nth-child(17) { order: 8; } /* 9月18日 */
+        .blog-post:nth-child(16) { order: 9; } /* 9月10日 */
+        .blog-post:nth-child(15) { order: 10; } /* 9月3日 */
+        .blog-post:nth-child(14) { order: 11; } /* 8月7日 */
+        .blog-post:nth-child(13) { order: 12; } /* 8月5日 */
+        .blog-post:nth-child(12) { order: 13; } /* 8月3日 */
+        .blog-post:nth-child(11) { order: 14; } /* 8月1日 */
+        .blog-post:nth-child(10) { order: 15; }  /* 7月26日 */
+        .blog-post:nth-child(9) { order: 16; }  /* 7月20日 */
+        .blog-post:nth-child(8) { order: 17; }  /* 7月15日 */
+        .blog-post:nth-child(7) { order: 18; }  /* 7月11日 */
+        .blog-post:nth-child(19) { order: 19; } /* 7月1日 */
         
         .blog-post {
             background: white;
@@ -523,6 +561,75 @@
                     </div>
                                     <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
 </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🎨</div>
+                    <div class="post-date">2025年10月6日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">MechaTora全コンテンツ紹介｜日常を便利にする無料Webアプリ集</h3>
+                    <p class="post-excerpt">
+                        <strong>🌟 MechaTora（メカトラ）とは？</strong><br>
+                        「日常の小さな不便を解決する」をコンセプトに、実用的なWebアプリケーションを無料で提供しているサイトです。2022年4月の開設以来、料理・防災・学習・癒しなど、多様なジャンルのアプリを開発・公開してきました。<br><br>
+
+                        このページでは、MechaTora で公開中の全コンテンツを一挙紹介します！<br><br>
+
+                        <strong>🍳 料理提案アプリ（CookSuggest）</strong><br>
+                        冷蔵庫の余り物から最適なレシピを提案してくれるWebアプリ。1,000種類以上のレシピデータベースを搭載し、材料名を入力するだけで3秒以内に5つのレシピを提案します。PWA対応でオフラインでも動作。「玉ねぎ、豚肉」などの簡単な入力でOK。食材を無駄にしない、エコで経済的な料理支援ツールです。<br>
+                        👉 <a href="https://mechatora.com/cook-suggest/" style="color: var(--primary-color);">CookSuggestを使う</a><br><br>
+
+                        <strong>🌏 地震モニター（Earthquake Monitor）</strong><br>
+                        気象庁APIと連携し、リアルタイムで地震情報を表示・通知するWebアプリ。地震発生から平均15秒以内で情報表示を実現。震度・マグニチュード・震源地を地図上に可視化し、プッシュ通知機能で素早く情報をキャッチ。防災チェックリスト機能も搭載しており、日頃の備えにも役立ちます。<br>
+                        👉 <a href="https://mechatora.com/earthquake-monitor/" style="color: var(--primary-color);">地震モニターを使う</a><br><br>
+
+                        <strong>📅 資格試験カレンダー</strong><br>
+                        主要な国家資格・民間資格の試験日程を一覧で確認できるカレンダー。社労士、宅建、FP、情報処理技術者試験など、人気資格の申込期間・試験日・合格発表日を網羅。Googleカレンダー連携機能付きで、試験日をリマインダー設定できます。資格取得を目指す方の必須ツール。<br>
+                        👉 <a href="https://mechatora.com/qualification-calendar.html" style="color: var(--primary-color);">資格カレンダーを見る</a><br><br>
+
+                        <strong>🔥 暖炉シミュレータ（Virtual Fireplace）</strong><br>
+                        リアルな暖炉の炎と音を再現したWebアプリ。パチパチという薪の音、ゆらめく炎のアニメーションで、自宅にいながら暖炉の雰囲気を楽しめます。作業用BGM、瞑想、リラックスタイムに最適。音量調整・炎の大きさ調整機能付き。寒い冬の夜、暖炉の前でくつろぐ贅沢な時間を。<br>
+                        👉 <a href="https://mechatora.com/fire/" style="color: var(--primary-color);">暖炉を楽しむ</a><br><br>
+
+                        <strong>📱 X投稿バズ予測（X Buzz Simulator）</strong><br>
+                        SNS投稿がどれだけバズるかを予測するエンタメアプリ。投稿文を入力すると、AI風アルゴリズムでバズ度（いいね数、リツイート数、インプレッション数）を予測表示。Twitter/X風のUIで実際にバズった雰囲気を体験できます。投稿前のシミュレーションや、友人との遊びに。<br>
+                        👉 <a href="https://mechatora.com/x-buzz-simulator/" style="color: var(--primary-color);">バズ予測を試す</a><br><br>
+
+                        <strong>🐱 癒し系コンテンツ</strong><br>
+                        ・<strong>猫カフェヒーリング</strong> - 可愛い猫の写真と癒しの音楽<br>
+                        ・<strong>オーロラ観賞</strong> - 幻想的なオーロラアニメーション<br>
+                        ・<strong>クラゲ水族館</strong> - ゆらゆら漂うクラゲの癒し空間<br>
+                        ・<strong>日本庭園散策</strong> - 和の風情を感じるバーチャル庭園<br>
+                        ストレスフルな日常に、ひと時の癒しを。<br><br>
+
+                        <strong>📚 学習・教育コンテンツ</strong><br>
+                        ・<strong>R言語・Tidyverse完全ガイド</strong> - 全24章、データサイエンス入門から機械学習まで網羅<br>
+                        ・<strong>社会保険ニュース</strong> - 厚労省・年金機構の最新情報を毎日自動更新<br>
+                        ・<strong>科学的暗記アプリ</strong> - 間隔反復学習理論に基づいた効率的暗記ツール<br><br>
+
+                        <strong>🎯 今後の開発予定</strong><br>
+                        ・<strong>日本酒サジェストアプリ</strong> - 好みの銘柄に近い日本酒を提案（開発中）<br>
+                        ・<strong>通勤経路最適化ツール</strong> - 混雑を避けた最適ルート提案<br>
+                        ・<strong>ビールクイズ</strong> - ビールの知識を楽しく学べるクイズアプリ<br><br>
+
+                        <strong>💡 MechaToraの特徴</strong><br>
+                        ✅ 完全無料 - すべてのアプリを無料で利用可能<br>
+                        ✅ 会員登録不要 - 面倒な登録なしですぐ使える<br>
+                        ✅ PWA対応 - オフラインでも動作、スマホにインストール可能<br>
+                        ✅ プライバシー重視 - 個人情報を収集しない設計<br>
+                        ✅ 継続更新 - 定期的に新機能追加・改善<br><br>
+
+                        すべてのアプリは、実際に自分が「あったらいいな」と思ったものを形にしています。ぜひ色々試してみてください！
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">コンテンツ紹介</span>
+                        <span class="tag">Webアプリ</span>
+                        <span class="tag">無料ツール</span>
+                        <span class="tag">PWA</span>
+                    </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
             </article>
 
             <article class="blog-post">
