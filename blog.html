@@ -95,21 +95,22 @@
         }
 
         /* 日付順でソート（新しい順） */
-        .blog-post:nth-child(2) { order: 1; }  /* 10月7日 */
-        .blog-post:nth-child(3) { order: 2; }  /* 10月5日 */
-        .blog-post:nth-child(1) { order: 3; }  /* 10月1日 */
-        .blog-post:nth-child(15) { order: 4; } /* 9月25日 */
-        .blog-post:nth-child(14) { order: 5; } /* 9月18日 */
-        .blog-post:nth-child(13) { order: 6; } /* 9月10日 */
-        .blog-post:nth-child(12) { order: 7; } /* 9月3日 */
-        .blog-post:nth-child(11) { order: 8; } /* 8月7日 */
-        .blog-post:nth-child(10) { order: 9; }  /* 8月5日 */
-        .blog-post:nth-child(9) { order: 10; }  /* 8月3日 */
-        .blog-post:nth-child(8) { order: 11; } /* 8月1日 */
-        .blog-post:nth-child(7) { order: 12; } /* 7月26日 */
-        .blog-post:nth-child(6) { order: 13; } /* 7月20日 */
-        .blog-post:nth-child(5) { order: 14; } /* 7月15日 */
-        .blog-post:nth-child(4) { order: 15; } /* 7月11日 */
+        .blog-post:nth-child(1) { order: 1; }  /* 10月10日 */
+        .blog-post:nth-child(3) { order: 2; }  /* 10月7日 */
+        .blog-post:nth-child(4) { order: 3; }  /* 10月5日 */
+        .blog-post:nth-child(2) { order: 4; }  /* 10月1日 */
+        .blog-post:nth-child(16) { order: 5; } /* 9月25日 */
+        .blog-post:nth-child(15) { order: 6; } /* 9月18日 */
+        .blog-post:nth-child(14) { order: 7; } /* 9月10日 */
+        .blog-post:nth-child(13) { order: 8; } /* 9月3日 */
+        .blog-post:nth-child(12) { order: 9; } /* 8月7日 */
+        .blog-post:nth-child(11) { order: 10; } /* 8月5日 */
+        .blog-post:nth-child(10) { order: 11; } /* 8月3日 */
+        .blog-post:nth-child(9) { order: 12; }  /* 8月1日 */
+        .blog-post:nth-child(8) { order: 13; }  /* 7月26日 */
+        .blog-post:nth-child(7) { order: 14; }  /* 7月20日 */
+        .blog-post:nth-child(6) { order: 15; }  /* 7月15日 */
+        .blog-post:nth-child(5) { order: 16; }  /* 7月11日 */
         
         .blog-post {
             background: white;
@@ -285,6 +286,56 @@
         
         <div class="blog-grid">
             <!-- Regular Posts -->
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-icon">🍶</div>
+                    <div class="post-date">2025年10月10日</div>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">新企画始動！日本酒サジェストアプリ「Sake Suggest」開発スタート</h3>
+                    <p class="post-excerpt">
+                        突然ですが、新しいプロジェクトを始めます。その名も「日本酒サジェストアプリ」！<br><br>
+
+                        <strong>📱 企画のきっかけ</strong><br>
+                        日本酒って、全国に1万種類以上あるんですよ。地元の酒屋に行くと、棚いっぱいに銘柄が並んでいて、正直どれを選べばいいか分からない。好きな銘柄はあるけど、「これに近い味の別の日本酒ないかな？」って思っても、探すのが大変。<br><br>
+
+                        結局いつも同じ銘柄ばかり買ってしまう…。でも、せっかくなら新しい出会いも楽しみたい。そんな自分のために、「好きな銘柄に近い日本酒をサジェストしてくれるアプリ」を作ろうと思い立ちました。<br><br>
+
+                        <strong>🔍 既存サービスを調査してみた</strong><br>
+                        まずは類似サービスがないか調べてみたところ、意外とたくさん見つかりました：<br><br>
+
+                        ① <strong>Sakenomy（サケノミー）</strong> - 中田英寿氏監修。7,000種類以上の日本酒データベースで、ラベル認識や好み分析機能あり<br>
+                        ② <strong>Sakenowa（さけのわ）</strong> - 飲んだ日本酒を記録＆レビュー。独自の味わい識別システムでレコメンド<br>
+                        ③<strong>YUMMY SAKE</strong> - AIとブラインドテイスティングで好みを12タイプに分類<br>
+                        ④ <strong>日本酒の学校</strong> - AIが類似銘柄をサジェスト。味のチャート調整も可能<br>
+                        ⑤ <strong>SAKE Street 酒ナビ</strong> - 東大農学部と共同研究した機械学習モデルで好み診断<br><br>
+
+                        …めっちゃある（笑）。しかも、どれもAI・機械学習を使った本格派。正直、「もう作らなくていいんじゃ…？」と一瞬思いました。<br><br>
+
+                        <strong>💡 それでも作る理由</strong><br>
+                        でも、既存アプリを使ってみて気づいたことがあります。多くは「アプリをダウンロード→会員登録→診断→レコメンド」という流れ。それはそれで良いんですが、「今すぐサクッと調べたい」時にはちょっと重い。<br><br>
+
+                        私が作りたいのは、もっとシンプルで軽量なWebアプリ。ブラウザで開いて、好きな銘柄を1つ入れるだけで、似た味わいの日本酒を5つ提案してくれる。アプリDL不要、会員登録不要、PWA対応でオフラインでも使える。<br><br>
+
+                        <strong>🛠️ 技術的なアプローチ</strong><br>
+                        データソースは、SAKETIMEやSakenomyの公開データ、各蔵元の公式情報を活用予定。味わいの類似度計算には、ベクトル空間モデルを使って「甘辛度」「香り」「コク」などのパラメータで距離を測定します。<br><br>
+
+                        機械学習は使わず、あくまでシンプルなロジックで。データベースも軽量化して、1,000銘柄程度に絞り込む予定です。<br><br>
+
+                        <strong>📅 今後の展開</strong><br>
+                        まずは青森の地酒データベースから構築スタート。地元の酒造データを手作業で整備しながら、サジェストアルゴリズムを検証していきます。完成したら、このブログで公開しますのでお楽しみに！<br><br>
+
+                        日本酒好きの皆さん、一緒に新しい銘柄との出会いを楽しみましょう🍶
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag">日本酒</span>
+                        <span class="tag">新企画</span>
+                        <span class="tag">アプリ開発</span>
+                        <span class="tag">レコメンド</span>
+                    </div>
+                </div>
+            </article>
+
             <article class="blog-post">
                 <div class="post-header">
                     <div class="post-icon">🎉</div>
