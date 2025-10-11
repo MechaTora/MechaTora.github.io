@@ -149,17 +149,41 @@
         .post-content {
             padding: 25px;
         }
-        
+
         .post-title {
             color: var(--primary-color);
             margin-bottom: 15px;
             font-size: 1.4rem;
         }
-        
+
         .post-excerpt {
             color: #666;
             margin-bottom: 20px;
             line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .post-excerpt.expanded {
+            display: block;
+            -webkit-line-clamp: unset;
+        }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            cursor: pointer;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .read-more-btn:hover {
+            opacity: 0.7;
         }
         
         .post-tags {
@@ -241,18 +265,52 @@
             .blog-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .featured-post {
                 grid-template-columns: 1fr;
             }
-            
+
             .header h1 {
                 font-size: 2.2rem;
             }
-            
+
             .categories {
                 flex-direction: column;
                 align-items: center;
+            }
+
+            /* スマホ用：コンパクト表示 */
+            .post-header {
+                padding: 15px;
+            }
+
+            .post-icon {
+                font-size: 2rem;
+                margin-bottom: 5px;
+            }
+
+            .post-content {
+                padding: 15px;
+            }
+
+            .post-title {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+
+            .post-excerpt {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                margin-bottom: 10px;
+            }
+
+            .post-tags {
+                margin-bottom: 10px;
+            }
+
+            .tag {
+                font-size: 0.75rem;
+                padding: 3px 10px;
             }
         }
     </style>
@@ -333,6 +391,7 @@
                         <span class="tag">台風</span>
                         <span class="tag">開発計画</span>
                     </div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
                 </div>
             </article>
 
@@ -383,7 +442,8 @@
                         <span class="tag">アプリ開発</span>
                         <span class="tag">レコメンド</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -410,7 +470,8 @@
                         <span class="tag">合格</span>
                         <span class="tag">note</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -434,7 +495,8 @@
                         <span class="tag">働き方</span>
                         <span class="tag">DX</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -468,7 +530,8 @@
                         <span class="tag">データサイエンス</span>
                         <span class="tag">機械学習</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -537,7 +600,8 @@
                         <span class="tag">開発環境</span>
                         <span class="tag">料金</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
             
             <article class="blog-post">
@@ -560,7 +624,8 @@
                         <span class="tag">認証</span>
                         <span class="tag">データベース</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -582,7 +647,8 @@
                         <span class="tag">PWA</span>
                         <span class="tag">データ構造化</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -605,7 +671,8 @@
                         <span class="tag">気象庁API</span>
                         <span class="tag">防災</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -628,7 +695,8 @@
                         <span class="tag">学習アルゴリズム</span>
                         <span class="tag">記憶科学</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -651,7 +719,8 @@
                         <span class="tag">自動化</span>
                         <span class="tag">Render.com</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -674,7 +743,8 @@
                         <span class="tag">DNS設定</span>
                         <span class="tag">HTTPS</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -702,7 +772,8 @@
                         <span class="tag">コンテンツ改善</span>
                         <span class="tag">SEO対策</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -725,7 +796,8 @@
                         <span class="tag">非エンジニア</span>
                         <span class="tag">時間管理</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
 
             <article class="blog-post">
@@ -755,7 +827,8 @@
                         <span class="tag">学習サイト</span>
                         <span class="tag">ggplot2</span>
                     </div>
-                </div>
+                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
+</div>
             </article>
         </div>
         
