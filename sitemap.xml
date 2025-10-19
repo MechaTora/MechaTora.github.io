@@ -139,4 +139,184 @@
         <priority>0.4</priority>
         <lastmod>2024-09-20T12:00:00+09:00</lastmod>
     </url>
+
+    <!-- R言語・Tidyverseガイド（メインページ） -->
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.95</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <!-- Tidyverse基礎編（第1-9章） -->
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter1-tidyverse-overview.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter2-dplyr-data-manipulation.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter3-ggplot2-visualization.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter4-tidyr-data-reshaping.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter5-stringr-text-processing.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter6-forcats-purrr-advanced.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter7-lubridate-datetime.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter8-readr-data-import.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter9-tibble-modern-dataframe.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <!-- 統計・可視化応用編（第10-15章） -->
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter10-statistics-modeling.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter11-machine-learning.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter12-time-series.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter13-advanced-ggplot2.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter14-interactive-visualization.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter15-advanced-data-viz.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <!-- Tidymodels機械学習編（第16-20章） -->
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter16-resampling-rsample.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter17-hyperparameter-tuning-simple.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter18-model-evaluation-yardstick.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter19-prediction-interpretation.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter20-ensemble-learning-enhanced.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <!-- 高度な応用編（第21-24章） -->
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter21-time-series-modeltime.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter22-text-analysis-tidytext.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter23-deep-learning-torch.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://mechatora.com/tidy-data-science/chapter24-practical-projects-enhanced.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+    </url>
 </urlset>
