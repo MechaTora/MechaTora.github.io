@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X投稿文ジェネレーター | MechaTora</title>
+    <meta name="description" content="ワードを2～3個入れるだけで、面白いX(Twitter)投稿文を自動生成。最後に必ず関連ワードでボケます。">
+    <link rel="canonical" href="https://mechatora.com/x-post-generator/">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .word-note {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            display: none;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .post-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .post-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .char-count {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .copy-btn {
+            padding: 8px 20px;
+            background: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #1a8cd8;
+        }
+
+        .copy-btn.copied {
+            background: #17bf63;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            opacity: 0.8;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid white;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .input-section {
+                padding: 20px;
+            }
+
+            .post-card {
+                padding: 20px;
+            }
+        }
+
+        .joke-highlight {
+            background: linear-gradient(transparent 60%, #ffeb3b 60%);
+            font-weight: bold;
+            padding: 0 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ X投稿文ジェネレーター</h1>
+            <p class="subtitle">ワードを入れるだけで、面白い投稿文を自動生成！</p>
+        </header>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="word1">ワード1 *</label>
+                <input type="text" id="word1" placeholder="例: 日本酒" required>
+            </div>
+
+            <div class="input-group">
+                <label for="word2">ワード2 *</label>
+                <input type="text" id="word2" placeholder="例: 獺祭" required>
+            </div>
+
+            <div class="input-group">
+                <label for="word3">ワード3（任意）</label>
+                <input type="text" id="word3" placeholder="例: 久保田">
+                <p class="word-note">※ 2個でも3個でもOK！</p>
+            </div>
+
+            <button class="generate-btn" onclick="generatePosts()">
+                🚀 投稿文を生成する
+            </button>
+        </div>
+
+        <div class="results" id="results"></div>
+
+        <footer>
+            <p>Made by <a href="https://mechatora.com">MechaTora</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // テンプレート
+        const TEMPLATES = [
+            "今日は{word1}について考えてた。{word2}とか{word3}とか色々あるけど、結局{joke}なんだよな",
+            "{word1}を極めたいと思ってる。{word2}も大事だし、{word3}も押さえておきたい。そして最終的には{joke}",
+            "最近{word1}にハマってる。{word2}の良さも分かってきたし、{word3}も面白い。でも一番好きなのは{joke}",
+            "{word1}と{word2}の関係性に気づいてしまった。{word3}も絡んでくるとさらに深い。つまり{joke}ってこと",
+            "{word1}を研究してたら、{word2}と{word3}の共通点を発見した。答えは{joke}だった",
+            "{word1}派と{word2}派で分かれがちだけど、{word3}という選択肢もある。僕は{joke}派",
+            "{word1}より{word2}の方が好き。でも{word3}もいい。結論：{joke}が最強",
+            "{word1}で悩んでる。{word2}も試したし{word3}も試した。もう{joke}しかない",
+            "{word1}が上手くいかない。{word2}を変えてみたり{word3}を工夫してみたり。そうだ、{joke}しよう",
+            "今日から{word1}を始める。{word2}もやる。{word3}も忘れない。そして{joke}を極める",
+            "{word1}マスターになる。{word2}も{word3}も全部やる。最終目標は{joke}",
+            "個人的{word1}ランキング\n1位: {word2}\n2位: {word3}\n3位: {joke}",
+            "{word1}ベスト3\n🥇{word2}\n🥈{word3}\n🥉{joke}",
+            "{word1}と{word2}、どっちが大事？って聞かれたら{word3}って答える。でも本当は{joke}",
+            "今{word1}が熱い。{word2}も注目されてるし、{word3}も来てる。次は{joke}が来る（確信）",
+            "{word1}の本質は{word2}にあり、{word3}がそれを証明している。そして{joke}がすべてを物語る",
+            "朝：{word1}\n昼：{word2}\n夜：{word3}\n深夜：{joke}",
+            "{word1}について学んだ3つのこと\n①{word2}\n②{word3}\n③{joke}",
+            "{word1}が好きすぎる。{word2}も{word3}も全部好き。特に{joke}",
+            "{word1}って{word2}だよな。{word3}もそう。全部{joke}に繋がる",
+        ];
+
+        const TEMPLATES_2WORDS = [
+            "{word1}と{word2}、どっちも好きだけど{joke}",
+            "{word1}より{word2}派。でも{joke}が最強",
+            "今日の{word1}は{word2}でした。明日は{joke}",
+            "{word1}について考えてた。{word2}もいいけど、{joke}なんだよな",
+            "{word1}を極めたい。{word2}も。そして{joke}",
+            "{word1}×{word2}の組み合わせ最高。でも{joke}には敵わない",
+            "{word1}で悩んでる。{word2}も試した。もう{joke}しかない",
+            "{word1}と{word2}、両方大事。でも{joke}が一番大事",
+        ];
+
+        function generateJoke(words) {
+            const patterns = [
+                `${words[0]}×${words[1]}`,
+                `全部${words[0]}`,
+                `${words[0]}しか勝たん`,
+                `結局${words[0]}`,
+                `${words[0]}になりたい`,
+                `${words[0]}を信じろ`,
+                `${words[0]}は正義`,
+                `${words[0]}こそ真理`,
+                `${words[0]}で${words[1]}する`,
+                `${words[0]}風${words[1]}`,
+                `${words[1]}系${words[0]}`,
+                `ゴールデン${words[0]}`,
+                `スーパー${words[0]}`,
+                `ウルトラ${words[0]}`,
+                `${words[0]}マックス`,
+                `${words[0]}アルティメット`,
+                `エクストリーム${words[0]}`,
+                `${words[0]}(物理)`,
+                `${words[0]}(大事)`,
+                `${words[0]}(迫真)`,
+                `${words[0]}(確信)`,
+                `${words[0]}(哲学)`,
+                `#${words[0]}`,
+                `${words[0]}、以上`,
+                `${words[0]}でFA`,
+                `答え：${words[0]}`,
+            ];
+
+            if (words.length >= 3) {
+                patterns.push(
+                    `${words[0]}と${words[1]}と${words[2]}のトリプルコンボ`,
+                    `${words[0]}${words[1]}${words[2]}`,
+                    `${words[2]}入り${words[0]}`
+                );
+            }
+
+            return patterns[Math.floor(Math.random() * patterns.length)];
+        }
+
+        function generatePost(words) {
+            const joke = generateJoke(words);
+            let template;
+
+            if (words.length === 2) {
+                template = TEMPLATES_2WORDS[Math.floor(Math.random() * TEMPLATES_2WORDS.length)];
+                return template
+                    .replace(/{word1}/g, words[0])
+                    .replace(/{word2}/g, words[1])
+                    .replace(/{joke}/g, joke);
+            } else {
+                template = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
+                return template
+                    .replace(/{word1}/g, words[0])
+                    .replace(/{word2}/g, words[1])
+                    .replace(/{word3}/g, words[2])
+                    .replace(/{joke}/g, joke);
+            }
+        }
+
+        function generatePosts() {
+            const word1 = document.getElementById('word1').value.trim();
+            const word2 = document.getElementById('word2').value.trim();
+            const word3 = document.getElementById('word3').value.trim();
+
+            if (!word1 || !word2) {
+                alert('ワード1とワード2は必須です！');
+                return;
+            }
+
+            const words = word3 ? [word1, word2, word3] : [word1, word2];
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            resultsDiv.style.display = 'block';
+
+            // 5パターン生成
+            for (let i = 0; i < 5; i++) {
+                const post = generatePost(words);
+                const card = createPostCard(post, i + 1);
+                resultsDiv.appendChild(card);
+            }
+
+            // 結果までスクロール
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function createPostCard(text, number) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+
+            card.innerHTML = `
+                <div class="post-number">パターン${number}</div>
+                <div class="post-text">${text}</div>
+                <div class="post-meta">
+                    <span class="char-count">文字数: ${text.length}</span>
+                    <button class="copy-btn" onclick="copyText(this, '${text.replace(/'/g, "\\'")}')">
+                        📋 コピー
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function copyText(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ コピーしました！';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Enterキーで生成
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = [document.getElementById('word1'), document.getElementById('word2'), document.getElementById('word3')];
+            inputs.forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        generatePosts();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
