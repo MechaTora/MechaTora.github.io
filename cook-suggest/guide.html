@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookSuggest使い方ガイド - 料理提案アプリの効果的な活用法 | MechaTora</title>
+    <meta name="description" content="料理提案アプリCookSuggestの詳しい使い方、効果的な活用法、レシピ検索のコツを解説。冷蔵庫の食材を無駄なく使い切るための実践的なガイドです。">
+    <meta name="keywords" content="料理アプリ,レシピ検索,食材活用,献立提案,使い方ガイド,食品ロス削減">
+    <link rel="canonical" href="https://mechatora.com/cook-suggest/guide.html">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .content h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .content h3 {
+            color: #764ba2;
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .content p {
+            margin-bottom: 1.2rem;
+            line-height: 1.9;
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .content li {
+            margin-bottom: 0.8rem;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .tip-box h4 {
+            color: #1976d2;
+            margin-bottom: 0.8rem;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .example-box {
+            background: #f3e5f5;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 2px solid #ce93d8;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 1rem 0.5rem 1rem 0;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .toc h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 ホーム</a> >
+            <a href="index.html">料理提案アプリ</a> >
+            使い方ガイド
+        </div>
+
+        <div class="header">
+            <h1>🍳 CookSuggest 使い方ガイド</h1>
+            <p>料理提案アプリを最大限に活用するための完全ガイド</p>
+        </div>
+
+        <div class="content">
+            <div class="toc">
+                <h3>📚 目次</h3>
+                <ul>
+                    <li><a href="#overview">1. CookSuggestとは</a></li>
+                    <li><a href="#basic-usage">2. 基本的な使い方</a></li>
+                    <li><a href="#tips">3. 効果的な活用法</a></li>
+                    <li><a href="#examples">4. 実践例</a></li>
+                    <li><a href="#faq">5. よくある質問</a></li>
+                </ul>
+            </div>
+
+            <h2 id="overview">1. CookSuggestとは</h2>
+
+            <p>CookSuggestは、冷蔵庫にある食材を入力するだけで、その食材を使った料理レシピを提案してくれるWebアプリケーションです。「今日の夕食、何を作ろう？」と悩んだ時や、冷蔵庫の余り食材を使い切りたい時に便利なツールです。</p>
+
+            <h3>主な特徴</h3>
+            <ul>
+                <li><strong>食材から逆引き検索：</strong>手持ちの食材を入力すると、その食材を使ったレシピを自動で検索します</li>
+                <li><strong>調理時間で絞り込み：</strong>「15分以内」「30分以内」など、時間制約に合わせてレシピを絞り込めます</li>
+                <li><strong>難易度フィルター：</strong>初心者向けから上級者向けまで、自分のレベルに合わせた料理を選べます</li>
+                <li><strong>アレルギー対応：</strong>特定の食材を除外して検索することで、アレルギーにも配慮できます</li>
+                <li><strong>無料で利用可能：</strong>会員登録不要、完全無料でお使いいただけます</li>
+            </ul>
+
+            <div class="tip-box">
+                <h4>💡 こんな時に便利！</h4>
+                <ul>
+                    <li>冷蔵庫の余り食材を使い切りたい</li>
+                    <li>献立のマンネリ化を解消したい</li>
+                    <li>食費を節約したい</li>
+                    <li>食品ロスを減らしたい</li>
+                    <li>料理のレパートリーを増やしたい</li>
+                </ul>
+            </div>
+
+            <h2 id="basic-usage">2. 基本的な使い方</h2>
+
+            <h3>ステップ1：食材を入力する</h3>
+            <p>まず、冷蔵庫にある食材を入力します。複数の食材を入力する場合は、カンマ（,）またはスペースで区切ってください。</p>
+
+            <div class="example-box">
+                <strong>入力例：</strong>
+                <ul>
+                    <li>鶏むね肉, 玉ねぎ, トマト</li>
+                    <li>豚肉 キャベツ にんじん</li>
+                    <li>サーモン じゃがいも ブロッコリー</li>
+                </ul>
+            </div>
+
+            <h3>ステップ2：条件を設定する（オプション）</h3>
+            <p>必要に応じて、以下の条件を設定できます：</p>
+
+            <ul>
+                <li><strong>調理時間：</strong>「15分以内」「30分以内」「60分以内」「制限なし」から選択</li>
+                <li><strong>難易度：</strong>「初心者向け」「中級者向け」「上級者向け」「すべて」から選択</li>
+                <li><strong>除外食材：</strong>アレルギーや苦手な食材を指定して除外できます</li>
+            </ul>
+
+            <h3>ステップ3：レシピを検索する</h3>
+            <p>「レシピを検索」ボタンをクリックすると、条件に合ったレシピが表示されます。通常5〜10件のレシピが提案されます。</p>
+
+            <h3>ステップ4：レシピを確認する</h3>
+            <p>表示されたレシピには、以下の情報が含まれます：</p>
+            <ul>
+                <li>料理名</li>
+                <li>必要な材料</li>
+                <li>調理時間</li>
+                <li>難易度</li>
+                <li>作り方の手順</li>
+            </ul>
+
+            <h2 id="tips">3. 効果的な活用法</h2>
+
+            <h3>コツ1：メイン食材を先に入力</h3>
+            <p>肉、魚、野菜などのメイン食材を最初に入力すると、より的確なレシピ提案が得られます。調味料（醤油、塩など）は入力する必要はありません。</p>
+
+            <h3>コツ2：冷蔵庫の在庫を定期的にチェック</h3>
+            <p>週に1回程度、冷蔵庫の在庫をチェックして、賞味期限が近い食材を優先的に入力すると、食品ロスを減らせます。</p>
+
+            <h3>コツ3：調理時間を現実的に設定</h3>
+            <p>忙しい平日は「15分以内」、休日の夕食は「60分以内」など、その日のスケジュールに合わせて調理時間を設定しましょう。</p>
+
+            <h3>コツ4：まとめ買いした食材をメモ</h3>
+            <p>週末にまとめ買いした食材をスマホのメモアプリに記録しておくと、外出先でも手持ちの食材を確認できます。</p>
+
+            <div class="tip-box">
+                <h4>💡 上級者向けテクニック</h4>
+                <p><strong>テーマ別検索：</strong>「和食」「イタリアン」「中華」など、料理のジャンルで検索したい場合は、その料理によく使われる食材を組み合わせて入力してみましょう。</p>
+                <p>例：「豆腐、ネギ、味噌」→ 和食系のレシピが多く表示されます</p>
+            </div>
+
+            <h2 id="examples">4. 実践例</h2>
+
+            <h3>ケース1：平日の夕食（時短料理）</h3>
+            <p><strong>状況：</strong>仕事帰りで疲れている。30分以内で作れる料理が知りたい。</p>
+            <p><strong>入力内容：</strong></p>
+            <ul>
+                <li>食材：鶏むね肉、キャベツ、玉ねぎ</li>
+                <li>調理時間：30分以内</li>
+                <li>難易度：初心者向け</li>
+            </ul>
+            <p><strong>期待される結果：</strong>鶏むね肉とキャベツの炒め物、野菜スープなど、短時間で作れる簡単な料理が提案されます。</p>
+
+            <h3>ケース2：週末のブランチ</h3>
+            <p><strong>状況：</strong>休日の朝、時間があるのでちょっと手の込んだ料理に挑戦したい。</p>
+            <p><strong>入力内容：</strong></p>
+            <ul>
+                <li>食材：卵、ベーコン、じゃがいも、チーズ</li>
+                <li>調理時間：60分以内</li>
+                <li>難易度：中級者向け</li>
+            </ul>
+            <p><strong>期待される結果：</strong>スパニッシュオムレツ、ポテトグラタンなど、少し手間をかけた料理が提案されます。</p>
+
+            <h3>ケース3：食材使い切りチャレンジ</h3>
+            <p><strong>状況：</strong>冷蔵庫に中途半端に余っている野菜を使い切りたい。</p>
+            <p><strong>入力内容：</strong></p>
+            <ul>
+                <li>食材：にんじん、ピーマン、もやし、豚肉</li>
+                <li>調理時間：制限なし</li>
+                <li>難易度：すべて</li>
+            </ul>
+            <p><strong>期待される結果：</strong>野菜炒め、八宝菜、野菜たっぷりスープなど、複数の野菜を使う料理が提案されます。</p>
+
+            <div class="warning-box">
+                <strong>⚠️ 注意点</strong>
+                <p>レシピは参考情報です。実際の調理では、食材の鮮度確認や加熱処理を適切に行ってください。アレルギーがある方は、必ず材料表記を確認してください。</p>
+            </div>
+
+            <h2 id="faq">5. よくある質問</h2>
+
+            <h3>Q1：調味料も入力する必要がありますか？</h3>
+            <p><strong>A：</strong>基本的な調味料（塩、醤油、砂糖、油など）は入力不要です。特殊な調味料（味噌、オイスターソースなど）がある場合のみ入力してください。</p>
+
+            <h3>Q2：レシピが表示されない場合は？</h3>
+            <p><strong>A：</strong>以下を確認してください：</p>
+            <ul>
+                <li>食材の入力方法が正しいか（カンマまたはスペース区切り）</li>
+                <li>条件設定が厳しすぎないか（例：珍しい食材の組み合わせ+15分以内）</li>
+                <li>入力した食材の数が少なすぎないか（最低2つ以上推奨）</li>
+            </ul>
+
+            <h3>Q3：スマホでも使えますか？</h3>
+            <p><strong>A：</strong>はい。CookSuggestはレスポンシブデザインを採用しており、スマートフォン、タブレット、PCのどのデバイスからでも快適にご利用いただけます。</p>
+
+            <h3>Q4：レシピを保存できますか？</h3>
+            <p><strong>A：</strong>現在のバージョンではレシピ保存機能は提供していません。気に入ったレシピは、スクリーンショットを撮るか、手元にメモすることをおすすめします。</p>
+
+            <h3>Q5：新しいレシピは追加されますか？</h3>
+            <p><strong>A：</strong>定期的にレシピデータベースを更新し、新しいレシピを追加しています。また、ユーザーからのリクエストも参考にさせていただいています。</p>
+
+            <div style="text-align: center; margin: 3rem 0;">
+                <a href="index.html" class="btn-primary">🍳 CookSuggestを使う</a>
+                <a href="../index.html" class="btn-primary">🏠 ホームに戻る</a>
+            </div>
+
+            <div class="tip-box">
+                <h4>📝 フィードバック募集中</h4>
+                <p>CookSuggestをより使いやすくするため、皆様のご意見をお聞かせください。バグ報告や機能要望は、<a href="../contact.html" style="color: #1976d2;">お問い合わせページ</a>からお送りください。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
