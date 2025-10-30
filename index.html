@@ -726,22 +726,18 @@
         </div>
     </nav>
 
-    <!-- Header Ad -->
-    <div class="ad-banner">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1184134440246706"
-             data-ad-slot="5287863920"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-    </div>
-
     <header>
         <div class="container">
             <div class="hero">
                 <h1>🤖 MechaTora</h1>
                 <p>日常生活を便利にするWebアプリケーション開発者</p>
-                
+
+                <!-- 運営者情報 -->
+                <p style="font-size: 0.9rem; opacity: 0.85; margin-top: 1rem; line-height: 1.5;">
+                    運営者: Web開発歴12年のシニアフルスタックエンジニア<br>
+                    （社会保険労務士・応用情報技術者・基本情報技術者・G検定）
+                </p>
+
                 <!-- ナビゲーションメニュー -->
                 <div style="margin-top: 2rem;">
                     <a href="about.html" style="color: white; text-decoration: none; margin: 0 15px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 25px; transition: all 0.3s ease;">📖 About</a>
@@ -761,71 +757,64 @@
                 <div class="apps-grid practical-apps">
                     <a href="/cook-suggest/" class="app-card">
                         <span class="app-icon">🍳</span>
-                        <h3 class="app-title">CookSuggest - スマート料理提案システム</h3>
+                        <h3 class="app-title">CookSuggest - 料理提案アプリ</h3>
                         <p class="app-description">
-                            <strong>食材の無駄を削減し、創造的な料理体験を提供</strong><br>
-                            冷蔵庫に余っている食材を入力するだけで、栄養バランスと美味しさを考慮した最適なレシピを瞬時に提案します。1000種類以上の厳選されたレシピデータベースから、あなたの食材・調理時間・難易度・アレルギー情報に完全マッチした料理を5つセレクト。
+                            <strong>冷蔵庫の食材から料理を提案</strong><br>
+                            余っている食材を入力すると、その食材を使ったレシピを提案します。毎日の献立に迷った時、食材を無駄にしたくない時に便利なツールです。
                             <br><br>
                             <strong>🌟 主要機能:</strong><br>
-                            • AI搭載の食材マッチングアルゴリズム<br>
-                            • 栄養価計算と健康的なバランス提案<br>
+                            • 食材から最適なレシピを検索<br>
                             • 調理時間・難易度による絞り込み<br>
-                            • アレルギー・食事制限対応フィルター<br>
-                            • 季節の食材を活用した旬のレシピ推奨<br>
-                            • ユーザー評価による品質保証システム<br>
-                            • 買い物リスト自動生成機能
+                            • アレルギー食材の除外機能<br>
+                            • シンプルで使いやすいインターフェース<br>
+                            • スマホ・PCどちらでも利用可能
                         </p>
-                        <p class="app-tech">React/PWA・栄養価API・機械学習・レスポンシブデザイン・オフライン対応</p>
+                        <p class="app-tech">JavaScript・HTML5・CSS3・レスポンシブデザイン</p>
                         <span class="app-button">詳細を見る</span>
                     </a>
 
                     <a href="/earthquake-monitor/" class="app-card">
                         <span class="app-icon">🌏</span>
-                        <h3 class="app-title">地震モニター - 高精度災害情報システム</h3>
+                        <h3 class="app-title">地震モニター</h3>
                         <p class="app-description">
-                            <strong>気象庁API連携による信頼性の高い地震情報配信</strong><br>
-                            日本全国の地震情報を秒単位でリアルタイム監視し、緊急時の迅速な判断をサポート。震度・マグニチュード・震源地を視覚的に把握できる直感的なインターフェースで、防災意識の向上と安全確保に貢献します。
+                            <strong>気象庁APIから地震情報を取得</strong><br>
+                            日本全国の地震情報をリアルタイムで確認できるWebアプリです。震度・マグニチュード・震源地を分かりやすく表示し、地震発生時の状況把握に役立ちます。
                             <br><br>
                             <strong>⚡ 主要機能:</strong><br>
-                            • 気象庁公式APIからの即時データ取得<br>
-                            • インタラクティブ地図による震源地可視化<br>
-                            • 震度別カラーコーディング表示<br>
-                            • 地域別絞り込み・履歴検索機能<br>
-                            • プッシュ通知による緊急アラート<br>
-                            • 過去30日間の地震活動統計分析<br>
-                            • 津波警報・注意報の同時表示<br>
-                            • 避難所情報との連携機能
+                            • 気象庁公式APIからの地震情報取得<br>
+                            • 地図上で震源地を表示<br>
+                            • 震度別の色分け表示<br>
+                            • 地域別絞り込み機能<br>
+                            • 過去の地震履歴の確認
                         </p>
-                        <p class="app-tech">気象庁API・WebSocket・Progressive Web App・プッシュ通知・地図API・データ可視化</p>
+                        <p class="app-tech">気象庁API・JavaScript・HTML5・CSS3・レスポンシブデザイン</p>
                         <span class="app-button">詳細を見る</span>
                     </a>
 
                     <div class="app-card social-insurance-unified">
                         <span class="app-icon">🏛️</span>
-                        <h3 class="app-title">社会保険ニュース - 自動情報収集・分析システム</h3>
+                        <h3 class="app-title">社会保険ニュース</h3>
                         <p class="app-description">
-                            <strong>専門家レベルの社会保険情報を自動化で効率配信</strong><br>
-                            厚生労働省・日本年金機構等の公式発表を24時間自動監視し、重要な制度変更や給付金情報をAI技術で要約・分類。社会保険労務士や人事担当者、個人の年金・保険の最新動向把握を強力サポート。
+                            <strong>社会保険関連の最新情報を収集</strong><br>
+                            厚生労働省や日本年金機構などの公式サイトから、社会保険に関する最新情報を自動収集して表示します。年金、健康保険、雇用保険などの制度変更や給付金情報をまとめて確認できます。
                             <br><br>
                             <strong>📋 カバー分野:</strong><br>
-                            • 厚生年金制度の改正・給付変更<br>
-                            • 健康保険の保険料率・制度変更<br>
-                            • 雇用保険の失業給付・助成金情報<br>
-                            • 労災保険の認定基準・補償内容<br>
-                            • 介護保険の改正・サービス変更<br>
-                            • マイナンバー関連の社会保険手続き<br>
-                            • 副業・フリーランス向け保険情報<br>
-                            • 企業の社会保険実務への影響分析
+                            • 厚生年金の制度改正<br>
+                            • 健康保険の保険料率変更<br>
+                            • 雇用保険の失業給付情報<br>
+                            • 労災保険の認定基準<br>
+                            • 介護保険の制度変更<br>
+                            • マイナンバー関連情報
                         </p>
-                        <p class="app-tech">Python Web Scraping・自然言語処理・機械学習分類・自動レポート生成・RSS配信</p>
-                        
+                        <p class="app-tech">Python・Web Scraping・情報収集・自動更新</p>
+
                         <!-- 並列リンクボタン -->
                         <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
-                            <a href="https://social-insurance-news-render-1.onrender.com/" target="_blank" rel="noopener" 
+                            <a href="https://social-insurance-news-render-1.onrender.com/" target="_blank" rel="noopener"
                                style="background: #3498db; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: background 0.3s ease;">
                                 📱 スマホ版
                             </a>
-                            <a href="/social-insurance-news2/" 
+                            <a href="/social-insurance-news2/"
                                style="background: #2980b9; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: background 0.3s ease;">
                                 💻 PC版
                             </a>
@@ -835,61 +824,57 @@
 
                     <a href="https://papaya-longma-00474f.netlify.app/" class="app-card">
                         <span class="app-icon">🧠</span>
-                        <h3 class="app-title">科学的暗記アプリ - エビデンスベース学習システム</h3>
+                        <h3 class="app-title">フラッシュカード学習アプリ</h3>
                         <p class="app-description">
-                            <strong>認知科学に基づく最適化された記憶定着メソッド</strong><br>
-                            エビングハウスの忘却曲線理論を応用した間隔反復アルゴリズムにより、記憶の定着率を最大化。個人の学習パフォーマンスを分析し、最適なタイミングで復習を促すパーソナライズドシステム。資格試験・語学学習・専門知識習得に革命的な効果を提供。
+                            <strong>繰り返し学習で記憶を定着</strong><br>
+                            デジタルフラッシュカードで効率的な暗記学習ができるアプリです。自分でカードを作成し、繰り返し復習することで知識を定着させます。資格試験や語学学習に便利です。
                             <br><br>
                             <strong>🎯 学習機能:</strong><br>
-                            • SM-2アルゴリズムベースの間隔反復<br>
-                            • 個人の記憶パターン学習・最適化<br>
-                            • 習熟度別自動レベル調整<br>
-                            • 学習統計・進捗の詳細可視化<br>
-                            • カスタムカテゴリ・タグ管理<br>
-                            • 音声読み上げ・画像添付対応<br>
-                            • 共有デッキ・コミュニティ機能<br>
-                            • オフライン学習・同期機能
+                            • オリジナルのカードセット作成<br>
+                            • 繰り返し復習機能<br>
+                            • 習熟度の記録<br>
+                            • 学習進捗の確認<br>
+                            • カテゴリ別の管理
                         </p>
-                        <p class="app-tech">認知科学・間隔反復アルゴリズム・LocalStorage・Service Worker・統計分析・PWA</p>
+                        <p class="app-tech">JavaScript・LocalStorage・HTML5・CSS3・PWA</p>
                         <span class="app-button">詳細を見る</span>
                     </a>
 
                     <a href="/qualification-calendar.html" class="app-card">
                         <span class="app-icon">📅</span>
-                        <h3 class="app-title">資格試験カレンダー - 戦略的受験計画システム</h3>
+                        <h3 class="app-title">資格試験カレンダー</h3>
                         <p class="app-description">
-                            <strong>300以上の主要資格試験を網羅した総合管理プラットフォーム</strong><br>
-                            国家資格・民間資格・技能検定の試験日程・申込期限・受験料を一元管理し、個人の学習スケジュールと連動した最適な受験戦略を提案。複数資格の同時取得計画や、キャリアアップに向けた段階的資格取得をサポートします。
+                            <strong>主要資格試験の日程を一覧表示</strong><br>
+                            国家資格や民間資格の試験日程・申込期限を確認できるカレンダーです。複数の資格試験の日程を一元管理でき、受験計画の立案に役立ちます。
                             <br><br>
                             <strong>📚 対応資格分野:</strong><br>
-                            • IT・情報処理（基本情報・応用情報・高度試験）<br>
-                            • 法律・行政（司法書士・行政書士・宅建士）<br>
-                            • 会計・金融（公認会計士・簿記・FP技能士）<br>
-                            • 建築・土木（建築士・施工管理技士・測量士）<br>
-                            • 医療・福祉（看護師・介護福祉士・精神保健福祉士）<br>
-                            • 語学・国際（TOEIC・英検・中国語検定）<br>
-                            • 技能・技術（危険物取扱者・電気工事士・調理師）<br>
-                            • ビジネス・経営（中小企業診断士・販売士・秘書検定）
+                            • IT・情報処理<br>
+                            • 法律・行政<br>
+                            • 会計・金融<br>
+                            • 建築・土木<br>
+                            • 医療・福祉<br>
+                            • 語学・国際<br>
+                            • 技能・技術<br>
+                            • ビジネス・経営
                         </p>
-                        <p class="app-tech">スケジュール最適化・通知システム・学習進捗管理・統計分析・カレンダー連携</p>
+                        <p class="app-tech">JavaScript・HTML5・CSS3・カレンダー表示</p>
                         <span class="app-button">詳細を見る</span>
                     </a>
 
                     <a href="/tidy-data-science/" class="app-card">
                         <span class="app-icon">📊</span>
-                        <h3 class="app-title">Tidyverse/Tidymodels完全ガイド - R言語データサイエンス学習サイト</h3>
+                        <h3 class="app-title">R言語・Tidyverse学習ガイド</h3>
                         <p class="app-description">
-                            <strong>データサイエンティストを目指す全ての人へ</strong><br>
-                            R言語の最強パッケージ群「Tidyverse」と機械学習フレームワーク「Tidymodels」を、基礎から実践まで体系的に学べる日本語完全ガイド。全25章、50,000語超の圧倒的ボリュームで、データ分析のプロフェッショナルスキルを習得。<br><br>
-                            <strong>📚 充実のカリキュラム:</strong><br>
-                            • 第1-9章：Tidyverse基礎（dplyr, ggplot2, tidyr等）<br>
-                            • 第10-15章：統計・可視化の応用<br>
-                            • 第16-20章：機械学習（tidymodels, リサンプリング, アンサンブル）<br>
-                            • 第21-23章：時系列分析・テキスト分析・ディープラーニング<br>
-                            • 第24-25章：実践プロジェクト・Kaggle挑戦<br><br>
-                            初心者からデータサイエンティストまで、あらゆるレベルに対応。Python経験者のR言語移行にも最適。サンプルコード・演習問題・実践例が豊富で、手を動かしながら学べます。
+                            <strong>R言語のTidyverseを日本語で学ぶ</strong><br>
+                            データ分析に便利なR言語のTidyverseパッケージと、機械学習のTidymodelsパッケージを学べるチュートリアルサイトです。基礎から実践まで、全24章で体系的に解説しています。<br><br>
+                            <strong>📚 学習内容:</strong><br>
+                            • 第1-9章：Tidyverseの基礎（dplyr、ggplot2、tidyr等）<br>
+                            • 第10-15章：統計分析とデータ可視化<br>
+                            • 第16-20章：機械学習の基礎（tidymodels）<br>
+                            • 第21-24章：時系列分析・テキスト分析・実践演習<br><br>
+                            各章にサンプルコードと解説を掲載。初心者から中級者まで、段階的に学習できる構成になっています。
                         </p>
-                        <p class="app-tech">R言語・Tidyverse・Tidymodels・dplyr・ggplot2・機械学習・データ可視化・統計解析・Kaggle</p>
+                        <p class="app-tech">R言語・Tidyverse・Tidymodels・dplyr・ggplot2・データ分析・統計</p>
                         <span class="app-button">学習を始める</span>
                     </a>
                 </div>
@@ -1115,8 +1100,8 @@
                         <li><a href="cook-suggest/">🍳 料理提案アプリ</a></li>
                         <li><a href="earthquake-monitor/">🌏 地震モニター</a></li>
                         <li><a href="qualification-calendar.html">📅 資格試験カレンダー</a></li>
-                        <li><a href="fire/">🔥 暖炉シミュレータ</a></li>
-                        <li><a href="x-buzz-simulator/">📱 X投稿バズ予測</a></li>
+                        <li><a href="tidy-data-science/">📊 R言語・Tidyverseガイド</a></li>
+                        <li><a href="x-post-generator/">✍️ X投稿文ジェネレーター</a></li>
                     </ul>
                 </div>
                 
