@@ -124,14 +124,17 @@
         }
 
         .tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             background: #e0e7ff;
             color: #667eea;
-            padding: 0.25rem 0.75rem;
+            padding: 0.5rem 1rem;
             border-radius: 12px;
             font-size: 0.85rem;
             margin-right: 0.5rem;
             margin-bottom: 0.5rem;
+            min-height: 44px;
         }
 
         .article-content {
@@ -198,11 +201,17 @@
             margin-bottom: 1rem;
         }
 
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 1rem;
+        }
+
         .rejection-history table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
             font-size: 0.9rem;
+            min-width: 600px;
         }
 
         .rejection-history th, .rejection-history td {
@@ -335,12 +344,13 @@
         }
 
         footer a {
-            color: #90cdf4;
+            color: #e0f2fe;
             text-decoration: none;
         }
 
         footer a:hover {
             text-decoration: underline;
+            color: #90cdf4;
         }
 
         @media (max-width: 768px) {
@@ -429,78 +439,80 @@
 
                 <div class="rejection-history">
                     <h3>AdSense審査不合格の記録</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>回数</th>
-                                <th>申請日</th>
-                                <th>不承認理由</th>
-                                <th>当時の状況</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1回目</td>
-                                <td>2025/3/15</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数5、パロディアプリ多数</td>
-                            </tr>
-                            <tr>
-                                <td>2回目</td>
-                                <td>2025/4/3</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数8、note.com過剰リンク</td>
-                            </tr>
-                            <tr>
-                                <td>3回目</td>
-                                <td>2025/5/10</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数10、内部リンク不足</td>
-                            </tr>
-                            <tr>
-                                <td>4回目</td>
-                                <td>2025/6/20</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数12、SEO未対策</td>
-                            </tr>
-                            <tr>
-                                <td>5回目</td>
-                                <td>2025/7/8</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数15、OGP画像なし</td>
-                            </tr>
-                            <tr>
-                                <td>6回目</td>
-                                <td>2025/8/1</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数17、サイトマップ不備</td>
-                            </tr>
-                            <tr>
-                                <td>7回目</td>
-                                <td>2025/9/5</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数20、独自ドメイン移行済</td>
-                            </tr>
-                            <tr>
-                                <td>8回目</td>
-                                <td>2025/9/28</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数22、プライバシーポリシー追加</td>
-                            </tr>
-                            <tr>
-                                <td>9回目</td>
-                                <td>2025/10/15</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数25、内部リンク強化</td>
-                            </tr>
-                            <tr>
-                                <td>10回目</td>
-                                <td>2025/11/2</td>
-                                <td>有用性の低いコンテンツ</td>
-                                <td>記事数27、SEO最適化実施</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>回数</th>
+                                    <th>申請日</th>
+                                    <th>不承認理由</th>
+                                    <th>当時の状況</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1回目</td>
+                                    <td>2025/3/15</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数5、パロディアプリ多数</td>
+                                </tr>
+                                <tr>
+                                    <td>2回目</td>
+                                    <td>2025/4/3</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数8、note.com過剰リンク</td>
+                                </tr>
+                                <tr>
+                                    <td>3回目</td>
+                                    <td>2025/5/10</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数10、内部リンク不足</td>
+                                </tr>
+                                <tr>
+                                    <td>4回目</td>
+                                    <td>2025/6/20</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数12、SEO未対策</td>
+                                </tr>
+                                <tr>
+                                    <td>5回目</td>
+                                    <td>2025/7/8</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数15、OGP画像なし</td>
+                                </tr>
+                                <tr>
+                                    <td>6回目</td>
+                                    <td>2025/8/1</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数17、サイトマップ不備</td>
+                                </tr>
+                                <tr>
+                                    <td>7回目</td>
+                                    <td>2025/9/5</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数20、独自ドメイン移行済</td>
+                                </tr>
+                                <tr>
+                                    <td>8回目</td>
+                                    <td>2025/9/28</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数22、プライバシーポリシー追加</td>
+                                </tr>
+                                <tr>
+                                    <td>9回目</td>
+                                    <td>2025/10/15</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数25、内部リンク強化</td>
+                                </tr>
+                                <tr>
+                                    <td>10回目</td>
+                                    <td>2025/11/2</td>
+                                    <td>有用性の低いコンテンツ</td>
+                                    <td>記事数27、SEO最適化実施</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <p>ご覧の通り、<strong>すべて「有用性の低いコンテンツ」</strong>という理由です。記事数を増やしても、ドメインを変えても、結果は同じでした。</p>

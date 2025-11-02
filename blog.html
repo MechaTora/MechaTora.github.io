@@ -100,7 +100,7 @@
 
         .blog-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
@@ -165,10 +165,14 @@
         .tag {
             background: #e0e7ff;
             color: #667eea;
-            padding: 4px 12px;
+            padding: 8px 16px;
             border-radius: 12px;
             font-size: 0.8rem;
             font-weight: 500;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .blog-card-body {
@@ -214,12 +218,13 @@
         }
 
         footer a {
-            color: #90cdf4;
+            color: #e0f2fe;
             text-decoration: none;
         }
 
         footer a:hover {
             text-decoration: underline;
+            color: #90cdf4;
         }
 
         @media (max-width: 768px) {
