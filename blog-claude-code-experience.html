@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Codeでバイブコーディング - AI支援開発の実践体験談 | MechaTora Blog</title>
+    <meta name="description" content="Claude Codeを使ったAI支援開発（バイブコーディング）の実践体験談。文系人事職でもWebアプリを開発できた理由、メリット・デメリット、具体的な活用法を詳しく解説します。">
+    <meta name="keywords" content="Claude Code,AI開発,バイブコーディング,Webアプリ開発,プログラミング,初心者,体験談">
+    <link rel="canonical" href="https://mechatora.com/blog-claude-code-experience.html">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RBPWE348T2');
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .meta-info {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .content h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .content h3 {
+            color: #764ba2;
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .content p {
+            margin-bottom: 1.2rem;
+            line-height: 1.9;
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .content li {
+            margin-bottom: 0.8rem;
+        }
+
+        .highlight-box {
+            background: #fff9e6;
+            border-left: 4px solid #ffb300;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 1rem 0.5rem 1rem 0;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">🏠 ホーム</a> >
+            <a href="blog.html">開発ブログ</a> >
+            Claude Code開発体験談
+        </div>
+
+        <div class="meta-info">
+            <div>📅 公開日: 2025年10月29日</div>
+            <div>👤 著者: MechaTora運営者</div>
+            <div>🏷️ カテゴリ: AI開発・プログラミング</div>
+        </div>
+
+        <div class="header">
+            <h1>🤖 Claude Codeでバイブコーディング<br>AI支援開発の実践体験談</h1>
+            <p>文系人事職でも15個のWebアプリを作れた理由</p>
+        </div>
+
+        <div class="content">
+            <h2>はじめに：バイブコーディングとの出会い</h2>
+
+            
+<p>ClaudeCodeを初めて使ったのは2024年11月3日、リリース翌日でした。Twitterで「AIがコードを書いてくれる」と話題になっており、半信半疑で試してみました。最初のプロンプトは「JavaScriptでカウントダウンタイマーを作って」という簡単なもの。すると30秒で動くコードが出力され、しかもHTML/CSS/JSがセットで生成されていました。「これは本物だ」と確信し、その日のうちに有料版に登録。翌日から本格的に使い始め、地震モニターアプリのリファクタリングを依頼したところ、200行のコードが10分で最適化されました。ただし、全てを鵜呑みにはできません。生成されたコードにバグがあり、デバッグに1時間かかったことも。それでも、開発速度は3倍以上になりました。</p>
+<p>こんにちは。MechaToraを運営している者です。私は元々、人事・労務の仕事をしていた文系出身者です。プログラミング経験は独学で少しかじった程度で、本格的なWebアプリケーション開発は未経験でした。</p>
+
+            <p>そんな私が、現在15個以上のWebアプリを公開できているのは、<strong>Claude Code</strong>というAI支援開発ツールのおかげです。この記事では、Claude Codeを使った「バイブコーディング」の実践体験と、そこから得た気づきを共有します。</p>
+
+            <div class="highlight-box">
+                <strong>📖 この記事で分かること</strong>
+                <ul>
+                    <li>Claude Codeとは何か、どんなツールなのか</li>
+                    <li>バイブコーディングの実際の開発フロー</li>
+                    <li>AI支援開発のメリット・デメリット</li>
+                    <li>非エンジニアでもWebアプリを作れる理由</li>
+                    <li>実際に開発したアプリの事例</li>
+                </ul>
+            </div>
+
+            <h2>1. Claude Codeとは？</h2>
+
+            <p>Claude Codeは、AnthropicのAIアシスタント「Claude」をベースにした、プログラミング特化型のツールです。コマンドライン（ターミナル）から対話形式で開発を進められる点が特徴です。</p>
+
+            <h3>従来のコーディングとの違い</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>従来のコーディング</th>
+                        <th>Claude Code（バイブコーディング）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>開発方法</strong></td>
+                        <td>自分でコードを一行ずつ書く</td>
+                        <td>AIに指示を出し、コードを生成してもらう</td>
+                    </tr>
+                    <tr>
+                        <td><strong>必要な知識</strong></td>
+                        <td>言語仕様、ライブラリ、フレームワークの深い理解</td>
+                        <td>何を作りたいか明確に説明できる能力</td>
+                    </tr>
+                    <tr>
+                        <td><strong>エラー対応</strong></td>
+                        <td>自分でデバッグ、Stack Overflowで検索</td>
+                        <td>AIがエラーを解析し、修正案を提示</td>
+                    </tr>
+                    <tr>
+                        <td><strong>開発速度</strong></td>
+                        <td>経験に大きく依存</td>
+                        <td>アイデアを形にするまでが非常に早い</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>2. 実際の開発フロー：地震モニターを作った例</h2>
+
+            <p>実際にClaude Codeで「地震モニター」アプリを開発した時の流れを紹介します。</p>
+
+            <h3>ステップ1：要件を伝える</h3>
+            <p>私がClaude Codeに最初に伝えた内容：</p>
+
+            <div class="highlight-box">
+                <p>「気象庁APIから地震情報を取得して、リアルタイムで表示するWebアプリを作りたい。震度、マグニチュード、震源地を一覧表示し、地図上にも表示したい。」</p>
+            </div>
+
+            <h3>ステップ2：Claude Codeが設計を提案</h3>
+            <p>Claude Codeは、以下のような構成を提案してくれました：</p>
+            <ul>
+                <li>HTML/CSS/JavaScriptで構築</li>
+                <li>気象庁のJSON APIを使用</li>
+                <li>Leaflet.jsで地図表示</li>
+                <li>定期的にデータを更新する仕組み</li>
+            </ul>
+
+            <h3>ステップ3：コード生成と修正</h3>
+            <p>Claude Codeがコードを生成し、私が「もう少しデザインを見やすくして」「スマホ対応にして」などとリクエストすると、即座に修正してくれます。</p>
+
+            <h3>ステップ4：デプロイ</h3>
+            <p>GitHub Pagesへのデプロイ方法も教えてくれ、数時間で公開まで完了しました。</p>
+
+            <div class="success-box">
+                <strong>✅ 結果</strong>
+                <p>従来の方法なら数週間かかりそうな開発が、<strong>わずか1日</strong>で完成しました。しかも、レスポンシブデザイン対応、エラーハンドリング、コメント付きの綺麗なコードが生成されました。</p>
+            </div>
+
+            <h2>3. バイブコーディングのメリット</h2>
+
+            <h3>メリット1：アイデアを即座に形にできる</h3>
+            <p>「こういう機能が欲しい」と思ったら、その場でClaude Codeに伝えて実装できます。思いついたアイデアが冷めないうちに形にできるのは、非常に大きなメリットです。</p>
+
+            <h3>メリット2：学習コストが低い</h3>
+            <p>従来のプログラミング学習では、言語の文法、ライブラリの使い方、デザインパターンなど、膨大な知識を事前に学ぶ必要がありました。Claude Codeを使えば、「作りたいもの」を明確に説明できれば、技術的な詳細は後から学べます。</p>
+
+            <h3>メリット3：ベストプラクティスを自然に学べる</h3>
+            <p>Claude Codeが生成するコードは、業界のベストプラクティスに沿っています。そのコードを読むことで、「なるほど、こう書くのか」と自然に学習できます。</p>
+
+            <h3>メリット4：複数の技術スタックを扱える</h3>
+            <p>私は当初、JavaScriptしか知りませんでした。しかしClaude Codeのおかげで、Python（社会保険ニュース収集）、R言語（データ分析チュートリアル）など、複数の言語を使ったプロジェクトを実現できました。</p>
+
+            <h2>4. バイブコーディングのデメリット・注意点</h2>
+
+            <p>良いことばかりではありません。実際に使って感じたデメリットもあります。</p>
+
+            <h3>デメリット1：基礎理解がないと応用が効かない</h3>
+            <p>AIに頼りすぎると、「なぜこのコードが動くのか」を理解しないまま進んでしまいます。後で独自の機能を追加したい時に困ることがあります。</p>
+
+            <div class="tip-box">
+                <strong>💡 対策</strong>
+                <p>生成されたコードを必ず読み、分からない部分はClaude Codeに「このコードの意味を教えて」と聞くようにしています。少しずつ理解を深めることが大切です。</p>
+            </div>
+
+            <h3>デメリット2：AIの提案が必ずしも最適とは限らない</h3>
+            <p>Claude Codeは優秀ですが、プロジェクトの全体像を完全に把握しているわけではありません。時々、過剰に複雑な実装を提案してくることがあります。</p>
+
+            <h3>デメリット3：依存しすぎるリスク</h3>
+            <p>AIツールが使えない環境になった時、何もできなくなる恐れがあります。定期的に「AIなしで書けるか」を試すことも重要です。</p>
+
+            <h2>5. 非エンジニアでも開発できる理由</h2>
+
+            <p>私のような文系出身者でも、なぜWebアプリを作れたのか。それは、<strong>プログラミングの本質が「問題解決」</strong>だからです。</p>
+
+            <h3>重要なのは「何を作りたいか」を言語化する力</h3>
+
+            <p>Claude Codeを使う上で最も重要なのは、「自分が何を実現したいのか」を明確に説明できる能力です。これは、プログラミングスキルよりも、論理的思考力やコミュニケーション能力に近いものです。</p>
+
+            <p>人事の仕事で培った「要件定義」「フロー設計」の経験が、実はプログラミングに直結していました。</p>
+
+            <h3>80点で公開する勇気</h3>
+
+            <p>完璧主義を捨て、「80点で公開して、フィードバックを得ながら改善する」スタイルに切り替えました。Claude Codeのおかげで修正が簡単なので、この方法が現実的になりました。</p>
+
+            <h2>6. 実際に開発したアプリ事例</h2>
+
+            <p>Claude Codeで開発した主なアプリを紹介します：</p>
+
+            <ul>
+                <li><strong>料理提案アプリ（CookSuggest）：</strong>冷蔵庫の食材からレシピを提案。JavaScript + CSS</li>
+                <li><strong>地震モニター：</strong>気象庁APIを使ったリアルタイム地震情報表示。Leaflet.js + API連携</li>
+                <li><strong>社会保険ニュース収集：</strong>Python + BeautifulSoupでWebスクレイピング</li>
+                <li><strong>R言語・Tidyverse学習サイト：</strong>全24章、50,000語超のチュートリアル。HTML + CSS</li>
+                <li><strong>資格試験カレンダー：</strong>主要資格の試験日程を一元管理。データ管理 + UI設計</li>
+            </ul>
+
+            <p>これらすべて、Claude Codeなしでは実現できなかったプロジェクトです。</p>
+
+            <h2>7. これから始める人へのアドバイス</h2>
+
+            <h3>アドバイス1：小さく始める</h3>
+            <p>いきなり大規模なアプリを作ろうとせず、「ボタンを押すとメッセージが表示される」レベルの簡単なものから始めましょう。</p>
+
+            <h3>アドバイス2：AIに頼りつつ、理解も深める</h3>
+            <p>「なぜこう書くのか」を常に意識し、生成されたコードを読む習慣をつけましょう。</p>
+
+            <h3>アドバイス3：失敗を恐れない</h3>
+            <p>AIがあれば、失敗してもすぐに修正できます。どんどん試して、どんどん失敗しましょう。</p>
+
+            <h2>まとめ</h2>
+
+            <p>Claude Codeによる「バイブコーディング」は、プログラミングの民主化を実現するツールだと感じています。従来は一部のエンジニアしか実現できなかったアイデアを、今では誰でも形にできる時代になりました。</p>
+
+            <p>もちろん、AIはあくまで「道具」です。最終的に重要なのは、「何を作るか」「誰のために作るか」というビジョンです。技術的なハードルが下がった今、アイデアと情熱があれば、誰でも開発者になれます。</p>
+
+            <p>あなたも、頭の中にあるアイデアを形にしてみませんか？</p>
+
+            <div style="text-align: center; margin: 3rem 0;">
+                <a href="blog.html" class="btn-primary">📝 他の記事を読む</a>
+                <a href="index.html" class="btn-primary">🏠 ホームに戻る</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

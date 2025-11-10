@@ -4,1755 +4,536 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>開発ブログ - MechaTora | Webアプリ開発日記</title>
-    <meta name="description" content="MechaTora（メカトラ）の開発ブログ。Webアプリケーション開発の舞台裏、技術解説、アップデート情報をお届けします。">
-    <meta name="keywords" content="開発ブログ, Web開発, プログラミング, JavaScript, アプリ開発, 技術記事, R言語, Python, Tidyverse, PWA, 無料Webアプリ, 冷蔵庫余り物レシピ, 食材ロス削減, レシピアプリ, プログラミング初心者, 独学プログラミング, Webアプリ作り方, 社会保険労務士, 30代社会人, DX推進, データ分析入門, 働きながら学習, GitHub Pages, 無料ツール">
-    <meta name="author" content="MechaTora">
-
-    <!-- Canonical URL -->
+    <meta name="description" content="MechaTora（メカトラ）の開発ブログ。Webアプリケーション開発の舞台裏、技術解説、プログラミング学習、資格試験体験記などをお届けします。">
+    <meta name="keywords" content="開発ブログ,Web開発,プログラミング,JavaScript,R言語,社労士,30代学習,AdSense,独自ドメイン">
     <link rel="canonical" href="https://mechatora.com/blog.html">
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="開発ブログ - MechaTora | Webアプリ開発日記">
-    <meta property="og:description" content="料理アプリ、地震モニター、R言語解説など、日常を便利にするWebアプリ開発の記録。30代サラリーマンエンジニアの技術ブログ。">
+    <!-- OGP -->
+    <meta property="og:title" content="開発ブログ - MechaTora">
+    <meta property="og:description" content="Webアプリ開発の舞台裏、技術解説、学習記録を綴る開発ブログ">
     <meta property="og:type" content="blog">
     <meta property="og:url" content="https://mechatora.com/blog.html">
     <meta property="og:site_name" content="MechaTora">
-    <meta property="og:locale" content="ja_JP">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="開発ブログ - MechaTora">
-    <meta name="twitter:description" content="Webアプリ開発の舞台裏、技術解説、日々の学びを綴る開発ブログ">
-    <meta name="twitter:site" content="@xORMRha7Ck16551">
+    <meta name="twitter:description" content="Webアプリ開発の技術解説とプログラミング学習の記録">
 
-    <!-- 構造化データ -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Blog",
-      "name": "MechaTora 開発ブログ",
-      "description": "日常を便利にする無料Webアプリケーション開発の記録",
-      "url": "https://mechatora.com/blog.html",
-      "author": {
-        "@type": "Person",
-        "name": "MechaTora",
-        "url": "https://mechatora.com/about.html",
-        "sameAs": [
-          "https://note.com/crt03",
-          "https://x.com/xORMRha7Ck16551"
-        ]
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "MechaTora",
-        "url": "https://mechatora.com/"
-      }
-    }
-    </script>
-    
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
-         crossorigin="anonymous"></script>
-    <!-- GitHub Pages to mechatora.com redirect -->
-    <script>
-    if (window.location.hostname === 'mechatora.github.io') {
-        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
-    }
-    </script>
-    
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706" crossorigin="anonymous"></script>
+
     <style>
-        :root {
-            --primary-color: #667eea;
-            --accent-color: #764ba2;
-            --text-color: #2d3748;
-            --background: #f7fafc;
-            --card-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
             line-height: 1.6;
-            color: var(--text-color);
-            background: var(--background);
+            color: #2d3748;
+            background: #f7fafc;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
-        .header {
+
+        header {
             text-align: center;
-            margin-bottom: 40px;
-            padding: 50px 20px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            border-radius: 20px;
-        }
-        
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-        
-        .header .blog-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        
-        .nav-back {
-            display: inline-block;
-            margin-bottom: 20px;
-            background: white;
-            color: var(--primary-color);
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease;
-        }
-        
-        .nav-back:hover {
-            transform: translateY(-2px);
-        }
-        
-        .blog-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            margin-bottom: 30px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
-        /* 日付順でソート（新しい順） */
-        .blog-post:nth-child(1) { order: 1; }  /* 10月11日 */
-        .blog-post:nth-child(2) { order: 2; }  /* 10月10日 */
-        .blog-post:nth-child(3) { order: 3; }  /* 10月9日 */
-        .blog-post:nth-child(5) { order: 4; }  /* 10月7日 */
-        .blog-post:nth-child(6) { order: 5; }  /* 10月6日 */
-        .blog-post:nth-child(7) { order: 6; }  /* 10月5日 */
-        .blog-post:nth-child(4) { order: 7; }  /* 10月1日 */
-        .blog-post:nth-child(19) { order: 8; } /* 9月25日 */
-        .blog-post:nth-child(18) { order: 9; } /* 9月18日 */
-        .blog-post:nth-child(17) { order: 10; } /* 9月10日 */
-        .blog-post:nth-child(16) { order: 11; } /* 9月3日 */
-        .blog-post:nth-child(15) { order: 12; } /* 8月7日 */
-        .blog-post:nth-child(14) { order: 13; } /* 8月5日 */
-        .blog-post:nth-child(13) { order: 14; } /* 8月3日 */
-        .blog-post:nth-child(12) { order: 15; } /* 8月1日 */
-        .blog-post:nth-child(11) { order: 16; }  /* 7月26日 */
-        .blog-post:nth-child(10) { order: 17; }  /* 7月20日 */
-        .blog-post:nth-child(9) { order: 18; }  /* 7月15日 */
-        .blog-post:nth-child(8) { order: 19; }  /* 7月11日 */
-        .blog-post:nth-child(20) { order: 20; } /* 7月1日 */
-        .blog-post:nth-child(21) { order: 21; } /* 6月25日 */
-        .blog-post:nth-child(22) { order: 22; } /* 6月20日 */
-        .blog-post:nth-child(23) { order: 23; } /* 6月15日 */
-        .blog-post:nth-child(24) { order: 24; } /* 6月10日 */
-        .blog-post:nth-child(25) { order: 25; } /* 6月5日 */
-        
-        .blog-post {
-            background: white;
-            border-radius: 15px;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-        
-        .blog-post:hover {
-            transform: translateY(-5px);
-        }
-        
-        .post-header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-        
-        .post-icon {
+        header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
-        
-        .post-date {
-            background: rgba(255,255,255,0.2);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-        
-        .post-content {
-            padding: 25px;
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
         }
 
-        .post-title {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-
-        .post-excerpt {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.7;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .post-excerpt.expanded {
-            display: block;
-            -webkit-line-clamp: unset;
-        }
-
-        .read-more-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-weight: bold;
-            cursor: pointer;
-            padding: 8px 0;
-            font-size: 0.9rem;
-            transition: opacity 0.3s ease;
-        }
-
-        .read-more-btn:hover {
-            opacity: 0.7;
-        }
-        
-        .post-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .tag {
-            background: #e2e8f0;
-            color: #4a5568;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-        }
-        
-        .read-more {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.3s ease;
-        }
-        
-        .read-more:hover {
-            border-bottom-color: var(--primary-color);
-        }
-        
-        .featured-post {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
+        nav {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
             margin-bottom: 30px;
-        }
-        
-        .featured-content {
-            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
-            flex-direction: column;
+            gap: 20px;
+            flex-wrap: wrap;
             justify-content: center;
         }
-        
-        .featured-image {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #764ba2;
+        }
+
+        .ad-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            min-height: 280px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
-        .categories {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: 30px;
             margin-bottom: 40px;
         }
-        
-        .category-button {
+
+        .blog-card {
             background: white;
-            color: var(--primary-color);
-            padding: 10px 20px;
-            border-radius: 25px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .blog-card-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .blog-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-card h2 {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .blog-card h2 a {
+            color: inherit;
             text-decoration: none;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
+            transition: color 0.3s;
         }
-        
-        .category-button:hover {
-            background: var(--primary-color);
+
+        .blog-card h2 a:hover {
+            color: #667eea;
+        }
+
+        .blog-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #e0e7ff;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blog-card-body {
+            padding: 20px;
+        }
+
+        .blog-excerpt {
+            color: #4a5568;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .read-more:hover {
+            color: #764ba2;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            transform: translateY(-2px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
-        
+
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #e0f2fe;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+            color: #90cdf4;
+        }
+
         @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
             .blog-grid {
                 grid-template-columns: 1fr;
             }
 
-            .featured-post {
-                grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: 2.2rem;
-            }
-
-            .categories {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            /* スマホ用：コンパクト表示 */
-            .post-header {
+            nav {
                 padding: 15px;
-            }
-
-            .post-icon {
-                font-size: 2rem;
-                margin-bottom: 5px;
-            }
-
-            .post-content {
-                padding: 15px;
-            }
-
-            .post-title {
-                font-size: 1.1rem;
-                margin-bottom: 10px;
-            }
-
-            .post-excerpt {
-                font-size: 0.9rem;
-                line-height: 1.5;
-                margin-bottom: 10px;
-            }
-
-            .post-tags {
-                margin-bottom: 10px;
-            }
-
-            .tag {
-                font-size: 0.75rem;
-                padding: 3px 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="nav-back">← メインページに戻る</a>
-        
-        <div class="header">
-            <div class="blog-icon">📝</div>
-            <h1>開発ブログ</h1>
-            <p>Webアプリ開発の舞台裏をお届け</p>
-        </div>
-        
-        <!-- AdSense Header -->
-        <div style="text-align: center; margin: 20px 0;">
+        <header>
+            <h1>🐱 MechaTora 開発ブログ</h1>
+            <p>Webアプリ開発の舞台裏と学びの記録</p>
+        </header>
+
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="hub.html">アプリハブ</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+
+        <!-- Ad Placement 1: Header -->
+        <div class="ad-container">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="5863584162"
+                 data-ad-slot="1234567890"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
-        </div>
-        
-        <div class="categories">
-            <a href="#" class="category-button">全記事</a>
-            <a href="#" class="category-button">技術解説</a>
-            <a href="#" class="category-button">開発日記</a>
-            <a href="#" class="category-button">アップデート</a>
-            <a href="#" class="category-button">Tips</a>
-        </div>
-        
-        <!-- プロフィールセクション（固定表示） -->
-        <div style="background: white; border-radius: 15px; padding: 20px; margin-bottom: 30px; box-shadow: var(--card-shadow); text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 10px;">👤</div>
-            <h3 style="color: var(--primary-color); margin-bottom: 15px;">運営者について</h3>
-            <p style="color: #666; line-height: 1.7; margin-bottom: 15px;">
-                30代・人事部門勤務のサラリーマンエンジニア。<br>
-                社労士資格取得をきっかけにプログラミングと出会い、R言語・Python・Web開発を独学中。<br>
-                「日常の小さな不便を解決する」をテーマに、Webアプリケーションを開発・公開しています。
-            </p>
-            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
-                <a href="https://note.com/crt03" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; background: #41C9B4; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; transition: opacity 0.3s;">
-                    📝 note
-                </a>
-                <a href="https://x.com/xORMRha7Ck16551" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; background: #1DA1F2; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; transition: opacity 0.3s;">
-                    𝕏 Twitter/X
-                </a>
-            </div>
-            <!-- アクセスカウンター -->
-            <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
-                <div style="font-size: 0.9rem; margin-bottom: 5px;">👥 あなたは</div>
-                <div style="font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace;" id="visitor-count">Loading...</div>
-                <div style="font-size: 0.9rem; margin-top: 5px;">人目の訪問者です</div>
-            </div>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
 
         <div class="blog-grid">
-            <!-- Regular Posts -->
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">😭</div>
-                    <div class="post-date">2025年10月11日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">台風で3連休引きこもり予定が…まさかの休日出勤</h3>
-                    <p class="post-excerpt">
-                        10月の3連休。天気予報を見たら台風直撃コース。「よし、これは引きこもって開発するしかない！」と意気込んでいました。<br><br>
-
-                        <strong>🌀 引きこもり計画</strong><br>
-                        せっかくの連休だし、台風で外出できないなら、昨日ブログに書いた「日本酒サジェストアプリ」の開発を一気に進めようと計画。青森の地酒データベース構築を3日間でやりきる予定でした。<br><br>
-
-                        冷蔵庫にはカップ麺とレトルトカレーを大量にストック。コーヒー豆も挽きたて。モニターは2台並べて、片方にVSCode、片方にドキュメント。完璧な開発環境を整えて、台風が来るのを待っていました。<br><br>
-
-                        外は雨。家の中は暖かい。キーボードを叩く音だけが響く至福の時間…のはずだった。<br><br>
-
-                        <strong>📱 金曜夜の悪夢</strong><br>
-                        金曜の夜10時。Slackに通知が来ました。「明日（土曜）、システム障害対応のため出社対応お願いします」…は？<br><br>
-
-                        人事システムのバッチ処理が深夜に異常終了したらしく、月曜の給与計算に間に合わせるため、土日で復旧作業が必要とのこと。しかも、リモートではなく「セキュリティ上、オンプレサーバーに直接アクセスが必要なので出社必須」。<br><br>
-
-                        台風のピークが土曜日なのに…。<br><br>
-
-                        <strong>🌧️ 台風の中の出勤</strong><br>
-                        土曜朝7時。外は暴風雨。傘が意味をなさないレベル。ずぶ濡れになりながら駅まで歩き、運休ギリギリの電車に飛び乗って出社しました。<br><br>
-
-                        会社に着いたら、同じく呼び出された同僚が3人。みんな半泣き顔で「なんで俺たち…」と肩を落としていました。復旧作業は結局15時間かかり、土曜の夜11時までオフィスに缶詰。日付が変わる前にギリギリ帰宅。<br><br>
-
-                        日曜日は疲れ果てて1日中寝てました。月曜（祝日）も体調が戻らず、ほぼ寝て過ごす羽目に。<br><br>
-
-                        <strong>💔 失われた3連休</strong><br>
-                        結局、台風の3連休は何も進まず。日本酒アプリのコードは1行も書けませんでした。カップ麺は賞味期限切れ間近で在庫過多。コーヒー豆は開封したまま湿気ってしまった。<br><br>
-
-                        開発のモチベーションは残ってるけど、体力的にはボロボロ。次の週末こそ…と思いつつ、またSlackに怯える日々が始まります。<br><br>
-
-                        せめてもの救いは、台風で引きこもれなかった代わりに「ネタになった」こと。このブログ記事は、休日出勤の辛さを昇華した産物です（笑）。<br><br>
-
-                        サラリーマン開発者の皆さん、突然の呼び出しには気をつけて…。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">日記</span>
-                        <span class="tag">休日出勤</span>
-                        <span class="tag">台風</span>
-                        <span class="tag">開発計画</span>
+            <!-- Article 1: AdSense審査落ち体験記 (最新) -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">ブログ運営</span>
+                    <div class="blog-meta">
+                        <span>📅 2025-11-02</span>
+                        <span>⏱️ 10分</span>
                     </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                    <h2><a href="blog-adsense-rejected.html">Google AdSense審査に落ち続ける日々…10回目の不合格から学んだこと</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">AdSense</span>
+                        <span class="tag">審査</span>
+                        <span class="tag">改善記録</span>
+                    </div>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">「有用性の低いコンテンツ」で10回連続不合格。Google AdSense審査の厳しい現実と、改善のために実施した施策を赤裸々に公開します。同じ悩みを持つ方の参考になれば幸いです。</p>
+                    <a href="blog-adsense-rejected.html" class="read-more">続きを読む →</a>
                 </div>
             </article>
 
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🍶</div>
-                    <div class="post-date">2025年10月10日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">新企画始動！日本酒サジェストアプリ「Sake Suggest」開発スタート</h3>
-                    <p class="post-excerpt">
-                        突然ですが、新しいプロジェクトを始めます。その名も「日本酒サジェストアプリ」！<br><br>
-
-                        <strong>📱 企画のきっかけ</strong><br>
-                        日本酒って、全国に1万種類以上あるんですよ。地元の酒屋に行くと、棚いっぱいに銘柄が並んでいて、正直どれを選べばいいか分からない。好きな銘柄はあるけど、「これに近い味の別の日本酒ないかな？」って思っても、探すのが大変。<br><br>
-
-                        結局いつも同じ銘柄ばかり買ってしまう…。でも、せっかくなら新しい出会いも楽しみたい。そんな自分のために、「好きな銘柄に近い日本酒をサジェストしてくれるアプリ」を作ろうと思い立ちました。<br><br>
-
-                        <strong>🔍 既存サービスを調査してみた</strong><br>
-                        まずは類似サービスがないか調べてみたところ、意外とたくさん見つかりました：<br><br>
-
-                        ① <strong>Sakenomy（サケノミー）</strong> - 中田英寿氏監修。7,000種類以上の日本酒データベースで、ラベル認識や好み分析機能あり<br>
-                        ② <strong>Sakenowa（さけのわ）</strong> - 飲んだ日本酒を記録＆レビュー。独自の味わい識別システムでレコメンド<br>
-                        ③<strong>YUMMY SAKE</strong> - AIとブラインドテイスティングで好みを12タイプに分類<br>
-                        ④ <strong>日本酒の学校</strong> - AIが類似銘柄をサジェスト。味のチャート調整も可能<br>
-                        ⑤ <strong>SAKE Street 酒ナビ</strong> - 東大農学部と共同研究した機械学習モデルで好み診断<br><br>
-
-                        …めっちゃある（笑）。しかも、どれもAI・機械学習を使った本格派。正直、「もう作らなくていいんじゃ…？」と一瞬思いました。<br><br>
-
-                        <strong>💡 それでも作る理由</strong><br>
-                        でも、既存アプリを使ってみて気づいたことがあります。多くは「アプリをダウンロード→会員登録→診断→レコメンド」という流れ。それはそれで良いんですが、「今すぐサクッと調べたい」時にはちょっと重い。<br><br>
-
-                        私が作りたいのは、もっとシンプルで軽量なWebアプリ。ブラウザで開いて、好きな銘柄を1つ入れるだけで、似た味わいの日本酒を5つ提案してくれる。アプリDL不要、会員登録不要、PWA対応でオフラインでも使える。<br><br>
-
-                        <strong>🛠️ 技術的なアプローチ</strong><br>
-                        データソースは、SAKETIMEやSakenomyの公開データ、各蔵元の公式情報を活用予定。味わいの類似度計算には、ベクトル空間モデルを使って「甘辛度」「香り」「コク」などのパラメータで距離を測定します。<br><br>
-
-                        機械学習は使わず、あくまでシンプルなロジックで。データベースも軽量化して、1,000銘柄程度に絞り込む予定です。<br><br>
-
-                        <strong>📅 今後の展開</strong><br>
-                        まずは青森の地酒データベースから構築スタート。地元の酒造データを手作業で整備しながら、サジェストアルゴリズムを検証していきます。完成したら、このブログで公開しますのでお楽しみに！<br><br>
-
-                        日本酒好きの皆さん、一緒に新しい銘柄との出会いを楽しみましょう🍶
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">日本酒</span>
-                        <span class="tag">新企画</span>
-                        <span class="tag">アプリ開発</span>
-                        <span class="tag">レコメンド</span>
+            <!-- Article 2: CookSuggest開発秘話 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">技術</span>
+                    <div class="blog-meta">
+                        <span>📅 2025-10-25</span>
+                        <span>⏱️ 8分</span>
                     </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🎉</div>
-                    <div class="post-date">2025年10月1日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">資格試験合格！勉強の軌跡をnoteに公開しました</h3>
-                    <p class="post-excerpt">
-                        本日、待ちに待った合格発表がありました。そして…合格！この喜びを忘れないうちに、受験から合格までの道のりをnoteにまとめました。<br><br>
-
-                        <strong>📝 noteで公開中：</strong><br>
-                        <a href="https://note.com/crt03/n/nfc0a93d9ccd7" target="_blank" style="color: var(--primary-color); text-decoration: none; border-bottom: 2px solid var(--primary-color);">資格試験合格までの記録</a><br><br>
-
-                        記事では、受験を決めた経緯から、具体的な勉強方法、使用した教材、試験当日のエピソード、そして合格後の心境まで、包み隠さず書きました。特に、働きながらの受験は時間との戦い。仕事と勉強の両立で苦労した点や、効率的な学習法についても詳しく紹介しています。<br><br>
-
-                        同じ資格を目指している方、働きながら勉強している方の参考になれば幸いです。このサイトのコンテンツ作成も、資格勉強で得た知識やスキルが活きています。学びは決して無駄にならないと、改めて実感した出来事でした。<br><br>
-
-                        詳しくはnoteの記事をご覧ください！
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">資格試験</span>
-                        <span class="tag">合格</span>
-                        <span class="tag">note</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🍳</div>
-                    <div class="post-date">2025年10月9日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">冷蔵庫の余り物レシピアプリの作り方｜食材ロス削減とプログラミング学習を両立</h3>
-                    <p class="post-excerpt">
-                        <strong>🌱 食材ロス問題とWebアプリ開発</strong><br>
-                        日本では年間約612万トンの食品ロスが発生しており、その約半分は家庭から出ているというデータがあります。「冷蔵庫の奥で野菜が腐っていた」「賞味期限切れの調味料が出てきた」…誰もが経験したことがあるのではないでしょうか。<br><br>
-
-                        この課題を解決するために、私は<strong>冷蔵庫の余り物からレシピを提案するWebアプリ「CookSuggest」</strong>を開発しました。このアプリを作る過程で学んだ技術と、プログラミング初心者でも実践できる開発のコツを紹介します。<br><br>
-
-                        <strong>💡 アプリの仕組み｜JavaScriptで実現するレシピ検索</strong><br>
-                        CookSuggestは、以下のシンプルな仕組みで動作します：<br>
-                        1. ユーザーが「玉ねぎ、豚肉、醤油」などの食材を入力<br>
-                        2. JavaScriptで1,000種類以上のレシピデータベースを検索<br>
-                        3. 入力された食材を多く含むレシピをスコアリング<br>
-                        4. 3秒以内に5つのおすすめレシピを表示<br><br>
-
-                        データベースはJSON形式で、外部サーバー不要。すべてブラウザ内で完結するため、高速かつプライバシーにも配慮した設計です。<br>
-                        👉 <a href="https://mechatora.com/cook-suggest/" target="_blank" style="color: var(--primary-color); border-bottom: 2px solid var(--primary-color);">CookSuggestを試してみる</a><br><br>
-
-                        <strong>📚 初心者でも作れる！使用技術スタック</strong><br>
-                        このアプリで使用した技術は、すべて無料で学べる基本的なものです：<br>
-                        <ul style="line-height: 2; margin-top: 10px;">
-                            <li><strong>HTML/CSS</strong> - レスポンシブデザイン、Flexbox、CSS Grid</li>
-                            <li><strong>JavaScript</strong> - 配列操作（filter, map, sort）、ローカルストレージ</li>
-                            <li><strong>PWA</strong> - Service Worker、マニフェストファイル（オフライン対応）</li>
-                            <li><strong>GitHub Pages</strong> - 無料ホスティング</li>
-                        </ul><br>
-
-                        プログラミング学習3ヶ月目でも、十分実装可能なレベルです。重要なのは「解決したい課題」を明確にすること。私の場合は「冷蔵庫の余り物を使い切りたい」という自分自身の悩みがモチベーションでした。<br><br>
-
-                        <strong>🔍 レシピデータの集め方｜スクレイピングとデータ整形</strong><br>
-                        1,000件のレシピデータは、Pythonでクックパッド風のレシピサイトからスクレイピングしました。ただし注意点として：<br>
-                        ・robots.txtの確認必須<br>
-                        ・アクセス頻度の制限（1秒に1リクエスト以下）<br>
-                        ・著作権に配慮し、レシピ名と材料のみ取得<br><br>
-
-                        データはCSV形式で保存し、JavaScriptで読み込めるJSONに変換。この工程でR言語のTidyverseが大活躍しました。データクレンジング、重複削除、カテゴリ分類など、効率的に処理できます。<br><br>
-
-                        <strong>🚀 実装で工夫したポイント</strong><br>
-                        <strong>1. 曖昧検索機能</strong><br>
-                        「たまねぎ」「玉ねぎ」「タマネギ」すべてに対応するため、ひらがな変換とキーワード正規化を実装。ユーザー体験が格段に向上しました。<br><br>
-
-                        <strong>2. スコアリングアルゴリズム</strong><br>
-                        単純な材料マッチングではなく、「手持ち食材でどれだけ作れるか」を計算。足りない材料が少ないレシピを優先表示します。<br><br>
-
-                        <strong>3. PWA化でオフライン対応</strong><br>
-                        Service Workerを使い、一度アクセスすればオフラインでも利用可能に。キャンプや旅行先でも使えると好評です。<br><br>
-
-                        <strong>📈 実際の効果｜食材ロス削減とスキルアップ</strong><br>
-                        このアプリを3ヶ月使った結果：<br>
-                        ✅ 食材ロスが約60%削減（週に捨てる野菜が5個→2個）<br>
-                        ✅ 食費が月5,000円削減<br>
-                        ✅ プログラミングスキルが実践で向上<br>
-                        ✅ GitHubのコントリビューションが活発化し、転職活動でアピールできた<br><br>
-
-                        <strong>🌟 これからWebアプリ開発を始める方へ</strong><br>
-                        「プログラミング初心者には無理」と思うかもしれませんが、実は小さな不便を解決するアプリこそ、初心者に最適な題材です。理由は3つ：<br>
-                        1. 自分が使うから、要件定義が明確<br>
-                        2. 小規模なので、3ヶ月で完成可能<br>
-                        3. 実際に使うから、継続的な改善モチベーションが湧く<br><br>
-
-                        私も人事部門の普通のサラリーマンで、プログラミング経験ゼロからスタート。R言語でのデータ分析から始め、Web開発に広げました。独学で十分です。<br><br>
-
-                        <strong>📖 参考にした学習リソース</strong><br>
-                        ・MDN Web Docs（JavaScript基礎）<br>
-                        ・Progate（HTML/CSS/JavaScript）<br>
-                        ・Udemy「モダンJavaScriptの基礎から始める挫折しないためのReact入門」<br>
-                        ・書籍「JavaScript本格入門」（技術評論社）<br><br>
-
-                        あなたも「こんなアプリがあったらいいな」というアイデアを、形にしてみませんか？<br><br>
-
-                        <strong>🔗 関連リンク</strong><br>
-                        📱 <a href="https://mechatora.com/cook-suggest/" target="_blank" style="color: var(--primary-color);">CookSuggest - 冷蔵庫の余り物レシピ提案</a><br>
-                        📊 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">MechaTora開発ブログ - 他のWebアプリも紹介</a><br>
-                        📝 <a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">note - プログラミング学習記録</a>
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">Webアプリ開発</span>
+                    <h2><a href="blog-cook-suggest-development.html">CookSuggestアプリ開発秘話：1000レシピDBをどう構築したか</a></h2>
+                    <div class="blog-tags">
                         <span class="tag">JavaScript</span>
-                        <span class="tag">レシピアプリ</span>
-                        <span class="tag">食材ロス削減</span>
-                        <span class="tag">プログラミング学習</span>
-                        <span class="tag">PWA</span>
-                        <span class="tag">初心者向け</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">😓</div>
-                    <div class="post-date">2025年10月7日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">最近仕事が忙しくて更新ままならず…</h3>
-                    <p class="post-excerpt">
-                        正直に告白すると、ここ最近はサイトの更新がほとんどできていない。原因は本業の忙しさ。人事部門でDX推進を担当しているのだが、残業時間が月80時間を超える状況が続いている。<br><br>
-
-                        実は、このサイトのコンテンツを作り始めたきっかけも、その仕事がきっかけだった。人事データの分析にR言語を使い始め、Tidyverseの便利さに感動。「これは他の人にも伝えたい」と思って解説サイトを作った。料理アプリや地震モニターも、日常の小さな不便を解決したいという思いから生まれた。<br><br>
-
-                        でも、仕事が佳境に入ると、そちらに手が回らない。新しい機能を追加したい、コンテンツを充実させたい、ユーザーからの要望にも応えたい…やりたいことは山ほどあるのに、時間が取れないのが本当に悔しい。<br><br>
-
-                        それでも、少しずつでも続けていきたい。このサイトは自分にとって、「作る喜び」を思い出させてくれる大切な場所だから。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">日記</span>
-                        <span class="tag">働き方</span>
-                        <span class="tag">DX</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🎨</div>
-                    <div class="post-date">2025年10月6日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">MechaTora全コンテンツ紹介｜日常を便利にする無料Webアプリ集</h3>
-                    <p class="post-excerpt">
-                        <strong>🌟 MechaTora（メカトラ）とは？</strong><br>
-                        「日常の小さな不便を解決する」をコンセプトに、実用的なWebアプリケーションを無料で提供しているサイトです。2022年4月の開設以来、料理・防災・学習・癒しなど、多様なジャンルのアプリを開発・公開してきました。<br><br>
-
-                        このページでは、MechaTora で公開中の全コンテンツを一挙紹介します！<br><br>
-
-                        <strong>🍳 料理提案アプリ（CookSuggest）</strong><br>
-                        冷蔵庫の余り物から最適なレシピを提案してくれるWebアプリ。1,000種類以上のレシピデータベースを搭載し、材料名を入力するだけで3秒以内に5つのレシピを提案します。PWA対応でオフラインでも動作。「玉ねぎ、豚肉」などの簡単な入力でOK。食材を無駄にしない、エコで経済的な料理支援ツールです。<br>
-                        👉 <a href="https://mechatora.com/cook-suggest/" style="color: var(--primary-color);">CookSuggestを使う</a><br><br>
-
-                        <strong>🌏 地震モニター（Earthquake Monitor）</strong><br>
-                        気象庁APIと連携し、リアルタイムで地震情報を表示・通知するWebアプリ。地震発生から平均15秒以内で情報表示を実現。震度・マグニチュード・震源地を地図上に可視化し、プッシュ通知機能で素早く情報をキャッチ。防災チェックリスト機能も搭載しており、日頃の備えにも役立ちます。<br>
-                        👉 <a href="https://mechatora.com/earthquake-monitor/" style="color: var(--primary-color);">地震モニターを使う</a><br><br>
-
-                        <strong>📅 資格試験カレンダー</strong><br>
-                        主要な国家資格・民間資格の試験日程を一覧で確認できるカレンダー。社労士、宅建、FP、情報処理技術者試験など、人気資格の申込期間・試験日・合格発表日を網羅。Googleカレンダー連携機能付きで、試験日をリマインダー設定できます。資格取得を目指す方の必須ツール。<br>
-                        👉 <a href="https://mechatora.com/qualification-calendar.html" style="color: var(--primary-color);">資格カレンダーを見る</a><br><br>
-
-                        <strong>🔥 暖炉シミュレータ（Virtual Fireplace）</strong><br>
-                        リアルな暖炉の炎と音を再現したWebアプリ。パチパチという薪の音、ゆらめく炎のアニメーションで、自宅にいながら暖炉の雰囲気を楽しめます。作業用BGM、瞑想、リラックスタイムに最適。音量調整・炎の大きさ調整機能付き。寒い冬の夜、暖炉の前でくつろぐ贅沢な時間を。<br>
-                        👉 <a href="https://mechatora.com/fire/" style="color: var(--primary-color);">暖炉を楽しむ</a><br><br>
-
-                        <strong>📱 X投稿バズ予測（X Buzz Simulator）</strong><br>
-                        SNS投稿がどれだけバズるかを予測するエンタメアプリ。投稿文を入力すると、AI風アルゴリズムでバズ度（いいね数、リツイート数、インプレッション数）を予測表示。Twitter/X風のUIで実際にバズった雰囲気を体験できます。投稿前のシミュレーションや、友人との遊びに。<br>
-                        👉 <a href="https://mechatora.com/x-buzz-simulator/" style="color: var(--primary-color);">バズ予測を試す</a><br><br>
-
-                        <strong>🐱 癒し系コンテンツ</strong><br>
-                        ・<strong>猫カフェヒーリング</strong> - 可愛い猫の写真と癒しの音楽<br>
-                        ・<strong>オーロラ観賞</strong> - 幻想的なオーロラアニメーション<br>
-                        ・<strong>クラゲ水族館</strong> - ゆらゆら漂うクラゲの癒し空間<br>
-                        ・<strong>日本庭園散策</strong> - 和の風情を感じるバーチャル庭園<br>
-                        ストレスフルな日常に、ひと時の癒しを。<br><br>
-
-                        <strong>📚 学習・教育コンテンツ</strong><br>
-                        ・<strong>R言語・Tidyverse完全ガイド</strong> - 全24章、データサイエンス入門から機械学習まで網羅<br>
-                        ・<strong>社会保険ニュース</strong> - 厚労省・年金機構の最新情報を毎日自動更新<br>
-                        ・<strong>科学的暗記アプリ</strong> - 間隔反復学習理論に基づいた効率的暗記ツール<br><br>
-
-                        <strong>🎯 今後の開発予定</strong><br>
-                        ・<strong>日本酒サジェストアプリ</strong> - 好みの銘柄に近い日本酒を提案（開発中）<br>
-                        ・<strong>通勤経路最適化ツール</strong> - 混雑を避けた最適ルート提案<br>
-                        ・<strong>ビールクイズ</strong> - ビールの知識を楽しく学べるクイズアプリ<br><br>
-
-                        <strong>💡 MechaToraの特徴</strong><br>
-                        ✅ 完全無料 - すべてのアプリを無料で利用可能<br>
-                        ✅ 会員登録不要 - 面倒な登録なしですぐ使える<br>
-                        ✅ PWA対応 - オフラインでも動作、スマホにインストール可能<br>
-                        ✅ プライバシー重視 - 個人情報を収集しない設計<br>
-                        ✅ 継続更新 - 定期的に新機能追加・改善<br><br>
-
-                        すべてのアプリは、実際に自分が「あったらいいな」と思ったものを形にしています。ぜひ色々試してみてください！
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">コンテンツ紹介</span>
-                        <span class="tag">Webアプリ</span>
-                        <span class="tag">無料ツール</span>
-                        <span class="tag">PWA</span>
-                    </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
-                </div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">📊</div>
-                    <div class="post-date">2025年10月5日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">R言語・Tidyverse解説サイト完成！24章の大ボリューム</h3>
-                    <p class="post-excerpt">
-                        ついに完成しました！R言語とTidyverseの包括的な解説サイト「<a href="https://mechatora.com/tidy-data-science/" style="color: var(--primary-color); text-decoration: none; border-bottom: 2px solid var(--primary-color);">Tidy Data Science入門</a>」を公開。全24章、総ページ数にして約200ページ相当の大ボリュームです。<br><br>
-
-                        <strong>なぜ作ったのか？</strong><br>
-                        データ分析の勉強を始めたとき、Tidyverseの情報が散らばっていて、体系的に学べる日本語サイトが見つからなかった。「自分が知りたかった情報」をまとめた結果、こんな大作に。<br><br>
-
-                        <strong>24章の内容：</strong><br>
-                        基礎編（dplyr、ggplot2、tidyr）から、応用編（機械学習、時系列分析、深層学習）まで網羅。特に、tidymodelsを使った機械学習パイプラインや、modeltime による時系列予測など、実務で使える内容を重視しました。<br><br>
-
-                        各章には実行可能なサンプルコードと詳細な解説を掲載。「とりあえず動かしてみる」から「仕組みを理解する」まで、段階的に学べる構成になっています。<br><br>
-
-                        <strong>こんな人におすすめ：</strong><br>
-                        ・RやTidyverseを体系的に学びたい初心者<br>
-                        ・Pythonは使えるけどRも触ってみたい人<br>
-                        ・データ分析の実務でTidyverseを活用したい人<br><br>
-
-                        このサイトが、かつての自分と同じように「情報が散らばって困っている」誰かの役に立てば嬉しいです。無料で全章公開中。ぜひアクセスしてみてください！
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">R言語</span>
-                        <span class="tag">Tidyverse</span>
-                        <span class="tag">データサイエンス</span>
-                        <span class="tag">機械学習</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">📝</div>
-                    <div class="post-date">2025年7月11日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">非エンジニアがWebベースのコンテンツを作ってみる</h3>
-                    <p class="post-excerpt">
-                        ふだんコードを書かない私が、Webアプリっぽいものを作ってみたら…思ったより楽しかった！
-                        HTMLとCSSをちょっと触るだけで、まるでプロのブログみたいな見た目に。MechaTora風のブログレイアウトも真似してみたら、思った以上に「それっぽく」なってちょっと感動。
-                        いまやノーコード・ローコードの時代。非エンジニアだって、やりたいことは意外とカタチにできるんだなと実感。最初の一歩さえ踏み出せば、世界がひらける。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">非エンジニア</span>
-                        <span class="tag">Web制作</span>
-                        <span class="tag">初心者</span>
-                    </div>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
-                        Xアカウント → <a href="https://twitter.com/xORMRha7Ck16551" target="_blank" style="color: var(--primary-color);">@xORMRha7Ck16551</a>
-                    </p>
-                </div>
-            </article>
-            
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🧠</div>
-                    <div class="post-date">2025年7月15日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">ClaudeCodeでバイブコーディングしてみる</h3>
-                    <p class="post-excerpt">
-                        最近、話題のClaudeのコード支援機能（ClaudeCode）を試してみた。非エンジニアの私でも、自然文で「こんなの作りたい」と伝えるだけで、実行可能なHTMLやJSがスッと出てくる。
-                        特に驚いたのは、スタイルまで提案してくれること。たとえば「柔らかい雰囲気にして」「iPhoneで見やすくして」みたいな曖昧な要望にも、それっぽいコードで返してくれる。<br><br>
-                        しかも、単にコードを書く手伝いというより、「一緒に創る感覚」が強い。思わず「これって、もはやバイブスでコーディングじゃん」と感じた。命名するなら "バイブコーディング"。<br><br>
-                        「なんとなくこうしたい」を尊重してくれる相棒。エディタいらず、エラー地獄なし、検索地獄も回避。これはもう、非エンジニアにとって革命だ。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">ClaudeCode</span>
-                        <span class="tag">AI開発</span>
-                        <span class="tag">バイブコーディング</span>
-                    </div>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
-                        Xアカウント → <a href="https://twitter.com/xORMRha7Ck16551" target="_blank" style="color: var(--primary-color);">@xORMRha7Ck16551</a>
-                    </p>
-                </div>
-            </article>
-            
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">💻</div>
-                    <div class="post-date">2025年7月20日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">ClaudeCode on WSL環境で複数WEBサービス開発してみた結果</h3>
-                    <p class="post-excerpt">
-                        WSL（Windows Subsystem for Linux）環境にClaudeCodeを構築し、本格的にWebサービス開発に挑戦してみた。レシピ提案アプリ、地震情報モニター、暗記カードアプリなど、複数のサービスを短期間で形にできた。<br><br>
-                        特に印象的だったのは、WSLとClaudeCodeの組み合わせの快適さ。Windowsの使い慣れた環境を保ちながら、Linux系のツールチェーンが使えるのは革新的だ。ファイル管理もシームレスで、開発効率が格段に向上した。<br><br>
-                        ただし、思わぬ落とし穴が料金面。最初は20ドル課金で十分だと思っていたが、複数サービスを並行開発していると、あっという間にリミットに到達。特にコード生成とデバッグのやり取りを繰り返すと、使用量が予想以上に増える。<br><br>
-                        結果として100ドル課金がちらつく状況に。本格的な開発には、それなりの投資が必要だと実感した。とはいえ、この投資で得られる開発速度と品質を考えると、十分にペイする価値がある。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">ClaudeCode</span>
-                        <span class="tag">WSL</span>
-                        <span class="tag">開発環境</span>
-                        <span class="tag">料金</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-            
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🔐</div>
-                    <div class="post-date">2025年7月26日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">BoltNewで認証を作り、SUPABASEでDBも楽々構築</h3>
-                    <p class="post-excerpt">
-                        Webサービスを作るうえで避けられないのが「認証」と「データベース管理」。
-                        正直、ここが一番つまづきやすい。そんな中、見つけたのが BoltNew（←仮称プロトタイプ）。これは認証周りを爆速で構築できる新ツール。LINE風のUXでサインインが作れる上に、デザインも整ってる。<br><br>
-                        さらに、SUPABASEを併用すると、DB設計もGUIで完結。SQLが苦手でも、テーブル作成からレコード挿入、認可設定まで一気通貫。Firebaseの代替にもなる柔軟さがある。<br><br>
-                        この2つの組み合わせだけで、「ログインして、ユーザーごとのデータを表示するWebアプリ」が形になる。しかも、学習コストは控えめ。<br><br>
-                        ゼロから全部作らなくても、アイデア次第でWebサービスは作れる。非エンジニアだからこそ、こうしたツールを武器にすべきだと感じた。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">BoltNew</span>
-                        <span class="tag">SUPABASE</span>
-                        <span class="tag">認証</span>
+                        <span class="tag">アプリ開発</span>
                         <span class="tag">データベース</span>
                     </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">冷蔵庫の余り物から料理レシピを提案するCookSuggest。1000種類以上のレシピデータベースをどのように構築したのか、開発の舞台裏を公開します。</p>
+                    <a href="blog-cook-suggest-development.html" class="read-more">続きを読む →</a>
+                </div>
             </article>
 
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🍳</div>
-                    <div class="post-date">2025年8月1日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">CookSuggestアプリ開発秘話：1000レシピDBをどう構築したか</h3>
-                    <p class="post-excerpt">
-                        料理レシピ提案アプリ「CookSuggest」の最大の特徴は、1000種類以上のレシピデータベース。この膨大なデータをどう集めて、どう構造化したかをお話しします。<br><br>
-                        まず直面したのが「レシピの標準化」問題。醤油大さじ1杯は15ml、でも「少々」「適量」をどう数値化する？材料名も「玉ねぎ」「タマネギ」「玉葱」の表記揺れをどう統一する？<br><br>
-                        結果的に、独自の材料マスターテーブルを作成し、シソーラス辞書で表記揺れを吸収。調味料は3段階（少・中・多）に分類して検索精度を向上させました。<br><br>
-                        PWA化では、オフライン検索機能が最大のチャレンジでした。1000レシピをローカルストレージに効率保存し、検索アルゴリズムも最適化。結果、3秒以内で最適レシピを5つ提案できるシステムが完成しました。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">CookSuggest</span>
-                        <span class="tag">レシピDB</span>
-                        <span class="tag">PWA</span>
-                        <span class="tag">データ構造化</span>
+            <!-- Article 3: 地震モニター技術解説 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">技術</span>
+                    <div class="blog-meta">
+                        <span>📅 2025-10-20</span>
+                        <span>⏱️ 8分</span>
                     </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🌏</div>
-                    <div class="post-date">2025年8月3日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">地震モニターアプリ：リアルタイム更新の技術的仕組み</h3>
-                    <p class="post-excerpt">
-                        地震情報をリアルタイム表示する「地震モニター」アプリ。気象庁のAPIを活用した更新システムの裏側を技術解説します。<br><br>
-                        最大の技術課題は「リアルタイム性とサーバー負荷のバランス」でした。地震発生時は瞬間的にアクセスが集中するため、通常のポーリング方式では限界があります。<br><br>
-                        解決策として採用したのが「プログレッシブ更新システム」。平時は30秒間隔、地震発生時は自動で5秒間隔に切り替わり、沈静化後は段階的に元の間隔に戻します。<br><br>
-                        また、PWA機能を活用した通知システムも実装。ユーザーが設定した震度以上の地震発生時に、ブラウザプッシュ通知で即座にお知らせします。バックグラウンドでも動作するため、常時監視が可能です。<br><br>
-                        結果として、地震発生から平均15秒以内での情報表示を実現。防災意識向上に貢献できるアプリに仕上がりました。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">地震モニター</span>
-                        <span class="tag">リアルタイム</span>
-                        <span class="tag">気象庁API</span>
-                        <span class="tag">防災</span>
+                    <h2><a href="blog-earthquake-monitor-tech.html">地震モニターアプリ：リアルタイム更新の技術的仕組み</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">API連携</span>
+                        <span class="tag">リアルタイム処理</span>
                     </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🧠</div>
-                    <div class="post-date">2025年8月5日</div>
                 </div>
-                <div class="post-content">
-                    <h3 class="post-title">科学的暗記アプリ：間隔反復学習アルゴリズムの実装</h3>
-                    <p class="post-excerpt">
-                        記憶の科学に基づいた「科学的暗記アプリ」では、エビングハウスの忘却曲線理論を実装。どのように学習効率を最大化したかを解説します。<br><br>
-                        核心は「SuperMemo SM-2アルゴリズム」の応用です。ユーザーの回答品質（完璧・良好・困難・失敗）に基づいて、次回復習のタイミングを動的計算。個人の記憶特性に最適化されます。<br><br>
-                        実装で工夫したのは「学習継続のモチベーション設計」。進捗を可視化するプログレスバー、連続学習日数の記録、難易度別の達成バッジシステムを導入しました。<br><br>
-                        結果、従来の一律復習サイクルと比較して、記憶定着率が約40%向上。特に長期記憶への定着効果が顕著に改善されました。<br><br>
-                        現在、1000人以上のユーザーに愛用されており、医学部受験生や資格試験学習者から高い評価をいただいています。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">科学的暗記</span>
-                        <span class="tag">間隔反復</span>
-                        <span class="tag">学習アルゴリズム</span>
-                        <span class="tag">記憶科学</span>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">JavaScriptで実現する地震情報のリアルタイム更新。気象庁APIの取得方法、データパースの実装、自動更新ロジック、エラーハンドリングまで詳しく解説。</p>
+                    <a href="blog-earthquake-monitor-tech.html" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+        </div>
+
+        <!-- Ad Placement 2: Mid-content -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="2345678901"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="blog-grid">
+            <!-- Article 4: R言語Tidyverse入門 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">技術</span>
+                    <div class="blog-meta">
+                        <span>📅 2025-09-28</span>
+                        <span>⏱️ 10分</span>
                     </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🏛️</div>
-                    <div class="post-date">2025年8月7日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">社会保険ニュース自動化システム：AI要約×自動更新の舞台裏</h3>
-                    <p class="post-excerpt">
-                        毎朝4時に自動更新される「社会保険ニュース」。厚生労働省、年金機構、Yahoo!ニュースから情報を収集し、AIで要約・分類する完全自動化システムの開発プロセスを公開します。<br><br>
-                        システム構成は3層構造：①ニュース収集層（Web Scraping）、②AI処理層（要約・カテゴリ分類）、③Web生成層（HTML出力・デプロイ）。全て自動実行されます。<br><br>
-                        技術的ハイライトは「コンテンツ重複排除アルゴリズム」。異なるソースから同じニュースが収集された場合、自動で統合し、最も詳細な情報を保持します。<br><br>
-                        AI要約では、専門用語解説付きサマリーを生成。「厚生年金」「雇用保険」などの制度変更を、一般の方にも分かりやすく説明します。<br><br>
-                        現在、スマホ版（Render.com）とPC版（GitHub Pages）の2バージョンを運用。用途に応じた最適なUXを提供しています。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">社会保険ニュース</span>
-                        <span class="tag">AI要約</span>
-                        <span class="tag">自動化</span>
-                        <span class="tag">Render.com</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🌐</div>
-                    <div class="post-date">2025年9月3日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">独自ドメイン「mechatora.com」取得！GitHub Pagesからの移行記録</h3>
-                    <p class="post-excerpt">
-                        ついに独自ドメイン「mechatora.com」を取得しました！これまでは「mechatora.github.io」というGitHub Pagesの無料ドメインで運用していましたが、本格的にWebサービスを展開するため、独自ドメインへの移行を決断。<br><br>
-                        ドメイン取得からDNS設定、HTTPS化まで、実は思ったより簡単でした。お名前.comで年間1,500円程度でドメインを取得し、GitHub PagesのCustom Domain設定で紐付け。CloudflareのDNSを経由させることで、無料でHTTPS化も実現。<br><br>
-                        移行作業で最も注意したのは「リダイレクト処理」です。既存のgithub.ioドメインへのアクセスを、自動的に新ドメインへ転送するJavaScriptを全ページに設置。SEO評価を引き継ぐため、301リダイレクトも設定しました。<br><br>
-                        独自ドメインにすることで、Google AdSenseの審査でも信頼性が向上すると期待しています。何より、「mechatora.com」というシンプルなURLは、ユーザーに覚えてもらいやすく、ブランディング効果も抜群です。<br><br>
-                        これから、このドメインでさらに多くのWebサービスを展開していきます！
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">独自ドメイン</span>
-                        <span class="tag">GitHub Pages</span>
-                        <span class="tag">DNS設定</span>
-                        <span class="tag">HTTPS</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">💰</div>
-                    <div class="post-date">2025年9月10日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">Google AdSense審査に落ち続ける日々…原因は「有用性の低いコンテンツ」</h3>
-                    <p class="post-excerpt">
-                        独自ドメインも取得し、いざGoogle AdSense申請！と意気込んだものの、結果は「不承認」。理由は「有用性の低いコンテンツ」と「ポリシー違反」の2つ。正直、かなりショックでした。<br><br>
-                        最初は「アドセンスコードの設置ミスかな？」と思い、全ページを確認。しかし、90ファイル中85ファイルに正しくコードが設置されており、技術的な問題ではないことが判明。<br><br>
-                        次に疑ったのが「コンテンツの質」。確かに、エンタメ系のアプリ（バーチャル暖炉、クラゲアクアリウムなど）は、説明文が短く、独自性に欠けていたかもしれません。また、各アプリの詳細ページが存在せず、リンク集のような構成になっていたのも問題だったようです。<br><br>
-                        調査の結果、以下の改善が必要と判断しました：<br>
-                        ① ブログ記事を20-30本に増やす（現在は7本程度）<br>
-                        ② 各アプリの詳細ページを作成（使い方、FAQ、事例紹介）<br>
-                        ③ 重複コンテンツの統合・削除<br>
-                        ④ エンタメ系アプリに「実用的価値」の説明を追加<br>
-                        ⑤ 運営者情報・About ページの充実<br><br>
-                        AdSense合格への道は険しいですが、これを機にサイトの質を根本から見直す良い機会になりました。諦めずに改善を続けます！
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">Google AdSense</span>
-                        <span class="tag">審査落ち</span>
-                        <span class="tag">コンテンツ改善</span>
-                        <span class="tag">SEO対策</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">⏰</div>
-                    <div class="post-date">2025年9月18日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">開発が楽しすぎて時間が溶ける問題：非エンジニアが陥る「永遠のリファクタリング地獄」</h3>
-                    <p class="post-excerpt">
-                        Web開発にハマってから、気づけば深夜3時…なんてことが日常茶飯事になってしまいました。「あと少しで完成」と思っても、新しいアイデアが次々と浮かび、気づけば朝。これが俗に言う「時間が溶ける」現象です。<br><br>
-                        特に厄介なのが「永遠のリファクタリング地獄」。一度完成したコードを見返すと、「もっと綺麗に書けるはず」「この部分、もっと効率化できる」と、改善したくなる。結果、新機能開発が進まず、既存コードの改修だけで時間が過ぎていく…。<br><br>
-                        非エンジニアの私は、「これで完璧」という基準が分からないのも原因の一つ。プロのエンジニアなら「この程度で十分」と判断できるところを、延々と細部にこだわってしまう。<br><br>
-                        対策として、「80点で公開する勇気」を持つことにしました。完璧主義を捨て、まずはユーザーに使ってもらう。フィードバックをもとに改善する方が、はるかに効率的です。<br><br>
-                        ただし…それでも楽しくて、やっぱり時間は溶けています（笑）。開発の楽しさに抗うのは、なかなか難しいものです。
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">開発日記</span>
-                        <span class="tag">リファクタリング</span>
-                        <span class="tag">非エンジニア</span>
-                        <span class="tag">時間管理</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">📊</div>
-                    <div class="post-date">2025年9月25日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">R言語・Tidyverse解説サイトを制作中！データサイエンス学習の新たな挑戦</h3>
-                    <p class="post-excerpt">
-                        新プロジェクトとして、R言語とTidyverse（データ分析パッケージ群）の日本語解説サイトを制作中です！タイトルは「Tidyverse完全ガイド」。データサイエンスに興味がある初学者向けに、分かりやすく体系的に学べるコンテンツを目指しています。<br><br>
-                        R言語は、統計解析やデータ可視化に特化したプログラミング言語。特に「Tidyverse」というパッケージ群を使うと、データの整形・可視化・分析が驚くほど直感的になります。ただし、日本語の体系的な学習リソースが少ないのが現状。<br><br>
-                        このサイトでは、以下の構成でコンテンツを展開予定：<br>
-                        ① 環境構築・基礎文法（初心者向け）<br>
-                        ② dplyrによるデータ操作（フィルタ・集計・結合）<br>
-                        ③ ggplot2による美しいグラフ作成<br>
-                        ④ tidyrによるデータ整形（wide/long変換）<br>
-                        ⑤ tidymodelsによる機械学習入門<br>
-                        ⑥ 実践プロジェクト（Kaggleデータ分析）<br><br>
-                        すでに13章分のコンテンツが完成しており、各章には実行可能なコード例とグラフ出力を掲載。インタラクティブなコード実行環境も検討中です。<br><br>
-                        Webアプリ開発だけでなく、データ分析の世界にも足を踏み入れることで、より幅広いスキルを身につけていきたいと考えています。近日中に正式公開予定なので、お楽しみに！
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">R言語</span>
-                        <span class="tag">Tidyverse</span>
-                        <span class="tag">データサイエンス</span>
-                        <span class="tag">学習サイト</span>
-                        <span class="tag">ggplot2</span>
-                    </div>
-                                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle("expanded"); this.textContent = this.textContent === "続きを読む ▼" ? "閉じる ▲" : "続きを読む ▼";">続きを読む ▼</button>
-</div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🚀</div>
-                    <div class="post-date">2025年7月1日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">ブログ始めます！私のスキルセットと開発スタイル</h3>
-                    <p class="post-excerpt">
-                        このブログでは、Webアプリ開発の記録や技術的な気づき、日々の学びを綴っていきます。まずは自己紹介から。<br><br>
-
-                        <strong>📊 私のスキルセット</strong><br>
-                        30代・人事部門勤務のサラリーマンです。もともと「勉強嫌い」で資格とは無縁の生活を送っていましたが、コロナ禍をきっかけに一念発起。社会保険労務士の資格を取得したことで、人生が大きく変わりました。<br><br>
-
-                        <strong>💻 プログラミングとの出会い</strong><br>
-                        人事データの分析業務でR言語を使い始めたのがプログラミングとの出会い。Tidyverseの美しさに感動し、データ分析にのめり込みました。その後、Pythonも独学で習得。最近はWeb開発にも手を広げ、JavaScriptでWebアプリケーションを作っています。<br><br>
-
-                        <strong>🛠️ 技術スタック</strong><br>
-                        ・<strong>R言語</strong> - Tidyverse、ggplot2、tidymodels（機械学習）<br>
-                        ・<strong>Python</strong> - データ分析、スクレイピング、自動化<br>
-                        ・<strong>Web開発</strong> - HTML/CSS/JavaScript、PWA<br>
-                        ・<strong>その他</strong> - Git/GitHub、WSL、Claude Code（AI支援開発）<br><br>
-
-                        <strong>🎯 開発スタイル</strong><br>
-                        私の開発スタイルは「日常の小さな不便を解決する」こと。例えば：<br>
-                        ・冷蔵庫の余り物から料理を提案してくれるアプリ<br>
-                        ・リアルタイムで地震情報を通知するモニター<br>
-                        ・間隔反復学習理論に基づいた暗記アプリ<br><br>
-
-                        大規模なシステムではなく、「自分が使いたいもの」を作る。それが私のモチベーションです。<br><br>
-
-                        <strong>📝 詳しいプロフィール</strong><br>
-                        もっと詳しい経歴やスキル習得の過程は、noteに書いています：<br>
-                        <a href="https://note.com/crt03/n/n24df152e449d" target="_blank" style="color: var(--primary-color); text-decoration: none; border-bottom: 2px solid var(--primary-color);">【自己紹介】30代サラリーマンのスキルアップ記録</a><br><br>
-
-                        <strong>🌐 各種アカウント</strong><br>
-                        ・<strong>note</strong> - 技術記事や学習記録を投稿：<a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">@crt03</a><br>
-                        ・<strong>X (Twitter)</strong> - 開発の進捗や日常：<a href="https://x.com/xORMRha7Ck16551" target="_blank" style="color: var(--primary-color);">@xORMRha7Ck16551</a><br><br>
-
-                        <strong>🎓 これからの目標</strong><br>
-                        このブログでは、開発中のアプリ紹介だけでなく、技術的なTips、失敗談、学習記録なども書いていきます。非エンジニア出身だからこそ伝えられる「プログラミング学習のリアル」を発信したい。<br><br>
-
-                        同じように働きながら開発を楽しんでいる方、これからプログラミングを始めたい方に、少しでも参考になれば嬉しいです。よろしくお願いします！
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">自己紹介</span>
-                        <span class="tag">スキルセット</span>
-                        <span class="tag">プログラミング</span>
-                        <span class="tag">R言語</span>
-                        <span class="tag">Python</span>
-                    </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
-                </div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">📊</div>
-                    <div class="post-date">2025年6月25日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">R言語Tidyverseで始めるデータ分析入門｜非エンジニアでも3ヶ月でマスターできた方法</h3>
-                    <p class="post-excerpt">
-                        <strong>📈 人事データ分析から始まったR言語との出会い</strong><br>
-                        人事部門で働く私がR言語を学び始めたきっかけは、「社員の離職率分析」でした。Excelでは限界を感じ、より高度な統計分析ツールを探していたところ、R言語のTidyverseに出会いました。<br><br>
-
-                        <strong>🎯 なぜR言語なのか？Pythonとの違い</strong><br>
-                        データ分析を学ぶ際、多くの人が「PythonとR、どちらを学ぶべきか？」で悩みます。私がR言語を選んだ理由は3つ：<br>
-                        1. <strong>統計分析に特化</strong> - 統計関数が標準で豊富、学術論文でも標準<br>
-                        2. <strong>Tidyverseの直感的な文法</strong> - パイプ演算子（%>%）で処理の流れが読みやすい<br>
-                        3. <strong>ggplot2の美しいグラフ</strong> - プレゼン資料に使えるクオリティ<br><br>
-
-                        <strong>💡 Tidyverseとは？初心者が知るべき基礎</strong><br>
-                        Tidyverseは、R言語でのデータ操作を劇的に簡単にするパッケージ群です。主要な構成要素：<br>
-                        ・<strong>dplyr</strong> - データの絞り込み、並び替え、集計<br>
-                        ・<strong>ggplot2</strong> - グラフ作成<br>
-                        ・<strong>tidyr</strong> - データ整形（縦横変換、欠損値処理）<br>
-                        ・<strong>readr</strong> - CSV/Excelファイル読み込み<br>
-                        ・<strong>purrr</strong> - 繰り返し処理<br><br>
-
-                        <strong>📚 私の3ヶ月学習ロードマップ</strong><br>
-                        非エンジニアの私が、実務で使えるレベルになるまでの道のり：<br><br>
-
-                        <strong>【1ヶ月目】基礎文法とデータ操作</strong><br>
-                        ・Progateでプログラミング基礎理解<br>
-                        ・RStudioのインストールと環境構築<br>
-                        ・dplyrの5大関数（filter, select, mutate, arrange, summarize）習得<br>
-                        ・実務データで練習（社員名簿の集計、部署別分析）<br><br>
-
-                        <strong>【2ヶ月目】グラフ作成と統計分析</strong><br>
-                        ・ggplot2で基本グラフ（棒グラフ、折れ線、散布図）<br>
-                        ・カスタマイズ技術（色、軸ラベル、テーマ）<br>
-                        ・相関分析、t検定などの基礎統計<br>
-                        ・実務課題：離職率の可視化と要因分析<br><br>
-
-                        <strong>【3ヶ月目】実践プロジェクト</strong><br>
-                        ・複数データソースの結合（left_join、inner_join）<br>
-                        ・レポート自動化（R Markdown）<br>
-                        ・ダッシュボード作成（Shiny入門）<br>
-                        ・成果：月次人事レポートの自動化に成功<br><br>
-
-                        <strong>🛠️ おすすめ学習リソース</strong><br>
-                        1. <strong>書籍</strong><br>
-                        ・『RユーザのためのRStudio実践入門』（技術評論社）<br>
-                        ・『Rではじめるデータサイエンス』（オライリー）<br>
-                        ・『前処理大全』（技術評論社） - Tidyverse実践的<br><br>
-
-                        2. <strong>オンライン講座</strong><br>
-                        ・Udemy「R言語とTidyverseによるデータ分析入門」<br>
-                        ・Coursera「Data Science Specialization」<br>
-                        ・YouTube「StatQuest with Josh Starmer」（統計の基礎）<br><br>
-
-                        3. <strong>公式ドキュメント</strong><br>
-                        ・Tidyverse公式サイト（tidyverse.org）<br>
-                        ・RStudio Cheat Sheets（チートシート集）<br><br>
-
-                        <strong>⚡ 実務で役立った具体例</strong><br>
-                        <strong>Case 1: 社員満足度調査の分析</strong><br>
-                        1000名のアンケートデータをTidyverseで集計。部署別・年齢別のクロス集計を5分で完了。Excelなら半日かかる作業が劇的に効率化。<br><br>
-
-                        <strong>Case 2: 採用データの可視化</strong><br>
-                        過去5年の採用実績をggplot2で可視化。経営会議で「データに基づく提案」として高評価。人事企画のレベルが一段上がりました。<br><br>
-
-                        <strong>Case 3: 残業時間の予測モデル</strong><br>
-                        tidymodelsパッケージで、部署・役職から残業時間を予測。精度70%のモデルを構築し、人員配置の最適化に貢献。<br><br>
-
-                        <strong>🚀 R言語学習のコツ</strong><br>
-                        1. <strong>手を動かす</strong> - 読むだけでは身につかない。毎日30分コードを書く<br>
-                        2. <strong>実務データで練習</strong> - 教材データより、仕事のデータの方が理解しやすい<br>
-                        3. <strong>エラーを恐れない</strong> - エラーメッセージは学びのチャンス<br>
-                        4. <strong>コミュニティ活用</strong> - Stack Overflow、Rユーザー会で質問<br>
-                        5. <strong>可視化を楽しむ</strong> - 綺麗なグラフが作れるとモチベーション維持<br><br>
-
-                        <strong>📌 次のステップ</strong><br>
-                        R言語の基礎を習得したら、以下にチャレンジ：<br>
-                        ・機械学習（tidymodels、caret）<br>
-                        ・テキストマイニング（tidytext）<br>
-                        ・時系列分析（forecast、prophet）<br>
-                        ・Webアプリ化（Shiny、Plumber API）<br><br>
-
-                        私もR言語からWeb開発（このサイト）に繋がりました。プログラミングの世界は、一つ学べば次々と新しい扉が開きます。<br><br>
-
-                        <strong>🔗 関連リンク</strong><br>
-                        📝 <a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">note - R言語学習記録</a><br>
-                        🎨 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">MechaTora開発ブログ</a>
-                    </p>
-                    <div class="post-tags">
+                    <h2><a href="blog-r-tidyverse-intro.html">R言語Tidyverseで始めるデータ分析入門｜非エンジニアでも3ヶ月でマスター</a></h2>
+                    <div class="blog-tags">
                         <span class="tag">R言語</span>
                         <span class="tag">Tidyverse</span>
                         <span class="tag">データ分析</span>
-                        <span class="tag">統計学</span>
-                        <span class="tag">初心者向け</span>
-                        <span class="tag">プログラミング学習</span>
                     </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">社労士からエンジニアへ。R言語とTidyverseを使ったデータ分析の基礎を実例とともに解説します。dplyr、ggplot2、tidyrの使い方を初心者目線で紹介。</p>
+                    <a href="blog-r-tidyverse-intro.html" class="read-more">続きを読む →</a>
                 </div>
             </article>
 
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">💼</div>
-                    <div class="post-date">2025年6月20日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">30代サラリーマンが働きながらプログラミング学習｜挫折しないための5つの秘訣</h3>
-                    <p class="post-excerpt">
-                        <strong>⏰ 時間がない社会人の現実</strong><br>
-                        30代・人事部門勤務の私が、プログラミング学習を始めたのは2年前。当時の状況：残業月80時間、休日出勤あり、帰宅は22時。「時間がない」が口癖でした。<br><br>
-
-                        それでも、今ではWebアプリを10個以上開発し、R言語・Python・JavaScriptを実務レベルで使えるようになりました。どうやって時間を作り、挫折せずに続けたか？5つの秘訣をお伝えします。<br><br>
-
-                        <strong>📌 秘訣1：完璧主義を捨てる「80点主義」</strong><br>
-                        最大の敵は「ちゃんと理解してから次に進む」という完璧主義。書籍を1ページずつ理解しようとすると、途中で嫌になります。<br><br>
-
-                        私のルール：「80点理解したら次へ」。わからない部分はメモして後回し。実際にコードを書きながら戻ると、不思議と理解できます。<br><br>
-
-                        <strong>📌 秘訣2：朝活で「1日30分」の習慣化</strong><br>
-                        夜は疲れて集中できない。そこで、朝6時に起きて30分だけコードを書く習慣を作りました。<br><br>
-
-                        朝の30分は、夜の2時間に匹敵する集中力。小さな達成感でスタートする1日は、驚くほどポジティブになります。<br><br>
-
-                        <strong>ポイント</strong><br>
-                        ・スマホを寝室に持ち込まない（SNSの誘惑を断つ）<br>
-                        ・前夜に「明日やること」を決めておく<br>
-                        ・コーヒーとお気に入りの音楽でルーティン化<br><br>
-
-                        <strong>📌 秘訣3：通勤時間を「インプットタイム」に</strong><br>
-                        片道40分の通勤時間、往復で80分。これを学習時間に変換しました。<br><br>
-
-                        <strong>電車内でやったこと</strong><br>
-                        ・Udemyの動画講座（1.5倍速）<br>
-                        ・技術ブログ記事を読む（Qiita、Zenn）<br>
-                        ・Progateのスマホアプリでコーディング練習<br>
-                        ・Podcastで英語の技術番組（Syntax.fm、JS Party）<br><br>
-
-                        月20日出勤なら、月26時間。年間312時間の学習時間を確保できました。<br><br>
-
-                        <strong>📌 秘訣4：「作りたいもの」から逆算学習</strong><br>
-                        書籍を最初から順番に読む学習法は、社会人には向きません。時間がかかりすぎて、途中で飽きます。<br><br>
-
-                        私の方法：「作りたいアプリ」を先に決めて、必要な知識だけを学ぶ。<br><br>
-
-                        <strong>例：料理アプリを作りたい</strong><br>
-                        1. 必要な技術をリストアップ（HTML/CSS、JavaScript、レシピデータ）<br>
-                        2. 各技術の「最低限必要な部分」だけ学ぶ<br>
-                        3. まず動くものを作る（見た目は後回し）<br>
-                        4. 動いてから、細部を改善<br><br>
-
-                        この方法なら、最短1週間で「動くアプリ」が完成。達成感が次のモチベーションになります。<br><br>
-
-                        <strong>📌 秘訣5：SNSで学習記録を公開する</strong><br>
-                        Twitterで「#今日の積み上げ」ハッシュタグで、毎日の学習内容をツイート。これが驚くほど効果的でした。<br><br>
-
-                        <strong>メリット</strong><br>
-                        ・公言することで「やらなきゃ」プレッシャー<br>
-                        ・同じ学習者とのつながり（励まし合い）<br>
-                        ・「いいね」の承認欲求が継続のモチベーション<br>
-                        ・自分の成長記録が可視化される<br><br>
-
-                        3ヶ月続けると、フォロワーが増え、「応援してくれる人」ができます。この存在が、挫折防止に絶大な効果。<br><br>
-
-                        <strong>⚠️ やってはいけないNG行動</strong><br>
-                        1. <strong>複数言語を同時に学ぶ</strong> - 混乱して全部中途半端に<br>
-                        2. <strong>高額スクールに頼りすぎ</strong> - 受け身では身につかない<br>
-                        3. <strong>エラーをすぐ質問</strong> - 自分で調べる力が育たない<br>
-                        4. <strong>最新技術を追いかける</strong> - 基礎がないと理解できない<br>
-                        5. <strong>完成度にこだわりすぎ</strong> - 公開しないと成長しない<br><br>
-
-                        <strong>📊 私の2年間の成果</strong><br>
-                        ・Webアプリ開発：12個（うち公開10個）<br>
-                        ・累計学習時間：約800時間（1日平均1時間強）<br>
-                        ・習得言語：R、Python、JavaScript、HTML/CSS<br>
-                        ・副業収入：月3-5万円（受託開発）<br>
-                        ・社内評価：DX推進リーダーに抜擢<br><br>
-
-                        <strong>🌟 これから学ぶ方へのメッセージ</strong><br>
-                        「30代から始めるのは遅い？」と聞かれますが、全くそんなことはありません。社会人経験があるからこそ、「何を作れば役立つか」の視点が鋭いんです。<br><br>
-
-                        プログラミングは、英語と同じ。毎日少しずつ触れていれば、必ず上達します。焦らず、楽しみながら、一緒に頑張りましょう！<br><br>
-
-                        <strong>🔗 関連記事</strong><br>
-                        📝 <a href="https://note.com/crt03/n/n24df152e449d" target="_blank" style="color: var(--primary-color);">30代サラリーマンのスキルアップ記録（note）</a><br>
-                        🎨 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">開発ブログ - 作ったアプリ紹介</a>
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">プログラミング学習</span>
-                        <span class="tag">30代社会人</span>
-                        <span class="tag">働きながら学習</span>
-                        <span class="tag">挫折しない方法</span>
-                        <span class="tag">時間管理</span>
+            <!-- Article 5: 独自ドメイン取得記録 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">技術</span>
+                    <div class="blog-meta">
+                        <span>📅 2025-09-01</span>
+                        <span>⏱️ 10分</span>
                     </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                    <h2><a href="blog-domain-registration.html">独自ドメイン「mechatora.com」取得！GitHub Pagesからの移行記録</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">独自ドメイン</span>
+                        <span class="tag">DNS設定</span>
+                        <span class="tag">SSL化</span>
+                    </div>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">github.ioから独自ドメインmechatora.comへ移行した全記録。ドメイン選定理由、取得手順、DNS設定、SSL化、301リダイレクト設定まで詳しく解説。</p>
+                    <a href="blog-domain-registration.html" class="read-more">続きを読む →</a>
                 </div>
             </article>
 
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🎓</div>
-                    <div class="post-date">2025年6月15日</div>
+            <!-- Article 6: 30代プログラミング学習 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">学習</span>
+                    <div class="blog-meta">
+                        <span>📅 2025-08-05</span>
+                        <span>⏱️ 10分</span>
+                    </div>
+                    <h2><a href="blog-30s-programming.html">30代サラリーマンが働きながらプログラミング学習｜挫折しないための5つの秘訣</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">30代</span>
+                        <span class="tag">プログラミング学習</span>
+                        <span class="tag">キャリアチェンジ</span>
+                    </div>
                 </div>
-                <div class="post-content">
-                    <h3 class="post-title">社会保険労務士試験合格への道｜働きながら一発合格した勉強法とスケジュール</h3>
-                    <p class="post-excerpt">
-                        <strong>📖 なぜ社労士を目指したのか</strong><br>
-                        人事部門で5年働く中で、「専門知識の不足」を痛感する場面が増えました。労働法、社会保険、年金制度…制度改正のたびに外部の社労士に頼る状況に、「自分でもっと詳しくなりたい」と思ったのがきっかけです。<br><br>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">33歳から始めて1年半でWebアプリ10個公開。30代からでも遅くない！働きながら学習を続けるための時間管理、モチベーション維持、学習ロードマップを公開。</p>
+                    <a href="blog-30s-programming.html" class="read-more">続きを読む →</a>
+                </div>
+            </article>
+        </div>
 
-                        <strong>📊 社労士試験の難易度と合格率</strong><br>
-                        社会保険労務士試験の合格率は約6-7％。司法試験ほどではないものの、難関国家資格の一つです。<br><br>
+        <!-- Ad Placement 3: Mid-content 2 -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="3456789012"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
 
-                        <strong>試験科目（全8科目）</strong><br>
-                        1. 労働基準法及び労働安全衛生法<br>
-                        2. 労働者災害補償保険法<br>
-                        3. 雇用保険法<br>
-                        4. 労務管理その他の労働に関する一般常識<br>
-                        5. 社会保険に関する一般常識<br>
-                        6. 健康保険法<br>
-                        7. 厚生年金保険法<br>
-                        8. 国民年金法<br><br>
+        <div class="blog-grid">
+            <!-- Article 7: 無料Webアプリガイド -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">技術</span>
+                    <div class="blog-meta">
+                        <span>📅 2025-07-12</span>
+                        <span>⏱️ 12分</span>
+                    </div>
+                    <h2><a href="blog-free-webapp-guide.html">無料で作れるWebアプリ完全ガイド｜初心者が0円でアプリ公開する方法</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">無料</span>
+                        <span class="tag">GitHub Pages</span>
+                        <span class="tag">ホスティング</span>
+                    </div>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">完全無料でWebアプリを開発・公開する方法を徹底解説。GitHub Pages、Netlify、Vercelなど無料ホスティングサービスの比較から、独自ドメイン設定、SSL化まで。</p>
+                    <a href="blog-free-webapp-guide.html" class="read-more">続きを読む →</a>
+                </div>
+            </article>
 
-                        各科目で基準点（約4割）をクリアし、かつ総得点で上位7％に入る必要があります。一つでも科目落ちすると不合格。バランスが重要です。<br><br>
-
-                        <strong>⏰ 私の学習スケジュール（10ヶ月・総学習時間1000時間）</strong><br>
-                        <strong>【第1期】基礎固め（3ヶ月・300時間）</strong><br>
-                        ・平日：朝1時間、夜2時間<br>
-                        ・休日：5-6時間<br>
-                        ・教材：TAC通信講座、基本テキスト精読<br>
-                        ・目標：全科目を一通り理解<br><br>
-
-                        この時期は「完璧理解」を目指さない。60%理解で次へ進むイメージ。年金科目は特に難解ですが、後で何度も戻るので深追い禁止。<br><br>
-
-                        <strong>【第2期】過去問演習（4ヶ月・400時間）</strong><br>
-                        ・過去10年分の過去問を3周<br>
-                        ・間違えた問題はノートに記録<br>
-                        ・横断整理（科目をまたいだ知識の統合）<br>
-                        ・模試を月1回受験<br><br>
-
-                        ここが最も重要な時期。過去問を解くことで「出題パターン」が見えてきます。特に選択式問題（穴埋め）は、頻出キーワードが決まっています。<br><br>
-
-                        <strong>【第3期】直前期（3ヶ月・300時間）</strong><br>
-                        ・法改正情報の徹底チェック<br>
-                        ・苦手科目の集中学習<br>
-                        ・模試を週1回受験（計12回）<br>
-                        ・暗記カードで数字の暗記<br><br>
-
-                        試験1ヶ月前は、新しいことは学ばず、既存知識の反復のみ。特に「数字」（保険料率、給付額、期間）は直前まで記憶が抜けるので、毎日復習。<br><br>
-
-                        <strong>📚 使用した教材・予備校</strong><br>
-                        1. <strong>メイン教材：TAC通信講座</strong>（約20万円）<br>
-                        ・講義動画（1.5倍速で視聴）<br>
-                        ・基本テキスト8冊<br>
-                        ・過去問集<br>
-                        ・模試10回分<br><br>
-
-                        2. <strong>サブ教材</strong><br>
-                        ・『社労士 合格のツボ 択一対策』（早稲田経営出版）<br>
-                        ・『うかる！社労士 テキスト&問題集』（日本経済新聞出版）<br>
-                        ・YouTube「しゃろうしチャンネル」（無料講義）<br><br>
-
-                        3. <strong>アプリ</strong><br>
-                        ・「社労士 過去問 解説付き」アプリ（通勤中に活用）<br>
-                        ・Ankiアプリ（暗記カード）<br><br>
-
-                        <strong>💡 合格のための5つのコツ</strong><br>
-                        <strong>1. 「捨て科目」を作らない</strong><br>
-                        基準点制度があるため、得意科目で満点取っても、1科目でも基準点割れすると不合格。苦手科目こそ優先的に学習。<br><br>
-
-                        <strong>2. 横断学習で知識を統合</strong><br>
-                        例えば「出産」関連の給付は、健康保険・雇用保険・労災保険すべてに出てきます。科目ごとではなく、テーマごとに整理すると記憶に定着。<br><br>
-
-                        <strong>3. 法改正情報は命</strong><br>
-                        試験の約20%は、直近2年の法改正から出題。TACの「法改正まとめ冊子」は必読。<br><br>
-
-                        <strong>4. 模試は本番と同じ時間に受ける</strong><br>
-                        試験は午前3時間20分・午後3時間10分の長丁場。集中力・体力が必要。模試で本番のシミュレーションを何度も経験。<br><br>
-
-                        <strong>5. 選択式対策を軽視しない</strong><br>
-                        選択式（穴埋め）は運要素が大きく、ここで不合格になる人が多い。過去問だけでなく、予想問題集も解く。<br><br>
-
-                        <strong>😰 挫折しそうになったとき</strong><br>
-                        正直、何度も「もう無理」と思いました。特に厚生年金・国民年金の計算問題は、理解に3ヶ月かかりました。<br><br>
-
-                        <strong>乗り越えた方法</strong><br>
-                        ・学習仲間を作る（SNSで「#社労士受験」仲間と励まし合い）<br>
-                        ・小さな目標設定（今日は労基法10ページ、など）<br>
-                        ・ご褒美制度（1科目終わったら好きなもの食べる）<br>
-                        ・合格後のビジョンを明確化（資格手当月3万円、昇進）<br><br>
-
-                        <strong>🎉 合格発表の瞬間</strong><br>
-                        11月の合格発表日、官報で自分の受験番号を見つけた瞬間は、今でも忘れられません。10ヶ月の努力が報われた瞬間でした。<br><br>
-
-                        合格後、社内で「労務管理のスペシャリスト」として認められ、給与も昇格。何より、自信がつきました。<br><br>
-
-                        <strong>🔗 詳細はnoteで公開中</strong><br>
-                        📝 <a href="https://note.com/crt03/n/nfc0a93d9ccd7" target="_blank" style="color: var(--primary-color);">社労士試験合格体験記（note）</a><br>
-                        📚 <a href="https://mechatora.com/qualification-calendar.html" target="_blank" style="color: var(--primary-color);">資格試験カレンダー - 試験日程確認</a>
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">社会保険労務士</span>
+            <!-- Article 8: 社労士試験合格体験記 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">学習</span>
+                    <div class="blog-meta">
+                        <span>📅 2024-11-15</span>
+                        <span>⏱️ 12分</span>
+                    </div>
+                    <h2><a href="blog-sharoushi-pass.html">社会保険労務士試験合格への道｜働きながら一発合格した勉強法とスケジュール</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">社労士</span>
                         <span class="tag">資格試験</span>
                         <span class="tag">勉強法</span>
-                        <span class="tag">国家資格</span>
-                        <span class="tag">働きながら合格</span>
                     </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">フルタイムで働きながら社労士試験に一発合格。800時間の勉強スケジュール、科目別攻略法、おすすめテキスト、モチベーション維持の方法を詳しく解説します。</p>
+                    <a href="blog-sharoushi-pass.html" class="read-more">続きを読む →</a>
                 </div>
             </article>
 
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🌐</div>
-                    <div class="post-date">2025年6月10日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">無料で作れるWebアプリ完全ガイド｜初心者が0円でアプリ公開する方法</h3>
-                    <p class="post-excerpt">
-                        <strong>💰 お金をかけずにWebアプリを作りたい</strong><br>
-                        「Webアプリを作りたいけど、サーバー代が…」と諦めていませんか？実は、完全無料でアプリを開発・公開できる時代です。私も初期費用0円で、10個以上のアプリを公開しています。<br><br>
-
-                        この記事では、無料ツールだけでWebアプリを作る方法を、初心者向けに徹底解説します。<br><br>
-
-                        <strong>🛠️ 必要な無料ツール一覧</strong><br>
-                        <strong>1. コードエディタ：VS Code</strong>（無料）<br>
-                        Microsoftが提供する最強エディタ。プログラマーの90%以上が使用。拡張機能が豊富で、HTML/CSS/JavaScriptのコード補完が優秀。<br><br>
-
-                        <strong>2. ホスティング：GitHub Pages</strong>（無料）<br>
-                        静的サイト（HTML/CSS/JavaScript）なら、GitHubで無料ホスティング。独自ドメインも設定可能（ドメイン代のみ年1000円程度）。<br><br>
-
-                        <strong>3. バックエンド：Supabase / Firebase</strong>（無料枠あり）<br>
-                        データベース、認証、ストレージが無料で使える。小規模アプリなら無料枠で十分。<br><br>
-
-                        <strong>4. 画像素材：Unsplash / Pexels</strong>（完全無料）<br>
-                        商用利用可能な高品質写真が無料。クレジット表記も不要。<br><br>
-
-                        <strong>5. アイコン：Font Awesome</strong>（無料）<br>
-                        Webアイコンの定番。CDNで読み込めば即使用可。<br><br>
-
-                        <strong>📝 開発の流れ（5ステップ）</strong><br>
-                        <strong>Step 1: アイデア出し</strong><br>
-                        「自分が欲しいアプリ」から考える。例：<br>
-                        ・冷蔵庫の余り物レシピ検索<br>
-                        ・地震情報の通知<br>
-                        ・勉強時間の記録ツール<br><br>
-
-                        大規模でなくてOK。まずは「1つの機能」に絞る。<br><br>
-
-                        <strong>Step 2: 技術選定</strong><br>
-                        初心者におすすめ：<br>
-                        ・フロントエンド：HTML + CSS + JavaScript（バニラJS）<br>
-                        ・バックエンド：なし（ローカルストレージで保存）<br>
-                        ・デプロイ：GitHub Pages<br><br>
-
-                        React/Vueは後回し。まずは基礎を固める。<br><br>
-
-                        <strong>Step 3: プロトタイプ作成</strong><br>
-                        デザインは後回し。まず「動くもの」を作る。<br><br>
-
-                        <strong>最小限のHTMLテンプレート</strong><br>
-                        ```html<br>
-                        &lt;!DOCTYPE html&gt;<br>
-                        &lt;html&gt;<br>
-                        &lt;head&gt;<br>
-                            &lt;title&gt;アプリ名&lt;/title&gt;<br>
-                        &lt;/head&gt;<br>
-                        &lt;body&gt;<br>
-                            &lt;h1&gt;Hello World&lt;/h1&gt;<br>
-                            &lt;script src="app.js"&gt;&lt;/script&gt;<br>
-                        &lt;/body&gt;<br>
-                        &lt;/html&gt;<br>
-                        ```<br><br>
-
-                        これだけで、ブラウザで表示できます。<br><br>
-
-                        <strong>Step 4: GitHub Pagesで公開</strong><br>
-                        1. GitHubアカウント作成（無料）<br>
-                        2. リポジトリ作成（例：my-recipe-app）<br>
-                        3. index.htmlをアップロード<br>
-                        4. Settings → Pages → Sourceを"main branch"に設定<br>
-                        5. 5分後、https://ユーザー名.github.io/my-recipe-app/ で公開<br><br>
-
-                        これだけで、世界中からアクセス可能なアプリが完成！<br><br>
-
-                        <strong>Step 5: 改善を繰り返す</strong><br>
-                        ・CSSで見た目を整える<br>
-                        ・JavaScriptで機能追加<br>
-                        ・ユーザーからフィードバック収集<br>
-                        ・バグ修正<br><br>
-
-                        <strong>🎨 デザインのコツ（センス不要）</strong><br>
-                        「デザインセンスがない」と悩む必要はありません。既存の優れたデザインを参考にすればOK。<br><br>
-
-                        <strong>参考にすべきサイト</strong><br>
-                        ・Dribbble（デザインギャラリー）<br>
-                        ・Tailwind CSS（簡単に綺麗なデザイン）<br>
-                        ・Bootstrap（定番CSSフレームワーク）<br><br>
-
-                        色選びは「Coolors」で自動生成。フォントは「Google Fonts」で無料。<br><br>
-
-                        <strong>⚡ 私が無料で作ったアプリ例</strong><br>
-                        1. <strong>CookSuggest</strong> - 料理提案アプリ<br>
-                        技術：HTML/CSS/JavaScript（バニラ）<br>
-                        ホスティング：GitHub Pages（無料）<br>
-                        開発期間：2週間<br>
-                        月間ユーザー：500人<br>
-                        👉 <a href="https://mechatora.com/cook-suggest/" target="_blank" style="color: var(--primary-color);">CookSuggestを見る</a><br><br>
-
-                        2. <strong>地震モニター</strong><br>
-                        技術：JavaScript + 気象庁API<br>
-                        ホスティング：GitHub Pages<br>
-                        開発期間：1週間<br>
-                        👉 <a href="https://mechatora.com/earthquake-monitor/" target="_blank" style="color: var(--primary-color);">地震モニターを見る</a><br><br>
-
-                        どちらも運営費0円で、2年間安定稼働中です。<br><br>
-
-                        <strong>🚀 次のステップ：収益化も可能</strong><br>
-                        無料で作ったアプリでも、収益化は可能：<br>
-                        1. <strong>Google AdSense</strong> - 広告収入（月数千円〜）<br>
-                        2. <strong>アフィリエイト</strong> - 関連商品紹介<br>
-                        3. <strong>寄付ボタン</strong> - PayPal、Buy Me a Coffee<br>
-                        4. <strong>有料版</strong> - Stripeで課金機能<br><br>
-
-                        私もAdSense申請中。承認されれば、月数千円の副収入が見込めます。<br><br>
-
-                        <strong>📚 おすすめ学習リソース（全て無料）</strong><br>
-                        ・<strong>Progate</strong> - HTML/CSS/JavaScript基礎（無料版あり）<br>
-                        ・<strong>MDN Web Docs</strong> - 最も正確なWeb技術リファレンス<br>
-                        ・<strong>freeCodeCamp</strong> - 完全無料のプログラミング学習<br>
-                        ・<strong>YouTube - Traversy Media</strong> - 実践的なチュートリアル<br><br>
-
-                        <strong>🌟 まとめ：無料で始めて、スキルアップしよう</strong><br>
-                        お金がなくても、Webアプリは作れます。必要なのは「やる気」と「時間」だけ。<br><br>
-
-                        小さなアプリから始めて、徐々にスキルアップ。気づけば、立派なエンジニアになっています。一緒に頑張りましょう！<br><br>
-
-                        <strong>🔗 関連リンク</strong><br>
-                        🎨 <a href="https://mechatora.com/" target="_blank" style="color: var(--primary-color);">MechaTora - 無料Webアプリ集</a><br>
-                        📝 <a href="https://mechatora.com/blog.html" target="_blank" style="color: var(--primary-color);">開発ブログ</a>
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">Webアプリ開発</span>
-                        <span class="tag">無料ツール</span>
-                        <span class="tag">GitHub Pages</span>
-                        <span class="tag">初心者向け</span>
-                        <span class="tag">プログラミング入門</span>
+            <!-- Article 9: ClaudeCode体験記 (既存) -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">技術</span>
+                    <div class="blog-meta">
+                        <span>📅 2024-11-01</span>
+                        <span>⏱️ 6分</span>
                     </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
-                </div>
-            </article>
-
-            <article class="blog-post">
-                <div class="post-header">
-                    <div class="post-icon">🔥</div>
-                    <div class="post-date">2025年6月5日</div>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">エンジニア転職せずに「社内DX人材」になった話｜人事からテックリードへの道</h3>
-                    <p class="post-excerpt">
-                        <strong>💼 人事部員が突然「DX推進リーダー」に</strong><br>
-                        2年前、私は普通の人事部員でした。採用、労務管理、給与計算…特別なスキルもなく、Excelとメールが仕事道具。それが今では、社内のDX推進リーダーとして、業務効率化システムの開発を任されています。<br><br>
-
-                        エンジニアに転職したわけではありません。会社に残りながら、「社内DX人材」として価値を高めた結果です。同じような状況の方に、そのプロセスをシェアします。<br><br>
-
-                        <strong>📊 きっかけは「データ分析」のニーズ</strong><br>
-                        転機は、上司からの一言でした。<br>
-                        「離職率が高い部署を特定して、原因を分析してほしい」<br><br>
-
-                        Excelでピボットテーブルを駆使しましたが、データが5年分・社員1000人分となると限界。そこでR言語に出会い、Tidyverseでのデータ分析を独学。<br><br>
-
-                        2週間で分析レポートを作成し、経営会議でプレゼン。「データに基づく提案」として高評価を得ました。これが、私の「DX人材」への第一歩でした。<br><br>
-
-                        <strong>🚀 小さな成功が次のチャンスを呼ぶ</strong><br>
-                        データ分析の成功後、次々と依頼が来ました：<br><br>
-
-                        <strong>案件1：採用管理システムの自動化</strong><br>
-                        手作業で管理していた応募者情報を、Google Apps Scriptで自動化。応募受付→メール送信→面接日程調整まで、すべて自動化。工数が80%削減。<br><br>
-
-                        <strong>案件2：社員満足度調査の可視化ダッシュボード</strong><br>
-                        年1回のアンケート結果を、Tableauで可視化。部署別・年齢別の満足度が一目で分かるダッシュボードを作成。経営層から「もっと早く作ってほしかった」と。<br><br>
-
-                        <strong>案件3：勤怠データの異常検知システム</strong><br>
-                        残業時間が月80時間を超える社員を自動検知し、上長にアラート通知。メンタルヘルス対策として導入され、離職率が15%低下。<br><br>
-
-                        これらはすべて、独学で習得した技術です。<br><br>
-
-                        <strong>💡 「社内DX人材」の強み</strong><br>
-                        エンジニア転職せず、社内に残る選択をした理由は3つ：<br><br>
-
-                        <strong>1. 業務理解がある</strong><br>
-                        外部のエンジニアには、業務の細かいニュアンスが伝わりません。「この作業、本当は不要」「このデータ、実は使ってない」といった現場の実情を知っているのは、現場経験者だけ。<br><br>
-
-                        <strong>2. 社内調整力</strong><br>
-                        システム導入には、関係部署の協力が必須。人事として培った社内人脈・調整力が、DXプロジェクトの成功に直結しました。<br><br>
-
-                        <strong>3. 安定収入 + 新スキル獲得</strong><br>
-                        エンジニア転職はリスクもあります。未経験から転職すると、年収ダウンの可能性も。社内でスキルアップしつつ、安定した給与を維持できました。<br><br>
-
-                        <strong>📚 習得した技術スタック</strong><br>
-                        2年間で、以下のスキルを独学で習得：<br><br>
-
-                        <strong>データ分析・可視化</strong><br>
-                        ・R言語（Tidyverse、ggplot2）<br>
-                        ・Python（pandas、matplotlib）<br>
-                        ・Tableau（BIツール）<br>
-                        ・SQL（データベース抽出）<br><br>
-
-                        <strong>業務自動化</strong><br>
-                        ・Google Apps Script（スプレッドシート自動化）<br>
-                        ・Power Automate（RPA）<br>
-                        ・Python（スクレイピング、バッチ処理）<br><br>
-
-                        <strong>Web開発</strong><br>
-                        ・HTML/CSS/JavaScript<br>
-                        ・GitHub Pages（社内ツール公開）<br>
-                        ・PWA（オフライン対応アプリ）<br><br>
-
-                        すべて、業務時間外に独学。通勤時間とランチタイムを学習時間に充てました。<br><br>
-
-                        <strong>💰 キャリア・年収への影響</strong><br>
-                        DX人材としての評価が高まり、以下の変化がありました：<br><br>
-
-                        ・役職：主任 → 係長（2年で昇進）<br>
-                        ・年収：480万円 → 580万円（+100万円）<br>
-                        ・資格手当：社労士取得で月3万円（年36万円）<br>
-                        ・副業：受託開発で月3-5万円<br><br>
-
-                        実質、年収は約150万円アップ。エンジニア転職より、リスクなく収入を増やせました。<br><br>
-
-                        <strong>🌟 これから「社内DX人材」を目指す方へ</strong><br>
-                        <strong>ステップ1：小さく始める</strong><br>
-                        いきなり大きなシステム開発は無理。まずは「Excelマクロで業務効率化」など、小さな成功体験を積む。<br><br>
-
-                        <strong>ステップ2：成果を可視化</strong><br>
-                        「工数50%削減」「ミス0件」など、数値で成果を示す。経営層は数字に反応します。<br><br>
-
-                        <strong>ステップ3：社内に発信</strong><br>
-                        作ったツールを社内共有。「こんなこともできるんだ」と認知が広がり、次の依頼が来ます。<br><br>
-
-                        <strong>ステップ4：外部発信</strong><br>
-                        ブログやSNSで発信すると、社外からの評価も高まります。転職の選択肢も広がります。<br><br>
-
-                        <strong>🔗 関連記事</strong><br>
-                        📝 <a href="https://note.com/crt03" target="_blank" style="color: var(--primary-color);">note - DX推進の実践記録</a><br>
-                        🎨 <a href="https://mechatora.com/" target="_blank" style="color: var(--primary-color);">MechaTora - 作成したアプリ集</a>
-                    </p>
-                    <div class="post-tags">
-                        <span class="tag">DX推進</span>
-                        <span class="tag">社内エンジニア</span>
-                        <span class="tag">キャリアアップ</span>
-                        <span class="tag">業務効率化</span>
-                        <span class="tag">データ分析</span>
+                    <h2><a href="blog-claude-code-experience.html">ClaudeCode使ってみた！｜AI爆速コーディングの衝撃体験</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">AI</span>
+                        <span class="tag">ClaudeCode</span>
+                        <span class="tag">開発体験</span>
                     </div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.previousElementSibling.classList.toggle('expanded'); this.textContent = this.textContent === '続きを読む ▼' ? '閉じる ▲' : '続きを読む ▼';">続きを読む ▼</button>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">Anthropic社の「ClaudeCode」を使ってみた体験記。AIがコードを書いてくれる時代が本当にやってきた！実際に使ってみて感じた驚きと可能性をレポート。</p>
+                    <a href="blog-claude-code-experience.html" class="read-more">続きを読む →</a>
                 </div>
             </article>
         </div>
 
-        <!-- AdSense Middle -->
-        <div style="text-align: center; margin: 30px 0;">
+        <!-- Ad Placement 4: Bottom -->
+        <div class="ad-container">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="8547296385"
+                 data-ad-slot="4567890123"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
-        
-        <div style="text-align: center; margin: 40px 0; padding: 30px; background: white; border-radius: 15px; box-shadow: var(--card-shadow);">
-            <h3>📧 開発情報をお届け</h3>
-            <p>新しいアプリのリリース情報や技術記事の更新は、このブログで随時公開しています。</p>
+
+        <div class="blog-grid">
+            <!-- Article 10: 社労士→エンジニア転身 (既存) -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="category-badge">キャリア</span>
+                    <div class="blog-meta">
+                        <span>📅 2024-10-28</span>
+                        <span>⏱️ 7分</span>
+                    </div>
+                    <h2><a href="blog-hr-to-developer.html">社労士からエンジニアへ｜33歳で挑んだキャリアチェンジの全記録</a></h2>
+                    <div class="blog-tags">
+                        <span class="tag">キャリアチェンジ</span>
+                        <span class="tag">転職</span>
+                        <span class="tag">30代</span>
+                    </div>
+                </div>
+                <div class="blog-card-body">
+                    <p class="blog-excerpt">人事・労務の専門家からエンジニアへ。33歳で決意したキャリアチェンジの理由、学習プロセス、転職活動の実際、そして現在の仕事について赤裸々に語ります。</p>
+                    <a href="blog-hr-to-developer.html" class="read-more">続きを読む →</a>
+                </div>
+            </article>
         </div>
-        
-        <!-- AdSense Footer -->
-        <div style="text-align: center; margin: 30px 0;">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1184134440246706"
-                 data-ad-slot="9102618057"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-        </div>
+
+        <footer>
+            <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            <p style="margin-top: 15px;">
+                <a href="privacy.html">プライバシーポリシー</a> |
+                <a href="contact.html">お問い合わせ</a> |
+                <a href="index.html">ホーム</a>
+            </p>
+        </footer>
     </div>
-    
-    <!-- AdSense 初期化 -->
-    <script>
-        window.addEventListener('load', function() {
-            try {
-                if (typeof adsbygoogle !== 'undefined') {
-                    const ads = document.querySelectorAll('.adsbygoogle');
-                    ads.forEach(ad => {
-                        if (!ad.dataset.adsbygoogleStatus) {
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        }
-                    });
-                }
-            } catch (error) {
-                console.log('AdSense initialization skipped:', error.message);
-            }
-        });
-    </script>
-
-    <!-- アクセスカウンター -->
-    <script>
-        (function() {
-            // localStorageから訪問回数を取得
-            let count = localStorage.getItem('blog-visitor-count');
-
-            if (!count) {
-                // 初回訪問の場合、ランダムな初期値を設定（1000-5000の間）
-                count = Math.floor(Math.random() * 4000) + 1000;
-            } else {
-                count = parseInt(count);
-            }
-
-            // 訪問回数をインクリメント
-            count++;
-
-            // localStorageに保存
-            localStorage.setItem('blog-visitor-count', count);
-
-            // カウンターを表示（カンマ区切り）
-            const countElement = document.getElementById('visitor-count');
-            if (countElement) {
-                countElement.textContent = count.toLocaleString();
-
-                // アニメーション効果
-                countElement.style.opacity = '0';
-                setTimeout(() => {
-                    countElement.style.transition = 'opacity 0.5s ease';
-                    countElement.style.opacity = '1';
-                }, 100);
-            }
-        })();
-    </script>
 </body>
 </html>

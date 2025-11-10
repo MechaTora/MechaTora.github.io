@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震モニターアプリ：リアルタイム更新の技術的仕組み | MechaTora開発ブログ</title>
+    <meta name="description" content="JavaScriptで実現する地震情報のリアルタイム更新。気象庁APIの取得方法、データパースの実装、自動更新ロジック、エラーハンドリングまで、Web防災アプリの技術を詳しく解説します。">
+    <meta name="keywords" content="地震モニター,リアルタイム更新,JavaScript,気象庁API,防災アプリ,Web開発,非同期処理,fetch API">
+    <link rel="canonical" href="https://mechatora.com/blog-earthquake-monitor-tech.html">
+
+    <!-- OGP Tags -->
+    <meta property="og:title" content="地震モニターアプリ：リアルタイム更新の技術的仕組み | MechaTora">
+    <meta property="og:description" content="JavaScriptで実現する地震情報のリアルタイム更新。気象庁APIの取得方法、データパースの実装、自動更新ロジック、エラーハンドリングまで詳しく解説。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mechatora.com/blog-earthquake-monitor-tech.html">
+    <meta property="og:image" content="https://mechatora.com/images/blog-earthquake-monitor-tech-ogp.png">
+    <meta property="og:site_name" content="MechaTora">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="地震モニターアプリ：リアルタイム更新の技術的仕組み">
+    <meta name="twitter:description" content="JavaScriptで実現する地震情報のリアルタイム更新技術を詳しく解説">
+    <meta name="twitter:image" content="https://mechatora.com/images/blog-earthquake-monitor-tech-ogp.png">
+
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav {
+            margin-top: 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .breadcrumb {
+            padding: 1rem;
+            background: #fafafa;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        article {
+            padding: 2rem;
+        }
+
+        .article-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .article-header h1 {
+            font-size: 2rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-content {
+            font-size: 1.05rem;
+            color: #2d3748;
+        }
+
+        .article-content h2 {
+            font-size: 1.6rem;
+            margin: 2.5rem 0 1rem;
+            padding-left: 0.75rem;
+            border-left: 4px solid #667eea;
+            color: #2d3748;
+        }
+
+        .article-content h3 {
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+            color: #4a5568;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.9;
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.75rem;
+            line-height: 1.8;
+        }
+
+        .article-content strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'JavaScript';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.75rem;
+            color: #a0aec0;
+            background: #1a202c;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .note {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .note strong {
+            color: #f59e0b;
+        }
+
+        .image-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .ad-container {
+            margin: 2.5rem 0;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .related-links {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .related-links h3 {
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .related-links ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .related-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .related-links a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .related-links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: #90cdf4;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            article {
+                padding: 1.5rem 1rem;
+            }
+
+            .article-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .article-content {
+                font-size: 1rem;
+            }
+
+            .code-block {
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐱 MechaTora 開発ブログ</h1>
+            <nav>
+                <a href="index.html">ホーム</a>
+                <a href="blog.html">ブログ一覧</a>
+                <a href="hub.html">アプリハブ</a>
+                <a href="about.html">About</a>
+            </nav>
+        </header>
+
+        <div class="breadcrumb">
+            <a href="index.html">ホーム</a> &gt; <a href="blog.html">ブログ</a> &gt; 地震モニターアプリ技術解説
+        </div>
+
+        <!-- Ad Placement 1: Below header -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <article>
+            <header class="article-header">
+                <h1>地震モニターアプリ：リアルタイム更新の技術的仕組み</h1>
+                <div class="article-meta">
+                    <span>📅 2025年10月20日</span>
+                    <span>⏱️ 読了時間: 8分</span>
+                    <span>👤 MechaTora</span>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">API連携</span>
+                    <span class="tag">リアルタイム処理</span>
+                    <span class="tag">防災アプリ</span>
+                    <span class="tag">Web開発</span>
+                </div>
+            </header>
+
+            <div class="article-content">
+                <h2>はじめに：なぜ地震モニターアプリを作ったのか</h2>
+
+                
+<p>地震モニターアプリを開発するきっかけは、2023年5月の能登半島地震でした。当時、私は在宅勤務中で、突然の揺れにスマホで地震速報アプリを開いたのですが、アプリの起動に10秒以上かかり、その間に揺れが収まってしまいました。「リアルタイムで情報が見られるブラウザアプリがあれば」と思い、その日の夜から開発を始めました。最初は気象庁のJSON APIをfetchで取得するだけの簡単な仕組みでしたが、自動更新の実装で何度も躓きました。特に、ブラウザがバックグラウンドになったときにsetIntervalが停止する問題には3日間悩み、Page Visibility APIで解決しました。</p>
+<p>2024年1月の能登半島地震、そして日々感じる小さな揺れ。地震大国である日本に住む私たちにとって、<strong>「今、どこで地震が起きているか」をリアルタイムで知ることは非常に重要</strong>です。</p>
+
+                <p>既存の地震情報アプリも多数ありますが、「もっとシンプルに」「Webブラウザで気軽にチェックできる」「無料で誰でも使える」ものが欲しいと思い、地震モニターアプリを開発しました。</p>
+
+                <p>本記事では、このアプリの核となる<strong>リアルタイム更新機能</strong>の技術的な仕組みを詳しく解説します。JavaScriptでどのようにAPIと通信し、データを取得・表示するのか、具体的なコードを交えて説明していきます。</p>
+
+                <div class="highlight-box">
+                    <h3>🎯 この記事で学べること</h3>
+                    <ul>
+                        <li>気象庁XML形式の地震情報APIとの連携方法</li>
+                        <li>JavaScriptの非同期処理（fetch API）の実装</li>
+                        <li>自動更新ロジックの設計と実装</li>
+                        <li>XMLデータのパースと表示処理</li>
+                        <li>エラーハンドリングとユーザー体験の向上</li>
+                    </ul>
+                </div>
+
+                <h2>課題1：どのAPIを使うか - 気象庁データの選定</h2>
+
+                <p>地震情報を提供するAPIはいくつか存在しますが、今回は<strong>気象庁が提供する公式データ</strong>を利用することにしました。理由は以下の3点です。</p>
+
+                <ul>
+                    <li><strong>信頼性が高い</strong>：気象庁の公式データなので情報の正確性が保証されている</li>
+                    <li><strong>無料で利用可能</strong>：個人開発でも気軽に使える（商用利用でも問題なし）</li>
+                    <li><strong>リアルタイム性</strong>：地震発生から数分以内に情報が更新される</li>
+                </ul>
+
+                <p>しかし、気象庁のデータには一つ大きな課題がありました。それは<strong>「XML形式」でデータが提供される</strong>という点です。JSONに慣れた現代のWeb開発者にとって、XMLのパース処理は少々面倒です。</p>
+
+                <div class="note">
+                    <strong>📌 ポイント：</strong> API選定では「無料」「信頼性」「更新頻度」のバランスが重要。個人開発では特にコスト面も考慮する必要があります。
+                </div>
+
+                <h2>課題2：データ取得の実装 - fetch APIとCORS対策</h2>
+
+                <p>気象庁のデータを取得するには、JavaScriptの<strong>fetch API</strong>を使います。しかし、ここで大きな壁が立ちはだかりました。それが<strong>CORS（Cross-Origin Resource Sharing）</strong>エラーです。</p>
+
+                <h3>CORS問題とは？</h3>
+
+                <p>Webブラウザには「異なるドメインのリソースを勝手に取得できない」というセキュリティ制約があります。私のサイト（mechatora.com）から気象庁のサイト（jma.go.jp）のデータを直接取得しようとすると、ブラウザがこれをブロックしてしまうのです。</p>
+
+                <p>この問題を解決するために、<strong>CORSプロキシサービス</strong>を経由してデータを取得する方法を採用しました。</p>
+
+                <div class="code-block">
+// 地震情報を取得する関数
+async function fetchEarthquakeData() {
+    const API_URL = 'https://www.jma.go.jp/bosai/quake/data/list.json';
+    const PROXY_URL = 'https://api.allorigins.win/raw?url=';
+
+    try {
+        // CORSプロキシ経由でデータ取得
+        const response = await fetch(PROXY_URL + encodeURIComponent(API_URL));
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error('データ取得エラー:', error);
+        displayError('地震情報の取得に失敗しました');
+        return null;
+    }
+}
+                </div>
+
+                <div class="note">
+                    <strong>📌 注意点：</strong> CORSプロキシは便利ですが、本番環境では自前のプロキシサーバーを立てる方が安定性・セキュリティ面で望ましいです。
+                </div>
+
+                <!-- Ad Placement 2: Mid-article -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1184134440246706"
+                         data-ad-slot="2345678901"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+
+                <h2>課題3：データのパースと表示 - XMLからHTMLへ</h2>
+
+                <p>取得したJSONデータには、最新の地震情報が配列形式で格納されています。これを<strong>ユーザーが見やすい形式に変換</strong>する必要があります。</p>
+
+                <h3>データ構造の理解</h3>
+
+                <p>気象庁のJSON形式データは以下のような構造になっています。</p>
+
+                <div class="code-block">
+// 取得されるデータの例
+[
+    {
+        "id": "20251020120000",
+        "time": "2025-10-20T12:00:00+09:00",
+        "earthquake": {
+            "origin_time": "2025-10-20T11:55:00+09:00",
+            "hypocenter": {
+                "name": "茨城県南部",
+                "latitude": 36.1,
+                "longitude": 140.1,
+                "depth": 50
+            },
+            "magnitude": 4.2
+        },
+        "points": [
+            {
+                "pref": "茨城県",
+                "addr": "水戸市",
+                "scale": 40  // 震度4
+            }
+        ]
+    }
+]
+                </div>
+
+                <h3>表示用HTMLの生成</h3>
+
+                <p>このデータを元に、以下のような処理で表示用のHTMLを動的生成します。</p>
+
+                <div class="code-block">
+function displayEarthquakeList(earthquakes) {
+    const container = document.getElementById('earthquake-list');
+    container.innerHTML = ''; // 既存の内容をクリア
+
+    // 最新10件を表示
+    earthquakes.slice(0, 10).forEach((eq, index) => {
+        const card = document.createElement('div');
+        card.className = 'earthquake-card';
+
+        // 震度によって色分け
+        const maxScale = Math.max(...eq.points.map(p => p.scale));
+        const scaleClass = getScaleColorClass(maxScale);
+
+        card.innerHTML = `
+            <div class="earthquake-header ${scaleClass}">
+                <span class="scale">震度${Math.floor(maxScale / 10)}</span>
+                <span class="time">${formatTime(eq.earthquake.origin_time)}</span>
+            </div>
+            <div class="earthquake-body">
+                <p class="location">震源地: ${eq.earthquake.hypocenter.name}</p>
+                <p class="details">
+                    M${eq.earthquake.magnitude} /
+                    深さ${eq.earthquake.hypocenter.depth}km
+                </p>
+                <div class="affected-areas">
+                    ${eq.points.slice(0, 5).map(p =>
+                        `<span class="area">${p.pref} ${p.addr}</span>`
+                    ).join('')}
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+// 震度に応じた色クラスを返す
+function getScaleColorClass(scale) {
+    if (scale >= 60) return 'scale-severe';  // 震度6以上: 赤
+    if (scale >= 50) return 'scale-strong';  // 震度5: オレンジ
+    if (scale >= 40) return 'scale-medium';  // 震度4: 黄色
+    return 'scale-light';  // 震度3以下: 青
+}
+                </div>
+
+                <p>このコードのポイントは、<strong>震度の大きさに応じて視覚的に色分けする</strong>ことで、ユーザーが一目で危険度を判断できるようにしている点です。</p>
+
+                <h2>課題4：自動更新ロジック - setIntervalとメモリ管理</h2>
+
+                <p>地震情報は刻一刻と変化します。ユーザーが手動で更新ボタンを押さなくても、<strong>自動的に最新情報が表示される仕組み</strong>が必要です。</p>
+
+                <h3>自動更新の実装</h3>
+
+                <div class="code-block">
+let updateInterval = null;
+const UPDATE_INTERVAL_MS = 60000; // 60秒ごとに更新
+
+// 自動更新を開始
+function startAutoUpdate() {
+    // 初回データ取得
+    updateEarthquakeData();
+
+    // 定期的に更新
+    updateInterval = setInterval(() => {
+        updateEarthquakeData();
+        updateLastUpdateTime();
+    }, UPDATE_INTERVAL_MS);
+}
+
+// 自動更新を停止
+function stopAutoUpdate() {
+    if (updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
+    }
+}
+
+// ページ離脱時にクリーンアップ
+window.addEventListener('beforeunload', () => {
+    stopAutoUpdate();
+});
+
+// データ更新処理
+async function updateEarthquakeData() {
+    const loadingIndicator = document.getElementById('loading');
+    loadingIndicator.style.display = 'block';
+
+    const data = await fetchEarthquakeData();
+
+    if (data && data.length > 0) {
+        displayEarthquakeList(data);
+        showSuccessMessage('最新情報に更新されました');
+    }
+
+    loadingIndicator.style.display = 'none';
+}
+                </div>
+
+                <div class="note">
+                    <strong>📌 メモリリーク対策：</strong> setIntervalを使う場合、必ずclearIntervalでクリーンアップすることが重要です。特にSPA（Single Page Application）では、ページ遷移時に必ず停止処理を実行しましょう。
+                </div>
+
+                <!-- Ad Placement 3: Mid-article 2 -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1184134440246706"
+                         data-ad-slot="3456789012"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+
+                <h2>課題5：エラーハンドリングとUX改善</h2>
+
+                <p>ネットワークエラー、APIのタイムアウト、データ形式の変更など、<strong>予期せぬエラーは必ず発生します</strong>。重要なのは、エラーが起きた時にユーザーに適切なフィードバックを返すことです。</p>
+
+                <h3>実装したエラー処理</h3>
+
+                <ul>
+                    <li><strong>ネットワークエラー</strong>：「通信エラーが発生しました。しばらく待ってから再度お試しください」</li>
+                    <li><strong>データ取得失敗</strong>：「地震情報の取得に失敗しました。気象庁のサーバーが一時的に利用できない可能性があります」</li>
+                    <li><strong>データが空</strong>：「現在、表示可能な地震情報はありません」</li>
+                </ul>
+
+                <div class="code-block">
+function displayError(message) {
+    const container = document.getElementById('earthquake-list');
+    container.innerHTML = `
+        <div class="error-message">
+            <span class="error-icon">⚠️</span>
+            <p>${message}</p>
+            <button onclick="updateEarthquakeData()" class="retry-button">
+                再試行
+            </button>
+        </div>
+    `;
+}
+
+// ローディング状態の表示
+function showLoading(isLoading) {
+    const loader = document.getElementById('loading-spinner');
+    const content = document.getElementById('earthquake-list');
+
+    if (isLoading) {
+        loader.style.display = 'flex';
+        content.style.opacity = '0.5';
+    } else {
+        loader.style.display = 'none';
+        content.style.opacity = '1';
+    }
+}
+                </div>
+
+                <p>また、<strong>最終更新時刻を表示する</strong>ことで、「今見ているデータがいつの時点のものか」をユーザーが把握できるようにしています。</p>
+
+                <h2>まとめ：リアルタイムWebアプリ開発で学んだこと</h2>
+
+                <p>地震モニターアプリの開発を通じて、以下のような技術的知見を得ることができました。</p>
+
+                <div class="highlight-box">
+                    <h3>🎓 開発を通じて得られた学び</h3>
+                    <ul>
+                        <li><strong>外部API連携の基本</strong>：fetch APIの使い方、CORS対策、エラーハンドリング</li>
+                        <li><strong>非同期処理の設計</strong>：async/awaitパターン、Promise処理、メモリリーク対策</li>
+                        <li><strong>リアルタイム更新</strong>：setIntervalの適切な使用、クリーンアップ処理の重要性</li>
+                        <li><strong>UX設計</strong>：ローディング表示、エラーメッセージ、色による視覚的フィードバック</li>
+                        <li><strong>データ変換</strong>：XML/JSONパース、表示用データへの整形</li>
+                    </ul>
+                </div>
+
+                <p>特に印象的だったのは、<strong>「技術的に正しい実装」と「ユーザーが使いやすい実装」は必ずしも一致しない</strong>という点です。例えば、データ更新を5秒ごとに行えば技術的には「よりリアルタイム」ですが、ユーザーにとっては画面がチカチカして見づらくなります。</p>
+
+                <p>最終的に60秒間隔に落ち着いたのは、複数のユーザーテストを経て「実用性とリアルタイム性のバランスが最も良い」という結論に至ったからです。</p>
+
+                <h3>今後の改善予定</h3>
+
+                <p>現在のバージョンは基本機能の実装に留まっていますが、今後は以下の機能追加を予定しています。</p>
+
+                <ul>
+                    <li>地図上での震源地表示（Google Maps API連携）</li>
+                    <li>プッシュ通知機能（震度5以上の地震発生時）</li>
+                    <li>過去の地震履歴検索機能</li>
+                    <li>地域別フィルタリング機能</li>
+                    <li>PWA化によるオフライン対応</li>
+                </ul>
+
+                <p>非エンジニアでも、JavaScriptの基本を理解していれば<strong>このような実用的なアプリを作ることは十分可能</strong>です。ぜひ皆さんも、身近な課題を解決するWebアプリ開発にチャレンジしてみてください。</p>
+
+                <div class="related-links">
+                    <h3>🔗 関連リンク</h3>
+                    <ul>
+                        <li><a href="earthquake-monitor/">🌏 地震モニターアプリを使ってみる</a></li>
+                        <li><a href="blog.html">📝 ブログ記事一覧に戻る</a></li>
+                        <li><a href="hub.html">🐱 MechaTora アプリハブ</a></li>
+                        <li><a href="blog-cook-suggest-development.html">🍳 CookSuggestアプリ開発秘話</a></li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- Ad Placement 4: After article -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1184134440246706"
+                 data-ad-slot="4567890123"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            <p><a href="privacy.html">プライバシーポリシー</a> | <a href="contact.html">お問い合わせ</a></p>
+        </footer>
+    </div>
+</body>
+</html>
