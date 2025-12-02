@@ -50,6 +50,13 @@
   Disallow: /beta/
   Disallow: /staging/
 
+  # エンターテイメント系（一時的にブロック）
+  Disallow: /x-buzz-simulator/
+  Disallow: /fire/
+  Disallow: /cat-healing-station/
+  Disallow: /aurora/
+  Disallow: /jellyfish/
+
   # プライバシーポリシー等は公開（Allowで明示）
   Allow: /privacy/
   Allow: /terms/

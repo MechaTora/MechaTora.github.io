@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資格試験カレンダーアプリ開発秘話：40種類の試験データをどう管理したか | MechaTora開発ブログ</title>
+    <meta name="description" content="社労士資格保有者が作る資格試験カウントダウンアプリの開発秘話。40種類以上の試験日程データの収集・更新管理・カテゴリ設計の舞台裏を公開。受験者目線で作ったUI設計のポイントも解説します。">
+    <meta name="keywords" content="資格試験カレンダー,アプリ開発,データ管理,JavaScript,社労士,受験,プログラミング,Web開発">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.com/blog-qualification-calendar-dev.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="資格試験カレンダーアプリ開発秘話：40種類の試験データをどう管理したか">
+    <meta property="og:description" content="社労士資格保有者が作る資格試験カウントダウンアプリの開発秘話。データ収集から更新管理まで徹底解説。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mechatora.com/blog-qualification-calendar-dev.html">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
+    <!-- GitHub Pages to mechatora.com redirect -->
+    <script>
+    if (window.location.hostname === 'mechatora.github.io') {
+        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #6B4E3D;
+            --accent-color: #D4A574;
+            --text-color: #2d3748;
+            --background: #f7fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .article-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 60px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .article-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            flex-wrap: wrap;
+        }
+
+        .article-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .article-content h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .article-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .article-content h3 {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin: 30px 0 15px 0;
+        }
+
+        .article-content p {
+            margin-bottom: 20px;
+            line-height: 1.9;
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 20px 0 20px 30px;
+        }
+
+        .article-content li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: #FFF9E6;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-link:hover {
+            background: var(--accent-color);
+        }
+
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 1.8rem;
+            }
+
+            .article-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="blog.html" class="back-link">← ブログ一覧に戻る</a>
+
+        <header class="article-header">
+            <div class="article-icon">📅</div>
+            <h1 class="article-title">資格試験カレンダーアプリ開発秘話：40種類の試験データをどう管理したか</h1>
+            <div class="article-meta">
+                <span>📅 2025-11-14</span>
+                <span>⏱️ 8分</span>
+                <span>📂 技術</span>
+            </div>
+        </header>
+
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='400' y='200' font-size='48' fill='white' text-anchor='middle' dominant-baseline='middle'%3E資格試験カレンダー開発%3C/text%3E%3C/svg%3E" alt="資格試験カレンダーアプリ開発秘話のアイキャッチ" class="article-image">
+
+        <article class="article-content">
+            <h2>なぜこのアプリを作ったのか</h2>
+            <p>
+                私は社労士試験に合格した経験があり、その後もFPや簿記など複数の資格にチャレンジしてきました。その中で常に感じていた不便さが「試験日程の一元管理の難しさ」でした。
+            </p>
+            <p>
+                各資格試験の公式サイトを個別に確認する必要があり、「あれ、この試験いつだっけ？」「あと何日で試験日？」という確認作業だけで時間を取られてしまう。そんな課題を解決するため、資格試験カウントダウンカレンダーを開発しました。
+            </p>
+
+            <div class="highlight-box">
+                <strong>💡 開発のきっかけ</strong><br>
+                複数資格を受験する人にとって、試験日程の管理は意外と大変。公式サイトを何度も確認するストレスから解放されたい！
+            </div>
+
+            <h2>40種類以上の試験データ収集の苦労</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Crect fill='%23FFF9E6' width='800' height='400'/%3E%3Crect fill='%23D4A574' x='100' y='80' width='150' height='100' rx='8'/%3E%3Ctext x='175' y='115' font-size='12' fill='white' text-anchor='middle' dominant-baseline='middle'%3E人事系%3C/text%3E%3Ctext x='175' y='135' font-size='10' fill='white' text-anchor='middle'%3E(社労士など)%3C/text%3E%3Crect fill='%23D4A574' x='350' y='80' width='150' height='100' rx='8'/%3E%3Ctext x='425' y='115' font-size='12' fill='white' text-anchor='middle' dominant-baseline='middle'%3E経理・財務系%3C/text%3E%3Ctext x='425' y='135' font-size='10' fill='white' text-anchor='middle'%3E(簿記など)%3C/text%3E%3Crect fill='%23D4A574' x='600' y='80' width='150' height='100' rx='8'/%3E%3Ctext x='675' y='115' font-size='12' fill='white' text-anchor='middle' dominant-baseline='middle'%3EIT系%3C/text%3E%3Ctext x='675' y='135' font-size='10' fill='white' text-anchor='middle'%3E(情報系)%3C/text%3E%3Crect fill='%23D4A574' x='200' y='230' width='150' height='100' rx='8'/%3E%3Ctext x='275' y='270' font-size='12' fill='white' text-anchor='middle' dominant-baseline='middle'%3Eデータサイエンス%3C/text%3E%3Ctext x='275' y='290' font-size='10' fill='white' text-anchor='middle'%3E(統計など)%3C/text%3E%3C/svg%3E" alt="資格試験の4つのカテゴリ分類" class="article-image">
+
+            <p>
+                最初の課題は「どの資格試験を掲載するか」でした。日本には数百種類の資格試験が存在しますが、すべてを網羅するのは現実的ではありません。
+            </p>
+
+            <h3>データ収集の方針</h3>
+            <ul>
+                <li><strong>人事系資格</strong>：社労士、キャリアコンサルタント、メンタルヘルス・マネジメント検定など</li>
+                <li><strong>経理・財務系資格</strong>：簿記、FP、税理士、公認会計士など</li>
+                <li><strong>IT系資格</strong>：基本情報技術者、応用情報技術者、AWS認定など</li>
+                <li><strong>データサイエンス系資格</strong>：統計検定、Python3エンジニア認定、G検定など</li>
+            </ul>
+
+            <p>
+                最終的に40種類以上の試験を選定しましたが、ここで大きな壁にぶつかりました。<strong>試験日程の情報源がバラバラ</strong>だったのです。
+            </p>
+
+            <h3>データ収集で直面した課題</h3>
+            <ul>
+                <li>試験実施団体の公式サイトのデザインや情報の掲載場所がバラバラ</li>
+                <li>PDFでしか公開されていない試験日程もある</li>
+                <li>年度によって試験日が大きく変動する資格もある（社労士、税理士など）</li>
+                <li>CBT形式の試験は常時実施のため、明確な試験日がない</li>
+            </ul>
+
+            <p>
+                結局、各試験実施団体の公式サイトから手作業で情報を収集し、Excelで一元管理してからJavaScriptの配列データに変換するという地道な作業を行いました。
+            </p>
+
+            <h2>データ構造の設計</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Crect fill='%23E8E0F0' width='800' height='400'/%3E%3Crect fill='%236B4E3D' x='50' y='80' width='700' height='60' rx='8'/%3E%3Ctext x='400' y='115' font-size='14' fill='white' text-anchor='middle' dominant-baseline='middle' font-weight='bold'%3EqualificationsArray (40種類以上の試験データ)%3C/text%3E%3Crect fill='%23D4A574' x='100' y='180' width='600' height='160' rx='8'/%3E%3Ctext x='120' y='200' font-size='12' fill='white' text-anchor='middle' text-anchor='start' dominant-baseline='middle'%3E- id, name (試験名)%3C/text%3E%3Ctext x='120' y='225' font-size='12' fill='white' text-anchor='start' dominant-baseline='middle'%3E- category (カテゴリ)%3C/text%3E%3Ctext x='120' y='250' font-size='12' fill='white' text-anchor='start' dominant-baseline='middle'%3E- examDate (試験日)%3C/text%3E%3Ctext x='120' y='275' font-size='12' fill='white' text-anchor='start' dominant-baseline='middle'%3E- difficulty (難易度)%3C/text%3E%3Ctext x='120' y='300' font-size='12' fill='white' text-anchor='start' dominant-baseline='middle'%3E- studyHours (勉強時間)%3C/text%3E%3Ctext x='120' y='325' font-size='12' fill='white' text-anchor='start' dominant-baseline='middle'%3E- description (説明)%3C/text%3E%3C/svg%3E" alt="データ構造の設計図" class="article-image">
+
+            <p>
+                40種類以上の試験データを効率的に管理するため、以下のようなデータ構造を設計しました。
+            </p>
+
+            <div class="code-block">
+const qualifications = [
+    {
+        id: 1,
+        name: "社会保険労務士試験",
+        category: "人事系",
+        examDate: "2025-08-24",
+        studyHours: "1000時間",
+        difficulty: "高",
+        description: "社会保険・労働法のスペシャリスト"
+    },
+    // ... 40種類以上
+];
+            </div>
+
+            <h3>設計のポイント</h3>
+            <ul>
+                <li><strong>カテゴリ分類</strong>：ユーザーが興味のある分野で絞り込めるよう、4つのカテゴリに分類</li>
+                <li><strong>勉強時間の目安</strong>：受験経験者として「これくらい必要」という実感値を記載</li>
+                <li><strong>難易度表示</strong>：高・中・低の3段階で、学習計画の参考になるように</li>
+            </ul>
+
+            <h2>カウントダウン機能の実装</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Crect fill='%23ECE9F1' width='800' height='400'/%3E%3Ccircle cx='400' cy='200' r='120' fill='%236B4E3D'/%3E%3Ctext x='400' y='160' font-size='48' fill='white' text-anchor='middle' dominant-baseline='middle' font-weight='bold'%3E100%3C/text%3E%3Ctext x='400' y='240' font-size='24' fill='%23D4A574' text-anchor='middle' dominant-baseline='middle'%3E日%3C/text%3E%3Ctext x='400' y='320' font-size='16' fill='%236B4E3D' text-anchor='middle'%3Eカウントダウンでモチベーション維持%3C/text%3E%3C/svg%3E" alt="カウントダウン機能の実装イメージ" class="article-image">
+
+            <p>
+                このアプリの核となる機能が「試験日までのカウントダウン」です。JavaScriptで日付計算を行い、リアルタイムで残り日数を表示します。
+            </p>
+
+            <div class="code-block">
+function calculateDaysUntil(examDate) {
+    const today = new Date();
+    const exam = new Date(examDate);
+    const diff = exam - today;
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    return days;
+}
+            </div>
+
+            <p>
+                シンプルな実装ですが、「あと〇日」という表示が受験者のモチベーション維持に役立つと考えています。私自身、社労士試験の勉強中にカウントダウンアプリを使って、「あと100日」「あと30日」という節目を意識していました。
+            </p>
+
+            <h2>受験者目線のUI設計</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Crect fill='%23FAF7F3' width='800' height='400'/%3E%3Crect fill='%23D4A574' x='80' y='50' width='140' height='60' rx='6'/%3E%3Ctext x='150' y='82' font-size='12' fill='white' text-anchor='middle' dominant-baseline='middle'%3E人事系%3C/text%3E%3Crect fill='%23D4A574' x='290' y='50' width='140' height='60' rx='6'/%3E%3Ctext x='360' y='82' font-size='12' fill='white' text-anchor='middle' dominant-baseline='middle'%3E経理系%3C/text%3E%3Crect fill='%23D4A574' x='500' y='50' width='140' height='60' rx='6'/%3E%3Ctext x='570' y='82' font-size='12' fill='white' text-anchor='middle' dominant-baseline='middle'%3EIT系%3C/text%3E%3Crect fill='%236B4E3D' x='60' y='150' width='680' height='200' rx='8'/%3E%3Ctext x='80' y='180' font-size='13' fill='%23D4A574' dominant-baseline='middle' font-weight='bold'%3E社会保険労務士試験%3C/text%3E%3Ctext x='80' y='210' font-size='11' fill='white'%3E試験日: 2025-08-24 | あと100日%3C/text%3E%3Ctext x='80' y='235' font-size='11' fill='white'%3E難易度: 高 | 勉強時間: 1000時間%3C/text%3E%3Crect fill='%236B4E3D' x='80' y='260' width='620' height='60' rx='6'/%3E%3Ctext x='90' y='295' font-size='11' fill='%23D4A574'%3E社会保険・労働法のスペシャリスト%3C/text%3E%3C/svg%3E" alt="UI設計のモックアップ - カテゴリフィルターと試験情報表示" class="article-image">
+
+            <p>
+                開発で最もこだわったのは「受験者が本当に欲しい情報をすぐに見つけられるUI」です。
+            </p>
+
+            <h3>実装した主要機能</h3>
+            <ol>
+                <li><strong>カテゴリフィルター</strong>：人事系・経理系・IT系・データサイエンス系で絞り込み</li>
+                <li><strong>試験日でソート</strong>：直近の試験から順に表示</li>
+                <li><strong>勉強時間の可視化</strong>：「500時間」「1000時間」など、具体的な目安を表示</li>
+                <li><strong>レスポンシブデザイン</strong>：スマホでもストレスなく閲覧可能</li>
+            </ol>
+
+            <div class="highlight-box">
+                <strong>📱 UX設計のこだわり</strong><br>
+                受験勉強中はスマホでサッと確認することが多いため、モバイルファーストで設計。カテゴリボタンは指で押しやすい大きさに調整しました。
+            </div>
+
+            <h2>データ更新の仕組み</h2>
+            <p>
+                資格試験のデータは毎年更新されるため、メンテナンスが必要です。現在は以下のような運用フローを構築しています。
+            </p>
+
+            <ol>
+                <li>毎年4月と10月に主要試験実施団体の公式サイトをチェック</li>
+                <li>試験日程が更新されていれば、データを修正</li>
+                <li>新しい人気資格が登場した場合は追加</li>
+                <li>GitHub Pagesで即座に更新を反映</li>
+            </ol>
+
+            <p>
+                将来的には、試験実施団体のAPIと連携して自動更新できる仕組みを検討していますが、現時点では多くの団体がAPIを提供していないため、手動更新を続けています。
+            </p>
+
+            <h2>ユーザーからの反響</h2>
+            <p>
+                リリース後、複数資格を受験している方から「こういうのが欲しかった！」という声をいただきました。特に以下の点が好評でした。
+            </p>
+
+            <ul>
+                <li>1ページで複数試験の日程を確認できる利便性</li>
+                <li>勉強時間の目安が学習計画に役立つ</li>
+                <li>カウントダウン表示でモチベーションが上がる</li>
+            </ul>
+
+            <h2>今後の展望</h2>
+            <p>
+                現在、以下の機能追加を検討しています。
+            </p>
+
+            <ul>
+                <li><strong>お気に入り機能</strong>：自分が受験する試験だけを表示</li>
+                <li><strong>学習記録機能</strong>：勉強時間の記録とグラフ化</li>
+                <li><strong>リマインダー機能</strong>：試験の1ヶ月前、1週間前に通知</li>
+                <li><strong>合格体験記の追加</strong>：各資格の学習法や合格のコツを掲載</li>
+            </ul>
+
+            <p>
+                ただし、機能を増やしすぎると「シンプルで使いやすい」というコンセプトが損なわれる可能性もあります。ユーザーの声を聞きながら、本当に必要な機能だけを厳選して追加していく予定です。
+            </p>
+
+            <h2>まとめ</h2>
+            <p>
+                資格試験カレンダーアプリは、自分自身の受験経験から生まれたプロダクトです。「こんなアプリがあったらいいな」を形にすることで、同じ悩みを持つ受験者の役に立てればと思っています。
+            </p>
+
+            <div class="highlight-box">
+                <strong>🔗 アプリはこちら</strong><br>
+                <a href="qualification-calendar.html" style="color: var(--primary-color); font-weight: bold;">資格試験カウントダウンカレンダー</a>
+            </div>
+
+            <p>
+                受験者目線で作ったこのアプリが、皆さんの資格取得の一助となれば幸いです。フィードバックやご要望があれば、ぜひお問い合わせフォームからお寄せください！
+            </p>
+        </article>
+
+        <a href="blog.html" class="back-link">← ブログ一覧に戻る</a>
+    </div>
+</body>
+</html>

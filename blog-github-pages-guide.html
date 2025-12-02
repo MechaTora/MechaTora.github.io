@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド | MechaTora開発ブログ</title>
+    <meta name="description" content="プログラミング初心者でもできる！GitHub Pagesで自分のWebサイトを無料公開する方法を、実際の経験をもとに徹底解説。アカウント作成からカスタムドメイン設定まで、つまずきやすいポイントも詳しく説明します。">
+    <meta name="keywords" content="GitHub Pages,無料ホスティング,Webサイト公開,初心者,Git,静的サイト,カスタムドメイン,HTTPS,ポートフォリオ">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mechatora.com/blog-github-pages-guide.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド">
+    <meta property="og:description" content="GitHub Pagesで自分のWebサイトを無料公開する方法を実体験をもとに徹底解説。初心者のつまずきポイントも詳しく説明。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mechatora.com/blog-github-pages-guide.html">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
+    <!-- GitHub Pages to mechatora.com redirect -->
+    <script>
+    if (window.location.hostname === 'mechatora.github.io') {
+        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #6B4E3D;
+            --accent-color: #D4A574;
+            --text-color: #2d3748;
+            --background: #f7fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .article-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 60px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .article-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            flex-wrap: wrap;
+        }
+
+        .article-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .article-content h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .article-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .article-content h3 {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin: 30px 0 15px 0;
+        }
+
+        .article-content p {
+            margin-bottom: 20px;
+            line-height: 1.9;
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 20px 0 20px 30px;
+        }
+
+        .article-content li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: #FFF9E6;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #FFF5F5;
+            border-left: 5px solid #E53E3E;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-link:hover {
+            background: var(--accent-color);
+        }
+
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 1.8rem;
+            }
+
+            .article-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="blog.html" class="back-link">← ブログ一覧に戻る</a>
+
+        <header class="article-header">
+            <div class="article-icon">🚀</div>
+            <h1 class="article-title">初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</h1>
+            <div class="article-meta">
+                <span>📅 2025-11-14</span>
+                <span>⏱️ 12分</span>
+                <span>📂 技術</span>
+            </div>
+        </header>
+
+        <article class="article-content">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3EGitHub Pages解説%3C/text%3E%3C/svg%3E" alt="GitHub Pagesでの無料Webサイト公開の記事アイキャッチ画像" class="article-image">
+
+            <h2>GitHub Pagesとは？</h2>
+            <p>
+                GitHub Pagesは、GitHubが提供する<strong>無料の静的サイトホスティングサービス</strong>です。HTMLファイルをGitHubリポジトリにアップロードするだけで、誰でも簡単にWebサイトを公開できます。
+            </p>
+
+            <h3>GitHub Pagesの主な特徴</h3>
+            <ul>
+                <li><strong>完全無料</strong>：容量制限はありますが、個人サイトなら十分</li>
+                <li><strong>独自ドメイン対応</strong>：カスタムドメインを設定可能</li>
+                <li><strong>HTTPS対応</strong>：無料でSSL証明書を取得</li>
+                <li><strong>高速配信</strong>：CDNで世界中どこからでも高速アクセス</li>
+                <li><strong>簡単デプロイ</strong>：GitHubにpushするだけで自動更新</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>💡 こんな人におすすめ</strong><br>
+                ポートフォリオサイト、ブログ、プロジェクトのドキュメント、個人の趣味サイトなどを無料で公開したい方に最適です！
+            </div>
+
+            <h2>【ステップ1】GitHubアカウントの作成</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23D4A574' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3EGitHub アカウント設定%3C/text%3E%3C/svg%3E" alt="GitHubアカウント作成のステップ画像" class="article-image">
+
+            <p>
+                まだGitHubアカウントを持っていない方は、最初にアカウントを作成しましょう。
+            </p>
+
+            <ol>
+                <li><a href="https://github.com/" target="_blank" style="color: var(--primary-color);">GitHub公式サイト</a>にアクセス</li>
+                <li>「Sign up」をクリック</li>
+                <li>メールアドレス、パスワード、ユーザー名を入力</li>
+                <li>メール認証を完了</li>
+            </ol>
+
+            <p>
+                ユーザー名は後からWebサイトのURLに使われるので、わかりやすい名前にしましょう（例：mechatora → mechatora.github.io）。
+            </p>
+
+            <h2>【ステップ2】リポジトリの作成</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Eリポジトリ作成%3C/text%3E%3C/svg%3E" alt="GitHubリポジトリの作成手順画像" class="article-image">
+
+            <p>
+                GitHubにログインしたら、Webサイト用のリポジトリを作成します。
+            </p>
+
+            <h3><span class="step-number">1</span>リポジトリ名の決定</h3>
+            <p>
+                GitHub Pagesには2種類の公開方法があります。
+            </p>
+
+            <ul>
+                <li><strong>ユーザーサイト</strong>：<code>ユーザー名.github.io</code>（例：mechatora.github.io）</li>
+                <li><strong>プロジェクトサイト</strong>：<code>ユーザー名.github.io/プロジェクト名</code>（例：mechatora.github.io/portfolio）</li>
+            </ul>
+
+            <p>
+                今回は個人サイトを作るので、<strong>ユーザーサイト</strong>の方法で進めます。リポジトリ名は必ず<code>ユーザー名.github.io</code>にしてください。
+            </p>
+
+            <h3><span class="step-number">2</span>リポジトリの設定</h3>
+            <ol>
+                <li>GitHubのトップページで「New repository」をクリック</li>
+                <li>Repository nameに「<strong>ユーザー名.github.io</strong>」と入力</li>
+                <li>「Public」を選択（無料版はPublicのみ）</li>
+                <li>「Add a README file」にチェック（任意）</li>
+                <li>「Create repository」をクリック</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>⚠️ よくあるミス</strong><br>
+                リポジトリ名のスペルミスに注意！「<code>ユーザー名.github.io</code>」と完全一致しないとGitHub Pagesとして認識されません。
+            </div>
+
+            <h2>【ステップ3】HTMLファイルをアップロード</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23D4A574' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Eファイルアップロード%3C/text%3E%3C/svg%3E" alt="HTMLファイルのアップロードプロセス画像" class="article-image">
+
+            <p>
+                リポジトリができたら、実際にWebサイトのファイルをアップロードします。
+            </p>
+
+            <h3>方法1：GitHub Web UIで直接アップロード（初心者向け）</h3>
+            <ol>
+                <li>リポジトリのページで「Add file」→「Create new file」をクリック</li>
+                <li>ファイル名に「<strong>index.html</strong>」と入力</li>
+                <li>以下のサンプルコードを貼り付け</li>
+            </ol>
+
+            <div class="code-block">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My First GitHub Pages&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello, GitHub Pages!&lt;/h1&gt;
+    &lt;p&gt;私の最初のWebサイトです。&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </div>
+
+            <ol start="4">
+                <li>「Commit new file」をクリック</li>
+                <li>数分待つと、<code>https://ユーザー名.github.io</code>でサイトが公開されます</li>
+            </ol>
+
+            <h3>方法2：Gitコマンドを使う方法（経験者向け）</h3>
+            <div class="code-block">
+# リポジトリをクローン
+git clone https://github.com/ユーザー名/ユーザー名.github.io.git
+
+# ディレクトリに移動
+cd ユーザー名.github.io
+
+# index.htmlを作成（エディタで編集）
+# ファイルをステージング
+git add index.html
+
+# コミット
+git commit -m "Initial commit"
+
+# GitHubにプッシュ
+git push origin main
+            </div>
+
+            <h2>【ステップ4】公開確認</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3EサイトLive公開%3C/text%3E%3C/svg%3E" alt="GitHub Pagesサイトが正常に公開された画像" class="article-image">
+
+            <p>
+                ブラウザで<code>https://ユーザー名.github.io</code>にアクセスして、サイトが表示されているか確認しましょう。
+            </p>
+
+            <div class="highlight-box">
+                <strong>⏱️ 反映に時間がかかる場合</strong><br>
+                初回公開時は最大10分程度かかることがあります。404エラーが出ても焦らず、少し待ってから再度アクセスしてみてください。
+            </div>
+
+            <h2>【応用】カスタムドメインの設定</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23D4A574' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Eカスタムドメイン設定%3C/text%3E%3C/svg%3E" alt="独自ドメインをGitHub Pagesに設定する図解" class="article-image">
+
+            <p>
+                独自ドメイン（例：mechatora.com）を持っている場合、GitHub Pagesと連携できます。
+            </p>
+
+            <h3>設定手順</h3>
+            <ol>
+                <li>リポジトリの「Settings」→「Pages」に移動</li>
+                <li>「Custom domain」にドメイン名を入力（例：mechatora.com）</li>
+                <li>ドメイン管理サービス（お名前.comなど）でDNS設定を変更</li>
+            </ol>
+
+            <h4>DNSレコードの設定例</h4>
+            <div class="code-block">
+# Aレコード（GitHub PagesのIPアドレス）
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+
+# CNAMEレコード（wwwサブドメインの場合）
+www → ユーザー名.github.io
+            </div>
+
+            <p>
+                DNS設定の反映には最大48時間かかる場合がありますが、通常は数時間で完了します。
+            </p>
+
+            <div class="highlight-box">
+                <strong>🔒 HTTPS化も自動</strong><br>
+                カスタムドメインでも、GitHub Pagesが自動でSSL証明書を発行してHTTPS対応してくれます（Let's Encrypt）。
+            </div>
+
+            <h2>実際に使ってみた感想</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='35%' font-size='48' fill='white' text-anchor='middle' font-family='Arial'%3E実体験と%3C/text%3E%3Ctext x='50%' y='65%' font-size='48' fill='white' text-anchor='middle' font-family='Arial'%3E感想%3C/text%3E%3C/svg%3E" alt="GitHub Pages実使用の体験談画像" class="article-image">
+
+            <p>
+                私自身、mechatora.comをGitHub Pagesでホスティングしています。以下が実際に使ってみて感じたメリットとデメリットです。
+            </p>
+
+            <h3>✅ メリット</h3>
+            <ul>
+                <li><strong>完全無料</strong>：サーバー代が一切かからない</li>
+                <li><strong>高速・安定</strong>：GitHubのインフラを使えるので信頼性が高い</li>
+                <li><strong>デプロイが簡単</strong>：GitHubにpushするだけで自動更新</li>
+                <li><strong>バージョン管理ができる</strong>：Gitで過去の状態に戻せる</li>
+            </ul>
+
+            <h3>⚠️ デメリット・制約</h3>
+            <ul>
+                <li><strong>静的サイトのみ</strong>：PHP、Node.js、Pythonなどのサーバーサイド処理は不可</li>
+                <li><strong>容量制限</strong>：リポジトリサイズは1GB推奨、帯域幅は月100GB</li>
+                <li><strong>商用利用の制約</strong>：大規模なビジネスサイトには向かない</li>
+                <li><strong>リポジトリが公開</strong>：無料版はコードが全世界に公開される</li>
+            </ul>
+
+            <h2>よくあるトラブルと解決法</h2>
+
+            <h3>❓ サイトが表示されない（404エラー）</h3>
+            <ul>
+                <li>リポジトリ名が「<code>ユーザー名.github.io</code>」と完全一致しているか確認</li>
+                <li>index.htmlがリポジトリのルートディレクトリにあるか確認</li>
+                <li>Settings → Pagesで「Source」がmainブランチになっているか確認</li>
+                <li>初回公開時は10分程度待つ</li>
+            </ul>
+
+            <h3>❓ 更新が反映されない</h3>
+            <ul>
+                <li>ブラウザのキャッシュをクリア（Ctrl + F5）</li>
+                <li>GitHubのActionsタブでデプロイ状況を確認</li>
+                <li>数分待ってから再度アクセス</li>
+            </ul>
+
+            <h3>❓ CSSやJavaScriptが読み込まれない</h3>
+            <ul>
+                <li>ファイルパスが正しいか確認（絶対パス vs 相対パス）</li>
+                <li>ファイル名の大文字・小文字が一致しているか確認</li>
+                <li>ブラウザの開発者ツールでエラーをチェック</li>
+            </ul>
+
+            <h2>まとめ</h2>
+            <p>
+                GitHub Pagesは、初心者でも簡単に無料でWebサイトを公開できる素晴らしいサービスです。ポートフォリオサイトや個人ブログ、プロジェクトのドキュメントサイトなど、幅広い用途に活用できます。
+            </p>
+
+            <div class="highlight-box">
+                <strong>🎯 次のステップ</strong><br>
+                基本的なサイトが公開できたら、デザインをカスタマイズしたり、複数ページを追加したりして、自分だけのWebサイトを作ってみましょう！
+            </div>
+
+            <p>
+                このブログが、あなたのWeb公開の第一歩の参考になれば幸いです。わからないことがあれば、GitHubのドキュメントやコミュニティも活用してみてください！
+            </p>
+        </article>
+
+        <a href="blog.html" class="back-link">← ブログ一覧に戻る</a>
+    </div>
+</body>
+</html>
