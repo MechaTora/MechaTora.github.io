@@ -177,6 +177,15 @@
             background: var(--accent-color);
         }
 
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
         @media (max-width: 768px) {
             .article-title {
                 font-size: 1.8rem;
@@ -203,6 +212,8 @@
         </header>
 
         <article class="article-content">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3EGitHub Pages解説%3C/text%3E%3C/svg%3E" alt="GitHub Pagesでの無料Webサイト公開の記事アイキャッチ画像" class="article-image">
+
             <h2>GitHub Pagesとは？</h2>
             <p>
                 GitHub Pagesは、GitHubが提供する<strong>無料の静的サイトホスティングサービス</strong>です。HTMLファイルをGitHubリポジトリにアップロードするだけで、誰でも簡単にWebサイトを公開できます。
@@ -223,6 +234,9 @@
             </div>
 
             <h2>【ステップ1】GitHubアカウントの作成</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23D4A574' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3EGitHub アカウント設定%3C/text%3E%3C/svg%3E" alt="GitHubアカウント作成のステップ画像" class="article-image">
+
             <p>
                 まだGitHubアカウントを持っていない方は、最初にアカウントを作成しましょう。
             </p>
@@ -239,6 +253,9 @@
             </p>
 
             <h2>【ステップ2】リポジトリの作成</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Eリポジトリ作成%3C/text%3E%3C/svg%3E" alt="GitHubリポジトリの作成手順画像" class="article-image">
+
             <p>
                 GitHubにログインしたら、Webサイト用のリポジトリを作成します。
             </p>
@@ -272,6 +289,9 @@
             </div>
 
             <h2>【ステップ3】HTMLファイルをアップロード</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23D4A574' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Eファイルアップロード%3C/text%3E%3C/svg%3E" alt="HTMLファイルのアップロードプロセス画像" class="article-image">
+
             <p>
                 リポジトリができたら、実際にWebサイトのファイルをアップロードします。
             </p>
@@ -323,6 +343,9 @@ git push origin main
             </div>
 
             <h2>【ステップ4】公開確認</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3EサイトLive公開%3C/text%3E%3C/svg%3E" alt="GitHub Pagesサイトが正常に公開された画像" class="article-image">
+
             <p>
                 ブラウザで<code>https://ユーザー名.github.io</code>にアクセスして、サイトが表示されているか確認しましょう。
             </p>
@@ -333,6 +356,9 @@ git push origin main
             </div>
 
             <h2>【応用】カスタムドメインの設定</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23D4A574' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Eカスタムドメイン設定%3C/text%3E%3C/svg%3E" alt="独自ドメインをGitHub Pagesに設定する図解" class="article-image">
+
             <p>
                 独自ドメイン（例：mechatora.com）を持っている場合、GitHub Pagesと連携できます。
             </p>
@@ -366,6 +392,9 @@ www → ユーザー名.github.io
             </div>
 
             <h2>実際に使ってみた感想</h2>
+
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%236B4E3D' width='800' height='400'/%3E%3Ctext x='50%' y='35%' font-size='48' fill='white' text-anchor='middle' font-family='Arial'%3E実体験と%3C/text%3E%3Ctext x='50%' y='65%' font-size='48' fill='white' text-anchor='middle' font-family='Arial'%3E感想%3C/text%3E%3C/svg%3E" alt="GitHub Pages実使用の体験談画像" class="article-image">
+
             <p>
                 私自身、mechatora.comをGitHub Pagesでホスティングしています。以下が実際に使ってみて感じたメリットとデメリットです。
             </p>

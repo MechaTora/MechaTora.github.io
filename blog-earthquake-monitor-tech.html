@@ -301,6 +301,15 @@
             text-decoration: underline;
         }
 
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
         @media (max-width: 768px) {
             article {
                 padding: 1.5rem 1rem;
@@ -371,6 +380,8 @@
                 </div>
             </header>
 
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Cdefs%3E%3ClinearGradient id='grad3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad3)' width='800' height='400'/%3E%3Ctext x='50%25' y='45%25' font-family='Arial, sans-serif' font-size='48' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'%3E地震モニターアプリ%3C/text%3E%3Ctext x='50%25' y='60%25' font-family='Arial, sans-serif' font-size='36' fill='white' text-anchor='middle' dominant-baseline='middle'%3Eリアルタイム更新の技術%3C/text%3E%3Ctext x='50%25' y='80%25' font-family='Arial, sans-serif' font-size='28' fill='rgba(255,255,255,0.8)' text-anchor='middle' dominant-baseline='middle'%3E🌍 JavaScriptで実現する防災情報%3C/text%3E%3C/svg%3E" alt="地震モニターアプリ：リアルタイム更新の技術的仕組み" class="article-image">
+
             <div class="article-content">
                 <h2>はじめに：なぜ地震モニターアプリを作ったのか</h2>
 
@@ -395,6 +406,8 @@
 
                 <h2>課題1：どのAPIを使うか - 気象庁データの選定</h2>
 
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Crect fill='%23f0f4ff' width='800' height='300'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='32' font-weight='bold' fill='%23333' text-anchor='middle' dominant-baseline='middle'%3EAPI選定%3C/text%3E%3Ctext x='50%25' y='70%25' font-family='Arial, sans-serif' font-size='20' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3E気象庁の公式データを採用%3C/text%3E%3Ctext x='50%25' y='85%25' font-family='Arial, sans-serif' font-size='16' fill='%23999' text-anchor='middle' dominant-baseline='middle'%3E📡 信頼性とリアルタイム性の両立%3C/text%3E%3C/svg%3E" alt="地震情報API選定：気象庁データの採用" class="article-image">
+
                 <p>地震情報を提供するAPIはいくつか存在しますが、今回は<strong>気象庁が提供する公式データ</strong>を利用することにしました。理由は以下の3点です。</p>
 
                 <ul>
@@ -410,6 +423,8 @@
                 </div>
 
                 <h2>課題2：データ取得の実装 - fetch APIとCORS対策</h2>
+
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Crect fill='%23fff3e0' width='800' height='300'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='32' font-weight='bold' fill='%23333' text-anchor='middle' dominant-baseline='middle'%3EfetchとCORS%3C/text%3E%3Ctext x='50%25' y='70%25' font-family='Arial, sans-serif' font-size='20' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3E非同期処理とセキュリティ対策%3C/text%3E%3Ctext x='50%25' y='85%25' font-family='Arial, sans-serif' font-size='16' fill='%23999' text-anchor='middle' dominant-baseline='middle'%3E🔐 安全なAPI連携の実装%3C/text%3E%3C/svg%3E" alt="fetch APIとCORS対策の実装" class="article-image">
 
                 <p>気象庁のデータを取得するには、JavaScriptの<strong>fetch API</strong>を使います。しかし、ここで大きな壁が立ちはだかりました。それが<strong>CORS（Cross-Origin Resource Sharing）</strong>エラーです。</p>
 
@@ -462,6 +477,8 @@ async function fetchEarthquakeData() {
                 </div>
 
                 <h2>課題3：データのパースと表示 - XMLからHTMLへ</h2>
+
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Crect fill='%23f3e5f5' width='800' height='300'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='32' font-weight='bold' fill='%23333' text-anchor='middle' dominant-baseline='middle'%3Eデータパース%3C/text%3E%3Ctext x='50%25' y='70%25' font-family='Arial, sans-serif' font-size='20' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3EJSONデータの解析と表示%3C/text%3E%3Ctext x='50%25' y='85%25' font-family='Arial, sans-serif' font-size='16' fill='%23999' text-anchor='middle' dominant-baseline='middle'%3E💾 データ整形とHTML生成%3C/text%3E%3C/svg%3E" alt="JSON地震データの解析と表示処理" class="article-image">
 
                 <p>取得したJSONデータには、最新の地震情報が配列形式で格納されています。これを<strong>ユーザーが見やすい形式に変換</strong>する必要があります。</p>
 
@@ -550,6 +567,8 @@ function getScaleColorClass(scale) {
 
                 <h2>課題4：自動更新ロジック - setIntervalとメモリ管理</h2>
 
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Crect fill='%23e0f2f1' width='800' height='300'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='32' font-weight='bold' fill='%23333' text-anchor='middle' dominant-baseline='middle'%3E自動更新ロジック%3C/text%3E%3Ctext x='50%25' y='70%25' font-family='Arial, sans-serif' font-size='20' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3EリアルタイムでのデータRefresh%3C/text%3E%3Ctext x='50%25' y='85%25' font-family='Arial, sans-serif' font-size='16' fill='%23999' text-anchor='middle' dominant-baseline='middle'%3E🔄 継続的なデータ更新の実装%3C/text%3E%3C/svg%3E" alt="自動更新とメモリ管理の実装" class="article-image">
+
                 <p>地震情報は刻一刻と変化します。ユーザーが手動で更新ボタンを押さなくても、<strong>自動的に最新情報が表示される仕組み</strong>が必要です。</p>
 
                 <h3>自動更新の実装</h3>
@@ -617,6 +636,8 @@ async function updateEarthquakeData() {
                 </div>
 
                 <h2>課題5：エラーハンドリングとUX改善</h2>
+
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Crect fill='%23fce4ec' width='800' height='300'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='32' font-weight='bold' fill='%23333' text-anchor='middle' dominant-baseline='middle'%3Eエラー対応とUX%3C/text%3E%3Ctext x='50%25' y='70%25' font-family='Arial, sans-serif' font-size='20' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3Eユーザー体験の最適化%3C/text%3E%3Ctext x='50%25' y='85%25' font-family='Arial, sans-serif' font-size='16' fill='%23999' text-anchor='middle' dominant-baseline='middle'%3E⚠️ 適切なエラーハンドリング%3C/text%3E%3C/svg%3E" alt="エラーハンドリングとUX改善" class="article-image">
 
                 <p>ネットワークエラー、APIのタイムアウト、データ形式の変更など、<strong>予期せぬエラーは必ず発生します</strong>。重要なのは、エラーが起きた時にユーザーに適切なフィードバックを返すことです。</p>
 

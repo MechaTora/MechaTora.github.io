@@ -294,6 +294,15 @@
             text-decoration: underline;
         }
 
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
         @media (max-width: 768px) {
             article {
                 padding: 1.5rem 1rem;
@@ -364,6 +373,8 @@
                 </div>
             </header>
 
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23667eea' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3ER言語データ分析%3C/text%3E%3C/svg%3E" alt="R言語とTidyverseを使ったデータ分析の記事アイキャッチ画像" class="article-image">
+
             <div class="article-content">
                 <h2>はじめに：なぜR言語とTidyverseを学んだのか</h2>
 
@@ -387,6 +398,8 @@
                 </div>
 
                 <h2>Tidyverseとは？データ分析を劇的に効率化するパッケージ群</h2>
+
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23764ba2' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3ETidyverseツールキット%3C/text%3E%3C/svg%3E" alt="Tidyverseパッケージの構成図" class="article-image">
 
                 <p>Tidyverseは、R言語でデータ分析を行う際の<strong>「標準ツールキット」</strong>と呼べる存在です。以下の8つの主要パッケージで構成されています。</p>
 
@@ -416,6 +429,8 @@ library(tidyverse)
                 </div>
 
                 <h2>dplyr：データ操作の5つの基本動詞</h2>
+
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%2310b981' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Edplyr 動詞%3C/text%3E%3C/svg%3E" alt="dplyrの5つの基本動詞の図解" class="article-image">
 
                 <p>dplyrは「データ操作のための文法」を提供してくれます。特に重要な5つの関数（動詞）をマスターすれば、ほとんどのデータ操作が可能になります。</p>
 
@@ -517,6 +532,8 @@ sales_data %>%
 
                 <h2>ggplot2：美しいグラフを簡単に作成</h2>
 
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23f59e0b' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Eggplot2 グラフ作成%3C/text%3E%3C/svg%3E" alt="ggplot2による美しいグラフの作成例" class="article-image">
+
                 <p>ggplot2は「Grammar of Graphics（グラフィックスの文法）」という考え方に基づいた可視化ライブラリです。複雑なグラフも直感的に作成できます。</p>
 
                 <h3>基本的な構文</h3>
@@ -573,6 +590,8 @@ sales_data %>%
 
                 <h2>tidyr：データ整形の2大関数</h2>
 
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%238b5cf6' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3Etidyr データ整形%3C/text%3E%3C/svg%3E" alt="tidyrでのデータ整形の図解" class="article-image">
+
                 <p>データ分析では、「データの形」を変える作業が頻繁に発生します。tidyrはその作業を簡単にしてくれます。</p>
 
                 <h3>pivot_longer()：横持ちを縦持ちに</h3>
@@ -619,6 +638,8 @@ data %>%
                 </div>
 
                 <h2>実践例：実際の業務データで試してみる</h2>
+
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%2306b6d4' width='800' height='400'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3E実践的なデータ分析%3C/text%3E%3C/svg%3E" alt="実際のビジネスデータを使った分析例" class="article-image">
 
                 <p>ここまでの知識を使って、実際の業務でよくある「月次売上レポート作成」を自動化してみましょう。</p>
 
@@ -667,6 +688,8 @@ write_csv(monthly_report, "monthly_sales_report_2025.csv")
                 <p>このコードは、<strong>毎月手作業で2〜3時間かかっていた集計作業を、わずか数秒で完了させます</strong>。これがR言語とTidyverseの威力です。</p>
 
                 <h2>非エンジニアが挫折しない学習方法</h2>
+
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%2306b6d4' width='800' height='400'/%3E%3Ctext x='50%' y='35%' font-size='48' fill='white' text-anchor='middle' font-family='Arial'%3E学習の工程表%3C/text%3E%3Ctext x='50%' y='65%' font-size='48' fill='white' text-anchor='middle' font-family='Arial'%3E3ヶ月マスター%3C/text%3E%3C/svg%3E" alt="R言語学習の3ヶ月マスタープラン" class="article-image">
 
                 <p>私自身が非エンジニアからR言語を習得した経験から、以下の学習方法を強くおすすめします。</p>
 
