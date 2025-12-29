@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Webサイトのパフォーマンス最適化を実践的に解説。画像圧縮、遅延読み込み、CSS/JS最適化、Lighthouse改善など、MechaToraで実際に行った高速化手法を紹介します。">
+    <meta name="keywords" content="パフォーマンス最適化,Web高速化,Lighthouse,画像圧縮,遅延読み込み,Core Web Vitals">
+    <title>Web パフォーマンス最適化の実践 - サイトを爆速にする方法 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Web パフォーマンス最適化の実践",
+        "description": "Webサイトのパフォーマンス最適化を実践的に解説。画像圧縮、遅延読み込み、CSS/JS最適化など、実際に行った高速化手法を紹介します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-11-04",
+        "dateModified": "2025-11-04",
+        "image": "https://blog.mechatora.com/images/web-performance.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Web パフォーマンス最適化の実践 - サイトを爆速にする方法",
+                "item": "https://blog.mechatora.com/articles/web-performance-optimization.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>Web パフォーマンス最適化の実践</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category tech">技術・開発</span>
+                <h1>Web パフォーマンス最適化の実践 - サイトを爆速にする方法</h1>
+                <div class="article-meta">
+                    <time datetime="2025-11-04">2025年11月4日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>「サイトの読み込みが遅い」「Lighthouseのスコアが低い」「ユーザーの離脱率が高い」——Webサイトのパフォーマンスは、ユーザー体験を左右する重要な要素です。Googleの調査によると、ページ読み込みが3秒以上かかると、53%のユーザーが離脱するとされています。</p>
+                <p>この記事では、MechaToraの15個のツールでLighthouseスコア90点以上を達成した経験から、実践的なパフォーマンス最適化手法を解説します。画像圧縮、遅延読み込み、CSS/JS最適化など、今すぐ使える技術をお伝えします。</p>
+            </div>
+
+            <h2>パフォーマンスが重要な理由</h2>
+
+            <h3>3つの影響</h3>
+            <ul>
+                <li><strong>ユーザー体験</strong>：読み込みが遅いとイライラして離脱</li>
+                <li><strong>SEO</strong>：Googleの検索順位に影響（Core Web Vitals）</li>
+                <li><strong>コンバージョン</strong>：1秒遅延で売上7%減（Amazon調査）</li>
+            </ul>
+
+            <h3>MechaToraの改善実績</h3>
+            <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #f3f4f6;">
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">指標</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">最適化前</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">最適化後</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">Lighthouseスコア</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">72点</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">94点</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">読み込み時間</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">4.2秒</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">1.8秒</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">ページサイズ</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">3.5MB</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">850KB</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Lighthouseでの測定</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>Lighthouseの使い方</h3>
+            <ol>
+                <li>Chrome DevTools を開く（F12）</li>
+                <li>Lighthouse タブを選択</li>
+                <li>「Analyze page load」をクリック</li>
+            </ol>
+
+            <h3>主要な指標</h3>
+            <ul>
+                <li><strong>FCP（First Contentful Paint）</strong>：最初のコンテンツが表示されるまでの時間</li>
+                <li><strong>LCP（Largest Contentful Paint）</strong>：最大コンテンツが表示されるまでの時間</li>
+                <li><strong>TBT（Total Blocking Time）</strong>：メインスレッドがブロックされた時間</li>
+                <li><strong>CLS（Cumulative Layout Shift）</strong>：レイアウトのずれ</li>
+                <li><strong>Speed Index</strong>：ページ内容が視覚的に表示される速度</li>
+            </ul>
+
+            <h2>最適化1：画像の最適化</h2>
+
+            <h3>問題：画像が重すぎる</h3>
+            <p>最適化前のMechaToraトップページ：</p>
+            <ul>
+                <li>15枚の画像、合計2.8MB</li>
+                <li>ページ全体の80%を画像が占める</li>
+                <li>読み込みに3秒以上</li>
+            </ul>
+
+            <h3>解決策1：画像圧縮</h3>
+            <p>無料ツールで圧縮：</p>
+            <ul>
+                <li><strong>TinyPNG</strong>：PNG/JPEGを70〜80%圧縮</li>
+                <li><strong>Squoosh</strong>：Googleのツール、WebP変換も可能</li>
+                <li><strong>ImageOptim</strong>：Mac用、ドラッグ&ドロップで圧縮</li>
+            </ul>
+
+            <p>結果：2.8MB → 680KB（75%削減）</p>
+
+            <h3>解決策2：次世代フォーマット（WebP）</h3>
+            <pre><code>&lt;!-- 従来のJPEG --&gt;
+&lt;img src="app-screenshot.jpg" alt="アプリ画面"&gt;
+
+&lt;!-- WebP対応（フォールバック付き） --&gt;
+&lt;picture&gt;
+    &lt;source srcset="app-screenshot.webp" type="image/webp"&gt;
+    &lt;source srcset="app-screenshot.jpg" type="image/jpeg"&gt;
+    &lt;img src="app-screenshot.jpg" alt="アプリ画面"&gt;
+&lt;/picture&gt;</code></pre>
+
+            <p>WebPは同じ品質でJPEGより25〜35%小さくなります。</p>
+
+            <h3>解決策3：遅延読み込み（Lazy Loading）</h3>
+            <pre><code>&lt;!-- loading="lazy" を追加するだけ --&gt;
+&lt;img src="large-image.jpg" alt="説明" loading="lazy"&gt;
+
+&lt;!-- 画面外の画像は必要になるまで読み込まれない --&gt;</code></pre>
+
+            <p>効果：初回読み込み時間が40%短縮</p>
+
+            <h3>解決策4：レスポンシブ画像</h3>
+            <pre><code>&lt;!-- 画面サイズに応じて適切なサイズの画像を配信 --&gt;
+&lt;img
+    srcset="app-320w.jpg 320w,
+            app-640w.jpg 640w,
+            app-1280w.jpg 1280w"
+    sizes="(max-width: 640px) 100vw,
+           (max-width: 1280px) 50vw,
+           33vw"
+    src="app-640w.jpg"
+    alt="アプリ画面"
+&gt;</code></pre>
+
+            <h2>最適化2：CSS/JSの最適化</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>問題：レンダリングブロック</h3>
+            <p>CSS/JSが全て読み込まれるまで、ページが表示されません。</p>
+
+            <h3>解決策1：クリティカルCSSのインライン化</h3>
+            <pre><code>&lt;!-- 最初に表示される部分のCSSをHTMLに直接記述 --&gt;
+&lt;head&gt;
+    &lt;style&gt;
+        /* クリティカルCSS（ファーストビューに必要な最小限のスタイル） */
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+        .hero {
+            background: #2563eb;
+            color: white;
+            padding: 2rem;
+        }
+    &lt;/style&gt;
+
+    &lt;!-- 残りのCSSは非同期読み込み --&gt;
+    &lt;link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'"&gt;
+&lt;/head&gt;</code></pre>
+
+            <h3>解決策2：JavaScriptの非同期読み込み</h3>
+            <pre><code>&lt;!-- 悪い例：レンダリングブロック --&gt;
+&lt;script src="app.js"&gt;&lt;/script&gt;
+
+&lt;!-- 良い例1：defer（DOMの後に実行） --&gt;
+&lt;script src="app.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- 良い例2：async（読み込み完了次第実行） --&gt;
+&lt;script src="analytics.js" async&gt;&lt;/script&gt;</code></pre>
+
+            <p>使い分け：</p>
+            <ul>
+                <li><strong>defer</strong>：DOM操作が必要なスクリプト</li>
+                <li><strong>async</strong>：Google Analyticsなど独立したスクリプト</li>
+            </ul>
+
+            <h3>解決策3：CSSの最小化</h3>
+            <pre><code>/* 最適化前（改行、スペース、コメント含む） */
+.button {
+    background-color: #2563eb;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+}
+
+/* 最適化後（1行、スペース削除） */
+.button{background-color:#2563eb;color:white;padding:.75rem 1.5rem;border-radius:.5rem}</code></pre>
+
+            <p>ツール：</p>
+            <ul>
+                <li><a href="https://cssnano.co/" target="_blank" rel="noopener noreferrer">cssnano</a></li>
+                <li><a href="https://github.com/jakubpawlowicz/clean-css" target="_blank" rel="noopener noreferrer">clean-css</a></li>
+            </ul>
+
+            <h2>最適化3：フォントの最適化</h2>
+
+            <h3>問題：Webフォントが重い</h3>
+            <p>Google Fontsを読み込むと、数百KBのファイルをダウンロードします。</p>
+
+            <h3>解決策1：font-display: swap</h3>
+            <pre><code>/* システムフォントを先に表示、Webフォント読み込み後に切り替え */
+@font-face {
+    font-family: 'Noto Sans JP';
+    src: url('NotoSansJP.woff2') format('woff2');
+    font-display: swap; /* これを追加 */
+}</code></pre>
+
+            <h3>解決策2：必要な文字だけ読み込む</h3>
+            <pre><code>&lt;!-- Google Fonts: 日本語サブセット --&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap&subset=japanese" rel="stylesheet"&gt;</code></pre>
+
+            <h3>解決策3：システムフォントを使う</h3>
+            <pre><code>body {
+    font-family:
+        -apple-system,           /* macOS, iOS */
+        BlinkMacSystemFont,      /* macOS Chrome */
+        "Segoe UI",              /* Windows */
+        "Helvetica Neue",
+        "Hiragino Sans",         /* macOS日本語 */
+        "Hiragino Kaku Gothic ProN", /* macOS日本語 */
+        "Noto Sans CJK JP",      /* Linux日本語 */
+        "Yu Gothic",             /* Windows日本語 */
+        sans-serif;
+}</code></pre>
+
+            <p>Webフォント不要で、0バイト！</p>
+
+            <h2>最適化4：キャッシュの活用</h2>
+
+            <h3>ブラウザキャッシュ</h3>
+            <p>GitHub Pagesは自動的にキャッシュヘッダーを設定してくれます。自前サーバーの場合：</p>
+
+            <pre><code># .htaccess（Apache）
+&lt;IfModule mod_expires.c&gt;
+    ExpiresActive On
+
+    # 画像：1年間キャッシュ
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+
+    # CSS/JS：1ヶ月キャッシュ
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+
+    # HTML：1時間キャッシュ
+    ExpiresByType text/html "access plus 1 hour"
+&lt;/IfModule&gt;</code></pre>
+
+            <h3>Service Workerでのキャッシュ</h3>
+            <pre><code>// sw.js
+const CACHE_NAME = 'mechatora-v1';
+const urlsToCache = [
+    '/',
+    '/styles.css',
+    '/app.js',
+    '/images/logo.png'
+];
+
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(urlsToCache))
+    );
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => response || fetch(event.request))
+    );
+});</code></pre>
+
+            <h2>最適化5：コンテンツ配信の最適化</h2>
+
+            <h3>CDNの活用</h3>
+            <p>Cloudflare（無料）を使うと：</p>
+            <ul>
+                <li>世界中のサーバーにコンテンツをキャッシュ</li>
+                <li>ユーザーに最も近いサーバーから配信</li>
+                <li>自動的に画像圧縮・最適化</li>
+            </ul>
+
+            <p>設定方法：</p>
+            <ol>
+                <li><a href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a> でアカウント作成</li>
+                <li>ドメインを追加</li>
+                <li>ネームサーバーを変更</li>
+                <li>自動最適化をON（Speed → Optimization）</li>
+            </ol>
+
+            <h3>プリロード・プリフェッチ</h3>
+            <pre><code>&lt;head&gt;
+    &lt;!-- 重要なリソースを優先読み込み --&gt;
+    &lt;link rel="preload" href="styles.css" as="style"&gt;
+    &lt;link rel="preload" href="app.js" as="script"&gt;
+
+    &lt;!-- 次に見るページを先読み --&gt;
+    &lt;link rel="prefetch" href="about.html"&gt;
+&lt;/head&gt;</code></pre>
+
+            <h2>最適化6：HTMLの最適化</h2>
+
+            <h3>DOM要素を減らす</h3>
+            <pre><code>&lt;!-- 悪い例：不必要なdivが多い --&gt;
+&lt;div class="container"&gt;
+    &lt;div class="wrapper"&gt;
+        &lt;div class="inner"&gt;
+            &lt;div class="content"&gt;
+                &lt;p&gt;テキスト&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- 良い例：必要最小限 --&gt;
+&lt;div class="container"&gt;
+    &lt;p&gt;テキスト&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+            <h3>HTMLの最小化</h3>
+            <p>改行・スペース・コメントを削除：</p>
+            <pre><code>&lt;!-- 最適化前 --&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;MechaTora&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;見出し&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+&lt;!-- 最適化後 --&gt;
+&lt;html&gt;&lt;head&gt;&lt;title&gt;MechaTora&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;見出し&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</code></pre>
+
+            <h2>実践：MechaToraの最適化プロセス</h2>
+
+            <h3>ステップ1：現状把握</h3>
+            <pre><code># Lighthouseで測定
+- Performance: 72点
+- 主な問題: 画像が大きい、JSがブロッキング</code></pre>
+
+            <h3>ステップ2：画像最適化</h3>
+            <ul>
+                <li>全画像をTinyPNGで圧縮：2.8MB → 680KB</li>
+                <li>WebP変換：さらに30%削減</li>
+                <li>loading="lazy" 追加</li>
+            </ul>
+
+            <h3>ステップ3：CSS/JS最適化</h3>
+            <ul>
+                <li>deferとasync追加</li>
+                <li>クリティカルCSSをインライン化</li>
+                <li>不要なCSS削除（300KB → 80KB）</li>
+            </ul>
+
+            <h3>ステップ4：再測定</h3>
+            <pre><code># Lighthouse再測定
+- Performance: 94点（+22点）
+- 読み込み時間: 1.8秒（-2.4秒）</code></pre>
+
+            <h2>まとめ</h2>
+
+            <h3>優先度の高い最適化</h3>
+            <ol>
+                <li><strong>画像圧縮</strong>：最も効果が大きい</li>
+                <li><strong>遅延読み込み</strong>：loading="lazy"を追加するだけ</li>
+                <li><strong>JS/CSSの非同期読み込み</strong>：defer/async追加</li>
+                <li><strong>Webフォント最適化</strong>：font-display: swap</li>
+            </ol>
+
+            <h3>チェックリスト</h3>
+            <ul>
+                <li>✅ 画像を圧縮（TinyPNG、Squoosh）</li>
+                <li>✅ WebP形式に変換</li>
+                <li>✅ loading="lazy" 追加</li>
+                <li>✅ JavaScript に defer 追加</li>
+                <li>✅ CSS を最小化</li>
+                <li>✅ Webフォントに font-display: swap</li>
+                <li>✅ CDN（Cloudflare）を設定</li>
+                <li>✅ Lighthouseで90点以上を目指す</li>
+            </ul>
+
+            <p>パフォーマンス最適化は、一度やれば終わりではなく、継続的な改善が重要です。MechaToraでは、新しいツールを追加するたびにLighthouseで測定し、90点以上を維持しています。</p>
+
+            <p>まずは、画像圧縮とloading="lazy"から始めてみてください！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="pwa-implementation-guide.html">PWA実装の基礎</a></li>
+                    <li><a href="responsive-design-basics.html">レスポンシブデザイン実装の基本</a></li>
+                    <li><a href="javascript-error-handling.html">JavaScriptエラーハンドリングの実践</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

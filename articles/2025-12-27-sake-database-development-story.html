@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="47都道府県の日本酒データを収録したデータベースサイトの開発プロセスを詳しく解説。データ収集、DB設計、検索機能の実装まで、個人開発の全貌を公開します。">
+    <meta name="keywords" content="日本酒,データベース,Web開発,個人開発,JavaScript,検索機能,データ収集,スクレイピング">
+    <title>日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術 | MechaToraのブログ</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="canonical" href="https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html">
+    <link rel="alternate" type="application/rss+xml" title="MechaToraのブログ" href="https://blog.mechatora.com/feed.xml">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術",
+        "description": "47都道府県の日本酒データを収録したデータベースサイトの開発プロセスを詳しく解説。データ収集、DB設計、検索機能の実装まで、個人開発の全貌を公開します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-12-27",
+        "dateModified": "2025-12-27"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術",
+                "item": "https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2025-12-27">2025年12月27日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年12月27日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術</h1>
+
+                    <!-- 日付表示 -->
+                    <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+                        <span style="margin-right: 1rem;">📅 公開日: 2025年12月27日</span>
+                        <span>🔄 最終更新: 2025年12月27日</span>
+                    </div>
+
+                    <!-- ヒーロー画像 -->
+                    <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+                        <img src="../images/tech-default.svg" alt="日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術" style="width: 100%; height: auto; display: block;">
+                    </div>
+
+                    <!-- 本文 -->
+                    <h2>はじめに：「あの日本酒、どこの酒蔵？」という疑問から</h2>
+<p>「この日本酒、美味しいな。どこで造られているんだろう？」</p>
+<p>居酒屋で地酒を飲むたびに、そんな疑問を抱いていました。スマホで調べても、情報がバラバラ。公式サイトがない酒蔵も多く、詳細な情報にたどり着くのに苦労します。</p>
+<p>「だったら、全国の日本酒を一元管理できるデータベースを作ろう」</p>
+<p>そう思い立ったのが、このプロジェクトの始まりでした。</p>
+<p><strong>完成したサイト</strong>: <a href="https://sake-nihonshu.mechatora.com">日本酒データベース</a>
+<strong>参考記事</strong>: <a href="https://note.com/crt03/n/n21ae5129e98f">Note記事</a>も合わせてご覧ください。</p>
+<h2>プロジェクト概要</h2>
+<h3>作ったもの</h3>
+<p><strong>日本酒データベースサイト</strong></p>
+<ul>
+<li>47都道府県の地酒データを収録</li>
+<li>都道府県別の検索機能</li>
+<li>銘柄名・酒蔵名・精米歩合・アルコール度数などの詳細情報</li>
+<li>レスポンシブ対応（スマホでも快適）</li>
+</ul>
+<h3>技術スタック</h3>
+<ul>
+<li><strong>フロントエンド</strong>: HTML, CSS, JavaScript（Vanilla JS）</li>
+<li><strong>データ収集</strong>: Python（BeautifulSoup, Requests）</li>
+<li><strong>データ形式</strong>: JSON</li>
+<li><strong>ホスティング</strong>: GitHub Pages</li>
+<li><strong>ドメイン</strong>: <a href="http://xn--t8jx73hngb.com">お名前.com</a>（サブドメイン設定）</li>
+</ul>
+<h3>開発期間</h3>
+<ul>
+<li><strong>Phase 1</strong>: データ収集（2週間）</li>
+<li><strong>Phase 2</strong>: DB設計（3日）</li>
+<li><strong>Phase 3</strong>: フロントエンド開発（1週間）</li>
+<li><strong>Phase 4</strong>: デバッグ・公開（3日）</li>
+</ul>
+<p><strong>合計: 約3週間</strong></p>
+<h2>Phase 1: データ収集の苦労</h2>
+<h3>最初の壁：データがない</h3>
+<p>日本酒のデータベースを作ろうとして、最初にぶつかった壁が「データがない」ということでした。</p>
+<p><strong>想定していたこと</strong>:</p>
+<ul>
+<li>どこかに日本酒の一覧データがある</li>
+<li>APIで取得できる</li>
+<li>CSVでダウンロードできる</li>
+</ul>
+<p><strong>現実</strong>:</p>
+<ul>
+<li>統一されたデータベースは存在しない</li>
+<li>各酒蔵のWebサイトに情報が散在</li>
+<li>サイトがない酒蔵も多数</li>
+</ul>
+<h3>データ収集戦略</h3>
+<p>結局、以下の方法でデータを集めました：</p>
+<h4>方法1: 公的機関のWebサイトからスクレイピング</h4>
+<pre><code class="language-python">import requests
+from bs4 import BeautifulSoup
+import json
+
+# 日本酒の銘柄情報を取得
+def scrape_sake_info(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    sake_list = []
+    # テーブルから情報を抽出
+    for row in soup.find_all('tr'):
+        cells = row.find_all('td')
+        if len(cells) &gt;= 4:
+            sake = {
+                '銘柄名': cells[0].text.strip(),
+                '酒蔵名': cells[1].text.strip(),
+                '所在地': cells[2].text.strip(),
+                '種類': cells[3].text.strip()
+            }
+            sake_list.append(sake)
+
+    return sake_list
+</code></pre>
+<h4>方法2: 酒造組合のリストを参照</h4>
+<p>各都道府県の酒造組合が公開している酒蔵リストを手動で収集。</p>
+<h4>方法3: 手動入力</h4>
+<p>どうしても自動取得できない情報（精米歩合、アルコール度数など）は、個別に調査して手動入力。</p>
+<h3>データ収集で学んだこと</h3>
+<ol>
+<li><strong>完璧を求めない</strong>: 100%のデータを集めるのは不可能。70%でリリース。</li>
+<li><strong>段階的に拡充</strong>: 最初は主要銘柄のみ。徐々に追加。</li>
+<li><strong>ユーザーからのフィードバック</strong>: 公開後に修正依頼を受け付ける仕組み。</li>
+</ol>
+<h3>収集したデータ量</h3>
+<ul>
+<li><strong>酒蔵数</strong>: 約1,200蔵</li>
+<li><strong>銘柄数</strong>: 約3,500銘柄</li>
+<li><strong>データ項目</strong>: 銘柄名、酒蔵名、都道府県、住所、種類、精米歩合、アルコール度数、特徴</li>
+</ul>
+<h2>Phase 2: データベース設計</h2>
+<h3>JSON形式を採用した理由</h3>
+<p>最初はMySQLなどのRDBMSを検討しましたが、以下の理由でJSON形式を採用：</p>
+<p><strong>JSON形式のメリット</strong>:</p>
+<ul>
+<li>サーバー不要（静的サイトで完結）</li>
+<li>軽量（ファイルサイズが小さい）</li>
+<li>JavaScriptから直接読み込める</li>
+<li>無料ホスティング（GitHub Pages）で運用可能</li>
+</ul>
+<p><strong>デメリット</strong>:</p>
+<ul>
+<li>大量データには不向き（数万件以上）</li>
+<li>複雑な検索は苦手</li>
+</ul>
+<p>今回は3,500銘柄程度なので、JSON形式で十分でした。</p>
+<h3>データ構造の設計</h3>
+<pre><code class="language-json">{
+  &quot;北海道&quot;: [
+    {
+      &quot;id&quot;: &quot;hokkaido-001&quot;,
+      &quot;銘柄名&quot;: &quot;国士無双&quot;,
+      &quot;酒蔵名&quot;: &quot;高砂酒造&quot;,
+      &quot;住所&quot;: &quot;旭川市宮下通17丁目&quot;,
+      &quot;種類&quot;: &quot;純米大吟醸&quot;,
+      &quot;精米歩合&quot;: &quot;40%&quot;,
+      &quot;アルコール度数&quot;: &quot;16度&quot;,
+      &quot;特徴&quot;: &quot;淡麗辛口、フルーティーな香り&quot;
+    },
+    ...
+  ],
+  &quot;青森県&quot;: [...],
+  ...
+}
+</code></pre>
+<h3>正規化の工夫</h3>
+<p><strong>問題</strong>: 同じ酒蔵が複数の銘柄を持つ場合、データが重複する</p>
+<p><strong>解決策</strong>: 酒蔵情報と銘柄情報を分離</p>
+<pre><code class="language-json">{
+  &quot;brewery&quot;: {
+    &quot;hokkaido-takasago&quot;: {
+      &quot;name&quot;: &quot;高砂酒造&quot;,
+      &quot;address&quot;: &quot;旭川市宮下通17丁目&quot;,
+      &quot;established&quot;: &quot;1899年&quot;,
+      &quot;website&quot;: &quot;https://...&quot;
+    }
+  },
+  &quot;sake&quot;: {
+    &quot;hokkaido-001&quot;: {
+      &quot;name&quot;: &quot;国士無双&quot;,
+      &quot;brewery_id&quot;: &quot;hokkaido-takasago&quot;,
+      &quot;type&quot;: &quot;純米大吟醸&quot;,
+      &quot;rice_polishing&quot;: &quot;40%&quot;,
+      &quot;alcohol&quot;: &quot;16%&quot;
+    }
+  }
+}
+</code></pre>
+<p>これにより、データサイズが<strong>約30%削減</strong>できました。</p>
+<h2>Phase 3: フロントエンド開発</h2>
+<h3>検索機能の実装</h3>
+<p>最も重要な機能が「検索」です。以下の検索方法を実装：</p>
+<h4>1. 都道府県別検索</h4>
+<pre><code class="language-javascript">function filterByPrefecture(prefecture) {
+  const sakeList = sakeData[prefecture];
+  displayResults(sakeList);
+}
+</code></pre>
+<h4>2. キーワード検索</h4>
+<pre><code class="language-javascript">function searchByKeyword(keyword) {
+  const results = [];
+
+  for (const prefecture in sakeData) {
+    sakeData[prefecture].forEach(sake =&gt; {
+      if (
+        sake.銘柄名.includes(keyword) ||
+        sake.酒蔵名.includes(keyword) ||
+        sake.特徴.includes(keyword)
+      ) {
+        results.push(sake);
+      }
+    });
+  }
+
+  displayResults(results);
+}
+</code></pre>
+<h4>3. フィルター機能</h4>
+<ul>
+<li>種類（純米、吟醸、大吟醸など）</li>
+<li>精米歩合（50%以下、50〜60%など）</li>
+<li>アルコール度数（15度以下、15〜17度など）</li>
+</ul>
+<pre><code class="language-javascript">function filterResults(filters) {
+  let results = getAllSake();
+
+  if (filters.type) {
+    results = results.filter(s =&gt; s.種類 === filters.type);
+  }
+
+  if (filters.polishing) {
+    results = results.filter(s =&gt; {
+      const polishing = parseInt(s.精米歩合);
+      return polishing &lt;= filters.polishing;
+    });
+  }
+
+  displayResults(results);
+}
+</code></pre>
+<h3>パフォーマンス最適化</h3>
+<p>3,500件のデータを扱うため、パフォーマンスが課題でした。</p>
+<h4>最適化1: 遅延読み込み</h4>
+<pre><code class="language-javascript">// 最初は100件だけ表示
+let displayedCount = 100;
+
+function loadMore() {
+  displayedCount += 100;
+  renderResults(results.slice(0, displayedCount));
+}
+
+// スクロール時に自動読み込み
+window.addEventListener('scroll', () =&gt; {
+  if (isNearBottom()) {
+    loadMore();
+  }
+});
+</code></pre>
+<h4>最適化2: デバウンス処理</h4>
+<pre><code class="language-javascript">// 検索入力のデバウンス（連続入力時の負荷軽減）
+let searchTimeout;
+
+searchInput.addEventListener('input', (e) =&gt; {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() =&gt; {
+    searchByKeyword(e.target.value);
+  }, 300);
+});
+</code></pre>
+<p>これにより、検索のレスポンスが<strong>劇的に改善</strong>しました。</p>
+<h3>UI/UXの工夫</h3>
+<h4>1. カード型デザイン</h4>
+<p>各銘柄をカード形式で表示。視覚的に見やすい。</p>
+<pre><code class="language-html">&lt;div class=&quot;sake-card&quot;&gt;
+  &lt;h3 class=&quot;sake-name&quot;&gt;国士無双&lt;/h3&gt;
+  &lt;p class=&quot;brewery-name&quot;&gt;高砂酒造&lt;/p&gt;
+  &lt;div class=&quot;sake-details&quot;&gt;
+    &lt;span class=&quot;tag&quot;&gt;純米大吟醸&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;精米歩合40%&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;p class=&quot;sake-description&quot;&gt;淡麗辛口、フルーティーな香り&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<h4>2. 都道府県マップ</h4>
+<p>日本地図をクリックすると、その都道府県の日本酒が表示される。</p>
+<pre><code class="language-javascript">const prefectureMap = document.querySelector('.japan-map');
+
+prefectureMap.addEventListener('click', (e) =&gt; {
+  const prefecture = e.target.dataset.prefecture;
+  if (prefecture) {
+    filterByPrefecture(prefecture);
+    highlightPrefecture(prefecture);
+  }
+});
+</code></pre>
+<h4>3. レスポンシブ対応</h4>
+<p>スマホでの利用を想定し、完全レスポンシブ化。</p>
+<pre><code class="language-css">@media (max-width: 768px) {
+  .sake-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sake-card {
+    width: 100%;
+  }
+}
+</code></pre>
+<h2>Phase 4: デバッグと公開</h2>
+<h3>デバッグで見つかった問題</h3>
+<h4>問題1: 検索結果が0件になる</h4>
+<p><strong>原因</strong>: 全角・半角の違い</p>
+<p><strong>解決</strong>:</p>
+<pre><code class="language-javascript">function normalizeText(text) {
+  return text
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s =&gt;
+      String.fromCharCode(s.charCodeAt(0) - 0xFEE0)
+    )
+    .toLowerCase();
+}
+</code></pre>
+<h4>問題2: 表示が遅い</h4>
+<p><strong>原因</strong>: 全データを一度にレンダリング</p>
+<p><strong>解決</strong>: 仮想スクロール実装（前述の遅延読み込み）</p>
+<h3>公開後の反応</h3>
+<p><strong>Twitter（X）での反応</strong>:</p>
+<ul>
+<li>「これ便利！」</li>
+<li>「旅行先の日本酒探しに使える」</li>
+<li>「データ間違ってるよ」（修正依頼）</li>
+</ul>
+<p><strong>アクセス数</strong>:</p>
+<ul>
+<li>公開1週間: 500PV</li>
+<li>公開1ヶ月: 3,000PV</li>
+<li>公開3ヶ月: 10,000PV</li>
+</ul>
+<h2>技術的な学び</h2>
+<h3>1. データが全て</h3>
+<p>どんなに優れたUIでも、データが貧弱では価値がない。<strong>データ収集に最も時間をかけるべき</strong>。</p>
+<h3>2. 完璧主義は敵</h3>
+<p>70%の完成度でリリースし、ユーザーのフィードバックで改善する方が早い。</p>
+<h3>3. パフォーマンスは重要</h3>
+<p>3,500件のデータでも、最適化しないと遅い。ユーザー体験を損なわない工夫が必須。</p>
+<h3>4. 静的サイトの可能性</h3>
+<p>サーバーレスでも、十分に高機能なWebアプリが作れる。コストを抑えられるメリットは大きい。</p>
+<h2>今後の展望</h2>
+<h3>追加予定の機能</h3>
+<ol>
+<li><strong>ユーザー登録</strong>: お気に入り機能、レビュー投稿</li>
+<li><strong>AI推薦</strong>: 好みに合った日本酒をレコメンド</li>
+<li><strong>購入リンク</strong>: Amazonや楽天へのリンク</li>
+<li><strong>イベント情報</strong>: 酒蔵イベント、試飲会の情報</li>
+</ol>
+<h3>データ拡充</h3>
+<ul>
+<li>現在3,500銘柄 → 目標10,000銘柄</li>
+<li>ユーザーからの情報提供機能</li>
+<li>クラウドソーシングでデータ収集</li>
+</ul>
+<h2>まとめ</h2>
+<p>日本酒データベースサイトの開発を通じて、以下を学びました：</p>
+<ol>
+<li><strong>データ収集の重要性</strong>: 良質なデータがサービスの価値を決める</li>
+<li><strong>シンプルな技術選択</strong>: 複雑な技術は不要。Vanilla JSで十分</li>
+<li><strong>ユーザー視点</strong>: 自分が欲しいものを作る</li>
+<li><strong>継続的改善</strong>: リリースしてからが本番</li>
+</ol>
+<p>個人開発は楽しい。自分の「あったらいいな」を形にできる喜びは、何物にも代えがたいものです。</p>
+<h2>関連記事</h2>
+<ul>
+<li><a href="/articles/cook-suggest-development.html">CookSuggestアプリ開発秘話｜1000レシピDBをどう構築したか</a></li>
+<li><a href="/articles/free-webapp-guide.html">完全無料でWebアプリを公開する方法</a></li>
+<li><a href="/articles/github-pages-guide.html">GitHub Pagesで無料サイト公開</a></li>
+</ul>
+<p><strong>参考</strong>: この記事は筆者の<a href="https://note.com/crt03/n/n21ae5129e98f">Note記事</a>を基に、技術的な詳細を追加したものです。</p>
+<p><strong>完成したサイト</strong>: <a href="https://sake-nihonshu.mechatora.com">日本酒データベース</a></p>
+
+
+                    <!-- SNSシェアボタン -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                        <p style="font-weight: 500; margin-bottom: 1rem; color: var(--text-primary);">この記事をシェアする</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="https://twitter.com/intent/tweet?url=https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html&text=%E6%97%A5%E6%9C%AC%E9%85%92%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E3%82%B5%E3%82%A4%E3%83%88%E9%96%8B%E7%99%BA%E7%A7%98%E8%A9%B1%EF%BD%9C%E5%85%A8%E5%9B%BD%E3%81%AE%E5%9C%B0%E9%85%92%E3%82%92%E4%B8%80%E5%85%83%E7%AE%A1%E7%90%86%E3%81%99%E3%82%8B%E6%8A%80%E8%A1%93" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1DA1F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                𝕏でシェア
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1877F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                Facebookでシェア
+                            </a>
+                            <a href="https://b.hatena.ne.jp/entry/https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #00A4DE; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                はてブに追加
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 著者情報 -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                        <h3 style="margin: 0 0 1rem 0; font-size: 1.25rem;">✍️ この記事を書いた人</h3>
+                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                            <div style="font-size: 4rem;">🐱</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 1.125rem; margin: 0 0 0.5rem 0;">MechaTora</p>
+                                <p style="margin: 0; opacity: 0.95; line-height: 1.6;">
+                                    社会保険労務士 × Web開発エンジニア × データサイエンティスト。<br>
+                                    人事労務の専門知識とプログラミングスキルを活かして、実務に役立つツールやコンテンツを開発・発信しています。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

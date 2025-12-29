@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="レスポンシブデザイン実装の基本。メディアクエリ、Flexbox、CSS Grid、モバイルファースト設計を実例で解説。初心者でもすぐに使える実践的なコード付き。">
+    <meta name="keywords" content="レスポンシブデザイン,CSS,メディアクエリ,Flexbox,モバイルファースト,Web開発">
+    <title>レスポンシブデザイン実装の基本｜メディアクエリとFlexboxで作る | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "レスポンシブデザイン実装の基本｜メディアクエリとFlexboxで作る",
+        "description": "レスポンシブデザイン実装の基本。メディアクエリ、Flexbox、CSS Grid、モバイルファースト設計を実例で解説。初心者でもすぐに使える実践的なコード付き。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-01-09",
+        "dateModified": "2025-01-09"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "レスポンシブデザイン実装の基本｜メディアクエリとFlexboxで作る",
+                "item": "https://blog.mechatora.com/articles/responsive-design-basics.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>レスポンシブデザイン実装の基本</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2025-01-09">2025年1月9日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年1月9日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>レスポンシブデザイン実装の基本｜メディアクエリとFlexboxで作る</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+
+                    <!-- リード文（導入） -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        「作ったサイトがスマホで崩れる...」「PCでは綺麗なのに、タブレットで見るとレイアウトがおかしい」。レスポンシブデザインは、今やWebサイト制作の必須スキルです。この記事では、メディアクエリ、Flexbox、CSS Gridを使った実践的なレスポンシブデザインの実装方法を、初心者でもすぐに使えるコード例と共に詳しく解説します。
+                    </p>
+
+                    <!-- 記事本文 -->
+                    <h2>レスポンシブデザインとは</h2>
+
+                    <h3>定義</h3>
+                    <p>
+                        レスポンシブデザインとは、1つのHTMLファイルで、デバイスの画面サイズに応じて最適な表示を実現する設計手法です。
+                    </p>
+                    <ul>
+                        <li>スマホ（375px〜）: 1カラム、縦並び</li>
+                        <li>タブレット（768px〜）: 2カラム、一部横並び</li>
+                        <li>PC（1024px〜）: 3カラム、全て横並び</li>
+                    </ul>
+
+                    <h3>なぜ必要なのか</h3>
+                    <ul>
+                        <li><strong>モバイルトラフィックが過半数：</strong>Webアクセスの60%以上がスマホ</li>
+                        <li><strong>SEOに有利：</strong>Googleがモバイルフレンドリーを重視</li>
+                        <li><strong>メンテナンス性：</strong>PC版・スマホ版を別々に作るより、1つのコードで管理</li>
+                    </ul>
+
+                    <h2>基礎：viewportメタタグ</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>必ず設定する</h3>
+                    <p>
+                        HTMLの<code>&lt;head&gt;</code>内に、以下のviewportメタタグを追加します。
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+</pre>
+
+                    <p>
+                        <strong>意味：</strong>
+                    </p>
+                    <ul>
+                        <li><code>width=device-width</code>: デバイスの横幅に合わせる</li>
+                        <li><code>initial-scale=1.0</code>: 初期の拡大率を100%に設定</li>
+                    </ul>
+
+                    <p>
+                        これを設定しないと、スマホでPCサイトがそのまま縮小表示され、文字が読めなくなります。
+                    </p>
+
+                    <h2>メディアクエリの基本</h2>
+
+                    <h3>構文</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+/* 基本構文 */
+@media (max-width: 768px) {
+  /* 768px以下の画面に適用されるCSS */
+  .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  /* 769px以上の画面に適用されるCSS */
+  .container {
+    width: 1200px;
+    margin: 0 auto;
+  }
+}
+</pre>
+
+                    <h3>ブレークポイントの設定</h3>
+                    <p>
+                        一般的なブレークポイント：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+/* スマホ（デフォルト）: 〜575px */
+
+/* タブレット */
+@media (min-width: 576px) { }
+
+/* タブレット（横向き）・小型PC */
+@media (min-width: 768px) { }
+
+/* PC */
+@media (min-width: 1024px) { }
+
+/* 大型PC */
+@media (min-width: 1200px) { }
+</pre>
+
+                    <h2>モバイルファースト設計</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>概念</h3>
+                    <p>
+                        スマホ（最小画面）のCSSをデフォルトとし、画面が大きくなるにつれてCSSを追加していく手法です。
+                    </p>
+
+                    <h3>実装例</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+/* モバイルファースト（デフォルト: スマホ向け） */
+.container {
+  width: 100%;
+  padding: 1rem;
+}
+
+.article-grid {
+  display: block; /* 縦並び */
+}
+
+/* タブレット以上 */
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .article-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2カラム */
+    gap: 1.5rem;
+  }
+}
+
+/* PC以上 */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+
+  .article-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3カラム */
+  }
+}
+</pre>
+
+                    <h2>Flexboxでのレスポンシブ実装</h2>
+
+                    <h3>基本パターン: カードの横並び → 縦並び</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+.card-container {
+  display: flex;
+  flex-wrap: wrap; /* 折り返しを許可 */
+  gap: 1rem;
+}
+
+.card {
+  flex: 1 1 300px; /* 最小幅300px、伸縮可能 */
+}
+
+/* スマホでは1列表示 */
+@media (max-width: 767px) {
+  .card {
+    flex: 1 1 100%; /* 1列100%幅 */
+  }
+}
+</pre>
+
+                    <h3>実践例: ナビゲーションメニュー</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+/* スマホ: ハンバーガーメニュー（縦並び） */
+nav ul {
+  display: flex;
+  flex-direction: column; /* 縦並び */
+}
+
+/* PC: 横並びメニュー */
+@media (min-width: 768px) {
+  nav ul {
+    flex-direction: row; /* 横並び */
+    gap: 2rem;
+  }
+}
+</pre>
+
+                    <h2>CSS Gridでのレスポンシブ実装</h2>
+
+                    <h3>auto-fitで自動調整</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/*
+auto-fit: 画面幅に応じて自動でカラム数を調整
+minmax(250px, 1fr): 最小250px、最大1frで均等配分
+→ スマホ: 1列、タブレット: 2列、PC: 3列 と自動調整される
+*/
+</pre>
+
+                    <h3>実践例: 記事一覧</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* スマホ: 1列 */
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .article-grid {
+    grid-template-columns: repeat(2, 1fr); /* タブレット: 2列 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .article-grid {
+    grid-template-columns: repeat(3, 1fr); /* PC: 3列 */
+  }
+}
+</pre>
+
+                    <h2>実践：mechatora.comで使っているコード</h2>
+
+                    <h3>ヘッダーのレスポンシブ化</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+/* スマホ */
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+nav ul {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* PC */
+@media (min-width: 768px) {
+  .header-content {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+  }
+
+  .logo {
+    margin-bottom: 0;
+  }
+
+  nav ul {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+</pre>
+
+                    <h3>カード型レイアウト</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* スマホ: 1列 */
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.app-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  .app-grid {
+    grid-template-columns: repeat(2, 1fr); /* 小型タブレット: 2列 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-grid {
+    grid-template-columns: repeat(3, 1fr); /* PC: 3列 */
+    padding: 2rem;
+  }
+}
+</pre>
+
+                    <h2>よくある失敗と解決策</h2>
+
+                    <h3>失敗1: 画像がはみ出す</h3>
+                    <p>
+                        <strong>原因：</strong>画像に幅指定がない
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+img {
+  max-width: 100%; /* 親要素の幅を超えない */
+  height: auto; /* アスペクト比を維持 */
+}
+</pre>
+
+                    <h3>失敗2: 文字が小さすぎて読めない</h3>
+                    <p>
+                        <strong>原因：</strong>スマホ向けのフォントサイズが未設定
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+body {
+  font-size: 16px; /* スマホでも読みやすいサイズ */
+}
+
+h1 {
+  font-size: 1.75rem; /* 28px相当 */
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 2.5rem; /* PCでは大きく */
+  }
+}
+</pre>
+
+                    <h3>失敗3: ボタンが小さくてタップしにくい</h3>
+                    <p>
+                        <strong>原因：</strong>タッチターゲットが44px未満
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+button,
+a {
+  min-height: 44px; /* タッチターゲットの最小サイズ */
+  min-width: 44px;
+  padding: 0.75rem 1.5rem;
+}
+</pre>
+
+                    <h2>開発者ツールでの確認方法</h2>
+
+                    <h3>Chrome DevToolsを使う</h3>
+                    <ol>
+                        <li>F12キーでデベロッパーツールを開く</li>
+                        <li>左上の「デバイスツールバー」アイコンをクリック（またはCtrl+Shift+M）</li>
+                        <li>「Responsive」または特定のデバイスを選択</li>
+                        <li>幅を手動で変えながら、レイアウトの崩れをチェック</li>
+                    </ol>
+
+                    <h3>チェックポイント</h3>
+                    <ul>
+                        <li>375px（iPhone SE）でレイアウトが崩れていないか</li>
+                        <li>768px（iPad）で2カラム表示になっているか</li>
+                        <li>1024px（PC）で3カラム表示になっているか</li>
+                        <li>画像・動画がはみ出していないか</li>
+                        <li>ボタンがタップしやすいサイズか</li>
+                    </ul>
+
+                    <!-- まとめセクション -->
+                    <h2>まとめ</h2>
+                    <p>
+                        レスポンシブデザインは、モバイルファーストで設計し、メディアクエリ・Flexbox・CSS Gridを活用することで実現できます。このページのポイントをまとめます：
+                    </p>
+                    <ul>
+                        <li><strong>必須設定：</strong>viewportメタタグを必ず記述</li>
+                        <li><strong>モバイルファースト：</strong>スマホ向けをデフォルト、画面拡大で追加CSS</li>
+                        <li><strong>メディアクエリ：</strong>@media (min-width: 768px) で画面サイズ別にスタイル適用</li>
+                        <li><strong>Flexbox：</strong>flex-wrap、flex-directionで縦横切り替え</li>
+                        <li><strong>CSS Grid：</strong>repeat(auto-fit, minmax())で自動調整</li>
+                        <li><strong>失敗対策：</strong>画像max-width: 100%、フォント16px以上、ボタン44px以上</li>
+                    </ul>
+
+                    <p>
+                        レスポンシブデザインは最初は難しく感じますが、パターンを覚えれば応用できます。ぜひ実際に手を動かして試してみてください！
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-actions-deploy.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ GitHub Actionsで自動デプロイ環境を作る｜初心者向けCI/CD入門</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

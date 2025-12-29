@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="R言語とTidyverseを使ったデータクレンジング（データ前処理）の実践ガイド。欠損値処理、重複削除、型変換、外れ値除去など、人事データの実例で解説します。">
+    <meta name="keywords" content="データクレンジング,データ前処理,Tidyverse,dplyr,R言語,欠損値,データ分析">
+    <title>Tidyverseで始めるデータクレンジング - 汚いデータを綺麗にする方法 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Tidyverseで始めるデータクレンジング",
+        "description": "R言語とTidyverseを使ったデータクレンジングの実践ガイド。欠損値処理、重複削除、型変換、外れ値除去など、人事データの実例で解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-10-31",
+        "dateModified": "2025-10-31",
+        "image": "https://blog.mechatora.com/images/data-cleaning.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Tidyverseで始めるデータクレンジング - 汚いデータを綺麗にする方法",
+                "item": "https://blog.mechatora.com/articles/data-cleaning-tidyverse.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/datascience-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>Tidyverseで始めるデータクレンジング</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category datascience">データサイエンス</span>
+                <h1>Tidyverseで始めるデータクレンジング - 汚いデータを綺麗にする方法</h1>
+                <div class="article-meta">
+                    <time datetime="2025-10-31">2025年10月31日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>データ分析の8割は「データクレンジング（データ前処理）」だと言われます。実際のデータは、欠損値、重複、表記ゆれ、外れ値など、様々な「汚れ」を含んでいます。これらを綺麗にしないと、正確な分析はできません。</p>
+                <p>この記事では、R言語のTidyverseを使ったデータクレンジングの実践方法を、人事データを例に解説します。欠損値の処理、重複の削除、型変換、外れ値の除去など、実務で必ず使う手法を網羅します。</p>
+            </div>
+
+            <h2>データクレンジングとは</h2>
+
+            <h3>データ分析の流れ</h3>
+            <ol>
+                <li><strong>データ収集</strong>：ExcelファイルやDBから取得</li>
+                <li><strong>データクレンジング</strong>：汚れを除去（全体の70〜80%）</li>
+                <li><strong>探索的データ分析（EDA）</strong>：可視化して傾向を探る</li>
+                <li><strong>モデリング</strong>：統計分析や機械学習</li>
+                <li><strong>レポーティング</strong>：結果を共有</li>
+            </ol>
+
+            <h3>よくあるデータの問題</h3>
+            <p>人事部から受け取った社員データの例：</p>
+            <pre><code>employee_id,name,age,department,salary,join_date
+001,山田太郎,32,営業部,5000000,2020-04-01
+002,佐藤花子,28,開発部,4500000,2021-06-15
+003,田中一郎,999,人事部,4800000,2019-10-01  # 年齢が明らかに異常
+004,山田太郎,32,営業部,5000000,2020-04-01  # 001と重複
+005,鈴木次郎,,営業部,4200000,2022-01-10  # 年齢が欠損
+006,高橋三郎,45,開発,5500000,2018-05-20  # 「開発部」ではなく「開発」
+007,伊藤四郎,38,営業部,,2020-08-01  # 給与が欠損
+008,渡辺五郎,29,人事部,4900000,2021/03/15  # 日付の形式が異なる</code></pre>
+
+            <p>このデータには、以下の問題があります：</p>
+            <ul>
+                <li><strong>重複データ</strong>：001と004が同じ</li>
+                <li><strong>欠損値</strong>：005の年齢、007の給与</li>
+                <li><strong>外れ値</strong>：003の年齢999歳</li>
+                <li><strong>表記ゆれ</strong>：「開発部」と「開発」</li>
+                <li><strong>日付形式の不統一</strong>：2020-04-01と2021/03/15</li>
+            </ul>
+
+            <h2>準備：Tidyverseのインストール</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/datascience-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <pre><code># Tidyverseのインストール
+install.packages("tidyverse")
+
+# ライブラリ読み込み
+library(tidyverse)</code></pre>
+
+            <h2>ステップ1：データの読み込みと確認</h2>
+
+            <h3>CSVファイルの読み込み</h3>
+            <pre><code># readr パッケージの read_csv() を使用
+employee_data <- read_csv("employee_data.csv")
+
+# データの最初の6行を表示
+head(employee_data)
+
+# データの構造を確認
+glimpse(employee_data)
+
+# 出力例:
+# Rows: 100
+# Columns: 6
+# $ employee_id <chr> "001", "002", "003", ...
+# $ name        <chr> "山田太郎", "佐藤花子", ...
+# $ age         <dbl> 32, 28, 999, ...
+# $ department  <chr> "営業部", "開発部", ...
+# $ salary      <dbl> 5000000, 4500000, ...
+# $ join_date   <chr> "2020-04-01", "2021-06-15", ...</code></pre>
+
+            <h3>基本統計量の確認</h3>
+            <pre><code># 各列の統計量
+summary(employee_data)
+
+# 欠損値の数
+employee_data %>%
+  summarise(across(everything(), ~sum(is.na(.))))
+
+# 出力例:
+# employee_id  name  age  department  salary  join_date
+#           0     0    5           2      12          0</code></pre>
+
+            <h2>ステップ2：重複データの削除</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/datascience-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>完全一致する重複</h3>
+            <pre><code># 重複行を削除（全ての列が一致）
+employee_data <- employee_data %>%
+  distinct()
+
+# 削除前後の行数を確認
+nrow(employee_data)  # 95行（5行の重複を削除）</code></pre>
+
+            <h3>特定列での重複</h3>
+            <pre><code># employee_id が重複している行を削除（最初の行を残す）
+employee_data <- employee_data %>%
+  distinct(employee_id, .keep_all = TRUE)
+
+# どの行が重複していたかを確認
+employee_data %>%
+  group_by(employee_id) %>%
+  filter(n() > 1)</code></pre>
+
+            <h2>ステップ3：欠損値の処理</h2>
+
+            <h3>欠損値の確認</h3>
+            <pre><code># 列ごとの欠損値数と割合
+employee_data %>%
+  summarise(across(everything(), list(
+    missing = ~sum(is.na(.)),
+    pct = ~mean(is.na(.)) * 100
+  )))
+
+# 出力例:
+# age_missing  age_pct  salary_missing  salary_pct
+#           5    5.26%              12       12.6%</code></pre>
+
+            <h3>欠損値の削除</h3>
+            <pre><code># 欠損値を含む行を全て削除
+employee_data_complete <- employee_data %>%
+  drop_na()
+
+# 特定の列の欠損値のみ削除
+employee_data_clean <- employee_data %>%
+  drop_na(age, salary)  # age または salary が欠損している行を削除</code></pre>
+
+            <h3>欠損値の補完</h3>
+            <pre><code># 平均値で補完
+employee_data <- employee_data %>%
+  mutate(salary = if_else(is.na(salary), mean(salary, na.rm = TRUE), salary))
+
+# 中央値で補完（外れ値の影響を受けにくい）
+employee_data <- employee_data %>%
+  mutate(age = if_else(is.na(age), median(age, na.rm = TRUE), age))
+
+# 前の値で補完（時系列データの場合）
+employee_data <- employee_data %>%
+  arrange(join_date) %>%
+  fill(department, .direction = "down")
+
+# 部署ごとの平均値で補完
+employee_data <- employee_data %>%
+  group_by(department) %>%
+  mutate(salary = if_else(is.na(salary), mean(salary, na.rm = TRUE), salary)) %>%
+  ungroup()</code></pre>
+
+            <h2>ステップ4：外れ値の処理</h2>
+
+            <h3>外れ値の検出（箱ひげ図）</h3>
+            <pre><code># 年齢の箱ひげ図
+ggplot(employee_data, aes(y = age)) +
+  geom_boxplot() +
+  labs(title = "年齢の分布")
+
+# IQR（四分位範囲）で外れ値を検出
+Q1 <- quantile(employee_data$age, 0.25, na.rm = TRUE)
+Q3 <- quantile(employee_data$age, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+
+# 外れ値の範囲
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# 外れ値を含む行を確認
+outliers <- employee_data %>%
+  filter(age < lower_bound | age > upper_bound)
+
+print(outliers)
+# 年齢999歳のデータが検出される</code></pre>
+
+            <h3>外れ値の処理</h3>
+            <pre><code># 方法1：外れ値を削除
+employee_data_clean <- employee_data %>%
+  filter(age >= lower_bound & age <= upper_bound)
+
+# 方法2：外れ値を上下限値で置き換え（Winsorization）
+employee_data <- employee_data %>%
+  mutate(age = case_when(
+    age < lower_bound ~ lower_bound,
+    age > upper_bound ~ upper_bound,
+    TRUE ~ age
+  ))
+
+# 方法3：外れ値をNAに置き換えて、後で補完
+employee_data <- employee_data %>%
+  mutate(age = if_else(age < 18 | age > 70, NA_real_, age))</code></pre>
+
+            <h2>ステップ5：データ型の変換</h2>
+
+            <h3>文字列→数値</h3>
+            <pre><code># employee_id を数値型に変換
+employee_data <- employee_data %>%
+  mutate(employee_id = as.numeric(employee_id))
+
+# カンマ区切りの数値文字列を数値に変換
+employee_data <- employee_data %>%
+  mutate(salary = as.numeric(str_remove_all(salary, ",")))
+
+# 例: "5,000,000" → 5000000</code></pre>
+
+            <h3>文字列→日付</h3>
+            <pre><code># lubridateパッケージを使用
+library(lubridate)
+
+# 様々な日付形式を統一
+employee_data <- employee_data %>%
+  mutate(join_date = ymd(join_date))
+
+# 日付の要素を抽出
+employee_data <- employee_data %>%
+  mutate(
+    join_year = year(join_date),
+    join_month = month(join_date),
+    join_day = day(join_date)
+  )</code></pre>
+
+            <h3>文字列→カテゴリ変数（factor）</h3>
+            <pre><code># department を factor 型に変換
+employee_data <- employee_data %>%
+  mutate(department = factor(department))
+
+# 順序付きfactor（評価など）
+employee_data <- employee_data %>%
+  mutate(performance = factor(
+    performance,
+    levels = c("C", "B", "A", "S"),
+    ordered = TRUE
+  ))</code></pre>
+
+            <h2>ステップ6：表記ゆれの修正</h2>
+
+            <h3>部署名の統一</h3>
+            <pre><code># 「開発」を「開発部」に統一
+employee_data <- employee_data %>%
+  mutate(department = case_when(
+    department == "開発" ~ "開発部",
+    department == "営業" ~ "営業部",
+    department == "人事" ~ "人事部",
+    TRUE ~ department
+  ))
+
+# または str_replace() を使用
+employee_data <- employee_data %>%
+  mutate(department = str_replace(department, "^(\\w+)$", "\\1部"))</code></pre>
+
+            <h3>空白の削除</h3>
+            <pre><code># 前後の空白を削除
+employee_data <- employee_data %>%
+  mutate(across(where(is.character), str_trim))
+
+# 全角スペースも削除
+employee_data <- employee_data %>%
+  mutate(across(where(is.character), ~str_replace_all(., "[ 　]+", "")))</code></pre>
+
+            <h3>大文字・小文字の統一</h3>
+            <pre><code># 全て小文字に変換
+employee_data <- employee_data %>%
+  mutate(email = str_to_lower(email))
+
+# 姓名を統一（姓は大文字、名は小文字）
+employee_data <- employee_data %>%
+  mutate(name = str_to_title(name))</code></pre>
+
+            <h2>ステップ7：データ変換と集約</h2>
+
+            <h3>新しい列の追加</h3>
+            <pre><code># 勤続年数を計算
+employee_data <- employee_data %>%
+  mutate(tenure_years = as.numeric(difftime(Sys.Date(), join_date, units = "days")) / 365.25)
+
+# 年齢層を作成
+employee_data <- employee_data %>%
+  mutate(age_group = case_when(
+    age < 30 ~ "20代",
+    age < 40 ~ "30代",
+    age < 50 ~ "40代",
+    TRUE ~ "50代以上"
+  ))
+
+# 給与を万円単位に変換
+employee_data <- employee_data %>%
+  mutate(salary_man = salary / 10000)</code></pre>
+
+            <h3>条件によるフィルタリング</h3>
+            <pre><code># 30歳以上かつ営業部の社員
+filtered_data <- employee_data %>%
+  filter(age >= 30 & department == "営業部")
+
+# 給与が上位10%の社員
+top10_salary <- employee_data %>%
+  filter(salary >= quantile(salary, 0.9, na.rm = TRUE))</code></pre>
+
+            <h3>データの集約</h3>
+            <pre><code># 部署別の平均給与
+dept_salary <- employee_data %>%
+  group_by(department) %>%
+  summarise(
+    count = n(),
+    avg_salary = mean(salary, na.rm = TRUE),
+    median_salary = median(salary, na.rm = TRUE),
+    sd_salary = sd(salary, na.rm = TRUE)
+  )</code></pre>
+
+            <h2>実践例：人事データの完全クレンジング</h2>
+
+            <pre><code># 1. データ読み込み
+employee_data <- read_csv("employee_data.csv")
+
+# 2. パイプラインで一気にクレンジング
+employee_cleaned <- employee_data %>%
+  # 重複削除
+  distinct(employee_id, .keep_all = TRUE) %>%
+  # 型変換
+  mutate(
+    employee_id = as.numeric(employee_id),
+    join_date = ymd(join_date),
+    department = factor(department)
+  ) %>%
+  # 表記ゆれ修正
+  mutate(across(where(is.character), str_trim)) %>%
+  mutate(department = case_when(
+    department %in% c("開発", "dev") ~ "開発部",
+    department %in% c("営業", "sales") ~ "営業部",
+    TRUE ~ department
+  )) %>%
+  # 外れ値除外（年齢18〜70歳）
+  filter(age >= 18 & age <= 70) %>%
+  # 欠損値補完
+  group_by(department) %>%
+  mutate(salary = if_else(is.na(salary), median(salary, na.rm = TRUE), salary)) %>%
+  ungroup() %>%
+  mutate(age = if_else(is.na(age), median(age, na.rm = TRUE), age)) %>%
+  # 新しい列追加
+  mutate(
+    tenure_years = as.numeric(difftime(Sys.Date(), join_date, units = "days")) / 365.25,
+    age_group = case_when(
+      age < 30 ~ "20代",
+      age < 40 ~ "30代",
+      age < 50 ~ "40代",
+      TRUE ~ "50代以上"
+    )
+  ) %>%
+  # 必要な列のみ選択
+  select(employee_id, name, age, age_group, department, salary, join_date, tenure_years)
+
+# 3. 確認
+glimpse(employee_cleaned)
+summary(employee_cleaned)
+
+# 4. クリーンなデータを保存
+write_csv(employee_cleaned, "employee_cleaned.csv")</code></pre>
+
+            <h2>データクレンジングのベストプラクティス</h2>
+
+            <h3>1. 元データは残す</h3>
+            <pre><code># 悪い例：元データを上書き
+employee_data <- employee_data %>% filter(age >= 18)
+
+# 良い例：新しいオブジェクトに保存
+employee_cleaned <- employee_data %>% filter(age >= 18)</code></pre>
+
+            <h3>2. 処理を記録する</h3>
+            <pre><code># Rスクリプトに全ての処理を記録
+# 再現可能な形で保存
+
+# クレンジング前のデータ概要
+cat("Before cleaning:\n")
+print(summary(employee_data))
+
+# クレンジング
+employee_cleaned <- employee_data %>%
+  # ... クレンジング処理
+
+# クレンジング後のデータ概要
+cat("\nAfter cleaning:\n")
+print(summary(employee_cleaned))</code></pre>
+
+            <h3>3. データ品質レポートを作成</h3>
+            <pre><code># skimr パッケージで詳細なレポート
+library(skimr)
+
+skim(employee_data)  # クレンジング前
+skim(employee_cleaned)  # クレンジング後
+
+# 出力:
+# データ型、欠損値、統計量、ヒストグラムなどを自動表示</code></pre>
+
+            <h2>まとめ</h2>
+
+            <h3>データクレンジングの流れ</h3>
+            <ol>
+                <li><strong>データ確認</strong>：構造、欠損値、統計量</li>
+                <li><strong>重複削除</strong>：distinct()</li>
+                <li><strong>欠損値処理</strong>：drop_na(), 補完</li>
+                <li><strong>外れ値処理</strong>：IQRで検出、削除または置換</li>
+                <li><strong>型変換</strong>：as.numeric(), ymd(), factor()</li>
+                <li><strong>表記ゆれ修正</strong>：case_when(), str_replace()</li>
+                <li><strong>データ変換</strong>：新しい列追加、集約</li>
+            </ol>
+
+            <h3>よく使う関数まとめ</h3>
+            <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #f3f4f6;">
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">処理</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">関数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">重複削除</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">distinct()</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">欠損値削除</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">drop_na()</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">欠損値補完</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">if_else(), fill()</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">条件分岐</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">case_when()</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">文字列操作</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">str_trim(), str_replace()</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">日付変換</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">ymd(), year(), month()</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>データクレンジングは地味ですが、分析の精度を左右する最重要工程です。Tidyverseを使えば、効率的かつ再現可能な形でクレンジングできます。ぜひ、自分のデータで試してみてください！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="r-tidyverse-intro.html">R言語とTidyverseで始めるデータ分析入門</a></li>
+                    <li><a href="ggplot2-data-visualization.html">ggplot2で始めるデータ可視化</a></li>
+                    <li><a href="sharoushi-skill-utilization.html">社労士資格を最大限活用する5つの方法</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

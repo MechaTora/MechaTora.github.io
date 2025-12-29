@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="現役人事×Kaggle Masterが教える、人事部門でのデータ活用実践ガイド。採用データ分析、離職予測モデル構築、Excel脱却の具体的手法を詳しく解説します。">
+    <meta name="keywords" content="人事,データ分析,Python,pandas,採用,離職率,予測モデル,HR Analytics,人事データ,可視化">
+    <title>人事データ分析入門｜Pythonで採用・離職率を可視化する方法 | MechaToraのブログ</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="canonical" href="https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html">
+    <link rel="alternate" type="application/rss+xml" title="MechaToraのブログ" href="https://blog.mechatora.com/feed.xml">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "人事データ分析入門｜Pythonで採用・離職率を可視化する方法",
+        "description": "現役人事×Kaggle Masterが教える、人事部門でのデータ活用実践ガイド。採用データ分析、離職予測モデル構築、Excel脱却の具体的手法を詳しく解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-12-21",
+        "dateModified": "2025-12-21"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "人事データ分析入門｜Pythonで採用・離職率を可視化する方法",
+                "item": "https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                <li>人事データ分析入門｜Pythonで採用・離職率を可視化する方法</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">データサイエンス</span>
+                        <time datetime="2025-12-21">2025年12月21日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年12月21日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>人事データ分析入門｜Pythonで採用・離職率を可視化する方法</h1>
+
+                    <!-- 日付表示 -->
+                    <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+                        <span style="margin-right: 1rem;">📅 公開日: 2025年12月21日</span>
+                        <span>🔄 最終更新: 2025年12月21日</span>
+                    </div>
+
+                    <!-- ヒーロー画像 -->
+                    <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+                        <img src="../images/datascience-default.svg" alt="人事データ分析入門｜Pythonで採用・離職率を可視化する方法" style="width: 100%; height: auto; display: block;">
+                    </div>
+
+                    <!-- 本文 -->
+                    <h2>はじめに：人事部門にこそデータサイエンスが必要</h2>
+<p>「人事の仕事は、データで変わる」</p>
+<p>現役人事として5年間働き、Kaggle Masterとしてデータサイエンスを学んだ私が断言します。<strong>人事データ分析は、採用・育成・定着の全てを改善します</strong>。</p>
+<p>しかし、多くの人事部門はまだ<strong>Excel手作業</strong>に頼っています。</p>
+<p>この記事では、<strong>Pythonを使った人事データ分析の実践方法</strong>を、初心者向けに詳しく解説します。</p>
+<ul>
+<li>採用データの分析（応募数・選考通過率）</li>
+<li>離職率の可視化と予測モデル</li>
+<li>Excel脱却の具体的ステップ</li>
+</ul>
+<p>人事×データサイエンスで、あなたの仕事を変革しましょう！</p>
+<h2>人事データ分析で解決できる課題</h2>
+<h3>課題1: 採用の属人化</h3>
+<p><strong>よくある問題</strong>:</p>
+<ul>
+<li>面接官によって合否が変わる</li>
+<li>「勘と経験」で判断</li>
+<li>データに基づいた意思決定ができない</li>
+</ul>
+<p><strong>データ分析による解決</strong>:</p>
+<ul>
+<li>過去の採用データから「合格者の傾向」を可視化</li>
+<li>面接官ごとの合格率を比較</li>
+<li>予測モデルで「この候補者は活躍しそうか？」を判定</li>
+</ul>
+<h3>課題2: 離職率が下がらない</h3>
+<p><strong>よくある問題</strong>:</p>
+<ul>
+<li>「なぜ辞めるのか」が分からない</li>
+<li>退職理由は建前ばかり</li>
+<li>離職予兆を掴めない</li>
+</ul>
+<p><strong>データ分析による解決</strong>:</p>
+<ul>
+<li>離職者の共通パターンを発見</li>
+<li>入社1年以内の離職を予測</li>
+<li>早期にフォロー施策を打つ</li>
+</ul>
+<h3>課題3: Excelの限界</h3>
+<p><strong>よくある問題</strong>:</p>
+<ul>
+<li>複数のExcelファイルを手作業で集計</li>
+<li>グラフ作成に時間がかかる</li>
+<li>データが増えると処理が遅い</li>
+</ul>
+<p><strong>Pythonによる解決</strong>:</p>
+<ul>
+<li>自動集計・可視化</li>
+<li>数千件のデータでも瞬時に処理</li>
+<li>コードを共有すれば誰でも再現可能</li>
+</ul>
+<h2>準備：環境構築</h2>
+<h3>Python環境のセットアップ</h3>
+<pre><code class="language-bash"># Anacondaインストール（推奨）
+# https://www.anaconda.com/products/distribution
+
+# 必要なライブラリ
+pip install pandas numpy matplotlib seaborn scikit-learn openpyxl
+</code></pre>
+<h3>サンプルデータの準備</h3>
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+
+# サンプル採用データ生成
+np.random.seed(42)
+
+n_applicants = 500  # 応募者数
+
+data = {
+    '応募ID': range(1, n_applicants + 1),
+    '応募日': [datetime(2024, 1, 1) + timedelta(days=int(x))
+               for x in np.random.uniform(0, 365, n_applicants)],
+    '年齢': np.random.randint(22, 45, n_applicants),
+    '性別': np.random.choice(['男性', '女性'], n_applicants),
+    '学歴': np.random.choice(['高卒', '専門卒', '大卒', '大学院卒'], n_applicants, p=[0.1, 0.2, 0.6, 0.1]),
+    '職歴年数': np.random.randint(0, 15, n_applicants),
+    '書類選考': np.random.choice(['合格', '不合格'], n_applicants, p=[0.7, 0.3]),
+    '一次面接': np.random.choice(['合格', '不合格', '未実施'], n_applicants, p=[0.4, 0.3, 0.3]),
+    '最終面接': np.random.choice(['内定', '不合格', '未実施'], n_applicants, p=[0.2, 0.2, 0.6]),
+}
+
+df_recruit = pd.DataFrame(data)
+
+# CSV保存
+df_recruit.to_csv('recruit_data.csv', index=False, encoding='utf-8-sig')
+
+print(f'サンプルデータ作成完了: {len(df_recruit)}件')
+print(df_recruit.head())
+</code></pre>
+<h2>分析1: 採用データの可視化</h2>
+<h3>応募数の推移</h3>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 日本語フォント設定
+plt.rcParams['font.family'] = 'MS Gothic'
+plt.rcParams['figure.figsize'] = (12, 6)
+
+# 月別の応募数
+df_recruit['応募月'] = pd.to_datetime(df_recruit['応募日']).dt.to_period('M')
+monthly_apply = df_recruit.groupby('応募月').size()
+
+plt.figure(figsize=(12, 6))
+monthly_apply.plot(kind='bar', color='steelblue')
+plt.xlabel('月')
+plt.ylabel('応募数')
+plt.title('月別応募数の推移')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('monthly_applications.png', dpi=300)
+plt.show()
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li>3月、9月に応募が増える（転職シーズン）</li>
+<li>12月は減少（年末で動きが鈍い）</li>
+</ul>
+<h3>選考通過率の分析</h3>
+<pre><code class="language-python"># 各段階の通過率
+total = len(df_recruit)
+pass_shurui = (df_recruit['書類選考'] == '合格').sum()
+pass_ichiji = (df_recruit['一次面接'] == '合格').sum()
+pass_naitei = (df_recruit['最終面接'] == '内定').sum()
+
+funnel_data = {
+    '段階': ['応募', '書類通過', '一次通過', '内定'],
+    '人数': [total, pass_shurui, pass_ichiji, pass_naitei],
+    '通過率': [100, pass_shurui/total*100, pass_ichiji/total*100, pass_naitei/total*100]
+}
+
+df_funnel = pd.DataFrame(funnel_data)
+
+# ファンネルチャート
+plt.figure(figsize=(10, 6))
+colors = ['#4CAF50', '#8BC34A', '#CDDC39', '#FFC107']
+plt.barh(df_funnel['段階'], df_funnel['人数'], color=colors)
+plt.xlabel('人数')
+plt.title('採用ファンネル分析')
+
+# パーセンテージ表示
+for i, (stage, count, pct) in enumerate(zip(df_funnel['段階'], df_funnel['人数'], df_funnel['通過率'])):
+    plt.text(count + 10, i, f'{count}人 ({pct:.1f}%)', va='center')
+
+plt.tight_layout()
+plt.savefig('recruitment_funnel.png', dpi=300)
+plt.show()
+
+print(df_funnel)
+</code></pre>
+<p><strong>出力例</strong>:</p>
+<pre><code>      段階    人数   通過率
+0   応募    500  100.0%
+1  書類通過  350   70.0%
+2  一次通過  200   40.0%
+3   内定    100   20.0%
+</code></pre>
+<h3>学歴別の内定率</h3>
+<pre><code class="language-python"># 学歴別の内定率
+education_stats = df_recruit.groupby('学歴').apply(
+    lambda x: (x['最終面接'] == '内定').sum() / len(x) * 100
+).sort_values(ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=education_stats.values, y=education_stats.index, palette='rocket')
+plt.xlabel('内定率（%）')
+plt.ylabel('学歴')
+plt.title('学歴別の内定率')
+plt.tight_layout()
+plt.savefig('offer_rate_by_education.png', dpi=300)
+plt.show()
+
+print(education_stats)
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li>大学院卒の内定率が高い（専門性評価）</li>
+<li>高卒も一定の内定率（実務経験重視）</li>
+</ul>
+<h2>分析2: 離職データの可視化</h2>
+<h3>離職データの作成</h3>
+<pre><code class="language-python"># 社員データ生成
+n_employees = 300
+
+employee_data = {
+    '社員ID': range(1, n_employees + 1),
+    '入社日': [datetime(2020, 1, 1) + timedelta(days=int(x))
+               for x in np.random.uniform(0, 1460, n_employees)],  # 4年分
+    '年齢': np.random.randint(22, 50, n_employees),
+    '性別': np.random.choice(['男性', '女性'], n_employees),
+    '部署': np.random.choice(['営業', '開発', '人事', '総務', 'マーケティング'], n_employees),
+    '役職': np.random.choice(['一般', '主任', '係長', '課長'], n_employees, p=[0.6, 0.2, 0.15, 0.05]),
+    '給与': np.random.randint(300, 800, n_employees),  # 万円
+    '残業時間': np.random.randint(0, 80, n_employees),  # 月
+    '有給取得日数': np.random.randint(0, 20, n_employees),  # 年
+    '評価': np.random.randint(1, 6, n_employees),  # 1〜5
+    '離職': np.random.choice([0, 1], n_employees, p=[0.85, 0.15])  # 15%が離職
+}
+
+df_employee = pd.DataFrame(employee_data)
+
+# 勤続年数を計算
+df_employee['勤続年数'] = ((datetime.now() - pd.to_datetime(df_employee['入社日'])).dt.days / 365).round(1)
+
+df_employee.to_csv('employee_data.csv', index=False, encoding='utf-8-sig')
+
+print(f'社員データ作成完了: {len(df_employee)}件')
+print(f'離職者数: {df_employee[&quot;離職&quot;].sum()}人 ({df_employee[&quot;離職&quot;].mean()*100:.1f}%)')
+</code></pre>
+<h3>離職率の可視化</h3>
+<pre><code class="language-python"># 部署別の離職率
+dept_turnover = df_employee.groupby('部署')['離職'].agg(['sum', 'count', 'mean'])
+dept_turnover['離職率'] = dept_turnover['mean'] * 100
+dept_turnover = dept_turnover.sort_values('離職率', ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=dept_turnover['離職率'], y=dept_turnover.index, palette='Reds_r')
+plt.xlabel('離職率（%）')
+plt.ylabel('部署')
+plt.title('部署別の離職率')
+plt.tight_layout()
+plt.savefig('turnover_by_department.png', dpi=300)
+plt.show()
+
+print(dept_turnover)
+</code></pre>
+<h3>勤続年数別の離職率</h3>
+<pre><code class="language-python"># 勤続年数をビニング
+df_employee['勤続年数帯'] = pd.cut(df_employee['勤続年数'], bins=[0, 1, 2, 3, 5, 10], labels=['1年未満', '1-2年', '2-3年', '3-5年', '5年以上'])
+
+tenure_turnover = df_employee.groupby('勤続年数帯')['離職'].mean() * 100
+
+plt.figure(figsize=(10, 6))
+tenure_turnover.plot(kind='bar', color='coral')
+plt.xlabel('勤続年数')
+plt.ylabel('離職率（%）')
+plt.title('勤続年数別の離職率')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('turnover_by_tenure.png', dpi=300)
+plt.show()
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li><strong>1年未満の離職率が最も高い</strong>（早期離職）</li>
+<li>3年以降は安定</li>
+</ul>
+<h2>分析3: 離職予測モデルの構築</h2>
+<h3>特徴量エンジニアリング</h3>
+<pre><code class="language-python">from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
+
+# カテゴリ変数をエンコード
+le_gender = LabelEncoder()
+df_employee['性別_encoded'] = le_gender.fit_transform(df_employee['性別'])
+
+le_dept = LabelEncoder()
+df_employee['部署_encoded'] = le_dept.fit_transform(df_employee['部署'])
+
+le_position = LabelEncoder()
+df_employee['役職_encoded'] = le_position.fit_transform(df_employee['役職'])
+
+# 特徴量の選択
+features = ['年齢', '性別_encoded', '部署_encoded', '役職_encoded', '給与', '残業時間', '有給取得日数', '評価', '勤続年数']
+X = df_employee[features]
+y = df_employee['離職']
+
+# 訓練データとテストデータに分割
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+print(f'訓練データ: {len(X_train)}件')
+print(f'テストデータ: {len(X_test)}件')
+</code></pre>
+<h3>モデル訓練</h3>
+<pre><code class="language-python"># Random Forestモデル
+model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10)
+model.fit(X_train, y_train)
+
+# 予測
+y_pred = model.predict(X_test)
+
+# 精度評価
+accuracy = accuracy_score(y_test, y_pred)
+print(f'\n精度: {accuracy:.2%}')
+
+print('\n分類レポート:')
+print(classification_report(y_test, y_pred, target_names=['定着', '離職']))
+
+# 混同行列
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['定着', '離職'], yticklabels=['定着', '離職'])
+plt.xlabel('予測')
+plt.ylabel('実際')
+plt.title('離職予測の混同行列')
+plt.tight_layout()
+plt.savefig('confusion_matrix.png', dpi=300)
+plt.show()
+</code></pre>
+<p><strong>出力例</strong>:</p>
+<pre><code>精度: 82.5%
+
+分類レポート:
+              precision    recall  f1-score   support
+       定着       0.85      0.95      0.90        77
+       離職       0.75      0.50      0.60        13
+
+  accuracy                           0.83        90
+</code></pre>
+<h3>特徴量の重要度</h3>
+<pre><code class="language-python"># 特徴量の重要度
+importances = model.feature_importances_
+feature_importance = pd.DataFrame({
+    '特徴量': features,
+    '重要度': importances
+}).sort_values('重要度', ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x='重要度', y='特徴量', data=feature_importance, palette='viridis')
+plt.title('離職予測における特徴量の重要度')
+plt.tight_layout()
+plt.savefig('feature_importance_turnover.png', dpi=300)
+plt.show()
+
+print(feature_importance)
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li><strong>残業時間</strong>が最も重要（過労→離職）</li>
+<li><strong>評価</strong>も重要（低評価→モチベーション低下）</li>
+<li><strong>有給取得日数</strong>（取得できない→不満）</li>
+</ul>
+<h3>離職リスクの予測</h3>
+<pre><code class="language-python"># 離職リスクの高い社員を特定
+df_employee['離職確率'] = model.predict_proba(X)[:, 1]
+
+# リスク上位10名
+high_risk = df_employee.nsmallest(10, '離職確率')[['社員ID', '部署', '残業時間', '評価', '離職確率']]
+
+print('離職リスクが高い社員（トップ10）:')
+print(high_risk)
+</code></pre>
+<p><strong>活用方法</strong>:</p>
+<ul>
+<li>リスクが高い社員に1on1面談</li>
+<li>残業時間削減の施策</li>
+<li>評価フィードバックの改善</li>
+</ul>
+<h2>Excel脱却：Pythonへの移行ステップ</h2>
+<h3>ステップ1: Excelデータを読み込む</h3>
+<pre><code class="language-python"># Excelファイルを読み込み
+df = pd.read_excel('採用データ.xlsx', sheet_name='応募者一覧')
+
+# データ確認
+print(df.head())
+print(df.info())
+</code></pre>
+<h3>ステップ2: 自動レポート生成</h3>
+<pre><code class="language-python">def generate_monthly_report(df, year, month):
+    &quot;&quot;&quot;
+    月次採用レポートを自動生成
+
+    Parameters:
+    - df: 採用データのDataFrame
+    - year: 年
+    - month: 月
+    &quot;&quot;&quot;
+    # 該当月のデータ抽出
+    df['応募月'] = pd.to_datetime(df['応募日']).dt.to_period('M')
+    target_month = f'{year}-{month:02d}'
+    df_month = df[df['応募月'] == target_month]
+
+    # レポート作成
+    report = f&quot;&quot;&quot;
+    ========== {year}年{month}月 採用レポート ==========
+
+    【応募状況】
+    - 応募者数: {len(df_month)}人
+    - 書類通過: {(df_month['書類選考'] == '合格').sum()}人
+    - 一次面接通過: {(df_month['一次面接'] == '合格').sum()}人
+    - 内定: {(df_month['最終面接'] == '内定').sum()}人
+
+    【学歴別内定数】
+    {df_month[df_month['最終面接'] == '内定']['学歴'].value_counts().to_string()}
+
+    ======================================
+    &quot;&quot;&quot;
+
+    # ファイル保存
+    with open(f'月次レポート_{year}{month:02d}.txt', 'w', encoding='utf-8') as f:
+        f.write(report)
+
+    print(report)
+    print(f'レポート保存完了: 月次レポート_{year}{month:02d}.txt')
+
+# 使用例
+generate_monthly_report(df_recruit, 2024, 6)
+</code></pre>
+<h3>ステップ3: ダッシュボード作成</h3>
+<pre><code class="language-python">import streamlit as st
+
+# Streamlitでダッシュボード作成
+# dashboard.py として保存
+
+st.title('人事データ分析ダッシュボード')
+
+# データ読み込み
+df = pd.read_csv('recruit_data.csv')
+
+# サイドバー
+st.sidebar.header('フィルター')
+selected_month = st.sidebar.selectbox('月を選択', df['応募月'].unique())
+
+# メインコンテンツ
+st.header('応募数の推移')
+st.line_chart(df.groupby('応募月').size())
+
+st.header('選考通過率')
+funnel = {
+    '書類通過': (df['書類選考'] == '合格').mean() * 100,
+    '一次通過': (df['一次面接'] == '合格').mean() * 100,
+    '内定': (df['最終面接'] == '内定').mean() * 100
+}
+st.bar_chart(funnel)
+
+# 実行: streamlit run dashboard.py
+</code></pre>
+<h2>まとめ：人事データ分析で組織を変える</h2>
+<p>Pythonによる人事データ分析で、以下が実現できます：</p>
+<h3>得られる成果</h3>
+<ol>
+<li><strong>採用の質向上</strong>: データに基づいた選考基準</li>
+<li><strong>離職率の低減</strong>: 早期にリスクを察知</li>
+<li><strong>業務効率化</strong>: Excel手作業から脱却</li>
+<li><strong>意思決定の精度向上</strong>: 勘ではなくデータで判断</li>
+</ol>
+<h3>学習ロードマップ</h3>
+<p><strong>Phase 1（1ヶ月）</strong>:</p>
+<ul>
+<li>Python基礎（pandas、matplotlib）</li>
+<li>Excelデータの読み込み・集計</li>
+</ul>
+<p><strong>Phase 2（2ヶ月）</strong>:</p>
+<ul>
+<li>可視化テクニック</li>
+<li>統計分析の基礎</li>
+</ul>
+<p><strong>Phase 3（3ヶ月）</strong>:</p>
+<ul>
+<li>機械学習入門</li>
+<li>予測モデルの構築</li>
+</ul>
+<p><strong>合計: 6ヶ月で人事データアナリストになれます！</strong></p>
+<h3>今日からできること</h3>
+<ol>
+<li><strong>Anacondaをインストール</strong></li>
+<li><strong>この記事のコードを実行</strong></li>
+<li><strong>自社のExcelデータで試す</strong></li>
+</ol>
+<p>人事×データサイエンスで、あなたの価値を10倍にしましょう！</p>
+<h2>関連記事</h2>
+<ul>
+<li><a href="/articles/kaggle-master-roadmap.html">Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート</a></li>
+<li><a href="/articles/sake-data-analysis.html">データサイエンスで日本酒を分析してみた</a></li>
+<li><a href="/articles/hr-perspective-portfolio-guide.html">人事のプロが語る、採用で評価されるポートフォリオの作り方</a></li>
+<li><a href="/articles/ai-powered-database-construction.html">AI活用でデータベース構築</a></li>
+</ul>
+<p>データで、人事の未来を創りましょう！</p>
+
+
+                    <!-- SNSシェアボタン -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                        <p style="font-weight: 500; margin-bottom: 1rem; color: var(--text-primary);">この記事をシェアする</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="https://twitter.com/intent/tweet?url=https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html&text=%E4%BA%BA%E4%BA%8B%E3%83%87%E3%83%BC%E3%82%BF%E5%88%86%E6%9E%90%E5%85%A5%E9%96%80%EF%BD%9CPython%E3%81%A7%E6%8E%A1%E7%94%A8%E3%83%BB%E9%9B%A2%E8%81%B7%E7%8E%87%E3%82%92%E5%8F%AF%E8%A6%96%E5%8C%96%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1DA1F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                𝕏でシェア
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1877F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                Facebookでシェア
+                            </a>
+                            <a href="https://b.hatena.ne.jp/entry/https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #00A4DE; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                はてブに追加
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 著者情報 -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                        <h3 style="margin: 0 0 1rem 0; font-size: 1.25rem;">✍️ この記事を書いた人</h3>
+                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                            <div style="font-size: 4rem;">🐱</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 1.125rem; margin: 0 0 0.5rem 0;">MechaTora</p>
+                                <p style="margin: 0; opacity: 0.95; line-height: 1.6;">
+                                    社会保険労務士 × Web開発エンジニア × データサイエンティスト。<br>
+                                    人事労務の専門知識とプログラミングスキルを活かして、実務に役立つツールやコンテンツを開発・発信しています。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="API Rate Limiting（レート制限）の実装方法と対策を実践的に解説。楽天APIや気象庁APIなど、実際のAPI連携で遭遇した制限への対処法、リトライロジック、キャッシュ戦略を紹介します。">
+    <meta name="keywords" content="API,Rate Limiting,レート制限,リトライ,キャッシュ,楽天API,気象庁API,429エラー">
+    <title>API Rate Limitingの実装と対策 - 制限を超えないための実践テクニック | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "API Rate Limitingの実装と対策",
+        "description": "API Rate Limitingの実装方法と対策を実践的に解説。実際のAPI連携で遭遇した制限への対処法、リトライロジック、キャッシュ戦略を紹介します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-10-23",
+        "dateModified": "2025-10-23",
+        "image": "https://blog.mechatora.com/images/api-rate-limiting.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "API Rate Limitingの実装と対策 - 制限を超えないための実践テクニック",
+                "item": "https://blog.mechatora.com/articles/api-rate-limiting-practices.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>API Rate Limitingの実装と対策</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category tech">技術・開発</span>
+                <h1>API Rate Limitingの実装と対策 - 制限を超えないための実践テクニック</h1>
+                <div class="article-meta">
+                    <time datetime="2025-10-23">2025年10月23日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>外部APIを使ったアプリ開発で必ず直面するのが「Rate Limiting（レート制限）」です。1時間に100回、1日に1000回といった制限を超えると、429エラー（Too Many Requests）が返され、アプリが正常に動作しなくなります。</p>
+                <p>この記事では、MechaToraで運用している日本酒検索（楽天API）や地震モニター（気象庁API）の開発で実際に遭遇したRate Limitingの問題と、その解決策を具体的なコード例とともに解説します。</p>
+            </div>
+
+            <h2>Rate Limitingとは</h2>
+
+            <h3>なぜRate Limitingが存在するのか</h3>
+            <p>API提供側がRate Limitingを設ける理由は主に3つ：</p>
+            <ul>
+                <li><strong>サーバー負荷の軽減</strong>：過剰なリクエストからサーバーを保護</li>
+                <li><strong>公平性の確保</strong>：一部のユーザーによる独占を防ぐ</li>
+                <li><strong>DoS攻撃の防止</strong>：悪意ある大量リクエストを遮断</li>
+            </ul>
+
+            <h3>主なRate Limitingの種類</h3>
+            <p>私が実際に遭遇した制限パターン：</p>
+            <ul>
+                <li><strong>秒単位</strong>：1秒に10リクエストまで（気象庁API）</li>
+                <li><strong>分単位</strong>：1分に60リクエストまで</li>
+                <li><strong>時間単位</strong>：1時間に1000リクエストまで（楽天API無料枠）</li>
+                <li><strong>日単位</strong>：1日に10,000リクエストまで</li>
+            </ul>
+
+            <h3>429エラーの典型例</h3>
+            <p>楽天APIで初めて429エラーに遭遇したときのレスポンス：</p>
+            <pre><code>{
+  "error": "rateLimitExceeded",
+  "error_description": "Rate limit quota exceeded. Retry after 3600 seconds."
+}</code></pre>
+
+            <p>この時、日本酒検索アプリは完全に停止し、ユーザーに「データ取得に失敗しました」と表示されてしまいました。</p>
+
+            <h2>Rate Limitingの確認方法</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>レスポンスヘッダーで確認</h3>
+            <p>多くのAPIは、レスポンスヘッダーで現在の使用状況を返します：</p>
+            <pre><code>HTTP/1.1 200 OK
+X-RateLimit-Limit: 1000       // 制限値
+X-RateLimit-Remaining: 234    // 残り回数
+X-RateLimit-Reset: 1698825600 // リセット時刻（Unixタイムスタンプ）
+Retry-After: 3600              // リトライ可能になるまでの秒数（429の場合）</code></pre>
+
+            <h3>JavaScriptでの取得</h3>
+            <p>fetchでヘッダーを確認する方法：</p>
+            <pre><code>fetch('https://api.example.com/data')
+  .then(response => {
+    console.log('Limit:', response.headers.get('X-RateLimit-Limit'));
+    console.log('Remaining:', response.headers.get('X-RateLimit-Remaining'));
+    console.log('Reset:', response.headers.get('X-RateLimit-Reset'));
+    return response.json();
+  })
+  .then(data => {
+    console.log(data);
+  });</code></pre>
+
+            <h3>ドキュメントでの確認</h3>
+            <p>各APIのドキュメントで制限を必ず確認します。私が使っている主なAPIの制限：</p>
+            <ul>
+                <li><strong>楽天API</strong>：1秒1リクエスト、1日5,000リクエスト（無料）</li>
+                <li><strong>気象庁API</strong>：明記なし（1秒10リクエスト程度推奨）</li>
+                <li><strong>YouTube Data API</strong>：1日10,000クォータ（1検索=100クォータ）</li>
+                <li><strong>Twitter API v2</strong>：15分に15リクエスト（無料枠）</li>
+            </ul>
+
+            <h2>実装パターン1：シンプルなリトライロジック</h2>
+
+            <h3>基本的なリトライ</h3>
+            <p>429エラーが返ってきたら、一定時間待ってリトライする基本パターン：</p>
+            <pre><code>async function fetchWithRetry(url, retries = 3, delay = 1000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url);
+
+      // 成功したらそのまま返す
+      if (response.ok) {
+        return await response.json();
+      }
+
+      // 429エラーの場合
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After');
+        const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : delay;
+
+        console.log(`Rate limit exceeded. Retrying after ${waitTime}ms...`);
+        await sleep(waitTime);
+        continue; // リトライ
+      }
+
+      // その他のエラー
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+    } catch (error) {
+      // 最後のリトライで失敗したら例外を投げる
+      if (i === retries - 1) {
+        throw error;
+      }
+      await sleep(delay);
+    }
+  }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// 使用例
+fetchWithRetry('https://api.rakuten.co.jp/search?keyword=日本酒')
+  .then(data => console.log(data))
+  .catch(error => console.error('Failed after retries:', error));</code></pre>
+
+            <h3>Exponential Backoff（指数バックオフ）</h3>
+            <p>リトライ間隔を指数関数的に増やす、より洗練された方法：</p>
+            <pre><code>async function fetchWithExponentialBackoff(url, maxRetries = 5) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(url);
+
+      if (response.ok) {
+        return await response.json();
+      }
+
+      if (response.status === 429) {
+        // 2^i * 1000ms = 1秒、2秒、4秒、8秒、16秒...
+        const waitTime = Math.pow(2, i) * 1000;
+        console.log(`Retry ${i + 1}/${maxRetries} after ${waitTime}ms`);
+        await sleep(waitTime);
+        continue;
+      }
+
+      throw new Error(`HTTP ${response.status}`);
+
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+    }
+  }
+}
+
+// 使用例（最大5回、最長16秒待機）
+fetchWithExponentialBackoff('https://api.example.com/data')
+  .then(data => console.log(data))
+  .catch(error => console.error(error));</code></pre>
+
+            <h2>実装パターン2：リクエストキューイング</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>キュー管理クラス</h3>
+            <p>複数のリクエストをキューに入れて、Rate Limitに収まるように制御します：</p>
+            <pre><code>class RateLimitedQueue {
+  constructor(requestsPerSecond = 1) {
+    this.queue = [];
+    this.processing = false;
+    this.interval = 1000 / requestsPerSecond; // 1リクエストあたりの間隔（ms）
+  }
+
+  async add(url, options = {}) {
+    return new Promise((resolve, reject) => {
+      this.queue.push({ url, options, resolve, reject });
+      this.process();
+    });
+  }
+
+  async process() {
+    if (this.processing || this.queue.length === 0) {
+      return;
+    }
+
+    this.processing = true;
+
+    while (this.queue.length > 0) {
+      const { url, options, resolve, reject } = this.queue.shift();
+
+      try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+
+      // 次のリクエストまで待機
+      if (this.queue.length > 0) {
+        await sleep(this.interval);
+      }
+    }
+
+    this.processing = false;
+  }
+}
+
+// 使用例：楽天API（1秒1リクエスト）
+const rakutenQueue = new RateLimitedQueue(1);
+
+// 10個のリクエストを追加（自動的に1秒間隔で実行される）
+for (let i = 0; i < 10; i++) {
+  rakutenQueue.add(`https://api.rakuten.co.jp/search?page=${i}`)
+    .then(data => console.log(`Page ${i}:`, data))
+    .catch(error => console.error(`Page ${i} failed:`, error));
+}</code></pre>
+
+            <h3>実際の活用例：日本酒検索</h3>
+            <p>MechaToraの日本酒検索では、ユーザーが連続して検索しても制限に引っかからないよう、キューイングを実装しました：</p>
+            <pre><code>// 楽天API専用キュー（1秒1リクエスト）
+const rakutenAPI = new RateLimitedQueue(1);
+
+document.getElementById('search-btn').addEventListener('click', async () => {
+  const keyword = document.getElementById('keyword').value;
+  const url = `https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601?
+    applicationId=YOUR_APP_ID&
+    keyword=${encodeURIComponent(keyword + ' 日本酒')}&
+    hits=30`;
+
+  try {
+    showLoading();
+    const data = await rakutenAPI.add(url);
+    displayResults(data.Items);
+  } catch (error) {
+    showError('検索に失敗しました。しばらく経ってから再度お試しください。');
+  } finally {
+    hideLoading();
+  }
+});</code></pre>
+
+            <h2>実装パターン3：キャッシュ戦略</h2>
+
+            <h3>LocalStorageでのキャッシュ</h3>
+            <p>同じリクエストを繰り返さないよう、結果をキャッシュします：</p>
+            <pre><code>class CachedAPI {
+  constructor(cacheExpiry = 3600000) { // デフォルト1時間
+    this.cacheExpiry = cacheExpiry;
+  }
+
+  async fetch(url) {
+    const cacheKey = `cache_${url}`;
+    const cached = localStorage.getItem(cacheKey);
+
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      const age = Date.now() - timestamp;
+
+      // キャッシュが有効期限内なら使用
+      if (age < this.cacheExpiry) {
+        console.log('Using cached data');
+        return data;
+      }
+    }
+
+    // キャッシュがないか期限切れの場合、APIから取得
+    console.log('Fetching from API');
+    const response = await fetch(url);
+    const data = await response.json();
+
+    // キャッシュに保存
+    localStorage.setItem(cacheKey, JSON.stringify({
+      data,
+      timestamp: Date.now()
+    }));
+
+    return data;
+  }
+
+  clearCache() {
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('cache_')) {
+        localStorage.removeItem(key);
+      }
+    });
+  }
+}
+
+// 使用例：気象庁API（10分キャッシュ）
+const weatherAPI = new CachedAPI(600000);
+
+async function getEarthquakeData() {
+  const url = 'https://www.jma.go.jp/bosai/quake/data/list.json';
+  return await weatherAPI.fetch(url);
+}
+
+// 最初の呼び出し：APIから取得
+getEarthquakeData().then(data => console.log(data));
+
+// 2回目の呼び出し（10分以内）：キャッシュから取得
+getEarthquakeData().then(data => console.log(data));</code></pre>
+
+            <h3>Cache-Control ヘッダーの活用</h3>
+            <p>サーバー側が指定したキャッシュ期間を尊重する実装：</p>
+            <pre><code>async function fetchWithCacheControl(url) {
+  const response = await fetch(url);
+  const cacheControl = response.headers.get('Cache-Control');
+
+  if (cacheControl) {
+    const maxAge = cacheControl.match(/max-age=(\d+)/);
+    if (maxAge) {
+      const expiryTime = parseInt(maxAge[1]) * 1000;
+      console.log(`Cache expires in ${expiryTime}ms`);
+
+      const data = await response.json();
+      localStorage.setItem(url, JSON.stringify({
+        data,
+        expiry: Date.now() + expiryTime
+      }));
+      return data;
+    }
+  }
+
+  return await response.json();
+}</code></pre>
+
+            <h2>実装パターン4：ユーザーへのフィードバック</h2>
+
+            <h3>残り回数の表示</h3>
+            <p>ユーザーに現在の使用状況を見せることで、意図しない制限超過を防ぎます：</p>
+            <pre><code>async function fetchWithFeedback(url) {
+  const response = await fetch(url);
+  const remaining = response.headers.get('X-RateLimit-Remaining');
+  const limit = response.headers.get('X-RateLimit-Limit');
+
+  if (remaining && limit) {
+    const percentage = (remaining / limit) * 100;
+    updateRateLimitDisplay(remaining, limit, percentage);
+
+    // 残り20%を切ったら警告
+    if (percentage < 20) {
+      showWarning(`API制限の残りが${remaining}回です。ご注意ください。`);
+    }
+  }
+
+  return await response.json();
+}
+
+function updateRateLimitDisplay(remaining, limit, percentage) {
+  const display = document.getElementById('rate-limit-display');
+  display.innerHTML = `
+    <div class="rate-limit-bar">
+      <div class="rate-limit-progress" style="width: ${percentage}%"></div>
+    </div>
+    <p>API使用可能回数: ${remaining} / ${limit}</p>
+  `;
+}</code></pre>
+
+            <h3>エラー時の親切なメッセージ</h3>
+            <p>429エラー時に、いつリトライ可能かをユーザーに伝えます：</p>
+            <pre><code>async function fetchWithUserFriendlyError(url) {
+  try {
+    const response = await fetch(url);
+
+    if (response.status === 429) {
+      const retryAfter = response.headers.get('Retry-After');
+      if (retryAfter) {
+        const minutes = Math.ceil(parseInt(retryAfter) / 60);
+        throw new Error(
+          `現在、一時的にAPIの利用制限に達しています。\n` +
+          `約${minutes}分後に再度お試しください。`
+        );
+      } else {
+        throw new Error(
+          '現在、一時的にAPIの利用制限に達しています。\n' +
+          'しばらく経ってから再度お試しください。'
+        );
+      }
+    }
+
+    return await response.json();
+
+  } catch (error) {
+    showErrorModal(error.message);
+    throw error;
+  }
+}</code></pre>
+
+            <h2>実際の運用で学んだこと</h2>
+
+            <h3>ケース1：楽天API（日本酒検索）</h3>
+            <p><strong>問題</strong>：検索結果が複数ページにまたがる場合、連続リクエストで制限超過</p>
+            <p><strong>解決策</strong>：</p>
+            <ol>
+                <li>キューイングで1秒1リクエストに制限</li>
+                <li>検索結果を30件に絞る（1リクエストで完結）</li>
+                <li>同一キーワードは1時間キャッシュ</li>
+            </ol>
+
+            <h3>ケース2：気象庁API（地震モニター）</h3>
+            <p><strong>問題</strong>：10秒ごとのポーリングで1日8,640リクエスト発生</p>
+            <p><strong>解決策</strong>：</p>
+            <ol>
+                <li>ポーリング間隔を30秒に変更（2,880リクエストに削減）</li>
+                <li>データ変更がない場合はスキップ（304 Not Modified）</li>
+                <li>ユーザーが画面を離れたら停止（Visibility API使用）</li>
+            </ol>
+
+            <pre><code>// Visibility APIでタブ非表示時は停止
+let pollingInterval;
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    // タブが非表示になったらポーリング停止
+    clearInterval(pollingInterval);
+    console.log('Polling stopped (tab hidden)');
+  } else {
+    // タブが再表示されたらポーリング再開
+    pollingInterval = setInterval(fetchEarthquakeData, 30000);
+    console.log('Polling resumed (tab visible)');
+  }
+});</code></pre>
+
+            <h3>ケース3：複数APIの組み合わせ</h3>
+            <p>日本酒検索では、楽天API（商品情報） + 独自DB（銘柄情報）を組み合わせています。</p>
+            <p><strong>戦略</strong>：</p>
+            <ul>
+                <li>独自DBで検索 → 該当なしの場合のみ楽天APIを呼ぶ</li>
+                <li>楽天APIの結果を独自DBに保存（次回からDB検索で済む）</li>
+                <li>結果：API呼び出しを70%削減</li>
+            </ul>
+
+            <h2>まとめ</h2>
+
+            <p>Rate Limitingへの対策をまとめると：</p>
+
+            <h3>開発時の対策</h3>
+            <ol>
+                <li><strong>リトライロジック</strong>：429エラー時のExponential Backoff</li>
+                <li><strong>キューイング</strong>：複数リクエストを制御して順次実行</li>
+                <li><strong>キャッシュ</strong>：同じリクエストを繰り返さない</li>
+                <li><strong>ポーリング最適化</strong>：必要最小限の頻度に抑える</li>
+            </ol>
+
+            <h3>UX向上の対策</h3>
+            <ol>
+                <li><strong>残り回数表示</strong>：ユーザーに使用状況を見せる</li>
+                <li><strong>親切なエラーメッセージ</strong>：いつリトライ可能かを伝える</li>
+                <li><strong>ローディング表示</strong>：リトライ中であることを明示</li>
+                <li><strong>オフライン対応</strong>：キャッシュで最低限の機能を提供</li>
+            </ol>
+
+            <h3>コスト削減の対策</h3>
+            <ol>
+                <li><strong>DB活用</strong>：APIから取得したデータを保存して再利用</li>
+                <li><strong>Visibility API</strong>：非アクティブ時はリクエスト停止</li>
+                <li><strong>デバウンス</strong>：ユーザー入力を適切に制御</li>
+                <li><strong>無料枠の確認</strong>：有料化する前に代替API検討</li>
+            </ol>
+
+            <p>Rate Limitingは避けられない制約ですが、適切な実装とキャッシュ戦略により、ユーザー体験を損なわず、無料枠内で運用できます。MechaToraでは、これらの対策により、15個のツール全てを完全無料で運用し続けています。</p>
+
+            <p>APIを使ったアプリ開発を始める方は、最初からRate Limitingを意識した設計をしておくことをおすすめします！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="pwa-implementation-guide.html">PWA実装の基礎 - WebアプリをPWA化する手順</a></li>
+                    <li><a href="earthquake-monitor-tech.html">地震モニターアプリの開発 - リアルタイム通知の実装</a></li>
+                    <li><a href="free-webapp-guide.html">完全無料でWebアプリを作る方法 - 0円運用の実践ガイド</a></li>
+                    <li><a href="cook-suggest-development.html">料理提案アプリの開発秘話 - CookSuggestができるまで</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

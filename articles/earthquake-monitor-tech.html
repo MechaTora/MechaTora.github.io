@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="地震情報モニターアプリの技術解説。気象庁APIとの連携、リアルタイムデータ表示、WebSocketによる自動更新の実装方法を詳しく紹介します。">
+    <meta name="keywords" content="地震情報,リアルタイムモニター,API連携,WebSocket,気象庁API,Web開発,JavaScript">
+    <title>地震情報モニターの技術解説｜リアルタイムデータ表示の実装 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "地震情報モニターの技術解説｜リアルタイムデータ表示の実装",
+        "description": "地震情報モニターアプリの技術解説。気象庁APIとの連携、リアルタイムデータ表示、WebSocketによる自動更新の実装方法を詳しく紹介します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-01-08",
+        "dateModified": "2025-01-08"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "地震情報モニターの技術解説｜リアルタイムデータ表示の実装",
+                "item": "https://blog.mechatora.com/articles/earthquake-monitor-tech.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>地震情報モニターの技術解説</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2025-01-08">2025年1月8日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年1月08日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>地震情報モニターの技術解説｜リアルタイムデータ表示の実装</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+
+                    <!-- リード文（導入） -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        2024年の能登半島地震をきっかけに、リアルタイムで地震情報を確認できるツールの必要性を強く感じました。テレビをつけなくても、スマホで素早く震度や震源地を確認したい。そんな思いから開発したのが「地震情報モニター」です。この記事では、気象庁APIとの連携、リアルタイムデータ表示、そして自動更新の実装方法について、技術的な詳細を解説します。
+                    </p>
+
+                    <!-- 記事本文 -->
+                    <h2>地震情報モニターを作った背景</h2>
+
+                    <h3>災害時の情報収集の課題</h3>
+                    <p>
+                        地震が発生した際、多くの人がスマホで情報を確認しますが、以下のような課題がありました：
+                    </p>
+                    <ul>
+                        <li><strong>アプリのダウンロードが必要：</strong>緊急時に新しいアプリをインストールするのは手間</li>
+                        <li><strong>情報の遅延：</strong>ニュースサイトでは速報が遅れることがある</li>
+                        <li><strong>広告が邪魔：</strong>災害情報を見る際に広告が表示されるのは不適切</li>
+                        <li><strong>複雑な操作：</strong>緊急時にシンプルに情報を得たい</li>
+                    </ul>
+
+                    <p>
+                        「ブラウザを開くだけで、即座に最新の地震情報が見られるツール」を目指して開発をスタートしました。
+                    </p>
+
+                    <h3>設計思想：シンプル・高速・正確</h3>
+                    <p>
+                        このアプリで重視した3つのポイント：
+                    </p>
+                    <ul>
+                        <li><strong>シンプル：</strong>余計な機能は一切なし。地震情報だけを表示</li>
+                        <li><strong>高速：</strong>ページを開いた瞬間に情報が表示される</li>
+                        <li><strong>正確：</strong>気象庁の公式データを直接取得</li>
+                    </ul>
+
+                    <h2>技術選定とアーキテクチャ</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>全体のシステム構成</h3>
+                    <p>
+                        地震情報モニターは以下の構成で実装しています：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+<strong>技術スタック：</strong>
+- フロントエンド: HTML/CSS/JavaScript (Vanilla JS)
+- データソース: 気象庁防災情報XML（P2P地震情報API経由）
+- 自動更新: Polling方式（30秒間隔）
+- 地図表示: Leaflet.js（オープンソース地図ライブラリ）
+- ホスティング: GitHub Pages
+</pre>
+
+                    <h3>気象庁APIの選定とCORS問題</h3>
+                    <p>
+                        当初、気象庁の公式APIを直接使おうとしましたが、CORS（Cross-Origin Resource Sharing）の制限に直面しました。
+                    </p>
+                    <p>
+                        <strong>CORS問題とは：</strong><br>
+                        ブラウザのセキュリティ機能により、異なるドメインのAPIに直接アクセスできない制限です。
+                    </p>
+
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li><strong>P2P地震情報APIを利用：</strong>気象庁データをJSON形式で提供してくれる中継API</li>
+                        <li><strong>CORS対応済み：</strong>ブラウザから直接アクセス可能</li>
+                        <li><strong>無料・登録不要：</strong>APIキー不要で誰でも使える</li>
+                    </ul>
+
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+// P2P地震情報APIのエンドポイント例
+const API_URL = 'https://api.p2pquake.net/v2/history?codes=551&limit=10';
+
+// データ取得
+async function fetchEarthquakeData() {
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+}
+</pre>
+
+                    <h2>リアルタイム更新の実装</h2>
+
+                    <h3>Polling vs WebSocket の選択</h3>
+                    <p>
+                        リアルタイムデータ更新には、主に2つの方法があります：
+                    </p>
+                    <ul>
+                        <li><strong>Polling：</strong>一定間隔でサーバーにリクエストを送る</li>
+                        <li><strong>WebSocket：</strong>常時接続を維持し、サーバーからpush通知を受け取る</li>
+                    </ul>
+
+                    <p>
+                        このアプリではPolling方式を採用しました。理由は以下の通りです：
+                    </p>
+                    <ul>
+                        <li><strong>実装がシンプル：</strong>setIntervalで簡単に実装できる</li>
+                        <li><strong>サーバー負荷が低い：</strong>地震は頻繁に起きないため、30秒間隔で十分</li>
+                        <li><strong>接続の安定性：</strong>WebSocketの接続切れを気にしなくて良い</li>
+                    </ul>
+
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+// 30秒ごとに地震データを取得
+let updateInterval;
+
+function startAutoUpdate() {
+  // 初回実行
+  updateEarthquakeList();
+
+  // 30秒ごとに更新
+  updateInterval = setInterval(() => {
+    updateEarthquakeList();
+  }, 30000);
+}
+
+function stopAutoUpdate() {
+  if (updateInterval) {
+    clearInterval(updateInterval);
+  }
+}
+</pre>
+
+                    <h3>データの差分検出と通知</h3>
+                    <p>
+                        新しい地震が発生した際、ユーザーに通知する仕組みを実装しました：
+                    </p>
+                    <ul>
+                        <li>前回取得したデータと比較</li>
+                        <li>新しいデータがあれば、視覚的にハイライト表示</li>
+                        <li>ブラウザ通知（Notification API）でアラート</li>
+                    </ul>
+
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+let previousEarthquakeId = null;
+
+async function updateEarthquakeList() {
+  const data = await fetchEarthquakeData();
+
+  if (data.length > 0) {
+    const latestId = data[0].id;
+
+    // 新しい地震を検出
+    if (previousEarthquakeId && latestId !== previousEarthquakeId) {
+      showNotification(data[0]);
+      highlightNewEarthquake(data[0]);
+    }
+
+    previousEarthquakeId = latestId;
+    renderEarthquakeList(data);
+  }
+}
+
+function showNotification(earthquake) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('地震情報', {
+      body: `${earthquake.earthquake.hypocenter.name} 震度${earthquake.earthquake.maxScale}`,
+      icon: '/earthquake-icon.png'
+    });
+  }
+}
+</pre>
+
+                    <h2>地図表示の実装（Leaflet.js）</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>Leaflet.jsを選んだ理由</h3>
+                    <p>
+                        震源地を地図上に表示するため、地図ライブラリが必要でした。Leaflet.jsを選んだ理由：
+                    </p>
+                    <ul>
+                        <li><strong>軽量：</strong>Google Maps APIと比べて非常に軽い（約40KB）</li>
+                        <li><strong>無料：</strong>APIキー不要、制限なし</li>
+                        <li><strong>カスタマイズ性：</strong>マーカーやポップアップを自由に設定可能</li>
+                        <li><strong>オープンソース：</strong>商用利用も可能</li>
+                    </ul>
+
+                    <h3>震源地マーカーの実装</h3>
+                    <p>
+                        震度に応じて、マーカーの色とサイズを変える工夫をしました：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+function addEarthquakeMarker(map, earthquake) {
+  const lat = earthquake.earthquake.hypocenter.latitude;
+  const lon = earthquake.earthquake.hypocenter.longitude;
+  const maxScale = earthquake.earthquake.maxScale;
+
+  // 震度に応じて色とサイズを決定
+  const color = getColorByScale(maxScale);
+  const radius = getRadiusByScale(maxScale);
+
+  const marker = L.circleMarker([lat, lon], {
+    radius: radius,
+    fillColor: color,
+    color: '#fff',
+    weight: 2,
+    opacity: 1,
+    fillOpacity: 0.7
+  }).addTo(map);
+
+  // ポップアップ表示
+  marker.bindPopup(`
+    <strong>${earthquake.earthquake.hypocenter.name}</strong><br>
+    震度: ${maxScale}<br>
+    深さ: ${earthquake.earthquake.hypocenter.depth}km<br>
+    マグニチュード: ${earthquake.earthquake.magnitude}
+  `);
+}
+
+function getColorByScale(scale) {
+  if (scale >= 6) return '#ff0000'; // 震度6以上: 赤
+  if (scale >= 5) return '#ff6600'; // 震度5: オレンジ
+  if (scale >= 4) return '#ffcc00'; // 震度4: 黄色
+  return '#00cc00'; // 震度3以下: 緑
+}
+</pre>
+
+                    <h2>UI/UXで工夫したポイント</h2>
+
+                    <h3>1. 情報の優先順位表示</h3>
+                    <p>
+                        最も重要な情報（最新の地震）を上部に大きく表示し、過去の地震は下にリスト表示しました。
+                    </p>
+                    <ul>
+                        <li><strong>最新情報カード：</strong>震度・震源地・時刻を大きく表示</li>
+                        <li><strong>過去10件リスト：</strong>コンパクトに表形式で表示</li>
+                        <li><strong>色分け：</strong>震度に応じて背景色を変更（視覚的に重要度を把握）</li>
+                    </ul>
+
+                    <h3>2. 読み込み状態の表示</h3>
+                    <p>
+                        データ取得中は、ユーザーに待機状態を明示：
+                    </p>
+                    <ul>
+                        <li>ローディングスピナーを表示</li>
+                        <li>「更新中...」のテキスト表示</li>
+                        <li>最終更新時刻を表示（データの鮮度を明示）</li>
+                    </ul>
+
+                    <h3>3. レスポンシブ対応</h3>
+                    <p>
+                        災害時はスマホで確認する人が多いため、モバイル最適化は必須でした：
+                    </p>
+                    <ul>
+                        <li>スマホでも見やすい大きな文字サイズ</li>
+                        <li>タップしやすいボタンサイズ（最低44px）</li>
+                        <li>地図はスマホでもスムーズにピンチ操作可能</li>
+                    </ul>
+
+                    <h2>開発中の課題と解決策</h2>
+
+                    <h3>課題1: データの信頼性確保</h3>
+                    <p>
+                        災害情報を扱うため、データの正確性は最重要でした。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>気象庁の公式データを使用するP2P地震情報APIを採用</li>
+                        <li>データ取得エラー時は、前回のデータを表示し続ける</li>
+                        <li>「情報源: 気象庁」と明記し、透明性を確保</li>
+                    </ul>
+
+                    <h3>課題2: API制限への対応</h3>
+                    <p>
+                        P2P地震情報APIは無料ですが、過度なアクセスは避けるべきです。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>Polling間隔を30秒に設定（推奨値）</li>
+                        <li>タブが非アクティブ時は更新を停止（Page Visibility API）</li>
+                        <li>取得したデータをローカルストレージにキャッシュ</li>
+                    </ul>
+
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+// タブが非アクティブ時は更新を停止
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopAutoUpdate();
+  } else {
+    startAutoUpdate();
+  }
+});
+</pre>
+
+                    <h3>課題3: パフォーマンス最適化</h3>
+                    <p>
+                        緊急時に高速表示が求められるため、パフォーマンス最適化は重要でした。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>画像を使わず、CSS・Unicode絵文字で軽量化</li>
+                        <li>地図は最初は非表示、「地図を表示」ボタンで遅延読み込み</li>
+                        <li>不要なライブラリは一切使わない</li>
+                    </ul>
+
+                    <h2>リリース後の反響と改善</h2>
+
+                    <h3>ユーザーからの反応</h3>
+                    <p>
+                        リリース後、以下のような声をいただきました：
+                    </p>
+                    <ul>
+                        <li>「アプリ不要でブラウザだけで使えるのが便利」</li>
+                        <li>「シンプルで見やすい。広告がないのが良い」</li>
+                        <li>「通知機能があるので、地震に気づきやすくなった」</li>
+                    </ul>
+
+                    <h3>実施した改善</h3>
+                    <p>
+                        ユーザーフィードバックを受けて、以下の機能を追加しました：
+                    </p>
+                    <ul>
+                        <li><strong>震度フィルター：</strong>「震度4以上のみ表示」などの絞り込み機能</li>
+                        <li><strong>地域フィルター：</strong>特定地域の地震のみ表示</li>
+                        <li><strong>音声通知：</strong>大きな地震の際にアラート音を鳴らす</li>
+                        <li><strong>履歴保存：</strong>過去1週間の地震データを表示</li>
+                    </ul>
+
+                    <h2>このプロジェクトで学んだこと</h2>
+
+                    <h3>技術面での学び</h3>
+                    <ul>
+                        <li><strong>API連携の実践：</strong>外部APIを使った実用的なアプリ開発の経験</li>
+                        <li><strong>リアルタイム処理：</strong>Pollingによる自動更新の実装パターン</li>
+                        <li><strong>地図ライブラリの活用：</strong>Leaflet.jsの基本から応用まで習得</li>
+                        <li><strong>エラーハンドリング：</strong>災害情報アプリならではの堅牢性の重要性</li>
+                    </ul>
+
+                    <h3>社会的意義の実感</h3>
+                    <ul>
+                        <li><strong>災害時に役立つツールの価値：</strong>技術で社会貢献できる喜び</li>
+                        <li><strong>シンプルさの重要性：</strong>緊急時こそ、複雑な操作は不要</li>
+                        <li><strong>信頼性とスピードの両立：</strong>正確な情報を素早く届ける技術的挑戦</li>
+                    </ul>
+
+                    <h2>今後の展望</h2>
+                    <p>
+                        今後、以下の機能追加を検討しています：
+                    </p>
+                    <ul>
+                        <li><strong>緊急地震速報（EEW）対応：</strong>P波検知時の早期警報</li>
+                        <li><strong>津波情報の表示：</strong>海岸部での避難判断に役立つ情報</li>
+                        <li><strong>PWA化：</strong>オフラインでも動作するアプリ化</li>
+                        <li><strong>多言語対応：</strong>訪日外国人向けの英語表示</li>
+                    </ul>
+
+                    <!-- まとめセクション -->
+                    <h2>まとめ</h2>
+                    <p>
+                        地震情報モニターの開発を通じて、「災害時に本当に役立つツール」の要件を学びました。このプロジェクトのポイントをまとめます：
+                    </p>
+                    <ul>
+                        <li><strong>公式データの活用：</strong>気象庁データを使い、信頼性を確保</li>
+                        <li><strong>リアルタイム更新：</strong>Pollingで30秒ごとに最新情報を取得</li>
+                        <li><strong>地図表示：</strong>Leaflet.jsで震源地を視覚的に表示</li>
+                        <li><strong>シンプルなUI：</strong>緊急時でも迷わない設計</li>
+                        <li><strong>パフォーマンス最適化：</strong>高速表示で即座に情報提供</li>
+                    </ul>
+
+                    <p>
+                        災害時、1秒でも早く正確な情報を得ることが、適切な判断につながります。このツールが、少しでも多くの方の安全に貢献できれば幸いです。
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="cook-suggest-development.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ CookSuggestアプリ開発秘話｜料理提案ツールの技術と工夫</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="qualification-calendar-dev.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 資格試験カレンダーアプリ開発秘話｜試験日程を一括管理するツールの作り方</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

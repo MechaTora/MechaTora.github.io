@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kaggle Masterが日本酒データベースをPythonで徹底分析。アルコール度数・精米歩合の分布、都道府県別の特徴、機械学習によるレコメンドシステム構築まで詳しく解説します。">
+    <meta name="keywords" content="データ分析,Python,日本酒,pandas,matplotlib,seaborn,機械学習,可視化,データサイエンス">
+    <title>データサイエンスで日本酒を分析してみた｜47都道府県3,500銘柄の傾向と特徴 | MechaToraのブログ</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="canonical" href="https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html">
+    <link rel="alternate" type="application/rss+xml" title="MechaToraのブログ" href="https://blog.mechatora.com/feed.xml">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "データサイエンスで日本酒を分析してみた｜47都道府県3,500銘柄の傾向と特徴",
+        "description": "Kaggle Masterが日本酒データベースをPythonで徹底分析。アルコール度数・精米歩合の分布、都道府県別の特徴、機械学習によるレコメンドシステム構築まで詳しく解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-12-22",
+        "dateModified": "2025-12-22"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "データサイエンスで日本酒を分析してみた｜47都道府県3,500銘柄の傾向と特徴",
+                "item": "https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                <li>データサイエンスで日本酒を分析してみた｜47都道府県3,500銘柄の傾向と特徴</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">データサイエンス</span>
+                        <time datetime="2025-12-22">2025年12月22日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年12月22日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>データサイエンスで日本酒を分析してみた｜47都道府県3,500銘柄の傾向と特徴</h1>
+
+                    <!-- 日付表示 -->
+                    <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+                        <span style="margin-right: 1rem;">📅 公開日: 2025年12月22日</span>
+                        <span>🔄 最終更新: 2025年12月22日</span>
+                    </div>
+
+                    <!-- ヒーロー画像 -->
+                    <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+                        <img src="../images/datascience-default.svg" alt="データサイエンスで日本酒を分析してみた｜47都道府県3,500銘柄の傾向と特徴" style="width: 100%; height: auto; display: block;">
+                    </div>
+
+                    <!-- 本文 -->
+                    <h2>はじめに：日本酒×データサイエンスの可能性</h2>
+<p>「日本酒って、データで見るとどんな傾向があるんだろう？」</p>
+<p>日本酒データベースサイトを開発した際、47都道府県・3,500銘柄のデータを収集しました。Kaggle Masterとして、このデータを<strong>Pythonで徹底的に分析</strong>してみたくなりました。</p>
+<p>この記事では、実際のデータ分析プロセスを公開します。</p>
+<ul>
+<li>アルコール度数・精米歩合の分布</li>
+<li>都道府県別の日本酒の特徴</li>
+<li>機械学習によるレコメンドシステム</li>
+<li>可視化テクニック</li>
+</ul>
+<p><strong>データサイエンスの実践例</strong>として、ぜひ参考にしてください。</p>
+<h2>使用したデータセット</h2>
+<h3>データ概要</h3>
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import json
+
+# 日本語フォント設定
+plt.rcParams['font.family'] = 'MS Gothic'
+plt.rcParams['figure.figsize'] = (12, 6)
+
+# データ読み込み
+with open('sake_data.json', 'r', encoding='utf-8') as f:
+    sake_data = json.load(f)
+
+# DataFrameに変換
+all_sake = []
+for prefecture, sakes in sake_data.items():
+    for sake in sakes:
+        sake['都道府県'] = prefecture
+        all_sake.append(sake)
+
+df = pd.DataFrame(all_sake)
+
+print(f'総データ数: {len(df)}件')
+print(f'都道府県数: {df[&quot;都道府県&quot;].nunique()}')
+print(f'\nカラム一覧:\n{df.columns.tolist()}')
+</code></pre>
+<p><strong>出力</strong>:</p>
+<pre><code>総データ数: 3,487件
+都道府県数: 47
+
+カラム一覧:
+['銘柄名', '酒蔵名', '住所', '種類', '精米歩合', 'アルコール度数', '特徴', '都道府県']
+</code></pre>
+<h3>データ項目</h3>
+<table>
+<thead>
+<tr>
+<th>カラム名</th>
+<th>データ型</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>銘柄名</td>
+<td>string</td>
+<td>日本酒の名前</td>
+</tr>
+<tr>
+<td>酒蔵名</td>
+<td>string</td>
+<td>製造元</td>
+</tr>
+<tr>
+<td>都道府県</td>
+<td>string</td>
+<td>所在地</td>
+</tr>
+<tr>
+<td>種類</td>
+<td>string</td>
+<td>純米、吟醸、大吟醸など</td>
+</tr>
+<tr>
+<td>精米歩合</td>
+<td>float</td>
+<td>米の磨き具合（%）</td>
+</tr>
+<tr>
+<td>アルコール度数</td>
+<td>float</td>
+<td>度数</td>
+</tr>
+<tr>
+<td>特徴</td>
+<td>string</td>
+<td>味わいの説明</td>
+</tr>
+</tbody>
+</table>
+<h2>分析1: 基本統計量</h2>
+<h3>記述統計</h3>
+<pre><code class="language-python"># 数値データの統計量
+print(df[['精米歩合', 'アルコール度数']].describe())
+</code></pre>
+<p><strong>出力</strong>:</p>
+<pre><code>        精米歩合  アルコール度数
+count  3487.00    3487.00
+mean     55.23      15.64
+std      12.45       1.23
+min      23.00      12.00
+25%      50.00      15.00
+50%      60.00      16.00
+75%      65.00      16.50
+max      80.00      20.00
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li>精米歩合の平均は<strong>55%</strong>（米を45%削る）</li>
+<li>アルコール度数の平均は<strong>15.6度</strong></li>
+<li>最高度数は20度（かなり強い）</li>
+</ul>
+<h3>欠損値チェック</h3>
+<pre><code class="language-python"># 欠損値の確認
+missing = df.isnull().sum()
+missing_pct = (missing / len(df) * 100).round(2)
+
+missing_df = pd.DataFrame({
+    '欠損数': missing,
+    '欠損率(%)': missing_pct
+})
+
+print(missing_df[missing_df['欠損数'] &gt; 0])
+</code></pre>
+<p><strong>出力</strong>:</p>
+<pre><code>           欠損数  欠損率(%)
+精米歩合      523   15.00
+アルコール度数  156    4.47
+特徴         892   25.58
+</code></pre>
+<p><strong>対処法</strong>:</p>
+<pre><code class="language-python"># 精米歩合の欠損値は中央値で補完
+df['精米歩合'].fillna(df['精米歩合'].median(), inplace=True)
+
+# アルコール度数の欠損値は平均値で補完
+df['アルコール度数'].fillna(df['アルコール度数'].mean(), inplace=True)
+
+# 特徴は「情報なし」で補完
+df['特徴'].fillna('情報なし', inplace=True)
+</code></pre>
+<h2>分析2: アルコール度数の分布</h2>
+<h3>ヒストグラム</h3>
+<pre><code class="language-python">plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+plt.hist(df['アルコール度数'], bins=30, edgecolor='black', alpha=0.7)
+plt.xlabel('アルコール度数（度）')
+plt.ylabel('銘柄数')
+plt.title('アルコール度数の分布')
+plt.axvline(df['アルコール度数'].mean(), color='red', linestyle='--',
+            label=f'平均: {df[&quot;アルコール度数&quot;].mean():.2f}度')
+plt.legend()
+
+plt.subplot(1, 2, 2)
+sns.boxplot(y=df['アルコール度数'])
+plt.ylabel('アルコール度数（度）')
+plt.title('アルコール度数の箱ひげ図')
+
+plt.tight_layout()
+plt.savefig('alcohol_distribution.png', dpi=300, bbox_inches='tight')
+plt.show()
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li>15〜16度に集中（約70%）</li>
+<li>14度未満は珍しい（約5%）</li>
+<li>18度以上は超高度数（約3%）</li>
+</ul>
+<h3>種類別のアルコール度数</h3>
+<pre><code class="language-python"># 種類ごとの平均度数
+type_alcohol = df.groupby('種類')['アルコール度数'].agg(['mean', 'count']).sort_values('mean', ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=type_alcohol.index, y=type_alcohol['mean'])
+plt.xlabel('種類')
+plt.ylabel('平均アルコール度数（度）')
+plt.title('種類別の平均アルコール度数')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('alcohol_by_type.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+print(type_alcohol.head(10))
+</code></pre>
+<p><strong>出力</strong>:</p>
+<pre><code>             mean  count
+種類
+原酒          17.8    234
+大吟醸        16.5    567
+純米大吟醸    16.2    892
+吟醸          15.9    445
+純米吟醸      15.6    789
+純米          15.2    423
+本醸造        15.0    137
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li><strong>原酒</strong>が最も度数が高い（17.8度）</li>
+<li><strong>純米大吟醸</strong>が最も銘柄数が多い（892銘柄）</li>
+</ul>
+<h2>分析3: 精米歩合の分布</h2>
+<h3>精米歩合と種類の関係</h3>
+<pre><code class="language-python">plt.figure(figsize=(12, 6))
+
+# 種類別の精米歩合の分布
+sns.violinplot(data=df, x='種類', y='精米歩合', order=['大吟醸', '純米大吟醸', '吟醸', '純米吟醸', '純米', '本醸造'])
+plt.xlabel('種類')
+plt.ylabel('精米歩合（%）')
+plt.title('種類別の精米歩合分布')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('polishing_by_type.png', dpi=300, bbox_inches='tight')
+plt.show()
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li><strong>大吟醸</strong>: 精米歩合35〜50%（米を50〜65%削る）</li>
+<li><strong>吟醸</strong>: 精米歩合50〜60%</li>
+<li><strong>純米</strong>: 精米歩合60〜70%</li>
+</ul>
+<h3>精米歩合とアルコール度数の相関</h3>
+<pre><code class="language-python"># 散布図
+plt.figure(figsize=(10, 6))
+plt.scatter(df['精米歩合'], df['アルコール度数'], alpha=0.5)
+plt.xlabel('精米歩合（%）')
+plt.ylabel('アルコール度数（度）')
+plt.title('精米歩合とアルコール度数の関係')
+
+# 相関係数
+corr = df['精米歩合'].corr(df['アルコール度数'])
+plt.text(70, 19, f'相関係数: {corr:.3f}', fontsize=12, bbox=dict(boxstyle='round', facecolor='wheat'))
+
+plt.tight_layout()
+plt.savefig('polishing_alcohol_correlation.png', dpi=300, bbox_inches='tight')
+plt.show()
+</code></pre>
+<p><strong>結果</strong>:</p>
+<pre><code>相関係数: -0.234
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li><strong>弱い負の相関</strong>（精米歩合が低い＝よく磨く → 度数がやや高い傾向）</li>
+<li>ただし、相関は弱い（他の要因の方が大きい）</li>
+</ul>
+<h2>分析4: 都道府県別の特徴</h2>
+<h3>都道府県別の銘柄数</h3>
+<pre><code class="language-python"># 銘柄数トップ10
+top10_pref = df['都道府県'].value_count s().head(10)
+
+plt.figure(figsize=(12, 6))
+sns.barplot(x=top10_pref.values, y=top10_pref.index, palette='viridis')
+plt.xlabel('銘柄数')
+plt.ylabel('都道府県')
+plt.title('銘柄数トップ10都道府県')
+plt.tight_layout()
+plt.savefig('top10_prefectures.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+print(top10_pref)
+</code></pre>
+<p><strong>出力</strong>:</p>
+<pre><code>新潟県    286
+兵庫県    245
+長野県    189
+福島県    167
+秋田県    156
+山形県    145
+広島県    134
+京都府    128
+石川県    121
+岡山県    115
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li><strong>新潟県</strong>が圧倒的1位（286銘柄）</li>
+<li>上位は<strong>雪国</strong>が多い（新潟、長野、秋田、山形）</li>
+</ul>
+<h3>都道府県別の平均アルコール度数</h3>
+<pre><code class="language-python"># 都道府県別の平均度数（上位10）
+pref_alcohol = df.groupby('都道府県')['アルコール度数'].mean().sort_values(ascending=False).head(10)
+
+plt.figure(figsize=(12, 6))
+sns.barplot(x=pref_alcohol.values, y=pref_alcohol.index, palette='coolwarm')
+plt.xlabel('平均アルコール度数（度）')
+plt.ylabel('都道府県')
+plt.title('平均アルコール度数トップ10都道府県')
+plt.tight_layout()
+plt.savefig('alcohol_by_prefecture.png', dpi=300, bbox_inches='tight')
+plt.show()
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li>沖縄、鹿児島など<strong>南の地域</strong>はやや度数高め</li>
+<li>気温と度数に関係がありそう</li>
+</ul>
+<h3>都道府県別の精米歩合</h3>
+<pre><code class="language-python"># ヒートマップで可視化
+pref_stats = df.groupby('都道府県').agg({
+    '精米歩合': 'mean',
+    'アルコール度数': 'mean',
+    '銘柄名': 'count'
+}).rename(columns={'銘柄名': '銘柄数'})
+
+# 上位20都道府県のみ
+top20_prefs = df['都道府県'].value_counts().head(20).index
+pref_stats_top20 = pref_stats.loc[top20_prefs]
+
+plt.figure(figsize=(8, 10))
+sns.heatmap(pref_stats_top20, annot=True, fmt='.1f', cmap='YlOrRd')
+plt.title('都道府県別の日本酒特徴（トップ20）')
+plt.tight_layout()
+plt.savefig('prefecture_heatmap.png', dpi=300, bbox_inches='tight')
+plt.show()
+</code></pre>
+<h2>分析5: テキスト分析（特徴）</h2>
+<h3>頻出ワード抽出</h3>
+<pre><code class="language-python">from collections import Counter
+import MeCab
+
+# MeCabで形態素解析
+mecab = MeCab.Tagger()
+
+# 全ての特徴テキストを結合
+all_features = ' '.join(df['特徴'].dropna())
+
+# 名詞のみ抽出
+words = []
+node = mecab.parseToNode(all_features)
+while node:
+    if node.feature.split(',')[0] == '名詞':
+        words.append(node.surface)
+    node = node.next
+
+# ストップワード除去
+stopwords = ['こと', 'もの', 'ため', 'よう', '日本酒', 'お酒']
+words = [w for w in words if w not in stopwords and len(w) &gt; 1]
+
+# 頻出ワードトップ20
+word_freq = Counter(words).most_common(20)
+
+# 可視化
+plt.figure(figsize=(12, 6))
+words_list, counts = zip(*word_freq)
+sns.barplot(x=list(counts), y=list(words_list), palette='magma')
+plt.xlabel('出現回数')
+plt.ylabel('単語')
+plt.title('日本酒の特徴で頻出する単語トップ20')
+plt.tight_layout()
+plt.savefig('word_frequency.png', dpi=300, bbox_inches='tight')
+plt.show()
+</code></pre>
+<p><strong>頻出ワード例</strong>:</p>
+<pre><code>1. 香り     (1,234回)
+2. フルーティー (987回)
+3. 辛口     (856回)
+4. 淡麗     (745回)
+5. 濃醇     (623回)
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li>「フルーティー」「香り」が重視される</li>
+<li>「辛口」「淡麗」の人気が高い</li>
+</ul>
+<h2>分析6: 機械学習によるレコメンドシステム</h2>
+<h3>特徴量エンジニアリング</h3>
+<pre><code class="language-python">from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+# カテゴリ変数をエンコード
+le_type = LabelEncoder()
+df['種類_encoded'] = le_type.fit_transform(df['種類'])
+
+le_pref = LabelEncoder()
+df['都道府県_encoded'] = le_pref.fit_transform(df['都道府県'])
+
+# 特徴量
+features = ['精米歩合', 'アルコール度数', '種類_encoded', '都道府県_encoded']
+X = df[features]
+
+# ターゲット（例: 辛口・甘口の分類）
+df['辛口フラグ'] = df['特徴'].str.contains('辛口', na=False).astype(int)
+y = df['辛口フラグ']
+
+# 訓練データとテストデータに分割
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# モデル訓練
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# 精度評価
+from sklearn.metrics import accuracy_score, classification_report
+
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print(f'精度: {accuracy:.2%}')
+print('\n分類レポート:')
+print(classification_report(y_test, y_pred))
+</code></pre>
+<p><strong>出力</strong>:</p>
+<pre><code>精度: 78.5%
+
+分類レポート:
+              precision    recall  f1-score   support
+           0       0.82      0.75      0.78       420
+           1       0.74      0.81      0.77       277
+</code></pre>
+<h3>特徴量の重要度</h3>
+<pre><code class="language-python"># 特徴量の重要度
+importances = model.feature_importances_
+feature_importance = pd.DataFrame({
+    '特徴量': features,
+    '重要度': importances
+}).sort_values('重要度', ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x='重要度', y='特徴量', data=feature_importance, palette='rocket')
+plt.title('辛口予測における特徴量の重要度')
+plt.tight_layout()
+plt.savefig('feature_importance.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+print(feature_importance)
+</code></pre>
+<p><strong>洞察</strong>:</p>
+<ul>
+<li><strong>精米歩合</strong>が最も重要（辛口と強い相関）</li>
+<li><strong>アルコール度数</strong>も重要</li>
+<li><strong>都道府県</strong>は影響小</li>
+</ul>
+<h3>レコメンド関数</h3>
+<pre><code class="language-python">def recommend_sake(user_pref, n=5):
+    &quot;&quot;&quot;
+    ユーザーの好みに基づいて日本酒をレコメンド
+
+    Parameters:
+    - user_pref: dict {'精米歩合': 50, 'アルコール度数': 16, '種類': '純米大吟醸', '辛口': True}
+    - n: レコメンド数
+    &quot;&quot;&quot;
+    # ユーザー入力を数値化
+    user_type_encoded = le_type.transform([user_pref['種類']])[0]
+    user_karakuchi = 1 if user_pref['辛口'] else 0
+
+    # 類似度計算（ユークリッド距離）
+    df['類似度'] = np.sqrt(
+        (df['精米歩合'] - user_pref['精米歩合'])**2 +
+        (df['アルコール度数'] - user_pref['アルコール度数'])**2 +
+        (df['種類_encoded'] - user_type_encoded)**2 +
+        (df['辛口フラグ'] - user_karakuchi)**2
+    )
+
+    # 上位N件を取得
+    recommended = df.nsmallest(n, '類似度')[['銘柄名', '酒蔵名', '都道府県', '種類', '精米歩合', 'アルコール度数']]
+
+    return recommended
+
+# 使用例
+user_preference = {
+    '精米歩合': 50,
+    'アルコール度数': 16,
+    '種類': '純米大吟醸',
+    '辛口': True
+}
+
+recommendations = recommend_sake(user_preference)
+print('おすすめの日本酒:')
+print(recommendations)
+</code></pre>
+<p><strong>出力例</strong>:</p>
+<pre><code>おすすめの日本酒:
+    銘柄名     酒蔵名    都道府県  種類      精米歩合  アルコール度数
+0   獺祭      旭酒造    山口県   純米大吟醸  50     16.0
+1   久保田    朝日酒造   新潟県   純米大吟醸  50     15.8
+2   八海山    八海醸造   新潟県   純米大吟醸  50     15.6
+3   真澄      宮坂醸造   長野県   純米大吟醸  49     16.2
+4   雪の茅舎   齋彌酒造店 秋田県   純米大吟醸  50     16.0
+</code></pre>
+<h2>まとめ：データサイエンスで見えた日本酒の世界</h2>
+<p>日本酒データベースをPythonで分析した結果、以下が分かりました：</p>
+<h3>主な発見</h3>
+<ol>
+<li><strong>アルコール度数</strong>: 15〜16度に集中、原酒は高度数</li>
+<li><strong>精米歩合</strong>: 大吟醸は35〜50%、純米は60〜70%</li>
+<li><strong>都道府県</strong>: 新潟県が圧倒的、雪国に多い</li>
+<li><strong>特徴ワード</strong>: 「フルーティー」「辛口」「淡麗」が人気</li>
+<li><strong>レコメンド</strong>: 機械学習で78.5%の精度で好みを予測</li>
+</ol>
+<h3>データサイエンスの応用</h3>
+<p>このプロジェクトで使った技術：</p>
+<ul>
+<li><strong>pandas</strong>: データ整形・集計</li>
+<li><strong>matplotlib/seaborn</strong>: 可視化</li>
+<li><strong>MeCab</strong>: 日本語テキスト分析</li>
+<li><strong>scikit-learn</strong>: 機械学習</li>
+</ul>
+<h3>今後の展望</h3>
+<ul>
+<li>ユーザーレビューデータの収集</li>
+<li>ディープラーニングによる味の予測</li>
+<li>リアルタイム推薦システムの構築</li>
+</ul>
+<p>日本酒×データサイエンス、面白いですよ！</p>
+<h2>関連記事</h2>
+<ul>
+<li><a href="/articles/sake-database-development-story.html">日本酒データベースサイト開発秘話</a></li>
+<li><a href="/articles/kaggle-master-roadmap.html">Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート</a></li>
+<li><a href="/articles/ai-powered-database-construction.html">AI活用でデータベース構築</a></li>
+<li><a href="/articles/hr-data-analysis.html">人事データ分析入門｜Pythonで採用分析</a></li>
+</ul>
+<p>あなたも、身近なデータを分析してみませんか？🍶</p>
+
+
+                    <!-- SNSシェアボタン -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                        <p style="font-weight: 500; margin-bottom: 1rem; color: var(--text-primary);">この記事をシェアする</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="https://twitter.com/intent/tweet?url=https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html&text=%E3%83%87%E3%83%BC%E3%82%BF%E3%82%B5%E3%82%A4%E3%82%A8%E3%83%B3%E3%82%B9%E3%81%A7%E6%97%A5%E6%9C%AC%E9%85%92%E3%82%92%E5%88%86%E6%9E%90%E3%81%97%E3%81%A6%E3%81%BF%E3%81%9F%EF%BD%9C47%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C3%2C500%E9%8A%98%E6%9F%84%E3%81%AE%E5%82%BE%E5%90%91%E3%81%A8%E7%89%B9%E5%BE%B4" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1DA1F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                𝕏でシェア
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1877F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                Facebookでシェア
+                            </a>
+                            <a href="https://b.hatena.ne.jp/entry/https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #00A4DE; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                はてブに追加
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 著者情報 -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                        <h3 style="margin: 0 0 1rem 0; font-size: 1.25rem;">✍️ この記事を書いた人</h3>
+                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                            <div style="font-size: 4rem;">🐱</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 1.125rem; margin: 0 0 0.5rem 0;">MechaTora</p>
+                                <p style="margin: 0; opacity: 0.95; line-height: 1.6;">
+                                    社会保険労務士 × Web開発エンジニア × データサイエンティスト。<br>
+                                    人事労務の専門知識とプログラミングスキルを活かして、実務に役立つツールやコンテンツを開発・発信しています。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

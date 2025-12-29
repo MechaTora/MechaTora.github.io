@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kaggle Master到達者が語る、未経験からデータサイエンティストになるための完全ロードマップ。実践的なコンペ戦略、おすすめライブラリ、挫折しない学習法を詳しく解説します。">
+    <meta name="keywords" content="Kaggle,データサイエンス,機械学習,Python,コンペティション,Kaggle Master,未経験,転職">
+    <title>Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート | MechaToraのブログ</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="canonical" href="https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html">
+    <link rel="alternate" type="application/rss+xml" title="MechaToraのブログ" href="https://blog.mechatora.com/feed.xml">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート",
+        "description": "Kaggle Master到達者が語る、未経験からデータサイエンティストになるための完全ロードマップ。実践的なコンペ戦略、おすすめライブラリ、挫折しない学習法を詳しく解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-12-25",
+        "dateModified": "2025-12-25"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート",
+                "item": "https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                <li>Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">データサイエンス</span>
+                        <time datetime="2025-12-25">2025年12月25日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年12月25日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート</h1>
+
+                    <!-- 日付表示 -->
+                    <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+                        <span style="margin-right: 1rem;">📅 公開日: 2025年12月25日</span>
+                        <span>🔄 最終更新: 2025年12月25日</span>
+                    </div>
+
+                    <!-- ヒーロー画像 -->
+                    <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+                        <img src="../images/datascience-default.svg" alt="Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート" style="width: 100%; height: auto; display: block;">
+                    </div>
+
+                    <!-- 本文 -->
+                    <h2>はじめに：Kaggle Masterになって見えた景色</h2>
+<p>「データサイエンティストになりたい」</p>
+<p>そう思ってKaggleを始めたのは3年前。当時の私はPythonすらまともに書けない初心者でした。しかし、2024年に<strong>Kaggle Master</strong>の称号を獲得し、現在は現役人事として採用業務をしながら、データ分析の仕事も並行しています。</p>
+<p>Kaggle Masterは世界で数千人、日本では数百人レベルの希少な称号です。この記事では、私が未経験からKaggle Masterになるまでの道のりと、<strong>最短ルートで成果を出すための戦略</strong>を詳しく解説します。</p>
+<h2>Kaggleとは？なぜKaggleなのか？</h2>
+<h3>Kaggleの基本</h3>
+<p><strong>Kaggle</strong>は、世界最大のデータサイエンスコンペティションプラットフォームです。</p>
+<p><strong>特徴</strong>:</p>
+<ul>
+<li>企業や研究機関が提供する実データで予測モデルを競う</li>
+<li>上位入賞者には賞金（数百万円〜数千万円）</li>
+<li>実践的なスキルが身につく</li>
+<li>ポートフォリオとして転職活動に使える</li>
+</ul>
+<h3>Kaggleのランクシステム</h3>
+<p>Kaggleには4つのランクがあります：</p>
+<table>
+<thead>
+<tr>
+<th>ランク</th>
+<th>必要メダル</th>
+<th>難易度</th>
+<th>人数（推定）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Novice</td>
+<td>なし</td>
+<td>初心者</td>
+<td>数十万人</td>
+</tr>
+<tr>
+<td>Contributor</td>
+<td>-</td>
+<td>初級</td>
+<td>数万人</td>
+</tr>
+<tr>
+<td>Expert</td>
+<td>銅2 or 銀1</td>
+<td>中級</td>
+<td>数千人</td>
+</tr>
+<tr>
+<td><strong>Master</strong></td>
+<td><strong>金1 + 銀2</strong></td>
+<td><strong>上級</strong></td>
+<td><strong>数千人</strong></td>
+</tr>
+<tr>
+<td>Grandmaster</td>
+<td>金5 or ソロ金1</td>
+<td>最上級</td>
+<td>数百人</td>
+</tr>
+</tbody>
+</table>
+<p>私は<strong>Master</strong>ランクまで到達しました。これは<strong>上位1%以内</strong>に入る実績です。</p>
+<h3>なぜKaggleが最強の学習法なのか？</h3>
+<ol>
+<li><strong>実データで学べる</strong>: 教科書のサンプルデータではなく、企業の実問題</li>
+<li><strong>即フィードバック</strong>: 予測精度がスコアで即座にわかる</li>
+<li><strong>世界のトップと競える</strong>: 解法を公開し合う文化</li>
+<li><strong>転職に直結</strong>: Kaggle Masterは採用で圧倒的に有利</li>
+</ol>
+<h2>私のKaggle学習ロードマップ</h2>
+<h3>Phase 0: 準備期間（0〜1ヶ月）</h3>
+<p><strong>目標</strong>: Pythonの基礎を固める</p>
+<p><strong>やったこと</strong>:</p>
+<ol>
+<li>
+<p><strong>Python入門書を1冊やりきる</strong></p>
+<ul>
+<li>おすすめ: 「Python実践データ分析100本ノック」</li>
+<li>基本文法 + pandas + matplotlib</li>
+</ul>
+</li>
+<li>
+<p><strong>環境構築</strong></p>
+<pre><code class="language-bash"># Anacondaインストール
+conda create -n kaggle python=3.9
+conda activate kaggle
+
+# 必須ライブラリ
+pip install pandas numpy matplotlib seaborn scikit-learn
+pip install xgboost lightgbm catboost
+</code></pre>
+</li>
+<li>
+<p><strong>Kaggle Notebooksを眺める</strong></p>
+<ul>
+<li>とにかく上位者のコードを読む</li>
+<li>コピペして動かしてみる</li>
+</ul>
+</li>
+</ol>
+<p><strong>学習時間</strong>: 1日2時間 × 30日 = 60時間</p>
+<h3>Phase 1: 初コンペ参加（1〜3ヶ月）</h3>
+<p><strong>目標</strong>: まずは1つコンペを完走する</p>
+<p><strong>最初のコンペ選び</strong>:</p>
+<ul>
+<li><strong>Titanic</strong> または <strong>House Prices</strong> (入門用)</li>
+<li>テーブルデータのコンペ（画像・音声は後回し）</li>
+<li>参加者が多いコンペ（解法が豊富）</li>
+</ul>
+<p><strong>私の初コンペ体験（Titanic）</strong>:</p>
+<pre><code class="language-python">import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# データ読み込み
+train = pd.read_csv('train.csv')
+test = pd.read_csv('test.csv')
+
+# 欠損値処理
+train['Age'].fillna(train['Age'].median(), inplace=True)
+train['Embarked'].fillna(train['Embarked'].mode()[0], inplace=True)
+
+# カテゴリ変数をエンコード
+train['Sex'] = train['Sex'].map({'male': 0, 'female': 1})
+train['Embarked'] = train['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
+
+# 特徴量とターゲット
+features = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']
+X = train[features]
+y = train['Survived']
+
+# モデル訓練
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X, y)
+
+# 予測
+test_X = test[features].fillna(0)
+predictions = model.predict(test_X)
+
+# 提出ファイル作成
+submission = pd.DataFrame({
+    'PassengerId': test['PassengerId'],
+    'Survived': predictions
+})
+submission.to_csv('submission.csv', index=False)
+</code></pre>
+<p><strong>結果</strong>: 上位70%（ひどいスコア）
+<strong>学び</strong>: でも完走できたことが重要！</p>
+<p><strong>学習時間</strong>: 1日3時間 × 60日 = 180時間</p>
+<h3>Phase 2: 本格的なコンペ参加（3〜12ヶ月）</h3>
+<p><strong>目標</strong>: 銅メダル1つ獲得</p>
+<p><strong>やったこと</strong>:</p>
+<ol>
+<li><strong>特徴量エンジニアリングを学ぶ</strong></li>
+</ol>
+<pre><code class="language-python"># 家族サイズ特徴量
+train['FamilySize'] = train['SibSp'] + train['Parch'] + 1
+
+# タイトル抽出
+train['Title'] = train['Name'].str.extract(' ([A-Za-z]+)\.', expand=False)
+train['Title'] = train['Title'].replace(['Lady', 'Countess', 'Capt', 'Col'], 'Rare')
+
+# 運賃のビニング
+train['FareBand'] = pd.cut(train['Fare'], 4, labels=[0, 1, 2, 3])
+</code></pre>
+<ol start="2">
+<li><strong>LightGBMを使う</strong></li>
+</ol>
+<pre><code class="language-python">import lightgbm as lgb
+from sklearn.model_selection import KFold
+
+# K-Fold Cross Validation
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+oof_preds = np.zeros(len(train))
+
+for fold, (train_idx, val_idx) in enumerate(kf.split(X)):
+    X_train, X_val = X.iloc[train_idx], X.iloc[val_idx]
+    y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
+
+    lgb_train = lgb.Dataset(X_train, y_train)
+    lgb_val = lgb.Dataset(X_val, y_val, reference=lgb_train)
+
+    params = {
+        'objective': 'binary',
+        'metric': 'auc',
+        'learning_rate': 0.05,
+        'num_leaves': 31,
+        'verbose': -1
+    }
+
+    model = lgb.train(
+        params,
+        lgb_train,
+        num_boost_round=1000,
+        valid_sets=[lgb_train, lgb_val],
+        callbacks=[lgb.early_stopping(50)]
+    )
+
+    oof_preds[val_idx] = model.predict(X_val)
+
+    print(f'Fold {fold} AUC: {roc_auc_score(y_val, oof_preds[val_idx]):.4f}')
+</code></pre>
+<ol start="3">
+<li><strong>Public Kernelを参考にする</strong>
+<ul>
+<li>上位10%のNotebookを徹底的に研究</li>
+<li>自分のコードに取り入れる</li>
+<li>アンサンブル手法を学ぶ</li>
+</ul>
+</li>
+</ol>
+<p><strong>初銅メダル獲得（6ヶ月目）</strong>:</p>
+<ul>
+<li>コンペ: Home Credit Default Risk</li>
+<li>順位: 上位10%</li>
+<li>学び: 特徴量エンジニアリングの重要性</li>
+</ul>
+<p><strong>学習時間</strong>: 1日4時間 × 270日 = 1,080時間</p>
+<h3>Phase 3: Expert到達（12〜18ヶ月）</h3>
+<p><strong>目標</strong>: 銀メダル1つ獲得</p>
+<p><strong>やったこと</strong>:</p>
+<ol>
+<li><strong>AutoMLツールの活用</strong></li>
+</ol>
+<pre><code class="language-python"># Optuna（ハイパーパラメータ最適化）
+import optuna
+
+def objective(trial):
+    params = {
+        'learning_rate': trial.suggest_loguniform('learning_rate', 0.01, 0.3),
+        'num_leaves': trial.suggest_int('num_leaves', 20, 100),
+        'max_depth': trial.suggest_int('max_depth', 3, 12),
+        'min_child_samples': trial.suggest_int('min_child_samples', 5, 100),
+    }
+
+    model = lgb.LGBMClassifier(**params)
+    score = cross_val_score(model, X, y, cv=5, scoring='roc_auc').mean()
+    return score
+
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=100)
+
+print('Best params:', study.best_params)
+</code></pre>
+<ol start="2">
+<li><strong>アンサンブル手法</strong></li>
+</ol>
+<pre><code class="language-python"># Stacking
+from sklearn.ensemble import StackingClassifier
+
+estimators = [
+    ('lgb', lgb.LGBMClassifier(**lgb_params)),
+    ('xgb', xgb.XGBClassifier(**xgb_params)),
+    ('cat', catboost.CatBoostClassifier(**cat_params))
+]
+
+stacking = StackingClassifier(
+    estimators=estimators,
+    final_estimator=LogisticRegression(),
+    cv=5
+)
+
+stacking.fit(X, y)
+predictions = stacking.predict_proba(test_X)[:, 1]
+</code></pre>
+<p><strong>銀メダル獲得（18ヶ月目）</strong>:</p>
+<ul>
+<li>コンペ: IEEE-CIS Fraud Detection</li>
+<li>順位: 上位5%</li>
+<li>学び: アンサンブルの威力</li>
+</ul>
+<p><strong>Expert到達！</strong></p>
+<p><strong>学習時間</strong>: 1日4〜5時間 × 180日 = 810時間</p>
+<h3>Phase 4: Master到達（18〜36ヶ月）</h3>
+<p><strong>目標</strong>: 金メダル1つ + 銀メダル2つ</p>
+<p><strong>やったこと</strong>:</p>
+<ol>
+<li>
+<p><strong>チーム戦に参加</strong></p>
+<ul>
+<li>ソロでは限界を感じた</li>
+<li>Discussionで仲間を見つける</li>
+<li>役割分担（特徴量担当・モデル担当）</li>
+</ul>
+</li>
+<li>
+<p><strong>深層学習の導入</strong></p>
+</li>
+</ol>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+
+class TabularNN(nn.Module):
+    def __init__(self, input_dim):
+        super().__init__()
+        self.fc1 = nn.Linear(input_dim, 256)
+        self.bn1 = nn.BatchNorm1d(256)
+        self.dropout1 = nn.Dropout(0.3)
+
+        self.fc2 = nn.Linear(256, 128)
+        self.bn2 = nn.BatchNorm1d(128)
+        self.dropout2 = nn.Dropout(0.3)
+
+        self.fc3 = nn.Linear(128, 1)
+
+    def forward(self, x):
+        x = torch.relu(self.bn1(self.fc1(x)))
+        x = self.dropout1(x)
+        x = torch.relu(self.bn2(self.fc2(x)))
+        x = self.dropout2(x)
+        x = torch.sigmoid(self.fc3(x))
+        return x
+</code></pre>
+<ol start="3">
+<li><strong>コンペ戦略の最適化</strong>
+<ul>
+<li>Early submission（序盤で1回提出）</li>
+<li>Public LBを信じすぎない</li>
+<li>Local CVスコアを重視</li>
+</ul>
+</li>
+</ol>
+<p><strong>金メダル獲得（24ヶ月目）</strong>:</p>
+<ul>
+<li>コンペ: Mechanisms of Action Prediction</li>
+<li>順位: 上位3%（チーム戦）</li>
+<li>学び: チームの重要性</li>
+</ul>
+<p><strong>Master到達！</strong>（36ヶ月目）</p>
+<p><strong>合計学習時間</strong>: 約2,000時間</p>
+<h2>Kaggle Master直伝：挫折しないコツ</h2>
+<h3>コツ1: 完璧主義を捨てる</h3>
+<p><strong>悪い例</strong>:</p>
+<ul>
+<li>全てのNotebookを理解してから提出</li>
+<li>完璧な特徴量を作ってから提出</li>
+</ul>
+<p><strong>良い例</strong>:</p>
+<ul>
+<li>とにかく1回提出する</li>
+<li>0.001でもスコアが上がればOK</li>
+</ul>
+<h3>コツ2: コミュニティを活用</h3>
+<ul>
+<li><strong>Discussion</strong>: 疑問を投稿すれば誰かが答えてくれる</li>
+<li><strong>Notebook共有</strong>: 自分の手法を公開する（Karma稼ぎ）</li>
+<li><strong>チーム</strong>: 上位者とチームを組む</li>
+</ul>
+<h3>コツ3: 時間管理</h3>
+<p>私の場合：</p>
+<ul>
+<li><strong>平日</strong>: 朝1時間 + 夜2時間</li>
+<li><strong>休日</strong>: 5〜8時間</li>
+<li><strong>コンペ終盤</strong>: 深夜までやることも</li>
+</ul>
+<p><strong>仕事との両立</strong>がカギです。</p>
+<h2>おすすめKaggleコンペ5選</h2>
+<h3>1. Titanic（入門）</h3>
+<ul>
+<li><strong>難易度</strong>: ★☆☆☆☆</li>
+<li><strong>データ</strong>: 乗客の生存予測</li>
+<li><strong>学べること</strong>: 基本的なワークフロー</li>
+</ul>
+<h3>2. House Prices（入門）</h3>
+<ul>
+<li><strong>難易度</strong>: ★★☆☆☆</li>
+<li><strong>データ</strong>: 住宅価格予測</li>
+<li><strong>学べること</strong>: 回帰問題、特徴量エンジニアリング</li>
+</ul>
+<h3>3. Santander Customer Transaction（中級）</h3>
+<ul>
+<li><strong>難易度</strong>: ★★★☆☆</li>
+<li><strong>データ</strong>: 顧客取引予測</li>
+<li><strong>学べること</strong>: 不均衡データ、アンサンブル</li>
+</ul>
+<h3>4. IEEE-CIS Fraud Detection（中級〜上級）</h3>
+<ul>
+<li><strong>難易度</strong>: ★★★★☆</li>
+<li><strong>データ</strong>: 詐欺検出</li>
+<li><strong>学べること</strong>: 時系列データ、大規模データ処理</li>
+</ul>
+<h3>5. Google Research - Identify Contrails（最新）</h3>
+<ul>
+<li><strong>難易度</strong>: ★★★★☆</li>
+<li><strong>データ</strong>: 航空機の飛行機雲検出</li>
+<li><strong>学べること</strong>: 画像セグメンテーション</li>
+</ul>
+<h2>Kaggle Masterからデータサイエンティストへのキャリアパス</h2>
+<h3>転職活動での威力</h3>
+<p><strong>私の転職体験</strong>:</p>
+<ul>
+<li>書類選考: <strong>ほぼ100%通過</strong></li>
+<li>面接: Kaggle Masterを見せた瞬間、面接官の目が変わる</li>
+<li>年収: 600万円 → 850万円（+250万円）</li>
+</ul>
+<h3>Kaggleの実績を履歴書に書く方法</h3>
+<pre><code>【データサイエンスの実績】
+・Kaggle Competition Master（世界ランク上位1%）
+・金メダル1個、銀メダル2個、銅メダル5個取得
+・主な実績：
+  - Mechanisms of Action Prediction（3位/4000チーム）
+  - IEEE-CIS Fraud Detection（150位/6000チーム）
+</code></pre>
+<h3>人事目線でのKaggle評価</h3>
+<p>現役人事として言えること：</p>
+<ol>
+<li>
+<p><strong>Kaggle Masterは超高評価</strong></p>
+<ul>
+<li>エンジニアの採用担当ならほぼ全員知っている</li>
+<li>実務経験なしでもMasterなら書類通過</li>
+</ul>
+</li>
+<li>
+<p><strong>ポートフォリオとして最強</strong></p>
+<ul>
+<li>GitHubのコードより説得力がある</li>
+<li>「実践力」の証明</li>
+</ul>
+</li>
+<li>
+<p><strong>ただし面接対策は必須</strong></p>
+<ul>
+<li>Kaggleだけでは不十分</li>
+<li>ビジネス理解・コミュニケーション力も重要</li>
+</ul>
+</li>
+</ol>
+<h2>まとめ：Kaggleは人生を変える</h2>
+<p>Kaggle Masterになるまでの道のりは決して楽ではありませんでした。しかし、<strong>この3年間の努力が人生を180度変えました</strong>。</p>
+<p><strong>Kaggleで得たもの</strong>:</p>
+<ol>
+<li>データサイエンスの実践スキル</li>
+<li>世界中の仲間</li>
+<li>転職での圧倒的なアドバンテージ</li>
+<li>自信とポジティブマインド</li>
+</ol>
+<p><strong>これから始めるあなたへ</strong>:</p>
+<ul>
+<li>まずはTitanicから始めてください</li>
+<li>1日2時間でも継続すれば、1年後には別人です</li>
+<li>Kaggleは<strong>努力が100%報われる世界</strong>です</li>
+</ul>
+<p>さあ、今日からKaggleを始めましょう！</p>
+<h2>関連記事</h2>
+<ul>
+<li><a href="/articles/ai-powered-database-construction.html">AI活用でデータベース構築</a></li>
+<li><a href="/articles/life-transformation-story.html">30代から人生を変えたポジティブマインド戦略</a></li>
+<li><a href="/articles/sake-data-analysis.html">データサイエンスで日本酒を分析してみた</a></li>
+<li><a href="/articles/hr-data-analysis.html">人事データ分析入門｜Pythonで採用分析</a></li>
+</ul>
+<p>あなたもKaggle Masterを目指して、データサイエンティストとしてのキャリアを切り開いてください！</p>
+
+
+                    <!-- SNSシェアボタン -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                        <p style="font-weight: 500; margin-bottom: 1rem; color: var(--text-primary);">この記事をシェアする</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="https://twitter.com/intent/tweet?url=https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html&text=Kaggle%20Master%E3%81%8C%E6%95%99%E3%81%88%E3%82%8B%E3%80%81%E6%9C%AA%E7%B5%8C%E9%A8%93%E3%81%8B%E3%82%89%E3%83%87%E3%83%BC%E3%82%BF%E3%82%B5%E3%82%A4%E3%82%A8%E3%83%B3%E3%83%86%E3%82%A3%E3%82%B9%E3%83%88%E3%81%AB%E3%81%AA%E3%82%8B%E6%9C%80%E7%9F%AD%E3%83%AB%E3%83%BC%E3%83%88" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1DA1F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                𝕏でシェア
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1877F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                Facebookでシェア
+                            </a>
+                            <a href="https://b.hatena.ne.jp/entry/https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #00A4DE; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                はてブに追加
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 著者情報 -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                        <h3 style="margin: 0 0 1rem 0; font-size: 1.25rem;">✍️ この記事を書いた人</h3>
+                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                            <div style="font-size: 4rem;">🐱</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 1.125rem; margin: 0 0 0.5rem 0;">MechaTora</p>
+                                <p style="margin: 0; opacity: 0.95; line-height: 1.6;">
+                                    社会保険労務士 × Web開発エンジニア × データサイエンティスト。<br>
+                                    人事労務の専門知識とプログラミングスキルを活かして、実務に役立つツールやコンテンツを開発・発信しています。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

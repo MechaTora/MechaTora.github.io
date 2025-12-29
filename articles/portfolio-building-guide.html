@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="エンジニアのポートフォリオ作成ガイド。GitHub Pages、実際のプロジェクト、技術スタック、デザインのコツまで、15個のツールを公開してきた経験から、効果的なポートフォリオの作り方を解説します。">
+    <meta name="keywords" content="ポートフォリオ,エンジニア,転職,GitHub Pages,実績,作品集">
+    <title>エンジニアのポートフォリオの作り方 - 実績で語る自己PR | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "エンジニアのポートフォリオの作り方",
+        "description": "エンジニアのポートフォリオ作成ガイド。GitHub Pages、実際のプロジェクト、技術スタック、デザインのコツまで、効果的なポートフォリオの作り方を解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-10-30",
+        "dateModified": "2025-10-30",
+        "image": "https://blog.mechatora.com/images/portfolio-guide.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "エンジニアのポートフォリオの作り方 - 実績で語る自己PR",
+                "item": "https://blog.mechatora.com/articles/portfolio-building-guide.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>エンジニアのポートフォリオの作り方</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category career">キャリア・資格</span>
+                <h1>エンジニアのポートフォリオの作り方 - 実績で語る自己PR</h1>
+                <div class="article-meta">
+                    <time datetime="2025-10-30">2025年10月30日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>「エンジニアとして転職したいけど、実務経験がない」「スキルをアピールする方法が分からない」——そんな悩みを解決するのが「ポートフォリオ」です。実際に動くアプリを作って公開することで、履歴書では伝えきれない技術力を証明できます。</p>
+                <p>この記事では、MechaToraで15個のWebツールを公開し、実際に社内で評価された経験から、効果的なポートフォリオの作り方を解説します。何を作るべきか、どう公開するか、どう見せるかまで、具体的なノウハウをお伝えします。</p>
+            </div>
+
+            <h2>なぜポートフォリオが重要なのか</h2>
+
+            <h3>採用担当者が見るポイント</h3>
+            <p>転職活動で、採用担当者がポートフォリオでチェックするのは：</p>
+            <ul>
+                <li><strong>実際に動くものを作れるか</strong>：理論だけでなく実装力</li>
+                <li><strong>コードの品質</strong>：読みやすさ、保守性</li>
+                <li><strong>技術の幅</strong>：どんな技術を使えるか</li>
+                <li><strong>問題解決能力</strong>：どんな課題をどう解決したか</li>
+                <li><strong>継続力</strong>：継続的に学習・開発しているか</li>
+            </ul>
+
+            <h3>私のポートフォリオの効果</h3>
+            <p>MechaToraのポートフォリオを作ったことで、以下の成果がありました：</p>
+            <ul>
+                <li><strong>社内評価向上</strong>：人事部で「データに強いエンジニア」として認知</li>
+                <li><strong>副業案件獲得</strong>：ポートフォリオ経由で3件の依頼</li>
+                <li><strong>技術力の証明</strong>：面接で「実際のコードを見せてください」と言われた際に即提示</li>
+                <li><strong>モチベーション維持</strong>：公開することで学習が継続</li>
+            </ul>
+
+            <h2>良いポートフォリオの3要素</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>1. 実用性のあるアプリ</h3>
+            <p>Todoリストやメモアプリだけでは差別化できません。以下のような実用的なアプリが評価されます：</p>
+            <ul>
+                <li><strong>実際の問題を解決</strong>：自分や他人が使いたいと思うもの</li>
+                <li><strong>独自性</strong>：既存サービスにない機能・切り口</li>
+                <li><strong>完成度</strong>：中途半端ではなく、実際に使えるレベル</li>
+            </ul>
+
+            <p>MechaToraの例：</p>
+            <ul>
+                <li><strong>地震モニター</strong>：リアルタイムで地震情報を通知（既存にない機能）</li>
+                <li><strong>日本酒検索</strong>：楽天APIで3万種類から検索（実用的）</li>
+                <li><strong>資格試験カレンダー</strong>：年間600試験を一覧表示（独自データ）</li>
+            </ul>
+
+            <h3>2. 技術スタックの明示</h3>
+            <p>使った技術を明確に示すことで、スキルセットが一目で分かります：</p>
+            <pre><code>## 技術スタック
+
+### フロントエンド
+- HTML5 / CSS3 / JavaScript (ES6+)
+- React 18.2.0
+- Tailwind CSS
+
+### バックエンド
+- Node.js 18.x
+- Express 4.18
+- Firebase Firestore
+
+### インフラ
+- GitHub Pages
+- Firebase Hosting
+- Cloudflare CDN
+
+### ツール
+- Git / GitHub
+- VS Code
+- Figma（デザイン）</code></pre>
+
+            <h3>3. ソースコードの公開</h3>
+            <p>GitHubでソースコードを公開することで、コーディングスキルを直接評価してもらえます：</p>
+            <ul>
+                <li><strong>README.md</strong>：プロジェクトの概要、セットアップ手順</li>
+                <li><strong>コメント</strong>：適度なコメントで意図を明示</li>
+                <li><strong>コミット履歴</strong>：段階的な開発プロセスを示す</li>
+                <li><strong>Issue・PR</strong>：バグ修正や機能追加の履歴</li>
+            </ul>
+
+            <h2>ポートフォリオに載せるべきプロジェクト</h2>
+
+            <h3>最低3つ、理想は5〜10個</h3>
+            <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #f3f4f6;">
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">数</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">評価</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">コメント</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">1〜2個</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">不十分</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">継続力が疑われる</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">3〜5個</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">合格ライン</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">基本的な技術力を証明できる</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">6〜10個</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">高評価</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">技術の幅と継続力をアピール</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">11個以上</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">かなり高評価</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">ただし質も重要</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>バランスの取れたプロジェクト構成</h3>
+            <p>以下のように、異なる種類のプロジェクトを組み合わせると効果的です：</p>
+
+            <h4>1. 基礎力を示すプロジェクト（1〜2個）</h4>
+            <ul>
+                <li>Todoアプリ（CRUD操作の基本）</li>
+                <li>天気予報アプリ（API連携の基本）</li>
+                <li>ブログサイト（静的サイトの基本）</li>
+            </ul>
+
+            <h4>2. 実用的なプロジェクト（2〜3個）</h4>
+            <ul>
+                <li>実際に使えるツール・サービス</li>
+                <li>特定の問題を解決するアプリ</li>
+                <li>データ可視化ツール</li>
+            </ul>
+
+            <h4>3. 技術力を示すプロジェクト（1〜2個）</h4>
+            <ul>
+                <li>リアルタイム通信（WebSocket、Firebase）</li>
+                <li>複雑な状態管理（Redux、Zustand）</li>
+                <li>パフォーマンス最適化</li>
+            </ul>
+
+            <h3>MechaToraのプロジェクト構成</h3>
+            <p>私のポートフォリオ（15個）の内訳：</p>
+            <ul>
+                <li><strong>API連携系</strong>：5個（地震モニター、日本酒検索、天気予報など）</li>
+                <li><strong>データ可視化系</strong>：3個（資格試験カレンダー、宝くじマップ、給与計算）</li>
+                <li><strong>実用ツール系</strong>：4個（料理提案、X投稿文生成、献立提案など）</li>
+                <li><strong>基礎スキル系</strong>：3個（ポートフォリオサイト、ブログ、ランディングページ）</li>
+            </ul>
+
+            <h2>ポートフォリオサイトの作り方</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>必須要素</h3>
+            <ol>
+                <li><strong>自己紹介</strong>：名前、スキルセット、経歴</li>
+                <li><strong>プロジェクト一覧</strong>：作品を見やすく配置</li>
+                <li><strong>技術スタック</strong>：使える技術を明記</li>
+                <li><strong>GitHub / 連絡先</strong>：リンクを明示</li>
+            </ol>
+
+            <h3>シンプルなHTML構成例</h3>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;MechaTora - Portfolio&lt;/title&gt;
+    &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- ヒーローセクション --&gt;
+    &lt;section class="hero"&gt;
+        &lt;h1&gt;MechaTora&lt;/h1&gt;
+        &lt;p&gt;社労士 × エンジニア&lt;/p&gt;
+        &lt;p&gt;HTML/CSS/JavaScript, R言語, データ分析&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;!-- プロジェクト一覧 --&gt;
+    &lt;section class="projects"&gt;
+        &lt;h2&gt;プロジェクト&lt;/h2&gt;
+        &lt;div class="project-grid"&gt;
+            &lt;!-- プロジェクトカード --&gt;
+            &lt;div class="project-card"&gt;
+                &lt;img src="earthquake-monitor.jpg" alt="地震モニター"&gt;
+                &lt;h3&gt;地震モニター&lt;/h3&gt;
+                &lt;p&gt;気象庁APIを使ったリアルタイム地震情報通知&lt;/p&gt;
+                &lt;div class="tech-stack"&gt;
+                    &lt;span&gt;JavaScript&lt;/span&gt;
+                    &lt;span&gt;Leaflet.js&lt;/span&gt;
+                    &lt;span&gt;API連携&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class="links"&gt;
+                    &lt;a href="https://mechatora.com/earthquake-monitor"&gt;デモ&lt;/a&gt;
+                    &lt;a href="https://github.com/mechatora/earthquake-monitor"&gt;GitHub&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- 他のプロジェクトカード... --&gt;
+        &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;!-- スキルセクション --&gt;
+    &lt;section class="skills"&gt;
+        &lt;h2&gt;技術スタック&lt;/h2&gt;
+        &lt;div class="skill-category"&gt;
+            &lt;h3&gt;フロントエンド&lt;/h3&gt;
+            &lt;ul&gt;
+                &lt;li&gt;HTML5 / CSS3 / JavaScript (ES6+)&lt;/li&gt;
+                &lt;li&gt;React, Vue.js&lt;/li&gt;
+                &lt;li&gt;Responsive Design&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;!-- 他のカテゴリ... --&gt;
+    &lt;/section&gt;
+
+    &lt;!-- コンタクトセクション --&gt;
+    &lt;section class="contact"&gt;
+        &lt;h2&gt;お問い合わせ&lt;/h2&gt;
+        &lt;p&gt;GitHub: &lt;a href="https://github.com/mechatora"&gt;@mechatora&lt;/a&gt;&lt;/p&gt;
+        &lt;p&gt;Email: contact@mechatora.com&lt;/p&gt;
+    &lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h3>デザインのコツ</h3>
+            <ul>
+                <li><strong>シンプルに</strong>：派手な演出より、見やすさ重視</li>
+                <li><strong>レスポンシブ対応</strong>：スマホでも見やすく</li>
+                <li><strong>読み込み速度</strong>：画像を圧縮、遅延読み込み</li>
+                <li><strong>アクセシビリティ</strong>：適切なalt属性、コントラスト</li>
+            </ul>
+
+            <h3>テンプレートの活用</h3>
+            <p>デザインが苦手な場合は、無料テンプレートを活用：</p>
+            <ul>
+                <li><strong>HTML5 UP</strong>：無料の高品質テンプレート</li>
+                <li><strong>Bootstrap</strong>：レスポンシブ対応が簡単</li>
+                <li><strong>Tailwind CSS</strong>：ユーティリティファーストCSS</li>
+            </ul>
+
+            <h2>GitHubを効果的に使う</h2>
+
+            <h3>README.mdの書き方</h3>
+            <p>プロジェクトごとに、以下の内容を含むREADME.mdを作成：</p>
+            <pre><code># 地震モニター
+
+リアルタイムで地震情報を取得して通知するWebアプリ
+
+## デモ
+https://mechatora.com/earthquake-monitor
+
+## スクリーンショット
+![地震モニター](screenshot.png)
+
+## 機能
+- 気象庁APIから最新の地震情報を取得（30秒ごとにポーリング）
+- 震度5弱以上でブラウザ通知
+- Leaflet.jsで震源地を地図に表示
+- 過去24時間の地震履歴を一覧表示
+
+## 技術スタック
+- フロントエンド: HTML, CSS, JavaScript
+- ライブラリ: Leaflet.js
+- API: 気象庁API
+- ホスティング: GitHub Pages
+
+## セットアップ
+```bash
+git clone https://github.com/mechatora/earthquake-monitor
+cd earthquake-monitor
+# ローカルサーバーで起動（Live Serverなど）
+```
+
+## 開発の背景
+2024年の元日に能登半島で大きな地震があり、リアルタイムで情報を知る手段が必要だと感じたため開発しました。
+
+## 今後の改善予定
+- [ ] WebSocket対応（ポーリング→リアルタイム）
+- [ ] 震度別の色分け
+- [ ] 通知設定のカスタマイズ
+
+## ライセンス
+MIT</code></pre>
+
+            <h3>GitHubプロフィールの最適化</h3>
+            <pre><code># 特別なリポジトリ（ユーザー名と同じ名前）を作成
+
+# README.md の例
+# Hi, I'm MechaTora 👋
+
+社労士 × エンジニアとして、人事データ分析とWebアプリ開発をしています。
+
+## 🛠 技術スタック
+- **言語**: JavaScript, R, HTML/CSS
+- **フレームワーク**: React, Vue.js
+- **ツール**: Git, Firebase, Leaflet.js
+
+## 📊 統計
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=mechatora&show_icons=true)
+
+## 🚀 最近のプロジェクト
+- [地震モニター](https://github.com/mechatora/earthquake-monitor): リアルタイム地震情報
+- [日本酒検索](https://github.com/mechatora/sake-search): 楽天API連携
+
+## 📫 連絡先
+- Website: https://mechatora.com
+- Email: contact@mechatora.com</code></pre>
+
+            <h3>コミットメッセージの書き方</h3>
+            <p>分かりやすいコミットメッセージで、開発プロセスを示します：</p>
+            <pre><code># 良い例
+feat: 震度5弱以上でブラウザ通知を追加
+fix: 地図の初期位置が日本の中心になるよう修正
+docs: README.mdにセットアップ手順を追加
+refactor: API呼び出しを別ファイルに分離
+
+# 悪い例
+修正
+バグ直した
+更新</code></pre>
+
+            <h2>ポートフォリオの公開方法</h2>
+
+            <h3>1. GitHub Pages（無料・おすすめ）</h3>
+            <pre><code># リポジトリ設定 → Pages → Source: main branch
+# https://username.github.io/ でアクセス可能
+
+# カスタムドメインも設定可能
+# https://mechatora.com/</code></pre>
+
+            <h3>2. Netlify / Vercel</h3>
+            <ul>
+                <li>GitHubリポジトリと連携</li>
+                <li>プッシュするだけで自動デプロイ</li>
+                <li>無料プランで十分</li>
+            </ul>
+
+            <h3>3. Firebase Hosting</h3>
+            <ul>
+                <li>HTTPS自動、CDN配信</li>
+                <li>月10GB無料</li>
+                <li>CLIで簡単デプロイ</li>
+            </ul>
+
+            <h2>実際の面接での使い方</h2>
+
+            <h3>事前準備</h3>
+            <ul>
+                <li><strong>デモを用意</strong>：実際に動かして見せられるように</li>
+                <li><strong>説明を練習</strong>：各プロジェクトを1分で説明</li>
+                <li><strong>質問を想定</strong>：「なぜこの技術を選んだか」など</li>
+            </ul>
+
+            <h3>面接での見せ方</h3>
+            <ol>
+                <li><strong>概要説明（30秒）</strong>：「どんなアプリか」を簡潔に</li>
+                <li><strong>技術説明（30秒）</strong>：使った技術とその理由</li>
+                <li><strong>デモ（1分）</strong>：実際に操作して見せる</li>
+                <li><strong>学び（30秒）</strong>：開発で得た知見</li>
+            </ol>
+
+            <p>私の例：</p>
+            <blockquote>
+                <p>「地震モニターは、気象庁APIを使ったリアルタイム地震情報通知アプリです。JavaScriptでAPIを30秒ごとにポーリングし、Leaflet.jsで地図に震源地を表示します。開発の中で、API Rate Limitingへの対処法や、リアルタイム通知の実装を学びました。実際に使っており、震度5以上の地震を見逃さずキャッチできています。」</p>
+            </blockquote>
+
+            <h2>まとめ</h2>
+
+            <h3>効果的なポートフォリオのチェックリスト</h3>
+            <ul>
+                <li>✅ 最低3つ以上のプロジェクト</li>
+                <li>✅ 実用的で独自性のあるアプリ</li>
+                <li>✅ GitHub でソースコード公開</li>
+                <li>✅ 各プロジェクトに詳細なREADME.md</li>
+                <li>✅ デモサイトが実際に動く</li>
+                <li>✅ レスポンシブ対応</li>
+                <li>✅ 技術スタックを明記</li>
+                <li>✅ 継続的に更新</li>
+            </ul>
+
+            <h3>ポートフォリオ作成のロードマップ</h3>
+            <ol>
+                <li><strong>1ヶ月目</strong>：基礎プロジェクト1つ（Todoアプリなど）</li>
+                <li><strong>2〜3ヶ月目</strong>：実用的なプロジェクト2つ</li>
+                <li><strong>4ヶ月目</strong>：ポートフォリオサイト作成</li>
+                <li><strong>5ヶ月目以降</strong>：継続的にプロジェクト追加</li>
+            </ol>
+
+            <p>ポートフォリオは、作って終わりではありません。継続的に更新し、新しい技術を学び続ける姿勢を示すことが重要です。MechaToraも、2年間で15個まで増やし、今も月1個ペースで追加しています。</p>
+
+            <p>まずは小さなプロジェクトから始めて、徐々に拡充していきましょう！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="github-pages-guide.html">GitHub Pages完全ガイド</a></li>
+                    <li><a href="30s-programming.html">30代からプログラミングを始めた話</a></li>
+                    <li><a href="hr-to-developer.html">社労士×エンジニアという働き方</a></li>
+                    <li><a href="free-webapp-guide.html">完全無料でWebアプリを作る方法</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

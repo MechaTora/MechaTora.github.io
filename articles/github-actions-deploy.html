@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GitHub Actionsで自動デプロイ環境を構築する方法。CI/CDの基礎、ワークフローファイルの書き方、GitHub Pagesへの自動デプロイ、エラー対処法を実例で解説します。">
+    <meta name="keywords" content="GitHub Actions,CI/CD,自動デプロイ,GitHub Pages,ワークフロー,DevOps">
+    <title>GitHub Actionsで自動デプロイ環境を作る｜初心者向けCI/CD入門 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "GitHub Actionsで自動デプロイ環境を作る｜初心者向けCI/CD入門",
+        "description": "GitHub Actionsで自動デプロイ環境を構築する方法。CI/CDの基礎、ワークフローファイルの書き方、GitHub Pagesへの自動デプロイ、エラー対処法を実例で解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-01-07",
+        "dateModified": "2025-01-07"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "GitHub Actionsで自動デプロイ環境を作る｜初心者向けCI/CD入門",
+                "item": "https://blog.mechatora.com/articles/github-actions-deploy.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>GitHub Actionsで自動デプロイ環境を作る</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2025-01-07">2025年1月7日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年1月7日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>GitHub Actionsで自動デプロイ環境を作る｜初心者向けCI/CD入門</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+
+                    <!-- リード文（導入） -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        「コードを修正するたびに、手動でビルド→デプロイするのが面倒...」「GitHubにpushしたら、自動でサイトが更新されたら便利なのに」。そんな悩みを解決するのがGitHub Actionsです。この記事では、CI/CDの基礎から、実際にGitHub Actionsでワークフローを作成し、GitHub Pagesへ自動デプロイする方法を、初心者でもわかるように詳しく解説します。
+                    </p>
+
+                    <!-- 記事本文 -->
+                    <h2>CI/CDとGitHub Actionsの基礎知識</h2>
+
+                    <h3>CI/CDとは？</h3>
+                    <p>
+                        <strong>CI（Continuous Integration：継続的インテグレーション）：</strong><br>
+                        コードの変更を頻繁にリポジトリに統合し、自動でテストを実行する仕組みです。
+                    </p>
+                    <ul>
+                        <li>コードをpushするたびに、自動でテストが走る</li>
+                        <li>バグを早期に発見できる</li>
+                        <li>チーム開発で、統合時の問題を減らせる</li>
+                    </ul>
+
+                    <p>
+                        <strong>CD（Continuous Deployment：継続的デプロイ）：</strong><br>
+                        テストに合格したコードを、自動で本番環境にデプロイする仕組みです。
+                    </p>
+                    <ul>
+                        <li>手動デプロイの手間がなくなる</li>
+                        <li>デプロイミスを防げる</li>
+                        <li>リリースサイクルが速くなる</li>
+                    </ul>
+
+                    <h3>GitHub Actionsとは？</h3>
+                    <p>
+                        GitHub Actionsは、GitHubが提供する無料のCI/CDツールです。
+                    </p>
+                    <ul>
+                        <li><strong>完全無料：</strong>パブリックリポジトリなら無制限（プライベートは月2,000分まで無料）</li>
+                        <li><strong>GitHub統合：</strong>リポジトリ内で完結、外部サービス不要</li>
+                        <li><strong>豊富なアクション：</strong>コミュニティ製のアクションを簡単に利用可能</li>
+                        <li><strong>柔軟性：</strong>YAML形式で、自由にワークフローを定義</li>
+                    </ul>
+
+                    <h2>実践：GitHub Pagesへの自動デプロイ</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>前提条件</h3>
+                    <ul>
+                        <li>GitHubアカウントを持っている</li>
+                        <li>デプロイしたいリポジトリがある</li>
+                        <li>GitHub Pagesの設定が完了している</li>
+                    </ul>
+
+                    <h3>ステップ1: ワークフローファイルの作成</h3>
+                    <p>
+                        リポジトリのルートに、<code>.github/workflows/</code>フォルダを作成し、その中にYAMLファイルを配置します。
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # mainブランチにpushされたら実行
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # デプロイするディレクトリ
+</pre>
+
+                    <h3>ステップ2: 各項目の解説</h3>
+                    <p>
+                        <strong>name:</strong> ワークフローの名前（任意）
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+name: Deploy to GitHub Pages
+</pre>
+
+                    <p>
+                        <strong>on:</strong> ワークフローを実行するトリガー
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+on:
+  push:
+    branches:
+      - main  # mainブランチへのpushで実行
+  # 他のトリガー例:
+  # pull_request:  # PRが作成されたら
+  # schedule:      # 定期実行
+  #   - cron: '0 0 * * *'  # 毎日0時
+</pre>
+
+                    <p>
+                        <strong>jobs:</strong> 実行するジョブの定義
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+jobs:
+  deploy:  # ジョブ名
+    runs-on: ubuntu-latest  # 実行環境（Ubuntu最新版）
+</pre>
+
+                    <p>
+                        <strong>steps:</strong> ジョブ内で実行するステップ
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+steps:
+  - name: Checkout code  # リポジトリのコードを取得
+    uses: actions/checkout@v3
+
+  - name: Deploy to GitHub Pages
+    uses: peaceiris/actions-gh-pages@v3  # デプロイ用アクション
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}  # 認証トークン
+      publish_dir: ./  # デプロイするディレクトリ
+</pre>
+
+                    <h3>ステップ3: ファイルをコミット＆プッシュ</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+git add .github/workflows/deploy.yml
+git commit -m "Add GitHub Actions workflow for deployment"
+git push origin main
+</pre>
+
+                    <h3>ステップ4: 実行確認</h3>
+                    <ol>
+                        <li>GitHubのリポジトリページにアクセス</li>
+                        <li>「Actions」タブをクリック</li>
+                        <li>ワークフローの実行状況を確認</li>
+                        <li>緑のチェックマークが表示されれば成功！</li>
+                    </ol>
+
+                    <h2>応用例：ビルドプロセスを含むデプロイ</h2>
+
+                    <h3>例1: Node.jsプロジェクトのビルド + デプロイ</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist  # ビルド後のディレクトリ
+</pre>
+
+                    <h3>例2: 複数環境へのデプロイ</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+name: Deploy to Multiple Environments
+
+on:
+  push:
+    branches:
+      - main      # 本番環境
+      - develop   # 開発環境
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          cname: www.example.com  # 本番ドメイン
+
+      - name: Deploy to Staging
+        if: github.ref == 'refs/heads/develop'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages-staging
+</pre>
+
+                    <h2>よくあるエラーと解決策</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>エラー1: Permission denied (publickey)</h3>
+                    <p>
+                        <strong>原因：</strong>GitHub Actionsが、リポジトリへのアクセス権限を持っていない
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>リポジトリのSettings → Actions → General → Workflow permissions</li>
+                        <li>「Read and write permissions」を選択</li>
+                        <li>「Save」をクリック</li>
+                    </ul>
+
+                    <h3>エラー2: Node.js version mismatch</h3>
+                    <p>
+                        <strong>原因：</strong>ローカルとGitHub Actions環境でNode.jsのバージョンが異なる
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+- name: Setup Node.js
+  uses: actions/setup-node@v3
+  with:
+    node-version: '18'  # ローカルと同じバージョンを指定
+</pre>
+
+                    <h3>エラー3: Build failed</h3>
+                    <p>
+                        <strong>原因：</strong>依存パッケージのインストール失敗、環境変数の不足など
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>Actionsタブで詳細なエラーログを確認</li>
+                        <li>環境変数が必要なら、Settings → Secrets → Actionsで設定</li>
+                        <li>ローカルで<code>npm run build</code>が成功するか確認</li>
+                    </ul>
+
+                    <h2>GitHub Actionsの便利なTips</h2>
+
+                    <h3>Tip 1: キャッシュを使って高速化</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+- name: Cache node modules
+  uses: actions/cache@v3
+  with:
+    path: ~/.npm
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-node-
+</pre>
+
+                    <h3>Tip 2: 環境変数を使う</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+- name: Build with environment variables
+  env:
+    API_KEY: ${{ secrets.API_KEY }}
+    NODE_ENV: production
+  run: npm run build
+</pre>
+
+                    <h3>Tip 3: 複数ジョブの並列実行</h3>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: npm test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run linter
+        run: npm run lint
+
+  deploy:
+    needs: [test, lint]  # test と lint が成功したら実行
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: npm run deploy
+</pre>
+
+                    <h2>GitHub Actionsのメリット・デメリット</h2>
+
+                    <h3>メリット</h3>
+                    <ul>
+                        <li><strong>完全無料：</strong>パブリックリポジトリなら無制限</li>
+                        <li><strong>設定が簡単：</strong>YAMLファイル1つで完結</li>
+                        <li><strong>GitHub統合：</strong>外部サービス不要</li>
+                        <li><strong>豊富なアクション：</strong>コミュニティ製のアクションが多数</li>
+                        <li><strong>柔軟性：</strong>複雑なワークフローも実現可能</li>
+                    </ul>
+
+                    <h3>デメリット</h3>
+                    <ul>
+                        <li><strong>学習コスト：</strong>YAMLの書き方、アクションの使い方を学ぶ必要がある</li>
+                        <li><strong>デバッグが難しい：</strong>ローカルで実行できないため、トライ&エラーが必要</li>
+                        <li><strong>実行時間制限：</strong>1ジョブ最大6時間、1ワークフロー最大72時間</li>
+                    </ul>
+
+                    <!-- まとめセクション -->
+                    <h2>まとめ</h2>
+                    <p>
+                        GitHub Actionsを使えば、無料で簡単にCI/CD環境を構築できます。このページのポイントをまとめます：
+                    </p>
+                    <ul>
+                        <li><strong>CI/CD：</strong>継続的インテグレーション・デプロイで、開発効率を大幅向上</li>
+                        <li><strong>GitHub Actions：</strong>無料、GitHub統合、豊富なアクション</li>
+                        <li><strong>基本ワークフロー：</strong>Checkout → Build → Deploy の3ステップ</li>
+                        <li><strong>応用：</strong>複数環境デプロイ、キャッシュ、並列実行</li>
+                        <li><strong>エラー対処：</strong>権限設定、バージョン一致、ログ確認</li>
+                    </ul>
+
+                    <p>
+                        手動デプロイから解放され、コードを書くことに集中できるようになります。ぜひGitHub Actionsを導入してみてください！
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="free-webapp-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 完全無料でWebアプリを公開する方法｜サーバー代0円のフル活用術</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

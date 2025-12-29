@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CSS Gridを使った現代的なレイアウト実装ガイド。Flexboxとの使い分け、グリッドの基本、レスポンシブ対応、実際のプロジェクト例まで、MechaToraで使っている実装をもとに解説します。">
+    <meta name="keywords" content="CSS Grid,レイアウト,Flexbox,CSS,レスポンシブデザイン,Web開発">
+    <title>CSS Grid完全ガイド - 現代的なレイアウト実装の決定版 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "CSS Grid完全ガイド",
+        "description": "CSS Gridを使った現代的なレイアウト実装ガイド。Flexboxとの使い分け、グリッドの基本、レスポンシブ対応、実際のプロジェクト例を解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-11-01",
+        "dateModified": "2025-11-01",
+        "image": "https://blog.mechatora.com/images/css-grid-guide.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "CSS Grid完全ガイド - 現代的なレイアウト実装の決定版",
+                "item": "https://blog.mechatora.com/articles/css-grid-layout-guide.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>CSS Grid完全ガイド</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category tech">技術・開発</span>
+                <h1>CSS Grid完全ガイド - 現代的なレイアウト実装の決定版</h1>
+                <div class="article-meta">
+                    <time datetime="2025-11-01">2025年11月1日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>「CSSのレイアウトが苦手」「Flexboxだけでは複雑なレイアウトが作れない」——そんな悩みを解決するのがCSS Gridです。2017年に主要ブラウザで対応が完了し、今や現代的なWebサイトには欠かせない技術となっています。</p>
+                <p>この記事では、MechaToraで15個のツールを作る中で習得したCSS Gridの使い方を、実践的なコード例とともに解説します。基本的な使い方から、レスポンシブ対応、Flexboxとの使い分けまで、実務で使える内容をお伝えします。</p>
+            </div>
+
+            <h2>CSS Gridとは</h2>
+
+            <h3>2次元レイアウトシステム</h3>
+            <p>CSS Gridは、行（row）と列（column）の両方を同時に制御できる、2次元のレイアウトシステムです：</p>
+            <ul>
+                <li><strong>Flexbox</strong>：1次元（行 OR 列）</li>
+                <li><strong>CSS Grid</strong>：2次元（行 AND 列）</li>
+            </ul>
+
+            <h3>FlexboxとCSS Gridの使い分け</h3>
+            <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #f3f4f6;">
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">用途</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">Flexbox</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">CSS Grid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">ナビゲーションバー</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">✅</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">❌</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">カード一覧</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">△</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">✅</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">ページ全体のレイアウト</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">❌</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">✅</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">フォーム</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">△</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">✅</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">センタリング</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">✅</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">✅</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>私の使い分けルール：</p>
+            <ul>
+                <li><strong>Flexbox</strong>：コンポーネント内の1方向の配置</li>
+                <li><strong>CSS Grid</strong>：ページ全体、カード配置、フォームなどの複雑なレイアウト</li>
+            </ul>
+
+            <h2>CSS Gridの基本</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>最もシンプルな例</h3>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="grid-container"&gt;
+    &lt;div class="item"&gt;1&lt;/div&gt;
+    &lt;div class="item"&gt;2&lt;/div&gt;
+    &lt;div class="item"&gt;3&lt;/div&gt;
+    &lt;div class="item"&gt;4&lt;/div&gt;
+    &lt;div class="item"&gt;5&lt;/div&gt;
+    &lt;div class="item"&gt;6&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- CSS --&gt;
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3列、均等幅 */
+    gap: 1rem; /* 要素間の隙間 */
+}
+
+.item {
+    background: #2563eb;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}</code></pre>
+
+            <h3>fr単位とは</h3>
+            <p><code>fr</code>（fraction、分数）は、利用可能なスペースを分割する単位です：</p>
+            <pre><code>/* 1:1:1 の比率で3列 */
+grid-template-columns: 1fr 1fr 1fr;
+
+/* 1:2:1 の比率で3列（中央が2倍の幅） */
+grid-template-columns: 1fr 2fr 1fr;
+
+/* 固定幅 + 可変幅 */
+grid-template-columns: 200px 1fr 200px;</code></pre>
+
+            <h3>repeat()関数</h3>
+            <p>同じパターンを繰り返す場合は、<code>repeat()</code>が便利：</p>
+            <pre><code>/* 3列均等 */
+grid-template-columns: repeat(3, 1fr);
+
+/* 4列、交互に200pxと1fr */
+grid-template-columns: repeat(2, 200px 1fr);</code></pre>
+
+            <h2>実践例1：カードグリッド</h2>
+
+            <h3>HTML構造</h3>
+            <pre><code>&lt;div class="card-grid"&gt;
+    &lt;div class="card"&gt;
+        &lt;img src="app1.jpg" alt="地震モニター"&gt;
+        &lt;h3&gt;地震モニター&lt;/h3&gt;
+        &lt;p&gt;リアルタイムで地震情報を通知&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="card"&gt;
+        &lt;img src="app2.jpg" alt="日本酒検索"&gt;
+        &lt;h3&gt;日本酒検索&lt;/h3&gt;
+        &lt;p&gt;3万種類から検索&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- ... 他のカード --&gt;
+&lt;/div&gt;</code></pre>
+
+            <h3>CSS実装</h3>
+            <pre><code>.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card h3 {
+    padding: 1rem 1rem 0.5rem;
+    margin: 0;
+}
+
+.card p {
+    padding: 0 1rem 1rem;
+    color: #666;
+}</code></pre>
+
+            <h3>auto-fit と minmax() の魔法</h3>
+            <p><code>auto-fit</code>と<code>minmax()</code>を組み合わせると、レスポンシブ対応が自動化されます：</p>
+            <pre><code>/* 最小300px、最大1fr */
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+/* 意味：
+- カードは最低300px幅
+- 画面幅に応じて列数が自動調整
+- PC: 3〜4列
+- タブレット: 2列
+- スマホ: 1列
+*/</code></pre>
+
+            <h3>auto-fit vs auto-fill</h3>
+            <ul>
+                <li><strong>auto-fit</strong>：空いたスペースを埋める（カードが伸びる）</li>
+                <li><strong>auto-fill</strong>：空いたスペースはそのまま（カードは伸びない）</li>
+            </ul>
+
+            <h2>実践例2：ページ全体のレイアウト</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>Holy Grail Layout</h3>
+            <p>ヘッダー、サイドバー、メイン、フッターを持つ典型的なレイアウト：</p>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="page-layout"&gt;
+    &lt;header&gt;ヘッダー&lt;/header&gt;
+    &lt;aside&gt;サイドバー&lt;/aside&gt;
+    &lt;main&gt;メインコンテンツ&lt;/main&gt;
+    &lt;footer&gt;フッター&lt;/footer&gt;
+&lt;/div&gt;
+
+&lt;!-- CSS --&gt;
+.page-layout {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    gap: 1rem;
+}
+
+header {
+    grid-area: header;
+    background: #1e40af;
+    color: white;
+    padding: 1rem;
+}
+
+aside {
+    grid-area: sidebar;
+    background: #f3f4f6;
+    padding: 1rem;
+}
+
+main {
+    grid-area: main;
+    padding: 1rem;
+}
+
+footer {
+    grid-area: footer;
+    background: #374151;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .page-layout {
+        grid-template-areas:
+            "header"
+            "main"
+            "sidebar"
+            "footer";
+        grid-template-columns: 1fr;
+    }
+}</code></pre>
+
+            <h3>grid-template-areas の利点</h3>
+            <ul>
+                <li><strong>視覚的に分かりやすい</strong>：レイアウトがASCIIアートで見える</li>
+                <li><strong>名前で管理</strong>：数値ではなく名前で配置</li>
+                <li><strong>レスポンシブが簡単</strong>：areas を書き換えるだけ</li>
+            </ul>
+
+            <h2>実践例3：フォームレイアウト</h2>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;form class="form-grid"&gt;
+    &lt;label for="name"&gt;名前&lt;/label&gt;
+    &lt;input type="text" id="name" /&gt;
+
+    &lt;label for="email"&gt;メールアドレス&lt;/label&gt;
+    &lt;input type="email" id="email" /&gt;
+
+    &lt;label for="message"&gt;メッセージ&lt;/label&gt;
+    &lt;textarea id="message" rows="5"&gt;&lt;/textarea&gt;
+
+    &lt;div&gt;&lt;/div&gt; &lt;!-- 空のdiv（ラベル列を埋めるため） --&gt;
+    &lt;button type="submit"&gt;送信&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;!-- CSS --&gt;
+.form-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.form-grid label {
+    align-self: center;
+    font-weight: bold;
+}
+
+.form-grid input,
+.form-grid textarea {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.form-grid button {
+    background: #2563eb;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* スマホではラベルを上に配置 */
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}</code></pre>
+
+            <h2>実践例4：ダッシュボード</h2>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="dashboard"&gt;
+    &lt;div class="widget large"&gt;大きいウィジェット&lt;/div&gt;
+    &lt;div class="widget"&gt;ウィジェット1&lt;/div&gt;
+    &lt;div class="widget"&gt;ウィジェット2&lt;/div&gt;
+    &lt;div class="widget"&gt;ウィジェット3&lt;/div&gt;
+    &lt;div class="widget tall"&gt;縦長ウィジェット&lt;/div&gt;
+    &lt;div class="widget"&gt;ウィジェット4&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- CSS --&gt;
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: 200px; /* 各行の高さ */
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.widget {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 大きいウィジェット：2列×2行 */
+.widget.large {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+/* 縦長ウィジェット：2行 */
+.widget.tall {
+    grid-row: span 2;
+}</code></pre>
+
+            <h3>grid-column と grid-row</h3>
+            <p>特定の要素だけサイズを変える：</p>
+            <pre><code>/* 2列分のスペースを占有 */
+grid-column: span 2;
+
+/* 2行分のスペースを占有 */
+grid-row: span 2;
+
+/* より明示的な書き方 */
+grid-column: 1 / 3;  /* 1列目から3列目の手前まで */
+grid-row: 2 / 4;     /* 2行目から4行目の手前まで */</code></pre>
+
+            <h2>よく使うCSSプロパティ一覧</h2>
+
+            <h3>コンテナ（親要素）</h3>
+            <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #f3f4f6;">
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">プロパティ</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">説明</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>display</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">Grid有効化</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>grid</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>grid-template-columns</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">列の定義</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>1fr 2fr 1fr</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>grid-template-rows</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">行の定義</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>auto 1fr auto</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>gap</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">要素間の隙間</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>1rem</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>grid-template-areas</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">エリア名で配置</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>"header header"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>アイテム（子要素）</h3>
+            <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #f3f4f6;">
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">プロパティ</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">説明</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>grid-column</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">列の占有範囲</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>span 2</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>grid-row</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">行の占有範囲</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>1 / 3</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>grid-area</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">エリア名を指定</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>header</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>justify-self</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">自身の水平位置</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>center</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>align-self</code></td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">自身の垂直位置</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;"><code>start</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>MechaToraでの実際の使用例</h2>
+
+            <h3>トップページのアプリ一覧</h3>
+            <pre><code>.app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+    .app-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 1rem;
+    }
+}</code></pre>
+
+            <h3>ブログ記事一覧</h3>
+            <pre><code>.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
+}
+
+.article-card {
+    display: grid;
+    grid-template-rows: 200px auto 1fr auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}</code></pre>
+
+            <h2>まとめ</h2>
+
+            <h3>CSS Gridを使うべき場面</h3>
+            <ul>
+                <li>✅ カード配置（3列、4列など）</li>
+                <li>✅ ページ全体のレイアウト（ヘッダー、サイドバー、メイン、フッター）</li>
+                <li>✅ ダッシュボード</li>
+                <li>✅ フォーム</li>
+                <li>✅ ギャラリー</li>
+            </ul>
+
+            <h3>Flexboxを使うべき場面</h3>
+            <ul>
+                <li>✅ ナビゲーションバー</li>
+                <li>✅ ボタングループ</li>
+                <li>✅ カード内の要素配置</li>
+                <li>✅ 単純な1方向配置</li>
+            </ul>
+
+            <h3>最初に覚えるべき3つのパターン</h3>
+            <ol>
+                <li><strong>均等3列グリッド</strong>：<code>grid-template-columns: repeat(3, 1fr)</code></li>
+                <li><strong>レスポンシブカード</strong>：<code>repeat(auto-fit, minmax(300px, 1fr))</code></li>
+                <li><strong>ページレイアウト</strong>：<code>grid-template-areas</code></li>
+            </ol>
+
+            <p>CSS Gridは最初は難しく感じるかもしれませんが、基本パターンを覚えてしまえば、あらゆるレイアウトが簡単に実現できます。MechaToraでは、全15個のツールでCSS Gridを活用し、レスポンシブ対応を効率化しています。</p>
+
+            <p>ぜひ、実際に手を動かして試してみてください！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="responsive-design-basics.html">レスポンシブデザイン実装の基本</a></li>
+                    <li><a href="pwa-implementation-guide.html">PWA実装の基礎</a></li>
+                    <li><a href="github-pages-guide.html">GitHub Pages完全ガイド</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

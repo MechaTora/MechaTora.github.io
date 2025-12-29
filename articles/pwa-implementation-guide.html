@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PWA（Progressive Web Apps）の実装方法を実践的に解説。Service Worker、manifest.json、キャッシュ戦略など、実際にMechaToraのツールをPWA化した経験をもとに、初心者でも分かる形で説明します。">
+    <meta name="keywords" content="PWA,Progressive Web Apps,Service Worker,manifest.json,オフライン対応,ホーム画面追加,キャッシュ戦略">
+    <title>PWA実装の基礎 - WebアプリをPWA化する手順 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "PWA実装の基礎 - WebアプリをPWA化する手順",
+        "description": "PWA（Progressive Web Apps）の実装方法を実践的に解説。Service Worker、manifest.json、キャッシュ戦略など、実際の経験をもとに初心者でも分かる形で説明します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-10-22",
+        "dateModified": "2025-10-22",
+        "image": "https://blog.mechatora.com/images/pwa-implementation-guide.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "PWA実装の基礎 - WebアプリをPWA化する手順",
+                "item": "https://blog.mechatora.com/articles/pwa-implementation-guide.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>PWA実装の基礎</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category tech">技術・開発</span>
+                <h1>PWA実装の基礎 - WebアプリをPWA化する手順</h1>
+                <div class="article-meta">
+                    <time datetime="2025-10-22">2025年10月22日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>PWA（Progressive Web Apps）は、Webアプリをネイティブアプリのように動作させる技術です。オフライン対応、ホーム画面への追加、プッシュ通知など、ユーザー体験を大幅に向上させることができます。</p>
+                <p>この記事では、実際にMechaToraのツール群をPWA化した経験をもとに、PWAの基礎から実装手順まで、初心者でも分かる形で解説します。Service Workerの基本、manifest.jsonの設定、キャッシュ戦略の選び方など、実践的な内容をお届けします。</p>
+            </div>
+
+            <h2>PWAとは何か</h2>
+
+            <h3>PWAの3つの柱</h3>
+            <p>PWAは以下の3つの特徴を持つWebアプリケーションです：</p>
+            <ul>
+                <li><strong>Progressive（プログレッシブ）</strong>：どんなブラウザでも基本機能が動作</li>
+                <li><strong>Responsive（レスポンシブ）</strong>：あらゆる画面サイズに対応</li>
+                <li><strong>Connectivity independent（接続に依存しない）</strong>：オフラインでも動作</li>
+            </ul>
+
+            <h3>ネイティブアプリとの違い</h3>
+            <p>私がPWA化を決めた理由は、以下のメリットがあったためです：</p>
+            <ul>
+                <li><strong>開発コストが低い</strong>：HTML/CSS/JavaScriptで開発可能</li>
+                <li><strong>配布が簡単</strong>：App Store/Google Play不要、URLだけで配布</li>
+                <li><strong>更新が即時反映</strong>：アプリ審査なし、即座に全ユーザーに配信</li>
+                <li><strong>クロスプラットフォーム</strong>：1つのコードでiOS/Android両対応</li>
+            </ul>
+
+            <p>MechaToraで運用している15個のツールは、全てPWA化することで、ユーザーがホーム画面に追加してネイティブアプリのように使えるようになりました。</p>
+
+            <h2>PWA実装の準備</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>必要な要素</h3>
+            <p>PWAには最低限、以下の3つが必要です：</p>
+            <ol>
+                <li><strong>HTTPS対応</strong>：Service Workerはセキュア接続でのみ動作</li>
+                <li><strong>manifest.json</strong>：アプリの情報を定義</li>
+                <li><strong>Service Worker</strong>：オフライン対応やキャッシュを制御</li>
+            </ol>
+
+            <h3>HTTPS化</h3>
+            <p>GitHub Pagesを使っている場合、自動的にHTTPS化されるため追加作業は不要です。私の場合も、mechatora.comはお名前.comで独自ドメインを取得し、GitHub PagesのカスタムドメインでHTTPS化が完了していました。</p>
+
+            <p>自前サーバーの場合は、Let's Encryptで無料のSSL証明書を取得できます：</p>
+            <pre><code># Ubuntu/Debian の場合
+sudo apt-get update
+sudo apt-get install certbot
+sudo certbot --nginx -d yourdomain.com</code></pre>
+
+            <h2>manifest.jsonの作成</h2>
+
+            <h3>基本的な設定</h3>
+            <p>manifest.jsonは、PWAのメタデータを定義するJSONファイルです。プロジェクトルートに作成します：</p>
+
+            <pre><code>{
+  "name": "MechaTora - 便利なWebツール",
+  "short_name": "MechaTora",
+  "description": "日常生活を便利にする実用的なWebアプリケーション",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}</code></pre>
+
+            <h3>各プロパティの説明</h3>
+            <ul>
+                <li><strong>name</strong>：アプリの正式名称（ホーム画面に表示される可能性がある）</li>
+                <li><strong>short_name</strong>：短縮名（ホーム画面に確実に表示される）</li>
+                <li><strong>start_url</strong>：アプリ起動時に開くURL</li>
+                <li><strong>display</strong>：表示モード（standalone, fullscreen, minimal-ui, browser）</li>
+                <li><strong>background_color</strong>：スプラッシュ画面の背景色</li>
+                <li><strong>theme_color</strong>：ステータスバーの色（Androidで反映）</li>
+                <li><strong>icons</strong>：アプリアイコン（192x192と512x512が推奨）</li>
+            </ul>
+
+            <h3>HTMLでの読み込み</h3>
+            <p>index.htmlの&lt;head&gt;内にmanifest.jsonを読み込みます：</p>
+            <pre><code>&lt;link rel="manifest" href="/manifest.json"&gt;
+&lt;meta name="theme-color" content="#2563eb"&gt;</code></pre>
+
+            <h3>アイコンの準備</h3>
+            <p>私が実際に使っているアイコン生成の流れ：</p>
+            <ol>
+                <li>512x512pxの元画像を作成（Canvaで作成）</li>
+                <li><a href="https://www.favicon-generator.org/" target="_blank" rel="noopener noreferrer">Favicon Generator</a>で各サイズを自動生成</li>
+                <li>192x192、512x512を/images/に配置</li>
+            </ol>
+
+            <h2>Service Workerの実装</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>Service Workerとは</h3>
+            <p>Service Workerは、ブラウザがバックグラウンドで実行するJavaScriptです。主な役割：</p>
+            <ul>
+                <li>ネットワークリクエストの傍受</li>
+                <li>キャッシュの管理</li>
+                <li>オフライン対応</li>
+                <li>プッシュ通知（今回は扱いません）</li>
+            </ul>
+
+            <h3>基本的なService Worker</h3>
+            <p>プロジェクトルートにsw.js（Service Worker）を作成します：</p>
+
+            <pre><code>const CACHE_NAME = 'mechatora-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/styles.css',
+  '/app.js',
+  '/images/icon-192.png',
+  '/images/icon-512.png'
+];
+
+// インストール時：キャッシュを作成
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('キャッシュを開きました');
+        return cache.addAll(urlsToCache);
+      })
+  );
+});
+
+// フェッチ時：キャッシュから返す
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // キャッシュにあればそれを返す
+        if (response) {
+          return response;
+        }
+        // なければネットワークから取得
+        return fetch(event.request);
+      })
+  );
+});
+
+// アクティベート時：古いキャッシュを削除
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});</code></pre>
+
+            <h3>Service Workerの登録</h3>
+            <p>メインのJavaScriptファイル（app.jsなど）でService Workerを登録します：</p>
+
+            <pre><code>// Service Worker に対応しているか確認
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker登録成功:', registration.scope);
+      })
+      .catch((error) => {
+        console.log('Service Worker登録失敗:', error);
+      });
+  });
+}</code></pre>
+
+            <h2>キャッシュ戦略</h2>
+
+            <h3>3つの基本戦略</h3>
+            <p>私がMechaToraのツールで使い分けている3つの戦略：</p>
+
+            <h4>1. Cache First（キャッシュ優先）</h4>
+            <p>キャッシュに存在すればそれを返し、なければネットワークから取得。静的ファイル（CSS、JS、画像）に最適。</p>
+            <pre><code>self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        return response || fetch(event.request);
+      })
+  );
+});</code></pre>
+
+            <h4>2. Network First（ネットワーク優先）</h4>
+            <p>まずネットワークから取得を試み、失敗したらキャッシュから返す。APIレスポンスなど、最新データが重要な場合に使用。</p>
+            <pre><code>self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetch(event.request)
+      .catch(() => {
+        return caches.match(event.request);
+      })
+  );
+});</code></pre>
+
+            <h4>3. Stale While Revalidate（キャッシュを返しつつ更新）</h4>
+            <p>キャッシュを即座に返しつつ、バックグラウンドで最新版を取得してキャッシュを更新。バランスが良い戦略。</p>
+            <pre><code>self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request).then((networkResponse) => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+        return cachedResponse || fetchPromise;
+      });
+    })
+  );
+});</code></pre>
+
+            <h3>実践的な使い分け</h3>
+            <p>MechaToraでの実際の使い分け例：</p>
+            <ul>
+                <li><strong>Cache First</strong>：styles.css, app.js, 画像ファイル</li>
+                <li><strong>Network First</strong>：気象庁API、楽天API（地震モニター、日本酒検索）</li>
+                <li><strong>Stale While Revalidate</strong>：index.html（ホーム画面）</li>
+            </ul>
+
+            <h2>実装時のトラブルシューティング</h2>
+
+            <h3>よくあるエラー1：Service Workerが登録されない</h3>
+            <p><strong>原因</strong>：HTTPSでない、またはパスが間違っている</p>
+            <p><strong>解決策</strong>：Chrome DevToolsのApplicationタブでエラーを確認</p>
+            <pre><code>// Console で確認
+navigator.serviceWorker.getRegistration()
+  .then(reg => console.log(reg));</code></pre>
+
+            <h3>よくあるエラー2：キャッシュが更新されない</h3>
+            <p><strong>原因</strong>：CACHE_NAMEを変更していない</p>
+            <p><strong>解決策</strong>：バージョン番号を上げる</p>
+            <pre><code>// 変更前
+const CACHE_NAME = 'mechatora-v1';
+
+// 変更後（ファイルを更新したら必ずバージョンアップ）
+const CACHE_NAME = 'mechatora-v2';</code></pre>
+
+            <h3>よくあるエラー3：manifest.jsonが読み込まれない</h3>
+            <p><strong>原因</strong>：JSONの構文エラー、またはMIMEタイプが間違っている</p>
+            <p><strong>解決策</strong>：<a href="https://manifest-validator.appspot.com/" target="_blank" rel="noopener noreferrer">Manifest Validator</a>で検証</p>
+
+            <h3>開発時の注意点</h3>
+            <p>開発中は、Chrome DevToolsの「Update on reload」をチェックすると、リロードの度にService Workerが更新されて便利です：</p>
+            <ol>
+                <li>Chrome DevToolsを開く（F12）</li>
+                <li>Applicationタブ → Service Workers</li>
+                <li>「Update on reload」にチェック</li>
+            </ol>
+
+            <h2>PWAの動作確認</h2>
+
+            <h3>Lighthouseで検証</h3>
+            <p>Chrome DevToolsのLighthouseタブでPWAスコアを確認できます：</p>
+            <ol>
+                <li>DevToolsを開く（F12）</li>
+                <li>Lighthouseタブを選択</li>
+                <li>「Progressive Web App」をチェック</li>
+                <li>「Analyze page load」をクリック</li>
+            </ol>
+
+            <p>私の場合、最初は78点でしたが、以下を改善して95点まで上がりました：</p>
+            <ul>
+                <li>manifest.jsonにdescriptionを追加</li>
+                <li>アイコンを192x192と512x512の両方用意</li>
+                <li>theme-colorをmetaタグにも追加</li>
+                <li>offline時の404ページを用意</li>
+            </ul>
+
+            <h3>実機でのテスト</h3>
+            <p><strong>Android（Chrome）：</strong></p>
+            <ol>
+                <li>PWAサイトにアクセス</li>
+                <li>メニュー（︙）→「ホーム画面に追加」</li>
+                <li>追加されたアイコンから起動</li>
+            </ol>
+
+            <p><strong>iOS（Safari）：</strong></p>
+            <ol>
+                <li>PWAサイトにアクセス</li>
+                <li>共有ボタン →「ホーム画面に追加」</li>
+                <li>追加されたアイコンから起動</li>
+            </ol>
+
+            <p>注意：iOSはService Workerの対応が限定的で、一部機能（プッシュ通知など）が使えません。</p>
+
+            <h2>実際の運用で学んだこと</h2>
+
+            <h3>キャッシュサイズの管理</h3>
+            <p>初期は全ファイルをキャッシュしていましたが、容量が肥大化したため、必要最低限に絞りました：</p>
+            <pre><code>// 改善前：全画像をキャッシュ（10MB超え）
+const urlsToCache = [
+  '/',
+  '/images/photo1.jpg',
+  '/images/photo2.jpg',
+  // ... 100枚以上
+];
+
+// 改善後：アイコンとロゴのみ（500KB以下）
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/styles.css',
+  '/app.js',
+  '/images/icon-192.png',
+  '/images/icon-512.png',
+  '/images/logo.png'
+];</code></pre>
+
+            <h3>キャッシュの有効期限</h3>
+            <p>7日以上経過したキャッシュは削除するようにしました：</p>
+            <pre><code>const MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7日間
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          return caches.open(cacheName).then((cache) => {
+            return cache.keys().then((requests) => {
+              return Promise.all(
+                requests.map((request) => {
+                  return cache.match(request).then((response) => {
+                    if (response) {
+                      const date = new Date(response.headers.get('date'));
+                      if (Date.now() - date.getTime() > MAX_AGE) {
+                        return cache.delete(request);
+                      }
+                    }
+                  });
+                })
+              );
+            });
+          });
+        })
+      );
+    })
+  );
+});</code></pre>
+
+            <h3>ユーザーへの通知</h3>
+            <p>新しいバージョンが利用可能になったら、ユーザーに通知を出すようにしました：</p>
+            <pre><code>// app.js
+let refreshing = false;
+
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+  if (refreshing) return;
+  refreshing = true;
+  window.location.reload();
+});
+
+navigator.serviceWorker.register('/sw.js').then((reg) => {
+  reg.addEventListener('updatefound', () => {
+    const newWorker = reg.installing;
+    newWorker.addEventListener('statechange', () => {
+      if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+        // 新バージョン検出
+        if (confirm('新しいバージョンが利用可能です。更新しますか？')) {
+          newWorker.postMessage({ type: 'SKIP_WAITING' });
+        }
+      }
+    });
+  });
+});
+
+// sw.js
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});</code></pre>
+
+            <h2>まとめ</h2>
+
+            <p>PWA化により、MechaToraのツール群は以下の改善を実現しました：</p>
+            <ul>
+                <li><strong>オフライン対応</strong>：ネット環境がなくても基本機能が使える</li>
+                <li><strong>高速化</strong>：キャッシュにより初回以降の読み込みが爆速</li>
+                <li><strong>UX向上</strong>：ホーム画面からワンタップで起動</li>
+                <li><strong>インストール不要</strong>：App Storeを経由せず配布可能</li>
+            </ul>
+
+            <p>実装の手順をまとめると：</p>
+            <ol>
+                <li>HTTPS化（GitHub Pagesなら自動）</li>
+                <li>manifest.json作成（名前、アイコン、テーマカラー）</li>
+                <li>Service Worker実装（install, fetch, activate）</li>
+                <li>キャッシュ戦略の選択（Cache First/Network First/Stale While Revalidate）</li>
+                <li>Lighthouseで検証（90点以上を目指す）</li>
+            </ol>
+
+            <p>最初は難しく感じるかもしれませんが、基本的なパターンは決まっているため、一度理解すれば様々なプロジェクトに応用できます。特に、個人開発のツール系Webアプリとの相性は抜群です。</p>
+
+            <p>GitHub Pagesなら完全無料でPWAを公開できるため、ぜひチャレンジしてみてください！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="responsive-design-basics.html">レスポンシブデザイン実装の基本</a></li>
+                    <li><a href="github-pages-guide.html">GitHub Pages完全ガイド - 無料でWebサイトを公開する方法</a></li>
+                    <li><a href="free-webapp-guide.html">完全無料でWebアプリを作る方法 - 0円運用の実践ガイド</a></li>
+                    <li><a href="earthquake-monitor-tech.html">地震モニターアプリの開発 - リアルタイム通知の実装</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

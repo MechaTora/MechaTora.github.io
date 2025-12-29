@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="生成AIを使ったデータベース構築の実践ガイド。ChatGPTとClaudeでデータ収集・整形・検証を自動化し、開発時間を10分の1に短縮した方法を詳しく解説します。">
+    <meta name="keywords" content="AI,ChatGPT,Claude,データベース,自動化,スクレイピング,データ整形,プロンプトエンジニアリング">
+    <title>AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ | MechaToraのブログ</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="canonical" href="https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html">
+    <link rel="alternate" type="application/rss+xml" title="MechaToraのブログ" href="https://blog.mechatora.com/feed.xml">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ",
+        "description": "生成AIを使ったデータベース構築の実践ガイド。ChatGPTとClaudeでデータ収集・整形・検証を自動化し、開発時間を10分の1に短縮した方法を詳しく解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-12-28",
+        "dateModified": "2025-12-28"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ",
+                "item": "https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2025-12-28">2025年12月28日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年12月28日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ</h1>
+
+                    <!-- 日付表示 -->
+                    <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+                        <span style="margin-right: 1rem;">📅 公開日: 2025年12月28日</span>
+                        <span>🔄 最終更新: 2025年12月28日</span>
+                    </div>
+
+                    <!-- ヒーロー画像 -->
+                    <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+                        <img src="../images/tech-default.svg" alt="AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ" style="width: 100%; height: auto; display: block;">
+                    </div>
+
+                    <!-- 本文 -->
+                    <h2>はじめに：AIがデータベース構築を変えた</h2>
+<p>「3,500件のデータを手作業で整形する…想像しただけで気が遠くなる」</p>
+<p>日本酒データベースサイトを開発した際、最初はそう思っていました。しかし、ChatGPTとClaudeを活用することで、<strong>作業時間を10分の1以下</strong>に短縮できました。</p>
+<p>この記事では、生成AIを使ったデータベース構築の実践ノウハウを、実際のプロジェクトを基に詳しく解説します。</p>
+<h2>AIでできること・できないこと</h2>
+<h3>AIが得意なこと</h3>
+<ol>
+<li>
+<p><strong>データの整形・変換</strong></p>
+<ul>
+<li>CSV → JSON変換</li>
+<li>表形式データの構造化</li>
+<li>不揃いなデータの正規化</li>
+</ul>
+</li>
+<li>
+<p><strong>スクリプト生成</strong></p>
+<ul>
+<li>Pythonスクレイピングコード</li>
+<li>データクレンジングスクリプト</li>
+<li>バリデーションコード</li>
+</ul>
+</li>
+<li>
+<p><strong>パターン認識</strong></p>
+<ul>
+<li>データの異常値検出</li>
+<li>重複データの発見</li>
+<li>カテゴリ分類</li>
+</ul>
+</li>
+</ol>
+<h3>AIが苦手なこと</h3>
+<ol>
+<li>
+<p><strong>最新情報の取得</strong></p>
+<ul>
+<li>リアルタイムデータの取得</li>
+<li>Webサイトの最新情報</li>
+</ul>
+</li>
+<li>
+<p><strong>大量データの一括処理</strong></p>
+<ul>
+<li>10,000件以上のデータ</li>
+<li>複雑な依存関係のあるデータ</li>
+</ul>
+</li>
+<li>
+<p><strong>判断を伴う作業</strong></p>
+<ul>
+<li>データの信頼性評価</li>
+<li>ビジネスロジックの決定</li>
+</ul>
+</li>
+</ol>
+<h2>実践1: データ収集の自動化</h2>
+<h3>ChatGPTでスクレイピングコード生成</h3>
+<p><strong>プロンプト例</strong>:</p>
+<pre><code>Pythonで以下のWebサイトから日本酒の情報を取得するスクレイピングコードを書いてください：
+
+URL: [対象サイトのURL]
+取得したい情報:
+- 銘柄名
+- 酒蔵名
+- 都道府県
+- アルコール度数
+
+BeautifulSoupを使用し、エラーハンドリングも含めてください。
+</code></pre>
+<p><strong>生成されたコード</strong>:</p>
+<pre><code class="language-python">import requests
+from bs4 import BeautifulSoup
+import json
+import time
+
+def scrape_sake_data(url):
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        sake_list = []
+
+        # テーブルから情報を抽出
+        table = soup.find('table', class_='sake-table')
+        if not table:
+            print(f&quot;テーブルが見つかりません: {url}&quot;)
+            return []
+
+        rows = table.find_all('tr')[1:]  # ヘッダー行をスキップ
+
+        for row in rows:
+            cells = row.find_all('td')
+            if len(cells) &gt;= 4:
+                sake = {
+                    '銘柄名': cells[0].text.strip(),
+                    '酒蔵名': cells[1].text.strip(),
+                    '都道府県': cells[2].text.strip(),
+                    'アルコール度数': cells[3].text.strip()
+                }
+                sake_list.append(sake)
+
+        return sake_list
+
+    except requests.exceptions.RequestException as e:
+        print(f&quot;エラー: {url} - {e}&quot;)
+        return []
+    except Exception as e:
+        print(f&quot;予期しないエラー: {e}&quot;)
+        return []
+
+# 実行例
+urls = [
+    'https://example.com/sake/hokkaido',
+    'https://example.com/sake/aomori',
+    # ... 47都道府県分
+]
+
+all_sake = []
+for url in urls:
+    print(f&quot;取得中: {url}&quot;)
+    data = scrape_sake_data(url)
+    all_sake.extend(data)
+    time.sleep(1)  # サーバー負荷軽減
+
+# JSONとして保存
+with open('sake_data.json', 'w', encoding='utf-8') as f:
+    json.dump(all_sake, ensure_ascii=False, indent=2, f)
+
+print(f&quot;完了: {len(all_sake)}件のデータを取得&quot;)
+</code></pre>
+<p><strong>このコードの優れた点</strong>:</p>
+<ul>
+<li>エラーハンドリング完備</li>
+<li>User-Agent設定（ブロック対策）</li>
+<li>サーバー負荷軽減（sleep）</li>
+<li>日本語対応（ensure_ascii=False）</li>
+</ul>
+<h3>Claudeでデータ検証コード生成</h3>
+<p>スクレイピングしたデータの品質チェックもAIに任せます。</p>
+<p><strong>プロンプト例</strong>:</p>
+<pre><code>以下のJSON形式の日本酒データに対して、データ品質をチェックするPythonコードを書いてください：
+
+チェック項目:
+1. 必須フィールド（銘柄名、酒蔵名）が空でないか
+2. アルコール度数が数値として妥当か（5-20度）
+3. 重複データがないか
+4. 都道府県名が正しいか（47都道府県）
+
+問題があるデータはエラーレポートとして出力してください。
+</code></pre>
+<p><strong>生成されたコード</strong>:</p>
+<pre><code class="language-python">import json
+from typing import List, Dict
+
+VALID_PREFECTURES = [
+    '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
+    # ... 全47都道府県
+]
+
+def validate_sake_data(data: List[Dict]) -&gt; Dict:
+    &quot;&quot;&quot;日本酒データを検証する&quot;&quot;&quot;
+    errors = {
+        'missing_fields': [],
+        'invalid_alcohol': [],
+        'duplicates': [],
+        'invalid_prefecture': []
+    }
+
+    seen = set()
+
+    for i, sake in enumerate(data):
+        # 必須フィールドチェック
+        if not sake.get('銘柄名') or not sake.get('酒蔵名'):
+            errors['missing_fields'].append({
+                'index': i,
+                'data': sake
+            })
+
+        # アルコール度数チェック
+        alcohol = sake.get('アルコール度数', '')
+        try:
+            alcohol_num = float(alcohol.replace('度', '').replace('%', ''))
+            if not (5 &lt;= alcohol_num &lt;= 20):
+                errors['invalid_alcohol'].append({
+                    'index': i,
+                    'value': alcohol,
+                    'data': sake
+                })
+        except (ValueError, AttributeError):
+            errors['invalid_alcohol'].append({
+                'index': i,
+                'value': alcohol,
+                'data': sake
+            })
+
+        # 重複チェック
+        key = f&quot;{sake.get('銘柄名')}_{sake.get('酒蔵名')}&quot;
+        if key in seen:
+            errors['duplicates'].append({
+                'index': i,
+                'key': key,
+                'data': sake
+            })
+        seen.add(key)
+
+        # 都道府県チェック
+        prefecture = sake.get('都道府県')
+        if prefecture not in VALID_PREFECTURES:
+            errors['invalid_prefecture'].append({
+                'index': i,
+                'value': prefecture,
+                'data': sake
+            })
+
+    return errors
+
+# 実行例
+with open('sake_data.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+errors = validate_sake_data(data)
+
+# エラーレポート出力
+print(&quot;=== データ検証レポート ===&quot;)
+print(f&quot;総データ数: {len(data)}件&quot;)
+print(f&quot;必須フィールド欠損: {len(errors['missing_fields'])}件&quot;)
+print(f&quot;不正なアルコール度数: {len(errors['invalid_alcohol'])}件&quot;)
+print(f&quot;重複データ: {len(errors['duplicates'])}件&quot;)
+print(f&quot;不正な都道府県名: {len(errors['invalid_prefecture'])}件&quot;)
+
+# 詳細をファイルに出力
+with open('error_report.json', 'w', encoding='utf-8') as f:
+    json.dump(errors, f, ensure_ascii=False, indent=2)
+</code></pre>
+<h2>実践2: データ整形の自動化</h2>
+<h3>不揃いなデータの正規化</h3>
+<p>実際にスクレイピングしたデータは、こんな感じでバラバラでした：</p>
+<pre><code class="language-json">[
+  {&quot;銘柄&quot;: &quot;国士無双&quot;, &quot;度数&quot;: &quot;16度&quot;},
+  {&quot;name&quot;: &quot;田酒&quot;, &quot;alcohol&quot;: &quot;16%&quot;},
+  {&quot;銘柄名&quot;: &quot;八海山&quot;, &quot;アルコール&quot;: &quot;15.5&quot;}
+]
+</code></pre>
+<p><strong>ChatGPTへのプロンプト</strong>:</p>
+<pre><code>以下のJSONデータを統一フォーマットに変換してください：
+
+統一フォーマット:
+{
+  &quot;銘柄名&quot;: &quot;string&quot;,
+  &quot;アルコール度数&quot;: &quot;数値（単位なし）&quot;
+}
+
+入力データ:
+[JSONデータ]
+
+変換ルール:
+- キー名を統一
+- 数値から単位（度、%）を削除
+- 数値型に変換
+</code></pre>
+<p><strong>AIが生成した変換コード</strong>:</p>
+<pre><code class="language-python">def normalize_sake_data(raw_data):
+    &quot;&quot;&quot;不揃いなデータを統一フォーマットに変換&quot;&quot;&quot;
+    normalized = []
+
+    for item in raw_data:
+        sake = {}
+
+        # 銘柄名の正規化
+        sake['銘柄名'] = (
+            item.get('銘柄名') or
+            item.get('銘柄') or
+            item.get('name') or
+            ''
+        )
+
+        # アルコール度数の正規化
+        alcohol_raw = (
+            item.get('アルコール度数') or
+            item.get('度数') or
+            item.get('alcohol') or
+            item.get('アルコール') or
+            '0'
+        )
+
+        # 数値抽出
+        alcohol_clean = alcohol_raw.replace('度', '').replace('%', '').strip()
+        try:
+            sake['アルコール度数'] = float(alcohol_clean)
+        except ValueError:
+            sake['アルコール度数'] = None
+
+        normalized.append(sake)
+
+    return normalized
+</code></pre>
+<p><strong>Before</strong>（3,500件を手作業で整形）: 推定50時間
+<strong>After</strong>（AIで自動変換）: 30分</p>
+<p><strong>時間短縮率: 99%</strong></p>
+<h2>実践3: プロンプトエンジニアリングのコツ</h2>
+<h3>コツ1: 具体例を示す</h3>
+<p><strong>❌ 悪い例</strong>:</p>
+<pre><code>データを整形してください
+</code></pre>
+<p><strong>✅ 良い例</strong>:</p>
+<pre><code>以下のデータを整形してください：
+
+入力例:
+{&quot;name&quot;: &quot;国士無双&quot;, &quot;deg&quot;: &quot;16度&quot;}
+
+期待される出力:
+{&quot;銘柄名&quot;: &quot;国士無双&quot;, &quot;アルコール度数&quot;: 16}
+
+変換ルール:
+- nameキーを銘柄名に変更
+- degキーをアルコール度数に変更し、数値のみ抽出
+</code></pre>
+<h3>コツ2: エラーハンドリングを指示</h3>
+<p><strong>プロンプト例</strong>:</p>
+<pre><code>スクレイピングコードを生成してください。
+
+必須要件:
+- try-exceptでエラーハンドリング
+- タイムアウト設定（10秒）
+- 404エラー時はスキップして次へ
+- 最大リトライ回数: 3回
+</code></pre>
+<h3>コツ3: 出力形式を明示</h3>
+<p><strong>プロンプト例</strong>:</p>
+<pre><code>以下のデータをJSON形式で出力してください。
+
+出力フォーマット:
+{
+  &quot;data&quot;: [...],
+  &quot;summary&quot;: {
+    &quot;total&quot;: 数値,
+    &quot;valid&quot;: 数値,
+    &quot;errors&quot;: 数値
+  }
+}
+</code></pre>
+<h2>実践4: ChatGPT vs Claude の使い分け</h2>
+<h3>ChatGPT 4が得意なこと</h3>
+<ol>
+<li>
+<p><strong>コード生成</strong></p>
+<ul>
+<li>Pythonスクリプト</li>
+<li>複雑なロジック</li>
+<li>ライブラリの使い方</li>
+</ul>
+</li>
+<li>
+<p><strong>データ変換</strong></p>
+<ul>
+<li>フォーマット変換</li>
+<li>大量データの処理提案</li>
+</ul>
+</li>
+</ol>
+<h3>Claudeが得意なこと</h3>
+<ol>
+<li>
+<p><strong>長文の理解</strong></p>
+<ul>
+<li>複雑な要件の整理</li>
+<li>仕様書の作成</li>
+</ul>
+</li>
+<li>
+<p><strong>データ分析</strong></p>
+<ul>
+<li>異常値の発見</li>
+<li>パターンの抽出</li>
+</ul>
+</li>
+<li>
+<p><strong>コードレビュー</strong></p>
+<ul>
+<li>バグの指摘</li>
+<li>改善提案</li>
+</ul>
+</li>
+</ol>
+<h3>実際の使い分け</h3>
+<p><strong>私の開発フロー</strong>:</p>
+<ol>
+<li><strong>ChatGPT</strong>: 初期コード生成</li>
+<li><strong>Claude</strong>: コードレビュー</li>
+<li><strong>ChatGPT</strong>: 修正コード生成</li>
+<li><strong>Claude</strong>: 最終チェック</li>
+</ol>
+<h2>実践5: AI活用の落とし穴と対策</h2>
+<h3>落とし穴1: AIの出力を盲信する</h3>
+<p><strong>問題</strong>: 生成されたコードにバグがある</p>
+<p><strong>対策</strong>:</p>
+<ul>
+<li>必ずテストデータで動作確認</li>
+<li>エッジケースを試す</li>
+<li>段階的に本番データで検証</li>
+</ul>
+<h3>落とし穴2: プロンプトが曖昧</h3>
+<p><strong>問題</strong>: 期待と違う出力が返ってくる</p>
+<p><strong>対策</strong>:</p>
+<ul>
+<li>具体例を3つ以上示す</li>
+<li>期待する出力形式を明示</li>
+<li>制約条件を箇条書きで列挙</li>
+</ul>
+<h3>落とし穴3: AI依存しすぎる</h3>
+<p><strong>問題</strong>: 基本的なコーディング力が低下</p>
+<p><strong>対策</strong>:</p>
+<ul>
+<li>生成されたコードを理解する</li>
+<li>自分でも書けるレベルを維持</li>
+<li>AIは「アシスタント」として使う</li>
+</ul>
+<h2>まとめ: AIで10倍速の開発を</h2>
+<p>生成AIを活用することで、データベース構築の開発時間を劇的に短縮できました：</p>
+<p><strong>従来の開発時間（推定）</strong>:</p>
+<ul>
+<li>データ収集: 20時間</li>
+<li>データ整形: 50時間</li>
+<li>検証コード作成: 10時間</li>
+<li><strong>合計: 80時間</strong></li>
+</ul>
+<p><strong>AI活用後</strong>:</p>
+<ul>
+<li>データ収集: 2時間</li>
+<li>データ整形: 30分</li>
+<li>検証コード作成: 1時間</li>
+<li><strong>合計: 3.5時間</strong></li>
+</ul>
+<p><strong>短縮率: 95%</strong></p>
+<p>ただし、AIは万能ではありません。<strong>人間の判断とAIの効率を組み合わせる</strong>ことが、最も効果的な開発スタイルです。</p>
+<h2>関連記事</h2>
+<ul>
+<li><a href="/articles/sake-database-development-story.html">日本酒データベースサイト開発秘話</a></li>
+<li><a href="/articles/claude-code-experience.html">Claude Code使用レビュー</a></li>
+<li><a href="/articles/cook-suggest-development.html">CookSuggestアプリ開発秘話</a></li>
+</ul>
+<p>AI時代の個人開発、楽しんでいきましょう！</p>
+
+
+                    <!-- SNSシェアボタン -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                        <p style="font-weight: 500; margin-bottom: 1rem; color: var(--text-primary);">この記事をシェアする</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="https://twitter.com/intent/tweet?url=https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html&text=AI%E6%B4%BB%E7%94%A8%E3%81%A7%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%A7%8B%E7%AF%89%EF%BD%9CChatGPT%2FClaude%E6%B4%BB%E7%94%A8%E8%A1%93%E3%81%A8%E5%AE%9F%E8%B7%B5%E3%83%8E%E3%82%A6%E3%83%8F%E3%82%A6" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1DA1F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                𝕏でシェア
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1877F2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                Facebookでシェア
+                            </a>
+                            <a href="https://b.hatena.ne.jp/entry/https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: #00A4DE; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                                はてブに追加
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 著者情報 -->
+                    <div style="margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                        <h3 style="margin: 0 0 1rem 0; font-size: 1.25rem;">✍️ この記事を書いた人</h3>
+                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                            <div style="font-size: 4rem;">🐱</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 1.125rem; margin: 0 0 0.5rem 0;">MechaTora</p>
+                                <p style="margin: 0; opacity: 0.95; line-height: 1.6;">
+                                    社会保険労務士 × Web開発エンジニア × データサイエンティスト。<br>
+                                    人事労務の専門知識とプログラミングスキルを活かして、実務に役立つツールやコンテンツを開発・発信しています。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

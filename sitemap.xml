@@ -1,431 +1,365 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- メインサイト -->
-    <url>
-        <loc>https://mechatora.com/</loc>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
-    </url>
-    
-    <!-- 主要アプリページ -->
-    <url>
-        <loc>https://mechatora.com/earthquake-monitor/</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
-    </url>
-    
-    <url>
-        <loc>https://mechatora.com/cook-suggest/</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
-    </url>
-    
-    <!-- アプリページ -->
-    <url>
-        <loc>https://mechatora.com/beer-quiz/</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
-    </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
+    <!-- メインページ -->
     <url>
-        <loc>https://mechatora.com/unreasonable-othello/</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/x-post-generator/</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-10-22T12:00:00+09:00</lastmod>
-    </url>
-
-    <!-- ニュースサイト（自動更新） -->
-    <url>
-        <loc>https://mechatora.com/social-insurance-news2/</loc>
+        <loc>https://blog.mechatora.com/</loc>
+        <lastmod>2025-12-29</lastmod>
         <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2024-09-20T10:00:00+09:00</lastmod>
+        <priority>1.0</priority>
     </url>
-    
-    <!-- 重要ページ -->
+
+    <!-- 記事一覧 -->
     <url>
-        <loc>https://mechatora.com/about.html</loc>
+        <loc>https://blog.mechatora.com/articles.html</loc>
+        <lastmod>2025-12-29</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- 運営者情報 -->
+    <url>
+        <loc>https://blog.mechatora.com/about.html</loc>
+        <lastmod>2025-12-29</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
+        <priority>0.8</priority>
     </url>
-    
+
+    <!-- お問い合わせ -->
     <url>
-        <loc>https://mechatora.com/blog.html</loc>
-        <changefreq>weekly</changefreq>
+        <loc>https://blog.mechatora.com/contact.html</loc>
+        <lastmod>2025-12-29</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.7</priority>
-        <lastmod>2025-11-14T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- プライバシーポリシー -->
     <url>
-        <loc>https://mechatora.com/hub.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-11-01T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/qualification-calendar.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-11-01T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/commute-flow-map.html</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-        <lastmod>2025-11-01T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/japan-map/</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-        <lastmod>2025-11-01T12:00:00+09:00</lastmod>
-    </url>
-
-    <!-- ブログ記事 -->
-    <!--
-    <url>
-        <loc>https://mechatora.com/blog-adsense-rejected.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-11-02T12:00:00+09:00</lastmod>
-    </url>
-    -->
-
-    <url>
-        <loc>https://mechatora.com/blog-cook-suggest-development.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-10-25T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-earthquake-monitor-tech.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-10-20T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-r-tidyverse-intro.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-09-28T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-domain-registration.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-09-01T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-30s-programming.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-08-05T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-free-webapp-guide.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-07-12T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-sharoushi-pass.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2024-11-15T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-claude-code-experience.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2024-11-01T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-hr-to-developer.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2024-10-28T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-github-pages-guide.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-11-14T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/blog-qualification-calendar-dev.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        <lastmod>2025-11-14T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/privacy.html</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-        <lastmod>2025-10-29T12:00:00+09:00</lastmod>
-    </url>
-
-    <!-- サブページ -->
-    <url>
-        <loc>https://mechatora.com/earthquake-monitor/contact.html</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.4</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/earthquake-monitor/checklist.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
-    </url>
-    
-    <!-- 追加ページ -->
-    <url>
-        <loc>https://mechatora.com/contact.html</loc>
+        <loc>https://blog.mechatora.com/privacy.html</loc>
+        <lastmod>2025-12-29</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
     </url>
-    
+
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/qualification-calendar.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-29-bookkeeping-basics-for-engineers.html</loc>
+        <lastmod>2025-12-29</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2024-09-20T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/privacy.html</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-        <lastmod>2025-10-29T12:00:00+09:00</lastmod>
-    </url>
-
-    <!-- アプリガイドページ -->
-    <url>
-        <loc>https://mechatora.com/cook-suggest/guide.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html</loc>
+        <lastmod>2025-12-28</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2025-10-29T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/earthquake-monitor/disaster-prep.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html</loc>
+        <lastmod>2025-12-27</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2025-10-29T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/beginner-guide.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-        <lastmod>2025-10-29T12:00:00+09:00</lastmod>
-    </url>
-
-    <!-- R言語・Tidyverseガイド（メインページ） -->
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.95</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <!-- Tidyverse基礎編（第1-9章） -->
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter1-tidyverse-overview.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter2-dplyr-data-manipulation.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter3-ggplot2-visualization.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter4-tidyr-data-reshaping.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter5-stringr-text-processing.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter6-forcats-purrr-advanced.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter7-lubridate-datetime.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter8-readr-data-import.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter9-tibble-modern-dataframe.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <!-- 統計・可視化応用編（第10-15章） -->
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter10-statistics-modeling.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter11-machine-learning.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter12-time-series.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-26-sharoushi-study-method-escape-memorization.html</loc>
+        <lastmod>2025-12-26</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter13-advanced-ggplot2.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html</loc>
+        <lastmod>2025-12-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter14-interactive-visualization.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-24-hr-perspective-portfolio-guide.html</loc>
+        <lastmod>2025-12-24</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter15-advanced-data-viz.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-23-life-transformation-story.html</loc>
+        <lastmod>2025-12-23</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
     </url>
 
-    <!-- Tidymodels機械学習編（第16-20章） -->
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter16-resampling-rsample.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter17-hyperparameter-tuning-simple.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter18-model-evaluation-yardstick.html</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
-    </url>
-
-    <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter19-prediction-interpretation.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html</loc>
+        <lastmod>2025-12-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter20-ensemble-learning-enhanced.html</loc>
+        <loc>https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html</loc>
+        <lastmod>2025-12-21</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+        <priority>0.8</priority>
     </url>
 
-    <!-- 高度な応用編（第21-24章） -->
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter21-time-series-modeltime.html</loc>
+        <loc>https://blog.mechatora.com/articles/continuous-learning-engineer.html</loc>
+        <lastmod>2025-11-05</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+        <priority>0.8</priority>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter22-text-analysis-tidytext.html</loc>
+        <loc>https://blog.mechatora.com/articles/web-performance-optimization.html</loc>
+        <lastmod>2025-11-04</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+        <priority>0.8</priority>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter23-deep-learning-torch.html</loc>
+        <loc>https://blog.mechatora.com/articles/git-github-workflow.html</loc>
+        <lastmod>2025-11-03</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.85</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+        <priority>0.8</priority>
     </url>
 
+    <!-- 記事 -->
     <url>
-        <loc>https://mechatora.com/tidy-data-science/chapter24-practical-projects-enhanced.html</loc>
+        <loc>https://blog.mechatora.com/articles/multiple-skills-strategy.html</loc>
+        <lastmod>2025-11-02</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-        <lastmod>2024-09-30T12:00:00+09:00</lastmod>
+        <priority>0.8</priority>
     </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/css-grid-layout-guide.html</loc>
+        <lastmod>2025-11-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/data-cleaning-tidyverse.html</loc>
+        <lastmod>2025-10-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/portfolio-building-guide.html</loc>
+        <lastmod>2025-10-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/lottery-map-development.html</loc>
+        <lastmod>2025-10-29</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/web-security-basics.html</loc>
+        <lastmod>2025-10-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/tech-books-selection-guide.html</loc>
+        <lastmod>2025-10-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/javascript-error-handling.html</loc>
+        <lastmod>2025-10-26</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/ggplot2-data-visualization.html</loc>
+        <lastmod>2025-10-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/sharoushi-skill-utilization.html</loc>
+        <lastmod>2025-10-24</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/api-rate-limiting-practices.html</loc>
+        <lastmod>2025-10-23</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/pwa-implementation-guide.html</loc>
+        <lastmod>2025-10-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/github-pages-guide.html</loc>
+        <lastmod>2025-01-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/sample-article.html</loc>
+        <lastmod>2025-01-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/r-tidyverse-intro.html</loc>
+        <lastmod>2025-01-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/cook-suggest-development.html</loc>
+        <lastmod>2025-01-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/qualification-calendar-dev.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/responsive-design-basics.html</loc>
+        <lastmod>2025-01-09</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/earthquake-monitor-tech.html</loc>
+        <lastmod>2025-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/github-actions-deploy.html</loc>
+        <lastmod>2025-01-07</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/x-post-generator-dev.html</loc>
+        <lastmod>2025-01-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/time-management-selfstudy.html</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/hr-to-developer.html</loc>
+        <lastmod>2024-12-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/domain-registration.html</loc>
+        <lastmod>2024-12-20</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/claude-code-experience.html</loc>
+        <lastmod>2024-12-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/free-webapp-guide.html</loc>
+        <lastmod>2024-12-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/30s-programming.html</loc>
+        <lastmod>2024-11-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 記事 -->
+    <url>
+        <loc>https://blog.mechatora.com/articles/sharoushi-pass.html</loc>
+        <lastmod>2024-11-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>

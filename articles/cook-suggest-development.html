@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CookSuggestアプリの開発秘話。食材から料理を提案するWebアプリの設計思想、API連携の実装、ユーザー体験向上のための工夫を詳しく解説します。">
+    <meta name="keywords" content="CookSuggest,料理提案,レシピアプリ,Web開発,JavaScript,API連携,UXデザイン">
+    <title>CookSuggestアプリ開発秘話｜料理提案ツールの技術と工夫 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "CookSuggestアプリ開発秘話｜料理提案ツールの技術と工夫",
+        "description": "CookSuggestアプリの開発秘話。食材から料理を提案するWebアプリの設計思想、API連携の実装、ユーザー体験向上のための工夫を詳しく解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-01-12",
+        "dateModified": "2025-01-12"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "CookSuggestアプリ開発秘話｜料理提案ツールの技術と工夫",
+                "item": "https://blog.mechatora.com/articles/cook-suggest-development.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>CookSuggestアプリ開発秘話</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2025-01-12">2025年1月12日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年1月12日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>CookSuggestアプリ開発秘話｜料理提案ツールの技術と工夫</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+
+                    <!-- リード文（導入） -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        「冷蔵庫にある食材で何か作りたいけど、何を作ればいいかわからない...」仕事終わりに疲れて帰宅し、冷蔵庫を開けて途方に暮れた経験は誰にでもあるはずです。私自身、一人暮らしを始めてから毎日この問題に直面していました。そんな日々の悩みを解決するために開発したのが「CookSuggest」という料理提案アプリです。この記事では、開発の裏側、技術的な実装、そしてユーザー体験向上のために試行錯誤したポイントを紹介します。
+                    </p>
+
+                    <!-- 記事本文 -->
+                    <h2>CookSuggestを作ったきっかけ</h2>
+
+                    <h3>日常の「料理の悩み」から生まれたアイデア</h3>
+                    <p>
+                        このアプリを作ったきっかけは、極めて個人的な悩みでした。社労士として働きながらプログラミング学習をしていた時期、仕事で疲れて帰宅すると「何を作るか考えるのも面倒」という状態になることが多かったのです。
+                    </p>
+
+                    <p>
+                        レシピサイトは数多くありますが、以下のような課題がありました：
+                    </p>
+                    <ul>
+                        <li><strong>検索が面倒：</strong>「今ある食材」を1つずつ検索条件に入力するのが手間</li>
+                        <li><strong>レシピが多すぎて選べない：</strong>検索結果が何百件も出て、かえって迷う</li>
+                        <li><strong>冷蔵庫の在庫を活かせない：</strong>「じゃがいも」で検索しても、他に必要な食材が多すぎる</li>
+                        <li><strong>献立のマンネリ化：</strong>いつも同じようなものを作ってしまう</li>
+                    </ul>
+
+                    <p>
+                        「今ある食材を選ぶだけで、パッと料理が提案されたら便利だな」というシンプルな思いから、CookSuggestの開発をスタートしました。
+                    </p>
+
+                    <h3>コンセプトの決定：3クリックで料理決定</h3>
+                    <p>
+                        開発前に決めた最重要コンセプトは「3クリックで料理を決定できる」ことでした。
+                    </p>
+                    <ul>
+                        <li>1クリック目：食材カテゴリーを選択（肉、野菜、など）</li>
+                        <li>2クリック目：具体的な食材を選択（鶏肉、じゃがいも、など）</li>
+                        <li>3クリック目：提案された料理を選択</li>
+                    </ul>
+
+                    <p>
+                        このシンプルさを実現するために、UIデザインと技術実装の両面で工夫が必要でした。
+                    </p>
+
+                    <h2>技術選定と設計思想</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>アーキテクチャの全体像</h3>
+                    <p>
+                        CookSuggestは以下の構成で実装しています：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+<strong>技術スタック：</strong>
+- フロントエンド: HTML/CSS/JavaScript (Vanilla JS)
+- データ管理: JSON形式（食材データ、料理データ）
+- ホスティング: GitHub Pages（完全無料）
+- デザイン: レスポンシブ対応のシンプルUI
+</pre>
+
+                    <h3>なぜフレームワークを使わなかったのか</h3>
+                    <p>
+                        ReactやVueなどのフレームワークを使わず、Vanilla JavaScriptで実装した理由：
+                    </p>
+                    <ul>
+                        <li><strong>高速表示：</strong>フレームワークの読み込み時間がない分、瞬時に起動</li>
+                        <li><strong>軽量：</strong>全体で100KB以下の軽量アプリ</li>
+                        <li><strong>学習しやすい：</strong>初心者でもコードを読んで理解できる</li>
+                        <li><strong>依存関係なし：</strong>ライブラリのバージョンアップを気にしなくて良い</li>
+                    </ul>
+
+                    <p>
+                        結果として、スマホでも0.3秒以内に起動する高速アプリになりました。
+                    </p>
+
+                    <h2>実装の核心：データ構造とマッチングロジック</h2>
+
+                    <h3>食材データベースの設計</h3>
+                    <p>
+                        最も苦労したのが「食材データの構造化」です。以下のようなJSON形式で管理しています：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+{
+  "ingredients": [
+    {
+      "id": "chicken",
+      "name": "鶏肉",
+      "category": "meat",
+      "synonyms": ["とりにく", "チキン"],
+      "commonDishes": ["chicken_rice", "karaage", "teriyaki_chicken"]
+    }
+  ],
+  "dishes": [
+    {
+      "id": "chicken_rice",
+      "name": "鶏肉の炊き込みご飯",
+      "requiredIngredients": ["chicken", "rice"],
+      "optionalIngredients": ["carrot", "mushroom"],
+      "cookingTime": 40,
+      "difficulty": "easy",
+      "description": "炊飯器で簡単に作れる本格的な炊き込みご飯"
+    }
+  ]
+}
+</pre>
+
+                    <p>
+                        <strong>この構造のポイント：</strong>
+                    </p>
+                    <ul>
+                        <li><strong>synonyms（同義語）：</strong>「鶏肉」「とりにく」「チキン」どの表記でも検索可能</li>
+                        <li><strong>requiredIngredients vs optionalIngredients：</strong>必須食材とあると良い食材を区別</li>
+                        <li><strong>cookingTime, difficulty：</strong>時間や難易度でフィルタリング可能</li>
+                        <li><strong>commonDishes：</strong>食材から逆引きで料理を検索</li>
+                    </ul>
+
+                    <h3>マッチングアルゴリズムの工夫</h3>
+                    <p>
+                        ユーザーが選んだ食材から料理を提案する「マッチングロジック」は、以下の優先順位で実装しました：
+                    </p>
+                    <ol>
+                        <li><strong>完全一致：</strong>選んだ食材だけで作れる料理</li>
+                        <li><strong>ほぼ一致：</strong>あと1〜2食材追加すれば作れる料理</li>
+                        <li><strong>部分一致：</strong>選んだ食材を2つ以上使う料理</li>
+                    </ol>
+
+                    <p>
+                        実装では、JavaScriptの配列メソッド（filter, includes, every）を組み合わせて、効率的にマッチング処理を行っています。
+                    </p>
+
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+// マッチング例（簡略版）
+function findDishes(selectedIngredients) {
+  return dishes.filter(dish => {
+    const required = dish.requiredIngredients;
+    const matchCount = required.filter(ing =>
+      selectedIngredients.includes(ing)
+    ).length;
+
+    return matchCount / required.length >= 0.7; // 70%以上一致
+  });
+}
+</pre>
+
+                    <h2>UI/UXで工夫したポイント</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>1. 食材選択のインターフェース</h3>
+                    <p>
+                        食材選択画面は、以下の工夫をしました：
+                    </p>
+                    <ul>
+                        <li><strong>カテゴリータブ：</strong>肉、魚、野菜、調味料などタブで切り替え</li>
+                        <li><strong>よく使う食材を上部に：</strong>使用頻度の高い食材は最初に表示</li>
+                        <li><strong>アイコン表示：</strong>絵文字アイコンで視覚的にわかりやすく</li>
+                        <li><strong>選択状態の明示：</strong>選んだ食材は色が変わる</li>
+                    </ul>
+
+                    <h3>2. 料理提案画面のデザイン</h3>
+                    <p>
+                        提案画面では「迷わせない」ことを重視しました：
+                    </p>
+                    <ul>
+                        <li><strong>カード形式：</strong>1料理1カードで視覚的に整理</li>
+                        <li><strong>必要な追加食材を明示：</strong>「あと〇〇が必要」と表示</li>
+                        <li><strong>調理時間・難易度表示：</strong>今の気分に合わせて選べる</li>
+                        <li><strong>レシピへのリンク：</strong>人気レシピサイトへ直接遷移</li>
+                    </ul>
+
+                    <h3>3. レスポンシブ対応</h3>
+                    <p>
+                        スマホでの使用を想定し、タッチ操作に最適化：
+                    </p>
+                    <ul>
+                        <li>食材ボタンは指でタップしやすい大きさ（最低44px×44px）</li>
+                        <li>スクロール不要で主要機能にアクセス可能</li>
+                        <li>画像を使わず、絵文字とCSSで軽量化</li>
+                    </ul>
+
+                    <h2>開発中に直面した課題と解決策</h2>
+
+                    <h3>課題1: 料理データの充実度</h3>
+                    <p>
+                        最大の課題は「どれだけの料理データを用意するか」でした。データが少ないと提案が貧弱になりますが、多すぎるとメンテナンスが大変です。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>まずは定番料理50種類からスタート</li>
+                        <li>ユーザーフィードバックで要望の多い料理を優先的に追加</li>
+                        <li>料理データの追加フォームを設置し、コミュニティで拡充</li>
+                    </ul>
+
+                    <h3>課題2: 食材名のゆらぎ対応</h3>
+                    <p>
+                        「トマト」「ミニトマト」「プチトマト」など、同じような食材でも表現が異なる問題がありました。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>synonyms（同義語リスト）をデータに含める</li>
+                        <li>検索時にひらがな・カタカナを正規化</li>
+                        <li>「これも同じ食材？」という提案機能を追加</li>
+                    </ul>
+
+                    <h3>課題3: パフォーマンス最適化</h3>
+                    <p>
+                        食材・料理データが増えると、マッチング処理が遅くなる懸念がありました。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>データをカテゴリーごとに分割し、必要な分だけ読み込む</li>
+                        <li>よく選ばれる組み合わせをキャッシュ</li>
+                        <li>Web Workerで非同期処理（将来的な改善予定）</li>
+                    </ul>
+
+                    <h2>リリース後の反応と改善</h2>
+
+                    <h3>ユーザーからの嬉しい反応</h3>
+                    <p>
+                        リリース後、以下のような声をいただきました：
+                    </p>
+                    <ul>
+                        <li>「冷蔵庫の食材を無駄にしなくなった」</li>
+                        <li>「料理のレパートリーが増えた」</li>
+                        <li>「献立を考えるストレスが減った」</li>
+                        <li>「シンプルで使いやすい。広告がないのが良い」</li>
+                    </ul>
+
+                    <h3>ユーザーフィードバックを受けた改善</h3>
+                    <p>
+                        実際に使っていただいた方の声を元に、以下の機能を追加しました：
+                    </p>
+                    <ul>
+                        <li><strong>調理時間フィルター：</strong>「15分以内」「30分以内」で絞り込み</li>
+                        <li><strong>難易度フィルター：</strong>初心者向け、本格派向けで分類</li>
+                        <li><strong>お気に入り機能：</strong>よく作る料理を保存</li>
+                        <li><strong>履歴機能：</strong>過去に作った料理を確認</li>
+                        <li><strong>ランダム提案：</strong>「おまかせ」ボタンで即決</li>
+                    </ul>
+
+                    <h2>このプロジェクトで学んだこと</h2>
+
+                    <h3>技術面での学び</h3>
+                    <ul>
+                        <li><strong>データ設計の重要性：</strong>最初のデータ構造設計が、後の拡張性を左右する</li>
+                        <li><strong>シンプルな技術選定：</strong>Vanilla JSでも十分実用的なアプリが作れる</li>
+                        <li><strong>パフォーマンス最適化：</strong>ユーザー体験向上のため、表示速度は最重要</li>
+                        <li><strong>検索アルゴリズムの奥深さ：</strong>「あいまい検索」の実装は思ったより難しい</li>
+                    </ul>
+
+                    <h3>プロダクト開発の学び</h3>
+                    <ul>
+                        <li><strong>自分の課題を解決するプロダクトは、他の人の課題も解決する</strong></li>
+                        <li><strong>シンプルさは最大の価値：</strong>「3クリックで完結」というコンセプトが成功の鍵</li>
+                        <li><strong>データの充実は継続的な取り組み：</strong>一度に完璧を目指さず、少しずつ拡充</li>
+                        <li><strong>ユーザーの声を聞く：</strong>想定外の使い方や要望が次の改善につながる</li>
+                    </ul>
+
+                    <h2>今後の展望</h2>
+                    <p>
+                        今後、以下の機能追加を検討しています：
+                    </p>
+                    <ul>
+                        <li><strong>栄養バランス表示：</strong>カロリーやタンパク質などの栄養情報</li>
+                        <li><strong>買い物リスト生成：</strong>足りない食材を自動でリスト化</li>
+                        <li><strong>献立プランナー：</strong>1週間分の献立を一括提案</li>
+                        <li><strong>画像認識：</strong>冷蔵庫の写真から食材を自動認識</li>
+                        <li><strong>コミュニティ機能：</strong>ユーザー投稿レシピの共有</li>
+                    </ul>
+
+                    <!-- まとめセクション -->
+                    <h2>まとめ</h2>
+                    <p>
+                        CookSuggestの開発を通じて、「日常の小さな不便を解決するツール」の価値を実感しました。このプロジェクトのポイントをまとめます：
+                    </p>
+                    <ul>
+                        <li><strong>明確なコンセプト：</strong>「3クリックで料理決定」というシンプルな目標</li>
+                        <li><strong>データ構造設計：</strong>食材と料理の関係性を適切にモデル化</li>
+                        <li><strong>マッチングロジック：</strong>効率的なアルゴリズムで高速検索を実現</li>
+                        <li><strong>UX重視：</strong>迷わせない、ストレスフリーなインターフェース</li>
+                        <li><strong>継続的改善：</strong>ユーザーフィードバックを受けて進化</li>
+                    </ul>
+
+                    <p>
+                        「今日の夕飯、何にしよう？」という日常の悩みを、少しでも楽にできていれば嬉しいです。もし使ってみて、追加してほしい料理や機能があれば、ぜひお問い合わせください。
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="qualification-calendar-dev.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 資格試験カレンダーアプリ開発秘話｜試験日程を一括管理するツールの作り方</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="earthquake-monitor-tech.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 地震情報モニターの技術解説｜リアルタイムデータ表示の実装</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="独自ドメイン取得の完全ガイド。お名前.comやムームードメインでのドメイン取得手順、DNS設定、GitHub Pagesとの連携方法を初心者向けに詳しく解説します。">
+    <meta name="keywords" content="独自ドメイン,ドメイン取得,お名前.com,DNS設定,GitHub Pages,Web開発">
+    <title>独自ドメイン取得完全ガイド｜お名前.comでの取得からDNS設定まで | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "独自ドメイン取得完全ガイド｜お名前.comでの取得からDNS設定まで",
+        "description": "独自ドメイン取得の完全ガイド。お名前.comやムームードメインでのドメイン取得手順、DNS設定、GitHub Pagesとの連携方法を初心者向けに詳しく解説します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2024-12-20",
+        "dateModified": "2024-12-20"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "独自ドメイン取得完全ガイド｜お名前.comでの取得からDNS設定まで",
+                "item": "https://blog.mechatora.com/articles/domain-registration.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>独自ドメイン取得完全ガイド</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2024-12-20">2024年12月20日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2024年12月20日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>独自ドメイン取得完全ガイド｜お名前.comでの取得からDNS設定まで</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/career-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+
+                    <!-- リード文（導入） -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        「自分のサイトを公開したい！でもドメインってどうやって取るの？」独自ドメインの取得は、Webサイト運営の第一歩です。私自身、mechatora.comを取得する際、DNS設定やネームサーバーなど専門用語に戸惑いました。この記事では、お名前.comでのドメイン取得から、GitHub Pagesとの連携、そしてサブドメイン設定まで、実際の画面を見ながら詳しく解説します。初めての方でも、この記事を読めば独自ドメインが使えるようになります。
+                    </p>
+
+                    <!-- 記事本文 -->
+                    <h2>なぜ独自ドメインが必要なのか</h2>
+
+                    <h3>独自ドメインの3つのメリット</h3>
+                    <p>
+                        独自ドメインを取得すると、以下のようなメリットがあります：
+                    </p>
+                    <ul>
+                        <li><strong>信頼性の向上：</strong>「username.github.io」よりも「yourname.com」の方が信頼感がある</li>
+                        <li><strong>SEOに有利：</strong>Google検索で上位表示されやすくなる</li>
+                        <li><strong>収益化の必須条件：</strong>Google AdSenseは独自ドメインが必須</li>
+                        <li><strong>覚えやすさ：</strong>短くシンプルなURLで、訪問者に覚えてもらいやすい</li>
+                        <li><strong>サービス移行が容易：</strong>ホスティング先を変更しても、ドメインはそのまま使える</li>
+                    </ul>
+
+                    <p>
+                        私の場合、当初はGitHub Pagesの「mechatora.github.io」で運用していましたが、Google AdSense申請のために独自ドメイン「mechatora.com」を取得しました。
+                    </p>
+
+                    <h3>ドメイン取得サービスの比較</h3>
+                    <p>
+                        主要なドメイン取得サービスを比較しました：
+                    </p>
+                    <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                        <thead>
+                            <tr style="background: var(--bg-secondary);">
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">サービス名</th>
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">.com価格（年）</th>
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">特徴</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>お名前.com</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">初年度500円〜、2年目以降1,408円</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">最大手、豊富な種類、キャンペーン多い</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary);">
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>ムームードメイン</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">初年度750円〜、2年目以降1,728円</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">UI がシンプル、初心者向け</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Google Domains</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">（2023年にSquarespaceに売却）</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">新規受付終了</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary);">
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Cloudflare</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">原価販売（約10ドル/年）</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">最安、ただし中上級者向け</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        初心者には「お名前.com」または「ムームードメイン」がおすすめです。私は初年度の安さとキャンペーンを重視して、お名前.comを選びました。
+                    </p>
+
+                    <h2>お名前.comでドメインを取得する手順</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/career-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>ステップ1: 希望ドメインの検索</h3>
+                    <p>
+                        まず、取得したいドメイン名が空いているか確認します。
+                    </p>
+                    <ol>
+                        <li><a href="https://www.onamae.com/" target="_blank" rel="noopener">お名前.com</a>にアクセス</li>
+                        <li>トップページの検索ボックスに希望のドメイン名を入力（例: mechatora）</li>
+                        <li>「検索」ボタンをクリック</li>
+                    </ol>
+
+                    <p>
+                        検索結果で、以下のように表示されます：
+                    </p>
+                    <ul>
+                        <li><strong>✅（取得可能）：</strong>そのドメインはまだ誰も取得していない</li>
+                        <li><strong>❌（取得不可）：</strong>すでに他の人が取得済み</li>
+                    </ul>
+
+                    <p>
+                        <strong>ドメイン名を決めるコツ：</strong>
+                    </p>
+                    <ul>
+                        <li>短くて覚えやすい名前（8文字以内が理想）</li>
+                        <li>発音しやすい（口頭で伝えやすい）</li>
+                        <li>ハイフン（-）は避ける（誤解されやすい）</li>
+                        <li>サービス名やハンドルネームと統一する</li>
+                    </ul>
+
+                    <h3>ステップ2: ドメインの種類（TLD）を選択</h3>
+                    <p>
+                        ドメインの種類（.com、.net、.jpなど）を選びます。
+                    </p>
+                    <ul>
+                        <li><strong>.com：</strong>最もポピュラー、信頼性が高い（おすすめ）</li>
+                        <li><strong>.net：</strong>.comの次に人気、技術系サイト向け</li>
+                        <li><strong>.jp：</strong>日本のサイトであることを明示、やや高価（年3,000円前後）</li>
+                        <li><strong>.org：</strong>非営利団体向け</li>
+                        <li><strong>.dev：</strong>開発者向け（最近人気）</li>
+                    </ul>
+
+                    <p>
+                        迷ったら「.com」を選びましょう。私もmechatora.comにしました。
+                    </p>
+
+                    <h3>ステップ3: 会員登録と支払い</h3>
+                    <ol>
+                        <li>希望のドメインにチェックを入れ、「お申込みへ進む」をクリック</li>
+                        <li>会員登録（メールアドレス、パスワード設定）</li>
+                        <li>契約期間を選択（1年がおすすめ、長期契約は割高になる場合も）</li>
+                        <li>Whois情報公開代行に✅（必須！個人情報を守るため）</li>
+                        <li>支払い方法を選択（クレジットカード、コンビニ払いなど）</li>
+                        <li>確認して「申し込む」</li>
+                    </ol>
+
+                    <p>
+                        <strong>重要：Whois情報公開代行とは？</strong><br>
+                        ドメインを取得すると、登録者の氏名・住所・電話番号が公開されてしまいます。Whois情報公開代行を利用すると、お名前.comの情報が代わりに公開され、個人情報を守れます。これは必ずONにしましょう（無料オプション）。
+                    </p>
+
+                    <h3>ステップ4: ドメイン取得完了</h3>
+                    <p>
+                        支払いが完了すると、登録したメールアドレスに以下のメールが届きます：
+                    </p>
+                    <ul>
+                        <li>「ドメイン登録完了のお知らせ」</li>
+                        <li>「メールアドレスの有効性確認」（24時間以内に認証リンクをクリック）</li>
+                    </ul>
+
+                    <p>
+                        メール認証を忘れると、ドメインが使えなくなるので、必ず確認してください。
+                    </p>
+
+                    <h2>DNS設定とGitHub Pagesとの連携</h2>
+
+                    <h3>DNSとは何か？</h3>
+                    <p>
+                        DNS（Domain Name System）は、「ドメイン名」と「IPアドレス」を紐付けるシステムです。
+                    </p>
+                    <ul>
+                        <li><strong>あなたのドメイン：</strong>mechatora.com</li>
+                        <li><strong>GitHub PagesのIPアドレス：</strong>185.199.108.153（など）</li>
+                        <li><strong>DNS設定：</strong>「mechatora.comにアクセスしたら、185.199.108.153に転送する」という指示</li>
+                    </ul>
+
+                    <h3>GitHub Pages用のDNS設定手順</h3>
+                    <p>
+                        お名前.comの管理画面でDNS設定を行います。
+                    </p>
+                    <ol>
+                        <li>お名前.comにログイン</li>
+                        <li>「ドメイン設定」→「DNS設定/転送設定」をクリック</li>
+                        <li>対象のドメインを選択し、「次へ」</li>
+                        <li>「DNSレコード設定を利用する」を選択</li>
+                        <li>以下のレコードを追加：</li>
+                    </ol>
+
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+<strong>Aレコード（GitHub PagesのIPアドレス）：</strong>
+ホスト名: @
+TYPE: A
+VALUE: 185.199.108.153
+VALUE: 185.199.109.153
+VALUE: 185.199.110.153
+VALUE: 185.199.111.153
+
+<strong>CNAMEレコード（wwwサブドメイン）：</strong>
+ホスト名: www
+TYPE: CNAME
+VALUE: [GitHubユーザー名].github.io
+</pre>
+
+                    <p>
+                        設定後、「確認画面へ進む」→「設定する」をクリック。反映には数時間〜24時間かかる場合があります。
+                    </p>
+
+                    <h3>GitHub Pagesでカスタムドメインを設定</h3>
+                    <ol>
+                        <li>GitHubリポジトリのSettings → Pagesに移動</li>
+                        <li>「Custom domain」欄に、取得したドメイン（例: mechatora.com）を入力</li>
+                        <li>「Save」をクリック</li>
+                        <li>「Enforce HTTPS」にチェック（SSL化、必須）</li>
+                    </ol>
+
+                    <p>
+                        DNS設定が反映されると、独自ドメインでサイトにアクセスできるようになります！
+                    </p>
+
+                    <h2>サブドメインの設定方法</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/career-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>サブドメインとは？</h3>
+                    <p>
+                        サブドメインは、メインドメインの配下に作成できる独立したドメインです。
+                    </p>
+                    <ul>
+                        <li><strong>メインドメイン：</strong>mechatora.com</li>
+                        <li><strong>サブドメイン：</strong>blog.mechatora.com、sake.mechatora.com</li>
+                    </ul>
+
+                    <p>
+                        私は以下のようにサブドメインを活用しています：
+                    </p>
+                    <ul>
+                        <li><strong>mechatora.com：</strong>Webアプリツール集</li>
+                        <li><strong>blog.mechatora.com：</strong>ブログ（この記事を読んでいるサイト）</li>
+                        <li><strong>sake.mechatora.com：</strong>日本酒データベース</li>
+                    </ul>
+
+                    <h3>サブドメインのDNS設定</h3>
+                    <p>
+                        お名前.comで以下のCNAMEレコードを追加します：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+ホスト名: blog
+TYPE: CNAME
+VALUE: [GitHubユーザー名].github.io
+</pre>
+
+                    <p>
+                        GitHub Pages側でも、「Custom domain」にサブドメイン（blog.mechatora.com）を設定します。
+                    </p>
+
+                    <h2>よくあるトラブルと解決策</h2>
+
+                    <h3>トラブル1: ドメインにアクセスできない</h3>
+                    <p>
+                        <strong>原因：</strong>DNS設定の反映待ち（最大24〜48時間かかる場合がある）
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>1日待ってから再度アクセスしてみる</li>
+                        <li>DNS設定が正しいか、お名前.comの管理画面で再確認</li>
+                        <li><code>nslookup mechatora.com</code>（コマンドプロンプト）でDNS伝播を確認</li>
+                    </ul>
+
+                    <h3>トラブル2: SSL証明書エラー（「安全ではありません」と表示）</h3>
+                    <p>
+                        <strong>原因：</strong>GitHub PagesのHTTPS設定が完了していない
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>GitHub Pages設定で「Enforce HTTPS」にチェックが入っているか確認</li>
+                        <li>DNS反映後、数時間待つ（GitHub側でSSL証明書を自動発行）</li>
+                    </ul>
+
+                    <h3>トラブル3: wwwあり/なしで表示が異なる</h3>
+                    <p>
+                        <strong>原因：</strong>CNAMEレコード（www）の設定漏れ
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>前述の通り、CNAMEレコード（www）を追加</li>
+                        <li>GitHub Pagesでは、どちらか一方を設定すれば自動リダイレクトされる</li>
+                    </ul>
+
+                    <h2>ドメイン管理の注意点</h2>
+
+                    <h3>1. 自動更新設定をONにする</h3>
+                    <p>
+                        ドメインは年間契約です。更新を忘れると、ドメインが失効し、他の人に取得されてしまいます。お名前.comの管理画面で「自動更新」を必ずONにしましょう。
+                    </p>
+
+                    <h3>2. メール通知をチェックする</h3>
+                    <p>
+                        お名前.comからのメールは、広告も多いですが、重要な通知（更新期限、DNS設定変更など）も含まれます。件名をチェックする習慣をつけましょう。
+                    </p>
+
+                    <h3>3. セキュリティ設定を有効にする</h3>
+                    <ul>
+                        <li><strong>二段階認証：</strong>不正ログイン防止</li>
+                        <li><strong>ドメインロック：</strong>勝手に移管されないようにする</li>
+                        <li><strong>Whois情報公開代行：</strong>個人情報保護（必須）</li>
+                    </ul>
+
+                    <h2>独自ドメイン取得後にやるべきこと</h2>
+
+                    <h3>1. Google Search Consoleに登録</h3>
+                    <p>
+                        独自ドメインを取得したら、すぐにGoogle Search Consoleに登録しましょう。SEO対策の基本です。
+                    </p>
+
+                    <h3>2. Google Analyticsの設定</h3>
+                    <p>
+                        アクセス解析ツールを導入し、訪問者数や人気ページを分析できるようにします。
+                    </p>
+
+                    <h3>3. サイトマップの送信</h3>
+                    <p>
+                        sitemap.xmlを作成し、Google Search Consoleに送信すると、検索エンジンにサイト構造を伝えられます。
+                    </p>
+
+                    <!-- まとめセクション -->
+                    <h2>まとめ</h2>
+                    <p>
+                        独自ドメイン取得は、Webサイト運営の重要な第一歩です。このページのポイントをまとめます：
+                    </p>
+                    <ul>
+                        <li><strong>ドメイン取得サービス：</strong>初心者には「お名前.com」または「ムームードメイン」がおすすめ</li>
+                        <li><strong>ドメインの種類：</strong>迷ったら「.com」を選ぶ</li>
+                        <li><strong>Whois情報公開代行：</strong>個人情報保護のため必須（無料）</li>
+                        <li><strong>DNS設定：</strong>AレコードとCNAMEレコードでGitHub Pagesと連携</li>
+                        <li><strong>サブドメイン：</strong>blog.、api.などで用途別にサイトを分けられる</li>
+                        <li><strong>SSL化：</strong>GitHub Pagesの「Enforce HTTPS」で安全な通信を実現</li>
+                    </ul>
+
+                    <p>
+                        独自ドメインを取得すると、サイトの信頼性が大きく向上します。初年度は500円程度から取得できるので、ぜひチャレンジしてみてください。質問があれば、お問い合わせフォームからお気軽にどうぞ！
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="free-webapp-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 完全無料でWebアプリを公開する方法｜サーバー代0円のフル活用術</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

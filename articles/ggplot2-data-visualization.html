@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="R言語のggplot2を使ったデータ可視化の基礎を実践的に解説。棒グラフ、折れ線グラフ、散布図、ヒートマップなど、実務で使える美しいグラフの作り方を人事データの実例で紹介します。">
+    <meta name="keywords" content="ggplot2,R言語,データ可視化,グラフ,データ分析,Tidyverse,ビジュアライゼーション">
+    <title>ggplot2で始めるデータ可視化 - 美しいグラフを作る実践ガイド | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "ggplot2で始めるデータ可視化",
+        "description": "R言語のggplot2を使ったデータ可視化の基礎を実践的に解説。実務で使える美しいグラフの作り方を人事データの実例で紹介します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-10-25",
+        "dateModified": "2025-10-25",
+        "image": "https://blog.mechatora.com/images/ggplot2-visualization.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "ggplot2で始めるデータ可視化 - 美しいグラフを作る実践ガイド",
+                "item": "https://blog.mechatora.com/articles/ggplot2-data-visualization.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/datascience-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>ggplot2で始めるデータ可視化</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category datascience">データサイエンス</span>
+                <h1>ggplot2で始めるデータ可視化 - 美しいグラフを作る実践ガイド</h1>
+                <div class="article-meta">
+                    <time datetime="2025-10-25">2025年10月25日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>データ分析において、「可視化」は最も重要なスキルの一つです。数値の羅列では見えなかったパターンや傾向が、グラフにすることで一目で分かるようになります。</p>
+                <p>この記事では、R言語の代表的な可視化ライブラリ「ggplot2」の使い方を、人事データを例に実践的に解説します。ExcelやPythonのMatplotlibとの違い、美しいグラフを作るコツ、実務で使える応用例まで、私が実際に業務で使っている内容をお伝えします。</p>
+            </div>
+
+            <h2>ggplot2とは</h2>
+
+            <h3>「Grammar of Graphics」の思想</h3>
+            <p>ggplot2は「グラフィックスの文法」という概念に基づいています。グラフを以下の要素の組み合わせとして捉えます：</p>
+            <ul>
+                <li><strong>Data（データ）</strong>：可視化する元データ</li>
+                <li><strong>Aesthetics（美的要素）</strong>：x軸、y軸、色、サイズなど</li>
+                <li><strong>Geometries（幾何学的要素）</strong>：点、線、棒など</li>
+                <li><strong>Facets（分割）</strong>：グラフを複数に分割</li>
+                <li><strong>Statistics（統計変換）</strong>：平均、回帰線など</li>
+                <li><strong>Coordinates（座標系）</strong>：直交座標、極座標など</li>
+                <li><strong>Theme（テーマ）</strong>：見た目の調整</li>
+            </ul>
+
+            <h3>ExcelやPythonとの違い</h3>
+            <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #f3f4f6;">
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">項目</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">Excel</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">Matplotlib（Python）</th>
+                        <th style="border: 1px solid #d1d5db; padding: 0.75rem;">ggplot2（R）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">学習コスト</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">低い</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">中〜高</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">中</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">美しさ</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★☆☆☆</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★☆☆</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★★★</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">柔軟性</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★☆☆☆</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★★★</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★★★</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">再現性</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★☆☆☆</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★★★</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★★★</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">統計機能</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★☆☆</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★☆☆</td>
+                        <td style="border: 1px solid #d1d5db; padding: 0.75rem;">★★★★★</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>私がggplot2を選ぶ理由：</p>
+            <ul>
+                <li>少ないコードで美しいグラフが作れる</li>
+                <li>一度コードを書けば、データが変わっても再利用可能</li>
+                <li>レポート自動化（RMarkdown）との相性が抜群</li>
+                <li>統計処理との親和性が高い</li>
+            </ul>
+
+            <h2>環境構築</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/datascience-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>RとRStudioのインストール</h3>
+            <p>まず、以下をインストールします：</p>
+            <ol>
+                <li><a href="https://cran.r-project.org/" target="_blank" rel="noopener noreferrer">R本体</a>をダウンロード・インストール</li>
+                <li><a href="https://posit.co/downloads/" target="_blank" rel="noopener noreferrer">RStudio</a>をダウンロード・インストール</li>
+            </ol>
+
+            <h3>必要なパッケージ</h3>
+            <p>RStudioを起動して、以下を実行：</p>
+            <pre><code># Tidyverseをインストール（ggplot2も含まれる）
+install.packages("tidyverse")
+
+# 読み込み
+library(tidyverse)</code></pre>
+
+            <p>Tidyverseには、ggplot2の他にdplyr（データ操作）、readr（データ読み込み）なども含まれており、データ分析に必要なツールが一通り揃っています。</p>
+
+            <h2>基本的なグラフの作り方</h2>
+
+            <h3>サンプルデータの準備</h3>
+            <p>人事データを例に、実践的なグラフを作っていきます：</p>
+            <pre><code># サンプルデータ作成
+hr_data <- tibble(
+  employee_id = 1:100,
+  department = rep(c("営業", "開発", "人事", "経理"), each = 25),
+  age = sample(23:60, 100, replace = TRUE),
+  salary = rnorm(100, mean = 5000000, sd = 1000000),
+  experience_years = sample(1:35, 100, replace = TRUE),
+  performance = sample(c("S", "A", "B", "C"), 100,
+                       replace = TRUE,
+                       prob = c(0.1, 0.3, 0.4, 0.2))
+)
+
+# データの確認
+head(hr_data)</code></pre>
+
+            <h3>1. 棒グラフ（Bar Chart）</h3>
+            <p>部署別の人数を可視化します：</p>
+            <pre><code>ggplot(hr_data, aes(x = department)) +
+  geom_bar(fill = "#2563eb") +
+  labs(
+    title = "部署別従業員数",
+    x = "部署",
+    y = "人数"
+  ) +
+  theme_minimal()</code></pre>
+
+            <p><strong>解説：</strong></p>
+            <ul>
+                <li><code>ggplot(data, aes(...))</code>：データと軸の指定</li>
+                <li><code>geom_bar()</code>：棒グラフを描画</li>
+                <li><code>labs()</code>：タイトルと軸ラベル</li>
+                <li><code>theme_minimal()</code>：シンプルなテーマ適用</li>
+            </ul>
+
+            <h3>2. ヒストグラム（Histogram）</h3>
+            <p>年齢の分布を可視化します：</p>
+            <pre><code>ggplot(hr_data, aes(x = age)) +
+  geom_histogram(binwidth = 5, fill = "#2563eb", color = "white") +
+  labs(
+    title = "従業員の年齢分布",
+    x = "年齢",
+    y = "人数"
+  ) +
+  theme_minimal()</code></pre>
+
+            <h3>3. 箱ひげ図（Box Plot）</h3>
+            <p>部署別の年収の分布を比較します：</p>
+            <pre><code>ggplot(hr_data, aes(x = department, y = salary, fill = department)) +
+  geom_boxplot() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "部署別年収分布",
+    x = "部署",
+    y = "年収（円）"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")</code></pre>
+
+            <p><strong>箱ひげ図の見方：</strong></p>
+            <ul>
+                <li>箱の中央の線：中央値</li>
+                <li>箱の下端：第1四分位数（25%点）</li>
+                <li>箱の上端：第3四分位数（75%点）</li>
+                <li>ひげ：最小値・最大値（外れ値を除く）</li>
+                <li>点：外れ値</li>
+            </ul>
+
+            <h3>4. 散布図（Scatter Plot）</h3>
+            <p>経験年数と年収の関係を可視化します：</p>
+            <pre><code>ggplot(hr_data, aes(x = experience_years, y = salary)) +
+  geom_point(color = "#2563eb", alpha = 0.6, size = 3) +
+  geom_smooth(method = "lm", color = "#dc2626", se = TRUE) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "経験年数と年収の関係",
+    x = "経験年数",
+    y = "年収（円）"
+  ) +
+  theme_minimal()</code></pre>
+
+            <p><strong>追加要素：</strong></p>
+            <ul>
+                <li><code>geom_smooth(method = "lm")</code>：線形回帰線を追加</li>
+                <li><code>alpha = 0.6</code>：透明度（重なりが見やすくなる）</li>
+                <li><code>se = TRUE</code>：信頼区間を表示</li>
+            </ul>
+
+            <h2>応用テクニック</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/datascience-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>1. 色分けによる多変量表示</h3>
+            <p>部署別に色分けした散布図：</p>
+            <pre><code>ggplot(hr_data, aes(x = experience_years, y = salary, color = department)) +
+  geom_point(alpha = 0.7, size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_color_manual(values = c(
+    "営業" = "#2563eb",
+    "開発" = "#dc2626",
+    "人事" = "#16a34a",
+    "経理" = "#9333ea"
+  )) +
+  labs(
+    title = "部署別：経験年数と年収の関係",
+    x = "経験年数",
+    y = "年収（円）",
+    color = "部署"
+  ) +
+  theme_minimal()</code></pre>
+
+            <h3>2. Facetによるグラフ分割</h3>
+            <p>部署ごとに別々のグラフを作成：</p>
+            <pre><code>ggplot(hr_data, aes(x = experience_years, y = salary)) +
+  geom_point(color = "#2563eb", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "#dc2626") +
+  scale_y_continuous(labels = scales::comma) +
+  facet_wrap(~department, ncol = 2) +
+  labs(
+    title = "部署別：経験年数と年収の関係",
+    x = "経験年数",
+    y = "年収（円）"
+  ) +
+  theme_minimal()</code></pre>
+
+            <h3>3. グループ化棒グラフ</h3>
+            <p>部署別・評価別の人数を比較：</p>
+            <pre><code># データ集計
+performance_summary <- hr_data %>%
+  count(department, performance)
+
+# グラフ作成
+ggplot(performance_summary, aes(x = department, y = n, fill = performance)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c(
+    "S" = "#16a34a",
+    "A" = "#2563eb",
+    "B" = "#f59e0b",
+    "C" = "#dc2626"
+  )) +
+  labs(
+    title = "部署別・評価別 従業員数",
+    x = "部署",
+    y = "人数",
+    fill = "評価"
+  ) +
+  theme_minimal()</code></pre>
+
+            <h3>4. 積み上げ棒グラフ</h3>
+            <p>割合を表示する場合は積み上げが便利：</p>
+            <pre><code>ggplot(performance_summary, aes(x = department, y = n, fill = performance)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = c(
+    "S" = "#16a34a",
+    "A" = "#2563eb",
+    "B" = "#f59e0b",
+    "C" = "#dc2626"
+  )) +
+  labs(
+    title = "部署別 評価分布（割合）",
+    x = "部署",
+    y = "割合",
+    fill = "評価"
+  ) +
+  theme_minimal()</code></pre>
+
+            <h2>実務で使える実践例</h2>
+
+            <h3>例1：離職率の推移（折れ線グラフ）</h3>
+            <pre><code># サンプルデータ
+turnover_data <- tibble(
+  year = 2019:2024,
+  turnover_rate = c(8.5, 9.2, 7.8, 6.5, 5.9, 5.2)
+)
+
+ggplot(turnover_data, aes(x = year, y = turnover_rate)) +
+  geom_line(color = "#2563eb", size = 1.2) +
+  geom_point(color = "#2563eb", size = 3) +
+  geom_hline(yintercept = 7, linetype = "dashed", color = "#dc2626") +
+  annotate("text", x = 2024, y = 7.3, label = "業界平均", color = "#dc2626") +
+  scale_x_continuous(breaks = 2019:2024) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "離職率の推移",
+    subtitle = "人事施策の効果により年々改善",
+    x = "年",
+    y = "離職率"
+  ) +
+  theme_minimal()</code></pre>
+
+            <h3>例2：ヒートマップ（部署×評価）</h3>
+            <pre><code># データ準備
+heatmap_data <- hr_data %>%
+  count(department, performance) %>%
+  group_by(department) %>%
+  mutate(percentage = n / sum(n) * 100)
+
+# ヒートマップ
+ggplot(heatmap_data, aes(x = performance, y = department, fill = percentage)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = sprintf("%.1f%%", percentage)), color = "white") +
+  scale_fill_gradient(low = "#dbeafe", high = "#1e40af") +
+  labs(
+    title = "部署別 評価分布（ヒートマップ）",
+    x = "評価",
+    y = "部署",
+    fill = "割合(%)"
+  ) +
+  theme_minimal()</code></pre>
+
+            <h3>例3：バイオリンプロット（分布の詳細表示）</h3>
+            <pre><code>ggplot(hr_data, aes(x = department, y = salary, fill = department)) +
+  geom_violin(alpha = 0.7) +
+  geom_boxplot(width = 0.2, fill = "white", alpha = 0.8) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "部署別年収分布（バイオリンプロット）",
+    x = "部署",
+    y = "年収（円）"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")</code></pre>
+
+            <p>バイオリンプロットは箱ひげ図の進化版で、分布の形状（二峰性、偏りなど）が視覚的に分かります。</p>
+
+            <h2>美しいグラフを作るコツ</h2>
+
+            <h3>1. カラーパレットの選択</h3>
+            <p>業務で使いやすいカラーパレット：</p>
+            <pre><code># ビジネス向け（青系）
+business_colors <- c("#1e3a8a", "#2563eb", "#60a5fa", "#93c5fd")
+
+# 信号色（良い→悪い）
+signal_colors <- c("#16a34a", "#f59e0b", "#dc2626")
+
+# カラーブラインドに配慮
+colorblind_safe <- c("#0173b2", "#de8f05", "#029e73", "#cc78bc")</code></pre>
+
+            <h3>2. フォントとサイズの調整</h3>
+            <pre><code>ggplot(hr_data, aes(x = department, y = salary)) +
+  geom_boxplot(fill = "#2563eb") +
+  labs(title = "部署別年収分布") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12)
+  )</code></pre>
+
+            <h3>3. 軸の範囲調整</h3>
+            <pre><code># 年収のグラフは0から始めると誤解を招く
+ggplot(hr_data, aes(x = department, y = salary)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(3000000, 7000000)) +
+  scale_y_continuous(labels = scales::comma)</code></pre>
+
+            <h3>4. 注釈の追加</h3>
+            <pre><code>ggplot(hr_data, aes(x = experience_years, y = salary)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  annotate("text", x = 25, y = 7000000,
+           label = "経験年数が\n増えるほど年収UP",
+           color = "#dc2626", size = 4) +
+  annotate("curve", x = 22, y = 6800000, xend = 18, yend = 6200000,
+           arrow = arrow(length = unit(0.3, "cm")),
+           color = "#dc2626")</code></pre>
+
+            <h2>グラフの保存と出力</h2>
+
+            <h3>ファイルとして保存</h3>
+            <pre><code># 最後に作成したグラフを保存
+ggsave("salary_analysis.png", width = 10, height = 6, dpi = 300)
+
+# 特定のグラフを保存
+my_plot <- ggplot(hr_data, aes(x = department, y = salary)) +
+  geom_boxplot()
+
+ggsave("my_plot.png", plot = my_plot, width = 8, height = 6)</code></pre>
+
+            <h3>RMarkdownで自動レポート</h3>
+            <p>私が月次レポートで使っているRMarkdownの例：</p>
+            <pre><code>---
+title: "人事データ月次レポート"
+author: "人事部"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+hr_data <- read_csv("hr_data.csv")
+```
+
+## 部署別年収分布
+
+```{r, echo=FALSE, fig.width=10, fig.height=6}
+ggplot(hr_data, aes(x = department, y = salary, fill = department)) +
+  geom_boxplot() +
+  theme_minimal()
+```
+
+このレポートは `r nrow(hr_data)` 名のデータに基づいています。</code></pre>
+
+            <p>これをKnitすると、自動でグラフ入りのHTMLレポートが生成されます。データが更新されても、コードを実行するだけで最新のレポートができます。</p>
+
+            <h2>まとめ</h2>
+
+            <p>ggplot2でできること：</p>
+            <ul>
+                <li><strong>少ないコード</strong>で美しいグラフが作れる</li>
+                <li><strong>再現性が高い</strong>（コード保存で同じグラフを何度でも作成）</li>
+                <li><strong>柔軟性が高い</strong>（細かいカスタマイズが可能）</li>
+                <li><strong>統計処理と統合</strong>（回帰線、信頼区間など自動計算）</li>
+                <li><strong>レポート自動化</strong>（RMarkdownと組み合わせ）</li>
+            </ul>
+
+            <p>データ可視化の学習ロードマップ：</p>
+            <ol>
+                <li><strong>基本グラフ</strong>：棒グラフ、ヒストグラム、散布図（1週間）</li>
+                <li><strong>色と軸</strong>：カラーパレット、スケール調整（1週間）</li>
+                <li><strong>応用グラフ</strong>：Facet、ヒートマップ、バイオリン（2週間）</li>
+                <li><strong>自動化</strong>：RMarkdownでレポート生成（1週間）</li>
+            </ol>
+
+            <p>私自身、ggplot2を使い始めて業務効率が劇的に上がりました。Excelで1時間かかっていたグラフ作成が、コード実行だけで5秒に短縮されています。データ分析を始めたい方に、ぜひおすすめしたいツールです。</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="r-tidyverse-intro.html">R言語とTidyverseで始めるデータ分析入門</a></li>
+                    <li><a href="hr-to-developer.html">社労士×エンジニアという働き方 - スキル掛け合わせのメリット</a></li>
+                    <li><a href="sharoushi-skill-utilization.html">社労士資格を最大限活用する5つの方法</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

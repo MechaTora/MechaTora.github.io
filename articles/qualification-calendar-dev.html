@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="資格試験カレンダーアプリの開発秘話。社労士資格を持つ開発者が、試験日程管理の課題を解決するために作ったWebアプリの技術的な工夫と学びを紹介します。">
+    <meta name="keywords" content="資格試験,カレンダー,Webアプリ開発,試験日程,JavaScript,API連携">
+    <title>資格試験カレンダーアプリ開発秘話｜試験日程を一括管理するツールの作り方 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "資格試験カレンダーアプリ開発秘話｜試験日程を一括管理するツールの作り方",
+        "description": "資格試験カレンダーアプリの開発秘話。社労士資格を持つ開発者が、試験日程管理の課題を解決するために作ったWebアプリの技術的な工夫と学びを紹介します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-01-10",
+        "dateModified": "2025-01-10"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "資格試験カレンダーアプリ開発秘話｜試験日程を一括管理するツールの作り方",
+                "item": "https://blog.mechatora.com/articles/qualification-calendar-dev.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>資格試験カレンダーアプリ開発秘話</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2025-01-10">2025年1月10日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2025年1月10日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>資格試験カレンダーアプリ開発秘話｜試験日程を一括管理するツールの作り方</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+
+                    <!-- リード文（導入） -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        「あれ、今年の社労士試験っていつだっけ？」「簿記検定の申込期限いつまでだっけ？」資格取得を目指す人なら、誰もが一度は経験する試験日程の確認作業。私自身、社労士として働きながら複数の資格取得を目指していた時期、この情報を探すのに毎回時間がかかっていました。この記事では、その課題を解決するために開発した「資格試験カレンダー」アプリの開発秘話と、実装で学んだ技術的なポイントを紹介します。
+                    </p>
+
+                    <!-- 記事本文 -->
+                    <h2>なぜ資格試験カレンダーアプリを作ったのか</h2>
+
+                    <h3>資格試験日程管理の3つの課題</h3>
+                    <p>
+                        資格試験の日程管理には、以下のような課題がありました：
+                    </p>
+                    <ul>
+                        <li><strong>情報が散在している：</strong>各試験の公式サイトを個別に確認する必要がある</li>
+                        <li><strong>申込期限の見落とし：</strong>試験日は覚えていても、申込期限を忘れがち</li>
+                        <li><strong>複数資格の管理が大変：</strong>関連資格を複数受験する場合、スケジュール調整が難しい</li>
+                    </ul>
+
+                    <p>
+                        私自身、社労士試験を受験した際、周辺の関連資格（衛生管理者、年金アドバイザーなど）も同時に勉強していたため、試験日程の把握に苦労しました。「主要な資格試験の日程を一覧できるカレンダーがあれば便利だな」と思ったのが、このアプリ開発のきっかけです。
+                    </p>
+
+                    <h3>既存サービスの調査と課題</h3>
+                    <p>
+                        開発前に、既存の試験日程サービスを調査しましたが、以下のような問題がありました：
+                    </p>
+                    <ul>
+                        <li>特定分野（IT系、会計系など）に特化していて、全分野を網羅していない</li>
+                        <li>情報更新が遅く、最新の日程が反映されていない</li>
+                        <li>広告が多く、使いづらい</li>
+                        <li>スマホ対応が不十分</li>
+                    </ul>
+
+                    <p>
+                        「ないなら作ろう」と決心し、開発をスタートしました。
+                    </p>
+
+                    <h2>アプリの設計思想と技術選定</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>ユーザー体験を最優先にした設計</h3>
+                    <p>
+                        このアプリで最も重視したのは「すぐに目的の情報にアクセスできること」です。以下の設計方針を立てました：
+                    </p>
+                    <ul>
+                        <li><strong>シンプルなUI：</strong>カレンダー形式で視覚的に日程を把握できる</li>
+                        <li><strong>高速表示：</strong>ページを開いたら即座に情報が表示される</li>
+                        <li><strong>カテゴリー絞り込み：</strong>IT系、法律系、会計系などでフィルタリング可能</li>
+                        <li><strong>完全無料：</strong>誰でもアカウント登録不要で使える</li>
+                        <li><strong>レスポンシブ対応：</strong>スマホでもPCでも快適に使える</li>
+                    </ul>
+
+                    <h3>技術スタックの選定理由</h3>
+                    <p>
+                        静的サイトで実装することを決めた理由は以下の通りです：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+<strong>採用技術：</strong>
+- フロントエンド: HTML/CSS/JavaScript（Vanilla JS）
+- カレンダーライブラリ: FullCalendar.js
+- ホスティング: GitHub Pages
+- データ管理: JSON形式（静的ファイル）
+</pre>
+
+                    <p>
+                        <strong>なぜこの構成にしたか：</strong>
+                    </p>
+                    <ul>
+                        <li><strong>サーバーコスト0円：</strong>GitHub Pagesなら完全無料で公開できる</li>
+                        <li><strong>高速表示：</strong>静的ファイルなので読み込みが非常に速い</li>
+                        <li><strong>メンテナンス性：</strong>JSONファイルを更新するだけで情報を更新できる</li>
+                        <li><strong>学習コスト低：</strong>フレームワーク不要なので、初心者でも理解しやすい</li>
+                    </ul>
+
+                    <h2>実装で工夫したポイント</h2>
+
+                    <h3>1. JSONデータの構造設計</h3>
+                    <p>
+                        試験情報を以下のような構造で管理しています：
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+{
+  "exams": [
+    {
+      "id": "sharoushi_2025",
+      "name": "社会保険労務士試験",
+      "category": "legal",
+      "examDate": "2025-08-24",
+      "applicationStart": "2025-04-14",
+      "applicationEnd": "2025-05-31",
+      "resultDate": "2025-11-08",
+      "url": "https://www.sharosi-siken.or.jp/",
+      "description": "労働・社会保険の専門家資格"
+    }
+  ]
+}
+</pre>
+
+                    <p>
+                        <strong>この設計のメリット：</strong>
+                    </p>
+                    <ul>
+                        <li>試験日だけでなく、申込期間や結果発表日も管理できる</li>
+                        <li>カテゴリー別にフィルタリングしやすい</li>
+                        <li>公式サイトへのリンクを含めることで、詳細情報へ誘導できる</li>
+                        <li>後から項目を追加しやすい拡張性</li>
+                    </ul>
+
+                    <h3>2. カレンダー表示の実装</h3>
+                    <p>
+                        FullCalendar.jsを使ってカレンダー表示を実装しました。このライブラリを選んだ理由は：
+                    </p>
+                    <ul>
+                        <li>ドキュメントが充実している</li>
+                        <li>レスポンシブ対応が標準で含まれている</li>
+                        <li>イベントのクリック処理がカスタマイズしやすい</li>
+                        <li>月表示・リスト表示の切り替えが簡単</li>
+                    </ul>
+
+                    <p>
+                        実装で苦労したのは、「試験日」「申込開始」「申込締切」「結果発表」の4つの日付を、色分けして表示する部分でした。最終的には、イベントの種類ごとに異なるclassNameを付与し、CSSで色分けする方法で実装しました。
+                    </p>
+
+                    <h3>3. カテゴリー絞り込み機能</h3>
+                    <p>
+                        資格試験は分野が幅広いため、カテゴリー絞り込み機能は必須でした。以下のカテゴリーを用意しています：
+                    </p>
+                    <ul>
+                        <li>法律系（社労士、行政書士、司法書士など）</li>
+                        <li>IT系（基本情報技術者、応用情報技術者など）</li>
+                        <li>会計系（簿記、税理士、公認会計士など）</li>
+                        <li>医療・福祉系（看護師、介護福祉士など）</li>
+                        <li>語学系（TOEIC、英検など）</li>
+                        <li>その他（宅建、FPなど）</li>
+                    </ul>
+
+                    <p>
+                        絞り込みはチェックボックスで実装し、複数選択可能にしました。JavaScriptで選択されたカテゴリーのイベントだけをフィルタリングして表示する仕組みです。
+                    </p>
+
+                    <h3>4. レスポンシブ対応の工夫</h3>
+                    <p>
+                        スマホで見る人が多いことを想定し、以下の対応をしました：
+                    </p>
+                    <ul>
+                        <li><strong>タッチ操作対応：</strong>イベントのタップで詳細ポップアップを表示</li>
+                        <li><strong>月/リスト表示切り替え：</strong>スマホでは「次の試験一覧」リスト表示をデフォルトに</li>
+                        <li><strong>読み込み高速化：</strong>必要なデータだけをロードする遅延読み込み</li>
+                        <li><strong>フォントサイズ調整：</strong>スマホでも読みやすい文字サイズ</li>
+                    </ul>
+
+                    <h2>開発で直面した課題と解決策</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>課題1: データの鮮度をどう保つか</h3>
+                    <p>
+                        最大の課題は「試験日程の情報をどうやって最新に保つか」でした。各試験の公式サイトを毎回チェックするのは非現実的です。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>年に1〜2回、主要資格の日程を一括更新する定期メンテナンス</li>
+                        <li>ユーザーからの情報提供フォームを設置（コミュニティ協力）</li>
+                        <li>各試験の「例年の実施時期」をメモとして記録し、次年度の予測に活用</li>
+                    </ul>
+
+                    <p>
+                        完璧な自動化は難しいため、「更新日」を明記して、ユーザーに情報の鮮度を伝えるようにしました。
+                    </p>
+
+                    <h3>課題2: 試験の追加・削除をどう管理するか</h3>
+                    <p>
+                        試験によっては、年によって実施されなかったり、新設されたりします。この変動にどう対応するかが課題でした。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>JSONファイルに「active」フラグを追加し、非実施の試験は非表示に</li>
+                        <li>過去データも残しておくことで、翌年の参考にする</li>
+                        <li>新規試験の追加は、JSONに1エントリー追加するだけで対応可能な仕組み</li>
+                    </ul>
+
+                    <h3>課題3: パフォーマンス最適化</h3>
+                    <p>
+                        当初、全試験データ（約150件）を一度に読み込んでいたため、初回表示が遅くなる問題がありました。
+                    </p>
+                    <p>
+                        <strong>解決策：</strong>
+                    </p>
+                    <ul>
+                        <li>「今後3ヶ月以内の試験」を優先的に読み込む</li>
+                        <li>過去の試験データは「アーカイブ」として別ファイルに分離</li>
+                        <li>画像を使わず、アイコンはUnicode絵文字で軽量化</li>
+                    </ul>
+
+                    <p>
+                        この改善で、初回表示時間を約2秒から0.5秒以下に短縮できました。
+                    </p>
+
+                    <h2>リリース後のユーザー反応と改善</h2>
+
+                    <h3>ユーザーからの反響</h3>
+                    <p>
+                        リリース後、予想以上に多くの方に使っていただけました。特に以下のような声をいただきました：
+                    </p>
+                    <ul>
+                        <li>「複数の資格を同時に勉強している人にとって、スケジュール調整がしやすい」</li>
+                        <li>「申込期限のリマインダーとして活用している」</li>
+                        <li>「シンプルで使いやすい。広告がないのが良い」</li>
+                    </ul>
+
+                    <h3>実施した機能追加</h3>
+                    <p>
+                        ユーザーフィードバックを受けて、以下の機能を追加しました：
+                    </p>
+                    <ul>
+                        <li><strong>検索機能：</strong>試験名で検索できるように</li>
+                        <li><strong>Googleカレンダー連携：</strong>気になる試験をGoogleカレンダーに追加できる機能</li>
+                        <li><strong>年度切り替え：</strong>来年度の試験日程も確認できるように</li>
+                        <li><strong>お気に入り機能：</strong>自分が受験予定の試験だけを表示</li>
+                    </ul>
+
+                    <h2>このプロジェクトで学んだこと</h2>
+
+                    <h3>技術面での学び</h3>
+                    <ul>
+                        <li><strong>ライブラリ選定の重要性：</strong>FullCalendar.jsを使ったことで、開発時間を大幅に短縮できた</li>
+                        <li><strong>データ設計の大切さ：</strong>最初にJSON構造をしっかり設計したことで、後の機能追加がスムーズだった</li>
+                        <li><strong>パフォーマンス意識：</strong>ユーザー体験向上のため、表示速度最適化は必須</li>
+                        <li><strong>レスポンシブの実装パターン：</strong>スマホファーストで設計する重要性を実感</li>
+                    </ul>
+
+                    <h3>プロダクト開発の学び</h3>
+                    <ul>
+                        <li><strong>自分の課題を解決するツールは、同じ悩みを持つ人の役に立つ</strong></li>
+                        <li><strong>完璧を目指さず、まずリリースして反応を見る重要性</strong></li>
+                        <li><strong>シンプルさは最大の価値：</strong>多機能より、1つのことを確実にやる</li>
+                        <li><strong>継続的な改善：</strong>ユーザーの声を聞いて、少しずつ良くしていく</li>
+                    </ul>
+
+                    <h2>今後の展望</h2>
+                    <p>
+                        今後、以下の機能追加を検討しています：
+                    </p>
+                    <ul>
+                        <li><strong>通知機能：</strong>申込期限が近づいたらメール通知</li>
+                        <li><strong>合格率データの表示：</strong>過去の合格率も参考情報として表示</li>
+                        <li><strong>学習リソースへのリンク：</strong>おすすめの教材や無料学習サイトの紹介</li>
+                        <li><strong>海外資格の対応：</strong>CPA、CFAなど国際資格も追加</li>
+                    </ul>
+
+                    <!-- まとめセクション -->
+                    <h2>まとめ</h2>
+                    <p>
+                        資格試験カレンダーアプリの開発を通じて、「自分の課題を解決するツールを作る」ことの価値を実感しました。このプロジェクトのポイントをまとめます：
+                    </p>
+                    <ul>
+                        <li><strong>課題の明確化：</strong>自分が実際に困っていた「試験日程の一括管理」という具体的な課題から出発</li>
+                        <li><strong>技術選定：</strong>静的サイト + FullCalendar.jsで、無料かつ高速なアプリを実現</li>
+                        <li><strong>データ設計：</strong>JSON形式で柔軟性と拡張性を確保</li>
+                        <li><strong>UX重視：</strong>シンプルで迷わない設計、レスポンシブ対応</li>
+                        <li><strong>継続的改善：</strong>ユーザーフィードバックを受けて機能追加</li>
+                    </ul>
+
+                    <p>
+                        資格試験を受験する方々の学習スケジュール管理に少しでも貢献できていれば嬉しいです。もし、このアプリに追加してほしい機能や、掲載してほしい試験があれば、ぜひお問い合わせください。
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="cook-suggest-development.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ CookSuggestアプリ開発秘話｜料理提案ツールの技術と工夫</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="earthquake-monitor-tech.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 地震情報モニターの技術解説｜リアルタイムデータ表示の実装</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

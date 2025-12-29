@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Claude Codeを1ヶ月使ってみた体験記。コード生成AIの実力、GitHub Copilotとの比較、実際の開発での活用シーン、料金対効果を詳しくレビューします。">
+    <meta name="keywords" content="Claude Code,AI,コード生成,GitHub Copilot,開発効率化,レビュー">
+    <title>Claude Code使用レビュー｜1ヶ月使ってわかった実力と活用法 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Claude Code使用レビュー｜1ヶ月使ってわかった実力と活用法",
+        "description": "Claude Codeを1ヶ月使ってみた体験記。コード生成AIの実力、GitHub Copilotとの比較、実際の開発での活用シーン、料金対効果を詳しくレビューします。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2024-12-15",
+        "dateModified": "2024-12-15"
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Claude Code使用レビュー｜1ヶ月使ってわかった実力と活用法",
+                "item": "https://blog.mechatora.com/articles/claude-code-experience.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>MechaToraのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>Claude Code使用レビュー</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2024-12-15">2024年12月15日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2024年12月15日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>Claude Code使用レビュー｜1ヶ月使ってわかった実力と活用法</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+
+                    <!-- リード文（導入） -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        「AIがコードを書く時代」がついに来ました。Claude CodeはAnthropicが提供する最新のAIコーディングアシスタントです。GitHub CopilotやCursorと並び、開発者の間で注目を集めています。私自身、1ヶ月間実際のプロジェクトでClaude Codeを使い続けました。この記事では、その体験を元に、Claude Codeの実力、得意・不得意、料金対効果、そして実践的な活用法を詳しくレビューします。
+                    </p>
+
+                    <!-- 記事本文 -->
+                    <h2>Claude Codeとは？</h2>
+
+                    <h3>基本情報</h3>
+                    <ul>
+                        <li><strong>提供元：</strong>Anthropic（ChatGPTのOpenAI対抗馬）</li>
+                        <li><strong>モデル：</strong>Claude 3.5 Sonnet（2024年12月時点）</li>
+                        <li><strong>対応エディタ：</strong>VS Code拡張機能</li>
+                        <li><strong>料金：</strong>月20ドル（約3,000円）</li>
+                        <li><strong>主な機能：</strong>コード補完、コード生成、リファクタリング提案、バグ修正、ドキュメント生成</li>
+                    </ul>
+
+                    <h3>GitHub Copilot / Cursorとの違い</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                        <thead>
+                            <tr style="background: var(--bg-secondary);">
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">項目</th>
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">Claude Code</th>
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">GitHub Copilot</th>
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">Cursor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>料金</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">月20ドル</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">月10ドル</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">月20ドル</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary);">
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>コード補完</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>コード生成</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎（長文に強い）</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">○</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary);">
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>会話形式</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎（自然な対話）</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">△（Copilot Chat）</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>コンテキスト理解</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎（200K tokens）</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">○</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary);">
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>日本語対応</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">○</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">◎</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>1ヶ月使って感じた「すごい」ポイント</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>1. 長文のコード生成能力が圧倒的</h3>
+                    <p>
+                        「料理提案アプリのJavaScriptコードを書いて」という曖昧なリクエストでも、200行以上の完成度の高いコードを一気に生成してくれました。
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+// 私のリクエスト
+「食材を選んだら料理を提案するアプリのJavaScriptを書いて。
+食材データはJSONで管理、マッチングアルゴリズムで提案。
+FullCalendar.jsは使わず、シンプルなHTMLで表示」
+
+// Claude Codeが生成したコード
+// → 完璧に動作する200行のコードが30秒で完成
+</pre>
+
+                    <p>
+                        GitHub Copilotでは、こういった長文のコード生成は苦手で、数行ずつ補完する形になります。Claude Codeは「プロジェクト全体を理解して、一気に書く」のが得意です。
+                    </p>
+
+                    <h3>2. 「なぜそうするのか」を説明してくれる</h3>
+                    <p>
+                        生成したコードに対して、「なぜこの書き方をしたのか」「どういう意図でこの関数を使ったのか」を自然な日本語で説明してくれます。
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+// Claude Codeの説明例
+「ここでは Array.filter() を使いました。理由は、選択された食材と
+料理の必須食材を比較し、条件に合う料理だけを抽出するためです。
+for文でも書けますが、filter()の方が可読性が高く、関数型プログラミングの
+スタイルに沿っています。」
+</pre>
+
+                    <p>
+                        これが学習にも非常に役立ちました。単にコードをコピペするのではなく、「なぜこう書くのか」を理解できます。
+                    </p>
+
+                    <h3>3. リファクタリング提案が的確</h3>
+                    <p>
+                        既存のコードを見せて「改善点を教えて」と聞くと、以下のような提案をしてくれます：
+                    </p>
+                    <ul>
+                        <li>重複したコードを関数化する</li>
+                        <li>変数名をより明確にする</li>
+                        <li>エラーハンドリングを追加する</li>
+                        <li>パフォーマンスを改善する（例: forループ → map/filter）</li>
+                    </ul>
+
+                    <p>
+                        コードレビューを受けているような感覚で、自分のコードの質が向上しました。
+                    </p>
+
+                    <h3>4. バグ修正がスムーズ</h3>
+                    <p>
+                        エラーメッセージをそのまま貼り付けると、原因と修正方法を即座に提示してくれます。
+                    </p>
+                    <pre style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;">
+// エラーメッセージ
+Uncaught TypeError: Cannot read properties of undefined (reading 'name')
+
+// Claude Codeの回答
+「このエラーは、オブジェクトが undefined の状態で .name プロパティに
+アクセスしようとしたために発生しています。
+原因として考えられるのは...（詳細な説明）
+修正方法は以下の通りです:（具体的なコード）」
+</pre>
+
+                    <p>
+                        Stack Overflowで調べる時間が大幅に削減されました。
+                    </p>
+
+                    <h2>1ヶ月使って感じた「微妙」なポイント</h2>
+
+                    <h3>1. 料金がやや高い（月20ドル）</h3>
+                    <p>
+                        GitHub Copilot（月10ドル）と比べると2倍の価格です。個人開発で毎月3,000円は、ややハードルが高いと感じました。
+                    </p>
+                    <p>
+                        <strong>ただし：</strong>生成されるコードの質と、学習効果を考えると、「プログラミング参考書を毎月1冊買う」くらいの価値はあると感じています。
+                    </p>
+
+                    <h3>2. たまに古い情報を参照する</h3>
+                    <p>
+                        2024年12月時点で、たまに古いライブラリのバージョンや、非推奨のメソッドを提案されることがありました。
+                    </p>
+                    <p>
+                        <strong>対策：</strong>生成されたコードは、必ず公式ドキュメントで確認する習慣をつけました。
+                    </p>
+
+                    <h3>3. 複雑なロジックは間違えることがある</h3>
+                    <p>
+                        シンプルなコードは完璧ですが、複雑なアルゴリズム（ソート、再帰処理など）では、たまに間違ったコードを生成します。
+                    </p>
+                    <p>
+                        <strong>対策：</strong>「このコードは正しいですか？」と確認し、テストケースを書いて検証しました。
+                    </p>
+
+                    <h2>実際の活用シーン</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+                    <h3>シーン1: 新機能の実装（料理提案アプリ）</h3>
+                    <p>
+                        <strong>やりたいこと：</strong>食材を選んだら、料理を提案する機能
+                    </p>
+                    <p>
+                        <strong>Claude Codeの活用：</strong>
+                    </p>
+                    <ol>
+                        <li>「食材マッチングのアルゴリズムを教えて」 → ロジックの説明</li>
+                        <li>「JavaScriptでコードを書いて」 → 完動するコード生成</li>
+                        <li>「このコードを改善して」 → リファクタリング提案</li>
+                    </ol>
+                    <p>
+                        <strong>結果：</strong>通常3時間かかる実装が、1時間で完了しました。
+                    </p>
+
+                    <h3>シーン2: バグ修正（地震情報モニター）</h3>
+                    <p>
+                        <strong>問題：</strong>APIから取得したデータが正しく表示されない
+                    </p>
+                    <p>
+                        <strong>Claude Codeの活用：</strong>
+                    </p>
+                    <ol>
+                        <li>エラーメッセージを貼り付け → 原因特定</li>
+                        <li>「このAPIレスポンスをパースして表示するコードを書いて」 → 修正コード生成</li>
+                    </ol>
+                    <p>
+                        <strong>結果：</strong>30分でバグ修正完了。
+                    </p>
+
+                    <h3>シーン3: 学習（R言語のTidyverse）</h3>
+                    <p>
+                        <strong>やりたいこと：</strong>R言語でデータ分析を学ぶ
+                    </p>
+                    <p>
+                        <strong>Claude Codeの活用：</strong>
+                    </p>
+                    <ol>
+                        <li>「dplyrでグループ化して集計する方法を教えて」 → 丁寧な解説 + サンプルコード</li>
+                        <li>「ggplot2で棒グラフを作るコードを書いて」 → 即座にコード生成</li>
+                    </ol>
+                    <p>
+                        <strong>結果：</strong>書籍より分かりやすく、効率的に学習できました。
+                    </p>
+
+                    <h2>効果的な使い方のコツ</h2>
+
+                    <h3>1. 具体的な指示を出す</h3>
+                    <p>
+                        曖昧な指示ではなく、できるだけ具体的に伝えましょう。
+                    </p>
+                    <ul>
+                        <li>❌ 悪い例: 「料理アプリを作って」</li>
+                        <li>✅ 良い例: 「食材を複数選択し、それらを含む料理を提案するアプリを作って。データはJSONで管理、JavaScriptで実装」</li>
+                    </ul>
+
+                    <h3>2. 段階的に質問する</h3>
+                    <p>
+                        いきなり全部を頼むのではなく、段階的に進めましょう。
+                    </p>
+                    <ol>
+                        <li>「アルゴリズムの設計を教えて」</li>
+                        <li>「JavaScriptでコードを書いて」</li>
+                        <li>「エラーハンドリングを追加して」</li>
+                        <li>「パフォーマンスを改善して」</li>
+                    </ol>
+
+                    <h3>3. 生成されたコードを理解する</h3>
+                    <p>
+                        コピペで終わらせず、必ず「なぜこう書いているのか」を理解しましょう。
+                    </p>
+                    <ul>
+                        <li>「このコードの各行を説明して」と聞く</li>
+                        <li>変数名や関数名の意味を確認する</li>
+                        <li>自分で書き直してみる</li>
+                    </ul>
+
+                    <h3>4. テストケースを書く</h3>
+                    <p>
+                        AIが生成したコードは完璧ではありません。必ずテストを書いて検証しましょう。
+                    </p>
+
+                    <h2>料金対効果は？</h2>
+
+                    <h3>月20ドル（約3,000円）の価値はあるか？</h3>
+                    <p>
+                        私の結論: <strong>「開発時間を買う」と考えれば、十分コスパが良い</strong>
+                    </p>
+
+                    <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                        <thead>
+                            <tr style="background: var(--bg-secondary);">
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">効果</th>
+                                <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">時間短縮</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">新機能実装</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">3時間 → 1時間（-2時間）</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary);">
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">バグ修正</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">1時間 → 30分（-30分）</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">コードレビュー</td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);">不要だった → 10分で完了</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary);">
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>月間合計</strong></td>
+                                <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>約15時間の短縮</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        時給2,000円で換算すると、月15時間 × 2,000円 = 30,000円分の価値。月3,000円の投資で10倍のリターンです。
+                    </p>
+
+                    <h3>どんな人におすすめか？</h3>
+                    <ul>
+                        <li><strong>◎ プログラミング初心者〜中級者：</strong>学習効果が高い</li>
+                        <li><strong>◎ 個人開発者：</strong>時間短縮の効果が大きい</li>
+                        <li><strong>◎ 副業エンジニア：</strong>限られた時間で成果を出せる</li>
+                        <li><strong>△ 上級エンジニア：</strong>既に自力で書けるので、効果は限定的かも</li>
+                    </ul>
+
+                    <h2>Claude Code vs GitHub Copilot どっちを選ぶ？</h2>
+
+                    <div style="background: var(--bg-secondary); padding: 2rem; border-radius: 8px; margin: 2rem 0;">
+                        <h3 style="margin-bottom: 1.5rem;">選び方のフローチャート</h3>
+                        <ul style="line-height: 2;">
+                            <li><strong>コスト重視（月10ドル）？</strong> → <span style="color: var(--primary-color); font-weight: bold;">GitHub Copilot</span></li>
+                            <li><strong>コード補完だけでOK？</strong> → <span style="color: var(--primary-color); font-weight: bold;">GitHub Copilot</span></li>
+                            <li><strong>長文のコード生成が必要？</strong> → <span style="color: var(--primary-color); font-weight: bold;">Claude Code</span></li>
+                            <li><strong>会話形式で質問したい？</strong> → <span style="color: var(--primary-color); font-weight: bold;">Claude Code / Cursor</span></li>
+                            <li><strong>学習目的で使いたい？</strong> → <span style="color: var(--primary-color); font-weight: bold;">Claude Code</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- まとめセクション -->
+                    <h2>まとめ</h2>
+                    <p>
+                        Claude Codeは、プログラミング学習と開発効率化の両面で優れたツールです。このページのポイントをまとめます：
+                    </p>
+                    <ul>
+                        <li><strong>料金：</strong>月20ドル（約3,000円）、GitHub Copilotの2倍</li>
+                        <li><strong>強み：</strong>長文コード生成、会話形式の質問、リファクタリング提案、学習効果</li>
+                        <li><strong>弱み：</strong>料金がやや高い、たまに古い情報、複雑なロジックは間違えることも</li>
+                        <li><strong>時間短縮：</strong>月15時間（約30,000円分の価値）</li>
+                        <li><strong>おすすめ：</strong>初心者〜中級者、個人開発者、副業エンジニア</li>
+                    </ul>
+
+                    <p>
+                        AIコーディングツールは「魔法の杖」ではありませんが、正しく使えば強力な味方になります。Claude Codeは特に、「コードを書くだけでなく、学びながら成長したい」という方におすすめです。
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="30s-programming.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 30代からのプログラミング独学体験記｜働きながら15個のアプリを作るまで</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MechaToraのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのMechaToraが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MechaTora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

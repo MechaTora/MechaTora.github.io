@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Git/GitHubの実践的な使い方を解説。基本コマンド、ブランチ戦略、プルリクエスト、コンフリクト解決など、個人開発で実際に使っているワークフローを紹介します。">
+    <meta name="keywords" content="Git,GitHub,バージョン管理,ブランチ,プルリクエスト,コンフリクト,開発フロー">
+    <title>Git/GitHub実践ガイド - 個人開発で使えるワークフロー | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Git/GitHub実践ガイド",
+        "description": "Git/GitHubの実践的な使い方を解説。基本コマンド、ブランチ戦略、プルリクエスト、コンフリクト解決など、実際に使っているワークフローを紹介します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-11-03",
+        "dateModified": "2025-11-03",
+        "image": "https://blog.mechatora.com/images/git-github-guide.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Git/GitHub実践ガイド - 個人開発で使えるワークフロー",
+                "item": "https://blog.mechatora.com/articles/git-github-workflow.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>Git/GitHub実践ガイド</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category tech">技術・開発</span>
+                <h1>Git/GitHub実践ガイド - 個人開発で使えるワークフロー</h1>
+                <div class="article-meta">
+                    <time datetime="2025-11-03">2025年11月3日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>「Gitは難しい」「コマンドが覚えられない」「コンフリクトが怖い」——プログラミング初心者がGitで躓くのはよくある話です。しかし、基本的な使い方を理解すれば、Gitは強力なバックアップ・履歴管理ツールになります。</p>
+                <p>この記事では、MechaToraで15個のプロジェクトを管理してきた経験から、個人開発で実際に使っているGit/GitHubのワークフローを解説します。最低限覚えるべきコマンド、ブランチの使い方、よくあるトラブルの解決法まで、実践的な内容をお伝えします。</p>
+            </div>
+
+            <h2>なぜGit/GitHubが必要なのか</h2>
+
+            <h3>Gitがない世界</h3>
+            <p>Git導入前の私の管理方法：</p>
+            <pre><code>project/
+├── index.html
+├── index_backup.html
+├── index_backup2.html
+├── index_old.html
+├── index_20240101.html
+├── index_final.html
+├── index_final_final.html
+└── index_本当に最終版.html</code></pre>
+
+            <p>これでは、以下の問題が発生します：</p>
+            <ul>
+                <li><strong>どれが最新か分からない</strong></li>
+                <li><strong>いつ何を変更したか分からない</strong></li>
+                <li><strong>以前のバージョンに戻せない</strong></li>
+                <li><strong>複数人で作業できない</strong></li>
+            </ul>
+
+            <h3>Gitのメリット</h3>
+            <ul>
+                <li><strong>全ての変更履歴を保存</strong>：いつでも過去に戻れる</li>
+                <li><strong>複数のバージョンを並行管理</strong>：ブランチ機能</li>
+                <li><strong>変更内容が明確</strong>：コミットメッセージで何をしたか記録</li>
+                <li><strong>GitHub連携</strong>：クラウドバックアップ、ポートフォリオ公開</li>
+            </ul>
+
+            <h2>Git/GitHubの基本概念</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>リポジトリ（Repository）</h3>
+            <p>プロジェクトの保管庫。ファイルと変更履歴を全て含みます。</p>
+
+            <h3>コミット（Commit）</h3>
+            <p>変更を記録する単位。「セーブポイント」のイメージです。</p>
+
+            <h3>ブランチ（Branch）</h3>
+            <p>並行して複数のバージョンを管理する機能。新機能開発時に使います。</p>
+
+            <h3>リモート（Remote）</h3>
+            <p>GitHub上のリポジトリ。ローカル（自分のPC）の変更をアップロードします。</p>
+
+            <h2>環境構築</h2>
+
+            <h3>Gitのインストール</h3>
+            <pre><code># Mac（Homebrew）
+brew install git
+
+# Windows
+# https://git-scm.com/ からインストーラーをダウンロード
+
+# インストール確認
+git --version
+# 出力例: git version 2.39.0</code></pre>
+
+            <h3>初期設定</h3>
+            <pre><code># ユーザー名とメールアドレスを設定（GitHubと同じにする）
+git config --global user.name "MechaTora"
+git config --global user.email "mechatora@example.com"
+
+# デフォルトブランチ名を main に設定
+git config --global init.defaultBranch main
+
+# 設定確認
+git config --list</code></pre>
+
+            <h2>基本ワークフロー</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>1. リポジトリの作成</h3>
+            <pre><code># プロジェクトフォルダに移動
+cd my-project
+
+# Gitリポジトリを初期化
+git init
+
+# 出力: Initialized empty Git repository in /path/to/my-project/.git/</code></pre>
+
+            <h3>2. ファイルを追加してコミット</h3>
+            <pre><code># ファイルを作成
+echo "# My Project" > README.md
+
+# ステージングエリアに追加
+git add README.md
+
+# または、全てのファイルを追加
+git add .
+
+# コミット（変更を記録）
+git commit -m "Initial commit: Add README"
+
+# 出力:
+# [main (root-commit) a1b2c3d] Initial commit: Add README
+#  1 file changed, 1 insertion(+)</code></pre>
+
+            <h3>3. GitHubにプッシュ</h3>
+            <pre><code># GitHub で新しいリポジトリを作成後、リモートを追加
+git remote add origin https://github.com/mechatora/my-project.git
+
+# main ブランチをプッシュ
+git push -u origin main
+
+# 2回目以降は
+git push</code></pre>
+
+            <h2>日常的に使うコマンド</h2>
+
+            <h3>現在の状態確認</h3>
+            <pre><code># 変更されたファイルを確認
+git status
+
+# 出力例:
+# On branch main
+# Changes not staged for commit:
+#   modified:   index.html
+# Untracked files:
+#   style.css</code></pre>
+
+            <h3>変更内容の確認</h3>
+            <pre><code># ファイルの差分を表示
+git diff
+
+# ステージング済みの差分を表示
+git diff --staged</code></pre>
+
+            <h3>コミット履歴の確認</h3>
+            <pre><code># コミット履歴を表示
+git log
+
+# 1行で表示（見やすい）
+git log --oneline
+
+# 出力例:
+# a1b2c3d (HEAD -> main) Fix bug in login form
+# e4f5g6h Add user authentication
+# i7j8k9l Initial commit</code></pre>
+
+            <h3>私がよく使うコマンドトップ5</h3>
+            <ol>
+                <li><code>git status</code>：現在の状態確認（1日10回以上）</li>
+                <li><code>git add .</code>：全ての変更をステージング</li>
+                <li><code>git commit -m "message"</code>：コミット</li>
+                <li><code>git push</code>：GitHubにアップロード</li>
+                <li><code>git log --oneline</code>：履歴確認</li>
+            </ol>
+
+            <h2>ブランチの使い方</h2>
+
+            <h3>なぜブランチを使うのか</h3>
+            <p>新機能開発中に、mainブランチ（本番用）を壊したくないからです。</p>
+
+            <h3>ブランチの基本操作</h3>
+            <pre><code># 新しいブランチを作成
+git branch feature/new-login
+
+# ブランチ一覧を表示
+git branch
+
+# 出力:
+# * main
+#   feature/new-login
+
+# ブランチを切り替え
+git checkout feature/new-login
+
+# または、作成と切り替えを同時に
+git checkout -b feature/new-login</code></pre>
+
+            <h3>ブランチでの作業</h3>
+            <pre><code># feature/new-login ブランチで開発
+# ファイルを編集...
+
+git add .
+git commit -m "Add new login form"
+
+# GitHubにプッシュ
+git push -u origin feature/new-login</code></pre>
+
+            <h3>ブランチのマージ</h3>
+            <pre><code># main ブランチに戻る
+git checkout main
+
+# feature/new-login をマージ
+git merge feature/new-login
+
+# 不要なブランチを削除
+git branch -d feature/new-login</code></pre>
+
+            <h2>実践：MechaToraでのブランチ戦略</h2>
+
+            <h3>シンプルな運用</h3>
+            <p>個人開発なので、以下のシンプルなルールで運用しています：</p>
+            <ul>
+                <li><strong>main ブランチ</strong>：本番環境（GitHub Pagesで公開）</li>
+                <li><strong>feature/〇〇 ブランチ</strong>：新機能開発</li>
+                <li><strong>fix/〇〇 ブランチ</strong>：バグ修正</li>
+            </ul>
+
+            <h3>実際のワークフロー</h3>
+            <pre><code># 1. 新機能開発開始
+git checkout -b feature/earthquake-notification
+
+# 2. 開発してコミット
+git add .
+git commit -m "Add earthquake notification feature"
+
+# 3. GitHubにプッシュ
+git push -u origin feature/earthquake-notification
+
+# 4. 動作確認OK → main にマージ
+git checkout main
+git merge feature/earthquake-notification
+
+# 5. 本番環境にデプロイ
+git push
+
+# 6. ブランチ削除
+git branch -d feature/earthquake-notification
+git push origin --delete feature/earthquake-notification</code></pre>
+
+            <h2>コンフリクトの解決</h2>
+
+            <h3>コンフリクトとは</h3>
+            <p>同じファイルの同じ箇所を、異なるブランチで別々に編集したときに発生します。</p>
+
+            <h3>コンフリクトの例</h3>
+            <pre><code># mainブランチでマージしようとすると...
+git merge feature/update-header
+
+# 出力:
+# Auto-merging index.html
+# CONFLICT (content): Merge conflict in index.html
+# Automatic merge failed; fix conflicts and then commit the result.</code></pre>
+
+            <h3>解決方法</h3>
+            <p>ファイルを開くと、以下のような表示があります：</p>
+            <pre><code>&lt;!-- index.html --&gt;
+&lt;header&gt;
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+    &lt;h1&gt;MechaTora - Webツール&lt;/h1&gt;
+=======
+    &lt;h1&gt;MechaTora - 便利なアプリ&lt;/h1&gt;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/update-header
+&lt;/header&gt;</code></pre>
+
+            <p>手動で修正：</p>
+            <pre><code>&lt;!-- 修正後 --&gt;
+&lt;header&gt;
+    &lt;h1&gt;MechaTora - 便利なWebツール&lt;/h1&gt;
+&lt;/header&gt;</code></pre>
+
+            <p>コミット：</p>
+            <pre><code>git add index.html
+git commit -m "Resolve merge conflict in header"</code></pre>
+
+            <h2>よくあるトラブルと解決法</h2>
+
+            <h3>トラブル1：コミットを取り消したい</h3>
+            <pre><code># 直前のコミットを取り消し（変更は残す）
+git reset --soft HEAD~1
+
+# 直前のコミットを完全に削除（変更も消える）
+git reset --hard HEAD~1
+
+# 注意：pushした後は使わない！</code></pre>
+
+            <h3>トラブル2：間違えてファイルを削除してしまった</h3>
+            <pre><code># 最後のコミット時点に戻す
+git checkout -- index.html
+
+# 全てのファイルを戻す
+git checkout -- .</code></pre>
+
+            <h3>トラブル3：GitHubにpushできない</h3>
+            <pre><code># エラー: Updates were rejected because the remote contains work...
+
+# 原因：リモートに新しいコミットがある
+
+# 解決策：まずpullする
+git pull origin main
+
+# コンフリクトがあれば解決後、再度push
+git push</code></pre>
+
+            <h3>トラブル4：.gitignore を後から追加</h3>
+            <pre><code># .gitignore ファイルを作成
+echo "node_modules/" > .gitignore
+echo ".env" >> .gitignore
+
+# すでにトラッキングされているファイルを削除
+git rm -r --cached node_modules/
+git rm --cached .env
+
+# コミット
+git add .gitignore
+git commit -m "Add .gitignore"</code></pre>
+
+            <h2>.gitignore の活用</h2>
+
+            <h3>基本的な .gitignore</h3>
+            <pre><code># 依存関係
+node_modules/
+vendor/
+
+# 環境変数
+.env
+.env.local
+
+# ビルド成果物
+dist/
+build/
+
+# エディタ設定
+.vscode/
+.idea/
+
+# OS固有ファイル
+.DS_Store
+Thumbs.db
+
+# ログファイル
+*.log</code></pre>
+
+            <h2>コミットメッセージのベストプラクティス</h2>
+
+            <h3>良いコミットメッセージ</h3>
+            <pre><code>✅ feat: Add earthquake notification feature
+✅ fix: Resolve login form validation bug
+✅ docs: Update README with setup instructions
+✅ refactor: Extract API calls to separate module
+✅ style: Format code with Prettier</code></pre>
+
+            <h3>悪いコミットメッセージ</h3>
+            <pre><code>❌ 修正
+❌ Update
+❌ aaa
+❌ 色々直した
+❌ とりあえずコミット</code></pre>
+
+            <h3>Conventional Commits</h3>
+            <p>プレフィックスで種類を明示：</p>
+            <ul>
+                <li><code>feat:</code> 新機能</li>
+                <li><code>fix:</code> バグ修正</li>
+                <li><code>docs:</code> ドキュメント</li>
+                <li><code>style:</code> コードフォーマット</li>
+                <li><code>refactor:</code> リファクタリング</li>
+                <li><code>test:</code> テスト追加</li>
+                <li><code>chore:</code> その他（依存関係更新など）</li>
+            </ul>
+
+            <h2>GitHub Pages へのデプロイ</h2>
+
+            <pre><code># 1. GitHubでリポジトリ作成
+
+# 2. ローカルリポジトリとリンク
+git remote add origin https://github.com/mechatora/my-site.git
+
+# 3. プッシュ
+git add .
+git commit -m "Initial commit"
+git push -u origin main
+
+# 4. GitHub のリポジトリ設定 → Pages
+# Source: main branch を選択
+
+# 5. https://mechatora.github.io/my-site/ でアクセス可能！</code></pre>
+
+            <h2>まとめ</h2>
+
+            <h3>最低限覚えるべきコマンド</h3>
+            <pre><code># 初期設定（1回だけ）
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+
+# 新規プロジェクト
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin [GitHub URL]
+git push -u origin main
+
+# 日常的な作業
+git status          # 状態確認
+git add .           # 変更をステージング
+git commit -m "〇〇" # コミット
+git push            # GitHubにアップロード
+git pull            # GitHubから最新を取得
+
+# ブランチ作業
+git checkout -b feature/new-feature  # ブランチ作成・切り替え
+git checkout main                    # mainに戻る
+git merge feature/new-feature        # マージ</code></pre>
+
+            <h3>運用のコツ</h3>
+            <ul>
+                <li>✅ こまめにコミット（1機能追加ごと）</li>
+                <li>✅ 分かりやすいコミットメッセージ</li>
+                <li>✅ 新機能はブランチで開発</li>
+                <li>✅ 動作確認してからマージ</li>
+                <li>✅ .gitignore で不要なファイルを除外</li>
+            </ul>
+
+            <p>Gitは最初は難しく感じますが、基本的なコマンドを繰り返し使えば自然と身に付きます。MechaToraでは、15個のプロジェクト全てをGitで管理し、変更履歴を完全に追跡できています。</p>
+
+            <p>まずは、小さなプロジェクトで試してみてください！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="github-pages-guide.html">GitHub Pages完全ガイド</a></li>
+                    <li><a href="github-actions-deploy.html">GitHub Actionsで自動デプロイ</a></li>
+                    <li><a href="portfolio-building-guide.html">エンジニアのポートフォリオの作り方</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>

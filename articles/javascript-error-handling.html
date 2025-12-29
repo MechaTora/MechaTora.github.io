@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JavaScriptのエラーハンドリングとデバッグ手法を実践的に解説。try-catch、Promise、async/awaitのエラー処理、Chrome DevToolsの使い方、本番環境でのエラー監視まで、実際の経験をもとに紹介します。">
+    <meta name="keywords" content="JavaScript,エラーハンドリング,デバッグ,try-catch,Promise,async/await,Chrome DevTools">
+    <title>JavaScriptエラーハンドリングの実践 - 堅牢なコードを書く方法 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "JavaScriptエラーハンドリングの実践",
+        "description": "JavaScriptのエラーハンドリングとデバッグ手法を実践的に解説。try-catch、Promise、async/awaitのエラー処理、DevToolsの使い方など実際の経験をもとに紹介します。",
+        "author": {
+            "@type": "Person",
+            "name": "MechaTora"
+        },
+        "datePublished": "2025-10-26",
+        "dateModified": "2025-10-26",
+        "image": "https://blog.mechatora.com/images/javascript-error-handling.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MechaToraのブログ",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.mechatora.com/images/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- パンくずリスト構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://blog.mechatora.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "記事一覧",
+                "item": "https://blog.mechatora.com/articles.html"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "JavaScriptエラーハンドリングの実践 - 堅牢なコードを書く方法",
+                "item": "https://blog.mechatora.com/articles/javascript-error-handling.html"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
+            <span>🔄 最終更新: 2025年1月15日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="記事のアイキャッチ画像" style="width: 100%; height: auto; display: block;">
+        </div>
+
+            <nav>
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="../index.html">ホーム</a> &gt;
+        <a href="../articles.html">記事一覧</a> &gt;
+        <span>JavaScriptエラーハンドリングの実践</span>
+    </nav>
+
+    <main>
+        <article>
+            <div class="article-header">
+                <span class="category tech">技術・開発</span>
+                <h1>JavaScriptエラーハンドリングの実践 - 堅牢なコードを書く方法</h1>
+                <div class="article-meta">
+                    <time datetime="2025-10-26">2025年10月26日</time>
+                    <span class="reading-time">📖 約10分</span>
+                </div>
+            </div>
+
+            <div class="lead">
+                <p>「動いたから完成！」と思ってリリースしたら、ユーザーから「エラーが出て使えない」と報告される——そんな経験はありませんか？エラーハンドリング（エラー処理）は、堅牢なWebアプリを作る上で不可欠なスキルです。</p>
+                <p>この記事では、MechaToraで15個のツールを運用する中で学んだ、JavaScriptのエラーハンドリングとデバッグの実践テクニックを紹介します。基本的なtry-catchから、非同期処理のエラー対処、本番環境でのエラー監視まで、実務で使える内容をお伝えします。</p>
+            </div>
+
+            <h2>エラーハンドリングが重要な理由</h2>
+
+            <h3>放置すると起こる問題</h3>
+            <p>私がエラーハンドリングを軽視していた頃、以下のような問題が発生しました：</p>
+            <ul>
+                <li><strong>アプリが突然停止</strong>：APIエラーでページ全体が固まる</li>
+                <li><strong>ユーザー体験の悪化</strong>：何が起きたか分からず、ユーザーが困惑</li>
+                <li><strong>デバッグが困難</strong>：エラー原因が特定できない</li>
+                <li><strong>セキュリティリスク</strong>：エラーメッセージで内部情報が露出</li>
+            </ul>
+
+            <h3>適切なエラーハンドリングの効果</h3>
+            <ul>
+                <li><strong>予期しない動作を防ぐ</strong>：エラーが起きても最低限の機能は維持</li>
+                <li><strong>ユーザーフレンドリー</strong>：分かりやすいエラーメッセージを表示</li>
+                <li><strong>デバッグが容易</strong>：ログで原因を特定しやすい</li>
+                <li><strong>保守性向上</strong>：エラーが一箇所に集約され、管理しやすい</li>
+            </ul>
+
+            <h2>基本：try-catch文</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>基本的な使い方</h3>
+            <p>最も基本的なエラーハンドリングがtry-catch文です：</p>
+            <pre><code>try {
+  // エラーが発生する可能性のあるコード
+  const data = JSON.parse(jsonString);
+  console.log(data);
+} catch (error) {
+  // エラーが発生したときの処理
+  console.error('JSONのパースに失敗:', error.message);
+  alert('データの読み込みに失敗しました');
+}</code></pre>
+
+            <h3>finally句の活用</h3>
+            <p>エラーの有無に関わらず実行したい処理は、finally句に書きます：</p>
+            <pre><code>function loadData() {
+  showLoading(); // ローディング表示
+
+  try {
+    const data = fetchDataFromAPI();
+    displayData(data);
+  } catch (error) {
+    showError('データ取得に失敗しました');
+  } finally {
+    hideLoading(); // 必ずローディングを消す
+  }
+}</code></pre>
+
+            <h3>実際の活用例：LocalStorageの読み込み</h3>
+            <p>MechaToraの各ツールで使っている実装：</p>
+            <pre><code>function loadSettings() {
+  try {
+    const settingsJson = localStorage.getItem('app_settings');
+    if (!settingsJson) {
+      return getDefaultSettings(); // デフォルト値を返す
+    }
+
+    const settings = JSON.parse(settingsJson);
+    return settings;
+
+  } catch (error) {
+    console.error('設定の読み込みエラー:', error);
+    // エラー時もデフォルト値で動作を継続
+    return getDefaultSettings();
+  }
+}
+
+function getDefaultSettings() {
+  return {
+    theme: 'light',
+    language: 'ja',
+    notifications: true
+  };
+}</code></pre>
+
+            <h2>非同期処理のエラーハンドリング</h2>
+
+            <h3>Promise の .catch()</h3>
+            <p>Promiseベースの非同期処理では、.catch()でエラーを捕捉します：</p>
+            <pre><code>fetch('https://api.example.com/data')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('データ取得成功:', data);
+  })
+  .catch(error => {
+    console.error('データ取得失敗:', error);
+    showError('通信エラーが発生しました。時間をおいて再度お試しください。');
+  });</code></pre>
+
+            <h3>async/await での try-catch</h3>
+            <p>async/awaitを使うと、同期処理と同じようにtry-catchが使えます（推奨）：</p>
+            <pre><code>async function fetchUserData(userId) {
+  try {
+    const response = await fetch(`https://api.example.com/users/${userId}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error('ユーザーデータ取得エラー:', error);
+
+    // ネットワークエラーか HTTPエラーかで分岐
+    if (error.message.includes('Failed to fetch')) {
+      throw new Error('ネットワークに接続できません');
+    } else {
+      throw new Error('ユーザー情報の取得に失敗しました');
+    }
+  }
+}</code></pre>
+
+            <h3>実際の活用例：楽天API呼び出し</h3>
+            <p>日本酒検索アプリでの実装：</p>
+            <pre><code>async function searchSake(keyword) {
+  const API_KEY = 'YOUR_API_KEY';
+  const url = `https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601?
+    applicationId=${API_KEY}&
+    keyword=${encodeURIComponent(keyword + ' 日本酒')}&
+    hits=30`;
+
+  try {
+    showLoading();
+
+    const response = await fetch(url);
+
+    // HTTPエラーチェック
+    if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error('API利用制限に達しました。しばらく経ってから再度お試しください。');
+      } else if (response.status === 404) {
+        throw new Error('APIエンドポイントが見つかりません。');
+      } else {
+        throw new Error(`APIエラー: ${response.status}`);
+      }
+    }
+
+    const data = await response.json();
+
+    // データの検証
+    if (!data.Items || data.Items.length === 0) {
+      showMessage('該当する商品が見つかりませんでした');
+      return [];
+    }
+
+    return data.Items;
+
+  } catch (error) {
+    console.error('検索エラー:', error);
+
+    // ユーザーフレンドリーなエラーメッセージ
+    if (error.message.includes('Failed to fetch')) {
+      showError('ネットワークエラーが発生しました。インターネット接続を確認してください。');
+    } else {
+      showError(error.message);
+    }
+
+    return [];
+
+  } finally {
+    hideLoading();
+  }
+}</code></pre>
+
+            <h2>カスタムエラークラス</h2>
+        <div style="margin: 1.5rem 0; text-align: center;">
+            <img src="../images/tech-default.svg" alt="セクション画像" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+
+
+            <h3>独自のエラー型を定義</h3>
+            <p>エラーの種類を明確にするため、カスタムエラークラスを作ります：</p>
+            <pre><code>// ネットワークエラー
+class NetworkError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+
+// APIエラー
+class APIError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.name = 'APIError';
+    this.statusCode = statusCode;
+  }
+}
+
+// バリデーションエラー
+class ValidationError extends Error {
+  constructor(message, field) {
+    super(message);
+    this.name = 'ValidationError';
+    this.field = field;
+  }
+}</code></pre>
+
+            <h3>カスタムエラーの活用</h3>
+            <pre><code>async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new APIError(
+        `API request failed: ${response.statusText}`,
+        response.status
+      );
+    }
+
+    return await response.json();
+
+  } catch (error) {
+    if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+      throw new NetworkError('ネットワークに接続できません');
+    }
+    throw error;
+  }
+}
+
+// 使用例
+try {
+  const data = await fetchData('https://api.example.com/data');
+  console.log(data);
+} catch (error) {
+  if (error instanceof NetworkError) {
+    showNetworkErrorDialog();
+  } else if (error instanceof APIError) {
+    showAPIErrorDialog(error.statusCode);
+  } else {
+    showGeneralErrorDialog();
+  }
+}</code></pre>
+
+            <h2>グローバルエラーハンドラー</h2>
+
+            <h3>window.onerror</h3>
+            <p>キャッチされなかったエラーを一箇所で処理：</p>
+            <pre><code>window.onerror = function(message, source, lineno, colno, error) {
+  console.error('Global error:', {
+    message,
+    source,
+    lineno,
+    colno,
+    error
+  });
+
+  // エラーをサーバーに送信（本番環境）
+  if (location.hostname !== 'localhost') {
+    logErrorToServer({
+      message,
+      source,
+      lineno,
+      colno,
+      stack: error?.stack,
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  // ユーザーに通知
+  showErrorNotification('予期しないエラーが発生しました');
+
+  // エラーの伝播を止める
+  return true;
+};</code></pre>
+
+            <h3>Promiseの未処理エラーを捕捉</h3>
+            <pre><code>window.addEventListener('unhandledrejection', event => {
+  console.error('Unhandled promise rejection:', event.reason);
+
+  // エラーログ送信
+  logErrorToServer({
+    type: 'unhandledRejection',
+    reason: event.reason,
+    promise: event.promise,
+    timestamp: new Date().toISOString()
+  });
+
+  // ユーザーに通知
+  showErrorNotification('処理中にエラーが発生しました');
+
+  // デフォルトの動作を防ぐ
+  event.preventDefault();
+});</code></pre>
+
+            <h2>デバッグテクニック</h2>
+
+            <h3>1. console.log の活用</h3>
+            <p>基本ですが、使い分けが重要：</p>
+            <pre><code>// 通常のログ
+console.log('変数の値:', myVariable);
+
+// 警告
+console.warn('この機能は非推奨です');
+
+// エラー
+console.error('APIエラー:', error);
+
+// テーブル形式（配列・オブジェクト）
+console.table(users);
+
+// グループ化
+console.group('ユーザー情報');
+console.log('名前:', user.name);
+console.log('年齢:', user.age);
+console.groupEnd();
+
+// 実行時間の計測
+console.time('データ取得');
+await fetchData();
+console.timeEnd('データ取得'); // "データ取得: 234.56ms"</code></pre>
+
+            <h3>2. デバッガーの使用</h3>
+            <p>Chrome DevTools のデバッガーを活用：</p>
+            <pre><code>function complexCalculation(data) {
+  debugger; // この行で実行が一時停止
+
+  let result = 0;
+  for (let item of data) {
+    result += item.value * item.quantity;
+  }
+
+  return result;
+}</code></pre>
+
+            <p><strong>DevToolsの便利機能：</strong></p>
+            <ul>
+                <li><strong>ブレークポイント</strong>：行番号クリックで設定</li>
+                <li><strong>条件付きブレークポイント</strong>：特定条件のみ停止</li>
+                <li><strong>ステップ実行</strong>：F10（次の行）、F11（関数内に入る）</li>
+                <li><strong>Watch式</strong>：変数の値を監視</li>
+                <li><strong>Call Stack</strong>：関数の呼び出し履歴を確認</li>
+            </ul>
+
+            <h3>3. エラーの再現方法</h3>
+            <p>意図的にエラーを発生させてテスト：</p>
+            <pre><code>// ネットワークエラーをシミュレート
+async function fetchDataWithSimulatedError(url, shouldFail = false) {
+  if (shouldFail) {
+    throw new Error('Simulated network error');
+  }
+  return await fetch(url);
+}
+
+// APIレート制限をシミュレート
+function mockAPIResponse(shouldReturn429 = false) {
+  if (shouldReturn429) {
+    return new Response(null, { status: 429 });
+  }
+  return new Response(JSON.stringify({ data: 'success' }), { status: 200 });
+}</code></pre>
+
+            <h2>本番環境でのエラー監視</h2>
+
+            <h3>シンプルなエラーログ送信</h3>
+            <p>サーバーにエラーを送信して記録：</p>
+            <pre><code>async function logErrorToServer(errorInfo) {
+  try {
+    await fetch('https://your-server.com/api/errors', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(errorInfo)
+    });
+  } catch (error) {
+    // エラーログの送信が失敗しても、アプリは止めない
+    console.error('Failed to log error:', error);
+  }
+}
+
+// 使用例
+try {
+  // 何らかの処理
+} catch (error) {
+  logErrorToServer({
+    message: error.message,
+    stack: error.stack,
+    url: window.location.href,
+    userAgent: navigator.userAgent,
+    timestamp: new Date().toISOString()
+  });
+}</code></pre>
+
+            <h3>外部サービスの活用</h3>
+            <p>本格的な監視には、以下のようなサービスが便利です：</p>
+            <ul>
+                <li><strong>Sentry</strong>：無料枠あり、エラートラッキングの定番</li>
+                <li><strong>LogRocket</strong>：セッションリプレイ機能付き</li>
+                <li><strong>Google Analytics</strong>：イベントトラッキングでエラーを記録</li>
+            </ul>
+
+            <p>Sentryの簡単な導入例：</p>
+            <pre><code>// Sentryをインストール
+// npm install @sentry/browser
+
+import * as Sentry from "@sentry/browser";
+
+Sentry.init({
+  dsn: "YOUR_SENTRY_DSN",
+  environment: "production",
+  // サンプリングレート（エラーの10%のみ送信）
+  sampleRate: 0.1
+});
+
+// エラーを手動で送信
+try {
+  // 何らかの処理
+} catch (error) {
+  Sentry.captureException(error);
+}</code></pre>
+
+            <h2>実践的なエラーハンドリングパターン</h2>
+
+            <h3>パターン1：Fetch ラッパー関数</h3>
+            <p>全てのAPI呼び出しで統一したエラーハンドリング：</p>
+            <pre><code>async function apiFetch(url, options = {}) {
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new APIError(
+        errorData.message || `HTTP ${response.status}`,
+        response.status
+      );
+    }
+
+    return await response.json();
+
+  } catch (error) {
+    if (error instanceof APIError) {
+      throw error;
+    }
+
+    // ネットワークエラー
+    throw new NetworkError('ネットワークエラーが発生しました');
+  }
+}
+
+// 使用例
+try {
+  const data = await apiFetch('https://api.example.com/data');
+  console.log(data);
+} catch (error) {
+  if (error instanceof NetworkError) {
+    showError('インターネット接続を確認してください');
+  } else if (error instanceof APIError && error.statusCode === 404) {
+    showError('データが見つかりませんでした');
+  } else {
+    showError('エラーが発生しました');
+  }
+}</code></pre>
+
+            <h3>パターン2：リトライロジック付きFetch</h3>
+            <pre><code>async function fetchWithRetry(url, options = {}, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, options);
+
+      if (response.ok) {
+        return await response.json();
+      }
+
+      // 429エラー（Rate Limit）は再試行
+      if (response.status === 429 && i < retries - 1) {
+        const retryAfter = response.headers.get('Retry-After') || 2;
+        await sleep(retryAfter * 1000);
+        continue;
+      }
+
+      throw new APIError(`HTTP ${response.status}`, response.status);
+
+    } catch (error) {
+      // 最後の試行で失敗したらエラーを投げる
+      if (i === retries - 1) {
+        throw error;
+      }
+
+      // 指数バックオフ（1秒、2秒、4秒...）
+      await sleep(Math.pow(2, i) * 1000);
+    }
+  }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}</code></pre>
+
+            <h2>まとめ</h2>
+
+            <p>堅牢なJavaScriptアプリを作るためのエラーハンドリングのポイント：</p>
+
+            <h3>基本原則</h3>
+            <ol>
+                <li><strong>全ての非同期処理にエラーハンドリング</strong>：try-catch または .catch()</li>
+                <li><strong>ユーザーフレンドリーなメッセージ</strong>：技術的な詳細は隠す</li>
+                <li><strong>エラーをログに記録</strong>：デバッグのため</li>
+                <li><strong>グレースフルデグラデーション</strong>：エラー時も最低限の機能は維持</li>
+            </ol>
+
+            <h3>実装チェックリスト</h3>
+            <ul>
+                <li>✅ API呼び出しにtry-catchを実装</li>
+                <li>✅ HTTPステータスコードを適切に処理</li>
+                <li>✅ ネットワークエラーを考慮</li>
+                <li>✅ グローバルエラーハンドラーを設定</li>
+                <li>✅ 本番環境でエラーログを記録</li>
+                <li>✅ ローディング表示をfinallyで確実に消す</li>
+                <li>✅ ユーザーに分かりやすいエラーメッセージ</li>
+            </ul>
+
+            <p>MechaToraの15個のツールでは、これらのエラーハンドリングを実装することで、ユーザーからのエラー報告が劇的に減りました。最初は面倒に感じるかもしれませんが、後々のデバッグコストを考えると、必ず実装すべきです。</p>
+
+            <p>エラーハンドリングは、ユーザー体験を守るための「保険」です。ぜひ、今日から実装してみてください！</p>
+
+            <div class="related-articles">
+                <h3>関連記事</h3>
+                <ul>
+                    <li><a href="api-rate-limiting-practices.html">API Rate Limitingの実装と対策</a></li>
+                    <li><a href="pwa-implementation-guide.html">PWA実装の基礎 - WebアプリをPWA化する手順</a></li>
+                    <li><a href="responsive-design-basics.html">レスポンシブデザイン実装の基本</a></li>
+                    <li><a href="github-actions-deploy.html">GitHub Actionsで自動デプロイ - CI/CD入門</a></li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">ホーム</a>
+                <a href="../articles.html">記事一覧</a>
+                <a href="../about.html">運営者情報</a>
+                <a href="../privacy.html">プライバシーポリシー</a>
+                <a href="../contact.html">お問い合わせ</a>
+            </div>
+            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 目次を自動生成
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) {
+                firstH2.insertAdjacentHTML('beforebegin', tocHTML);
+            }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>
