@@ -1,0 +1,79 @@
+Python Installation Guide for CSV Image Search Tool
+=====================================================
+
+PROBLEM: "Command not found" when running batch file
+CAUSE: Python is not installed or not in PATH
+
+SOLUTION STEPS:
+
+1. Download Python
+   - Go to: https://www.python.org/downloads/
+   - Download Python 3.8 or newer for Windows
+   - Choose "Windows installer (64-bit)" for most computers
+
+2. Install Python (IMPORTANT SETTINGS)
+   ✅ CHECK "Add Python to PATH" (very important!)
+   ✅ CHECK "Install for all users" (recommended)
+   - Click "Install Now"
+   - Wait for installation to complete
+
+3. Verify Installation
+   - Open NEW Command Prompt (Win+R, type "cmd", press Enter)
+   - Type: python --version
+   - Should show: Python 3.x.x
+   - If still not working, try: py --version
+
+4. If Python is installed but not in PATH:
+   - Search "Environment Variables" in Windows Start menu
+   - Click "Edit the system environment variables"
+   - Click "Environment Variables..." button
+   - In "System Variables", find and select "Path"
+   - Click "Edit..."
+   - Click "New" and add Python installation directory
+     (usually: C:\Users\YourName\AppData\Local\Programs\Python\Python3x\)
+   - Click "New" again and add Scripts directory
+     (usually: C:\Users\YourName\AppData\Local\Programs\Python\Python3x\Scripts\)
+   - Click OK on all dialogs
+   - Close and reopen Command Prompt
+
+5. Alternative: Use Python Launcher
+   - If "python" doesn't work, try "py" instead
+   - py --version
+   - py -m pip install --upgrade pip
+
+6. Test Installation
+   - Open Command Prompt
+   - Type: python -m tkinter
+   - Should open a small test window
+   - Close the window
+
+7. Run the Build Script
+   - Navigate to folder with Python files
+   - Run: build_exe_simple.bat
+   - Or run: check_environment.bat (for diagnosis)
+
+TROUBLESHOOTING:
+
+If you get "python is not recognized":
+- Python is not installed OR
+- Python is not in PATH OR
+- You need to restart Command Prompt after installation
+
+If you get permission errors:
+- Run Command Prompt as Administrator
+- Right-click Command Prompt icon
+- Choose "Run as administrator"
+
+If build fails:
+- Check internet connection (needed for pip install)
+- Try: py -m pip install pyinstaller aiohttp aiofiles chardet
+- Then run build script again
+
+ALTERNATIVE METHOD (if all else fails):
+1. Install Anaconda instead of Python
+   - Download from: https://www.anaconda.com/products/distribution
+   - Includes Python and many packages pre-installed
+2. Open "Anaconda Prompt" instead of Command Prompt
+3. Run the build script from Anaconda Prompt
+
+Need help? Run "check_environment.bat" to see what's missing.

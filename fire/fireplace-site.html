@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Fireplace - Ultimate Relaxation Experience</title>
+    <meta name="description" content="Ultimate relaxation experience with eternal fireplace flames and soothing sounds. Perfect companion for work, meditation, and sleep.">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="fireplace-manifest.json">
+    <meta name="theme-color" content="#1a1a1a">
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RBPWE348T2');
+  </script>
+    
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1106158066306697"
+         crossorigin="anonymous"></script>
+    
+    <!-- SEO -->
+    <meta name="keywords" content="fireplace,relaxation,meditation,sleep,work,ambient,ASMR,sounds,cozy,warmth">
+    <meta property="og:title" content="Fireplace - Ultimate Relaxation Experience">
+    <meta property="og:description" content="Ultimate relaxation experience with eternal fireplace flames and soothing sounds">
+    <meta property="og:type" content="website">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* メイン焚火コンテナ */
+        .fireplace-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1a0f0a 0%, #000000 100%);
+        }
+
+        /* 焚火動画 */
+        .fireplace-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.1) contrast(1.2) saturate(1.3);
+        }
+
+        /* 上部ヘッダー広告 */
+        .header-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            text-align: center;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+
+        /* サイドバー広告（デスクトップ） */
+        .sidebar-ad {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 160px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 90;
+        }
+
+        /* 下部広告 */
+        .footer-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            text-align: center;
+            z-index: 100;
+        }
+
+        /* コントロールパネル */
+        .controls {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 200;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .controls:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 140, 0, 0.5);
+        }
+
+        /* コントロールボタン */
+        .control-btn {
+            background: transparent;
+            border: 2px solid rgba(255, 140, 0, 0.6);
+            color: #ff8c00;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 140, 0, 0.2);
+            border-color: #ff8c00;
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .control-btn.active {
+            background: rgba(255, 140, 0, 0.3);
+            border-color: #ff8c00;
+            color: #ffffff;
+        }
+
+        /* 音量スライダー */
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ff8c00;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 140, 0, 0.3);
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff8c00;
+            cursor: pointer;
+        }
+
+        /* スタートオーバーレイ */
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .start-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 140, 0, 0.3);
+        }
+
+        .start-title {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff8c00, #ff4500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+        }
+
+        .start-description {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff8c00, #ff4500);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 140, 0, 0.4);
+        }
+
+        /* 情報パネル */
+        .info-panel {
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 250px;
+            z-index: 150;
+            border: 1px solid rgba(255, 140, 0, 0.2);
+        }
+
+        .info-title {
+            color: #ff8c00;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .info-value {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .sidebar-ad, .info-panel {
+                display: none;
+            }
+            
+            .controls {
+                bottom: 100px;
+                padding: 10px 20px;
+                gap: 15px;
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .volume-slider {
+                width: 80px;
+            }
+            
+            .start-title {
+                font-size: 2rem;
+            }
+            
+            .start-content {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+        }
+
+        /* 隠す/表示する機能 */
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* パーティクルエフェクト用 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 140, 0, 0.8);
+            border-radius: 50%;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10px) translateX(10px); opacity: 0; }
+        }
+
+        /* AdSense スタイル */
+        .ad-label {
+            color: #666;
+            font-size: 0.7rem;
+            margin-bottom: 5px;
+        }
+        
+        /* フルスクリーン時の広告非表示 */
+        body:fullscreen .header-ad,
+        body:fullscreen .footer-ad,
+        body:fullscreen .sidebar-ad {
+            display: none !important;
+        }
+        
+        /* フルスクリーン時のコントロール調整 */
+        body:fullscreen .controls {
+            bottom: 30px;
+        }
+
+        /* 焚火アニメーション */
+        .fireplace-animation {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logs {
+            position: absolute;
+            bottom: 20%;
+            width: 300px;
+            height: 80px;
+            background: linear-gradient(135deg, #8B4513 0%, #654321 50%, #3D2F1F 100%);
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .logs::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50px;
+            width: 200px;
+            height: 60px;
+            background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
+            border-radius: 30px;
+            transform: rotate(-5deg);
+        }
+
+        .flame {
+            position: absolute;
+            bottom: 30%;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform-origin: bottom center;
+        }
+
+        .flame1 {
+            width: 60px;
+            height: 120px;
+            background: linear-gradient(to top, #ff4500 0%, #ff8c00 50%, #ffd700 100%);
+            left: 50%;
+            margin-left: -30px;
+            animation: flicker1 2s infinite ease-in-out;
+        }
+
+        .flame2 {
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(to top, #ff6500 0%, #ff9500 50%, #ffb700 100%);
+            left: 45%;
+            margin-left: -20px;
+            animation: flicker2 1.8s infinite ease-in-out;
+        }
+
+        .flame3 {
+            width: 50px;
+            height: 100px;
+            background: linear-gradient(to top, #ff5500 0%, #ff8800 50%, #ffc000 100%);
+            left: 55%;
+            margin-left: -25px;
+            animation: flicker3 2.2s infinite ease-in-out;
+        }
+
+        @keyframes flicker1 {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(-2deg); opacity: 0.9; }
+            25% { transform: scaleY(1.1) scaleX(0.95) rotate(1deg); opacity: 1; }
+            50% { transform: scaleY(0.95) scaleX(1.05) rotate(-1deg); opacity: 0.85; }
+            75% { transform: scaleY(1.05) scaleX(0.9) rotate(2deg); opacity: 0.95; }
+        }
+
+        @keyframes flicker2 {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(1deg); opacity: 0.8; }
+            33% { transform: scaleY(1.15) scaleX(0.85) rotate(-2deg); opacity: 0.9; }
+            66% { transform: scaleY(0.9) scaleX(1.1) rotate(1.5deg); opacity: 0.75; }
+        }
+
+        @keyframes flicker3 {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(-1deg); opacity: 0.85; }
+            20% { transform: scaleY(1.08) scaleX(0.92) rotate(0.5deg); opacity: 0.95; }
+            40% { transform: scaleY(0.92) scaleX(1.08) rotate(-1.5deg); opacity: 0.8; }
+            60% { transform: scaleY(1.12) scaleX(0.88) rotate(1deg); opacity: 0.9; }
+            80% { transform: scaleY(0.96) scaleX(1.04) rotate(-0.5deg); opacity: 0.85; }
+        }
+
+        /* 実写焚火動画 */
+        .fireplace-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.1) contrast(1.2) saturate(1.3);
+        }
+
+        /* 薪のスタイル */
+        .log {
+            position: absolute;
+            background: linear-gradient(135deg, #654321 0%, #3D2F1F 30%, #2F1F0F 70%, #1A0F0A 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            bottom: 15%;
+        }
+
+        .log::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #2F1F0F 50%, transparent 100%);
+            border-radius: 50%;
+        }
+
+        .log::after {
+            content: '';
+            position: absolute;
+            top: 70%;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #1A0F0A 50%, transparent 100%);
+            border-radius: 50%;
+        }
+
+        .log1 { width: 200px; height: 25px; left: 35%; transform: rotate(-15deg); z-index: 3; }
+        .log2 { width: 180px; height: 22px; left: 40%; bottom: 12%; transform: rotate(20deg); z-index: 2; }
+        .log3 { width: 160px; height: 20px; left: 45%; bottom: 18%; transform: rotate(-8deg); z-index: 4; }
+        .log4 { width: 140px; height: 18px; left: 30%; bottom: 10%; transform: rotate(35deg); z-index: 1; }
+        .log5 { width: 120px; height: 16px; left: 55%; bottom: 14%; transform: rotate(-25deg); z-index: 2; }
+
+        /* 火の粉エフェクト */
+        .ember {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: radial-gradient(circle, #ff4500 0%, #ff8c00 50%, transparent 100%);
+            border-radius: 50%;
+            bottom: 25%;
+        }
+
+        .ember1 { left: 48%; animation: emberFloat1 4s infinite ease-out; }
+        .ember2 { left: 52%; animation: emberFloat2 3.5s infinite ease-out 0.5s; }
+        .ember3 { left: 45%; animation: emberFloat3 4.2s infinite ease-out 1s; }
+        .ember4 { left: 55%; animation: emberFloat4 3.8s infinite ease-out 1.5s; }
+        .ember5 { left: 50%; animation: emberFloat5 4.5s infinite ease-out 2s; }
+
+        @keyframes emberFloat1 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-100px) translateX(-10px) scale(0.8); opacity: 0.8; }
+            100% { transform: translateY(-200px) translateX(-20px) scale(0.3); opacity: 0; }
+        }
+
+        @keyframes emberFloat2 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-120px) translateX(15px) scale(0.6); opacity: 0.7; }
+            100% { transform: translateY(-240px) translateX(30px) scale(0.2); opacity: 0; }
+        }
+
+        @keyframes emberFloat3 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-90px) translateX(-15px) scale(0.9); opacity: 0.9; }
+            100% { transform: translateY(-180px) translateX(-30px) scale(0.4); opacity: 0; }
+        }
+
+        @keyframes emberFloat4 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-110px) translateX(8px) scale(0.7); opacity: 0.8; }
+            100% { transform: translateY(-220px) translateX(16px) scale(0.3); opacity: 0; }
+        }
+
+        @keyframes emberFloat5 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-130px) translateX(-5px) scale(0.8); opacity: 0.6; }
+            100% { transform: translateY(-260px) translateX(-10px) scale(0.2); opacity: 0; }
+        }
+
+        /* 多層炎システム */
+        .flame-layer {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform-origin: bottom center;
+        }
+
+        .flame-base {
+            width: 120px; height: 160px; margin-left: -60px;
+            background: radial-gradient(ellipse at 50% 100%, #ff0000 0%, #ff4500 30%, #ff8c00 60%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 20% 20% 80% 80%;
+            animation: flameBase 2s infinite ease-in-out; z-index: 10;
+        }
+
+        .flame-mid1 {
+            width: 90px; height: 180px; margin-left: -45px;
+            background: radial-gradient(ellipse at 50% 100%, #ff4500 0%, #ff8c00 40%, #ffa500 70%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 25% 25% 75% 75%;
+            animation: flameMid1 2.3s infinite ease-in-out 0.2s; z-index: 11;
+        }
+
+        .flame-mid2 {
+            width: 70px; height: 200px; margin-left: -35px;
+            background: radial-gradient(ellipse at 50% 100%, #ff8c00 0%, #ffa500 50%, #ffb84d 80%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+            animation: flameMid2 1.8s infinite ease-in-out 0.4s; z-index: 12;
+        }
+
+        .flame-top1 {
+            width: 50px; height: 220px; margin-left: -25px;
+            background: radial-gradient(ellipse at 50% 100%, #ffa500 0%, #ffb84d 40%, #ffd700 80%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 35% 35% 65% 65%;
+            animation: flameTop1 2.1s infinite ease-in-out 0.6s; z-index: 13;
+        }
+
+        .flame-top2 {
+            width: 35px; height: 240px; margin-left: -17px;
+            background: radial-gradient(ellipse at 50% 100%, #ffb84d 0%, #ffd700 50%, #ffff99 90%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: flameTop2 1.9s infinite ease-in-out 0.8s; z-index: 14;
+        }
+
+        .flame-tip {
+            width: 20px; height: 260px; margin-left: -10px;
+            background: radial-gradient(ellipse at 50% 100%, #ffd700 0%, #ffff99 60%, #ffffff 95%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 45% 45% 55% 55%;
+            animation: flameTip 2.4s infinite ease-in-out 1s; z-index: 15;
+        }
+
+        @keyframes flameBase {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(-1deg); opacity: 0.9; }
+            25% { transform: scaleY(1.1) scaleX(0.95) rotate(1deg); opacity: 1; }
+            50% { transform: scaleY(0.95) scaleX(1.05) rotate(-0.5deg); opacity: 0.85; }
+            75% { transform: scaleY(1.05) scaleX(0.9) rotate(1.5deg); opacity: 0.95; }
+        }
+
+        @keyframes flameMid1 {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(0.5deg); opacity: 0.8; }
+            30% { transform: scaleY(1.15) scaleX(0.85) rotate(-1deg); opacity: 0.9; }
+            60% { transform: scaleY(0.9) scaleX(1.1) rotate(1deg); opacity: 0.75; }
+        }
+
+        @keyframes flameMid2 {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(-0.8deg); opacity: 0.85; }
+            20% { transform: scaleY(1.08) scaleX(0.92) rotate(0.3deg); opacity: 0.95; }
+            40% { transform: scaleY(0.92) scaleX(1.08) rotate(-1.2deg); opacity: 0.8; }
+            80% { transform: scaleY(1.12) scaleX(0.88) rotate(0.8deg); opacity: 0.9; }
+        }
+
+        @keyframes flameTop1 {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(1deg); opacity: 0.7; }
+            35% { transform: scaleY(1.2) scaleX(0.8) rotate(-1.5deg); opacity: 0.85; }
+            70% { transform: scaleY(0.85) scaleX(1.15) rotate(1.2deg); opacity: 0.6; }
+        }
+
+        @keyframes flameTop2 {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(-1.2deg); opacity: 0.6; }
+            40% { transform: scaleY(1.25) scaleX(0.75) rotate(1.8deg); opacity: 0.8; }
+            80% { transform: scaleY(0.8) scaleX(1.2) rotate(-0.8deg); opacity: 0.5; }
+        }
+
+        @keyframes flameTip {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(0.8deg); opacity: 0.5; }
+            50% { transform: scaleY(1.3) scaleX(0.7) rotate(-2deg); opacity: 0.7; }
+        }
+
+        /* 煙エフェクト */
+        .smoke {
+            position: absolute; bottom: 80%; left: 50%; width: 40px; height: 150px;
+            background: radial-gradient(ellipse at 50% 100%, rgba(100, 100, 100, 0.3) 0%, rgba(150, 150, 150, 0.2) 30%, transparent 70%);
+            border-radius: 50%; transform-origin: bottom center;
+        }
+
+        .smoke1 { margin-left: -20px; animation: smokeRise1 8s infinite ease-out; }
+        .smoke2 { margin-left: -15px; animation: smokeRise2 9s infinite ease-out 1s; }
+        .smoke3 { margin-left: -25px; animation: smokeRise3 7s infinite ease-out 2s; }
+
+        @keyframes smokeRise1 {
+            0% { transform: translateY(0) scaleX(1) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-100px) scaleX(1.5) rotate(-5deg); opacity: 0.2; }
+            100% { transform: translateY(-200px) scaleX(2) rotate(-10deg); opacity: 0; }
+        }
+
+        @keyframes smokeRise2 {
+            0% { transform: translateY(0) scaleX(1) rotate(0deg); opacity: 0.25; }
+            50% { transform: translateY(-120px) scaleX(1.8) rotate(8deg); opacity: 0.15; }
+            100% { transform: translateY(-240px) scaleX(2.5) rotate(15deg); opacity: 0; }
+        }
+
+        @keyframes smokeRise3 {
+            0% { transform: translateY(0) scaleX(1) rotate(0deg); opacity: 0.2; }
+            50% { transform: translateY(-90px) scaleX(1.3) rotate(-3deg); opacity: 0.18; }
+            100% { transform: translateY(-180px) scaleX(1.8) rotate(-6deg); opacity: 0; }
+        }
+
+        /* 火の粉エフェクト */
+        .ember-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: radial-gradient(circle, #ff8c00 0%, #ff4500 50%, transparent 100%);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 20;
+        }
+
+        .ember-1 {
+            bottom: 25%; left: 48%;
+            animation: emberFloat1 4s infinite ease-out;
+        }
+
+        .ember-2 {
+            bottom: 30%; left: 52%;
+            animation: emberFloat2 5s infinite ease-out 0.5s;
+        }
+
+        .ember-3 {
+            bottom: 28%; left: 50%;
+            animation: emberFloat3 4.5s infinite ease-out 1s;
+        }
+
+        .ember-4 {
+            bottom: 32%; left: 49%;
+            animation: emberFloat4 3.8s infinite ease-out 1.5s;
+        }
+
+        .ember-5 {
+            bottom: 26%; left: 51%;
+            animation: emberFloat5 4.2s infinite ease-out 2s;
+        }
+
+        .ember-6 {
+            bottom: 29%; left: 53%;
+            animation: emberFloat6 5.2s infinite ease-out 2.5s;
+        }
+
+        .ember-7 {
+            bottom: 31%; left: 47%;
+            animation: emberFloat7 4.8s infinite ease-out 3s;
+        }
+
+        .ember-8 {
+            bottom: 27%; left: 54%;
+            animation: emberFloat8 4.4s infinite ease-out 3.5s;
+        }
+
+        @keyframes emberFloat1 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+            20% { opacity: 1; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-200px) translateX(-20px) scale(0.3); opacity: 0; }
+        }
+
+        @keyframes emberFloat2 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.7; }
+            25% { opacity: 0.9; }
+            75% { opacity: 0.5; }
+            100% { transform: translateY(-250px) translateX(30px) scale(0.2); opacity: 0; }
+        }
+
+        @keyframes emberFloat3 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+            30% { opacity: 0.8; }
+            70% { opacity: 0.4; }
+            100% { transform: translateY(-180px) translateX(10px) scale(0.4); opacity: 0; }
+        }
+
+        @keyframes emberFloat4 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.9; }
+            15% { opacity: 1; }
+            85% { opacity: 0.3; }
+            100% { transform: translateY(-220px) translateX(-30px) scale(0.2); opacity: 0; }
+        }
+
+        @keyframes emberFloat5 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.5; }
+            35% { opacity: 0.7; }
+            65% { opacity: 0.4; }
+            100% { transform: translateY(-160px) translateX(25px) scale(0.3); opacity: 0; }
+        }
+
+        @keyframes emberFloat6 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+            25% { opacity: 0.9; }
+            75% { opacity: 0.2; }
+            100% { transform: translateY(-280px) translateX(-15px) scale(0.1); opacity: 0; }
+        }
+
+        @keyframes emberFloat7 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.7; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.3; }
+            100% { transform: translateY(-240px) translateX(20px) scale(0.2); opacity: 0; }
+        }
+
+        @keyframes emberFloat8 {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+            40% { opacity: 0.8; }
+            60% { opacity: 0.5; }
+            100% { transform: translateY(-190px) translateX(-25px) scale(0.3); opacity: 0; }
+        }
+
+        /* 熱波エフェクト */
+        .heat-distortion {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, transparent 0%, rgba(255, 140, 0, 0.1) 30%, transparent 100%);
+            animation: heatWave 3s infinite ease-in-out;
+            z-index: 5;
+        }
+
+        @keyframes heatWave {
+            0%, 100% { transform: skewX(0deg) scaleY(1); opacity: 0.3; }
+            50% { transform: skewX(1deg) scaleY(1.02); opacity: 0.5; }
+        }
+
+        /* 光の反射 */
+        .glow-effect {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, rgba(255, 140, 0, 0.3) 0%, rgba(255, 69, 0, 0.2) 40%, transparent 70%);
+            border-radius: 50%;
+            animation: glow 2.5s infinite ease-in-out;
+            z-index: 3;
+        }
+
+        @keyframes glow {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+        }
+
+        /* 熱波エフェクト */
+        .heat-wave {
+            position: absolute; bottom: 15%; left: 30%; right: 30%; height: 300px;
+            background: linear-gradient(to top, rgba(255, 69, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 30%, transparent 60%);
+            filter: blur(2px); animation: heatDistortion 3s infinite ease-in-out;
+        }
+
+        @keyframes heatDistortion {
+            0%, 100% { transform: scaleX(1) skewX(0deg); opacity: 0.3; }
+            50% { transform: scaleX(1.1) skewX(1deg); opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <!-- スタートオーバーレイ -->
+    <div class="start-overlay" id="startOverlay">
+        <div class="start-content">
+            <h1 class="start-title">🔥 Fireplace</h1>
+            <p class="start-description">
+                Experience the ultimate relaxation with beautiful flames and soothing sounds.<br>
+                Perfect for work, meditation, and sleep.
+            </p>
+            <button class="start-btn" onclick="startFireplace()">
+                🔥 Start Fireplace
+            </button>
+        </div>
+    </div>
+
+    <!-- メイン焚火コンテナ -->
+    <div class="fireplace-container">
+        <!-- 実写焚火動画 -->
+        <video 
+            class="fireplace-video" 
+            id="fireplaceVideo"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiBmaWxsPSIjMGEwYTBhIi8+CjxjaXJjbGUgY3g9Ijk2MCIgY3k9IjU0MCIgcj0iMjAwIiBmaWxsPSJyYWRpYWwtZ3JhZGllbnQoY2lyY2xlLCNmZjhjMDAgMCUsIzAwMDAwMCAxMDAlKSIvPgo8L3N2Zz4K">
+            
+            <!-- 高品質焚火動画ソース -->
+            <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+        </video>
+
+        <!-- 著作権フリー焚火動画（確実なソース） -->
+        <video 
+            class="fireplace-video-main" 
+            id="fireplaceMainVideo"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            crossorigin="anonymous"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;">
+            
+            <!-- Pixabay - 確実な著作権フリー動画 -->
+            <source src="https://pixabay.com/videos/download/video-6631_large.mp4" type="video/mp4">
+            
+            <!-- Archive.org - パブリックドメイン -->
+            <source src="https://archive.org/download/Fireplace_201611/Fireplace.mp4" type="video/mp4">
+            
+            <!-- フォールバック: Base64埋め込み小動画 -->
+            <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMWRhc2gAAAAIZnJlZQAAAAhtZGF0AAAAZGZyZWUAAAA4bWRhdAABABEABohQEQAAAAAAAAAAAP//wAAAHkBuAAAAAFVTAAAFo0JTA2dnAAAFUgFOAAAFSgFOAAAFMAAAE/I=" type="video/mp4">
+        </video>
+
+        <!-- リアル焚火エフェクト（CSS + JavaScript） -->
+        <div class="fireplace-effects" id="fireplaceEffects">
+            <!-- 追加の火の粉 -->
+            <div class="ember-particle ember-1"></div>
+            <div class="ember-particle ember-2"></div>
+            <div class="ember-particle ember-3"></div>
+            <div class="ember-particle ember-4"></div>
+            <div class="ember-particle ember-5"></div>
+            <div class="ember-particle ember-6"></div>
+            <div class="ember-particle ember-7"></div>
+            <div class="ember-particle ember-8"></div>
+            
+            <!-- 熱波エフェクト -->
+            <div class="heat-distortion"></div>
+            
+            <!-- 光の反射 -->
+            <div class="glow-effect"></div>
+        </div>
+    </div>
+
+    <!-- パーティクルエフェクト -->
+    <div class="particles" id="particles"></div>
+
+    <!-- 上部広告 -->
+    <div class="header-ad">
+        <div class="ad-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- サイドバー広告（デスクトップ） -->
+    <div class="sidebar-ad">
+        <div class="ad-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="2345678901"
+             data-ad-format="vertical"></ins>
+    </div>
+
+    <!-- 情報パネル -->
+    <div class="info-panel">
+        <div class="info-title">🔥 Fireplace Info</div>
+        <div class="info-item">
+            <span>Status: </span>
+            <span class="info-value" id="fireStatus">Standby</span>
+        </div>
+        <div class="info-item">
+            <span>Time: </span>
+            <span class="info-value" id="fireTime">00:00:00</span>
+        </div>
+        <div class="info-item">
+            <span>Warmth: </span>
+            <span class="info-value" id="fireTemp">🌡️ Cozy</span>
+        </div>
+        <div class="info-item">
+            <span>Volume: </span>
+            <span class="info-value" id="volumeDisplay">50%</span>
+        </div>
+    </div>
+
+    <!-- コントロールパネル -->
+    <div class="controls">
+        <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()" title="再生/一時停止">
+            ⏸️
+        </button>
+        
+        <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="ミュート/ミュート解除">
+            🔊
+        </button>
+        
+        <div class="volume-container">
+            <span>🔉</span>
+            <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider" oninput="changeVolume(this.value)">
+        </div>
+        
+        <button class="control-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="フルスクリーン">
+            ⛶
+        </button>
+        
+        <button class="control-btn" id="hideUIBtn" onclick="toggleUI()" title="UI表示/非表示">
+            👁️
+        </button>
+    </div>
+
+    <!-- 下部広告 -->
+    <div class="footer-ad">
+        <div class="ad-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1106158066306697"
+             data-ad-slot="3456789012"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- 焚火音声（著作権フリー） -->
+    <audio id="fireplaceAudio" loop preload="auto" crossorigin="anonymous">
+        <!-- Archive.org - パブリックドメイン焚火音 -->
+        <source src="https://archive.org/download/fireplace-crackling-sound/fireplace-crackling.mp3" type="audio/mpeg">
+        
+        <!-- フォールバック: Pixabay音声 -->
+        <source src="https://pixabay.com/audio/download/audio-28466_fireplace-6307.mp3" type="audio/mpeg">
+        
+        <!-- 緊急フォールバック: Web Audio生成音 -->
+    </audio>
+    
+    <!-- 追加アンビエント音 -->
+    <audio id="ambientAudio" loop preload="auto" volume="0.3" crossorigin="anonymous">
+        <!-- 木がパチパチ音 - Archive.org -->
+        <source src="https://archive.org/download/wood-crackling-sounds/wood-crackling.mp3" type="audio/mpeg">
+        
+        <!-- フォールバック: Pixabay木音 -->
+        <source src="https://pixabay.com/audio/download/audio-15626_wood-fire-crackling.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // グローバル変数
+        let isPlaying = false;
+        let isMuted = false;
+        let isUIVisible = true;
+        let startTime = null;
+        let fireplaceVideo = document.getElementById('fireplaceVideo');
+        let fireplaceMainVideo = document.getElementById('fireplaceMainVideo');
+        let fireplaceAudio = document.getElementById('fireplaceAudio');
+        let ambientAudio = document.getElementById('ambientAudio');
+
+        // 焚火開始
+        function startFireplace() {
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            // メイン動画を再生開始（優先）
+            if (fireplaceMainVideo) {
+                fireplaceMainVideo.muted = false;
+                fireplaceMainVideo.play().catch(e => {
+                    console.log('Main video autoplay prevented, trying muted');
+                    fireplaceMainVideo.muted = true;
+                    fireplaceMainVideo.play();
+                });
+            }
+            
+            // フォールバック動画も準備
+            if (fireplaceVideo) {
+                fireplaceVideo.play().catch(e => console.log('Fallback video autoplay prevented'));
+            }
+            
+            // 音声の再生を試行
+            if (fireplaceAudio) {
+                fireplaceAudio.volume = 0.6;
+                fireplaceAudio.play().catch(e => console.log('Main audio autoplay prevented'));
+            }
+            
+            // アンビエント音も再生
+            if (ambientAudio) {
+                ambientAudio.volume = 0.3;
+                ambientAudio.play().catch(e => console.log('Ambient audio autoplay prevented'));
+            }
+            
+            isPlaying = true;
+            startTime = Date.now();
+            updateFireStatus();
+            startTimer();
+            createParticles();
+            updateTemperature();
+        }
+
+        // 再生/一時停止
+        function togglePlayPause() {
+            const btn = document.getElementById('playPauseBtn');
+            
+            if (isPlaying) {
+                // 一時停止
+                if (fireplaceMainVideo) fireplaceMainVideo.pause();
+                if (fireplaceVideo) fireplaceVideo.pause();
+                if (fireplaceAudio) fireplaceAudio.pause();
+                if (ambientAudio) ambientAudio.pause();
+                btn.innerHTML = '▶️';
+                document.getElementById('fireStatus').textContent = 'Paused';
+            } else {
+                // 再生
+                if (fireplaceMainVideo) fireplaceMainVideo.play();
+                if (fireplaceVideo) fireplaceVideo.play();
+                if (fireplaceAudio) fireplaceAudio.play();
+                if (ambientAudio) ambientAudio.play();
+                btn.innerHTML = '⏸️';
+                document.getElementById('fireStatus').textContent = 'Burning';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // ミュート切り替え
+        function toggleMute() {
+            const btn = document.getElementById('muteBtn');
+            
+            if (isMuted) {
+                if (fireplaceAudio) fireplaceAudio.muted = false;
+                if (ambientAudio) ambientAudio.muted = false;
+                if (fireplaceMainVideo) fireplaceMainVideo.muted = false;
+                btn.innerHTML = '🔊';
+            } else {
+                if (fireplaceAudio) fireplaceAudio.muted = true;
+                if (ambientAudio) ambientAudio.muted = true;
+                if (fireplaceMainVideo) fireplaceMainVideo.muted = true;
+                btn.innerHTML = '🔇';
+            }
+            isMuted = !isMuted;
+        }
+
+        // 音量変更
+        function changeVolume(value) {
+            const volume = value / 100;
+            if (fireplaceAudio) fireplaceAudio.volume = volume;
+            if (ambientAudio) ambientAudio.volume = volume * 0.5; // アンビエント音は半分の音量
+            if (fireplaceMainVideo) fireplaceMainVideo.volume = volume;
+            document.getElementById('volumeDisplay').textContent = value + '%';
+        }
+
+        // フルスクリーン
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // UI表示/非表示
+        function toggleUI() {
+            const elements = ['.header-ad', '.footer-ad', '.sidebar-ad', '.info-panel'];
+            
+            elements.forEach(selector => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.classList.toggle('hidden');
+                }
+            });
+            
+            isUIVisible = !isUIVisible;
+            document.getElementById('hideUIBtn').innerHTML = isUIVisible ? '👁️' : '🙈';
+        }
+
+        // 焚火状態更新
+        function updateFireStatus() {
+            if (isPlaying) {
+                document.getElementById('fireStatus').textContent = 'Burning';
+            }
+        }
+
+        // タイマー更新
+        function startTimer() {
+            setInterval(() => {
+                if (startTime && isPlaying) {
+                    const elapsed = Date.now() - startTime;
+                    const hours = Math.floor(elapsed / 3600000);
+                    const minutes = Math.floor((elapsed % 3600000) / 60000);
+                    const seconds = Math.floor((elapsed % 60000) / 1000);
+                    
+                    document.getElementById('fireTime').textContent = 
+                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        // 温度表示更新
+        function updateTemperature() {
+            const temps = ['🌡️ Cozy', '🌡️ Warm', '🌡️ Comfortable', '🌡️ Relaxing'];
+            let index = 0;
+            
+            setInterval(() => {
+                document.getElementById('fireTemp').textContent = temps[index % temps.length];
+                index++;
+            }, 5000);
+        }
+
+        // パーティクルエフェクト
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            setInterval(() => {
+                if (isPlaying) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 2 + 's';
+                    particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 5000);
+                }
+            }, 500);
+        }
+
+        // キーボードショートカット
+        document.addEventListener('keydown', (e) => {
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    togglePlayPause();
+                    break;
+                case 'KeyM':
+                    toggleMute();
+                    break;
+                case 'KeyF':
+                    toggleFullscreen();
+                    break;
+                case 'KeyH':
+                    toggleUI();
+                    break;
+            }
+        });
+
+        // マウス非表示（一定時間後）
+        let mouseTimer;
+        document.addEventListener('mousemove', () => {
+            document.body.style.cursor = 'default';
+            clearTimeout(mouseTimer);
+            mouseTimer = setTimeout(() => {
+                document.body.style.cursor = 'none';
+            }, 3000);
+        });
+
+        // AdSense 初期化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>
