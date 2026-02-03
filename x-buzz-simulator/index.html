@@ -37,6 +37,21 @@
     
     <link rel="stylesheet" href="realistic-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- 広告表示切り替え用スタイル -->
+    <style>
+        .ad-pc { display: block; }
+        .ad-sp { display: none; }
+        @media (max-width: 768px) {
+            .ad-pc { display: none !important; }
+            .ad-sp { display: block !important; }
+        }
+        .ad-container {
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -440,12 +455,22 @@
             <!-- Ad Space -->
             <div class="ad-widget">
                 <div class="ad-label">プロモーション</div>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1184134440246706"
-                     data-ad-slot="3889638884"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
+                <div class="ad-container">
+                    <!-- PC用広告 -->
+                    <div class="ad-pc">
+                        <div id="im-1cec58b8f74b4b238dc04e224e8ff739">
+                            <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
+                            <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590541,asid:1923063,type:"banner",display:"inline",elementid:"im-1cec58b8f74b4b238dc04e224e8ff739"})</script>
+                        </div>
+                    </div>
+                    <!-- スマホ用広告 -->
+                    <div class="ad-sp">
+                        <div id="im-10538d6f73df4be69fdb4f073d0cfabc">
+                            <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
+                            <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590542,asid:1923064,type:"banner",display:"inline",elementid:"im-10538d6f73df4be69fdb4f073d0cfabc"})</script>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- A8 Affiliate Ads -->
@@ -526,9 +551,5 @@
     </footer>
 
     <script src="realistic-simulator.js"></script>
-    <script>
-        // AdSense initialization
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
 </body>
 </html>

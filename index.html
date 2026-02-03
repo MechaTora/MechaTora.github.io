@@ -53,6 +53,21 @@
 
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- 広告表示切り替え用スタイル -->
+    <style>
+        .ad-pc { display: block; }
+        .ad-sp { display: none; }
+        @media (max-width: 768px) {
+            .ad-pc { display: none !important; }
+            .ad-sp { display: block !important; }
+        }
+        .ad-container {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+        }
+    </style>
 </head>
 <body>
     <!-- ヘッダー -->
@@ -84,6 +99,24 @@
                 <p style="font-size: 1.25rem; margin-bottom: 0.5rem; opacity: 0.95;">社会保険労務士 × Web開発エンジニア</p>
                 <p style="font-size: 1.125rem; opacity: 0.9;">Web開発・技術・キャリア・データサイエンスについて発信中</p>
             </section>
+
+            <!-- 広告エリア -->
+            <div class="ad-container">
+                <!-- PC用広告 -->
+                <div class="ad-pc">
+                    <div id="im-e9dd96f5b2124896aee20f93147b9119">
+                        <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
+                        <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590539,asid:1923061,type:"banner",display:"inline",elementid:"im-e9dd96f5b2124896aee20f93147b9119"})</script>
+                    </div>
+                </div>
+                <!-- スマホ用広告 -->
+                <div class="ad-sp">
+                    <div id="im-cf7a5be1c7474161bbaafed34bd9d690">
+                        <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
+                        <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590540,asid:1923062,type:"banner",display:"inline",elementid:"im-cf7a5be1c7474161bbaafed34bd9d690"})</script>
+                    </div>
+                </div>
+            </div>
 
             <!-- 最新記事セクション -->
             <section>
