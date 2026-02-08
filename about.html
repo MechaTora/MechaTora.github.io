@@ -1,477 +1,173 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RBPWE348T2');
-    </script>
-    
+    <title>About | メカトラ：スキルアップ人事・DXメディア</title>
+    <meta name="description" content="メカトラ（MechaTora）のプロフィール。人事実務家×DXエンジニアとしての経歴、スキルセット、このブログの運営目的について紹介しています。">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF8C00, #FFD700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background: #f0f0f0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+        }
+    </style>
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
          crossorigin="anonymous"></script>
-    
-    <title>このサイトについて | MechaTora</title>
-    <meta name="description" content="MechaTora（メカトラ）について。無料で使える実用的なWebアプリケーションを多数公開しているサイトの概要をご紹介します。">
-    <meta name="keywords" content="Webアプリ,無料ツール,便利アプリ,オンラインツール,実用アプリ,学習ツール">
-    <link rel="canonical" href="https://mechatora.com/about.html">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- GitHub Pages to mechatora.com redirect -->
-    <script>
-    if (window.location.hostname === 'mechatora.github.io') {
-        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
-    }
-    </script>
-    
-    <style>
-        :root {
-            --primary-color: #667eea;
-            --accent-color: #764ba2;
-            --background: #FEFEFE;
-            --text-primary: #2D2D2D;
-            --text-secondary: #5A5A5A;
-            --border-radius: 16px;
-            --spacing-md: 24px;
-            --spacing-lg: 32px;
-        }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--text-primary);
-            line-height: 1.7;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: var(--spacing-lg);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: var(--spacing-lg);
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 16px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header .emoji {
-            font-size: 4rem;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: var(--spacing-md);
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 12px 24px;
-            border: 2px solid white;
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-            background: rgba(255,255,255,0.1);
-        }
-
-        .back-link:hover {
-            background: white;
-            color: var(--primary-color);
-        }
-
-        .content {
-            background: white;
-            padding: var(--spacing-lg);
-            border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .section {
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .section h2 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--accent-color);
-        }
-
-        .intro-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 32px;
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .intro-card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 16px;
-        }
-
-        .intro-card p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .feature-card {
-            background: #f8f9fa;
-            padding: 24px;
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .feature-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 12px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .feature-card .icon {
-            font-size: 1.5rem;
-        }
-
-        .apps-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .app-preview {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            border-top: 4px solid var(--accent-color);
-            text-align: center;
-        }
-
-        .app-preview .app-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .app-preview h4 {
-            color: var(--primary-color);
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
-
-        .app-preview p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .stats-section {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 24px;
-            margin: 20px 0;
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
-        }
-
-        .stats-section h3 {
-            color: #1976d2;
-            margin-bottom: 12px;
-            font-size: 1.4rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 16px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1976d2;
-            display: block;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        ul {
-            padding-left: 24px;
-            margin-bottom: 16px;
-        }
-
-        li {
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .header .emoji {
-                font-size: 3rem;
-            }
-            
-            .features-grid, .apps-showcase {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
+
 <body>
-    <div class="container">
-        <a href="index.html" class="back-link">← ホームに戻る</a>
-        
-        <div class="header">
-            <span class="emoji">🛠️</span>
-            <h1>このサイトについて</h1>
-            <p>MechaToraの詳細情報</p>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">MEKA<span>TORA</span>🐯</a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </nav>
         </div>
+    </header>
 
-        <div class="content">
-            <div class="intro-card">
-                <h3>🌟 MechaTora（メカトラ）について</h3>
-                <p>「日常の小さな不便を解決する」をモットーに、実用的なWebアプリケーションを開発・運営しています。料理で何を作るか迷った時、地震情報をリアルタイムで知りたい時、効率的に学習したい時など、具体的な課題に対応したツールを無料で提供。2022年4月の開設以来、3年以上にわたり継続的にサービスを運営しています。</p>
-            </div>
+    <main class="container">
+        <article style="background: white; padding: 3rem; border-radius: 1.5rem; box-shadow: var(--shadow);">
+            <h1>About メカトラ ｜ 現場とコードを繋ぐ人事</h1>
 
-            <div class="section">
-                <h2>👨‍💻 運営者プロフィール</h2>
-                <div class="feature-card" style="background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-left: 4px solid #FF6F00;">
-                    <h3 style="color: #E65100;">🏆 資格・認定</h3>
-                    <ul style="margin-top: 12px;">
-                        <li><strong>社会保険労務士</strong> - 社会保険・労働法の専門家</li>
-                        <li><strong>第一種衛生管理者</strong> - 労働安全衛生の国家資格</li>
-                        <li><strong>応用情報技術者</strong> - 高度IT人材の証明</li>
-                        <li><strong>基本情報技術者</strong> - IT基礎知識の国家資格</li>
-                        <li><strong>簿記2級</strong> - 企業会計の実務知識</li>
-                        <li><strong>G検定（JDLA Deep Learning for GENERAL）</strong> - AI・機械学習の基礎知識</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB); border-left: 4px solid #1976D2; margin-top: 20px;">
-                    <h3 style="color: #0D47A1;">💼 経歴・専門性</h3>
-                    <p><strong>Web開発歴12年のシニアフルスタックエンジニア</strong></p>
-                    <ul style="margin-top: 12px;">
-                        <li><strong>フロントエンド：</strong>JavaScript, TypeScript, React, Vue.js, HTML5, CSS3</li>
-                        <li><strong>バックエンド：</strong>Python, Node.js, PHP, データベース設計</li>
-                        <li><strong>インフラ：</strong>AWS, GitHub Pages, Netlify, Render.com</li>
-                        <li><strong>データサイエンス：</strong>R言語（Tidyverse）, Python（Pandas, NumPy）, 機械学習</li>
-                        <li><strong>専門分野：</strong>社会保険制度、労務管理、人事DX、PWA開発</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" style="background: linear-gradient(135deg, #F3E5F5, #E1BEE7); border-left: 4px solid #8E24AA; margin-top: 20px;">
-                    <h3 style="color: #6A1B9A;">🎯 開発スタンス</h3>
-                    <p>文系人事職からWeb開発の世界へ転身。「非エンジニアでも、アイデアと情熱があれば価値あるサービスを作れる」ことを実証するため、日々学習しながら開発を進めています。</p>
-                    <p style="margin-top: 12px;">完璧主義を捨て、「80点で公開する勇気」を持ち、ユーザーフィードバックを重視した継続的改善を行っています。</p>
+            <div class="profile-section">
+                <div class="profile-img">🐯</div>
+                <div>
+                    <h2 style="margin-top: 0;">メカトラ (MechaTora)</h2>
+                    <p>人事実務 × データサイエンス × 自動化エンジニア</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">社会保険労務士</span>
+                        <span class="skill-tag">Python/R</span>
+                        <span class="skill-tag">DX推進</span>
+                        <span class="skill-tag">AI活用</span>
+                        <span class="skill-tag">日本酒DB開発</span>
+                    </div>
                 </div>
             </div>
+
+            <p>はじめまして、メカトラ（🐯）です。私は「人事実務のプロ」でありながら、「R言語やPython、RPAを使いこなすDXエンジニア」として活動しています。🥰</p>
+
+            <h2>私のミッション</h2>
+            <p>「人事の仕事は、もっとクリエイティブになれる。」これが私の信念です。<br>
+                社会保険労務士業務などで守るべきコンプライアンスを徹底しつつ、R言語での高度なデータ分析やRPAによる自動化を駆使して、現場の「非効率」や「属人化」をテクノロジーの力で解決することを目指しています。✨</p>
+
+            <h2>専門性と実績</h2>
+            <ul>
+                <li><strong>人事実務のエキスパート</strong>:
+                    社会保険労務士資格を保有し、労働法務、給与計算、人事制度設計の実務経験が豊富です。現場の「痛み」を知っているからこそ、本当に使えるDX施策を提案できます。</li>
+                <li><strong>データサイエンス</strong>:
+                    統計検定2級レベルの知識をベースに、R言語（Tidyverse）やPythonを用いた人事データの多変量解析、可視化を行い、経営判断に資するファクトを提供しています。</li>
+                <li><strong>アプリケーション開発</strong>:
+                    趣味が高じて、3000銘柄以上の日本酒データを管理・検索できるデータベースアプリを個人開発・運用中。フロントエンドからバックエンドまで一貫した開発スキルを保有しています。</li>
+                <li><strong>生成AIの業務実装</strong>: Claude、ChatGPT、GeminiなどのLLMを業務フローに組み込み、問い合わせ対応の自動化や文書作成の効率化を実現しています。
+                </li>
+            </ul>
+
             
-            <!-- AdSense Header -->
-            <div style="text-align: center; margin: 20px 0;">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1184134440246706"  
-                     data-ad-slot="5863584162"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
+<div class="ad-container" style="text-align: center; margin: 2rem 0;">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    <!-- 横長２ -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1184134440246706"
+         data-ad-slot="4192012905"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
 
-            <div class="section">
-                <h2>🎯 サイトの特徴</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h3><span class="icon">🆓</span>完全無料</h3>
-                        <p>すべてのWebアプリは完全無料でご利用いただけます。会員登録や課金は一切不要です。</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3><span class="icon">🌐</span>ブラウザで動作</h3>
-                        <p>インストール不要でブラウザから直接利用可能。PC、スマートフォン、タブレットに対応。</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3><span class="icon">🎨</span>使いやすいデザイン</h3>
-                        <p>直感的で分かりやすいユーザーインターフェースを重視。誰でも簡単に使えるよう設計。</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3><span class="icon">📱</span>レスポンシブ対応</h3>
-                        <p>どのデバイスからでも快適に利用できるよう、レスポンシブデザインを採用。</p>
-                    </div>
+
+            <h2>運営メディアの目的</h2>
+            <p>このブログ「メカトラ」では、私が日々実践している<br>
+                <strong>「実務 × テクノロジー」</strong><br>
+                <strong>「資格学習 × 実践的アウトプット」</strong><br>
+                のノウハウを惜しみなく公開しています。
+            </p>
+            <p>同じように「スキルアップしたい」「現場を変えたい」「市場価値を高めたい」と願うビジネスパーソンにとって、具体的なヒントや勇気を与えられる場所でありたいと考えています。<br>
+                アウトプットこそが最大の学びです。一緒に成長していきましょう！🐯✨</p>
+
+            <h2 id="contact">お問い合わせ</h2>
+            <p>お仕事のご依頼、技術的なご相談、または日本酒トークなどは、<a href="contact.html">お問い合わせフォーム</a>またはSNSのDMよりお気軽にご連絡ください。</p>
+            <ul>
+                <li><a href="https://x.com/xORMRha7Ck16551" target="_blank">X (Twitter): @xORMRha7Ck16551</a></li>
+                <li><a href="https://note.com/crt03" target="_blank">note: crt03</a></li>
+            </ul>
+
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">MEKA<span>TORA</span>🐯</div>
+                    <p>スキルアップ人事、DX、AI、そして日本酒。多層的な視点で未来を切り拓くエンジニア。🥰</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
                 </div>
             </div>
-
-            <div class="stats-section">
-                <h3>📊 サイト情報</h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-number">15+</span>
-                        <span class="stat-label">公開アプリ数</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">25章</span>
-                        <span class="stat-label">R言語学習コンテンツ</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">3年</span>
-                        <span class="stat-label">継続運営期間</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">100%</span>
-                        <span class="stat-label">無料利用</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>🚀 公開中のアプリ</h2>
-                <p style="text-align: center; margin: 2rem 0;">
-                    <a href="https://mechatora.com/" style="
-                        color: #3498db;
-                        text-decoration: none;
-                        font-weight: 600;
-                        font-size: 1.2rem;
-                        padding: 15px 30px;
-                        border: 2px solid #3498db;
-                        border-radius: 25px;
-                        display: inline-block;
-                        transition: all 0.3s ease;
-                    ">🏠 TOPページで全アプリを見る</a>
-                </p>
-                <style>
-                    a[href="https://mechatora.com/"]:hover {
-                        background: #3498db;
-                        color: white;
-                        transform: translateY(-2px);
-                    }
-                </style>
-            </div>
-
-            <div class="section">
-                <h2>🎯 対象ユーザー</h2>
-                <ul>
-                    <li><strong>学生・社会人:</strong> 学習効率を向上させたい方</li>
-                    <li><strong>主婦・主夫:</strong> 日常生活を便利にしたい方</li>
-                    <li><strong>防災意識のある方:</strong> 地震情報を常にチェックしたい方</li>
-                    <li><strong>SNS利用者:</strong> SNSをより楽しく活用したい方</li>
-                    <li><strong>料理好き:</strong> 新しいレシピを発見したい方</li>
-                    <li><strong>IT初心者:</strong> 簡単に使えるツールを探している方</li>
-                </ul>
-            </div>
-
-            <div class="section">
-                <h2>🔧 技術仕様</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h3><span class="icon">⚡</span>軽量・高速</h3>
-                        <p>JavaScript、HTML5、CSS3を使用した軽量設計で高速動作を実現。</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3><span class="icon">🔒</span>プライバシー重視</h3>
-                        <p>個人情報の収集を最小限に抑え、ユーザーのプライバシーを保護。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>🌱 開発の歴史</h2>
-                <div style="border-left: 3px solid var(--primary-color); padding-left: 20px; margin: 20px 0;">
-                    <div style="margin-bottom: 20px;">
-                        <strong style="color: var(--primary-color);">2022年4月</strong>
-                        <p>MechaTora立ち上げ。最初のアプリ「CookSuggest」をリリース。</p>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <strong style="color: var(--primary-color);">2023年</strong>
-                        <p>地震モニター、暗記カードアプリなど実用ツールを順次追加。PWA対応を開始。</p>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <strong style="color: var(--primary-color);">2024年</strong>
-                        <p>癒し系コンテンツ（暖炉、オーロラ、クラゲ）を追加。科学的根拠に基づく価値訴求を強化。</p>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <strong style="color: var(--primary-color);">2025年9月</strong>
-                        <p>独自ドメイン「mechatora.com」取得。R言語・Tidyverse学習コンテンツを全25章構成で公開。データサイエンス教育コンテンツの充実を図る。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>📖 開発ブログ</h2>
-                <p>開発の舞台裏、技術解説、アップデート情報を定期的に公開しています。</p>
-                <ul style="margin-top: 12px;">
-                    <li><a href="blog.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">📝 開発ブログを読む</a></li>
-                    <li>最新記事：「R言語・Tidyverse解説サイトを制作中！」</li>
-                    <li>人気記事：「ClaudeCodeでバイブコーディングしてみる」</li>
-                </ul>
-            </div>
-
-            <div class="section">
-                <h2>📧 お問い合わせ</h2>
-                <div class="feature-card">
-                    <p><strong>バグ報告・機能要望：</strong><br>
-                    GitHubのIssues機能をご利用ください。改善要望やバグ報告を歓迎します。</p>
-                    <p style="margin-top: 12px;"><strong>その他のお問い合わせ：</strong><br>
-                    <a href="contact.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">お問い合わせフォーム</a>からご連絡ください。</p>
-                </div>
-            </div>
-
-            <div class="stats-section">
-                <h3>💡 今後の展望</h3>
-                <ul style="margin-top: 12px;">
-                    <li>🎯 <strong>R言語・Tidyverse完全ガイド公開</strong> - データサイエンス学習サイトの正式リリース</li>
-                    <li>🔔 <strong>プッシュ通知機能の強化</strong> - 地震モニターなど重要情報の即時通知</li>
-                    <li>🧠 <strong>AI機能の拡充</strong> - より賢いレシピ提案、学習効率の最適化</li>
-                    <li>🌍 <strong>英語版の展開</strong> - グローバルユーザーへの対応</li>
-                    <li>📱 <strong>ネイティブアプリ化</strong> - iOS/Androidアプリのリリース検討</li>
-                </ul>
-            </div>
-
-            <div style="text-align: center; margin: 40px 0; padding: 30px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); border-radius: var(--border-radius); color: white;">
-                <h3 style="margin-bottom: 20px;">🚀 あなたも一緒にMechaToraを育てませんか？</h3>
-                <p style="margin-bottom: 20px; opacity: 0.9;">フィードバック、バグ報告、機能要望、大歓迎です！<br>ユーザーの声がサービスを進化させます。</p>
-                <a href="index.html" style="display: inline-block; background: white; color: var(--primary-color); padding: 15px 40px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">🏠 ホームに戻る</a>
-            </div>
+            <p style="margin-top: 3rem; text-align: center; color: #555;">&copy; 2026 メカトラ / スキルアップ人事. All rights
+                reserved.</p>
         </div>
-    </div>
+    </footer>
 </body>
+
 </html>

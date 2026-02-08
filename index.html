@@ -1,281 +1,341 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="社労士×エンジニアのMechaToraが、Web開発・技術・キャリア・データサイエンスについて発信するブログ">
-    <meta name="keywords" content="Web開発,プログラミング,社会保険労務士,エンジニア,R言語,データサイエンス">
-
-    <!-- OGP -->
-    <meta property="og:title" content="MechaToraのブログ | 社労士×エンジニアの技術ブログ">
-    <meta property="og:description" content="社労士×エンジニアのMechaToraが、Web開発・技術・キャリア・データサイエンスについて発信するブログ">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://blog.mechatora.com/">
-    <meta property="og:image" content="https://blog.mechatora.com/images/og-image.svg">
-    <meta property="og:site_name" content="MechaToraのブログ">
-    <meta property="og:locale" content="ja_JP">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="MechaToraのブログ | 社労士×エンジニアの技術ブログ">
-    <meta name="twitter:description" content="社労士×エンジニアのMechaToraが、Web開発・技術・キャリア・データサイエンスについて発信するブログ">
-    <meta name="twitter:image" content="https://blog.mechatora.com/images/og-image.svg">
-
-    <title>MechaToraのブログ | 社労士×エンジニアの技術ブログ</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="canonical" href="https://blog.mechatora.com/">
-    <link rel="alternate" type="application/rss+xml" title="MechaToraのブログ" href="https://blog.mechatora.com/feed.xml">
-
-    <!-- 構造化データ（JSON-LD） -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Blog",
-        "name": "MechaToraのブログ",
-        "description": "社労士×エンジニアのMechaToraが、Web開発・技術・キャリア・データサイエンスについて発信するブログ",
-        "url": "https://blog.mechatora.com",
-        "author": {
-            "@type": "Person",
-            "name": "MechaTora"
-        }
-    }
-    </script>
-
-    <!-- Google Analytics (準備完了 - GA4測定IDを設定してください) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script> -->
-
-    <!-- Netlify Identity Widget -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-    <!-- 広告表示切り替え用スタイル -->
-    <style>
-        .ad-pc { display: block; }
-        .ad-sp { display: none; }
-        @media (max-width: 768px) {
-            .ad-pc { display: none !important; }
-            .ad-sp { display: block !important; }
-        }
-        .ad-container {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 1rem;
-        }
-    </style>
+    <title>MEKATORA ｜ スキルアップ人事・DXメディア</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <!-- ヘッダー -->
     <header>
         <div class="container">
-            <div class="header-content">
-                <a href="index.html" class="logo">
-                    <span>🐱</span>
-                    <span>MechaToraのブログ</span>
-                </a>
-                <nav>
-                    <ul>
-                        <li><a href="index.html">ホーム</a></li>
-                        <li><a href="articles.html">記事一覧</a></li>
-                        <li><a href="about.html">運営者情報</a></li>
-                        <li><a href="contact.html">お問い合わせ</a></li>
-                    </ul>
-                </nav>
-            </div>
+            <nav>
+                <a href="index.html" class="logo">MEKA<span>TORA</span>🐯</a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="#articles">Articles</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </nav>
         </div>
     </header>
 
-    <!-- メインコンテンツ -->
     <main>
-        <div class="container">
-            <!-- ブログ紹介セクション -->
-            <section style="text-align: center; margin-bottom: 4rem; padding: 3rem 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px;">
-                <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">MechaToraのブログへようこそ</h1>
-                <p style="font-size: 1.25rem; margin-bottom: 0.5rem; opacity: 0.95;">社会保険労務士 × Web開発エンジニア</p>
-                <p style="font-size: 1.125rem; opacity: 0.9;">Web開発・技術・キャリア・データサイエンスについて発信中</p>
-            </section>
-
-            <!-- 広告エリア -->
-            <div class="ad-container">
-                <!-- PC用広告 -->
-                <div class="ad-pc">
-                    <div id="im-e9dd96f5b2124896aee20f93147b9119">
-                        <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
-                        <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590539,asid:1923061,type:"banner",display:"inline",elementid:"im-e9dd96f5b2124896aee20f93147b9119"})</script>
-                    </div>
-                </div>
-                <!-- スマホ用広告 -->
-                <div class="ad-sp">
-                    <div id="im-cf7a5be1c7474161bbaafed34bd9d690">
-                        <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
-                        <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590540,asid:1923062,type:"banner",display:"inline",elementid:"im-cf7a5be1c7474161bbaafed34bd9d690"})</script>
-                    </div>
+        <div class="hero">
+            <div class="speed-lines"></div>
+            <div class="container">
+                <h1>人事実務 ✕<span> DX </span>✕ AI</h1>
+                <p
+                    style="font-size: 1.4rem; max-width: 700px; margin: 0 auto; color: var(--text-muted); font-weight: 500; position: relative;">
+                    「人」の知恵と「コード」の力を融合させ、<br>ビジネスを、人生を、爆速で自己改善する。🐯✨🥰
+                </p>
+                <div style="margin-top: 3rem;">
+                    <a href="about.html"
+                        style="background: var(--primary); color: white; text-decoration: none; padding: 1.2rem 2.5rem; border-radius: 3rem; font-weight: 800; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(255,140,0,0.4); display: inline-block;">メカトラの挑戦を見る
+                        ✨</a>
                 </div>
             </div>
-
-            <!-- 最新記事セクション -->
-            <section>
-                <h2 class="section-title">📝 最新記事</h2>
-
-                <!-- 記事カード1 -->
-                <article class="article-card">
-                    <div class="article-meta">
-                        <span class="article-category">技術・開発</span>
-                        <time datetime="2026-01-02">2026年1月2日</time>
-                    </div>
-                    <h3 class="article-title">
-                        <a href="articles/2026-01-02-日本酒サジェストでリクエストをもらい追加作業🐯.html">日本酒サジェストでリクエストをもらい追加作業🐯</a>
-                    </h3>
-                    <p class="article-excerpt">
-                        Xで宣伝してみると・・・...
-                    </p>
-                    <a href="articles/2026-01-02-日本酒サジェストでリクエストをもらい追加作業🐯.html" class="read-more">続きを読む →</a>
-                </article>
-
-                <!-- 記事カード2 -->
-                <article class="article-card">
-                    <div class="article-meta">
-                        <span class="article-category">技術・開発</span>
-                        <time datetime="2026-01-01">2026年1月1日</time>
-                    </div>
-                    <h3 class="article-title">
-                        <a href="articles/2026-01-01-日本酒サジェスver2に向けたデータ整理.html">日本酒サジェスVer2に向けたデータ整理</a>
-                    </h3>
-                    <p class="article-excerpt">
-                        元旦の挨拶とやっていること...
-                    </p>
-                    <a href="articles/2026-01-01-日本酒サジェスver2に向けたデータ整理.html" class="read-more">続きを読む →</a>
-                </article>
-
-                <!-- 記事カード3 -->
-                <article class="article-card">
-                    <div class="article-meta">
-                        <span class="article-category">キャリア・資格</span>
-                        <time datetime="2025-12-29">2025年12月29日</time>
-                    </div>
-                    <h3 class="article-title">
-                        <a href="articles/2025-12-29-bookkeeping-basics-for-engineers.html">エンジニアのための簿記入門｜ITと会計の融合で市場価値を10倍にする方法</a>
-                    </h3>
-                    <p class="article-excerpt">
-                        エンジニアが簿記を学ぶメリットとは？簿記2級取得者が語る、ITスキルと会計知識を掛け合わせてキャリアの幅を広げる戦略を詳しく解説します。...
-                    </p>
-                    <a href="articles/2025-12-29-bookkeeping-basics-for-engineers.html" class="read-more">続きを読む →</a>
-                </article>
-
-                <!-- 記事カード4 -->
-                <article class="article-card">
-                    <div class="article-meta">
-                        <span class="article-category">技術・開発</span>
-                        <time datetime="2025-12-28">2025年12月28日</time>
-                    </div>
-                    <h3 class="article-title">
-                        <a href="articles/2025-12-28-ai-powered-database-construction.html">AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ</a>
-                    </h3>
-                    <p class="article-excerpt">
-                        生成AIを使ったデータベース構築の実践ガイド。ChatGPTとClaudeでデータ収集・整形・検証を自動化し、開発時間を10分の1に短縮した方法を詳しく解説します。...
-                    </p>
-                    <a href="articles/2025-12-28-ai-powered-database-construction.html" class="read-more">続きを読む →</a>
-                </article>
-
-                <!-- 記事カード5 -->
-                <article class="article-card">
-                    <div class="article-meta">
-                        <span class="article-category">技術・開発</span>
-                        <time datetime="2025-12-27">2025年12月27日</time>
-                    </div>
-                    <h3 class="article-title">
-                        <a href="articles/2025-12-27-sake-database-development-story.html">日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術</a>
-                    </h3>
-                    <p class="article-excerpt">
-                        47都道府県の日本酒データを収録したデータベースサイトの開発プロセスを詳しく解説。データ収集、DB設計、検索機能の実装まで、個人開発の全貌を公開します。...
-                    </p>
-                    <a href="articles/2025-12-27-sake-database-development-story.html" class="read-more">続きを読む →</a>
-                </article>
-
-            </section>
-
-                        <!-- カテゴリーセクション -->
-            <section style="margin-top: 4rem;">
-                <h2 class="section-title">📂 カテゴリー</h2>
-                <div class="category-list">
-                    <a href="articles.html#tech" class="category-card" style="text-decoration: none; color: inherit;">
-                        <h3>💻 技術・開発</h3>
-                        <p>Web開発、プログラミング、ツール開発の技術解説</p>
-                    </a>
-                    <a href="articles.html#career" class="category-card" style="text-decoration: none; color: inherit;">
-                        <h3>👔 キャリア・資格</h3>
-                        <p>社労士の仕事、資格取得、学習法、働き方</p>
-                    </a>
-                    <a href="articles.html#datascience" class="category-card" style="text-decoration: none; color: inherit;">
-                        <h3>📊 データサイエンス</h3>
-                        <p>R言語、Tidyverse、統計分析、データ可視化</p>
-                    </a>
-                    <a href="articles.html#misc" class="category-card" style="text-decoration: none; color: inherit;">
-                        <h3>📝 雑記</h3>
-                        <p>日々の気づき、学び、その他の話題</p>
-                    </a>
-                </div>
-            </section>
-
-            <!-- CTAセクション -->
-            <section style="text-align: center; margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
-                <h2 style="font-size: 1.75rem; margin-bottom: 1rem;">すべての記事を見る</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">技術記事からキャリア体験談まで、30記事以上を公開中</p>
-                <a href="articles.html" class="btn">記事一覧へ →</a>
-            </section>
         </div>
+
+        <section id="articles" class="container" style="padding: 6rem 0;">
+            <h2
+                style="border: none; padding: 0; margin-bottom: 4rem; text-align: center; font-size: 2.89rem; font-family: var(--font-heading);">
+                LATEST INSIGHTS 🐯✨</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                <!-- NEW: X Buzz Simulator -->
+                <a href="article-x-buzz-simulator.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card"
+                        style="align-items: center; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--primary); height: 100%;">
+                        <div class="card-thumb" style="height: 100px; font-size: 2.5rem;">🚀</div>
+                        <div class="card-body" style="padding: 1rem;">
+                            <span class="tag" style="background: var(--primary); color: white;">NEW TOOL</span>
+                            <h3 style="color: white; font-size: 0.95rem; margin-bottom: 0.3rem;">Xバズ・シミュレーター 🐯🔥</h3>
+                            <p style="color: #cbd5e1; font-size: 0.7rem;">ツイートを「バズの資産」へ。🥰</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NEW: Earthquake Monitor -->
+                <a href="article-earthquake-monitor.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card"
+                        style="align-items: center; background: linear-gradient(135deg, #05070a, #0f172a); border: 2px solid #00ffff; height: 100%;">
+                        <div class="card-thumb" style="height: 100px; font-size: 2.5rem;">📡</div>
+                        <div class="card-body" style="padding: 1rem;">
+                            <span class="tag" style="background: #00ffff; color: #000;">DATA DX</span>
+                            <h3 style="color: white; font-size: 0.95rem; margin-bottom: 0.3rem;">リアルタイム地震モニター 📡🐯</h3>
+                            <p style="color: #cbd5e1; font-size: 0.7rem;">世界の地震データを可視化。✨</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NEW: Tidy Data Science -->
+                <a href="article-tidy-data-science.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card"
+                        style="align-items: center; background: linear-gradient(135deg, #ffffff, #f1f5f9); border: 2px solid #10b981; height: 100%;">
+                        <div class="card-thumb" style="height: 100px; font-size: 2.5rem;">📊</div>
+                        <div class="card-body" style="padding: 1rem;">
+                            <span class="tag" style="background: #10b981; color: white;">R LANGUAGE</span>
+                            <h3 style="color: var(--text); font-size: 0.95rem; margin-bottom: 0.3rem;">Tidy Data Science
+                                📊🐯</h3>
+                            <p style="color: #64748b; font-size: 0.7rem;">データを資産に。Rの哲学。🥰</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NEW: Company Hate Meter -->
+                <a href="article-company-hate-meter.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card"
+                        style="align-items: center; background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #ff006e; height: 100%;">
+                        <div class="card-thumb" style="height: 100px; font-size: 2.5rem;">📡💔</div>
+                        <div class="card-body" style="padding: 1rem;">
+                            <span class="tag" style="background: #ff006e; color: white;">MENTAL DX</span>
+                            <h3 style="color: white; font-size: 0.95rem; margin-bottom: 0.3rem;">会社行きたくないメーター 🐯📡</h3>
+                            <p style="color: #cbd5e1; font-size: 0.7rem;">全国の憂鬱をリアルタイム可視化。✨</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NEW: Social Insurance News -->
+                <a href="article-social-insurance-news.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card"
+                        style="align-items: center; background: linear-gradient(135deg, #FF8C00, #FF4500); border: 2px solid #ffffff; height: 100%;">
+                        <div class="card-thumb" style="height: 100px; font-size: 2.5rem;">🏛️📡</div>
+                        <div class="card-body" style="padding: 1rem;">
+                            <span class="tag" style="background: #ffffff; color: #FF4500;">LAW DX</span>
+                            <h3 style="color: white; font-size: 0.95rem; margin-bottom: 0.3rem;">社会保険・速報ツール 🐯🏛️</h3>
+                            <p style="color: #ffffff; font-size: 0.7rem;">毎朝4時更新。法改正を爆速把握。✨</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 1 -->
+                <a href="article-ai-ranking-2026.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card">
+                        <div class="card-thumb" style="background: linear-gradient(135deg, #FF8C00, #FFD700);">🏆</div>
+                        <div class="card-body">
+                            <span class="tag">AI UPDATE</span>
+                            <h3>【2026最新】4大生成AIランキングを人事実務家が徹底解説 🐯✨</h3>
+                            <p>ChatGPT, Claude, Gemini, Perplexity。どれをどう使うのが正解か、結論を出します。🥰</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 2 -->
+                <a href="article-ai-hr-dx.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card">
+                        <div class="card-thumb" style="background: linear-gradient(135deg, #6a11cb, #2575fc);">📊</div>
+                        <div class="card-body">
+                            <span class="tag">R LANGUAGE</span>
+                            <h3>Claude 4.6 ✕ R言語：人事データを爆速で可視化する手法 📊🐯</h3>
+                            <p>コード1つで定型業務を資産化。最強AIを相棒に、現場のDXを加速させるフレームワーク。✨</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 3 -->
+                <a href="article-x-algorithm.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card">
+                        <div class="card-thumb" style="background: linear-gradient(135deg, #000000, #434343);">🔥</div>
+                        <div class="card-body">
+                            <span class="tag">X STRATEGY</span>
+                            <h3>Xアルゴリズム完全分析：バズを論理的に攻略する方法 🐯🔥</h3>
+                            <p>GitHubソースコードから読み解く。インプレッションを爆発させ、収益に繋げる全戦略。🥰</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 4 -->
+                <a href="article-sake-app-dx.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card">
+                        <div class="card-thumb" style="background: linear-gradient(135deg, #2c3e50, #00bcd4);">🍶</div>
+                        <div class="card-body">
+                            <span class="tag">DX CASE</span>
+                            <h3>日本酒DB 3000銘柄突破！副業DXで分かった伝統を繋ぐ技術 🍶🐯</h3>
+                            <p>執念の開発プロセス。テクノロジーを使って、価値ある伝統を未来へ届ける。✨🥰</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 5 -->
+                <a href="article-hr-mindset.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card">
+                        <div class="card-thumb" style="background: linear-gradient(135deg, #11998e, #38ef7d);">🛡️</div>
+                        <div class="card-body">
+                            <span class="tag">MINDSET</span>
+                            <h3>「誰が言うか」より「何を言うか」。社労士合格後に見えた本質 🐯✨</h3>
+                            <p>肩書きに甘えない。実体験とデータで語る、プロフェッショナルとしての発信マインド。🥰</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 6 -->
+                <a href="article-dx-workflow.html" style="text-decoration: none; color: inherit;">
+                    <div class="article-card">
+                        <div class="card-thumb" style="background: linear-gradient(135deg, #ee0979, #ff6a00);">💻</div>
+                        <div class="card-body">
+                            <span class="tag">WORKFLOW</span>
+                            <h3>DX人件のリアルな1日：RとRPAで業務をハックする 🐯💻</h3>
+                            <p>面倒な作業はすべて自動化。人間が本来やるべきクリエイティブな仕事に集中する手法。✨</p>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            
+<div class="ad-container" style="text-align: center; margin: 2rem 0;">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    <!-- 横長２ -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1184134440246706"
+         data-ad-slot="4192012905"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+        </section>
     </main>
 
-    <!-- フッター -->
+    <!-- NEO-TORA Mascot Overlay -->
+    <div class="mascot-container" id="neo-tora">
+        <div class="mascot-speech">自己改善のヒントを<br>探しに来ましたか？🐯✨</div>
+        <svg viewBox="0 0 200 200" style="filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
+            <circle cx="50" cy="50" r="23" fill="#333" stroke="#ff9900" stroke-width="3" />
+            <circle cx="150" cy="50" r="23" fill="#333" stroke="#ff9900" stroke-width="3" />
+            <rect x="40" y="45" width="120" height="110" rx="40" fill="#ff9900" />
+            <rect x="50" y="60" width="100" height="85" rx="30" fill="#222" />
+            <ellipse cx="75" cy="95" rx="15" ry="20" fill="#00ffff" id="eye-l" />
+            <ellipse cx="125" cy="95" rx="15" ry="20" fill="#00ffff" id="eye-r" />
+            <path d="M 100 50 L 90 65 L 110 65 Z" fill="#000" />
+            <path d="M 85 130 Q 100 145 115 130" fill="none" stroke="white" stroke-width="3" />
+        </svg>
+    </div>
+
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>MechaToraのブログ</h3>
-                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                        社労士×エンジニアのMechaToraが運営する技術ブログです。
-                    </p>
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">MEKA<span>TORA</span>🐯</div>
+                    <p>スキルアップ人事、DX、AI、データ分析、日本酒。多層的な視点で未来を切り拓く、メカトラ流・自己改善メディア。🥰✨</p>
                 </div>
-                <div class="footer-section">
-                    <h3>カテゴリー</h3>
+                <div class="footer-links">
+                    <h4>Insight</h4>
                     <ul>
-                        <li><a href="articles.html#tech">技術・開発</a></li>
-                        <li><a href="articles.html#career">キャリア・資格</a></li>
-                        <li><a href="articles.html#datascience">データサイエンス</a></li>
-                        <li><a href="articles.html#misc">雑記</a></li>
+                        <li><a href="article-ai-ranking-2026.html">AIランキング</a></li>
+                        <li><a href="article-x-algorithm.html">SNS戦略</a></li>
+                        <li><a href="article-dx-workflow.html">DXワークフロー</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
-                    <h3>サイト情報</h3>
+                <div class="footer-links">
+                    <h4>Connect</h4>
                     <ul>
-                        <li><a href="about.html">運営者情報</a></li>
-                        <li><a href="privacy.html">プライバシーポリシー</a></li>
-                        <li><a href="contact.html">お問い合わせ</a></li>
-                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">MechaTora（開発ツール）</a></li>
+                        <li><a href="https://x.com/xORMRha7Ck16551" target="_blank">X (Twitter)</a></li>
+                        <li><a href="https://note.com/crt03" target="_blank">note</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 MechaTora. All rights reserved.</p>
-            </div>
+            <p style="margin-top: 5rem; text-align: center; opacity: 0.3; font-size: 0.8rem;">&copy; 2026 メカトラ /
+                スキルアップ人事. <a href="privacy-policy.html" style="color: inherit;">Privacy Policy</a></p>
         </div>
     </footer>
-    <script src="cookie-banner.js"></script>
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
-          }
-        });
-      }
-    </script>
+
+    <style>
+        .article-card {
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-thumb {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 2.2rem;
+            flex: 1;
+        }
+
+        .card-body h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        .card-body p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Animation for Neo-Tora */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        #neo-tora {
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            90%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            95% {
+                transform: scaleY(0.1);
+            }
+        }
+
+        #eye-l,
+        #eye-r {
+            transform-origin: center 95px;
+            animation: blink 4s infinite;
+        }
+    </style>
 </body>
+
 </html>

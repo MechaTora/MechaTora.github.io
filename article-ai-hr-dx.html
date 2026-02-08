@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Claude 4.6 ✕ R言語：人事データを爆速で可視化する手法 ｜ メカトラ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">MEKA<span>TORA</span>🐯</a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article>
+            <div class="meta">
+                <span class="tag">AI</span>
+                <span class="tag">R Language</span>
+                <span>2026.02.08</span>
+            </div>
+            <h1>Claude Opus 4.6 ✕ R言語：人事実務のデータを「爆速」で可視化する具体的手法 🐯✨</h1>
+
+            <p>こんにちは、メカトラです🐯。最新のClaude Opus
+                4.6がリリースされましたね。今回は、この「史上最強」のエージェントと、私が愛してやまない統計言語「R」を組み合わせて、人事実務の定型レポートを一瞬で仕上げる手法を徹底解説します！🥰</p>
+
+            
+<div class="ad-container" style="text-align: center; margin: 2rem 0;">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+    <!-- 横長２ -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1184134440246706"
+         data-ad-slot="4192012905"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+
+            <h2>1. なぜ「R」なのか？</h2>
+            <p>Excelでのコピペ作業に疲弊していませんか？R言語を使えば、コード1つでデータのクリーニングから高度な統計分析までを一貫して「資産化」できます。再現性が高いので、翌月のレポートはRPAでスクリプトを叩くだけ。まさにDXの真髄ですね✨
+            </p>
+
+            <h2>2. Claude 4.6によるコード生成</h2>
+            <p>驚くべきはClaude
+                4.6のコード精度です。私のような、R言語の書き方にこだわりがある人間が指示しても、文脈を汲み取って「最適なライブラリ」を選択してくれます。以下は、離職率を多変量解析するためのサンプルコードです。</p>
+
+            <div class="code-header">
+                <span>analysis.R</span>
+                <span>R Language</span>
+            </div>
+            <pre>
+# 必要なパッケージの読み込み 🐯
+library(tidyverse)
+library(survival)
+
+# データ読み込み（人事実務用ダミーデータ）
+hr_data <- read.csv("employee_stats.csv")
+
+# 離職リスクのコックス回帰分析
+fit <- coxph(Surv(years_of_service, status) ~ factor(dept) + age + satisfaction, data = hr_data)
+
+# 結果の可視化 (ggplot2)
+ggsurvplot(survfit(fit), data = hr_data, palette = "jco", ggtheme = theme_minimal())
+            </pre>
+
+            <h2>3. RPAとの連携で「無人化」へ</h2>
+            <p>作成したRスクリプトを、Power Automate
+                Desktop等のRPAで定期実行するように組めば、もはや人間が手を動かす必要はありません。法改正への対応も含め、AIとRPAという「2人の部下」を持つ感覚で実務を回しましょう🐯🥰</p>
+
+            <section
+                style="background: #fff5e6; padding: 2rem; border-radius: 1rem; border-left: 8px solid var(--primary); margin: 3rem 0;">
+                <h3>メカトラ・インサイト 🐯✨</h3>
+                <p>大事なのは「ツールを使うこと」ではなく、それによって生まれた時間で「従業員と向き合う」ことです。社労士としての経験からも言えますが、データはあくまでツール。その先にある「人」の幸福を分析の目的としましょう。🥰
+                </p>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container" style="text-align: center;">&copy; 2026 メカトラ / スキルアップ人事</div>
+    </footer>
+</body>
+
+</html>

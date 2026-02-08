@@ -1,93 +1,11 @@
-  User-agent: *
-  Allow: /
+User-agent: *
+Allow: /
 
-  # 公開ページは明示的に許可
-  Allow: /*.html
-  Allow: /contact.html
-  Allow: /blog.html
-  Allow: /privacy.html
-  Allow: /privacy-policy.html
-  Allow: /earthquake-monitor/
-  Allow: /jellyfish-simulation/
-  Allow: /flashcard-web-app/
-  Allow: /beer-quiz/
-  Allow: /unreasonable-othello/
+# WordPress等の管理画面ではないため、基本的には全て許可しますが
+# システムファイルや非公開にすべきディレクトリのみ除外します
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /google*.html
 
-  # 個人情報・機密データをブロック
-  Disallow: /admin/
-  Disallow: /dashboard/
-  Disallow: /user/
-  Disallow: /profile/
-  Disallow: /account/
-  Disallow: /login/
-  Disallow: /auth/
-  Disallow: /api/private/
-  Disallow: /config/
-  Disallow: /.env
-  Disallow: /.git/
-  Disallow: /backup/
-  Disallow: /logs/
-
-  # 一時的・内部ファイルをブロック
-  Disallow: /temp/
-  Disallow: /tmp/
-  Disallow: /cache/
-  Disallow: /.well-known/
-  Disallow: /node_modules/
-  Disallow: /*.log$
-  Disallow: /*.csv$
-  Disallow: /*.sql$
-  Disallow: /*.db$
-
-  # フォーム送信エンドポイントのみブロック
-  Disallow: /contact/submit/
-  Disallow: /form/submit/
-  Disallow: /mail/send/
-
-  # 検索インデックス化したくないページ
-  Disallow: /test/
-  Disallow: /dev/
-  Disallow: /beta/
-  Disallow: /staging/
-
-  # 特定ページのブロック
-  Disallow: /x-buzz-simulator/
-  Disallow: /fire/
-  Disallow: /cat-healing-station/
-  Disallow: /aurora/
-  Disallow: /jellyfish/
-
-  # プライバシーポリシー等は公開（Allowで明示）
-  Allow: /privacy/
-  Allow: /terms/
-  Allow: /about/
-
-  # 良性な検索エンジンには詳細許可
-  User-agent: Googlebot
-  Allow: /
-  Disallow: /admin/
-  Disallow: /user/
-  Disallow: /api/private/
-
-  User-agent: Bingbot
-  Allow: /
-  Disallow: /admin/
-  Disallow: /user/
-  Disallow: /api/private/
-
-  # 悪意のあるボットをブロック
-  User-agent: SemrushBot
-  Disallow: /
-
-  User-agent: AhrefsBot
-  Disallow: /
-
-  User-agent: MJ12bot
-  Disallow: /
-
-  # サイトマップ
-  Sitemap: https://mechatora.com/sitemap.xml
-
-  # クロール遅延設定（サーバー負荷軽減）
-  Crawl-delay: 1
-
+# サイトマップの場所を明示
+Sitemap: https://mechatora.com/sitemap.xml
