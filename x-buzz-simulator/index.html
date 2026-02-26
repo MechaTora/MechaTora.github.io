@@ -1,555 +1,353 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 Xインフルエンサー体験シミュレーター｜バズる感覚を体験できる無料ツール</title>
-    <meta name="description" content="Xでインフルエンサーになった感覚を体験！フォロワー数の急増、バイラル投稿、リツイートの急増をリアルにシミュレート。Xで有名になる感覚、インフルエンサーの疑似体験ができる無料エンターテイメントツール。">
-    
-    <!-- SEO Meta Tags -->
-    <meta name="keywords" content="Xインフルエンサー体験,Xバズシミュレーター,インフルエンサーになる,X有名体験,Twitterバズ,バイラル体験,SNSシミュレーター,ソーシャルメディア体験,フォロワー数,リツイート,エンガージメント,バズ体験,Xアプリ">
-    <meta property="og:title" content="Xバズシミュレーター｜Twitterでバズる体験をシミュレート">
-    <meta property="og:description" content="X（Twitter）でバズる体験をシミュレート！ソーシャルメディアのバイラル投稿、フォロワー数の伸び、リツイートの急増を体験できるエンターテイメントツール。">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mechatora.com/x-buzz-simulator/">
-    <meta property="og:site_name" content="MechaTora">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Xバズシミュレーター｜Twitterでバズる体験">
-    <meta name="twitter:description" content="X（Twitter）でバズる体験をシミュレート！バイラル投稿、フォロワー数の伸びを体験できるエンターテイメントツール。">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://mechatora.com/x-buzz-simulator/">
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RBPWE348T2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RBPWE348T2');
-    </script>
-    
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
-         crossorigin="anonymous"></script>
-    
-    <link rel="stylesheet" href="realistic-styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <!-- 広告表示切り替え用スタイル -->
+    <title>X Buzz Simulator 🐯🔥 ｜ メカトラ・ラボ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@900&display=swap"
+        rel="stylesheet">
     <style>
-        .ad-pc { display: block; }
-        .ad-sp { display: none; }
-        @media (max-width: 768px) {
-            .ad-pc { display: none !important; }
-            .ad-sp { display: block !important; }
+        :root {
+            --primary: #FF8C00;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --accent: #00ffff;
         }
-        .ad-container {
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 2rem;
             text-align: center;
-            margin: 15px 0;
-            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        main {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            background: linear-gradient(to right, var(--primary), #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .simulator-box {
+            background: var(--surface);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            color: white;
+            padding: 1rem;
+            font-size: 1.1rem;
+            resize: none;
+            transition: border-color 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 140, 0, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.5);
+        }
+
+        .result-panel {
+            margin-top: 3rem;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .buzz-meter {
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .buzz-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #facc15, #ea580c);
+            transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .mekatora-judge {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            background: rgba(255, 140, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border-left: 5px solid var(--primary);
+        }
+
+        .tora-icon {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        .speech-bubble {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.8rem;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
         }
     </style>
+
+    <style>
+        /* スティッキー広告（スマホのみ） */
+        .admax-sticky {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .admax-sticky {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                z-index: 9999;
+                background: rgba(15, 23, 42, 0.95);
+                padding: 4px 0;
+            }
+            body {
+                padding-bottom: 60px;
+            }
+        }
+        /* 結果パネル内広告 */
+        .admax-result {
+            margin: 2rem 0;
+            text-align: center;
+        }
+    </style>
+
 </head>
+
 <body>
-    <div class="app-container">
-        <!-- Left Sidebar -->
-        <nav class="sidebar-nav">
-            <div class="nav-header">
-                <div class="x-logo">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class="logo-icon">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    <header>
+        <h1>X BUZZ SIMULATOR 🐯🚀</h1>
+        <p>あなたのツイートを「メカトラ」が論理的に添削し、バズの可能性を診断します。🥰</p>
+    </header>
+
+    <main>
+        <div class="simulator-box">
+            <textarea id="tweetInput" placeholder="ここにツイートドラフトを入力してください... (例: Claude 4.6が最強すぎて革命が起きています🐯)"></textarea>
+            <div class="controls">
+                <button onclick="analyzeTweet()">診断を開始する ✨</button>
+            </div>
+        </div>
+
+        <div id="resultPanel" class="result-panel">
+            <div class="stat-card" style="margin-bottom: 2rem;">
+                <div style="font-size: 0.9rem; opacity: 0.7;">バズ・ポテンシャル算出...</div>
+                <div id="scoreText" style="font-size: 4rem; font-family: 'Outfit'; color: var(--primary);">0%</div>
+                <div class="buzz-meter">
+                    <div id="buzzProgress" class="buzz-progress"></div>
+                </div>
+            </div>
+
+            <div class="mekatora-judge">
+                <div class="tora-icon">
+                    <svg viewBox="0 0 200 200">
+                        <circle cx="50" cy="50" r="23" fill="#333" stroke="#ff9900" stroke-width="3" />
+                        <circle cx="150" cy="50" r="23" fill="#333" stroke="#ff9900" stroke-width="3" />
+                        <rect x="40" y="45" width="120" height="110" rx="40" fill="#ff9900" />
+                        <rect x="50" y="60" width="100" height="85" rx="30" fill="#222" />
+                        <ellipse cx="75" cy="95" rx="15" ry="20" fill="#00ffff" />
+                        <ellipse cx="125" cy="95" rx="15" ry="20" fill="#00ffff" />
+                        <path d="M 100 50 L 90 65 L 110 65 Z" fill="#000" />
+                        <path d="M 85 130 Q 100 145 115 130" fill="none" stroke="white" stroke-width="3" />
                     </svg>
                 </div>
-            </div>
-            
-            <div class="nav-menu">
-                <a href="#" class="nav-item active">
-                    <i class="fas fa-home"></i>
-                    <span>ホーム</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-search"></i>
-                    <span>話題を検索</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="far fa-bell"></i>
-                    <span>通知</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="far fa-envelope"></i>
-                    <span>メッセージ</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="far fa-bookmark"></i>
-                    <span>ブックマーク</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="far fa-user"></i>
-                    <span>プロフィール</span>
-                </a>
-            </div>
-            
-            <button class="post-button">ポスト</button>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <div class="content-header">
-                <h1>ホーム</h1>
-            </div>
-
-            <!-- Post Composer -->
-            <div class="compose-tweet">
-                <div class="compose-header">
-                    <div class="profile-avatar">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="プロフィール画像">
-                    </div>
-                    <div class="compose-input">
-                        <textarea id="tweetInput" placeholder="いまどうしてる？" maxlength="280"></textarea>
-                        <div class="compose-options">
-                            <div class="media-options">
-                                <button class="option-btn" id="imageBtn">
-                                    <i class="far fa-image"></i>
-                                </button>
-                                <button class="option-btn">
-                                    <i class="fas fa-poll"></i>
-                                </button>
-                                <button class="option-btn">
-                                    <i class="far fa-smile"></i>
-                                </button>
-                                <button class="option-btn">
-                                    <i class="far fa-calendar"></i>
-                                </button>
-                                <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                            </div>
-                            <div class="post-controls">
-                                <div class="char-counter">
-                                    <span id="charCount">0</span>/280
-                                </div>
-                                <button class="tweet-btn" id="tweetBtn" disabled>ポスト</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Image Preview -->
-                        <div class="image-preview-container" id="imagePreview" style="display: none;">
-                            <img id="previewImage" alt="プレビュー">
-                            <button class="remove-image-btn" id="removeImage">&times;</button>
-                        </div>
-                    </div>
+                <div class="speech-bubble" id="toraMessage">
+                    分析の準備が整いました。🐯✨<br>あなたの投稿の「資産価値」を見てみましょう。🥰
                 </div>
             </div>
 
-            <!-- SNS活用ヒント -->
-            <div style="margin: 15px 0; padding: 12px; background: #000; border-radius: 12px; border: 1px solid #2f3336;">
-            </div>
-
-            <!-- Tweet Feed -->
-            <div class="tweet-feed">
-                <!-- User's Viral Tweet -->
-                <article class="tweet viral-tweet" id="viralTweet" style="display: none;">
-                    <div class="tweet-header">
-                        <div class="profile-avatar">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="あなた">
-                        </div>
-                        <div class="tweet-author">
-                            <div class="author-info">
-                                <span class="display-name">あなた</span>
-                                <span class="verified-badge">✓</span>
-                                <span class="username">@your_handle</span>
-                                <span class="timestamp">・<span id="tweetTimestamp">今</span></span>
-                            </div>
-                        </div>
-                        <div class="tweet-menu">
-                            <button class="menu-btn">
-                                <i class="fas fa-ellipsis"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="tweet-content">
-                        <p class="tweet-text" id="viralTweetText"></p>
-                        <div class="tweet-media" id="viralTweetImage" style="display: none;">
-                            <img id="viralImage" alt="投稿画像">
-                        </div>
-                    </div>
-                    
-                    <div class="tweet-stats">
-                        <div class="engagement-stats">
-                            <span class="stat-item">
-                                <span id="viewCount">0</span> 回表示
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="tweet-actions">
-                        <button class="action-btn reply-btn">
-                            <i class="far fa-comment"></i>
-                            <span class="action-count" id="replyCount">0</span>
-                        </button>
-                        <button class="action-btn retweet-btn">
-                            <i class="fas fa-retweet"></i>
-                            <span class="action-count" id="retweetCount">0</span>
-                        </button>
-                        <button class="action-btn like-btn">
-                            <i class="far fa-heart"></i>
-                            <span class="action-count" id="likeCount">0</span>
-                        </button>
-                        <button class="action-btn bookmark-btn">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                        <button class="action-btn share-btn">
-                            <i class="fas fa-share"></i>
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Sample Tweets -->
-                <article class="tweet mini-viral">
-                    <div class="tweet-header">
-                        <div class="profile-avatar">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face" alt="きのこたけのこ">
-                        </div>
-                        <div class="tweet-author">
-                            <div class="author-info">
-                                <span class="display-name">きのこたけのこ</span>
-                                <span class="username">@kinoko_takenoko</span>
-                                <span class="timestamp">・1時間</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tweet-content">
-                        <p class="tweet-text">きのこの山とたけのこの里どっちが好き？<br>永遠のテーマだよね🍄🥨 #きのこたけのこ戦争</p>
-                    </div>
-                    <div class="tweet-stats">
-                        <div class="engagement-stats">
-                            <span class="stat-item">2.4万 回表示</span>
-                        </div>
-                    </div>
-                    <div class="tweet-actions">
-                        <button class="action-btn">
-                            <i class="far fa-comment"></i>
-                            <span class="action-count">156</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-retweet"></i>
-                            <span class="action-count">89</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-heart"></i>
-                            <span class="action-count">1.2K</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-share"></i>
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Promoted Tweet / A8 Affiliate Ad -->
-                <article class="tweet promoted-tweet">
-                    <div class="promoted-label">
-                        <i class="fas fa-ad" style="font-size: 12px; margin-right: 4px;"></i>
-                        <span>プロモーション</span>
-                    </div>
-                    <div class="tweet-header">
-                        <div class="profile-avatar">
-                            <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #1DA1F2, #0A7EC8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <div class="tweet-author">
-                            <div class="author-info">
-                                <span class="display-name">おすすめサービス</span>
-                                <span class="username">@recommended</span>
-                                <span class="timestamp">・PR</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tweet-content">
-                        <p class="tweet-text">✨ 今すぐチェックしたいサービス情報をお届け！</p>
-                    </div>
-                    <div class="tweet-actions">
-                        <button class="action-btn">
-                            <i class="far fa-comment"></i>
-                            <span class="action-count">12</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-retweet"></i>
-                            <span class="action-count">24</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-heart"></i>
-                            <span class="action-count">89</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-share"></i>
-                        </button>
-                    </div>
-                </article>
-
-                <article class="tweet">
-                    <div class="tweet-header">
-                        <div class="profile-avatar">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="ユーザー">
-                        </div>
-                        <div class="tweet-author">
-                            <div class="author-info">
-                                <span class="display-name">田中太郎</span>
-                                <span class="username">@tanaka_taro</span>
-                                <span class="timestamp">・2時間</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tweet-content">
-                        <p class="tweet-text">今日の朝食はパンケーキでした🥞 美味しかった！</p>
-                    </div>
-                    <div class="tweet-actions">
-                        <button class="action-btn">
-                            <i class="far fa-comment"></i>
-                            <span class="action-count">12</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-retweet"></i>
-                            <span class="action-count">3</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-heart"></i>
-                            <span class="action-count">45</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-share"></i>
-                        </button>
-                    </div>
-                </article>
-
-                <article class="tweet">
-                    <div class="tweet-header">
-                        <div class="profile-avatar">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="ユーザー">
-                        </div>
-                        <div class="tweet-author">
-                            <div class="author-info">
-                                <span class="display-name">佐藤花子</span>
-                                <span class="username">@sato_hanako</span>
-                                <span class="timestamp">・4時間</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tweet-content">
-                        <p class="tweet-text">新しいカフェ見つけた！コーヒーが本当に美味しい☕️ みんなにもおすすめしたい</p>
-                    </div>
-                    <div class="tweet-actions">
-                        <button class="action-btn">
-                            <i class="far fa-comment"></i>
-                            <span class="action-count">8</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-retweet"></i>
-                            <span class="action-count">15</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-heart"></i>
-                            <span class="action-count">67</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-share"></i>
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Second Promoted Tweet / A8 Affiliate Ad -->
-                <article class="tweet promoted-tweet">
-                    <div class="promoted-label">
-                        <i class="fas fa-ad" style="font-size: 12px; margin-right: 4px;"></i>
-                        <span>プロモーション</span>
-                    </div>
-                    <div class="tweet-header">
-                        <div class="profile-avatar">
-                            <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
-                                <i class="fas fa-gift"></i>
-                            </div>
-                        </div>
-                        <div class="tweet-author">
-                            <div class="author-info">
-                                <span class="display-name">人気サービス</span>
-                                <span class="username">@popular_service</span>
-                                <span class="timestamp">・PR</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tweet-content">
-                        <p class="tweet-text">🎁 お得な情報をお見逃しなく！話題のサービスをチェック</p>
-                    </div>
-                    <div class="tweet-actions">
-                        <button class="action-btn">
-                            <i class="far fa-comment"></i>
-                            <span class="action-count">8</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-retweet"></i>
-                            <span class="action-count">16</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-heart"></i>
-                            <span class="action-count">42</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-share"></i>
-                        </button>
-                    </div>
-                </article>
-            </div>
-        </main>
-
-        <!-- Right Sidebar -->
-        <aside class="right-sidebar">
-            <!-- Search -->
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="キーワード検索">
-            </div>
-
-            <!-- Trending -->
-            <div class="trending-widget">
-                <h3>いま話題</h3>
-                <div class="trending-item">
-                    <div class="trend-location">日本のトレンド</div>
-                    <div class="trend-topic">#おはよう</div>
-                    <div class="trend-count">12.5万件のポスト</div>
+            <div class="stats">
+                <div class="stat-card">
+                    <div style="font-size: 0.8rem;">フックの強さ</div>
+                    <div id="hookStat" class="stat-val">-</div>
                 </div>
-                <div class="trending-item">
-                    <div class="trend-location">テクノロジー・トレンド</div>
-                    <div class="trend-topic">#AI</div>
-                    <div class="trend-count">45.2万件のポスト</div>
-                </div>
-                <div class="trending-item viral-trend" id="viralTrend" style="display: none;">
-                    <div class="trend-location">🔥 #1 トレンド</div>
-                    <div class="trend-topic" id="userTrend"></div>
-                    <div class="trend-count">150万件のポスト</div>
-                </div>
-                <div class="trending-item">
-                    <div class="trend-location">エンタメ・トレンド</div>
-                    <div class="trend-topic">#映画</div>
-                    <div class="trend-count">28.7万件のポスト</div>
+                <div class="stat-card">
+                    <div style="font-size: 0.8rem;">保存・拡散性</div>
+                    <div id="shareStat" class="stat-val">-</div>
                 </div>
             </div>
 
-            <!-- Ad Space -->
-            <div class="ad-widget">
-                <div class="ad-label">プロモーション</div>
-                <div class="ad-container">
-                    <!-- PC用広告 -->
-                    <div class="ad-pc">
-                        <div id="im-1cec58b8f74b4b238dc04e224e8ff739">
-                            <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
-                            <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590541,asid:1923063,type:"banner",display:"inline",elementid:"im-1cec58b8f74b4b238dc04e224e8ff739"})</script>
-                        </div>
-                    </div>
-                    <!-- スマホ用広告 -->
-                    <div class="ad-sp">
-                        <div id="im-10538d6f73df4be69fdb4f073d0cfabc">
-                            <script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
-                            <script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:84386,mid:590542,asid:1923064,type:"banner",display:"inline",elementid:"im-10538d6f73df4be69fdb4f073d0cfabc"})</script>
-                        </div>
-                    </div>
-                </div>
+            <!-- admax 300×250 結果パネル直後 -->
+            <div class="admax-result">
+                <script src="https://adm.shinobi.jp/s/754fc5f32fb98c51d6535306851aa397"></script>
             </div>
+            <!-- admax -->
 
-            <!-- A8 Affiliate Ads -->
-            <div class="ad-widget">
-                <div class="ad-label">おすすめ</div>
-                <div class="a8-ad-container" style="text-align: center; padding: 10px;">
-                    </a>
-                    
-                    </a>
-                </div>
-            </div>
-
-            <!-- SNS関連サービス -->
-            <div class="ad-widget">
-                <div class="ad-label">SNS運用・学習</div>
-                <div style="padding: 15px; background: #16181c; border-radius: 12px; border: 1px solid #2f3336;">
-                    <div style="margin-bottom: 15px;">
-                            📚 マンツーマン・超実践型SNS大学校【HERO'ZZ UNIVERSITY】
-                        </a>
-                        <p style="color: #71767b; font-size: 13px; margin-top: 5px;">プロから学ぶSNS運用の実践スキル</p>
-                    </div>
-                    <div>
-                            💰 SNS副業始めるなら【エストレ】
-                        </a>
-                        <p style="color: #71767b; font-size: 13px; margin-top: 5px;">SNSを活用した副業の始め方</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <!-- Viral Notification Overlay -->
-    <div class="viral-notification-overlay" id="viralOverlay" style="display: none;">
-        <div class="viral-notification">
-            <div class="viral-icon">🔥</div>
-            <div class="viral-text">
-                <h3>バイラル中！</h3>
-                <p>あなたの投稿が話題になっています</p>
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="../index.html"
+                    style="color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.9rem;">← メディアTOPへ戻る</a>
             </div>
         </div>
+    </main>
+
+    <!-- admax 320×50 スマホスティッキー -->
+    <div class="admax-sticky">
+        <script src="https://adm.shinobi.jp/s/c3bea6d417c781670abbfeece8560dce"></script>
     </div>
+    <!-- admax -->
 
-    <!-- Floating Notifications -->
-    <div class="notification-container" id="notificationContainer"></div>
+    <script>
+        function analyzeTweet() {
+            const input = document.getElementById('tweetInput').value.trim();
+            if (!input) {
+                alert('ツイートを入力してください！🐯');
+                return;
+            }
 
-    <!-- Footer with other apps -->
-    <footer style="background: #000; color: white; padding: 40px 20px; margin-top: 50px;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 10px; color: #1d9bf0;">🤖 MechaTora の他のアプリ</h3>
-                <p style="opacity: 0.8; color: #71767b;">日常生活を便利にするWebアプリケーション</p>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                <a href="https://mechatora.com/" style="display: block; padding: 20px; background: rgba(29, 155, 240, 0.1); border: 1px solid rgba(29, 155, 240, 0.3); border-radius: 16px; text-decoration: none; color: white; transition: all 0.3s;">
-                    <div style="font-size: 2em; margin-bottom: 10px;">🏠</div>
-                    <h4 style="margin-bottom: 5px; color: #1d9bf0;">MechaTora メインサイト</h4>
-                    <p style="opacity: 0.8; font-size: 0.9em; color: #71767b;">便利なWebアプリ集のトップページ</p>
-                </a>
-                
-                <a href="https://mechatora.com/cook-suggest/" style="display: block; padding: 20px; background: rgba(29, 155, 240, 0.1); border: 1px solid rgba(29, 155, 240, 0.3); border-radius: 16px; text-decoration: none; color: white; transition: all 0.3s;">
-                    <div style="font-size: 2em; margin-bottom: 10px;">🍳</div>
-                    <h4 style="margin-bottom: 5px; color: #1d9bf0;">CookSuggest</h4>
-                    <p style="opacity: 0.8; font-size: 0.9em; color: #71767b;">余った材料から最適なレシピを提案</p>
-                </a>
-                
-                <a href="https://mechatora.com/earthquake-monitor/" style="display: block; padding: 20px; background: rgba(29, 155, 240, 0.1); border: 1px solid rgba(29, 155, 240, 0.3); border-radius: 16px; text-decoration: none; color: white; transition: all 0.3s;">
-                    <div style="font-size: 2em; margin-bottom: 10px;">🌍</div>
-                    <h4 style="margin-bottom: 5px; color: #1d9bf0;">地震情報モニター</h4>
-                    <p style="opacity: 0.8; font-size: 0.9em; color: #71767b;">リアルタイム地震情報と防災対策</p>
-                </a>
-            </div>
-            
-            <div style="text-align: center; padding-top: 20px; border-top: 1px solid rgba(113, 118, 123, 0.3);">
-                <p style="opacity: 0.7; font-size: 0.9em; color: #71767b;">&copy; 2025 MechaTora. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+            const panel = document.getElementById('resultPanel');
+            panel.style.display = 'block';
+            window.scrollTo({ top: panel.offsetTop, behavior: 'smooth' });
 
-    <script src="realistic-simulator.js"></script>
+            // Reset
+            document.getElementById('buzzProgress').style.width = '0%';
+            document.getElementById('scoreText').innerText = '分析中...';
+
+            let score = 0;
+            let feedback = "";
+            let hook = 0;
+            let share = 0;
+
+            // Simple Logic based on Mekatora Persona & Social Hub Skills
+            const keywords = ["最強", "徹底解説", "革命", "爆速", "資産", "完全分析", "DX", "AI"];
+            const emojis = ["🐯", "🥰", "✨", "🚀", "📊"];
+
+            // Score calculation
+            if (input.length > 50) score += 20; // Enough info
+            if (input.length > 130) score -= 10; // Too long for a single punch
+
+            keywords.forEach(k => {
+                if (input.includes(k)) {
+                    score += 15;
+                    hook += 20;
+                }
+            });
+
+            emojis.forEach(e => {
+                if (input.includes(e)) {
+                    score += 5;
+                }
+            });
+
+            if (input.includes("？") || input.includes("?")) {
+                score += 10; // Encourages engagement
+            }
+
+            score = Math.min(100, Math.max(10, score));
+            hook = Math.min(100, hook + 40);
+            share = Math.min(100, score + 10);
+
+            // Mekatora Voice Feedback
+            if (score > 80) {
+                feedback = "これは爆速でバズる可能性が高いですよ！🐯✨ 強い言葉選びと適度な絵文字。メディアプランナーとしてのセンスを感じます🥰 今すぐ投下しましょう！";
+            } else if (score > 50) {
+                feedback = "悪くないですが、もう少し「フック」が欲しいですね。🐯 最初の1行でもっと読者の足を止める工夫を。データの裏付けを入れるとさらに伸びます✨";
+            } else {
+                feedback = "ちょっと情報が薄いかもしれません。🐯 何を伝えたいのか、具体的なメリット（ベネフィット）を強調しましょう。もっと自己改善していきましょう🥰";
+            }
+
+            // Animate
+            setTimeout(() => {
+                document.getElementById('scoreText').innerText = score + '%';
+                document.getElementById('buzzProgress').style.width = score + '%';
+                document.getElementById('toraMessage').innerHTML = feedback;
+                document.getElementById('hookStat').innerText = hook + ' pt';
+                document.getElementById('shareStat').innerText = share + ' pt';
+            }, 800);
+        }
+    </script>
 </body>
+
 </html>
