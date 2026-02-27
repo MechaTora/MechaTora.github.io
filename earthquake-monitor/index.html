@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌏 直近の地震情報と傾向分析｜日本地震リアルタイムモニター</title>
     <meta name="keywords" content="直近地震,地震傾向,地震情報,地震モニター,日本地震,リアルタイム地震,震度,マグニチュード,地震マップ,防災情報,地震速報,地震監視,地震アラート,P2P地震情報,地震発生頻度,地震統計">
-    <meta name="description" content="直近24時間の地震情報と発生傾向を分析！日本全国の地震データをリアルタイムで監視し、震度・マグニチュード別に色分け表示。地震の発生パターンや頻度傾向を把握して防災対策に活用。無料で最新の地震速報と統計データを提供。">
+    <meta name="description" content="今、日本で地震が起きている？震度・マグニチュード別にリアルタイム表示。直近3日間の地震マップ・統計・速報を無料で確認。防災対策にも役立つ地震モニター。">
+    <meta name="robots" content="index, follow">
     
     <!-- SEO Meta Tags -->
     <meta property="og:title" content="日本地震情報リアルタイムモニター｜震度・マグニチュード別地震マップ">
@@ -13,6 +14,9 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mechatora.com/earthquake-monitor/">
     <meta property="og:site_name" content="MechaTora">
+    <meta property="og:image" content="https://mechatora.com/earthquake-monitor/ogp.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -42,6 +46,7 @@
         "name": "MechaTora"
       },
       "datePublished": "2025-07-09",
+      "dateModified": "2026-02-27",
       "inLanguage": "ja",
       "featureList": [
         "リアルタイム地震情報",
@@ -62,10 +67,6 @@
       gtag('js', new Date());
       gtag('config', 'G-RBPWE348T2');
     </script>
-    
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
-         crossorigin="anonymous"></script>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -284,14 +285,11 @@
 </head>
 <body>
     <!-- Header Ad -->
-    <div class="ad-section" style="margin: 20px;">
+    <div class="ad-section" style="margin: 20px; text-align: center;">
         <div class="ad-label">広告</div>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1184134440246706"
-             data-ad-slot="1234567890"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+        <!-- admax -->
+        <script src="https://adm.shinobi.jp/s/7a95a2a73818f9e9372fe35fac431a7f"></script>
+        <!-- admax -->
     </div>
 
     <div class="header">
@@ -374,19 +372,12 @@
                 </div>
             </div>
 
-            <!-- A8 Affiliate Ads Section -->
-            <div class="ad-section">
+            <!-- ADMAX Ad Section -->
+            <div class="ad-section" style="text-align: center;">
                 <div class="ad-label">広告</div>
-                <div style="text-align: center; margin-bottom: 15px;">
-                </div>
-                <div style="text-align: center; margin-bottom: 15px;">
-                </div>
-                <div style="text-align: center; margin-bottom: 15px;">
-                </div>
-                <div style="text-align: center; margin-bottom: 15px;">
-                </div>
-                <div style="text-align: center;">
-                </div>
+                <!-- admax -->
+                <script src="https://adm.shinobi.jp/s/38f32f1202111fd99283ad349fb85a3d"></script>
+                <!-- admax -->
             </div>
 
             <!-- 最新地震リスト -->
@@ -402,36 +393,13 @@
     </div>
 
     <!-- Footer Ad -->
-    <div class="ad-section" style="margin: 20px;">
-        <div class="ad-label">広告</div>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1184134440246706"
-             data-ad-slot="1234567890"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-    </div>
-
-    <!-- A8 Affiliate Ads Section -->
     <div class="ad-section" style="margin: 20px; text-align: center;">
         <div class="ad-label">広告</div>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 15px;">
-            <div>
-            </div>
-            <div>
-            </div>
-            <div>
-            </div>
-        </div>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
-            <div>
-            </div>
-            <div>
-            </div>
-            <div>
-            </div>
-        </div>
+        <!-- admax -->
+        <script src="https://adm.shinobi.jp/s/3b1f32896780cae7ad1e15d72345349e"></script>
+        <!-- admax -->
     </div>
+
 
     <!-- MechaTora Footer -->
     <footer style="background: rgba(0,0,0,0.8); color: white; padding: 20px; text-align: center; margin-top: 40px;">
@@ -807,11 +775,6 @@
         // ページ読み込み完了後に初期化
         document.addEventListener('DOMContentLoaded', init);
 
-        // AdSense初期化
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-1184134440246706",
-            enable_page_level_ads: true
-        });
     </script>
 </body>
 </html>
