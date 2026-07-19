@@ -1,0 +1,35 @@
+==========================================
+🛍️ Affiliate Link Generator v1.0 - QUICK GUIDE
+==========================================
+
+📋 FIRST TIME SETUP:
+1. Run AUTO_SETUP.bat
+2. Run FORCE_FIX_TKINTER.bat  
+3. Run CHROME_AUTO_INSTALL.bat (for Amazon)
+4. Test with START_APP.bat
+
+🚀 DAILY USAGE:
+1. Double-click START_APP.bat
+2. Configure affiliate IDs in app settings
+3. Create Excel file like sample_products.xlsx
+4. Load file and click "Start Processing"
+
+📁 FILES INCLUDED:
+- START_APP.bat (main launcher)
+- SAFE_START.bat (backup launcher)
+- sample_products.xlsx (template file)
+- README.txt (detailed Japanese manual)
+- source_code/ (application files)
+
+⚠️ IF PROBLEMS OCCUR:
+- App won't start → Try SAFE_START.bat or CLICK_ME.bat
+- tkinter error → Run FORCE_FIX_TKINTER.bat
+- Chrome error → Run CHROME_AUTO_INSTALL.bat
+- All else fails → Run AUTO_SETUP.bat
+
+✅ SUPPORTED FILES:
+Excel (.xlsx, .xls), WPS Office, LibreOffice
+
+💡 TIP: Put product names in column B of Excel file
+
+==========================================
