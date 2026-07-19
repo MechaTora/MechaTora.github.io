@@ -35,7 +35,6 @@ social:
 include:
   - _pages
   - qualification-calendar
-  - cat-healing-station
 
 # Exclude from processing
 exclude:
@@ -50,7 +49,6 @@ exclude:
 
 # Custom URLs for sitemap (external subapps)
 external_urls:
-  - https://mechatora.github.io/fire/
   - https://mechatora.github.io/flashcard-web-app/
   - https://mechatora.github.io/cook-suggest/
   - https://mechatora.github.io/x-buzz-simulator/
