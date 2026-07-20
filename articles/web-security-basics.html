@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Webセキュリティの基礎を実践的に解説。XSS、CSRF、SQLインジェクション、CORS設定など、個人開発で最低限押さえるべきセキュリティ対策を、実際の脆弱性事例とコード例で紹介します。">
     <meta name="keywords" content="Webセキュリティ,XSS,CSRF,SQLインジェクション,セキュリティ対策,脆弱性,OWASP">
-    <title>個人開発で押さえるべきWebセキュリティ基礎 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <title>個人開発で押さえるべきWebセキュリティ基礎 | メカとらのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
     <link rel="stylesheet" href="../styles.css">
     <script type="application/ld+json">
@@ -16,14 +16,14 @@
         "description": "Webセキュリティの基礎を実践的に解説。XSS、CSRF、SQLインジェクションなど、個人開発で最低限押さえるべきセキュリティ対策を実際の事例とコード例で紹介します。",
         "author": {
             "@type": "Person",
-            "name": "MechaTora"
+            "name": "メカとら"
         },
         "datePublished": "2025-10-28",
         "dateModified": "2025-10-28",
         "image": "https://blog.mechatora.com/images/web-security.jpg",
         "publisher": {
             "@type": "Organization",
-            "name": "MechaToraのブログ",
+            "name": "メカとらのブログ",
             "logo": {
                 "@type": "ImageObject",
                 "url": "https://blog.mechatora.com/images/logo.png"
@@ -75,7 +75,7 @@
 <body>
     <header>
         <div class="header-content">
-            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+            <h1><a href="../index.html">メカとらのブログ</a></h1>
         <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
             <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
             <span>🔄 最終更新: 2025年1月15日</span>
@@ -113,7 +113,7 @@
 
             <div class="lead">
                 <p>「個人開発だからセキュリティは後回しでいい」——そう考えていませんか？実は、個人開発のWebアプリでも、脆弱性があれば攻撃の標的になります。ユーザー情報の漏洩、サイト改ざん、サーバー乗っ取りなど、深刻な被害につながる可能性があります。</p>
-                <p>この記事では、MechaToraで15個のツールを運用する中で学んだ、最低限押さえるべきWebセキュリティ対策を紹介します。XSS、CSRF、SQLインジェクションなどの基本的な脆弱性と、その対策を実際のコード例で解説します。</p>
+                <p>この記事では、メカとらで15個のツールを運用する中で学んだ、最低限押さえるべきWebセキュリティ対策を紹介します。XSS、CSRF、SQLインジェクションなどの基本的な脆弱性と、その対策を実際のコード例で解説します。</p>
             </div>
 
             <h2>Webセキュリティが重要な理由</h2>
@@ -127,7 +127,7 @@
             </ul>
 
             <h3>実際に受けた攻撃</h3>
-            <p>MechaToraで運用中に検知した攻撃の例：</p>
+            <p>メカとらで運用中に検知した攻撃の例：</p>
             <ul>
                 <li><strong>SQLインジェクション試行</strong>：URLに<code>' OR '1'='1</code>を含むアクセス（1日10件程度）</li>
                 <li><strong>XSS試行</strong>：<code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>を含むリクエスト</li>
@@ -205,7 +205,7 @@ document.getElementById('content').innerHTML = clean;
 
 // 悪意あるスクリプトは削除され、安全なHTMLのみ残る</code></pre>
 
-            <h3>MechaToraでの実装例</h3>
+            <h3>メカとらでの実装例</h3>
             <p>日本酒検索アプリでのユーザー入力処理：</p>
             <pre><code>function displaySearchResults(items) {
   const resultsDiv = document.getElementById('results');
@@ -455,7 +455,7 @@ npm audit fix --force</code></pre>
                 <li>混合コンテンツ（HTTP/HTTPS混在）の検出</li>
             </ul>
 
-            <h2>実際のセキュリティ対策例（MechaTora）</h2>
+            <h2>実際のセキュリティ対策例（メカとら）</h2>
 
             <h3>実装した対策</h3>
             <ol>
@@ -519,7 +519,7 @@ npm audit fix --force</code></pre>
                 <a href="../privacy.html">プライバシーポリシー</a>
                 <a href="../contact.html">お問い合わせ</a>
             </div>
-            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+            <p>&copy; 2025 メカとらのブログ. All rights reserved.</p>
         </div>
     </footer>
 

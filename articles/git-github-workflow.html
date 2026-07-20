@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Git/GitHubの実践的な使い方を解説。基本コマンド、ブランチ戦略、プルリクエスト、コンフリクト解決など、個人開発で実際に使っているワークフローを紹介します。">
     <meta name="keywords" content="Git,GitHub,バージョン管理,ブランチ,プルリクエスト,コンフリクト,開発フロー">
-    <title>Git/GitHub実践ガイド - 個人開発で使えるワークフロー | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <title>Git/GitHub実践ガイド - 個人開発で使えるワークフロー | メカとらのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
     <link rel="stylesheet" href="../styles.css">
     <script type="application/ld+json">
@@ -16,14 +16,14 @@
         "description": "Git/GitHubの実践的な使い方を解説。基本コマンド、ブランチ戦略、プルリクエスト、コンフリクト解決など、実際に使っているワークフローを紹介します。",
         "author": {
             "@type": "Person",
-            "name": "MechaTora"
+            "name": "メカとら"
         },
         "datePublished": "2025-11-03",
         "dateModified": "2025-11-03",
         "image": "https://blog.mechatora.com/images/git-github-guide.jpg",
         "publisher": {
             "@type": "Organization",
-            "name": "MechaToraのブログ",
+            "name": "メカとらのブログ",
             "logo": {
                 "@type": "ImageObject",
                 "url": "https://blog.mechatora.com/images/logo.png"
@@ -75,7 +75,7 @@
 <body>
     <header>
         <div class="header-content">
-            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+            <h1><a href="../index.html">メカとらのブログ</a></h1>
         <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
             <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
             <span>🔄 最終更新: 2025年1月15日</span>
@@ -113,7 +113,7 @@
 
             <div class="lead">
                 <p>「Gitは難しい」「コマンドが覚えられない」「コンフリクトが怖い」——プログラミング初心者がGitで躓くのはよくある話です。しかし、基本的な使い方を理解すれば、Gitは強力なバックアップ・履歴管理ツールになります。</p>
-                <p>この記事では、MechaToraで15個のプロジェクトを管理してきた経験から、個人開発で実際に使っているGit/GitHubのワークフローを解説します。最低限覚えるべきコマンド、ブランチの使い方、よくあるトラブルの解決法まで、実践的な内容をお伝えします。</p>
+                <p>この記事では、メカとらで15個のプロジェクトを管理してきた経験から、個人開発で実際に使っているGit/GitHubのワークフローを解説します。最低限覚えるべきコマンド、ブランチの使い方、よくあるトラブルの解決法まで、実践的な内容をお伝えします。</p>
             </div>
 
             <h2>なぜGit/GitHubが必要なのか</h2>
@@ -179,7 +179,7 @@ git --version
 
             <h3>初期設定</h3>
             <pre><code># ユーザー名とメールアドレスを設定（GitHubと同じにする）
-git config --global user.name "MechaTora"
+git config --global user.name "メカとら"
 git config --global user.email "mechatora@example.com"
 
 # デフォルトブランチ名を main に設定
@@ -313,7 +313,7 @@ git merge feature/new-login
 # 不要なブランチを削除
 git branch -d feature/new-login</code></pre>
 
-            <h2>実践：MechaToraでのブランチ戦略</h2>
+            <h2>実践：メカとらでのブランチ戦略</h2>
 
             <h3>シンプルな運用</h3>
             <p>個人開発なので、以下のシンプルなルールで運用しています：</p>
@@ -364,16 +364,16 @@ git merge feature/update-header
             <pre><code>&lt;!-- index.html --&gt;
 &lt;header&gt;
 &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-    &lt;h1&gt;MechaTora - Webツール&lt;/h1&gt;
+    &lt;h1&gt;メカとら - Webツール&lt;/h1&gt;
 =======
-    &lt;h1&gt;MechaTora - 便利なアプリ&lt;/h1&gt;
+    &lt;h1&gt;メカとら - 便利なアプリ&lt;/h1&gt;
 &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/update-header
 &lt;/header&gt;</code></pre>
 
             <p>手動で修正：</p>
             <pre><code>&lt;!-- 修正後 --&gt;
 &lt;header&gt;
-    &lt;h1&gt;MechaTora - 便利なWebツール&lt;/h1&gt;
+    &lt;h1&gt;メカとら - 便利なWebツール&lt;/h1&gt;
 &lt;/header&gt;</code></pre>
 
             <p>コミット：</p>
@@ -528,7 +528,7 @@ git merge feature/new-feature        # マージ</code></pre>
                 <li>✅ .gitignore で不要なファイルを除外</li>
             </ul>
 
-            <p>Gitは最初は難しく感じますが、基本的なコマンドを繰り返し使えば自然と身に付きます。MechaToraでは、15個のプロジェクト全てをGitで管理し、変更履歴を完全に追跡できています。</p>
+            <p>Gitは最初は難しく感じますが、基本的なコマンドを繰り返し使えば自然と身に付きます。メカとらでは、15個のプロジェクト全てをGitで管理し、変更履歴を完全に追跡できています。</p>
 
             <p>まずは、小さなプロジェクトで試してみてください！</p>
 
@@ -552,7 +552,7 @@ git merge feature/new-feature        # マージ</code></pre>
                 <a href="../privacy.html">プライバシーポリシー</a>
                 <a href="../contact.html">お問い合わせ</a>
             </div>
-            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+            <p>&copy; 2025 メカとらのブログ. All rights reserved.</p>
         </div>
     </footer>
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="API Rate Limiting（レート制限）の実装方法と対策を実践的に解説。楽天APIや気象庁APIなど、実際のAPI連携で遭遇した制限への対処法、リトライロジック、キャッシュ戦略を紹介します。">
     <meta name="keywords" content="API,Rate Limiting,レート制限,リトライ,キャッシュ,楽天API,気象庁API,429エラー">
-    <title>API Rate Limitingの実装と対策 - 制限を超えないための実践テクニック | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <title>API Rate Limitingの実装と対策 - 制限を超えないための実践テクニック | メカとらのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
     <link rel="stylesheet" href="../styles.css">
     <script type="application/ld+json">
@@ -16,14 +16,14 @@
         "description": "API Rate Limitingの実装方法と対策を実践的に解説。実際のAPI連携で遭遇した制限への対処法、リトライロジック、キャッシュ戦略を紹介します。",
         "author": {
             "@type": "Person",
-            "name": "MechaTora"
+            "name": "メカとら"
         },
         "datePublished": "2025-10-23",
         "dateModified": "2025-10-23",
         "image": "https://blog.mechatora.com/images/api-rate-limiting.jpg",
         "publisher": {
             "@type": "Organization",
-            "name": "MechaToraのブログ",
+            "name": "メカとらのブログ",
             "logo": {
                 "@type": "ImageObject",
                 "url": "https://blog.mechatora.com/images/logo.png"
@@ -75,7 +75,7 @@
 <body>
     <header>
         <div class="header-content">
-            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+            <h1><a href="../index.html">メカとらのブログ</a></h1>
         <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
             <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
             <span>🔄 最終更新: 2025年1月15日</span>
@@ -113,7 +113,7 @@
 
             <div class="lead">
                 <p>外部APIを使ったアプリ開発で必ず直面するのが「Rate Limiting（レート制限）」です。1時間に100回、1日に1000回といった制限を超えると、429エラー（Too Many Requests）が返され、アプリが正常に動作しなくなります。</p>
-                <p>この記事では、MechaToraで運用している日本酒検索（楽天API）や地震モニター（気象庁API）の開発で実際に遭遇したRate Limitingの問題と、その解決策を具体的なコード例とともに解説します。</p>
+                <p>この記事では、メカとらで運用している日本酒検索（楽天API）や地震モニター（気象庁API）の開発で実際に遭遇したRate Limitingの問題と、その解決策を具体的なコード例とともに解説します。</p>
             </div>
 
             <h2>Rate Limitingとは</h2>
@@ -319,7 +319,7 @@ for (let i = 0; i < 10; i++) {
 }</code></pre>
 
             <h3>実際の活用例：日本酒検索</h3>
-            <p>MechaToraの日本酒検索では、ユーザーが連続して検索しても制限に引っかからないよう、キューイングを実装しました：</p>
+            <p>メカとらの日本酒検索では、ユーザーが連続して検索しても制限に引っかからないよう、キューイングを実装しました：</p>
             <pre><code>// 楽天API専用キュー（1秒1リクエスト）
 const rakutenAPI = new RateLimitedQueue(1);
 
@@ -560,7 +560,7 @@ document.addEventListener('visibilitychange', () => {
                 <li><strong>無料枠の確認</strong>：有料化する前に代替API検討</li>
             </ol>
 
-            <p>Rate Limitingは避けられない制約ですが、適切な実装とキャッシュ戦略により、ユーザー体験を損なわず、無料枠内で運用できます。MechaToraでは、これらの対策により、15個のツール全てを完全無料で運用し続けています。</p>
+            <p>Rate Limitingは避けられない制約ですが、適切な実装とキャッシュ戦略により、ユーザー体験を損なわず、無料枠内で運用できます。メカとらでは、これらの対策により、15個のツール全てを完全無料で運用し続けています。</p>
 
             <p>APIを使ったアプリ開発を始める方は、最初からRate Limitingを意識した設計をしておくことをおすすめします！</p>
 
@@ -585,7 +585,7 @@ document.addEventListener('visibilitychange', () => {
                 <a href="../privacy.html">プライバシーポリシー</a>
                 <a href="../contact.html">お問い合わせ</a>
             </div>
-            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+            <p>&copy; 2025 メカとらのブログ. All rights reserved.</p>
         </div>
     </footer>
 

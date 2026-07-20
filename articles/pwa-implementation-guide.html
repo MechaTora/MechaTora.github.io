@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PWA（Progressive Web Apps）の実装方法を実践的に解説。Service Worker、manifest.json、キャッシュ戦略など、実際にMechaToraのツールをPWA化した経験をもとに、初心者でも分かる形で説明します。">
+    <meta name="description" content="PWA（Progressive Web Apps）の実装方法を実践的に解説。Service Worker、manifest.json、キャッシュ戦略など、実際にメカとらのツールをPWA化した経験をもとに、初心者でも分かる形で説明します。">
     <meta name="keywords" content="PWA,Progressive Web Apps,Service Worker,manifest.json,オフライン対応,ホーム画面追加,キャッシュ戦略">
-    <title>PWA実装の基礎 - WebアプリをPWA化する手順 | MechaToraのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <title>PWA実装の基礎 - WebアプリをPWA化する手順 | メカとらのブログ</title>    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
     <link rel="stylesheet" href="../styles.css">
     <script type="application/ld+json">
@@ -16,14 +16,14 @@
         "description": "PWA（Progressive Web Apps）の実装方法を実践的に解説。Service Worker、manifest.json、キャッシュ戦略など、実際の経験をもとに初心者でも分かる形で説明します。",
         "author": {
             "@type": "Person",
-            "name": "MechaTora"
+            "name": "メカとら"
         },
         "datePublished": "2025-10-22",
         "dateModified": "2025-10-22",
         "image": "https://blog.mechatora.com/images/pwa-implementation-guide.jpg",
         "publisher": {
             "@type": "Organization",
-            "name": "MechaToraのブログ",
+            "name": "メカとらのブログ",
             "logo": {
                 "@type": "ImageObject",
                 "url": "https://blog.mechatora.com/images/logo.png"
@@ -75,7 +75,7 @@
 <body>
     <header>
         <div class="header-content">
-            <h1><a href="../index.html">MechaToraのブログ</a></h1>
+            <h1><a href="../index.html">メカとらのブログ</a></h1>
         <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
             <span style="margin-right: 1rem;">📅 公開日: 2025年1月15日</span>
             <span>🔄 最終更新: 2025年1月15日</span>
@@ -113,7 +113,7 @@
 
             <div class="lead">
                 <p>PWA（Progressive Web Apps）は、Webアプリをネイティブアプリのように動作させる技術です。オフライン対応、ホーム画面への追加、プッシュ通知など、ユーザー体験を大幅に向上させることができます。</p>
-                <p>この記事では、実際にMechaToraのツール群をPWA化した経験をもとに、PWAの基礎から実装手順まで、初心者でも分かる形で解説します。Service Workerの基本、manifest.jsonの設定、キャッシュ戦略の選び方など、実践的な内容をお届けします。</p>
+                <p>この記事では、実際にメカとらのツール群をPWA化した経験をもとに、PWAの基礎から実装手順まで、初心者でも分かる形で解説します。Service Workerの基本、manifest.jsonの設定、キャッシュ戦略の選び方など、実践的な内容をお届けします。</p>
             </div>
 
             <h2>PWAとは何か</h2>
@@ -135,7 +135,7 @@
                 <li><strong>クロスプラットフォーム</strong>：1つのコードでiOS/Android両対応</li>
             </ul>
 
-            <p>MechaToraで運用している15個のツールは、全てPWA化することで、ユーザーがホーム画面に追加してネイティブアプリのように使えるようになりました。</p>
+            <p>メカとらで運用している15個のツールは、全てPWA化することで、ユーザーがホーム画面に追加してネイティブアプリのように使えるようになりました。</p>
 
             <h2>PWA実装の準備</h2>
         <div style="margin: 1.5rem 0; text-align: center;">
@@ -166,8 +166,8 @@ sudo certbot --nginx -d yourdomain.com</code></pre>
             <p>manifest.jsonは、PWAのメタデータを定義するJSONファイルです。プロジェクトルートに作成します：</p>
 
             <pre><code>{
-  "name": "MechaTora - 便利なWebツール",
-  "short_name": "MechaTora",
+  "name": "メカとら - 便利なWebツール",
+  "short_name": "メカとら",
   "description": "日常生活を便利にする実用的なWebアプリケーション",
   "start_url": "/",
   "display": "standalone",
@@ -303,7 +303,7 @@ if ('serviceWorker' in navigator) {
             <h2>キャッシュ戦略</h2>
 
             <h3>3つの基本戦略</h3>
-            <p>私がMechaToraのツールで使い分けている3つの戦略：</p>
+            <p>私がメカとらのツールで使い分けている3つの戦略：</p>
 
             <h4>1. Cache First（キャッシュ優先）</h4>
             <p>キャッシュに存在すればそれを返し、なければネットワークから取得。静的ファイル（CSS、JS、画像）に最適。</p>
@@ -344,7 +344,7 @@ if ('serviceWorker' in navigator) {
 });</code></pre>
 
             <h3>実践的な使い分け</h3>
-            <p>MechaToraでの実際の使い分け例：</p>
+            <p>メカとらでの実際の使い分け例：</p>
             <ul>
                 <li><strong>Cache First</strong>：styles.css, app.js, 画像ファイル</li>
                 <li><strong>Network First</strong>：気象庁API、楽天API（地震モニター、日本酒検索）</li>
@@ -505,7 +505,7 @@ self.addEventListener('message', (event) => {
 
             <h2>まとめ</h2>
 
-            <p>PWA化により、MechaToraのツール群は以下の改善を実現しました：</p>
+            <p>PWA化により、メカとらのツール群は以下の改善を実現しました：</p>
             <ul>
                 <li><strong>オフライン対応</strong>：ネット環境がなくても基本機能が使える</li>
                 <li><strong>高速化</strong>：キャッシュにより初回以降の読み込みが爆速</li>
@@ -547,7 +547,7 @@ self.addEventListener('message', (event) => {
                 <a href="../privacy.html">プライバシーポリシー</a>
                 <a href="../contact.html">お問い合わせ</a>
             </div>
-            <p>&copy; 2025 MechaToraのブログ. All rights reserved.</p>
+            <p>&copy; 2025 メカとらのブログ. All rights reserved.</p>
         </div>
     </footer>
 
