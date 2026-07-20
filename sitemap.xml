@@ -345,11 +345,6 @@
         <changefreq>monthly</changefreq>
     </url>
     <url>
-        <loc>https://mechatora.com/articles/sample-article.html</loc>
-        <priority>0.6</priority>
-        <changefreq>monthly</changefreq>
-    </url>
-    <url>
         <loc>https://mechatora.com/articles/sharoushi-pass.html</loc>
         <priority>0.6</priority>
         <changefreq>monthly</changefreq>
@@ -382,6 +377,11 @@
     <url>
         <loc>https://mechatora.com/articles/x-post-generator-dev.html</loc>
         <priority>0.6</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://mechatora.com/articles/2026-07-20-site-renewal-claude-fable.html</loc>
+        <priority>0.7</priority>
         <changefreq>monthly</changefreq>
     </url>
 </urlset>

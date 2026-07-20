@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Claude（Fable）にメカとらのサイト全体をAI診断してもらい、不要サイトの削除・死にリンク修正・ブログ再生・ブランド統一まで一気に全面リニューアル中。AI伴走でのサイト大改造の記録です。">
+    <meta name="keywords" content="Claude,Claude Fable,AIサイト診断,サイトリニューアル,個人開発,GitHub Pages,AdSense準備,SEO">
+    <title>Claude FableでサイトをAI診断→全面リニューアル中｜メカとら大改造ログ | メカとらのブログ</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://mechatora.com/articles/2026-07-20-site-renewal-claude-fable.html">
+    <link rel="stylesheet" href="../styles.css">
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Claude FableでサイトをAI診断→全面リニューアル中｜メカとら大改造ログ",
+        "description": "Claude（Fable）にサイト全体をAI診断してもらい、不要サイト削除・死にリンク修正・ブログ再生・ブランド統一まで全面リニューアルした記録。",
+        "author": { "@type": "Person", "name": "メカとら" },
+        "datePublished": "2026-07-20",
+        "dateModified": "2026-07-20"
+    }
+    </script>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
+         crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <span>🐱</span>
+                    <span>メカとらのブログ</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">ホーム</a></li>
+                        <li><a href="../articles.html">記事一覧</a></li>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="../index.html">ホーム</a></li>
+                <li><a href="../articles.html">記事一覧</a></li>
+                <li><a href="../articles.html#tech">技術・開発</a></li>
+                <li>ClaudeでAI診断→全面リニューアル中</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <article>
+                    <!-- 記事メタ情報 -->
+                    <div class="article-meta" style="margin-bottom: 2rem;">
+                        <span class="article-category">技術・開発</span>
+                        <time datetime="2026-07-20">2026年7月20日</time>
+                        <span style="margin-left: 1rem; color: var(--text-secondary);">更新日: 2026年7月20日</span>
+                    </div>
+
+                    <!-- 記事タイトル -->
+                    <h1>Claude FableでサイトをAI診断→全面リニューアル中｜メカとら大改造ログ</h1>
+        <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
+            <span style="margin-right: 1rem;">📅 公開日: 2026年7月20日</span>
+            <span>🔄 最終更新: 2026年7月20日</span>
+        </div>
+
+        <div class="article-hero" style="margin: 2rem 0; border-radius: 8px; overflow: hidden;">
+            <img src="../images/tech-default.svg" alt="ClaudeでサイトをAI診断して全面リニューアルするイメージ" style="width: 100%; height: auto; display: block;">
+        </div>
+
+                    <!-- リード文 -->
+                    <p style="font-size: 1.125rem; line-height: 1.8; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); margin: 2rem 0;">
+                        「サイトが増えすぎて、どれが生きていてどれが死んでいるのか分からない……」。そんな“散らかったメカとら”を、最新のClaude（Fable）に丸ごとAI診断してもらいました。結果は想像以上にシビア。今このサイトは、その診断を元に<strong>全面リニューアルの真っ最中</strong>です。この記事は、その大改造をリアルタイムで記録した“作業ログ”です。
+                    </p>
+
+                    <!-- 本文 -->
+                    <h2>きっかけ：BOLTからClaudeへ移植したら、逆に散らかった</h2>
+                    <p>
+                        もともとメカとらは、思いつくたびにツールやサイトを量産してきました。地震モニター、資格カレンダー、Rデータサイエンスの解説、気持ちメーター、お題判定ツール……。作るのは楽しいのですが、勢いで増やした結果、ドメインもサブドメインも入り乱れ、「何がどこにあるのか」を自分でも把握できなくなっていました。
+                    </p>
+                    <p>
+                        さらに、制作環境をBOLTからClaudeへ移した際に重複や中途半端なページが大量に生まれ、広告審査にもなかなか通らない状態に。そこで、思い切って<strong>Claude（Fable）にサイト全体を棚卸し・診断してもらう</strong>ことにしました。
+                    </p>
+
+                    <h2>AI診断で突きつけられた“3つの現実”</h2>
+                    <p>
+                        Search Consoleやリポジトリの中身まで見てもらった結果、耳の痛い指摘が並びました。
+                    </p>
+
+                    <h3>1. 大半のページが「クロール済み・インデックス未登録」</h3>
+                    <p>
+                        本体（mechatora.com）は、登録13ページに対して未登録が40ページ超。Google自身が「索引に載せる価値が低い」と判断していた、というわけです。原因のひとつは、力作のはずのデータサイエンス解説が<strong>sitemapに1件も載っていなかった</strong>という単純ミスでした。
+                    </p>
+
+                    <h3>2. 転載・エンタメ・空ページが評価を下げていた</h3>
+                    <p>
+                        他社ニュースを自動転載していた社会保険ニュース、X（旧Twitter）の画面を模したバズ体験ツール、中身が空の癒やし系ページ群——。これらは著作権や“価値の低いコンテンツ”の観点でマイナス。しかも同じドメイン配下にあると、まじめに作ったページの足まで引っぱります。
+                    </p>
+
+                    <h3>3. 壊れていたのに気づいていなかった</h3>
+                    <p>
+                        極めつけは、トップページなど複数ページが存在しないCSSファイルを参照して<strong>デザインが崩れていた</strong>こと、プライバシーポリシーとお問い合わせページが消えてリンク切れになっていたこと。AdSense申請の前提条件すら満たせていませんでした。自分では「動いているつもり」だったので、指摘されて初めて気づきました。
+                    </p>
+
+                    <h2>いま進めている全面リニューアルの中身</h2>
+                    <p>
+                        診断結果を元に、Claudeと二人三脚で次々と手を入れています。作業はすべて「調べる→方針を決める→私が確認→実行→GitHubへ反映」の順で、こわい操作は必ず私が確認してから進めています。
+                    </p>
+                    <ul>
+                        <li><strong>不要サイトの整理：</strong>癒やし系・重複ツール・開発用ファイルを削除し、本体をスリム化</li>
+                        <li><strong>転載/エンタメの分離：</strong>審査に不利なものは本体から外し、別ドメインへ</li>
+                        <li><strong>デザインと必須ページの復旧：</strong>崩れていたテーマCSSを再構築、プライバシーポリシーとお問い合わせを整備</li>
+                        <li><strong>眠っていたブログの再生：</strong>40本以上の記事をトップから辿れるようにし、sitemapへ登録</li>
+                        <li><strong>回遊性の改善：</strong>トップに「ツール＆姉妹サイト」への導線を新設</li>
+                        <li><strong>ブランド表記の統一：</strong>ゆれていた表記を全ページ「メカとら」へ統一</li>
+                        <li><strong>Gitの正常化：</strong>改行コードの設定を整え、差分がきれいに出るように</li>
+                    </ul>
+
+                    <h2>AIに“伴走”してもらって感じたこと</h2>
+                    <p>
+                        一番大きかったのは、<strong>「感覚」ではなく「データ」で優先順位が決められた</strong>ことです。どのページに価値があり、どれが評価を下げているのか。人力だと後回しにしがちな棚卸しを、淡々と全件洗い出してくれました。
+                    </p>
+                    <p>
+                        もちろん万能ではありません。途中、消さなくていいローカルのフォルダをうっかり巻き込みかけた場面もありました。それでも、その場で気づいて履歴から復元できたのは、作業の一つひとつを記録しながら進めていたからです。AIに任せきりにするのではなく、<strong>要所は自分の目で確認する</strong>——この距離感が、個人開発では特に大事だと感じています。
+                    </p>
+
+                    <h2>これからやること</h2>
+                    <p>
+                        リニューアルはまだ道半ばです。今後は各ページの目視チェック、サブドメイン側のコンテンツ強化、そして満を持しての<strong>AdSense申請</strong>へと進めていく予定です。散らかっていたメカとらが、少しずつ“見せられるサイト”に育っていく過程を、これからもこのブログで記録していきます。
+                    </p>
+
+                    <h2>まとめ</h2>
+                    <p>
+                        増やすのは簡単でも、整えるのは難しい。今回のAI診断は、その当たり前を突きつけてくれました。もし「サイトやツールを作りすぎて収拾がつかない」という人がいたら、一度ぜんぶ棚卸ししてみることをおすすめします。きっと、思っている以上に“いらないもの”と“埋もれたお宝”が眠っています。
+                    </p>
+
+                    <!-- 関連記事 -->
+                    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">📚 関連記事</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="claude-code-experience.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ Claude Code使用レビュー｜1ヶ月使ってわかった実力と活用法</a>
+                            </li>
+                            <li style="margin-bottom: 0.75rem;">
+                                <a href="github-pages-guide.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">→ 初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 記事フッター -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
+                        <p>この記事が役に立ったら、ぜひシェアしてください！</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>メカとらのブログ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        社労士×エンジニアのメカとらが運営する技術ブログです。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>カテゴリー</h3>
+                    <ul>
+                        <li><a href="../articles.html#tech">技術・開発</a></li>
+                        <li><a href="../articles.html#career">キャリア・資格</a></li>
+                        <li><a href="../articles.html#datascience">データサイエンス</a></li>
+                        <li><a href="../articles.html#misc">雑記</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>サイト情報</h3>
+                    <ul>
+                        <li><a href="../about.html">運営者情報</a></li>
+                        <li><a href="../privacy-policy.html">プライバシーポリシー</a></li>
+                        <li><a href="../contact.html">お問い合わせ</a></li>
+                        <li><a href="https://mechatora.com" target="_blank" rel="noopener">メカとら（開発ツール）</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 メカとら. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const article = document.querySelector('article');
+            if (!article) return;
+            const headings = article.querySelectorAll('h2');
+            if (headings.length < 2) return;
+            let tocHTML = '<div class="table-of-contents" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;"><h3 style="margin: 0 0 1rem 0; font-size: 1.125rem;">📑 目次</h3><ul style="margin: 0; padding-left: 1.5rem; line-height: 2;">';
+            headings.forEach((heading, index) => {
+                const id = `section-${index}`;
+                heading.id = id;
+                tocHTML += `<li><a href="#${id}" style="color: var(--primary-color); text-decoration: none;">${heading.textContent}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+            const firstH2 = article.querySelector('h2');
+            if (firstH2) { firstH2.insertAdjacentHTML('beforebegin', tocHTML); }
+        });
+    </script>
+    <script src="../cookie-banner.js"></script>
+</body>
+</html>
