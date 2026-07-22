@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#ff8c00"/>
+  <!-- ears -->
+  <path d="M14 16 L22 10 L24 22 Z" fill="#ffb04d"/>
+  <path d="M50 16 L42 10 L40 22 Z" fill="#ffb04d"/>
+  <!-- face -->
+  <circle cx="32" cy="34" r="20" fill="#ffa733"/>
+  <!-- stripes -->
+  <path d="M32 15 l-3 8 h6 Z" fill="#3a2a12"/>
+  <path d="M17 27 q6 3 6 9 l-7 -2 Z" fill="#3a2a12"/>
+  <path d="M47 27 q-6 3 -6 9 l7 -2 Z" fill="#3a2a12"/>
+  <!-- muzzle -->
+  <ellipse cx="32" cy="42" rx="12" ry="9" fill="#fff4e6"/>
+  <!-- eyes -->
+  <circle cx="24" cy="33" r="3.4" fill="#1a1a1a"/>
+  <circle cx="40" cy="33" r="3.4" fill="#1a1a1a"/>
+  <circle cx="25.1" cy="31.9" r="1" fill="#fff"/>
+  <circle cx="41.1" cy="31.9" r="1" fill="#fff"/>
+  <!-- nose + mouth -->
+  <path d="M29 40 h6 l-3 3 Z" fill="#e8642b"/>
+  <path d="M32 43 v3 M32 46 q-3 2 -6 0 M32 46 q3 2 6 0" stroke="#3a2a12" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+</svg>
