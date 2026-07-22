@@ -521,6 +521,19 @@
             font-style: italic;
         }
 
+        .exam-ongoing {
+            color: var(--text-primary);
+        }
+
+        .date-note {
+            display: inline-block;
+            margin-left: 0.25rem;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+        }
+
         .countdown {
             background: var(--surface-secondary);
             border: 1px solid var(--border-light);
@@ -1328,6 +1341,9 @@
                 日本の主要資格試験の試験日程・カウントダウン・平均勉強時間を一覧表示<br>
                 効率的な学習計画で合格を目指しましょう
             </p>
+            <p class="subtitle" style="font-size:0.8rem; opacity:0.8; margin-top:0.75rem;">
+                ※「例年目安」は過去の実施パターンから自動算出した推定日です。正確な日程・出願期間は各試験の公式サイトで必ずご確認ください。
+            </p>
         </header>
 
         <div class="filter-section">
@@ -1831,18 +1847,52 @@
         // 現在の日付
         const today = new Date();
 
-        // 未来の試験日を取得
-        function getNextExamDate(examDates) {
-            if (!examDates || examDates.length === 0) {
-                return null; // 未発表
+        // 今日（時刻を切り捨て）
+        const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        // 随時受験（CBT・通年）かどうか
+        function isOngoing(qual) {
+            const f = (qual && qual.frequency) || '';
+            return f.includes('随時') || f.includes('毎月') || f.includes('通年') || f.includes('CBT');
+        }
+
+        // 過去日付を「次の年の同月同日」へ繰り越す
+        function rollDateToFuture(dateStr) {
+            const d = new Date(dateStr);
+            let cand = new Date(todayMidnight.getFullYear(), d.getMonth(), d.getDate());
+            if (cand < todayMidnight) {
+                cand = new Date(todayMidnight.getFullYear() + 1, d.getMonth(), d.getDate());
             }
-            
-            const futureDates = examDates
-                .map(date => new Date(date))
-                .filter(date => date >= today)
+            return cand;
+        }
+
+        // 次回試験日の情報を取得（実日程 or 例年ベースの推定 or 随時）
+        // 返り値: { date: Date|null, projected: boolean, ongoing: boolean }
+        function getNextExamInfo(qual) {
+            const dates = (qual && qual.examDates) || [];
+            // 1) データ内に未来日があればそれを使う（確定）
+            const future = dates
+                .map(s => new Date(s))
+                .filter(d => d >= todayMidnight)
                 .sort((a, b) => a - b);
-            
-            return futureDates.length > 0 ? futureDates[0] : null;
+            if (future.length > 0) {
+                return { date: future[0], projected: false, ongoing: false };
+            }
+            // 2) 随時受験（CBT等）は通年扱い
+            if (isOngoing(qual)) {
+                return { date: null, projected: false, ongoing: true };
+            }
+            // 3) それ以外は例年パターンを翌年以降へ繰り越して推定
+            if (dates.length > 0) {
+                const projected = dates.map(rollDateToFuture).sort((a, b) => a - b);
+                return { date: projected[0], projected: true, ongoing: false };
+            }
+            return { date: null, projected: false, ongoing: false };
+        }
+
+        // ソート用: 次回日（Date）。随時・不明は null（後ろへ）
+        function getNextExamDate(qual) {
+            return getNextExamInfo(qual).date;
         }
 
         // 日数計算
@@ -1855,17 +1905,24 @@
 
         // 資格カード生成
         function createQualificationCard(qual) {
-            const nextExam = getNextExamDate(qual.examDates);
+            const info = getNextExamInfo(qual);
+            const nextExam = info.date;
             const daysUntil = calculateDaysUntil(nextExam);
-            
+
             let examDateDisplay, countdownDisplay, countdownValue, countdownUnit;
-            
-            if (nextExam) {
-                examDateDisplay = nextExam.toLocaleDateString('ja-JP', {
+
+            if (info.ongoing) {
+                examDateDisplay = '随時受験（通年）';
+                countdownDisplay = 'exam-ongoing';
+                countdownValue = '随時';
+                countdownUnit = '';
+            } else if (nextExam) {
+                const dateStr = nextExam.toLocaleDateString('ja-JP', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 });
+                examDateDisplay = info.projected ? `${dateStr}<span class="date-note">（例年目安）</span>` : dateStr;
                 countdownDisplay = 'next-exam-date';
                 countdownValue = daysUntil;
                 countdownUnit = '日';
@@ -2121,8 +2178,8 @@
             
             // 次回試験日順にソート（未定は後ろ）
             qualifications.sort((a, b) => {
-                const nextA = getNextExamDate(a.examDates);
-                const nextB = getNextExamDate(b.examDates);
+                const nextA = getNextExamDate(a);
+                const nextB = getNextExamDate(b);
                 
                 if (!nextA && !nextB) return 0;
                 if (!nextA) return 1;
@@ -2152,13 +2209,17 @@
             const cards = document.querySelectorAll('.qualification-card');
             cards.forEach((card, index) => {
                 const qual = qualifications[index];
-                const nextExam = getNextExamDate(qual.examDates);
+                const info = getNextExamInfo(qual);
+                const nextExam = info.date;
                 const daysUntil = calculateDaysUntil(nextExam);
-                
+
                 const countdownValue = card.querySelector('.countdown-value');
                 const countdownUnit = card.querySelector('.countdown-unit');
-                
-                if (nextExam && daysUntil !== null) {
+
+                if (info.ongoing) {
+                    countdownValue.textContent = '随時';
+                    countdownUnit.textContent = '';
+                } else if (nextExam && daysUntil !== null) {
                     countdownValue.textContent = daysUntil;
                     countdownUnit.textContent = '日';
                 } else {
