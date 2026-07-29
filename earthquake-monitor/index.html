@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌏 直近の地震情報と傾向分析｜日本地震リアルタイムモニター</title>
+    <title>地震情報リアルタイム｜今日の地震・震度・震源マップ｜地震モニター</title>
     <meta name="keywords" content="直近地震,地震傾向,地震情報,地震モニター,日本地震,リアルタイム地震,震度,マグニチュード,地震マップ,防災情報,地震速報,地震監視,地震アラート,P2P地震情報,地震発生頻度,地震統計">
     <meta name="description" content="今、日本で地震が起きている？震度・マグニチュード別にリアルタイム表示。直近3日間の地震マップ・統計・速報を無料で確認。防災対策にも役立つ地震モニター。">
     <meta name="robots" content="index, follow">
@@ -59,6 +59,92 @@
     }
     </script>
 
+    <!-- 構造化データ：FAQ（本文のFAQと内容を一致させること） -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "今、地震がありましたか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "このページ上部の地図と「最新の地震情報」に、直近に発生した地震が自動で表示されます。揺れを感じてから気象庁が震度を発表するまでには1〜2分ほどかかるため、発表前であれば「体感マップ」で全国の揺れの報告状況を確認できます。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "震度とマグニチュードの違いは何ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "マグニチュード（M）は地震そのものの規模、つまり放出されたエネルギーの大きさを表し、地震ごとにひとつだけ決まる値です。一方、震度はその場所で実際にどれくらい揺れたかを表します。同じマグニチュードの地震でも、震源からの距離や地盤の固さによって場所ごとに震度は変わります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "揺れた気がするのですが、地震ではないのでしょうか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "最新の地震リストに該当する時刻の地震が表示されていない場合、震度1未満のごく小さな揺れだったか、地震以外の原因（大型車の通行、風、機械の振動など）の可能性があります。体感マップに他の地域からも報告が集まっていれば、地震である可能性が高くなります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "大きな地震のときは、まず何をすればいいですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "揺れている間は、机の下などに入って頭を守ることを最優先してください。あわてて外へ飛び出すと、落下物でけがをする危険があります。揺れが収まってから、火の始末、扉を開けての避難経路の確保、家族の安否確認、という順で行動します。海の近くにいる場合は、津波警報を待たずに高い場所へ避難してください。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "地震に備えて用意しておくものは？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "水（1人1日3リットル×3日分）、非常食、携帯トイレ、モバイルバッテリー、懐中電灯、常備薬が基本です。停電が長引くケースに備え、ポータブル電源があると安心度が大きく変わります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "この情報はどこから取得していますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "気象庁が発表する地震情報を、P2P地震情報のAPIを通じて取得しています。体感マップの「揺れた」報告は、同サービスの利用者から寄せられた未検証の情報です。避難などの判断は、必ず気象庁および自治体の公式発表に従ってください。"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- 構造化データ：パンくず -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "メカとら", "item": "https://mechatora.com/" },
+        { "@type": "ListItem", "position": 2, "name": "地震情報モニター", "item": "https://mechatora.com/earthquake-monitor/" }
+      ]
+    }
+    </script>
+
+    <!-- 構造化データ：運営者情報 -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "メカとら",
+      "url": "https://mechatora.com/",
+      "logo": "https://mechatora.com/earthquake-monitor/ogp.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://mechatora.com/earthquake-monitor/contact.html"
+      }
+    }
+    </script>
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
     <script>
@@ -111,6 +197,35 @@
             max-width: 1400px;
             margin: 0 auto;
         }
+
+        /* ===== 解説・FAQ ===== */
+        .info-panel {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 15px;
+            padding: 28px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            line-height: 1.9;
+            color: #34495e;
+        }
+        .info-panel h2 {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin: 28px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eef2f6;
+        }
+        .info-panel h2:first-child { margin-top: 0; }
+        .info-panel h3 {
+            font-size: 1.08em;
+            color: #2a5298;
+            margin: 22px 0 8px;
+        }
+        .info-panel p { margin-bottom: 12px; }
+        .info-panel .info-list { margin: 12px 0 12px 1.2em; }
+        .info-panel .info-list li { margin-bottom: 8px; }
+        .info-panel a { color: #2a5298; }
+        @media (max-width: 600px) { .info-panel { padding: 20px 18px; } }
 
         /* ===== 体感マップ ===== */
         .felt-panel {
@@ -464,6 +579,42 @@
             <p class="fm-note">※ 体感報告は<strong>利用者の申告にもとづく未検証の情報</strong>です。公式の震度は気象庁発表をご確認ください。データ提供：<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a></p>
         </section>
         <!-- ▲▲ 体感マップ ここまで ▲▲ -->
+
+        <!-- ▼▼ 解説・FAQ（SEO用テキストコンテンツ） ▼▼ -->
+        <section class="info-panel">
+            <h2>地震情報の見方</h2>
+            <p>このページでは、日本国内で発生した地震を<strong>リアルタイム</strong>で表示しています。地図上の円は震源の位置を表し、色は揺れの大きさ（震度・マグニチュード）に対応しています。円が大きいほど規模の大きな地震です。</p>
+
+            <h3>震度とマグニチュードの違いは何ですか？</h3>
+            <p><strong>マグニチュード（M）</strong>は地震そのものの規模、つまり放出されたエネルギーの大きさを表し、地震ごとにひとつだけ決まる値です。一方、<strong>震度</strong>はその場所で実際にどれくらい揺れたかを表します。同じマグニチュードの地震でも、震源からの距離や地盤の固さによって場所ごとに震度は変わります。</p>
+            <p>たとえば、マグニチュード5.0の地震でも、震源の真上では震度4、100km離れた場所では震度1ということが起こります。深い場所で起きた地震は、規模が大きくても地表の揺れは小さくなる傾向があります。</p>
+
+            <h3>震度階級の目安</h3>
+            <ul class="info-list">
+                <li><strong>震度1〜2</strong>：屋内で静かにしている人の一部が揺れを感じる程度。</li>
+                <li><strong>震度3〜4</strong>：ほとんどの人が揺れを感じ、棚の食器が音を立てます。震度4では歩いている人も揺れを感じ、置物が倒れることがあります。</li>
+                <li><strong>震度5弱〜5強</strong>：家具が移動し、固定していない物が落下します。窓ガラスが割れることもあります。<strong>身の安全を確保する行動が必要な段階</strong>です。</li>
+                <li><strong>震度6弱以上</strong>：立っていることが困難になり、耐震性の低い建物では倒壊の危険があります。ただちに身を守り、その後の情報に注意してください。</li>
+            </ul>
+
+            <h2>よくある質問</h2>
+
+            <h3>今、地震がありましたか？</h3>
+            <p>このページ上部の地図と「最新の地震情報」に、直近に発生した地震が自動で表示されます。揺れを感じてから気象庁が震度を発表するまでには1〜2分ほどかかるため、発表前であれば「体感マップ」で全国の揺れの報告状況を確認できます。</p>
+
+            <h3>揺れた気がするのですが、地震ではないのでしょうか？</h3>
+            <p>最新の地震リストに該当する時刻の地震が表示されていない場合、震度1未満のごく小さな揺れだったか、地震以外の原因（大型車の通行、風、機械の振動など）の可能性があります。体感マップに他の地域からも報告が集まっていれば、地震である可能性が高くなります。</p>
+
+            <h3>大きな地震のときは、まず何をすればいいですか？</h3>
+            <p>揺れている間は、机の下などに入って<strong>頭を守ること</strong>を最優先してください。あわてて外へ飛び出すと、落下物でけがをする危険があります。揺れが収まってから、火の始末、扉を開けての避難経路の確保、家族の安否確認、という順で行動します。海の近くにいる場合は、津波警報を待たずに高い場所へ避難してください。</p>
+
+            <h3>地震に備えて用意しておくものは？</h3>
+            <p>水（1人1日3リットル×3日分）、非常食、携帯トイレ、モバイルバッテリー、懐中電灯、常備薬が基本です。停電が長引くケースに備え、ポータブル電源があると安心度が大きく変わります。詳しくは<a href="checklist.html">防災備品チェックリスト</a>をご覧ください。</p>
+
+            <h3>この情報はどこから取得していますか？</h3>
+            <p>気象庁が発表する地震情報を、<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPIを通じて取得しています。体感マップの「揺れた」報告は、同サービスの利用者から寄せられた未検証の情報です。<strong>避難などの判断は、必ず気象庁および自治体の公式発表に従ってください。</strong>本サービスは参考情報として提供しています。</p>
+        </section>
+        <!-- ▲▲ 解説・FAQ ここまで ▲▲ -->
     </div>
 
     <!-- Footer Ad -->
@@ -480,6 +631,8 @@
         <div style="max-width: 1200px; margin: 0 auto;">
             <h3 style="margin-bottom: 15px;">🛠️ メカとら</h3>
             <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; font-size: 0.9em;">
+                <a href="about.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">このサイトについて</a>
+                <a href="checklist.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">防災備品チェックリスト</a>
                 <a href="https://mechatora.com/privacy-policy.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.8); text-decoration: none;">プライバシーポリシー</a>
                 <a href="https://mechatora.com/terms.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.8); text-decoration: none;">利用規約</a>
                 <a href="contact.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">お問い合わせ</a>
