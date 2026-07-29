@@ -112,6 +112,33 @@
             margin: 0 auto;
         }
 
+        /* ===== 体感マップ ===== */
+        .felt-panel {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .felt-panel h3 { margin-bottom: 6px; color: #2c3e50; }
+        .felt-panel .fm-sub { font-size: 0.9em; color: #7f8c8d; margin-bottom: 14px; line-height: 1.6; }
+        .fm-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+        .fm-stat { background: #f4f7fa; border-radius: 10px; padding: 10px 6px; text-align: center; }
+        .fm-k { display: block; font-size: 0.72em; color: #7f8c8d; margin-bottom: 2px; }
+        .fm-stat strong { font-size: 1.25em; color: #2a5298; }
+        .fm-banner { margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; font-weight: bold; background: #fdecea; border-left: 4px solid #e74c3c; color: #c0392b; }
+        .fm-banner.calm { background: #eef4f9; border-left-color: #2a5298; color: #2a5298; font-weight: normal; }
+        .fm-mapbox { background: #0f1720; border-radius: 12px; padding: 10px; text-align: center; }
+        #fmSvg { width: 100%; max-width: 520px; height: auto; display: block; margin: 0 auto; }
+        .fm-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 10px; font-size: 0.78em; color: #7f8c8d; }
+        .fm-legend .fmd { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+        .fm-legend em { margin-left: auto; font-style: normal; opacity: 0.8; }
+        .fm-note { margin-top: 12px; font-size: 0.78em; color: #95a5a6; line-height: 1.6; }
+        .fm-note a { color: #2a5298; }
+        .fm-pulse { animation: fmPulse 1.8s ease-out infinite; }
+        @keyframes fmPulse { 0% { opacity: .8; transform: scale(1); } 70% { opacity: 0; transform: scale(2.4); } 100% { opacity: 0; transform: scale(2.4); } }
+        @media (max-width: 600px) { .fm-stats { grid-template-columns: repeat(2, 1fr); } }
+
         .map-container {
             background: white;
             border-radius: 15px;
@@ -403,6 +430,40 @@
                 <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=45C666+1HL52Y+5PDW+61JSH" alt="">
             </div>
         </div>
+
+        <!-- ▼▼ 体感マップ（地震感知情報） ▼▼ -->
+        <section class="felt-panel" id="feltMap" aria-labelledby="fmTitle">
+            <h3 id="fmTitle">📍 体感マップ｜いま揺れを感じた人</h3>
+            <p class="fm-sub">全国のユーザーから届いた「揺れた」報告をリアルタイム集計。<strong>気象庁の震度発表より先に</strong>、揺れの広がりが見えます。</p>
+
+            <div class="fm-stats">
+                <div class="fm-stat"><span class="fm-k">報告件数</span><strong id="fmCount">-</strong></div>
+                <div class="fm-stat"><span class="fm-k">信頼度</span><strong id="fmConf">-</strong></div>
+                <div class="fm-stat"><span class="fm-k">検知地域</span><strong id="fmAreas">-</strong></div>
+                <div class="fm-stat"><span class="fm-k">経過</span><strong id="fmElapsed">-</strong></div>
+            </div>
+
+            <div class="fm-banner" id="fmBanner" hidden></div>
+
+            <div class="fm-mapbox">
+                <svg id="fmSvg" viewBox="0 0 620 700" role="img" aria-label="全国の体感報告マップ">
+                    <g id="fmBase"></g>
+                    <g id="fmActive"></g>
+                </svg>
+            </div>
+
+            <div class="fm-legend">
+                <span><i class="fmd" style="background:#ff3b30"></i>信頼度A</span>
+                <span><i class="fmd" style="background:#ff9500"></i>B</span>
+                <span><i class="fmd" style="background:#ffcc00"></i>C</span>
+                <span><i class="fmd" style="background:#4da3ff"></i>D以下</span>
+                <span><i class="fmd" style="background:#8a99a8"></i>報告なし</span>
+                <em>円の大きさ＝報告件数</em>
+            </div>
+
+            <p class="fm-note">※ 体感報告は<strong>利用者の申告にもとづく未検証の情報</strong>です。公式の震度は気象庁発表をご確認ください。データ提供：<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a></p>
+        </section>
+        <!-- ▲▲ 体感マップ ここまで ▲▲ -->
     </div>
 
     <!-- Footer Ad -->
@@ -783,5 +844,234 @@
         document.addEventListener('DOMContentLoaded', init);
 
     </script>
+
+    <!-- ▼▼ 体感マップ（地震感知情報 code:9611） ▼▼ -->
+    <script>
+    (function () {
+        'use strict';
+
+        var API = 'https://api.p2pquake.net/v2/history';
+        var REFRESH_MS = 30000;   // 30秒（レート制限60/分に対して安全）
+        var EVENT_TTL_MIN = 30;   // 直近何分までを「進行中」とみなすか
+
+        // 地域コード → [都道府県, 地域名, 緯度, 経度]（P2P地震情報 epsp-area.csv）
+        var AREAS = [
+            [10,'北海道','石狩',43.062,141.354],[15,'北海道','渡島',41.820,140.753],[20,'北海道','檜山',41.859,140.128],
+            [25,'北海道','後志',42.902,140.756],[30,'北海道','空知',43.198,141.767],[35,'北海道','上川',43.808,142.439],
+            [40,'北海道','留萌',43.935,141.656],[45,'北海道','宗谷',45.398,141.700],[50,'北海道','網走',44.027,144.261],
+            [55,'北海道','胆振',42.321,140.972],[60,'北海道','日高',42.173,142.768],[65,'北海道','十勝',42.930,143.208],
+            [70,'北海道','釧路',42.977,144.345],[75,'北海道','根室',43.330,145.585],
+            [100,'青森','津軽',40.759,140.428],[105,'青森','三八上北',40.610,141.325],[106,'青森','下北',41.293,141.183],
+            [110,'岩手','沿岸北部',39.843,141.796],[111,'岩手','沿岸南部',39.082,141.709],[115,'岩手','内陸',39.702,141.154],
+            [120,'宮城','北部',38.540,141.128],[125,'宮城','南部',38.172,140.892],
+            [130,'秋田','沿岸',39.720,140.104],[135,'秋田','内陸',39.700,140.731],
+            [140,'山形','庄内',38.727,139.827],[141,'山形','最上',38.765,140.302],[142,'山形','村山',38.255,140.340],[143,'山形','置賜',37.922,140.117],
+            [150,'福島','中通り',37.401,140.360],[151,'福島','浜通り',37.449,141.013],[152,'福島','会津',37.460,139.841],
+            [200,'茨城','北部',36.457,140.486],[205,'茨城','南部',36.083,140.076],
+            [210,'栃木','北部',36.961,140.046],[215,'栃木','南部',36.426,139.803],
+            [220,'群馬','北部',36.678,138.999],[225,'群馬','南部',36.389,139.063],
+            [230,'埼玉','北部',36.147,139.388],[231,'埼玉','南部',35.925,139.485],[232,'埼玉','秩父',35.991,139.085],
+            [240,'千葉','北東部',35.707,140.564],[241,'千葉','北西部',35.607,140.106],[242,'千葉','南部',35.330,139.902],
+            [250,'東京','東京',35.699,139.502],[255,'東京','伊豆諸島北部',34.377,139.257],[260,'東京','伊豆諸島南部',34.075,139.479],[265,'東京','小笠原',27.094,142.191],
+            [270,'神奈川','東部',35.443,139.638],[275,'神奈川','西部',35.348,139.139],
+            [300,'新潟','上越',37.147,138.236],[301,'新潟','中越',37.446,138.851],[302,'新潟','下越',37.948,139.327],[305,'新潟','佐渡',38.018,138.368],
+            [310,'富山','東部',36.827,137.409],[315,'富山','西部',36.647,136.962],
+            [320,'石川','能登',37.390,136.899],[325,'石川','加賀',36.561,136.656],
+            [330,'福井','嶺北',35.956,136.184],[335,'福井','嶺南',35.461,135.857],
+            [340,'山梨','東部',35.551,138.905],[345,'山梨','中・西部',35.608,138.464],
+            [350,'長野','北部',36.648,138.194],[351,'長野','中部',36.238,137.972],[355,'長野','南部',35.551,137.878],
+            [400,'岐阜','飛騨',36.146,137.252],[405,'岐阜','美濃',35.544,136.907],
+            [410,'静岡','伊豆',34.976,138.946],[411,'静岡','東部',35.161,138.676],[415,'静岡','中部',34.867,138.257],[416,'静岡','西部',34.717,137.851],
+            [420,'愛知','東部',34.898,137.497],[425,'愛知','西部',35.053,137.012],
+            [430,'三重','北中部',34.881,136.584],[435,'三重','南部',34.211,136.337],
+            [440,'滋賀','北部',35.380,136.278],[445,'滋賀','南部',35.067,136.025],
+            [450,'京都','北部',35.474,135.385],[455,'京都','南部',35.011,135.768],
+            [460,'大阪','北部',34.816,135.568],[465,'大阪','南部',34.483,135.423],
+            [470,'兵庫','北部',35.544,134.820],[475,'兵庫','南部',34.853,134.931],
+            [480,'奈良','奈良',34.396,135.857],
+            [490,'和歌山','北部',34.065,135.254],[495,'和歌山','南部',33.678,135.348],
+            [500,'鳥取','東部',35.501,134.235],[505,'鳥取','中・西部',35.495,133.693],
+            [510,'島根','東部',35.367,132.754],[514,'島根','隠岐',36.209,133.321],[515,'島根','西部',34.899,132.079],
+            [520,'岡山','北部',35.069,134.004],[525,'岡山','南部',34.655,133.919],
+            [530,'広島','北部',34.666,132.704],[535,'広島','南部',34.341,132.907],
+            [540,'山口','北部',34.408,131.399],[541,'山口','西部',33.957,130.941],[545,'山口','中・東部',34.050,131.804],
+            [550,'徳島','北部',34.025,134.259],[555,'徳島','南部',33.734,134.535],
+            [560,'香川','香川',34.342,134.046],
+            [570,'愛媛','東予',33.919,133.181],[575,'愛媛','中予',33.839,132.765],[576,'愛媛','南予',33.362,132.510],
+            [580,'高知','東部',33.424,134.020],[581,'高知','中部',33.559,133.529],[582,'高知','西部',32.991,132.933],
+            [600,'福岡','福岡',33.590,130.401],[601,'福岡','北九州',33.883,130.875],[602,'福岡','筑豊',33.646,130.691],[605,'福岡','筑後',33.319,130.508],
+            [610,'佐賀','北部',33.450,129.968],[615,'佐賀','南部',33.181,130.143],
+            [620,'長崎','北部',33.179,129.715],[625,'長崎','南部',32.843,130.053],[630,'長崎','壱岐・対馬',34.202,129.287],[635,'長崎','五島',32.695,128.840],
+            [640,'熊本','阿蘇',32.951,131.120],[641,'熊本','熊本',32.803,130.707],[645,'熊本','球磨',32.240,130.897],[646,'熊本','天草・芦北',32.233,130.439],
+            [650,'大分','北部',33.531,131.349],[651,'大分','中部',33.239,131.609],[655,'大分','西部',33.228,131.188],[656,'大分','南部',32.959,131.900],
+            [660,'宮崎','北部平野部',32.422,131.624],[661,'宮崎','北部山沿い',32.467,131.158],[665,'宮崎','南部平野部',31.601,131.378],[666,'宮崎','南部山沿い',31.928,131.007],
+            [670,'鹿児島','薩摩',31.813,130.304],[675,'鹿児島','大隅',31.378,130.852],[680,'鹿児島','種子島・屋久島',30.732,130.996],[685,'鹿児島','奄美',28.377,129.493],
+            [700,'沖縄','本島北部',26.591,127.977],[701,'沖縄','本島中南部',26.281,127.778],[702,'沖縄','久米島',26.349,126.747],
+            [705,'沖縄','八重山',24.286,123.881],[706,'沖縄','宮古島',24.805,125.281],[710,'沖縄','大東島',25.828,131.232]
+        ];
+        var BY_CODE = {};
+        AREAS.forEach(function (a) { BY_CODE[a[0]] = a; });
+
+        var LON_MIN = 122, LON_MAX = 147, LAT_MIN = 23.5, LAT_MAX = 46.5, W = 620, H = 700;
+        function project(lat, lon) {
+            return {
+                x: (lon - LON_MIN) / (LON_MAX - LON_MIN) * W,
+                y: (LAT_MAX - lat) / (LAT_MAX - LAT_MIN) * H
+            };
+        }
+
+        // 信頼度: 0.8以上A / 0.6以上B / 0.4以上C / 0.2以上D / 0以上E / それ未満F
+        function grade(c) {
+            if (c >= 0.8) return { g: 'A', color: '#ff3b30' };
+            if (c >= 0.6) return { g: 'B', color: '#ff9500' };
+            if (c >= 0.4) return { g: 'C', color: '#ffcc00' };
+            if (c >= 0.2) return { g: 'D', color: '#4da3ff' };
+            if (c >= 0)   return { g: 'E', color: '#3f7fd0' };
+            return { g: 'F', color: '#8a99a8' };
+        }
+
+        function parseP2P(s) { return s ? new Date(s.replace(/-/g, '/').replace(/\.\d+$/, '')) : null; }
+        function $(id) { return document.getElementById(id); }
+        var NS = 'http://www.w3.org/2000/svg';
+
+        function drawBase() {
+            var g = $('fmBase');
+            if (!g) return;
+            g.innerHTML = '';
+            AREAS.forEach(function (a) {
+                var p = project(a[3], a[4]);
+                var c = document.createElementNS(NS, 'circle');
+                c.setAttribute('cx', p.x.toFixed(1));
+                c.setAttribute('cy', p.y.toFixed(1));
+                c.setAttribute('r', '2.6');
+                c.setAttribute('fill', '#8a99a8');
+                c.setAttribute('fill-opacity', '.55');
+                var t = document.createElementNS(NS, 'title');
+                t.textContent = a[1] + ' ' + a[2];
+                c.appendChild(t);
+                g.appendChild(c);
+            });
+        }
+
+        function drawActive(areaConf) {
+            var g = $('fmActive');
+            if (!g) return 0;
+            g.innerHTML = '';
+            var keys = Object.keys(areaConf || {});
+            if (!keys.length) return 0;
+
+            var maxCount = 1;
+            keys.forEach(function (k) { maxCount = Math.max(maxCount, areaConf[k].count || 0); });
+
+            keys.forEach(function (k) {
+                var a = BY_CODE[Number(k)];
+                if (!a) return;
+                var v = areaConf[k];
+                var p = project(a[3], a[4]);
+                var gr = grade(v.confidence);
+                var r = 4 + Math.sqrt((v.count || 1) / maxCount) * 14;
+
+                if (gr.g === 'A' || gr.g === 'B') {
+                    var halo = document.createElementNS(NS, 'circle');
+                    halo.setAttribute('cx', p.x.toFixed(1));
+                    halo.setAttribute('cy', p.y.toFixed(1));
+                    halo.setAttribute('r', r.toFixed(1));
+                    halo.setAttribute('fill', gr.color);
+                    halo.setAttribute('opacity', '.45');
+                    halo.setAttribute('class', 'fm-pulse');
+                    halo.style.transformOrigin = p.x.toFixed(1) + 'px ' + p.y.toFixed(1) + 'px';
+                    g.appendChild(halo);
+                }
+
+                var c = document.createElementNS(NS, 'circle');
+                c.setAttribute('cx', p.x.toFixed(1));
+                c.setAttribute('cy', p.y.toFixed(1));
+                c.setAttribute('r', r.toFixed(1));
+                c.setAttribute('fill', gr.color);
+                c.setAttribute('fill-opacity', '.78');
+                c.setAttribute('stroke', '#fff');
+                c.setAttribute('stroke-width', '1');
+                var t = document.createElementNS(NS, 'title');
+                t.textContent = a[1] + ' ' + a[2] + '／' + v.count + '件（信頼度' + gr.g + '）';
+                c.appendChild(t);
+                g.appendChild(c);
+            });
+            return keys.length;
+        }
+
+        function setBanner(text, calm) {
+            var b = $('fmBanner');
+            if (!b) return;
+            if (!text) { b.hidden = true; return; }
+            b.hidden = false;
+            b.textContent = text;
+            b.className = 'fm-banner' + (calm ? ' calm' : '');
+        }
+
+        function elapsedText(d) {
+            if (!d) return '-';
+            var sec = Math.floor((Date.now() - d.getTime()) / 1000);
+            if (sec < 60) return sec + '秒前';
+            if (sec < 3600) return Math.floor(sec / 60) + '分前';
+            return Math.floor(sec / 3600) + '時間前';
+        }
+
+        function render(ev) {
+            if (!ev) { setBanner('体感報告データを取得できませんでした。', true); return; }
+            var started = parseP2P(ev.started_at);
+            var ageMin = started ? (Date.now() - started.getTime()) / 60000 : Infinity;
+            var active = ageMin <= EVENT_TTL_MIN && (ev.count || 0) > 0;
+
+            var areaCount = drawActive(active ? ev.area_confidences : {});
+
+            $('fmCount').textContent = active ? ev.count + '件' : '0件';
+            $('fmConf').textContent = active ? grade(ev.confidence).g : '-';
+            $('fmAreas').textContent = active ? areaCount + '地域' : '-';
+            $('fmElapsed').textContent = active ? elapsedText(started) : '-';
+
+            if (active && ev.count >= 30) {
+                setBanner('⚠️ 広範囲で揺れの報告が入っています（' + ev.count + '件・' + areaCount + '地域）', false);
+            } else if (active) {
+                setBanner('揺れの報告を受信中（' + ev.count + '件）', false);
+            } else {
+                setBanner('現在、揺れの報告は入っていません。', true);
+            }
+        }
+
+        function tick() {
+            fetch(API + '?codes=9611&limit=1', { cache: 'no-store' })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (arr) { render(arr && arr[0]); })
+                .catch(function (e) {
+                    console.warn('[feltmap]', e);
+                    setBanner('データ取得に失敗しました。しばらくして再試行します。', true);
+                });
+        }
+
+        // 動作確認用: URLに ?demo=1 を付けるとサンプル表示
+        function demo() {
+            render({
+                count: 128, confidence: 0.98,
+                started_at: new Date(Date.now() - 95000).toISOString().slice(0, 19).replace('T', ' ').replace(/-/g, '/'),
+                area_confidences: {
+                    '250': { confidence: 0.92, count: 41 }, '241': { confidence: 0.86, count: 27 },
+                    '270': { confidence: 0.81, count: 19 }, '205': { confidence: 0.71, count: 14 },
+                    '231': { confidence: 0.64, count: 11 }, '200': { confidence: 0.48, count: 7 },
+                    '215': { confidence: 0.33, count: 5 },  '340': { confidence: 0.22, count: 3 },
+                    '411': { confidence: 0.12, count: 1 }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            drawBase();
+            if (location.search.indexOf('demo=1') !== -1) { demo(); return; }
+            tick();
+            setInterval(tick, REFRESH_MS);
+            document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
+        });
+    })();
+    </script>
+    <!-- ▲▲ 体感マップ ここまで ▲▲ -->
 </body>
 </html>
