@@ -26,6 +26,13 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://mechatora.com/earthquake-monitor/">
 
+    <!-- PWA -->
+    <link rel="manifest" href="/earthquake-monitor/manifest.json">
+    <meta name="theme-color" content="#1e3c72">
+    <link rel="apple-touch-icon" href="/earthquake-monitor/icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="地震モニター">
+
     <!-- 構造化データ（JSON-LD） -->
     <script type="application/ld+json">
     {
@@ -1226,5 +1233,55 @@
     })();
     </script>
     <!-- ▲▲ 体感マップ ここまで ▲▲ -->
+
+    <!-- ▼▼ PWA（ホーム画面に追加＋オフライン対応） ▼▼ -->
+    <script>
+    (function () {
+        if (!('serviceWorker' in navigator)) return;
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/earthquake-monitor/sw.js', { scope: '/earthquake-monitor/' })
+                .catch(function (e) { console.warn('[pwa]', e); });
+        });
+
+        // インストール訴求（Android/PC）: ユーザーが一度閉じたら再表示しない
+        var deferred = null;
+        window.addEventListener('beforeinstallprompt', function (e) {
+            if (localStorage.getItem('pwaDismissed') === '1') return;
+            e.preventDefault();
+            deferred = e;
+            showBanner();
+        });
+
+        function showBanner() {
+            if (document.getElementById('pwaBanner')) return;
+            var b = document.createElement('div');
+            b.id = 'pwaBanner';
+            b.innerHTML =
+                '<span>📲 ホーム画面に追加して、次の地震にすぐ備える</span>' +
+                '<button id="pwaAdd">追加</button>' +
+                '<button id="pwaNo" aria-label="閉じる">×</button>';
+            document.body.appendChild(b);
+            document.getElementById('pwaAdd').onclick = function () {
+                if (!deferred) return;
+                deferred.prompt();
+                deferred.userChoice.finally(function () { deferred = null; b.remove(); });
+            };
+            document.getElementById('pwaNo').onclick = function () {
+                localStorage.setItem('pwaDismissed', '1');
+                b.remove();
+            };
+        }
+    })();
+    </script>
+    <style>
+        #pwaBanner{position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;display:flex;align-items:center;gap:10px;
+            background:rgba(15,23,32,.96);color:#fff;padding:12px 14px;border-radius:12px;
+            box-shadow:0 8px 24px rgba(0,0,0,.35);font-size:.9em;max-width:520px;margin:0 auto}
+        #pwaBanner span{flex:1;line-height:1.5}
+        #pwaBanner button{border:0;border-radius:8px;padding:8px 14px;font-weight:bold;cursor:pointer}
+        #pwaAdd{background:#e74c3c;color:#fff}
+        #pwaNo{background:transparent;color:#9fb0c0;font-size:1.2em;padding:4px 8px}
+    </style>
+    <!-- ▲▲ PWA ここまで ▲▲ -->
 </body>
 </html>

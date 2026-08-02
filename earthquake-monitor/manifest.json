@@ -1,0 +1,24 @@
+{
+  "name": "地震モニター｜日本地震リアルタイム",
+  "short_name": "地震モニター",
+  "description": "日本の地震をリアルタイム表示。震度・マグニチュード別マップ、体感マップ、直近3日間の統計。",
+  "start_url": "/earthquake-monitor/?utm_source=pwa",
+  "scope": "/earthquake-monitor/",
+  "display": "standalone",
+  "background_color": "#0f1720",
+  "theme_color": "#1e3c72",
+  "lang": "ja",
+  "categories": ["utilities", "news", "weather"],
+  "icons": [
+    { "src": "/earthquake-monitor/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/earthquake-monitor/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/earthquake-monitor/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "防災備品チェックリスト",
+      "url": "/earthquake-monitor/checklist.html",
+      "icons": [{ "src": "/earthquake-monitor/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
