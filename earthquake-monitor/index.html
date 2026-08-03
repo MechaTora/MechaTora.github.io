@@ -205,6 +205,48 @@
             margin: 0 auto;
         }
 
+        /* ===== 都道府県別リンク ===== */
+        .pref-panel {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 15px;
+            padding: 22px 26px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .pref-panel h2 { font-size: 1.25em; color: #2c3e50; margin-bottom: 4px; }
+        .pref-sub { font-size: .9em; color: #7f8c8d; margin-bottom: 12px; }
+        .pl-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f0f3f6; font-size: .93em; }
+        .pl-row:last-child { border-bottom: 0; }
+        .pl-reg { flex: 0 0 62px; color: #7f8c8d; font-weight: bold; font-size: .86em; padding-top: 2px; }
+        .pl-links { flex: 1; }
+        .pl-links a { display: inline-block; margin: 3px 10px 3px 0; color: #2a5298; text-decoration: none; }
+        .pl-links a:hover { text-decoration: underline; }
+        @media (max-width: 600px) { .pl-row { flex-direction: column; gap: 2px; } }
+
+        /* ===== プッシュ通知UI ===== */
+        .push-panel {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 15px;
+            padding: 22px 26px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #e74c3c;
+            line-height: 1.8;
+        }
+        .push-panel h2 { font-size: 1.25em; color: #2c3e50; margin-bottom: 6px; }
+        .push-sub { font-size: .9em; color: #7f8c8d; margin-bottom: 14px; }
+        .push-field { margin-bottom: 10px; border: 0; padding: 0; }
+        .push-field legend, .push-field > label { font-weight: bold; color: #34495e; display: inline-block; margin-bottom: 4px; }
+        .push-field label { margin-right: 16px; font-weight: normal; color: #34495e; }
+        #pushRegion { margin-left: 8px; padding: 7px 12px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: .95em; }
+        .push-btn { margin-top: 10px; padding: 12px 26px; font-size: 1em; font-weight: bold; color: #fff;
+            background: #e74c3c; border: 0; border-radius: 10px; cursor: pointer; }
+        .push-btn:hover { background: #c0392b; }
+        .push-btn.off { background: #7f8c8d; }
+        .push-status { margin-top: 8px; color: #2a5298; font-weight: bold; min-height: 1.2em; font-size: .92em; }
+        .push-hint { margin-top: 8px; padding: 10px 12px; background: #fff6e6; border: 1px solid #f0d9a8;
+            border-radius: 8px; font-size: .88em; color: #7a5c1e; }
+
         /* ===== 解説・FAQ ===== */
         .info-panel {
             grid-column: 1 / -1;
@@ -586,6 +628,57 @@
             <p class="fm-note">※ 体感報告は<strong>利用者の申告にもとづく未検証の情報</strong>です。公式の震度は気象庁発表をご確認ください。データ提供：<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a></p>
         </section>
         <!-- ▲▲ 体感マップ ここまで ▲▲ -->
+
+        <!-- ▼▼ 都道府県別リンク ▼▼ -->
+        <section class="pref-panel" aria-labelledby="prefTitle">
+            <h2 id="prefTitle">🗾 都道府県別の地震情報</h2>
+            <p class="pref-sub">お住まいの地域で観測された地震だけを絞り込んで確認できます。</p>
+            <div class="pl-row"><span class="pl-reg">北海道</span><div class="pl-links"><a href="pref/hokkaido.html">北海道</a></div></div>
+            <div class="pl-row"><span class="pl-reg">東北</span><div class="pl-links"><a href="pref/aomori.html">青森</a><a href="pref/iwate.html">岩手</a><a href="pref/miyagi.html">宮城</a><a href="pref/akita.html">秋田</a><a href="pref/yamagata.html">山形</a><a href="pref/fukushima.html">福島</a></div></div>
+            <div class="pl-row"><span class="pl-reg">関東</span><div class="pl-links"><a href="pref/ibaraki.html">茨城</a><a href="pref/tochigi.html">栃木</a><a href="pref/gunma.html">群馬</a><a href="pref/saitama.html">埼玉</a><a href="pref/chiba.html">千葉</a><a href="pref/tokyo.html">東京</a><a href="pref/kanagawa.html">神奈川</a></div></div>
+            <div class="pl-row"><span class="pl-reg">中部</span><div class="pl-links"><a href="pref/niigata.html">新潟</a><a href="pref/toyama.html">富山</a><a href="pref/ishikawa.html">石川</a><a href="pref/fukui.html">福井</a><a href="pref/yamanashi.html">山梨</a><a href="pref/nagano.html">長野</a><a href="pref/gifu.html">岐阜</a><a href="pref/shizuoka.html">静岡</a><a href="pref/aichi.html">愛知</a></div></div>
+            <div class="pl-row"><span class="pl-reg">近畿</span><div class="pl-links"><a href="pref/mie.html">三重</a><a href="pref/shiga.html">滋賀</a><a href="pref/kyoto.html">京都</a><a href="pref/osaka.html">大阪</a><a href="pref/hyogo.html">兵庫</a><a href="pref/nara.html">奈良</a><a href="pref/wakayama.html">和歌山</a></div></div>
+            <div class="pl-row"><span class="pl-reg">中国</span><div class="pl-links"><a href="pref/tottori.html">鳥取</a><a href="pref/shimane.html">島根</a><a href="pref/okayama.html">岡山</a><a href="pref/hiroshima.html">広島</a><a href="pref/yamaguchi.html">山口</a></div></div>
+            <div class="pl-row"><span class="pl-reg">四国</span><div class="pl-links"><a href="pref/tokushima.html">徳島</a><a href="pref/kagawa.html">香川</a><a href="pref/ehime.html">愛媛</a><a href="pref/kochi.html">高知</a></div></div>
+            <div class="pl-row"><span class="pl-reg">九州</span><div class="pl-links"><a href="pref/fukuoka.html">福岡</a><a href="pref/saga.html">佐賀</a><a href="pref/nagasaki.html">長崎</a><a href="pref/kumamoto.html">熊本</a><a href="pref/oita.html">大分</a><a href="pref/miyazaki.html">宮崎</a><a href="pref/kagoshima.html">鹿児島</a><a href="pref/okinawa.html">沖縄</a></div></div>
+        </section>
+        <!-- ▲▲ 都道府県別リンク ▲▲ -->
+
+        <!-- ▼▼ プッシュ通知の購読UI ▼▼ -->
+        <section class="push-panel" id="pushPanel" aria-labelledby="pushTitle">
+            <h2 id="pushTitle">🔔 次の地震を見逃さない</h2>
+            <p class="push-sub">地震が発生したら通知でお知らせします。通知は地震情報のみで、広告の配信には使いません。</p>
+
+            <fieldset class="push-field">
+                <legend>通知する最小震度</legend>
+                <label><input type="radio" name="minScale" value="30"> 震度3以上</label>
+                <label><input type="radio" name="minScale" value="40" checked> 震度4以上</label>
+                <label><input type="radio" name="minScale" value="45"> 震度5弱以上</label>
+            </fieldset>
+
+            <div class="push-field">
+                <label for="pushRegion">対象地域</label>
+                <select id="pushRegion">
+                    <option value="all" selected>全国</option>
+                    <option value="hokkaido">北海道</option>
+                    <option value="tohoku">東北</option>
+                    <option value="kanto">関東</option>
+                    <option value="chubu">中部</option>
+                    <option value="kinki">近畿</option>
+                    <option value="chugoku">中国</option>
+                    <option value="shikoku">四国</option>
+                    <option value="kyushu">九州・沖縄</option>
+                </select>
+            </div>
+
+            <button id="pushEnable" type="button" class="push-btn">通知を受け取る</button>
+            <button id="pushDisable" type="button" class="push-btn off" hidden>通知を停止</button>
+            <p id="pushStatus" class="push-status" role="status" aria-live="polite"></p>
+            <p id="pushIosHint" class="push-hint" hidden>
+                📱 <strong>iPhoneの方へ</strong>：Safariの共有ボタンから「ホーム画面に追加」でアプリ化すると、通知を受け取れるようになります。
+            </p>
+        </section>
+        <!-- ▲▲ プッシュ通知の購読UI ▲▲ -->
 
         <!-- ▼▼ 解説・FAQ（SEO用テキストコンテンツ） ▼▼ -->
         <section class="info-panel">
@@ -1283,5 +1376,109 @@
         #pwaNo{background:transparent;color:#9fb0c0;font-size:1.2em;padding:4px 8px}
     </style>
     <!-- ▲▲ PWA ここまで ▲▲ -->
+
+    <!-- ▼▼ プッシュ通知クライアント ▼▼ -->
+    <script>
+    (function () {
+        // ↓ デプロイ後に自分のWorkerのURLと公開鍵に差し替える
+        var API = 'https://quake-push.<あなたのサブドメイン>.workers.dev';
+        var VAPID_PUBLIC_KEY = 'ここにVAPID公開鍵を貼る';
+
+        var $ = function (id) { return document.getElementById(id); };
+        var statusEl, enableBtn, disableBtn;
+
+        function setStatus(m) { if (statusEl) statusEl.textContent = m; }
+        var isIOS = function () { return /iphone|ipad|ipod/i.test(navigator.userAgent); };
+        var isStandalone = function () {
+            return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        };
+        var supported = function () {
+            return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+        };
+
+        function urlB64ToUint8Array(base64String) {
+            var padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+            var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            var raw = atob(base64);
+            var out = new Uint8Array(raw.length);
+            for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+            return out;
+        }
+
+        function prefs() {
+            var el = document.querySelector('input[name="minScale"]:checked');
+            return {
+                minScale: el ? Number(el.value) : 40,
+                region: ($('pushRegion') && $('pushRegion').value) || 'all'
+            };
+        }
+
+        function post(path, payload) {
+            return fetch(API + path, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        async function enable() {
+            if (!supported()) { setStatus('お使いのブラウザは通知に対応していません。'); return; }
+            if (isIOS() && !isStandalone()) {
+                setStatus('iPhoneは「ホーム画面に追加」してから通知をオンにできます。');
+                $('pushIosHint').hidden = false;
+                return;
+            }
+            var perm = await Notification.requestPermission();
+            if (perm !== 'granted') { setStatus('通知がブロックされています。ブラウザの設定から許可してください。'); return; }
+
+            var reg = await navigator.serviceWorker.ready;
+            var sub = await reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlB64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
+            var p = prefs();
+            var res = await post('/subscribe', { subscription: sub, prefs: p });
+            if (!res.ok) { setStatus('登録に失敗しました。時間をおいて再度お試しください。'); return; }
+
+            localStorage.setItem('quakePushOn', '1');
+            setStatus('通知をオンにしました（震度' + ({30:'3',40:'4',45:'5弱'}[p.minScale]) + '以上 / '
+                + (p.region === 'all' ? '全国' : $('pushRegion').selectedOptions[0].text) + '）。');
+            enableBtn.hidden = true; disableBtn.hidden = false;
+        }
+
+        async function disable() {
+            var reg = await navigator.serviceWorker.ready;
+            var sub = await reg.pushManager.getSubscription();
+            if (sub) {
+                await post('/unsubscribe', { endpoint: sub.endpoint }).catch(function () {});
+                await sub.unsubscribe().catch(function () {});
+            }
+            localStorage.removeItem('quakePushOn');
+            setStatus('通知を停止しました。');
+            enableBtn.hidden = false; disableBtn.hidden = true;
+        }
+
+        async function updatePrefs() {
+            if (localStorage.getItem('quakePushOn') !== '1') return;
+            var reg = await navigator.serviceWorker.ready;
+            var sub = await reg.pushManager.getSubscription();
+            if (!sub) return;
+            await post('/subscribe', { subscription: sub, prefs: prefs() });
+            setStatus('通知の設定を更新しました。');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            statusEl = $('pushStatus'); enableBtn = $('pushEnable'); disableBtn = $('pushDisable');
+            if (!enableBtn) return;
+            if (localStorage.getItem('quakePushOn') === '1') { enableBtn.hidden = true; disableBtn.hidden = false; }
+            if (isIOS() && !isStandalone()) $('pushIosHint').hidden = false;
+            enableBtn.addEventListener('click', enable);
+            disableBtn.addEventListener('click', disable);
+            document.querySelectorAll('input[name="minScale"], #pushRegion')
+                .forEach(function (el) { el.addEventListener('change', updatePrefs); });
+        });
+    })();
+    </script>
+    <!-- ▲▲ プッシュ通知クライアント ▲▲ -->
 </body>
 </html>

@@ -1,0 +1,21 @@
+name = "quake-push"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+
+# 1分ごとに気象庁の地震情報をチェック（Cron Triggersの最短間隔）
+[triggers]
+crons = ["* * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "quake-push"
+database_id = "ここにwrangler d1 createで表示されたIDを貼る"
+
+[vars]
+# VAPIDの「公開鍵」。秘密鍵は wrangler secret put VAPID_PRIVATE_KEY で登録する
+VAPID_PUBLIC_KEY = "ここに公開鍵を貼る"
+VAPID_SUBJECT = "mailto:crtvybunimofds@gmail.com"
+# 通知を出す最小震度（P2Pのscale値: 30=震度3, 40=震度4, 45=震度5弱）
+MIN_SCALE = "30"
+# CORS許可オリジン
+ALLOW_ORIGIN = "https://mechatora.com"

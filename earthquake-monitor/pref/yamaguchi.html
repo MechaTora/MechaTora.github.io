@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山口の地震情報｜今日の最新地震・震度・震源｜地震モニター</title>
+<meta name="description" content="山口県で観測された地震をリアルタイム表示。今日の最新の震度・震源・マグニチュードと、直近の観測回数・最大震度を無料で確認できます。">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://mechatora.com/earthquake-monitor/pref/yamaguchi.html">
+<meta property="og:title" content="山口の地震情報｜今日の最新地震・震度・震源">
+<meta property="og:description" content="山口県で観測された地震をリアルタイム表示。最新の震度・震源を無料で確認。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mechatora.com/earthquake-monitor/pref/yamaguchi.html">
+<meta property="og:image" content="https://mechatora.com/earthquake-monitor/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="/earthquake-monitor/manifest.json">
+<meta name="theme-color" content="#1e3c72">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "メカとら", "item": "https://mechatora.com/" },
+    { "@type": "ListItem", "position": 2, "name": "地震情報モニター", "item": "https://mechatora.com/earthquake-monitor/" },
+    { "@type": "ListItem", "position": 3, "name": "山口県の地震情報", "item": "https://mechatora.com/earthquake-monitor/pref/yamaguchi.html" }
+  ]
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-6NJKWS2RJ8');</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Meiryo',sans-serif;background:linear-gradient(135deg,#1e3c72,#2a5298);color:#333;min-height:100vh}
+.header{background:rgba(0,0,0,.8);color:#fff;padding:18px 20px;text-align:center}
+.header h1{font-size:1.5em;margin-bottom:6px}
+.header p{opacity:.9;font-size:.95em}
+.crumb{max-width:900px;margin:14px auto 0;padding:0 16px;font-size:.82em;color:rgba(255,255,255,.85)}
+.crumb a{color:rgba(255,255,255,.85)}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:15px;padding:20px 24px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);line-height:1.85}
+.card h2{font-size:1.2em;color:#2c3e50;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #eef2f6}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:6px}
+.stat{background:#f4f7fa;border-radius:10px;padding:12px 6px;text-align:center}
+.stat span{display:block;font-size:.74em;color:#7f8c8d}
+.stat strong{font-size:1.3em;color:#2a5298}
+.q{border-bottom:1px solid #eef2f6;padding:11px 0;display:flex;align-items:center;gap:12px}
+.q:last-child{border-bottom:0}
+.sc{flex:0 0 46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:1.05em}
+.q-main{flex:1;min-width:0}
+.q-t{font-size:.8em;color:#7f8c8d}
+.q-p{font-weight:bold;color:#2c3e50}
+.q-m{font-size:.84em;color:#7f8c8d}
+.cta{display:inline-block;margin-top:6px;padding:11px 22px;background:#e74c3c;color:#fff;text-decoration:none;border-radius:9px;font-weight:bold}
+.pl-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f0f3f6;font-size:.9em}
+.pl-row:last-child{border-bottom:0}
+.pl-reg{flex:0 0 62px;color:#7f8c8d;font-weight:bold;font-size:.85em}
+.pl-links{flex:1}
+.pl-links a{display:inline-block;margin:2px 9px 2px 0;color:#2a5298;text-decoration:none}
+.pl-links a:hover{text-decoration:underline}
+.pl-links strong{display:inline-block;margin:2px 9px 2px 0;color:#e74c3c}
+.note{font-size:.82em;color:#95a5a6;line-height:1.7}
+footer{background:rgba(0,0,0,.8);color:#fff;padding:20px;text-align:center;margin-top:24px;font-size:.88em}
+footer a{color:rgba(255,255,255,.8);text-decoration:none;margin:0 8px}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.pl-row{flex-direction:column;gap:2px}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>山口県の地震情報</h1>
+  <p>今日の最新の地震・震度・震源をリアルタイム表示</p>
+</div>
+<nav class="crumb"><a href="/">メカとら</a> › <a href="/earthquake-monitor/">地震モニター</a> › 山口県</nav>
+
+<div class="wrap">
+  <div class="card">
+    <h2>📊 山口県の観測状況</h2>
+    <div class="stats">
+      <div class="stat"><span>観測回数</span><strong id="cnt">-</strong></div>
+      <div class="stat"><span>最大震度</span><strong id="mx">-</strong></div>
+      <div class="stat"><span>直近の地震</span><strong id="last">-</strong></div>
+      <div class="stat"><span>震度3以上</span><strong id="c3">-</strong></div>
+    </div>
+    <p class="note" id="range">読み込み中…</p>
+  </div>
+
+  <div class="card">
+    <h2>🕒 山口県で観測された地震</h2>
+    <div id="list"><p class="note">データを読み込み中…</p></div>
+    <p style="margin-top:14px"><a class="cta" href="/earthquake-monitor/">🗺 全国の地震マップ・体感マップを見る</a></p>
+  </div>
+
+  <div class="card">
+    <h2>ℹ️ 震度の見方</h2>
+    <p>ここに表示している震度は、山口県内の観測点で記録された値のうち最も大きいものです。マグニチュードは地震そのものの規模を示すため、山口から震源が遠い場合はマグニチュードが大きくても震度は小さくなります。</p>
+    <p class="note">気象庁が発表する地震情報を<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPI経由で取得しています。本サービスは参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
+  </div>
+
+  <div class="card">
+    <h2>🗾 他の都道府県の地震情報</h2>
+    <div class="pl-row"><span class="pl-reg">北海道</span><div class="pl-links"><a href="hokkaido.html">北海道</a></div></div>
+<div class="pl-row"><span class="pl-reg">東北</span><div class="pl-links"><a href="aomori.html">青森</a> <a href="iwate.html">岩手</a> <a href="miyagi.html">宮城</a> <a href="akita.html">秋田</a> <a href="yamagata.html">山形</a> <a href="fukushima.html">福島</a></div></div>
+<div class="pl-row"><span class="pl-reg">関東</span><div class="pl-links"><a href="ibaraki.html">茨城</a> <a href="tochigi.html">栃木</a> <a href="gunma.html">群馬</a> <a href="saitama.html">埼玉</a> <a href="chiba.html">千葉</a> <a href="tokyo.html">東京</a> <a href="kanagawa.html">神奈川</a></div></div>
+<div class="pl-row"><span class="pl-reg">中部</span><div class="pl-links"><a href="niigata.html">新潟</a> <a href="toyama.html">富山</a> <a href="ishikawa.html">石川</a> <a href="fukui.html">福井</a> <a href="yamanashi.html">山梨</a> <a href="nagano.html">長野</a> <a href="gifu.html">岐阜</a> <a href="shizuoka.html">静岡</a> <a href="aichi.html">愛知</a></div></div>
+<div class="pl-row"><span class="pl-reg">近畿</span><div class="pl-links"><a href="mie.html">三重</a> <a href="shiga.html">滋賀</a> <a href="kyoto.html">京都</a> <a href="osaka.html">大阪</a> <a href="hyogo.html">兵庫</a> <a href="nara.html">奈良</a> <a href="wakayama.html">和歌山</a></div></div>
+<div class="pl-row"><span class="pl-reg">中国</span><div class="pl-links"><a href="tottori.html">鳥取</a> <a href="shimane.html">島根</a> <a href="okayama.html">岡山</a> <a href="hiroshima.html">広島</a> <strong>山口</strong></div></div>
+<div class="pl-row"><span class="pl-reg">四国</span><div class="pl-links"><a href="tokushima.html">徳島</a> <a href="kagawa.html">香川</a> <a href="ehime.html">愛媛</a> <a href="kochi.html">高知</a></div></div>
+<div class="pl-row"><span class="pl-reg">九州</span><div class="pl-links"><a href="fukuoka.html">福岡</a> <a href="saga.html">佐賀</a> <a href="nagasaki.html">長崎</a> <a href="kumamoto.html">熊本</a> <a href="oita.html">大分</a> <a href="miyazaki.html">宮崎</a> <a href="kagoshima.html">鹿児島</a> <a href="okinawa.html">沖縄</a></div></div>
+  </div>
+</div>
+
+<footer>
+  <div><a href="/earthquake-monitor/">地震モニター</a><a href="/earthquake-monitor/checklist.html">防災チェックリスト</a><a href="/earthquake-monitor/about.html">このサイトについて</a><a href="/earthquake-monitor/contact.html">お問い合わせ</a></div>
+  <p style="margin-top:10px;opacity:.6;font-size:.9em">© 2026 メカとら. All rights reserved.</p>
+</footer>
+
+<script>
+(function(){
+  var PREF='山口県';
+  var LABEL={10:'1',20:'2',30:'3',40:'4',45:'5弱',46:'5弱以上',50:'5強',55:'6弱',60:'6強',70:'7'};
+  var COLOR={10:'#27ae60',20:'#27ae60',30:'#f39c12',40:'#f39c12',45:'#e67e22',46:'#e67e22',50:'#e67e22',55:'#e74c3c',60:'#e74c3c',70:'#c0392b'};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  fetch('https://api.p2pquake.net/v2/history?codes=551&limit=100')
+    .then(function(r){return r.json();})
+    .then(function(all){
+      var rows=[];
+      all.forEach(function(q){
+        if(!q.earthquake||!q.points)return;
+        var mine=q.points.filter(function(p){return p.pref===PREF;});
+        if(!mine.length)return;
+        var sc=Math.max.apply(null,mine.map(function(p){return p.scale;}));
+        rows.push({sc:sc,q:q});
+      });
+
+      var cnt=rows.length;
+      document.getElementById('cnt').textContent=cnt+'回';
+      document.getElementById('c3').textContent=rows.filter(function(r){return r.sc>=30;}).length+'回';
+      if(cnt){
+        var mx=Math.max.apply(null,rows.map(function(r){return r.sc;}));
+        document.getElementById('mx').textContent='震度'+(LABEL[mx]||'-');
+        document.getElementById('last').textContent=(rows[0].q.earthquake.time||'').split(' ')[0].slice(5)||'-';
+      }else{
+        document.getElementById('mx').textContent='なし';
+        document.getElementById('last').textContent='なし';
+      }
+      var oldest=all.length?(all[all.length-1].earthquake&&all[all.length-1].earthquake.time||'').split(' ')[0]:'';
+      document.getElementById('range').textContent=
+        cnt? '直近の地震情報100件のうち、'+PREF+'で揺れが観測されたのは'+cnt+'回です（'+oldest+' 以降）。'
+           : PREF+'では、直近の地震情報100件の中に揺れの観測記録はありません（'+oldest+' 以降）。';
+
+      var el=document.getElementById('list');
+      if(!cnt){el.innerHTML='<p class="note">'+PREF+'で観測された地震は、直近のデータにはありません。全国の状況は下のリンクから確認できます。</p>';return;}
+      el.innerHTML=rows.slice(0,20).map(function(r){
+        var e=r.q.earthquake,h=e.hypocenter||{};
+        var m=(h.magnitude>0)?('M'+h.magnitude):'M不明';
+        return '<div class="q"><div class="sc" style="background:'+(COLOR[r.sc]||'#7f8c8d')+'">'+(LABEL[r.sc]||'?')+'</div>'
+          +'<div class="q-main"><div class="q-t">'+esc(e.time||'')+'</div>'
+          +'<div class="q-p">'+esc(h.name||'震源不明')+'</div>'
+          +'<div class="q-m">'+m+'／深さ'+(h.depth>=0?h.depth+'km':'不明')+'</div></div></div>';
+      }).join('');
+    })
+    .catch(function(){
+      document.getElementById('list').innerHTML='<p class="note">データを取得できませんでした。時間をおいて再度お試しください。</p>';
+      document.getElementById('range').textContent='';
+    });
+})();
+</script>
+</body>
+</html>

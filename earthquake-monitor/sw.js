@@ -57,30 +57,46 @@ self.addEventListener('fetch', (event) => {
 });
 
 // ---- Push受信 ----
+// 通知にペイロードは載っていない（暗号化不要にするための設計）。
+// ここで最新の地震情報を取得し、通知文を組み立てる。取得に失敗しても必ず通知は出す。
+const SCALE_LABEL = { 10:'1', 20:'2', 30:'3', 40:'4', 45:'5弱', 46:'5弱以上', 50:'5強', 55:'6弱', 60:'6強', 70:'7' };
+
 self.addEventListener('push', (event) => {
-  let data = {};
-  try { data = event.data ? event.data.json() : {}; } catch (_) {}
+  event.waitUntil((async () => {
+    let title = '地震が発生しました';
+    let body = '最新の地震情報を確認 →';
+    let tag = 'quake';
+    let strong = false;
 
-  const shindo = data.shindo || '';
-  const place = data.place || '地震情報';
-  const mag = data.mag ? `（M${data.mag}）` : '';
-  const time = data.time || '';
+    try {
+      const res = await fetch('https://api.p2pquake.net/v2/history?codes=551&limit=1', { cache: 'no-store' });
+      const [q] = await res.json();
+      const e = q && q.earthquake;
+      if (e) {
+        const shindo = SCALE_LABEL[e.maxScale] || '';
+        const place = (e.hypocenter && e.hypocenter.name) || '日本';
+        const mag = (e.hypocenter && e.hypocenter.magnitude > 0) ? `（M${e.hypocenter.magnitude}）` : '';
+        const time = (e.time || '').split(' ')[1] || '';
+        title = shindo ? `【震度${shindo}】${place}で地震${mag}` : `${place}で地震${mag}`;
+        body = time
+          ? `${time}頃発生。各地の震度と震源を確認 →`
+          : '各地の震度と震源を確認 →';
+        tag = q.id || 'quake';
+        strong = ['45','5弱','50','5強','55','6弱','60','6強','70','7'].includes(String(e.maxScale)) || e.maxScale >= 45;
+      }
+    } catch (_) { /* 取得失敗時は既定の文面で通知する */ }
 
-  const title = shindo ? `【震度${shindo}】${place}で地震${mag}` : `${place}${mag}`;
-  const body = time
-    ? `${time}頃、${place}で最大震度${shindo}を観測。詳しい震源・各地の震度を確認 →`
-    : '最新の地震情報を確認 →';
-
-  event.waitUntil(self.registration.showNotification(title, {
-    body,
-    icon: '/earthquake-monitor/icons/icon-192.png',
-    badge: '/earthquake-monitor/icons/badge-72.png',
-    tag: data.id || 'quake',
-    renotify: true,
-    requireInteraction: Number(shindo) >= 5,
-    vibrate: [200, 100, 200],
-    data: { url: data.url || '/earthquake-monitor/?utm_source=push' },
-  }));
+    await self.registration.showNotification(title, {
+      body,
+      icon: '/earthquake-monitor/icons/icon-192.png',
+      badge: '/earthquake-monitor/icons/badge-72.png',
+      tag,
+      renotify: true,
+      requireInteraction: strong,
+      vibrate: [200, 100, 200],
+      data: { url: '/earthquake-monitor/?utm_source=push' },
+    });
+  })());
 });
 
 // ---- 通知タップ ----
