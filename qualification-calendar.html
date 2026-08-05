@@ -1,1318 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>資格試験カウントダウンカレンダー | 試験日・勉強時間・カウントダウン</title>
-    <meta name="description" content="日本の主要資格試験の試験日カレンダーとカウントダウン。人事系・経理系・データサイエンス系・IT系資格の平均勉強時間も表示。">
-    <meta name="keywords" content="資格試験,カレンダー,試験日,カウントダウン,勉強時間,簿記,社労士,基本情報,統計検定">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="資格試験カウントダウンカレンダー | 試験日・勉強時間・カウントダウン">
-    <meta property="og:description" content="日本の主要資格試験の試験日とカウントダウン、平均勉強時間を一覧表示">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mechatora.com/qualification-calendar/">
-    
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706"
-         crossorigin="anonymous"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- GitHub Pages to mechatora.com redirect -->
-    <script>
-    if (window.location.hostname === 'mechatora.github.io') {
-        window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
-    }
-    </script>
-    
-    <style>
-        :root {
-            /* Modern Gray-Based Stylish Palette */
-            --primary-blue: #2563EB;
-            --primary-green: #059669;
-            --primary-orange: #EA580C;
-            --primary-purple: #7C3AED;
-            --primary-indigo: #4F46E5;
-            --primary-pink: #DB2777;
-            --primary-cyan: #0891B2;
-            --primary-emerald: #10B981;
-            
-            /* Sophisticated Gray Backgrounds */
-            --bg-primary: #F1F5F9;
-            --bg-secondary: #F8FAFC;
-            --bg-card: #FFFFFF;
-            --bg-card-hover: #F1F5F9;
-            --bg-accent: #E2E8F0;
-            --bg-glass: rgba(248, 250, 252, 0.85);
-            --bg-overlay: rgba(15, 23, 42, 0.1);
-            
-            /* Dark Mode Compatible */
-            --surface-primary: #FFFFFF;
-            --surface-secondary: #F8FAFC;
-            --surface-tertiary: #F1F5F9;
-            --surface-elevated: #FFFFFF;
-            
-            /* Advanced Shadows */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            --shadow-colored: 0 8px 25px rgba(37, 99, 235, 0.15);
-            --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-            
-            /* Refined Typography */
-            --text-primary: #0F172A;
-            --text-secondary: #475569;
-            --text-tertiary: #64748B;
-            --text-muted: #94A3B8;
-            --text-disabled: #CBD5E1;
-            --text-white: #FFFFFF;
-            --text-inverse: #F8FAFC;
-            
-            /* Borders & Dividers */
-            --border-light: #E2E8F0;
-            --border-medium: #CBD5E1;
-            --border-strong: #94A3B8;
-            --border-accent: #2563EB;
-            --divider: #F1F5F9;
-            
-            /* Premium Gradients */
-            --gradient-primary: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
-            --gradient-green: linear-gradient(135deg, #059669 0%, #10B981 100%);
-            --gradient-orange: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
-            --gradient-purple: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%);
-            --gradient-pink: linear-gradient(135deg, #DB2777 0%, #EC4899 100%);
-            --gradient-surface: linear-gradient(135deg, rgba(248,250,252,0.9) 0%, rgba(241,245,249,0.8) 100%);
-            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.8) 100%);
-            
-            /* Modern Title Gradients */
-            --gradient-cosmic: linear-gradient(135deg, #ff9e2c 0%, #e67e00 50%, #f093fb 100%);
-            --gradient-aurora: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%);
-            --gradient-sunset: linear-gradient(135deg, #fa709a 0%, #fee140 50%, #ffecd2 100%);
-            --gradient-ocean: linear-gradient(135deg, #2193b0 0%, #6dd5ed 50%, #c471ed 100%);
-            
-            /* Modern Border Radius */
-            --radius-xs: 0.25rem;
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --radius-2xl: 1.5rem;
-            --radius-3xl: 2rem;
-            --radius-full: 9999px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        /* AdSense Ad Styles */
-        .ad-container {
-            display: flex;
-            justify-content: center;
-            margin: 2rem 0;
-            padding: 1rem;
-            background: var(--surface-secondary);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-light);
-        }
-
-        .ad-header {
-            text-align: center;
-            margin: 3rem 0 2rem 0;
-        }
-
-        .ad-middle {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .ad-footer {
-            text-align: center;
-            margin: 2rem 0 3rem 0;
-        }
-
-        /* Sophisticated Gray Header */
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 4rem 0;
-            background: var(--surface-elevated);
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--gradient-surface);
-            opacity: 0.8;
-            z-index: -1;
-        }
-
-        .title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: var(--gradient-cosmic);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-            line-height: 1.05;
-            text-align: center;
-            position: relative;
-        }
-        
-        .title::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--gradient-cosmic);
-            opacity: 0.1;
-            border-radius: var(--radius-2xl);
-            filter: blur(20px);
-            z-index: -1;
-            transform: scale(1.1);
-        }
-
-        .subtitle {
-            font-family: 'Manrope', sans-serif;
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            max-width: 650px;
-            margin: 0 auto;
-            line-height: 1.6;
-            letter-spacing: 0.2px;
-            opacity: 0.9;
-        }
-
-        /* Modern Gray Filter Section */
-        .filter-section {
-            margin-bottom: 3rem;
-            background: var(--surface-elevated);
-            border-radius: var(--radius-2xl);
-            padding: 2.5rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-            position: relative;
-        }
-
-        .filter-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-
-
-        .filter-btn {
-            font-family: 'Manrope', sans-serif;
-            padding: 0.875rem 1.75rem;
-            border: 2px solid var(--border-medium);
-            background: var(--surface-secondary);
-            color: var(--text-primary);
-            border-radius: var(--radius-xl);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-transform: none;
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.3px;
-        }
-
-        .filter-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            transition: left 0.3s ease;
-            z-index: -1;
-        }
-
-        .filter-btn:hover {
-            background: var(--surface-tertiary);
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
-            border-color: var(--border-accent);
-        }
-
-        .filter-btn.active {
-            background: var(--gradient-primary);
-            border-color: var(--primary-blue);
-            color: var(--text-white);
-            box-shadow: var(--shadow-colored);
-        }
-
-        .filter-btn.active::before {
-            left: 0;
-        }
-
-        .filter-btn.hr { border-color: var(--primary-green); }
-        .filter-btn.hr.active { background: var(--gradient-green); border-color: var(--primary-green); }
-        .filter-btn.finance { border-color: var(--primary-orange); }
-        .filter-btn.finance.active { background: var(--gradient-orange); border-color: var(--primary-orange); }
-        .filter-btn.data { border-color: var(--primary-purple); }
-        .filter-btn.data.active { background: var(--gradient-purple); border-color: var(--primary-purple); }
-        .filter-btn.it { border-color: var(--primary-blue); }
-        .filter-btn.it.active { background: var(--gradient-primary); border-color: var(--primary-blue); }
-        .filter-btn.business { border-color: var(--primary-indigo); }
-        .filter-btn.business.active { background: var(--gradient-pink); border-color: var(--primary-pink); }
-
-        .save-filter-btn, .reset-filter-btn {
-            font-family: 'Manrope', sans-serif;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: var(--radius-lg);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .save-filter-btn {
-            background: var(--gradient-green);
-            color: var(--text-white);
-            box-shadow: var(--shadow-md);
-        }
-
-        .save-filter-btn:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-3px) scale(1.02);
-        }
-
-        .reset-filter-btn {
-            background: var(--gradient-orange);
-            color: var(--text-white);
-            box-shadow: var(--shadow-md);
-        }
-
-        .reset-filter-btn:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-3px) scale(1.02);
-        }
-
-        /* 資格カードグリッド */
-        .qualification-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .qualification-card {
-            background: var(--surface-elevated);
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            border: 1px solid var(--border-light);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            box-shadow: var(--shadow-md);
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .qualification-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background: var(--category-gradient);
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        }
-
-        .qualification-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: var(--category-gradient);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: -1;
-        }
-
-        .qualification-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-2xl);
-            background: var(--surface-secondary);
-            border-color: var(--category-border);
-        }
-
-        .qualification-card:hover::after {
-            opacity: 0.03;
-        }
-
-        .qualification-card.hr {
-            --category-gradient: var(--gradient-green);
-            --category-border: var(--primary-green);
-        }
-        .qualification-card.finance {
-            --category-gradient: var(--gradient-orange);
-            --category-border: var(--primary-orange);
-        }
-        .qualification-card.data {
-            --category-gradient: var(--gradient-purple);
-            --category-border: var(--primary-purple);
-        }
-        .qualification-card.it {
-            --category-gradient: var(--gradient-primary);
-            --category-border: var(--primary-blue);
-        }
-        .qualification-card.business {
-            --category-gradient: var(--gradient-pink);
-            --category-border: var(--primary-pink);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-
-        .qualification-name {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            letter-spacing: -0.2px;
-        }
-
-        /* Responsive font sizing for qualification names */
-        @media (min-width: 768px) {
-            .qualification-name {
-                font-size: 1.15rem;
-                white-space: normal;
-                overflow: visible;
-                text-overflow: initial;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .qualification-name {
-                font-size: 1.2rem;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            .qualification-name {
-                font-size: 1.25rem;
-            }
-        }
-
-        .category-badge {
-            padding: 0.625rem 1.25rem;
-            border-radius: var(--radius-lg);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            background: var(--category-gradient);
-            color: var(--text-white);
-            border: none;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .exam-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-item {
-            text-align: center;
-        }
-
-        .info-label {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .info-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.2;
-        }
-
-        .next-exam-date {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .study-hours {
-            background: var(--gradient-purple);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .exam-pending {
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-
-        .exam-ongoing {
-            color: var(--text-primary);
-        }
-
-        .date-note {
-            display: inline-block;
-            margin-left: 0.25rem;
-            font-size: 0.72rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            -webkit-text-fill-color: var(--text-secondary);
-        }
-
-        .countdown {
-            background: var(--surface-secondary);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            text-align: center;
-            margin-top: 1.5rem;
-            box-shadow: var(--shadow-inner);
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .countdown-title {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .countdown-value {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: var(--category-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.25rem;
-            line-height: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .countdown-unit {
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.875rem;
-            color: var(--text-tertiary);
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        /* カレンダーセクション */
-        .calendar-section {
-            margin-top: 4rem;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-        }
-
-        .calendar-container {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-card);
-        }
-
-        /* レスポンシブ */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem 0.5rem;
-            }
-
-            .title {
-                font-size: 2.5rem;
-            }
-
-            .ipa-guide-title {
-                font-size: 2rem;
-            }
-
-            .qualification-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .qualification-card {
-                padding: 1.5rem;
-            }
-
-            .exam-info {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .filter-section {
-                padding: 1.5rem;
-            }
-
-            .filter-controls {
-                margin-bottom: 1rem;
-            }
-
-            .filter-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
-            }
-
-            .save-filter-btn, .reset-filter-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.8rem;
-            }
-
-            .ipa-guide-section {
-                margin: 2rem 0;
-                padding: 2rem 0;
-            }
-
-            .ipa-guide-container {
-                padding: 0 1rem;
-            }
-
-            .ipa-overview {
-                padding: 1.5rem;
-            }
-
-            .ipa-qualifications-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .ipa-qualification-card {
-                padding: 1.5rem;
-            }
-
-            .ipa-benefits {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .tips-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .detail-modal-content {
-                padding: 2rem;
-                margin: 1rem;
-            }
-
-            .detail-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .detail-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .detail-header h2 {
-                font-size: 1.5rem;
-            }
-
-            .ad-container {
-                margin: 1rem 0;
-                padding: 0.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .title {
-                font-size: 2rem;
-            }
-
-            .ipa-guide-title {
-                font-size: 1.8rem;
-            }
-
-            .ipa-guide-container {
-                padding: 0 0.5rem;
-            }
-
-            .ipa-overview {
-                padding: 1rem;
-            }
-
-            .ipa-qualification-card {
-                padding: 1rem;
-            }
-
-            .ipa-study-tips {
-                padding: 1.5rem;
-            }
-
-            .detail-modal-overlay {
-                padding: 1rem;
-            }
-
-            .detail-modal-content {
-                padding: 1.5rem;
-            }
-
-            .notification {
-                right: 1rem;
-                max-width: 250px;
-                padding: 1rem;
-            }
-
-            .notification-title {
-                font-size: 0.8rem;
-            }
-
-            .notification-message {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* アニメーション */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .qualification-card {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .qualification-card:nth-child(1) { animation-delay: 0.1s; }
-        .qualification-card:nth-child(2) { animation-delay: 0.2s; }
-        .qualification-card:nth-child(3) { animation-delay: 0.3s; }
-        .qualification-card:nth-child(4) { animation-delay: 0.4s; }
-
-        /* Modern Gray IPA Guide Section */
-        .ipa-guide-section {
-            margin: 3rem 0;
-            padding: 3rem 0;
-            background: var(--surface-elevated);
-            border-radius: var(--radius-2xl);
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-md);
-        }
-
-        .ipa-guide-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-surface);
-            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
-        }
-
-        .ipa-guide-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .ipa-guide-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .ipa-guide-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--gradient-aurora);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            letter-spacing: -0.8px;
-        }
-
-        .ipa-guide-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        .ipa-overview {
-            background: var(--surface-secondary);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            margin-bottom: 3rem;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .overview-content h3 {
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .overview-content p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        .ipa-benefits {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: var(--glass-bg);
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-            transition: transform 0.3s ease;
-        }
-
-        .benefit-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .benefit-icon {
-            font-size: 2rem;
-            flex-shrink: 0;
-        }
-
-        .benefit-text h4 {
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .benefit-text p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        .ipa-qualifications-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .ipa-qualification-card {
-            background: var(--surface-elevated);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-            position: relative;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .ipa-qualification-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--level-color);
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        }
-
-        .ipa-qualification-card[data-level="entry"] {
-            --level-color: var(--primary-green);
-        }
-        .ipa-qualification-card[data-level="basic"] {
-            --level-color: var(--primary-blue);
-        }
-        .ipa-qualification-card[data-level="applied"] {
-            --level-color: var(--primary-orange);
-        }
-        .ipa-qualification-card[data-level="advanced"] {
-            --level-color: var(--primary-purple);
-        }
-
-        .ipa-qualification-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .ipa-card-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .ipa-level-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-lg);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: var(--level-color);
-            color: var(--text-white);
-            margin-bottom: 1rem;
-        }
-
-        .ipa-card-header h4 {
-            color: var(--text-primary);
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .ipa-card-content p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .ipa-card-details {
-            margin-bottom: 1.5rem;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .detail-value {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .ipa-detail-btn {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--level-gradient);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .ipa-detail-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .ipa-study-tips {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 2.5rem;
-            border: 1px solid var(--glass-border);
-        }
-
-        .ipa-study-tips h3 {
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .tip-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 1.5rem;
-            background: var(--glass-bg);
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-            transition: transform 0.3s ease;
-        }
-
-        .tip-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .tip-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .tip-item h4 {
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .tip-item p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        /* 詳細モーダル */
-        .detail-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1000;
-        }
-
-        .detail-modal-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .detail-modal-content {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            position: relative;
-        }
-
-        .detail-modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .detail-modal-close:hover {
-            background: var(--glass-bg);
-            color: var(--text-primary);
-        }
-
-        .detail-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .detail-header h2 {
-            color: var(--text-primary);
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .detail-level-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: var(--gradient-electric);
-            color: white;
-        }
-
-        .detail-description {
-            margin-bottom: 2rem;
-        }
-
-        .detail-description p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .detail-section {
-            background: var(--glass-bg);
-            border-radius: 15px;
-            padding: 1.5rem;
-            border: 1px solid var(--glass-border);
-        }
-
-        .detail-section.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .detail-section h3 {
-            color: var(--text-primary);
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .detail-section ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .detail-section li {
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .detail-section li::before {
-            content: '•';
-            color: var(--primary-electric);
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        .detail-info-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-row span:first-child {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .info-row span:last-child {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .study-tips-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .study-tips-list li {
-            background: var(--bg-secondary);
-            margin-bottom: 1rem;
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .study-tips-list li::before {
-            content: '💡';
-            margin-right: 0.5rem;
-        }
-
-        .ipa-icon {
-            color: var(--primary-electric);
-            margin-left: 0.5rem;
-        }
-
-        .qualification-card {
-            cursor: pointer;
-        }
-
-        .qualification-card[data-category="it"]:hover {
-            border-color: var(--primary-electric);
-        }
-
-        .qualification-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .qual-item {
-            padding: 0.5rem 0;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .qual-item:last-child {
-            border-bottom: none;
-        }
-
-        /* 通知スタイル */
-        .notification {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            backdrop-filter: blur(20px);
-            z-index: 1001;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            max-width: 300px;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.success {
-            border-left: 4px solid var(--primary-neon);
-        }
-
-        .notification.info {
-            border-left: 4px solid var(--primary-electric);
-        }
-
-        .notification-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .notification-message {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            line-height: 1.4;
-        }
-    </style>
-<!-- Google Analytics (GA4) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>資格試験カレンダー2026-2027｜試験日・申込期間・逆算学習ペース | メカとら</title>
+<meta name="description" content="社労士・簿記・FP・統計検定・情報処理技術者など35資格の2026〜2027年試験日と申込期間を一覧化。1日に確保できる勉強時間を入れると、どの資格が今から間に合うかを自動で判定します。">
+<meta name="keywords" content="資格試験 日程,2026 資格 試験日,資格 カウントダウン,申込期間,勉強時間,情報処理技術者試験 2026 前期 後期,社労士 試験日,簿記 試験日">
+<link rel="canonical" href="https://mechatora.com/qualification-calendar.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="メカとら">
+<meta property="og:title" content="資格試験カレンダー2026-2027｜試験日・申込期間・逆算学習ペース">
+<meta property="og:description" content="35資格の試験日と申込期間を一覧化。1日に確保できる勉強時間から「今から間に合う資格」を自動判定します。">
+<meta property="og:url" content="https://mechatora.com/qualification-calendar.html">
+<meta property="og:image" content="https://mechatora.com/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706" crossorigin="anonymous"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -1320,918 +26,981 @@
   gtag('js', new Date());
   gtag('config', 'G-6NJKWS2RJ8');
 </script>
+<script>
+if (window.location.hostname === 'mechatora.github.io') {
+  window.location.replace('https://mechatora.com' + window.location.pathname + window.location.search + window.location.hash);
+}
+</script>
+<style>
+.qc-lead { max-width: 780px; margin: 0 auto 2.5rem; }
+.qc-lead p { color: var(--text-muted); margin: 0.9rem 0; }
+
+.qc-notice {
+  background: #fff7ed; border: 1px solid #fed7aa; border-left: 5px solid var(--primary);
+  border-radius: 0.9rem; padding: 1.3rem 1.5rem; margin: 2rem 0;
+}
+.qc-notice h2 { font-size: 1.05rem; border: none; display: block; margin: 0 0 0.5rem; padding: 0; }
+.qc-notice p { margin: 0.4rem 0; font-size: 0.95rem; }
+
+.qc-planner {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 1.2rem;
+  box-shadow: var(--shadow); padding: 1.8rem; margin: 2.5rem 0;
+}
+.qc-planner h2 { font-size: 1.3rem; margin: 0 0 0.5rem; }
+.qc-planner .hint { color: var(--text-muted); font-size: 0.92rem; margin: 0 0 1.4rem; }
+.qc-slider-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.qc-slider-row input[type=range] { flex: 1 1 260px; accent-color: var(--primary); }
+.qc-hours-badge {
+  font-family: var(--font-heading); font-weight: 900; font-size: 1.6rem; color: var(--primary-dark);
+  min-width: 5.5rem;
+}
+.qc-planner-summary { margin-top: 1.2rem; font-size: 0.95rem; color: var(--text); }
+.qc-planner-summary strong { color: var(--primary-dark); }
+
+.qc-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0 0.8rem; }
+.qc-filter {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  padding: 0.5rem 1.1rem; border-radius: 2rem; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+  font-family: inherit;
+}
+.qc-filter:hover { border-color: var(--primary); }
+.qc-filter.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.qc-toggle { display: flex; align-items: center; gap: 0.5rem; font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+.qc-toggle input { accent-color: var(--primary); width: 1.05rem; height: 1.05rem; }
+
+.qc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; }
+.qc-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 1.1rem;
+  padding: 1.4rem; display: flex; flex-direction: column; gap: 0.85rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04); transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.qc-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(255,140,0,0.14); }
+.qc-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.6rem; }
+.qc-card h3 { font-size: 1.08rem; margin: 0; line-height: 1.4; }
+.qc-cat {
+  font-size: 0.72rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 0.5rem;
+  white-space: nowrap; letter-spacing: 0.02em;
+}
+.qc-cat.hr { background: #ecfdf5; color: #047857; }
+.qc-cat.finance { background: #fffbeb; color: #b45309; }
+.qc-cat.data { background: #f5f3ff; color: #6d28d9; }
+.qc-cat.it { background: #eff6ff; color: #1d4ed8; }
+.qc-cat.business { background: #fdf2f8; color: #be185d; }
+
+.qc-rows { display: grid; gap: 0.4rem; font-size: 0.9rem; }
+.qc-row { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 0.35rem; }
+.qc-row dt { color: var(--text-muted); margin: 0; flex: 0 0 auto; }
+.qc-row dd { margin: 0; text-align: right; font-weight: 600; }
+.qc-est { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+
+.qc-verdict { border-radius: 0.7rem; padding: 0.75rem 0.9rem; font-size: 0.88rem; line-height: 1.6; }
+.qc-verdict strong { font-family: var(--font-heading); }
+.qc-verdict.ok { background: #f0fdf4; color: #166534; }
+.qc-verdict.tight { background: #fffbeb; color: #92400e; }
+.qc-verdict.hard { background: #fef2f2; color: #991b1b; }
+.qc-verdict.rolling { background: #f8fafc; color: #475569; }
+
+.qc-note { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
+.qc-links { display: flex; gap: 0.8rem; font-size: 0.83rem; font-weight: 700; margin-top: auto; padding-top: 0.4rem; }
+
+.qc-section { margin: 4rem 0; }
+.qc-section h2 { font-size: 1.6rem; }
+.qc-section h3 { font-size: 1.15rem; margin: 2rem 0 0.6rem; }
+.qc-section p { color: var(--text); }
+
+.qc-table-wrap { overflow-x: auto; margin: 1.2rem 0; }
+table.qc-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 560px; }
+table.qc-table th, table.qc-table td { border: 1px solid var(--border); padding: 0.6rem 0.8rem; text-align: left; }
+table.qc-table th { background: #fafaf8; font-weight: 700; }
+
+.qc-cal { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+.qc-month { background: var(--surface); border: 1px solid var(--border); border-radius: 0.9rem; padding: 1rem 1.1rem; }
+.qc-month h3 { font-size: 1rem; margin: 0 0 0.6rem; color: var(--primary-dark); }
+.qc-month ul { list-style: none; margin: 0; padding: 0; font-size: 0.85rem; }
+.qc-month li { padding: 0.25rem 0; border-bottom: 1px dashed var(--border); }
+.qc-month li:last-child { border-bottom: none; }
+.qc-month .d { color: var(--text-muted); font-weight: 700; margin-right: 0.4rem; }
+.qc-month.empty { opacity: 0.5; }
+
+.qc-sources { font-size: 0.85rem; color: var(--text-muted); }
+.qc-sources ul { padding-left: 1.2rem; }
+.qc-sources li { margin-bottom: 0.35rem; }
+.qc-disclaimer { background: #fafaf8; border: 1px solid var(--border); border-radius: 0.9rem; padding: 1.2rem 1.4rem; font-size: 0.88rem; color: var(--text-muted); }
+
+@media (max-width: 720px) {
+  .qc-grid { grid-template-columns: 1fr; }
+  .qc-hours-badge { font-size: 1.3rem; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header Ad -->
-        <div class="ad-header">
-            <div class="ad-container">
-                <!-- Google AdSense Header Ad -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1184134440246706"
-                     data-ad-slot="1234567890"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
-        </div>
-        <header class="header">
-            <h1 class="title">資格試験カウントダウンカレンダー</h1>
-            <p class="subtitle">
-                日本の主要資格試験の試験日程・カウントダウン・平均勉強時間を一覧表示<br>
-                効率的な学習計画で合格を目指しましょう
-            </p>
-            <p class="subtitle" style="font-size:0.8rem; opacity:0.8; margin-top:0.75rem;">
-                ※「例年目安」は過去の実施パターンから自動算出した推定日です。正確な日程・出願期間は各試験の公式サイトで必ずご確認ください。
-            </p>
-        </header>
+<header>
+  <div class="container">
+    <nav>
+      <a href="/index.html" class="logo">メカ<span>とら</span>🐯</a>
+      <div class="nav-links">
+        <a href="/index.html">Home</a>
+        <a href="/articles.html">Blog</a>
+        <a href="/qualification-calendar.html">資格カレンダー</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </div>
+    </nav>
+  </div>
+</header>
 
-        <div class="filter-section">
-            <div class="filter-controls">
-                <button class="filter-btn active" data-category="all">すべて</button>
-                <button class="filter-btn hr" data-category="hr">👥 人事系</button>
-                <button class="filter-btn finance" data-category="finance">💰 経理系</button>
-                <button class="filter-btn data" data-category="data">📊 データサイエンス</button>
-                <button class="filter-btn it" data-category="it">💻 IT系</button>
-                <button class="filter-btn business" data-category="business">📈 経営・コンサル系</button>
-            </div>
-        </div>
+<main class="container" style="padding-top:3rem;">
 
-        <div class="qualification-grid" id="qualificationGrid">
-            <!-- 資格カードがJavaScriptで生成される -->
-        </div>
+  <h1 style="font-size:clamp(1.8rem,4.5vw,2.6rem);font-weight:900;margin:0 0 1rem;">資格試験カレンダー 2026-2027</h1>
 
-        <!-- Middle Ad -->
-        <div class="ad-middle">
-            <div class="ad-container">
-                <!-- Google AdSense Middle Ad -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1184134440246706"
-                     data-ad-slot="2345678901"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
-        </div>
+  <div class="qc-lead">
+    <p>人事・経理・データサイエンス・IT・経営の主要35資格について、次の試験日と申込期間、標準的な学習時間をまとめています。日程は各試験の公式発表を確認して掲載し、まだ公示されていないものは「例年目安」と明記して区別しました。</p>
+    <p>このページの主眼は日程の羅列ではなく、<strong>「今から始めて間に合うのか」を数字で判断できるようにすること</strong>です。下のスライダーに1日あたり確保できる勉強時間を入れると、各資格について必要な学習ペースと、現時点で現実的かどうかの判定が出ます。</p>
+  </div>
 
-        <!-- 難易度別資格まとめセクション -->
-        <section class="ipa-guide-section">
-            <div class="ipa-guide-container">
-                <div class="ipa-guide-header">
-                    <h2 class="ipa-guide-title">📊 難易度別資格まとめ</h2>
-                    <p class="ipa-guide-subtitle">資格の難易度を理解して効率的な学習計画を立てよう</p>
-                </div>
-                
-                <div class="ipa-qualifications-grid">
-                    <div class="ipa-qualification-card" data-level="entry">
-                        <div class="ipa-card-header">
-                            <span class="ipa-level-badge entry">🌟 エントリーレベル</span>
-                            <h4>入門・基礎資格</h4>
-                        </div>
-                        <div class="ipa-card-content">
-                            <p>IT業界への第一歩。基礎知識を身につけたい方におすすめの資格群です。</p>
-                            <div class="ipa-card-details">
-                                <div class="qualification-list">
-                                    <div class="qual-item">🎓 ITパスポート</div>
-                                    <div class="qual-item">📊 G検定</div>
-                                    <div class="qual-item">📈 日商簿記3級</div>
-                                    <div class="qual-item">💚 メンタルヘルス検定</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="ipa-qualification-card" data-level="basic">
-                        <div class="ipa-card-header">
-                            <span class="ipa-level-badge basic">⭐⭐ ベーシックレベル</span>
-                            <h4>中級・実践資格</h4>
-                        </div>
-                        <div class="ipa-card-content">
-                            <p>実務で役立つ専門知識を証明。キャリアアップの基盤となる資格群です。</p>
-                            <div class="ipa-card-details">
-                                <div class="qualification-list">
-                                    <div class="qual-item">🎓 基本情報技術者</div>
-                                    <div class="qual-item">🔒 情報セキュリティマネジメント</div>
-                                    <div class="qual-item">📊 統計検定2級</div>
-                                    <div class="qual-item">📈 日商簿記2級</div>
-                                    <div class="qual-item">💰 FP技能検定2級</div>
-                                    <div class="qual-item">👥 キャリアコンサルタント</div>
-                                    <div class="qual-item">🏥 衛生管理者</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="ipa-qualification-card" data-level="applied">
-                        <div class="ipa-card-header">
-                            <span class="ipa-level-badge applied">⭐⭐⭐ アドバンスレベル</span>
-                            <h4>上級・専門資格</h4>
-                        </div>
-                        <div class="ipa-card-content">
-                            <p>高度な専門性を要求される資格。管理職・専門職を目指す方向けです。</p>
-                            <div class="ipa-card-details">
-                                <div class="qualification-list">
-                                    <div class="qual-item">🎓 応用情報技術者</div>
-                                    <div class="qual-item">🔒 情報処理安全確保支援士</div>
-                                    <div class="qual-item">🌐 ネットワークスペシャリスト</div>
-                                    <div class="qual-item">🗄️ データベーススペシャリスト</div>
-                                    <div class="qual-item">📊 統計検定1級</div>
-                                    <div class="qual-item">📈 日商簿記1級</div>
-                                    <div class="qual-item">💰 証券アナリスト</div>
-                                    <div class="qual-item">📊 データサイエンティスト検定</div>
-                                    <div class="qual-item">🤖 E資格</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="ipa-qualification-card" data-level="advanced">
-                        <div class="ipa-card-header">
-                            <span class="ipa-level-badge advanced">⭐⭐⭐⭐ エキスパートレベル</span>
-                            <h4>最高難易度資格</h4>
-                        </div>
-                        <div class="ipa-card-content">
-                            <p>業界のトップエキスパートを目指す最高峰の資格群です。</p>
-                            <div class="ipa-card-details">
-                                <div class="qualification-list">
-                                    <div class="qual-item">📋 プロジェクトマネージャ</div>
-                                    <div class="qual-item">🏗️ システムアーキテクト</div>
-                                    <div class="qual-item">💼 ITストラテジスト</div>
-                                    <div class="qual-item">📊 公認会計士</div>
-                                    <div class="qual-item">💰 税理士</div>
-                                    <div class="qual-item">👥 社会保険労務士</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <div class="qc-notice">
+    <h2>2026年度、情報処理技術者試験の日程が大きく動いています</h2>
+    <p>応用情報技術者試験と高度試験・情報処理安全確保支援士試験は、2026年度からCBT方式に移行しました。それに伴い、これまで4月だった春期試験は「前期試験」として<strong>2026年10月〜12月</strong>に、10月だった秋期試験は「後期試験」として<strong>2027年2月〜3月</strong>に移動しています。</p>
+    <p>「春に応用情報、秋にネットワークスペシャリスト」という従来の受験計画はそのままでは成立しません。前期・後期それぞれ申込みは1回きりで、複数区分の併願もできない点に注意してください。詳しくは<a href="#ipa-2026">下の解説</a>にまとめました。</p>
+  </div>
 
-        <!-- Footer Ad -->
-        <div class="ad-footer">
-            <div class="ad-container">
-                <!-- Google AdSense Footer Ad -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1184134440246706"
-                     data-ad-slot="3456789012"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
-        </div>
+  <div class="ad-container">
+    <!-- AdSense: この位置に広告ユニットを配置します。
+         Google AdSense管理画面で広告ユニットを作成し、発行された data-ad-slot の値を
+         下記の ins タグに設定したうえでコメントを解除してください。
+         ダミーの slot ID のままでは広告は配信されません。
+    <ins class="adsbygoogle" style="display:block"
+         data-ad-client="ca-pub-1184134440246706"
+         data-ad-slot="ここに実際の広告ユニットIDを入れる"
+         data-ad-format="auto" data-full-width-responsive="true"></ins>
+    -->
+  </div>
 
-        <section class="calendar-section">
-            <h2 class="section-title">📅 年間試験スケジュール</h2>
-            <div class="calendar-container" id="calendarContainer">
-                <!-- カレンダーがJavaScriptで生成される -->
-            </div>
-        </section>
+  <section class="qc-planner" id="planner">
+    <h2>1日に確保できる勉強時間から逆算する</h2>
+    <p class="hint">平日・休日をならして、1日あたり平均で何時間くらい勉強に使えそうかを入れてください。各資格カードの判定がその場で切り替わります。</p>
+    <div class="qc-slider-row">
+      <span class="qc-hours-badge" id="hoursBadge">1.5時間</span>
+      <input type="range" id="hoursInput" min="0.5" max="8" step="0.5" value="1.5" aria-label="1日あたりの勉強時間">
+    </div>
+    <p class="qc-planner-summary" id="plannerSummary"></p>
+  </section>
+
+  <div class="qc-filters" id="filters">
+    <button class="qc-filter active" data-cat="all" type="button">すべて</button>
+    <button class="qc-filter" data-cat="hr" type="button">人事・労務</button>
+    <button class="qc-filter" data-cat="finance" type="button">会計・金融</button>
+    <button class="qc-filter" data-cat="data" type="button">データサイエンス</button>
+    <button class="qc-filter" data-cat="it" type="button">IT</button>
+    <button class="qc-filter" data-cat="business" type="button">経営・ビジネス</button>
+  </div>
+  <label class="qc-toggle"><input type="checkbox" id="onlyFeasible"> 設定した勉強時間で間に合うものだけ表示する</label>
+
+  <div class="qc-grid" id="grid"></div>
+
+  <div class="ad-container">
+    <!-- AdSense: 2枠目。上と同様に実際の広告ユニットIDを設定してから有効化してください。 -->
+  </div>
+
+  <section class="qc-section" id="ipa-2026">
+    <h2>2026年度の情報処理技術者試験はどう変わったか</h2>
+    <p>ここ数年でいちばん影響が大きい変更が、応用情報技術者試験と高度試験のCBT化です。従来は年2回、決められた日曜日に全国一斉のペーパー試験でしたが、2026年度からは一定の実施期間のなかで会場と日時を自分で選ぶ方式に変わりました。</p>
+
+    <h3>試験時期が半年ずれた</h3>
+    <p>もっとも実務的に効くのは、実施時期の移動です。春期（4月）が「前期」として秋に、秋期（10月）が「後期」として翌年の冬〜春に動きました。区分ごとの割り当ては次のとおりです。</p>
+    <div class="qc-table-wrap">
+      <table class="qc-table">
+        <thead><tr><th>区分</th><th>対象試験</th><th>科目A群</th><th>科目B群</th><th>申込受付</th></tr></thead>
+        <tbody>
+          <tr><td>前期 AP</td><td>応用情報技術者</td><td>2026/10/28〜11/10</td><td>2026/11/24〜12/6</td><td>2026/10/6〜11/7</td></tr>
+          <tr><td>前期 高度</td><td>ST・SA・NW・SM</td><td>2026/10/17〜10/27</td><td>2026/11/11〜11/23</td><td>2026/10/6〜10/24</td></tr>
+          <tr><td>前期 SC</td><td>情報処理安全確保支援士</td><td>2026/10/17〜10/27</td><td>2026/11/11〜11/23</td><td>2026/10/6〜10/24</td></tr>
+          <tr><td>後期 AP</td><td>応用情報技術者</td><td>2027/2/6〜2/19</td><td>2027/3/3〜3/15</td><td>2027/1/27〜2/16</td></tr>
+          <tr><td>後期 高度</td><td>PM・DB・ES・AU</td><td>2027/2/20〜3/2</td><td>2027/3/16〜3/28</td><td>2027/1/27〜2/27</td></tr>
+          <tr><td>後期 SC</td><td>情報処理安全確保支援士</td><td>2027/2/20〜3/2</td><td>2027/3/16〜3/28</td><td>2027/1/27〜2/27</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <script>
-        // AdSense initialization
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
+    <h3>科目Aと科目Bは別の日に受ける</h3>
+    <p>1日で午前・午後を通しで受ける形式ではなくなりました。科目A群と科目B群は実施期間そのものが分かれており、応用情報の場合はA群とB群のあいだが1か月近く空きます。申込みの時点で両方の日程をまとめて予約する仕組みなので、A群の手応え次第でB群の受験をやめる、といった調整はできません。</p>
+    <p>学習計画の面では、この空白期間をどう使うかが分かれ目になります。従来は午前の暗記と午後の記述対策を並行して仕上げる必要がありましたが、これからはA群を先に片付けてからB群対策に集中できる、と考えることもできます。</p>
 
-        // 資格データ
-        const qualifications = [
-            // 人事系
-            {
-                id: 'sharoushi',
-                name: '社会保険労務士',
-                category: 'hr',
-                frequency: '年1回',
-                examDates: ['2025-08-24'],
-                studyHours: '800-1000時間',
-                difficulty: 'S'
-            },
-            {
-                id: 'career-consultant',
-                name: 'キャリアコンサルタント',
-                category: 'hr',
-                frequency: '年3回',
-                examDates: ['2025-03-09', '2025-07-13', '2025-11-16'],
-                studyHours: '150-300時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'mental-health',
-                name: 'メンタルヘルス・マネジメント検定',
-                category: 'hr',
-                frequency: '年2回',
-                examDates: ['2025-03-16', '2025-11-09'],
-                studyHours: '50-150時間',
-                difficulty: 'C'
-            },
-            {
-                id: 'hr-exam',
-                name: '人事総務検定',
-                category: 'hr',
-                frequency: '年2回',
-                examDates: ['2025-10-19', '2026-03-01'],
-                studyHours: '100-200時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'hygiene-manager',
-                name: '衛生管理者',
-                category: 'hr',
-                frequency: '毎月',
-                examDates: ['2025-02-20', '2025-03-20', '2025-04-17', '2025-05-15', '2025-06-19', '2025-07-17'],
-                studyHours: '100-150時間',
-                difficulty: 'B'
-            },
+    <h3>申込みは前期・後期それぞれ1回だけ</h3>
+    <p>前期試験と後期試験のいずれも、申込みは1回に限られます。複数の試験区分に同時に申し込むことも、同じ区分を期間内に2回受けることもできません。加えて、ネットワークスペシャリストとITストラテジストは前期のみ、プロジェクトマネージャとデータベーススペシャリストは後期のみの実施です。狙う区分によって、受験できるタイミングが年に一度しかない点は従来と変わりません。</p>
+    <p>なお受験手数料は7,500円、出題範囲・出題形式・試験時間・合格基準に変更はありません。過去問による対策はこれまでどおり有効です。</p>
 
-            // 経理系
-            {
-                id: 'cpa',
-                name: '公認会計士',
-                category: 'finance',
-                frequency: '年2回',
-                examDates: ['2025-05-25', '2025-12-14'],
-                studyHours: '3000-4000時間',
-                difficulty: 'S+'
-            },
-            {
-                id: 'tax-accountant',
-                name: '税理士',
-                category: 'finance',
-                frequency: '年1回',
-                examDates: ['2025-08-05'],
-                studyHours: '2500-3500時間',
-                difficulty: 'S+'
-            },
-            {
-                id: 'boki-1',
-                name: '日商簿記検定1級',
-                category: 'finance',
-                frequency: '年2回',
-                examDates: ['2025-06-08', '2025-11-16'],
-                studyHours: '500-700時間',
-                difficulty: 'A'
-            },
-            {
-                id: 'boki-2',
-                name: '日商簿記検定2級',
-                category: 'finance',
-                frequency: '年3回',
-                examDates: ['2025-02-23', '2025-06-08', '2025-11-16'],
-                studyHours: '200-300時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'boki-3',
-                name: '日商簿記検定3級',
-                category: 'finance',
-                frequency: '年3回',
-                examDates: ['2025-02-23', '2025-06-08', '2025-11-16'],
-                studyHours: '100-150時間',
-                difficulty: 'C'
-            },
-            {
-                id: 'fp-2',
-                name: 'FP技能検定2級',
-                category: 'finance',
-                frequency: '年3回',
-                examDates: ['2025-05-25', '2025-09-14', '2026-01-25'],
-                studyHours: '150-300時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'securities-analyst',
-                name: '証券アナリスト',
-                category: 'finance',
-                frequency: '年2回',
-                examDates: ['2025-04-20', '2025-10-19'],
-                studyHours: '300-500時間',
-                difficulty: 'A'
-            },
+    <h3>2027年度の試験制度改訂が控えている</h3>
+    <p>経済産業省とIPAは2027年度に向けた試験制度の改訂を検討中で、現行区分は再編される見込みです。現行制度のまま受験できるのは2026年度が最後になる可能性があります。すでに学習を進めている人にとっては、2026年度中に取り切る意味がそれなりに大きい状況です。</p>
+  </section>
 
-            // 語学系
-            {
-                id: 'toeic',
-                name: 'TOEIC L&R',
-                category: 'business',
-                frequency: '年10回',
-                examDates: ['2025-01-26', '2025-03-23', '2025-04-27', '2025-05-25', '2025-06-22', '2025-07-27', '2025-09-28', '2025-10-26', '2025-11-23', '2025-12-14'],
-                studyHours: '100-300時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'eiken-1',
-                name: '英検1級',
-                category: 'business',
-                frequency: '年3回',
-                examDates: ['2025-01-26', '2025-06-01', '2025-10-05'],
-                studyHours: '300-500時間',
-                difficulty: 'A'
-            },
-            {
-                id: 'eiken-pre1',
-                name: '英検準1級',
-                category: 'business',
-                frequency: '年3回',
-                examDates: ['2025-01-26', '2025-06-01', '2025-10-05'],
-                studyHours: '200-400時間',
-                difficulty: 'B+'
-            },
+  <section class="qc-section">
+    <h2>「標準学習時間」の数字をどう読むか</h2>
+    <p>各カードに載せている学習時間は、予備校や試験団体が公表する目安と合格体験記の分布から取った幅です。あくまで前提知識ゼロに近い人が独学で合格ラインに届くまでの目安であって、保証された数字ではありません。使うときは次の点を割り引いて考えてください。</p>
 
-            // 経営・コンサルタント系
-            {
-                id: 'sme-consultant',
-                name: '中小企業診断士',
-                category: 'business',
-                frequency: '年1回',
-                examDates: ['2025-08-03'],
-                studyHours: '1000-1500時間',
-                difficulty: 'A+'
-            },
-            {
-                id: 'business-manager',
-                name: 'ビジネスマネジャー検定',
-                category: 'business',
-                frequency: '年2回',
-                examDates: ['2025-06-19', '2025-10-23'],
-                studyHours: '100-200時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'project-manager-pmp',
-                name: 'PMP（Project Management Professional）',
-                category: 'business',
-                frequency: '随時',
-                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
-                studyHours: '200-300時間',
-                difficulty: 'A'
-            },
-            {
-                id: 'itil',
-                name: 'ITIL Foundation',
-                category: 'business',
-                frequency: '随時',
-                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
-                studyHours: '50-100時間',
-                difficulty: 'C'
-            },
-            {
-                id: 'marketing',
-                name: 'マーケティング・ビジネス実務検定',
-                category: 'business',
-                frequency: '年4回',
-                examDates: ['2025-06-08', '2025-08-03', '2025-11-02', '2026-02-08'],
-                studyHours: '100-200時間',
-                difficulty: 'B'
-            },
+    <h3>下限値は実務経験者の数字</h3>
+    <p>たとえば衛生管理者の「100〜150時間」の下限は、労働安全衛生法の実務に日常的に触れている人事担当者を想定した値です。まったくの初学者なら上限側、場合によってはそれ以上を見ておくほうが安全です。逆に日商簿記2級を持っている人が3級の目安時間をそのまま当てはめる意味はありません。</p>
 
-            // データサイエンス系
-            {
-                id: 'statistics-1',
-                name: '統計検定1級',
-                category: 'data',
-                frequency: '年1回',
-                examDates: ['2025-06-22'],
-                studyHours: '400-600時間',
-                difficulty: 'A'
-            },
-            {
-                id: 'statistics-2',
-                name: '統計検定2級',
-                category: 'data',
-                frequency: '年2回',
-                examDates: ['2025-06-22', '2025-11-30'],
-                studyHours: '150-250時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'data-scientist',
-                name: 'データサイエンティスト検定',
-                category: 'data',
-                frequency: '年2回',
-                examDates: ['2025-06-14', '2025-12-13'],
-                studyHours: '100-200時間',
-                difficulty: 'B'
-            },
-            {
-                id: 'g-test',
-                name: 'G検定（ディープラーニング）',
-                category: 'data',
-                frequency: '年3回',
-                examDates: ['2025-03-08', '2025-07-05', '2025-11-08'],
-                studyHours: '50-100時間',
-                difficulty: 'C'
-            },
-            {
-                id: 'e-test',
-                name: 'E資格（ディープラーニング）',
-                category: 'data',
-                frequency: '年2回',
-                examDates: ['2025-02-22', '2025-08-30'],
-                studyHours: '200-400時間',
-                difficulty: 'A'
-            },
+    <h3>「合計時間」より「1日あたり」で見る</h3>
+    <p>800時間と言われるとひるみますが、社労士の場合それは12か月で1日2.2時間という配分です。合計時間は現実感がなく、続けられるかどうかの判断材料になりません。このページの逆算機能を1日単位で表示しているのはそのためです。1日あたりの必要時間が生活のなかで無理なく収まるかどうかで、受験年度を決めるほうが失敗が少ないと考えています。</p>
 
-            // IT系
-            {
-                id: 'itpassport',
-                name: 'ITパスポート',
-                category: 'it',
-                frequency: '随時',
-                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
-                studyHours: '100-150時間',
-                difficulty: 'C',
-                isIPA: true
-            },
-            {
-                id: 'fe',
-                name: '基本情報技術者',
-                category: 'it',
-                frequency: '随時',
-                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
-                studyHours: '200-300時間',
-                difficulty: 'B',
-                isIPA: true
-            },
-            {
-                id: 'ap',
-                name: '応用情報技術者',
-                category: 'it',
-                frequency: '年2回',
-                examDates: ['2025-04-20', '2025-10-19'],
-                studyHours: '300-500時間',
-                difficulty: 'A',
-                isIPA: true
-            },
-            {
-                id: 'sg',
-                name: '情報セキュリティマネジメント',
-                category: 'it',
-                frequency: '随時',
-                examDates: ['2025-02-01', '2025-03-01', '2025-04-01', '2025-05-01', '2025-06-01'],
-                studyHours: '150-250時間',
-                difficulty: 'B',
-                isIPA: true
-            },
-            {
-                id: 'sc',
-                name: '情報処理安全確保支援士',
-                category: 'it',
-                frequency: '年2回',
-                examDates: ['2025-04-20', '2025-10-19'],
-                studyHours: '400-600時間',
-                difficulty: 'A+',
-                isIPA: true
-            },
-            {
-                id: 'nw',
-                name: 'ネットワークスペシャリスト',
-                category: 'it',
-                frequency: '年1回',
-                examDates: ['2025-10-12'],
-                studyHours: '300-500時間',
-                difficulty: 'A',
-                isIPA: true
-            },
-            {
-                id: 'db',
-                name: 'データベーススペシャリスト',
-                category: 'it',
-                frequency: '年1回',
-                examDates: ['2025-04-20'],
-                studyHours: '300-500時間',
-                difficulty: 'A',
-                isIPA: true
-            },
-            {
-                id: 'pm',
-                name: 'プロジェクトマネージャ',
-                category: 'it',
-                frequency: '年1回',
-                examDates: ['2025-10-12'],
-                studyHours: '300-500時間',
-                difficulty: 'A',
-                isIPA: true
-            },
-            {
-                id: 'st',
-                name: 'ITストラテジスト',
-                category: 'it',
-                frequency: '年1回',
-                examDates: ['2025-10-12'],
-                studyHours: '400-600時間',
-                difficulty: 'A+',
-                isIPA: true
-            },
-            {
-                id: 'sa',
-                name: 'システムアーキテクト',
-                category: 'it',
-                frequency: '年1回',
-                examDates: ['2025-10-12'],
-                studyHours: '400-600時間',
-                difficulty: 'A+',
-                isIPA: true
-            }
-        ];
+    <h3>直前期は必要時間が跳ね上がる</h3>
+    <p>実際の学習は均等配分になりません。多くの試験で、直前1〜2か月は模試・答練・過去問の反復で普段の1.5〜2倍の時間が要ります。逆算結果が「ぎりぎり間に合う」ライン上にある場合、直前期に上積みできる余地があるかどうかまで含めて判断してください。</p>
+  </section>
 
-        // カテゴリー設定
-        const categories = {
-            hr: { name: '人事系', color: '#10b981', icon: '👥' },
-            finance: { name: '経理系', color: '#f59e0b', icon: '💰' },
-            data: { name: 'データサイエンス', color: '#8b5cf6', icon: '📊' },
-            it: { name: 'IT系', color: '#3b82f6', icon: '💻' },
-            business: { name: '経営・コンサル系', color: '#ec4899', icon: '📈' }
-        };
+  <section class="qc-section">
+    <h2>試験日より申込期間のほうが事故が多い</h2>
+    <p>資格試験でいちばんもったいない失敗は、実力不足ではなく申込み忘れです。試験日は覚えていても、その3〜4か月前に締め切られる出願期間を見落とすケースが目立ちます。</p>
+    <p>社労士試験を例にとると、2026年8月23日の試験に対して申込受付は4月13日から5月31日まででした。試験の3か月近く前に受付が終わっています。中小企業診断士の1次試験も8月上旬の実施に対して受付は4月下旬から5月下旬です。「夏の試験だから春に考えればいい」という感覚だと間に合いません。</p>
+    <p>一方でCBT方式の試験（ITパスポート、基本情報技術者、FP技能検定、統計検定の準1級以下など）は、受験日の数日前まで申し込めるものが多く、この種の事故はほぼ起きません。年1回の一斉試験か、通年のCBTかで、スケジュール管理の性質がまったく違うということです。このページで「随時受験」と表示している資格は後者にあたります。</p>
+    <p>各カードの申込期間欄は、次回試験に対応する受付期間を記載しています。すでに終了しているものは「受付終了」と付記しました。</p>
+  </section>
 
-        // 現在の日付
-        const today = new Date();
+  <section class="qc-section">
+    <h2>年間スケジュール</h2>
+    <p>今後12か月のあいだに実施される試験を月ごとに並べたものです。「目安」と付いているものは公式発表前で、例年の実施パターンから推定した日付です。</p>
+    <div class="qc-cal" id="calendar"></div>
+  </section>
 
-        // 今日（時刻を切り捨て）
-        const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  <section class="qc-section">
+    <h2>データの出典と更新について</h2>
+    <div class="qc-disclaimer">
+      <p style="margin-top:0;"><strong>最終更新：2026年8月5日</strong></p>
+      <p>掲載している試験日・申込期間・受験手数料は、下記の各試験実施団体の公表情報をもとに作成しています。合格率は直近数年の実績のおおよその水準であり、年度により変動します。標準学習時間は各種公表資料と合格体験記から編集部が整理した目安です。</p>
+      <p>試験制度・日程は変更されることがあります。とくに公示前の日程を「例年目安」として表示しているものは推定値です。実際に出願される際は、必ず各試験の公式サイトで最新情報をご確認ください。当ページの情報にもとづく判断によって生じた損害について、当サイトは責任を負いかねます。</p>
+      <p style="margin-bottom:0;">記載内容の誤りにお気づきの場合は<a href="/contact.html">お問い合わせ</a>からご連絡いただけると助かります。</p>
+    </div>
 
-        // 随時受験（CBT・通年）かどうか
-        function isOngoing(qual) {
-            const f = (qual && qual.frequency) || '';
-            return f.includes('随時') || f.includes('毎月') || f.includes('通年') || f.includes('CBT');
+    <div class="qc-sources">
+      <h3>主な参照先</h3>
+      <ul>
+        <li>情報処理推進機構（IPA）「令和8年度 応用情報技術者試験、高度試験及び情報処理安全確保支援士試験の申込受付期間及び試験実施期間について」<a href="https://www.ipa.go.jp/shiken/2026/index.html" target="_blank" rel="noopener">ipa.go.jp</a></li>
+        <li>社会保険労務士試験オフィシャルサイト <a href="https://www.sharosi-siken.or.jp/" target="_blank" rel="noopener">sharosi-siken.or.jp</a></li>
+        <li>国税庁「税理士試験」<a href="https://www.nta.go.jp/taxes/zeirishi/zeirishishiken/" target="_blank" rel="noopener">nta.go.jp</a></li>
+        <li>公認会計士・監査審査会 <a href="https://www.fsa.go.jp/cpaaob/" target="_blank" rel="noopener">fsa.go.jp/cpaaob</a></li>
+        <li>商工会議所の検定試験（日商簿記ほか）<a href="https://www.kentei.ne.jp/" target="_blank" rel="noopener">kentei.ne.jp</a></li>
+        <li>日本FP協会「FP技能検定 試験日程」<a href="https://www.jafp.or.jp/exam/schedule/" target="_blank" rel="noopener">jafp.or.jp</a></li>
+        <li>中小企業診断協会 <a href="https://www.j-smeca.jp/" target="_blank" rel="noopener">j-smeca.jp</a></li>
+        <li>統計質保証推進協会「統計検定」<a href="https://www.toukei-kentei.jp/" target="_blank" rel="noopener">toukei-kentei.jp</a></li>
+        <li>日本ディープラーニング協会（G検定・E資格）<a href="https://www.jdla.org/" target="_blank" rel="noopener">jdla.org</a></li>
+        <li>データサイエンティスト協会「DS検定」<a href="https://www.datascientist.or.jp/dscertification/" target="_blank" rel="noopener">datascientist.or.jp</a></li>
+        <li>安全衛生技術試験協会（衛生管理者）<a href="https://www.exam.or.jp/" target="_blank" rel="noopener">exam.or.jp</a></li>
+        <li>キャリアコンサルティング協議会 <a href="https://www.career-shiken.org/" target="_blank" rel="noopener">career-shiken.org</a></li>
+        <li>大阪商工会議所「メンタルヘルス・マネジメント検定」<a href="https://www.mental-health.ne.jp/" target="_blank" rel="noopener">mental-health.ne.jp</a></li>
+        <li>国際ビジネスコミュニケーション協会（TOEIC）<a href="https://www.iibc-global.org/toeic.html" target="_blank" rel="noopener">iibc-global.org</a></li>
+        <li>日本英語検定協会 <a href="https://www.eiken.or.jp/eiken/" target="_blank" rel="noopener">eiken.or.jp</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="qc-section">
+    <h2>関連記事</h2>
+    <ul>
+      <li><a href="/articles/qualification-calendar-dev.html">この資格カレンダーをどう作ったか（開発記録）</a></li>
+      <li><a href="/articles/hr-to-developer.html">人事から個人開発へ ── 手を動かして分かったこと</a></li>
+      <li><a href="/articles/30s-programming.html">30代から始めるプログラミング学習の現実的な進め方</a></li>
+      <li><a href="/articles.html">記事一覧を見る</a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">メカ<span>とら</span>🐯</div>
+        <p>現役の人事担当者が、人事・DX・AI・データ分析の実践知を発信しています。この資格カレンダーは自分の受験管理用に作ったツールを公開したものです。</p>
+      </div>
+      <div class="footer-links">
+        <h4>ツール</h4>
+        <ul>
+          <li><a href="/qualification-calendar.html">資格カレンダー</a></li>
+          <li><a href="/earthquake-monitor/">地震モニター</a></li>
+          <li><a href="/tidy-data-science/">Rデータサイエンス</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>サイト情報</h4>
+        <ul>
+          <li><a href="/about.html">運営者について</a></li>
+          <li><a href="/contact.html">お問い合わせ</a></li>
+          <li><a href="/privacy-policy.html">プライバシーポリシー</a></li>
+          <li><a href="/terms.html">利用規約</a></li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:3rem;text-align:center;opacity:0.35;font-size:0.8rem;">&copy; 2026 メカとら. 掲載情報は各試験実施団体の公表資料にもとづく参考情報です。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var CATS = {
+    hr:       { label: '人事・労務' },
+    finance:  { label: '会計・金融' },
+    data:     { label: 'データサイエンス' },
+    it:       { label: 'IT' },
+    business: { label: '経営・ビジネス' }
+  };
+
+  // 試験日は各実施団体の公表資料にもとづく（2026年8月5日時点）。
+  // fixed:true = 公式に公表済みの確定日程 / pattern = 未公表時に例年パターンから推定する月日
+  var QUALS = [
+    // ---------- 人事・労務 ----------
+    {
+      id: 'sharoushi', name: '社会保険労務士', cat: 'hr', freq: '年1回',
+      hMin: 800, hMax: 1000, fee: '15,000円', rate: '6〜7%台',
+      official: 'https://www.sharosi-siken.or.jp/',
+      exams: [{ d: '2026-08-23', label: '第58回', fixed: true }],
+      pattern: ['08-23'],
+      apply: '2026年4月13日〜5月31日（受付終了）',
+      note: '選択式80分と択一式210分を1日で通す長丁場。科目ごとに基準点があるため、得意科目だけ伸ばしても合格できない構造になっている。'
+    },
+    {
+      id: 'career-consultant', name: 'キャリアコンサルタント', cat: 'hr', freq: '年3回',
+      hMin: 150, hMax: 300, fee: '学科8,900円＋実技29,900円', rate: '学科50%前後／実技60%前後',
+      official: 'https://www.career-shiken.org/',
+      exams: [{ d: '2026-11-01', label: '第33回 学科・実技論述', fixed: true }],
+      pattern: ['03-08', '07-05', '11-01'],
+      apply: '第33回：2026年8月頃',
+      note: '学科と実技（論述＋面接）は別料金・別合否。受験には養成講習の修了などの要件があり、申込みまでの準備期間が長い。'
+    },
+    {
+      id: 'mental-health', name: 'メンタルヘルス・マネジメント検定', cat: 'hr', freq: '年2回',
+      hMin: 50, hMax: 150, fee: 'II種 7,480円', rate: 'II種 50〜70%',
+      official: 'https://www.mental-health.ne.jp/',
+      exams: [
+        { d: '2026-11-01', label: '第41回', fixed: true },
+        { d: '2027-03-21', label: '第42回', fixed: true }
+      ],
+      pattern: ['11-01', '03-21'],
+      apply: '2026年9月4日〜9月17日（第41回）',
+      note: 'I種（マスター）・II種（ライン）・III種（セルフケア）の3コース。管理職や人事の実務に直結するのはII種。'
+    },
+    {
+      id: 'hygiene-manager', name: '第一種衛生管理者', cat: 'hr', freq: '会場ごとに月2〜4回',
+      hMin: 100, hMax: 150, fee: '8,800円', rate: '40%台',
+      official: 'https://www.exam.or.jp/',
+      exams: [], pattern: [], rolling: true,
+      apply: '受験希望日の2か月前から2週間前まで',
+      note: '全国7か所の安全衛生技術センターで実施され、日程は会場ごとに異なる。2026年5月からオンライン完結の電子申請が始まった。'
+    },
+    {
+      id: 'hr-exam', name: '人事総務検定', cat: 'hr', freq: '年2回',
+      hMin: 100, hMax: 200, fee: '3級 6,600円〜', rate: '公表なし',
+      exams: [], pattern: ['10-18', '03-07'],
+      apply: '試験日の約2か月前から',
+      note: '労働基準法・社会保険の実務知識を問う民間検定。社労士試験の入り口として使う人が多い。'
+    },
+
+    // ---------- 会計・金融 ----------
+    {
+      id: 'cpa', name: '公認会計士', cat: 'finance', freq: '短答年2回・論文年1回',
+      hMin: 3000, hMax: 4000, fee: '19,500円', rate: '最終合格 7〜8%台',
+      official: 'https://www.fsa.go.jp/cpaaob/',
+      exams: [
+        { d: '2026-08-21', label: '令和8年 論文式（〜23日）', fixed: true },
+        { d: '2026-12-13', label: '令和9年 第Ⅰ回短答式', fixed: false }
+      ],
+      pattern: ['12-13', '05-24'],
+      apply: '第Ⅰ回短答式：2026年8〜9月頃',
+      note: '短答式は年2回あり、合格すると以後2年間は免除される。論文式は8月に3日間かけて実施。'
+    },
+    {
+      id: 'tax-accountant', name: '税理士', cat: 'finance', freq: '年1回',
+      hMin: 2500, hMax: 3500, fee: '1科目4,000円〜5科目10,000円', rate: '科目ごとに10〜20%台',
+      official: 'https://www.nta.go.jp/taxes/zeirishi/zeirishishiken/',
+      exams: [{ d: '2026-08-04', label: '第76回（〜6日）', fixed: true }],
+      pattern: ['08-04'],
+      apply: '2026年4月20日〜5月8日（受付終了）',
+      note: '5科目合格で官報合格。科目合格は生涯有効なので、数年かけて1〜2科目ずつ積み上げる受験生が多い。合格発表は11月27日。'
+    },
+    {
+      id: 'boki-1', name: '日商簿記検定1級', cat: 'finance', freq: '年2回（統一試験のみ）',
+      hMin: 500, hMax: 700, fee: '8,800円', rate: '10%前後',
+      official: 'https://www.kentei.ne.jp/bookkeeping',
+      exams: [{ d: '2026-11-15', label: '第174回', fixed: true }],
+      pattern: ['06-14', '11-15'],
+      apply: '2026年9月頃（商工会議所ごとに異なる）',
+      note: '1級だけはネット試験がなく、6月と11月の統一試験のみ。合格すると税理士試験の受験資格が得られる。'
+    },
+    {
+      id: 'boki-2', name: '日商簿記検定2級', cat: 'finance', freq: '統一試験年3回＋ネット試験随時',
+      hMin: 200, hMax: 300, fee: '5,500円', rate: '統一20%前後／ネット40%前後',
+      official: 'https://www.kentei.ne.jp/bookkeeping',
+      exams: [
+        { d: '2026-11-15', label: '第174回 統一試験', fixed: true },
+        { d: '2027-02-28', label: '第175回 統一試験', fixed: true }
+      ],
+      pattern: ['06-14', '11-15', '02-28'], rolling: true,
+      apply: 'ネット試験は受験日の3日前まで',
+      note: '統一試験とネット試験（CBT）のどちらでも同じ資格が取れる。ネット試験は通年で受けられ、合格率も高めに出る傾向がある。'
+    },
+    {
+      id: 'boki-3', name: '日商簿記検定3級', cat: 'finance', freq: '統一試験年3回＋ネット試験随時',
+      hMin: 100, hMax: 150, fee: '3,300円', rate: '統一40%前後／ネット50%前後',
+      official: 'https://www.kentei.ne.jp/bookkeeping',
+      exams: [
+        { d: '2026-11-15', label: '第174回 統一試験', fixed: true },
+        { d: '2027-02-28', label: '第175回 統一試験', fixed: true }
+      ],
+      pattern: ['06-14', '11-15', '02-28'], rolling: true,
+      apply: 'ネット試験は受験日の3日前まで',
+      note: '簿記の入り口。ネット試験なら思い立った週に受けられるので、学習開始時期の自由度が高い。'
+    },
+    {
+      id: 'fp-2', name: 'FP技能検定2級', cat: 'finance', freq: '毎月（CBT）',
+      hMin: 150, hMax: 300, fee: '学科6,000円＋実技6,000円', rate: '40〜60%',
+      official: 'https://www.jafp.or.jp/exam/schedule/',
+      exams: [], pattern: [], rolling: true,
+      apply: '受験日の3日前まで',
+      note: '2025年度にCBT方式へ完全移行。2026年度は4〜12月と1〜3月の各月で受検でき、学科と実技は別々に合否が出る。'
+    },
+    {
+      id: 'securities-analyst', name: '証券アナリスト（第1次）', cat: 'finance', freq: '年2回（春・秋）',
+      hMin: 300, hMax: 500, fee: '科目ごとに設定', rate: '50%前後',
+      official: 'https://www.saa.or.jp/',
+      exams: [{ d: '2026-09-27', label: '2026年秋 第1次', fixed: true }],
+      pattern: ['04-19', '09-27'],
+      apply: '2026年7〜8月頃',
+      note: '第1次は3科目それぞれ独立に合否が出る。受験するには日本証券アナリスト協会の通信教育講座の受講が前提となる。'
+    },
+
+    // ---------- データサイエンス ----------
+    {
+      id: 'toukei-1', name: '統計検定1級', cat: 'data', freq: '年1回（PBT）',
+      hMin: 400, hMax: 600, fee: '統計数理6,000円＋統計応用6,000円', rate: '20%前後',
+      official: 'https://www.toukei-kentei.jp/',
+      exams: [{ d: '2026-11-15', label: '2026年 1級', fixed: true }],
+      pattern: ['11-15'],
+      apply: '2026年9月2日〜10月2日',
+      note: '1級だけが会場一斉のペーパー試験で年1回。統計数理と統計応用は別々に申し込み、それぞれ合否が出る。'
+    },
+    {
+      id: 'toukei-2', name: '統計検定2級', cat: 'data', freq: '随時（CBT）',
+      hMin: 150, hMax: 250, fee: '7,000円', rate: '40%前後',
+      official: 'https://www.toukei-kentei.jp/',
+      exams: [], pattern: [], rolling: true,
+      apply: '受験日の前日まで',
+      note: '準1級以下はすべてCBTで通年受検できる。データ分析職の入り口として求人票に書かれることが増えている。'
+    },
+    {
+      id: 'ds-kentei', name: 'データサイエンティスト検定（リテラシー）', cat: 'data', freq: '年2回',
+      hMin: 100, hMax: 200, fee: '11,000円', rate: '50%前後',
+      official: 'https://www.datascientist.or.jp/dscertification/',
+      exams: [{ d: '2026-11-07', label: '第14回（〜11月22日）', fixed: true }],
+      pattern: ['06-13', '11-07'],
+      apply: '2026年9月21日〜10月23日',
+      note: 'データサイエンス力・データエンジニアリング力・ビジネス力の3領域から出題。実施期間内で日時を選ぶ形式。'
+    },
+    {
+      id: 'g-test', name: 'G検定（ディープラーニング）', cat: 'data', freq: '年6回',
+      hMin: 50, hMax: 100, fee: '13,200円（一般）', rate: '60〜70%',
+      official: 'https://www.jdla.org/certificate/general/',
+      exams: [], pattern: ['01-10', '03-07', '05-09', '07-04', '09-05', '11-07'],
+      apply: '試験日の約1か月半前から',
+      note: '2026年は奇数月に計6回、うち3回は会場試験として実施。オンライン受験は自宅から受けられる。'
+    },
+    {
+      id: 'e-shikaku', name: 'E資格（ディープラーニング）', cat: 'data', freq: '年2回',
+      hMin: 200, hMax: 400, fee: '33,000円（一般）', rate: '60〜70%',
+      official: 'https://www.jdla.org/certificate/engineer/',
+      exams: [{ d: '2026-08-28', label: '2026#2（〜8月30日）', fixed: true }],
+      pattern: ['02-20', '08-28'],
+      apply: '2026年6月1日〜受験日前日',
+      note: '受験にはJDLA認定プログラムの修了が必要（修了から2年以内）。講座受講の期間まで含めて計画する必要がある。'
+    },
+
+    // ---------- IT ----------
+    {
+      id: 'itpassport', name: 'ITパスポート', cat: 'it', freq: '随時（CBT）',
+      hMin: 100, hMax: 150, fee: '7,500円', rate: '50%前後',
+      official: 'https://www3.jitec.ipa.go.jp/JitesCbt/index.html',
+      exams: [], pattern: [], rolling: true,
+      apply: '受験日の前日まで（会場により異なる）',
+      note: 'ほぼ毎日どこかの会場で実施している。IT系国家試験の入り口で、経営・マネジメント分野の出題も多い。'
+    },
+    {
+      id: 'fe', name: '基本情報技術者', cat: 'it', freq: '随時（通年CBT）',
+      hMin: 200, hMax: 300, fee: '7,500円', rate: '40%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/fe.html',
+      exams: [], pattern: [], rolling: true,
+      apply: '受験日の前日まで（会場により異なる）',
+      note: '2023年から通年CBT化されており、科目A・科目Bを同日に受験する。応用情報と違い時期を選ばない。'
+    },
+    {
+      id: 'sg', name: '情報セキュリティマネジメント', cat: 'it', freq: '随時（通年CBT）',
+      hMin: 150, hMax: 250, fee: '7,500円', rate: '70%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/sg.html',
+      exams: [], pattern: [], rolling: true,
+      apply: '受験日の前日まで（会場により異なる）',
+      note: '技術者ではなく情報を扱う立場の人向け。基本情報より合格率が高く、通年で受けられる。'
+    },
+    {
+      id: 'ap', name: '応用情報技術者', cat: 'it', freq: '年2回（前期・後期）',
+      hMin: 300, hMax: 500, fee: '7,500円', rate: '20%台',
+      official: 'https://www.ipa.go.jp/shiken/kubun/ap.html',
+      exams: [
+        { d: '2026-10-28', label: '令和8年度前期 科目A（〜11月10日）', fixed: true },
+        { d: '2026-11-24', label: '令和8年度前期 科目B（〜12月6日）', fixed: true },
+        { d: '2027-02-06', label: '令和8年度後期 科目A（〜2月19日）', fixed: true },
+        { d: '2027-03-03', label: '令和8年度後期 科目B（〜3月15日）', fixed: true }
+      ],
+      pattern: ['10-28', '02-06'],
+      apply: '前期：2026年10月6日〜11月7日',
+      note: '2026年度からCBT化され、春期→前期（11月頃）、秋期→後期（2027年2月頃）へ時期が移動した。科目Aと科目Bは別日で、申込時に両方まとめて予約する。'
+    },
+    {
+      id: 'sc', name: '情報処理安全確保支援士', cat: 'it', freq: '年2回（前期・後期）',
+      hMin: 300, hMax: 500, fee: '7,500円', rate: '20%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/sc.html',
+      exams: [
+        { d: '2026-10-17', label: '令和8年度前期 科目A-1/A-2（〜10月27日）', fixed: true },
+        { d: '2026-11-11', label: '令和8年度前期 科目B（〜11月23日）', fixed: true },
+        { d: '2027-02-20', label: '令和8年度後期 科目A-1/A-2（〜3月2日）', fixed: true },
+        { d: '2027-03-16', label: '令和8年度後期 科目B（〜3月28日）', fixed: true }
+      ],
+      pattern: ['10-17', '02-20'],
+      apply: '前期：2026年10月6日〜10月24日',
+      note: '高度試験のなかでは唯一、前期・後期の両方で実施される。合格後に登録すると「登録セキスペ」を名乗れる。'
+    },
+    {
+      id: 'nw', name: 'ネットワークスペシャリスト', cat: 'it', freq: '年1回（前期のみ）',
+      hMin: 400, hMax: 600, fee: '7,500円', rate: '15%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/nw.html',
+      exams: [
+        { d: '2026-10-17', label: '令和8年度前期 科目A-1/A-2（〜10月27日）', fixed: true },
+        { d: '2026-11-11', label: '令和8年度前期 科目B-1/B-2（〜11月23日）', fixed: true }
+      ],
+      pattern: ['10-17'],
+      apply: '2026年10月6日〜10月24日',
+      note: '2026年度は前期のみの実施。従来の春期にあたる区分で、次の機会は1年後になる。'
+    },
+    {
+      id: 'st', name: 'ITストラテジスト', cat: 'it', freq: '年1回（前期のみ）',
+      hMin: 400, hMax: 600, fee: '7,500円', rate: '15%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/st.html',
+      exams: [
+        { d: '2026-10-17', label: '令和8年度前期 科目A-1/A-2（〜10月27日）', fixed: true },
+        { d: '2026-11-11', label: '令和8年度前期 科目B-1/B-2（〜11月23日）', fixed: true }
+      ],
+      pattern: ['10-17'],
+      apply: '2026年10月6日〜10月24日',
+      note: '論述式が中心で、経営とITを橋渡しする立場の視点が問われる。前期のみの実施。'
+    },
+    {
+      id: 'sa', name: 'システムアーキテクト', cat: 'it', freq: '年1回（前期のみ）',
+      hMin: 400, hMax: 600, fee: '7,500円', rate: '15%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/sa.html',
+      exams: [
+        { d: '2026-10-17', label: '令和8年度前期 科目A-1/A-2（〜10月27日）', fixed: true },
+        { d: '2026-11-11', label: '令和8年度前期 科目B-1/B-2（〜11月23日）', fixed: true }
+      ],
+      pattern: ['10-17'],
+      apply: '2026年10月6日〜10月24日',
+      note: '2026年度は前期のみ。要件定義から方式設計までを扱う区分で、論述の準備量が合否を左右する。'
+    },
+    {
+      id: 'pm', name: 'プロジェクトマネージャ', cat: 'it', freq: '年1回（後期のみ）',
+      hMin: 400, hMax: 600, fee: '7,500円', rate: '14%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/pm.html',
+      exams: [
+        { d: '2027-02-20', label: '令和8年度後期 科目A-1/A-2（〜3月2日）', fixed: true },
+        { d: '2027-03-16', label: '令和8年度後期 科目B-1/B-2（〜3月28日）', fixed: true }
+      ],
+      pattern: ['02-20'],
+      apply: '2027年1月27日〜2月27日',
+      note: '従来の秋期にあたる区分が後期へ移動した。2027年2〜3月の実施で、申込みは年明けから。'
+    },
+    {
+      id: 'db', name: 'データベーススペシャリスト', cat: 'it', freq: '年1回（後期のみ）',
+      hMin: 400, hMax: 600, fee: '7,500円', rate: '17%前後',
+      official: 'https://www.ipa.go.jp/shiken/kubun/db.html',
+      exams: [
+        { d: '2027-02-20', label: '令和8年度後期 科目A-1/A-2（〜3月2日）', fixed: true },
+        { d: '2027-03-16', label: '令和8年度後期 科目B-1/B-2（〜3月28日）', fixed: true }
+      ],
+      pattern: ['02-20'],
+      apply: '2027年1月27日〜2月27日',
+      note: '後期のみの実施。概念データモデルと正規化まわりの演習量がそのまま得点に反映されやすい。'
+    },
+
+    // ---------- 経営・ビジネス ----------
+    {
+      id: 'shindanshi', name: '中小企業診断士', cat: 'business', freq: '1次・2次 各年1回',
+      hMin: 800, hMax: 1000, fee: '1次14,500円／2次17,800円', rate: '最終 4〜7%',
+      official: 'https://www.j-smeca.jp/',
+      exams: [{ d: '2026-10-25', label: '第2次試験（筆記）', fixed: true }],
+      pattern: ['08-01', '10-25'],
+      apply: '2次：2026年9月1日〜9月18日',
+      note: '2026年度から2次試験の口述試験が廃止され、筆記のみになった。1次は8月上旬、2次筆記は10月下旬。'
+    },
+    {
+      id: 'biz-manager', name: 'ビジネスマネジャー検定', cat: 'business', freq: '年2回（IBT／CBT）',
+      hMin: 50, hMax: 100, fee: '7,700円', rate: '50%前後',
+      official: 'https://kentei.tokyo-cci.or.jp/bijimane/',
+      exams: [{ d: '2026-10-22', label: '2026年度第2回（〜11月9日）', fixed: true }],
+      pattern: ['06-19', '10-22'],
+      apply: '2026年9月頃',
+      note: '管理職に必要な知識を人・業務・リスクの3方向から整理する検定。実施期間内であれば自宅受験も選べる。'
+    },
+    {
+      id: 'toeic', name: 'TOEIC L&R', cat: 'business', freq: '毎月（公開テスト）',
+      hMin: 100, hMax: 300, fee: '7,810円', rate: 'スコア型（合否なし）',
+      official: 'https://www.iibc-global.org/toeic.html',
+      exams: [], pattern: [], rolling: true,
+      apply: '試験日の約2か月前に締切',
+      note: '2026年度も毎月実施され、6月・9月・12月・3月は土曜日程も追加される。合否ではなくスコアなので、目標点から逆算して受験月を決める。'
+    },
+    {
+      id: 'eiken-1', name: '実用英語技能検定 1級', cat: 'business', freq: '年3回',
+      hMin: 300, hMax: 500, fee: '12,500円（本会場）', rate: '10%前後',
+      official: 'https://www.eiken.or.jp/eiken/',
+      exams: [{ d: '2026-10-04', label: '2026年度第2回 一次（本会場）', fixed: true }],
+      pattern: ['05-31', '10-04', '01-24'],
+      apply: '2026年8月〜9月頃',
+      note: '一次試験の合格は1年間有効で、その間は二次試験から受け直せる。語彙問題の比重が大きい。'
+    },
+    {
+      id: 'eiken-p1', name: '実用英語技能検定 準1級', cat: 'business', freq: '年3回',
+      hMin: 200, hMax: 400, fee: '10,500円（本会場）', rate: '15〜20%',
+      official: 'https://www.eiken.or.jp/eiken/',
+      exams: [{ d: '2026-10-04', label: '2026年度第2回 一次（本会場）', fixed: true }],
+      pattern: ['05-31', '10-04', '01-24'],
+      apply: '2026年8月〜9月頃',
+      note: '大学入試や就職で評価されることが多い水準。TOEICと違い、ライティングとスピーキングが必須になる。'
+    },
+    {
+      id: 'pmp', name: 'PMP（Project Management Professional）', cat: 'business', freq: '随時',
+      hMin: 200, hMax: 400, fee: '会員405USD／非会員575USD', rate: '非公表',
+      official: 'https://www.pmi.org/certifications/project-management-pmp',
+      exams: [], pattern: [], rolling: true,
+      apply: '受験申請の審査後、随時予約',
+      note: '受験には35時間の公式研修と一定の実務経験が必要。試験自体は通年で予約できるが、申請の審査に時間がかかる。'
+    },
+    {
+      id: 'itil', name: 'ITIL 4 Foundation', cat: 'business', freq: '随時',
+      hMin: 30, hMax: 60, fee: '46,000円前後', rate: '非公表',
+      official: 'https://www.peoplecert.org/',
+      exams: [], pattern: [], rolling: true,
+      apply: '随時予約',
+      note: 'ITサービスマネジメントの共通言語を押さえる入門資格。オンライン受験に対応しており、短期集中で取りやすい。'
+    },
+    {
+      id: 'marketing-biz', name: 'マーケティング・ビジネス実務検定', cat: 'business', freq: '年4回',
+      hMin: 100, hMax: 200, fee: 'C級 7,700円', rate: 'C級 60%前後',
+      official: 'https://www.marke.jp/',
+      exams: [], pattern: ['02-01', '06-07', '08-02', '11-01'],
+      apply: '試験日の約1か月半前まで',
+      note: 'マーケティングの用語と実務プロセスを体系的に確認できる。A級・B級・C級の3段階。'
+    }
+  ];
+
+  // ---------- 日付ユーティリティ ----------
+  var NOW = new Date();
+  var TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+  var MS_DAY = 86400000;
+
+  function parseDate(s) {
+    var p = s.split('-');
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  }
+  function fmt(d) {
+    return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
+  }
+  function fmtShort(d) {
+    return (d.getMonth() + 1) + '/' + d.getDate();
+  }
+  function daysBetween(d) {
+    return Math.round((d - TODAY) / MS_DAY);
+  }
+
+  // 例年パターン（MM-DD）を未来へ繰り越す
+  function projectFromPattern(pattern) {
+    var out = [];
+    for (var i = 0; i < pattern.length; i++) {
+      var p = pattern[i].split('-');
+      var m = +p[0] - 1, day = +p[1];
+      var cand = new Date(TODAY.getFullYear(), m, day);
+      if (cand < TODAY) cand = new Date(TODAY.getFullYear() + 1, m, day);
+      out.push(cand);
+    }
+    out.sort(function (a, b) { return a - b; });
+    return out;
+  }
+
+  // 次回試験情報を返す
+  function nextExam(q) {
+    var fixedFuture = [];
+    (q.exams || []).forEach(function (e) {
+      var d = parseDate(e.d);
+      if (d >= TODAY) fixedFuture.push({ date: d, label: e.label, projected: !e.fixed });
+    });
+    fixedFuture.sort(function (a, b) { return a.date - b.date; });
+    if (fixedFuture.length) return fixedFuture[0];
+
+    if (q.pattern && q.pattern.length) {
+      var proj = projectFromPattern(q.pattern);
+      return { date: proj[0], label: '', projected: true };
+    }
+    return null;
+  }
+
+  // 次々回（今回に間に合わなかった人向け）
+  function followingExam(q) {
+    var all = [];
+    (q.exams || []).forEach(function (e) {
+      var d = parseDate(e.d);
+      if (d >= TODAY) all.push({ date: d, projected: !e.fixed });
+    });
+    if (q.pattern && q.pattern.length) {
+      projectFromPattern(q.pattern).forEach(function (d) {
+        var dup = all.some(function (a) { return Math.abs(a.date - d) < MS_DAY * 20; });
+        if (!dup) all.push({ date: d, projected: true });
+      });
+      // さらに翌年分
+      projectFromPattern(q.pattern).forEach(function (d) {
+        var n = new Date(d.getFullYear() + 1, d.getMonth(), d.getDate());
+        all.push({ date: n, projected: true });
+      });
+    }
+    all.sort(function (a, b) { return a.date - b.date; });
+    if (!all.length) return null;
+    // 同じ回の別科目（科目A/科目Bなど）は「次の機会」ではないので、
+    // 最初の日程から90日以内のものは読み飛ばす
+    var first = all[0].date;
+    for (var j = 1; j < all.length; j++) {
+      if (all[j].date - first > MS_DAY * 90) return all[j];
+    }
+    return null;
+  }
+
+  // 指定日以降で最初に受験できる回（例年パターンは数年先まで展開して探す）
+  function firstExamAfter(q, from) {
+    var cands = [];
+    (q.exams || []).forEach(function (e) {
+      var d = parseDate(e.d);
+      if (d >= from) cands.push({ date: d, projected: !e.fixed });
+    });
+    if (q.pattern && q.pattern.length) {
+      for (var y = 0; y <= 6; y++) {
+        for (var i = 0; i < q.pattern.length; i++) {
+          var p = q.pattern[i].split('-');
+          var d2 = new Date(TODAY.getFullYear() + y, +p[0] - 1, +p[1]);
+          if (d2 >= from) cands.push({ date: d2, projected: true });
         }
+      }
+    }
+    cands.sort(function (a, b) { return a.date - b.date; });
+    return cands.length ? cands[0] : null;
+  }
 
-        // 過去日付を「次の年の同月同日」へ繰り越す
-        function rollDateToFuture(dateStr) {
-            const d = new Date(dateStr);
-            let cand = new Date(todayMidnight.getFullYear(), d.getMonth(), d.getDate());
-            if (cand < todayMidnight) {
-                cand = new Date(todayMidnight.getFullYear() + 1, d.getMonth(), d.getDate());
-            }
-            return cand;
+  function round1(n) { return Math.round(n * 10) / 10; }
+
+  // ---------- 判定ロジック ----------
+  // daily: ユーザーが1日に確保できる時間
+  function judge(q, daily) {
+    if (q.rolling && !nextExamHasFixed(q)) {
+      var daysNeeded = Math.ceil(q.hMax / daily);
+      var target = new Date(TODAY.getTime() + daysNeeded * MS_DAY);
+      return {
+        level: 'rolling',
+        text: '<strong>随時受験できる試験です。</strong>1日' + round1(daily) + '時間なら、' +
+              q.hMin + '〜' + q.hMax + '時間の目安に対しておよそ' + Math.ceil(q.hMin / daily) + '〜' + daysNeeded + '日（' +
+              fmt(target) + 'ごろ）で受験レベルに届く計算です。'
+      };
+    }
+    var info = nextExam(q);
+    if (!info) return { level: 'rolling', text: '次回日程は未発表です。公式サイトで確認してください。' };
+
+    var days = Math.max(daysBetween(info.date), 1);
+    var needMax = q.hMax / days;
+    var needMin = q.hMin / days;
+
+    if (daily >= needMax) {
+      return {
+        level: 'ok',
+        text: '<strong>間に合います。</strong>残り' + days + '日で' + q.hMax + '時間なら1日' + round1(needMax) +
+              '時間。設定の1日' + round1(daily) + '時間なら余裕があります。'
+      };
+    }
+    if (daily >= needMin) {
+      return {
+        level: 'tight',
+        text: '<strong>ぎりぎり届く範囲です。</strong>残り' + days + '日で必要なのは1日' + round1(needMin) + '〜' +
+              round1(needMax) + '時間。設定の1日' + round1(daily) + '時間だと、直前期の上積みが前提になります。'
+      };
+    }
+    // 設定ペースで目安時間に到達する日を出し、その後で最初に受けられる回を示す
+    var reachDays = Math.ceil(q.hMin / daily);
+    var reachDate = new Date(TODAY.getTime() + reachDays * MS_DAY);
+    var target = firstExamAfter(q, reachDate);
+    var alt;
+    if (target) {
+      alt = ' 1日' + round1(daily) + '時間のペースだと、目安の下限' + q.hMin + '時間に届くのは' + fmt(reachDate) +
+            'ごろ。その時点で受けられるのは<strong>' + fmt(target.date) + (target.projected ? '（目安）' : '') + '</strong>以降の日程です。';
+    } else {
+      var nxt = followingExam(q);
+      alt = nxt ? ' 次の機会は' + fmt(nxt.date) + (nxt.projected ? '（目安）' : '') + 'です。' : '';
+    }
+    return {
+      level: 'hard',
+      text: '<strong>今回は間に合いません。</strong>残り' + days + '日で' + q.hMin + '〜' + q.hMax +
+            '時間を消化するには1日' + round1(needMin) + '時間以上が必要です。' + alt
+    };
+  }
+
+  function nextExamHasFixed(q) {
+    return (q.exams || []).some(function (e) { return e.fixed && parseDate(e.d) >= TODAY; });
+  }
+
+  // ---------- 描画 ----------
+  var state = { cat: 'all', daily: 1.5, onlyFeasible: false };
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function cardHTML(q) {
+    var v = judge(q, state.daily);
+    var info = nextExam(q);
+    var dateCell, countCell;
+
+    if (q.rolling && !nextExamHasFixed(q)) {
+      dateCell = '随時受験（通年）';
+      countCell = '日程を選べます';
+    } else if (info) {
+      dateCell = fmt(info.date) + (info.projected ? '<span class="qc-est">（例年目安）</span>' : '');
+      if (info.label) dateCell += '<div class="qc-est">' + esc(info.label) + '</div>';
+      var d = daysBetween(info.date);
+      countCell = 'あと' + d + '日';
+    } else {
+      dateCell = '未発表';
+      countCell = '—';
+    }
+
+    var rows =
+      '<div class="qc-row"><dt>次回試験</dt><dd>' + dateCell + '</dd></div>' +
+      '<div class="qc-row"><dt>カウントダウン</dt><dd>' + countCell + '</dd></div>' +
+      '<div class="qc-row"><dt>実施回数</dt><dd>' + esc(q.freq) + '</dd></div>' +
+      (q.rolling && nextExamHasFixed(q) ? '<div class="qc-row"><dt>通年受験</dt><dd>ネット試験（CBT）なら随時</dd></div>' : '') +
+      (q.apply ? '<div class="qc-row"><dt>申込期間</dt><dd>' + esc(q.apply) + '</dd></div>' : '') +
+      '<div class="qc-row"><dt>標準学習時間</dt><dd>' + q.hMin + '〜' + q.hMax + '時間</dd></div>' +
+      (q.fee ? '<div class="qc-row"><dt>受験手数料</dt><dd>' + esc(q.fee) + '</dd></div>' : '') +
+      (q.rate ? '<div class="qc-row"><dt>合格率の目安</dt><dd>' + esc(q.rate) + '</dd></div>' : '');
+
+    return '<article class="qc-card" data-cat="' + q.cat + '" data-level="' + v.level + '">' +
+      '<div class="qc-card-top"><h3>' + esc(q.name) + '</h3>' +
+      '<span class="qc-cat ' + q.cat + '">' + CATS[q.cat].label + '</span></div>' +
+      '<dl class="qc-rows">' + rows + '</dl>' +
+      '<div class="qc-verdict ' + v.level + '">' + v.text + '</div>' +
+      '<p class="qc-note">' + esc(q.note) + '</p>' +
+      (q.official ? '<div class="qc-links"><a href="' + q.official + '" target="_blank" rel="noopener nofollow">公式サイトで日程を確認</a></div>' : '') +
+      '</article>';
+  }
+
+  function render() {
+    var list = QUALS.filter(function (q) {
+      if (state.cat !== 'all' && q.cat !== state.cat) return false;
+      if (state.onlyFeasible && judge(q, state.daily).level === 'hard') return false;
+      return true;
+    });
+
+    list.sort(function (a, b) {
+      var ra = (a.rolling && !nextExamHasFixed(a)) ? 1 : 0;
+      var rb = (b.rolling && !nextExamHasFixed(b)) ? 1 : 0;
+      if (ra !== rb) return ra - rb;
+      var ia = nextExam(a), ib = nextExam(b);
+      if (!ia) return 1;
+      if (!ib) return -1;
+      return ia.date - ib.date;
+    });
+
+    var grid = document.getElementById('grid');
+    grid.innerHTML = list.length
+      ? list.map(cardHTML).join('')
+      : '<p style="color:var(--text-muted);">条件に合う資格がありませんでした。1日の勉強時間を増やすか、絞り込みを外してみてください。</p>';
+
+    updateSummary();
+  }
+
+  function updateSummary() {
+    var total = QUALS.length;
+    var feasible = QUALS.filter(function (q) { return judge(q, state.daily).level !== 'hard'; }).length;
+    var weekly = round1(state.daily * 7);
+    document.getElementById('plannerSummary').innerHTML =
+      '1日' + round1(state.daily) + '時間＝週' + weekly + '時間、年間およそ' + Math.round(state.daily * 365) + '時間。' +
+      'このペースなら掲載' + total + '資格のうち<strong>' + feasible + '資格</strong>が、次回試験に間に合う計算になります。';
+  }
+
+  // ---------- 年間カレンダー ----------
+  function buildCalendar() {
+    var buckets = [];
+    for (var i = 0; i < 12; i++) {
+      var d = new Date(TODAY.getFullYear(), TODAY.getMonth() + i, 1);
+      buckets.push({ y: d.getFullYear(), m: d.getMonth(), items: [] });
+    }
+    function push(date, name, projected) {
+      for (var i = 0; i < buckets.length; i++) {
+        if (buckets[i].y === date.getFullYear() && buckets[i].m === date.getMonth()) {
+          buckets[i].items.push({ date: date, name: name, projected: projected });
+          return;
         }
+      }
+    }
+    QUALS.forEach(function (q) {
+      var seen = {};
+      (q.exams || []).forEach(function (e) {
+        var d = parseDate(e.d);
+        if (d >= TODAY) { push(d, q.name, !e.fixed); seen[d.getFullYear() + '-' + d.getMonth()] = 1; }
+      });
+      if (!(q.exams || []).some(function (e) { return parseDate(e.d) >= TODAY; }) && q.pattern && q.pattern.length) {
+        projectFromPattern(q.pattern).forEach(function (d) { push(d, q.name, true); });
+      }
+    });
 
-        // 次回試験日の情報を取得（実日程 or 例年ベースの推定 or 随時）
-        // 返り値: { date: Date|null, projected: boolean, ongoing: boolean }
-        function getNextExamInfo(qual) {
-            const dates = (qual && qual.examDates) || [];
-            // 1) データ内に未来日があればそれを使う（確定）
-            const future = dates
-                .map(s => new Date(s))
-                .filter(d => d >= todayMidnight)
-                .sort((a, b) => a - b);
-            if (future.length > 0) {
-                return { date: future[0], projected: false, ongoing: false };
-            }
-            // 2) 随時受験（CBT等）は通年扱い
-            if (isOngoing(qual)) {
-                return { date: null, projected: false, ongoing: true };
-            }
-            // 3) それ以外は例年パターンを翌年以降へ繰り越して推定
-            if (dates.length > 0) {
-                const projected = dates.map(rollDateToFuture).sort((a, b) => a - b);
-                return { date: projected[0], projected: true, ongoing: false };
-            }
-            return { date: null, projected: false, ongoing: false };
-        }
+    var html = buckets.map(function (b) {
+      b.items.sort(function (x, y) { return x.date - y.date; });
+      var items = b.items.length
+        ? '<ul>' + b.items.map(function (it) {
+            return '<li><span class="d">' + fmtShort(it.date) + '</span>' + esc(it.name) +
+                   (it.projected ? '<span class="qc-est">（目安）</span>' : '') + '</li>';
+          }).join('') + '</ul>'
+        : '<p class="qc-est" style="margin:0;">掲載資格の試験はありません</p>';
+      return '<div class="qc-month' + (b.items.length ? '' : ' empty') + '">' +
+             '<h3>' + b.y + '年' + (b.m + 1) + '月</h3>' + items + '</div>';
+    }).join('');
+    document.getElementById('calendar').innerHTML = html;
+  }
 
-        // ソート用: 次回日（Date）。随時・不明は null（後ろへ）
-        function getNextExamDate(qual) {
-            return getNextExamInfo(qual).date;
-        }
+  // ---------- イベント ----------
+  document.getElementById('filters').addEventListener('click', function (e) {
+    var btn = e.target.closest('.qc-filter');
+    if (!btn) return;
+    Array.prototype.forEach.call(this.querySelectorAll('.qc-filter'), function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    state.cat = btn.dataset.cat;
+    render();
+  });
 
-        // 日数計算
-        function calculateDaysUntil(examDate) {
-            if (!examDate) return null;
-            const diffTime = examDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
-        }
+  var hoursInput = document.getElementById('hoursInput');
+  hoursInput.addEventListener('input', function () {
+    state.daily = parseFloat(this.value);
+    document.getElementById('hoursBadge').textContent = round1(state.daily) + '時間';
+    render();
+  });
 
-        // 資格カード生成
-        function createQualificationCard(qual) {
-            const info = getNextExamInfo(qual);
-            const nextExam = info.date;
-            const daysUntil = calculateDaysUntil(nextExam);
+  document.getElementById('onlyFeasible').addEventListener('change', function () {
+    state.onlyFeasible = this.checked;
+    render();
+  });
 
-            let examDateDisplay, countdownDisplay, countdownValue, countdownUnit;
-
-            if (info.ongoing) {
-                examDateDisplay = '随時受験（通年）';
-                countdownDisplay = 'exam-ongoing';
-                countdownValue = '随時';
-                countdownUnit = '';
-            } else if (nextExam) {
-                const dateStr = nextExam.toLocaleDateString('ja-JP', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                examDateDisplay = info.projected ? `${dateStr}<span class="date-note">（例年目安）</span>` : dateStr;
-                countdownDisplay = 'next-exam-date';
-                countdownValue = daysUntil;
-                countdownUnit = '日';
-            } else {
-                examDateDisplay = '未定';
-                countdownDisplay = 'exam-pending';
-                countdownValue = '未定';
-                countdownUnit = '';
-            }
-
-            const ipaIcon = qual.isIPA ? '<span class="ipa-icon">🎓</span>' : '';
-
-            return `
-                <div class="qualification-card ${qual.category}" data-category="${qual.category}" data-qualification-id="${qual.id}">
-                    <div class="card-header">
-                        <div>
-                            <h3 class="qualification-name">${qual.name} ${ipaIcon}</h3>
-                        </div>
-                        <div class="card-controls">
-                            <span class="category-badge ${qual.category}">
-                                ${categories[qual.category].icon} ${categories[qual.category].name}
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="exam-info">
-                        <div class="info-item">
-                            <div class="info-label">次回試験日</div>
-                            <div class="info-value ${countdownDisplay}">${examDateDisplay}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">平均勉強時間</div>
-                            <div class="info-value study-hours">${qual.studyHours}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="countdown">
-                        <div class="countdown-title">試験まで</div>
-                        <div class="countdown-value">${countdownValue}</div>
-                        <div class="countdown-unit">${countdownUnit}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // IPA資格詳細データ
-        const ipaDetails = {
-            itpassport: {
-                title: 'ITパスポート試験',
-                level: 'エントリー',
-                description: 'IT基礎知識を証明する入門資格',
-                targetAudience: ['IT初心者', 'ビジネスパーソン', '学生'],
-                examFormat: 'CBT（Computer Based Testing）',
-                examTime: '120分',
-                questionCount: '100問',
-                passingScore: '600点/1000点',
-                fee: '5,700円',
-                studyTips: [
-                    'IT全般の基礎知識を幅広く学習',
-                    '経営戦略・マネジメント・IT技術の3分野をバランス良く',
-                    'CBT対策として模擬試験を活用',
-                    '実務経験がなくても暗記中心で合格可能'
-                ]
-            },
-            fe: {
-                title: '基本情報技術者試験',
-                level: 'ベーシック',
-                description: 'プログラマー・SEの登竜門',
-                targetAudience: ['プログラマー志望', 'SE志望', 'IT業界新人'],
-                examFormat: 'CBT（科目A・科目B）',
-                examTime: '科目A: 90分、科目B: 100分',
-                questionCount: '科目A: 60問、科目B: 20問',
-                passingScore: '科目A・B共に600点/1000点',
-                fee: '5,700円',
-                studyTips: [
-                    'アルゴリズムとプログラミングを重点的に',
-                    '科目Bは疑似言語の理解が必須',
-                    '午前問題は過去問の反復学習',
-                    'プログラミング経験があると有利'
-                ]
-            },
-            ap: {
-                title: '応用情報技術者試験',
-                level: 'ミドル',
-                description: 'IT技術者としての実力を証明',
-                targetAudience: ['中級SE', 'プロジェクトリーダー', 'ITコンサルタント'],
-                examFormat: '筆記試験（午前・午後）',
-                examTime: '午前: 150分、午後: 150分',
-                questionCount: '午前: 80問、午後: 11問中5問選択',
-                passingScore: '午前・午後共に600点/1000点',
-                fee: '5,700円',
-                studyTips: [
-                    '幅広い技術知識が必要',
-                    '午後問題は記述式で論理的思考力が重要',
-                    '実務経験と関連付けて学習',
-                    '経営戦略・マネジメント分野も出題'
-                ]
-            },
-            sc: {
-                title: '情報処理安全確保支援士',
-                level: 'エキスパート',
-                description: 'サイバーセキュリティの専門家',
-                targetAudience: ['セキュリティエンジニア', 'CISO', 'セキュリティコンサルタント'],
-                examFormat: '筆記試験（午前I・II、午後I・II）',
-                examTime: '午前I: 50分、午前II: 40分、午後I・II: 各90分',
-                questionCount: '午前I: 30問、午前II: 25問、午後I: 3問中2問、午後II: 2問中1問',
-                passingScore: '各試験区分で600点/1000点',
-                fee: '5,700円',
-                studyTips: [
-                    'セキュリティ技術の深い理解が必要',
-                    '最新の脅威やトレンドを把握',
-                    '午後問題は実務的なケーススタディ',
-                    '継続的な学習（CPE単位）が必要'
-                ]
-            }
-        };
-
-        // 資格詳細モーダルを開く
-        function openQualificationDetail(qualId) {
-            const qual = qualifications.find(q => q.id === qualId);
-            if (!qual || !qual.isIPA) return;
-            
-            const detail = ipaDetails[qualId];
-            if (!detail) return;
-            
-            const modal = document.createElement('div');
-            modal.className = 'detail-modal';
-            modal.innerHTML = `
-                <div class="detail-modal-overlay" onclick="closeModal()">
-                    <div class="detail-modal-content" onclick="event.stopPropagation()">
-                        <button class="detail-modal-close" onclick="closeModal()">×</button>
-                        
-                        <div class="detail-header">
-                            <h2>${detail.title}</h2>
-                            <span class="detail-level-badge">${detail.level}</span>
-                        </div>
-                        
-                        <div class="detail-description">
-                            <p>${detail.description}</p>
-                        </div>
-                        
-                        <div class="detail-grid">
-                            <div class="detail-section">
-                                <h3>🎯 対象者</h3>
-                                <ul>
-                                    ${detail.targetAudience.map(target => `<li>${target}</li>`).join('')}
-                                </ul>
-                            </div>
-                            
-                            <div class="detail-section">
-                                <h3>📝 試験概要</h3>
-                                <div class="detail-info-grid">
-                                    <div class="info-row">
-                                        <span>試験形式</span>
-                                        <span>${detail.examFormat}</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span>試験時間</span>
-                                        <span>${detail.examTime}</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span>問題数</span>
-                                        <span>${detail.questionCount}</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span>合格基準</span>
-                                        <span>${detail.passingScore}</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span>受験料</span>
-                                        <span>${detail.fee}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-section full-width">
-                                <h3>💡 勉強のコツ</h3>
-                                <ul class="study-tips-list">
-                                    ${detail.studyTips.map(tip => `<li>${tip}</li>`).join('')}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-
-        // IPA詳細モーダルを開く（ガイドセクション用）
-        function openIPADetail(qualId) {
-            openQualificationDetail(qualId);
-        }
-
-        // モーダルを閉じる
-        function closeModal() {
-            const modal = document.querySelector('.detail-modal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        // フィルター機能
-        function filterQualifications(category) {
-            const cards = document.querySelectorAll('.qualification-card');
-            cards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-
-        // 通知表示機能
-        function showNotification(type, title, message) {
-            // 既存の通知があれば削除
-            const existingNotification = document.querySelector('.notification');
-            if (existingNotification) {
-                existingNotification.remove();
-            }
-            
-            // 新しい通知を作成
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <div class="notification-title">${title}</div>
-                <div class="notification-message">${message}</div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // アニメーションで表示
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
-            
-            // 3秒後に自動で非表示
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    if (document.body.contains(notification)) {
-                        document.body.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
-        }
-
-        // 初期化
-        function init() {
-            const grid = document.getElementById('qualificationGrid');
-            
-            // 次回試験日順にソート（未定は後ろ）
-            qualifications.sort((a, b) => {
-                const nextA = getNextExamDate(a);
-                const nextB = getNextExamDate(b);
-                
-                if (!nextA && !nextB) return 0;
-                if (!nextA) return 1;
-                if (!nextB) return -1;
-                
-                return nextA - nextB;
-            });
-            
-            // カード生成
-            grid.innerHTML = qualifications.map(qual => createQualificationCard(qual)).join('');
-
-            // フィルターイベント
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    filterQualifications(btn.dataset.category);
-                });
-            });
-
-            // カウントダウンの定期更新（1時間ごと）
-            setInterval(updateCountdowns, 3600000);
-        }
-
-        // カウントダウン更新
-        function updateCountdowns() {
-            const cards = document.querySelectorAll('.qualification-card');
-            cards.forEach((card, index) => {
-                const qual = qualifications[index];
-                const info = getNextExamInfo(qual);
-                const nextExam = info.date;
-                const daysUntil = calculateDaysUntil(nextExam);
-
-                const countdownValue = card.querySelector('.countdown-value');
-                const countdownUnit = card.querySelector('.countdown-unit');
-
-                if (info.ongoing) {
-                    countdownValue.textContent = '随時';
-                    countdownUnit.textContent = '';
-                } else if (nextExam && daysUntil !== null) {
-                    countdownValue.textContent = daysUntil;
-                    countdownUnit.textContent = '日';
-                } else {
-                    countdownValue.textContent = '未定';
-                    countdownUnit.textContent = '';
-                }
-            });
-        }
-
-        
-        // ページ読み込み時に初期化
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+  render();
+  buildCalendar();
+})();
+</script>
 </body>
 </html>
