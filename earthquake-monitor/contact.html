@@ -231,14 +231,14 @@
         </div>
 
         <h2>よくあるお問い合わせ</h2>
-        <h3>Q. 地震情報の精度について</h3>
-        <p>A. 本サービスで表示される地震情報は、デモンストレーション用のサンプルデータです。実際の防災行動には、気象庁等の公式情報をご利用ください。</p>
+        <h3>Q. 地震情報の出どころは？</h3>
+        <p>A. 気象庁が発表した地震情報を、<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPI（api.p2pquake.net）経由で取得して表示しています。海外の地震については米国地質調査所（USGS）のAPIも利用しています。いずれも公式発表そのものではなく、それを再配信した参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
 
         <h3>Q. スマートフォンで正しく表示されない</h3>
         <p>A. モバイル対応を行っておりますが、一部機能で不具合がある場合があります。詳細をGitHub Issuesでご報告ください。</p>
 
         <h3>Q. データの更新頻度について</h3>
-        <p>A. サンプルデータは5分間隔で自動更新されます。実際の地震情報ではないため、リアルタイム性はありません。</p>
+        <p>A. ページを開いたときにAPIから最新の情報を取得し、その後も定期的に更新しています。ただし、提供元APIの状況やネットワークの状態によっては最新の情報が反映されないことがあります。取得に失敗した場合はその旨を画面に表示します。速報性が求められる場面では、必ず気象庁の公式サイトやテレビ・ラジオ等をあわせてご確認ください。</p>
 
         <h3>Q. 商用利用について</h3>
         <p>A. 本サービスのデータや機能の商用利用については、事前にお問い合わせください。</p>
@@ -285,5 +285,21 @@
 
         <a href="index.html" class="back-link">🌏 地震情報モニターに戻る</a>
     </div>
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:3rem;padding:2rem 1.25rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">地震情報は気象庁の発表を <a href="https://www.p2pquake.net/" target="_blank" rel="noopener" style="color:#ff8c00;">P2P地震情報</a> のAPI経由で取得している参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/earthquake-monitor/" style="color:#8d97a5;text-decoration:none;">地震モニター</a>
+      <a href="/earthquake-monitor/about.html" style="color:#8d97a5;text-decoration:none;">このサイトについて</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/earthquake-monitor/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

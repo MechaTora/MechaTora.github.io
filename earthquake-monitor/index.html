@@ -517,6 +517,7 @@
                 </p>
                 <!-- 防災関連広告：停電対策ポータブル電源 -->
                 <div style="margin-top: 15px; text-align: center; padding-top: 12px; border-top: 1px solid #f0d080;">
+                    <p style="font-size: 0.75em; color: #aaa; margin-bottom: 6px;">広告</p>
                     <p style="font-size: 0.8em; color: #a07820; margin-bottom: 8px; font-weight: bold;">⚡ 停電・災害時の備えに</p>
                     <a href="https://px.a8.net/svt/ejp?a8mat=45C666+1I6KOQ+5MSA+5YJRM" rel="nofollow" style="display: block; color: #c0392b; font-weight: bold; font-size: 0.95em; text-decoration: none; margin-bottom: 10px; line-height: 1.5;">大容量で持ちやすいポータブル電源！【Dabbsson_Japan】</a>
                     <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=45C666+1I6KOQ+5MSA+5YJRM" alt="">
@@ -739,7 +740,11 @@
             </div>
             <p style="font-size: 0.8em; color: rgba(255,255,255,0.6);">© 2025 メカとら. All rights reserved.</p>
         </div>
-    </footer>
+      <div style="margin-top:.6rem;"><a href="/privacy-policy.html">プライバシーポリシー</a></div>
+  <div style="margin-top:.6rem;"><a href="/about.html">運営者について</a></div>
+  <div style="margin-top:.6rem;"><a href="/terms.html">利用規約</a></div>
+  <div style="margin-top:.6rem;"><a href="/index.html">メカとら トップ</a></div>
+</footer>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -865,8 +870,8 @@
                 return combinedData.sort((a, b) => b.time - a.time);
             } catch (error) {
                 console.error('地震データ取得エラー:', error);
-                // エラー時はサンプルデータを生成
-                return generateSampleData();
+                // 防災情報を扱う性質上、取得に失敗したときに架空のデータを表示することはしない
+                throw error;
             }
         }
 
@@ -1073,14 +1078,18 @@
             } catch (error) {
                 console.error('データ更新エラー:', error);
 
-                // エラー時はサンプルデータを使用
-                earthquakeData = generateSampleData();
-                addEarthquakeMarkers(earthquakeData);
-                updateStats(earthquakeData);
-                updateEarthquakeList(earthquakeData);
-
+                // 取得できなかったことを明示する。架空の地震を地図に出すことは避ける
+                const list = document.getElementById('earthquakeList');
+                if (list) {
+                    list.innerHTML =
+                        '<div style="padding:24px;text-align:center;color:#c0392b;line-height:1.9;">'
+                        + '<strong>地震情報を取得できませんでした。</strong><br>'
+                        + '時間をおいて再度お試しください。<br>'
+                        + '<a href="https://www.jma.go.jp/bosai/map.html#contents=earthquake_map" target="_blank" rel="noopener" style="color:#2980b9;">気象庁の地震情報を確認する</a>'
+                        + '</div>';
+                }
                 document.getElementById('updateTime').textContent =
-                    `最終更新: ${new Date().toLocaleTimeString('ja-JP')} (サンプルデータ)`;
+                    `${new Date().toLocaleTimeString('ja-JP')} 時点：データを取得できませんでした`;
             }
         }
 
