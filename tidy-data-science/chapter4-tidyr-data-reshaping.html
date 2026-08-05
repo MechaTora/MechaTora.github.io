@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>データ再構造化の魔術 | TIDYVERSE/TIDYMODELS</title>
+    <title>tidyrによるデータ再構造化 | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter4-tidyr-data-reshaping.html">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -704,22 +704,22 @@
     <meta name="keywords" content="tidyr,pivot_longer,pivot_wider,ワイド形式,ロング形式,欠損値,nest,unnest,R言語">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="データ再構造化の魔術 | TIDYVERSE/TIDYMODELS">
+    <meta property="og:title" content="tidyrによるデータ再構造化 | tidyverseで学ぶ人事データ分析">
     <meta property="og:description" content="tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値の優雅な処理、複雑なデータ構造の整理術をマスターし、データサイエンスの真の力を解き放とう。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter4-tidyr-data-reshaping.html">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第4章: tidyrによるデータ再構造化 | TIDYVERSE/TIDYMODELS">
-    <meta name="twitter:description" content="tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値処理、ネストされたデータの扱い方をマスターしよう。">
+    <meta name="twitter:title" content="第4章: tidyrによるデータ再構造化 | tidyverseで学ぶ人事データ分析">
+    <meta name="twitter:description" content="tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値処理、ネストされたデータの扱い方を身につけます。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "第4章: tidyrによるデータ再構造化 | TIDYVERSE/TIDYMODELS",
-      "description": "tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値処理、ネストされたデータの扱い方をマスターしよう。",
+      "name": "第4章: tidyrによるデータ再構造化 | tidyverseで学ぶ人事データ分析",
+      "description": "tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値処理、ネストされたデータの扱い方を身につけます。",
       "url": "https://mechatora.com/tidy-data-science/chapter4-tidyr-data-reshaping.html",
       "inLanguage": "ja",
       "publisher": {
@@ -737,6 +737,20 @@
     </script>
 </head>
 <body>
+<!-- mechatora common topbar -->
+<div style="background:#11151c;border-bottom:1px solid #232a35;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.82rem;">
+  <div style="max-width:1200px;margin:0 auto;padding:.5rem 1.25rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+    <a href="/index.html" style="color:#ff8c00;font-weight:700;text-decoration:none;">メカとら</a>
+    <span style="color:#4a5464;">/</span>
+    <a href="/tidy-data-science/" style="color:#c7d0dc;text-decoration:none;">tidyverseで学ぶ人事データ分析</a>
+    <span style="margin-left:auto;display:flex;gap:1rem;">
+      <a href="/articles.html" style="color:#8d97a5;text-decoration:none;">記事一覧</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+    </span>
+  </div>
+</div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -755,7 +769,7 @@
             <header class="chapter-header fade-in-up">
                 <div class="chapter-icon">🔄</div>
                 <div class="chapter-number">CHAPTER 04</div>
-                <h1 class="chapter-title">データ再構造化の魔術</h1>
+                <h1 class="chapter-title">tidyrによるデータ再構造化</h1>
                 <p class="chapter-description">
                     tidyrでデータを自在に操る。Wide/Long形式の変換、欠損値の優雅な処理、複雑なデータ構造の整理術をマスターし、データサイエンスの真の力を解き放とう。
                 </p>
@@ -770,7 +784,7 @@
                     </p>
                     
                     <p>
-                        現実のデータは常に理想的な形ではありません。Excel形式の幅の広いテーブル、不規則な欠損値、ネストされた複雑な構造...。tidyrは、これらすべてを「tidy」な形に変換する魔法を提供します。
+                        現実のデータは常に理想的な形ではありません。Excel形式の幅の広いテーブル、不規則な欠損値、ネストされた複雑な構造...。tidyrは、これらを「tidy」な形に変換する関数がそろっています。
                     </p>
                     
                     <div class="code-block">
@@ -1612,5 +1626,30 @@
             }, 3000);
         }
     </script>
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:4rem;padding:2.5rem 1.25rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">
+      このサイトは、現役の人事担当者がRとtidyverseで人事データを扱うために書いている解説です。
+      掲載しているコードは自由に使ってかまいませんが、実行結果はデータやパッケージのバージョンによって変わります。
+      内容の誤りにお気づきの場合は<a href="/contact.html" style="color:#ff8c00;">お問い合わせ</a>からご連絡ください。
+    </p>
+    <p style="margin:0 0 1.2rem;font-size:.8rem;">
+      パッケージの仕様は更新されます。最新の挙動は
+      <a href="https://www.tidyverse.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidyverse公式</a>・
+      <a href="https://www.tidymodels.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidymodels公式</a>
+      のドキュメントをご確認ください。
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1.2rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/tidy-data-science/" style="color:#8d97a5;text-decoration:none;">目次</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

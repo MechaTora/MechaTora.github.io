@@ -1,1995 +1,398 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIDYVERSE/TIDYMODELS | TIDYVERSE/TIDYMODELS</title>
-    <meta name="description" content="R言語、Tidyverseによるモダンなデータサイエンスの解説ページ。">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tidyverseで学ぶ人事データ分析｜R・dplyr・ggplot2・tidymodels</title>
+<meta name="description" content="残業時間・勤続年数・退職・エンゲージメントといった人事データを題材に、R（tidyverse／tidymodels）でのデータ加工・可視化・モデリングを解説します。サンプルデータ付き、全24章。">
+<meta name="keywords" content="R 人事データ,ピープルアナリティクス R,tidyverse 日本語,dplyr 使い方,ggplot2 日本語,tidymodels 日本語,退職予測 R,人事 データ分析">
+<link rel="canonical" href="https://mechatora.com/tidy-data-science/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="メカとら">
+<meta property="og:title" content="tidyverseで学ぶ人事データ分析">
+<meta property="og:description" content="残業・退職・エンゲージメントなど人事データを題材にしたR（tidyverse／tidymodels）の実践解説。サンプルデータ付き、全24章。">
+<meta property="og:url" content="https://mechatora.com/tidy-data-science/">
+<meta property="og:image" content="https://mechatora.com/tidy-data-science/images/hr-overtime-by-dept.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184134440246706" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6NJKWS2RJ8');
+</script>
+<style>
+.tds-lead { max-width: 780px; }
+.tds-lead p { color: var(--text-muted); margin: .9rem 0; }
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-6NJKWS2RJ8');
-    </script>
+.tds-callout {
+  background: #fff7ed; border: 1px solid #fed7aa; border-left: 5px solid var(--primary);
+  border-radius: .9rem; padding: 1.3rem 1.5rem; margin: 2rem 0;
+}
+.tds-callout h2 { font-size: 1.05rem; border: none; display: block; margin: 0 0 .5rem; padding: 0; }
+.tds-callout p { margin: .4rem 0; font-size: .95rem; }
 
+.tds-example { margin: 3rem 0; padding-bottom: 3rem; border-bottom: 1px solid var(--border); }
+.tds-example:last-of-type { border-bottom: none; }
+.tds-example h3 { font-size: 1.2rem; margin: 0 0 .5rem; }
+.tds-example > p { color: var(--text-muted); margin: 0 0 1.2rem; }
+.tds-figrow { display: grid; grid-template-columns: 1.05fr .95fr; gap: 1.5rem; align-items: start; }
+.tds-figrow img {
+  width: 100%; height: auto; border: 1px solid var(--border);
+  border-radius: .7rem; background: #fff;
+}
+.tds-example pre {
+  background: #1b2027; color: #e6edf3; border-radius: .7rem; padding: 1.1rem 1.2rem;
+  overflow-x: auto; font-size: .82rem; line-height: 1.75; margin: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+}
+.tds-example pre .fn { color: #79c0ff; }
+.tds-example pre .st { color: #a5d6ff; }
+.tds-example pre .cm { color: #8b949e; }
+.tds-takeaway {
+  background: #f8fafc; border-left: 3px solid var(--primary); border-radius: 0 .5rem .5rem 0;
+  padding: .8rem 1rem; margin-top: 1.2rem; font-size: .9rem; color: var(--text);
+}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            /* CYBERPUNK NEON PALETTE */
-            --neon-cyan: #00ffff;
-            --neon-magenta: #ff00ff;
-            --neon-lime: #39ff14;
-            --neon-orange: #ff6600;
-            --electric-blue: #0080ff;
-            --plasma-purple: #8000ff;
-            
-            /* DARK MATRIX BACKGROUNDS */
-            --void-black: #000000;
-            --deep-space: #0a0a0f;
-            --matrix-dark: #0d1117;
-            --carbon-grey: #161b22;
-            --terminal-green: #0dff00;
-            
-            /* HOLOGRAPHIC GRADIENTS */
-            --gradient-cyber: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
-            --gradient-matrix: linear-gradient(135deg, #0dff00 0%, #00ffff 50%, #8000ff 100%);
-            --gradient-plasma: linear-gradient(135deg, #ff6600 0%, #ff00ff 50%, #8000ff 100%);
-            --gradient-neural: linear-gradient(135deg, #0080ff 0%, #00ffff 25%, #39ff14 50%, #ffff00 75%, #ff6600 100%);
-            
-            /* GLASS MORPHISM */
-            --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 255, 255, 0.15);
-            
-            /* TYPOGRAPHY */
-            --font-mono: 'JetBrains Mono', monospace;
-            --font-tech: 'Space Grotesk', sans-serif;
-            --font-ui: 'Inter', sans-serif;
-            
-            /* SHADOWS & GLOWS */
-            --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
-            --text-glow: 0 0 10px currentColor;
-            --box-glow: 0 0 30px rgba(0, 255, 255, 0.3);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: var(--font-ui);
-            background: var(--void-black);
-            color: var(--neon-cyan);
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-        }
-        
-        /* ANIMATED BACKGROUND */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 40%, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
-            animation: backgroundPulse 8s ease-in-out infinite alternate;
-            z-index: -2;
-        }
-        
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2300ffff' fill-opacity='0.02'%3E%3Cpath d='M30 30h30v30H30V30zm15 15v15h15V45H45z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            animation: matrixScroll 20s linear infinite;
-            z-index: -1;
-        }
-        
-        @keyframes backgroundPulse {
-            0% { opacity: 0.3; }
-            100% { opacity: 0.8; }
-        }
-        
-        @keyframes matrixScroll {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(60px); }
-        }
-        
-        /* NAVIGATION */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 1rem 2rem;
-            background: rgba(13, 17, 23, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        
-        nav.scrolled {
-            background: rgba(0, 0, 0, 0.95);
-            box-shadow: var(--box-glow);
-        }
-        
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-family: var(--font-mono);
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            font-weight: 700;
-            color: var(--neon-cyan);
-            text-shadow: var(--text-glow);
-            letter-spacing: 1px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-family: var(--font-tech);
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-cyber);
-            transition: width 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: var(--neon-cyan);
-            text-shadow: var(--text-glow);
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        /* HERO SECTION */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-content {
-            max-width: 1000px;
-            z-index: 2;
-        }
-        
-        .hero-title {
-            font-family: var(--font-mono);
-            font-size: clamp(2rem, 6vw, 5rem);
-            font-weight: 700;
-            line-height: 0.9;
-            margin-bottom: 2rem;
-            background: var(--gradient-neural);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-            animation: titleGlow 3s ease-in-out infinite alternate;
-            letter-spacing: -2px;
-        }
-        
-        @keyframes titleGlow {
-            0% { filter: brightness(1) saturate(1); }
-            100% { filter: brightness(1.2) saturate(1.5); }
-        }
-        
-        .hero-subtitle {
-            font-family: var(--font-tech);
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 3rem;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .cta-btn {
-            padding: 1rem 2.5rem;
-            font-family: var(--font-tech);
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            border: 2px solid transparent;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            letter-spacing: 1px;
-        }
-        
-        .cta-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .cta-btn:hover::before {
-            left: 100%;
-        }
-        
-        .cta-primary {
-            background: var(--gradient-cyber);
-            color: var(--void-black);
-            box-shadow: var(--neon-glow);
-        }
-        
-        .cta-primary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
-        }
-        
-        .cta-secondary {
-            color: var(--neon-cyan);
-            border: 2px solid var(--neon-cyan);
-            background: var(--glass-bg);
-        }
-        
-        .cta-secondary:hover {
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: var(--box-glow);
-            transform: translateY(-5px);
-        }
-        
-        /* FLOATING PARTICLES */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            animation: floatUp 15s linear infinite;
-        }
-        
-        .particle:nth-child(2n) { background: var(--neon-magenta); animation-duration: 18s; }
-        .particle:nth-child(3n) { background: var(--neon-lime); animation-duration: 12s; }
-        .particle:nth-child(4n) { background: var(--neon-orange); animation-duration: 20s; }
-        
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% {
-                transform: translateY(-10vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        /* FEATURES SECTION */
-        .features {
-            padding: 8rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .section-title {
-            font-family: var(--font-mono);
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            text-align: center;
-            margin-bottom: 4rem;
-            background: var(--gradient-plasma);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-        }
-        
-        .feature-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 3rem;
-            backdrop-filter: blur(20px);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--gradient-neural);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--box-glow);
-            border-color: var(--neon-cyan);
-        }
-        
-        .feature-card:hover::before {
-            transform: translateX(0);
-        }
-        
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 2rem;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5)) brightness(1.1);
-            transition: all 0.3s ease;
-        }
-        
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 25px rgba(0, 255, 255, 0.8)) brightness(1.3);
-        }
-        
-        .feature-title {
-            font-family: var(--font-tech);
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--neon-cyan);
-        }
-        
-        .feature-description {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-        
-        /* CHAPTERS SHOWCASE */
-        .chapters-showcase {
-            padding: 8rem 2rem;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
-        }
-        
-        .chapters-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        /* TOC ICONS ROW */
-        .toc-icons-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 3rem;
-            margin: 4rem 0;
-            padding: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .toc-icon {
-            position: relative;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 1.5rem;
-            border-radius: 20px;
-            background: var(--glass-bg);
-            border: 2px solid transparent;
-            backdrop-filter: blur(10px);
-        }
-        
-        .toc-icon:hover {
-            transform: translateY(-10px) scale(1.05);
-            border-color: var(--neon-cyan);
-            box-shadow: var(--box-glow);
-        }
-        
-        .toc-icon.active {
-            border-color: var(--neon-cyan);
-            box-shadow: var(--box-glow);
-            transform: scale(1.1);
-        }
-        
-        .toc-icon img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.4));
-            transition: all 0.3s ease;
-        }
-        
-        .toc-icon:hover img,
-        .toc-icon.active img {
-            filter: drop-shadow(0 0 25px rgba(0, 255, 255, 0.8));
-            transform: scale(1.1);
-        }
-        
-        .toc-number {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--gradient-cyber);
-            color: var(--void-black);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            font-weight: 700;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-        }
-        
-        /* CHAPTER DETAILS */
-        .chapter-details {
-            max-width: 800px;
-            margin: 0 auto;
-            min-height: 300px;
-            position: relative;
-        }
-        
-        .chapter-detail {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.5s ease;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            padding: 2rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-        }
-        
-        .chapter-detail.active {
-            opacity: 1;
-            transform: translateY(0);
-            position: relative;
-        }
-        
-        .chapter-detail .chapter-title {
-            font-family: var(--font-tech);
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--neon-cyan);
-            margin-bottom: 1.5rem;
-            background: var(--gradient-cyber);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .chapter-detail .chapter-description {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.8;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-        
-        .chapter-detail .chapter-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-        }
-        
-        .chapter-detail .chapter-tag {
-            background: rgba(0, 255, 255, 0.15);
-            color: var(--neon-cyan);
-            padding: 0.6rem 1.2rem;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border: 1px solid rgba(0, 255, 255, 0.4);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-        }
-        
-        .chapter-detail .chapter-tag:hover {
-            background: rgba(0, 255, 255, 0.3);
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-        }
-        
-        
-        /* FOOTER */
-        footer {
-            background: var(--matrix-dark);
-            border-top: 1px solid var(--glass-border);
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .footer-text {
-            font-family: var(--font-mono);
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 2rem;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-        }
-        
-        .social-link {
-            color: var(--neon-cyan);
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .social-link:hover {
-            transform: scale(1.2);
-            text-shadow: var(--text-glow);
-        }
-        
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            nav {
-                padding: 1rem;
-            }
-            
-            .nav-links {
-                gap: 1rem;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .feature-card {
-                padding: 2rem;
-            }
-            
-            .toc-icons-row {
-                gap: 1.5rem;
-                padding: 1rem;
-            }
-            
-            .toc-icon {
-                padding: 1rem;
-            }
-            
-            .toc-icon img {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .chapter-detail {
-                padding: 1.5rem;
-            }
-            
-            .chapter-detail .chapter-title {
-                font-size: 1.5rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
-            }
-        }
-        
-        /* SCROLL ANIMATIONS */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease;
-        }
-        
-        .fade-in-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* CURSOR GLOW EFFECT */
-        .cursor-glow {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: screen;
-            transition: transform 0.1s ease;
-        }
-    </style>
-    <!-- SEO: keywords -->
-    <meta name="keywords" content="Tidyverse,Tidymodels,R言語,データサイエンス,機械学習,dplyr,ggplot2,統計,データ分析">
-    <!-- SEO: canonical -->
-    <link rel="canonical" href="https://mechatora.com/tidy-data-science/index.html">
-    <!-- OGP -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="TIDYVERSE/TIDYMODELS | TIDYVERSE/TIDYMODELS">
-    <meta property="og:description" content="R言語、Tidyverseによるモダンなデータサイエンスの解説ページ。">
-    <meta property="og:url" content="https://mechatora.com/tidy-data-science/index.html">
-    <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
-    <meta property="og:locale" content="ja_JP">
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="TIDYVERSE/TIDYMODELS | データサイエンスのためのRパッケージエコシステム">
-    <meta name="twitter:description" content="Tidyverse・Tidymodelsを活用したデータサイエンス。dplyr, ggplot2, tidymodelsでデータ分析を効率化。">
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "TIDYVERSE/TIDYMODELS | データサイエンスのためのRパッケージエコシステム",
-      "description": "Tidyverse・Tidymodelsを活用したデータサイエンス。dplyr, ggplot2, tidymodelsでデータ分析を効率化。",
-      "url": "https://mechatora.com/tidy-data-science/index.html",
-      "inLanguage": "ja",
-      "publisher": {
-        "@type": "Organization",
-        "name": "メカとら",
-        "url": "https://mechatora.com"
-      }
-    }
-    </script>
+.tds-data { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1.6rem; margin: 2rem 0; }
+.tds-data h2 { font-size: 1.25rem; margin: 0 0 .8rem; }
+.tds-table-wrap { overflow-x: auto; }
+table.tds-table { border-collapse: collapse; width: 100%; font-size: .86rem; min-width: 560px; }
+table.tds-table th, table.tds-table td { border: 1px solid var(--border); padding: .5rem .7rem; text-align: left; }
+table.tds-table th { background: #fafaf8; font-weight: 700; white-space: nowrap; }
+table.tds-table code { font-size: .85em; }
+
+.tds-chapters { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: .9rem; }
+.tds-ch {
+  display: block; background: var(--surface); border: 1px solid var(--border);
+  border-radius: .8rem; padding: 1rem 1.1rem; text-decoration: none; color: inherit;
+  transition: border-color .2s ease, transform .2s ease;
+}
+.tds-ch:hover { border-color: var(--primary); transform: translateY(-2px); text-decoration: none; }
+.tds-ch .no { font-size: .72rem; font-weight: 800; color: var(--primary-dark); letter-spacing: .06em; }
+.tds-ch .ti { font-weight: 700; margin: .2rem 0 .3rem; font-size: 1rem; }
+.tds-ch .de { font-size: .84rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
+.tds-part { font-size: 1.1rem; margin: 2.2rem 0 .9rem; color: var(--text); border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: .2rem; }
+
+.tds-section { margin: 4rem 0; }
+.tds-section h2 { font-size: 1.6rem; }
+.tds-section p { color: var(--text); }
+.tds-section h3 { font-size: 1.12rem; margin: 1.8rem 0 .5rem; }
+.tds-refs li { margin-bottom: .7rem; }
+
+@media (max-width: 820px) {
+  .tds-figrow { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
-    <div class="cursor-glow"></div>
-    
-    <!-- Navigation -->
-    <nav id="navbar">
-        <div class="nav-container">
-            <div class="logo">TIDYVERSE/TIDYMODELS</div>
-            <ul class="nav-links">
-                <li><a href="#home">HOME</a></li>
-                <li><a href="#features">FEATURES</a></li>
-                <li><a href="#chapters">CHAPTERS</a></li>
-                <li><a href="beginner-guide.html">GUIDE</a></li>
-            </ul>
-        </div>
+<!-- mechatora common topbar -->
+<div style="background:#11151c;border-bottom:1px solid #232a35;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.82rem;">
+  <div style="max-width:1200px;margin:0 auto;padding:.5rem 1.25rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+    <a href="/index.html" style="color:#ff8c00;font-weight:700;text-decoration:none;">メカとら</a>
+    <span style="color:#4a5464;">/</span>
+    <a href="/tidy-data-science/" style="color:#c7d0dc;text-decoration:none;">tidyverseで学ぶ人事データ分析</a>
+    <span style="margin-left:auto;display:flex;gap:1rem;">
+      <a href="/articles.html" style="color:#8d97a5;text-decoration:none;">記事一覧</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+    </span>
+  </div>
+</div>
+<header>
+  <div class="container">
+    <nav>
+      <a href="/index.html" class="logo">メカ<span>とら</span>🐯</a>
+      <div class="nav-links">
+        <a href="/index.html">Home</a>
+        <a href="/articles.html">Blog</a>
+        <a href="/tidy-data-science/">R解説</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </div>
     </nav>
-    
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="particles" id="particles"></div>
-        
-        <div class="hero-content">
-            <div style="display: flex; justify-content: center; align-items: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                <img src="https://tidyverse.tidyverse.org/logo.png" alt="Tidyverse" style="width: 160px; height: 160px; filter: drop-shadow(0 0 25px rgba(0, 255, 255, 0.6));">
-                <div style="font-size: 4rem; color: var(--neon-cyan); filter: drop-shadow(0 0 20px currentColor);">/</div>
-                <img src="https://tidymodels.org/images/tidymodels.png" alt="Tidymodels" style="width: 160px; height: 160px; filter: drop-shadow(0 0 25px rgba(255, 0, 255, 0.6));">
-            </div>
-            <h1 class="hero-title">TIDYVERSE/TIDYMODELS</h1>
-            <p class="hero-subtitle">Rによるデータサイエンス・エコシステム</p>
-            <div class="cta-buttons">
-                <a href="#features" class="cta-btn cta-primary">EXPLORE UNIVERSE</a>
-                <a href="#chapters" class="cta-btn cta-secondary">VIEW CHAPTERS</a>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <h2 class="section-title fade-in-up">CORE FEATURES</h2>
-        <div class="features-grid">
-            <div class="feature-card fade-in-up">
-                <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr" class="feature-icon" style="width: 80px; height: 80px; object-fit: contain;">
-                <h3 class="feature-title">DATA MANIPULATION</h3>
-                <p class="feature-description">dplyrによる直感的なデータ操作。filter(), select(), mutate(), summarise()で複雑なデータ変換を簡潔に記述。</p>
-            </div>
-            
-            <div class="feature-card fade-in-up">
-                <img src="https://ggplot2.tidyverse.org/logo.png" alt="ggplot2" class="feature-icon" style="width: 80px; height: 80px; object-fit: contain;">
-                <h3 class="feature-title">ELEGANT VISUALIZATION</h3>
-                <p class="feature-description">ggplot2による美しいデータ可視化。Grammar of Graphicsに基づく直感的なプロット作成で洞察を視覚化。</p>
-            </div>
-            
-            <div class="feature-card fade-in-up">
-                <img src="https://tidyr.tidyverse.org/logo.png" alt="tidyr" class="feature-icon" style="width: 80px; height: 80px; object-fit: contain;">
-                <h3 class="feature-title">TIDY DATA PRINCIPLES</h3>
-                <p class="feature-description">tidyrによるデータ整理。pivot_longer(), pivot_wider()でデータを整然とした形式に変換し、分析に適した構造を作成。</p>
-            </div>
-            
-            <div class="feature-card fade-in-up">
-                <img src="https://tidymodels.org/images/tidymodels.png" alt="tidymodels" class="feature-icon" style="width: 80px; height: 80px; object-fit: contain;">
-                <h3 class="feature-title">MACHINE LEARNING</h3>
-                <p class="feature-description">tidymodelsによる統一されたML workflow。前処理、モデル構築、評価を一貫したAPIで効率的に実行。</p>
-            </div>
-            
-            <div class="feature-card fade-in-up">
-                <img src="https://readr.tidyverse.org/logo.png" alt="readr" class="feature-icon" style="width: 80px; height: 80px; object-fit: contain;">
-                <h3 class="feature-title">DATA IMPORT</h3>
-                <p class="feature-description">readr, readxl, havenによる多様なデータ形式の読み込み。CSV、Excel、SAS、SPSS、Stataファイルを効率的に処理。</p>
-            </div>
-            
-            <div class="feature-card fade-in-up">
-                <img src="https://magrittr.tidyverse.org/logo.png" alt="magrittr" class="feature-icon" style="width: 80px; height: 80px; object-fit: contain;">
-                <h3 class="feature-title">PIPE WORKFLOW</h3>
-                <p class="feature-description">magrittr パイプ演算子 (%>%) による流れるような処理チェーン。読みやすく保守しやすいコードでデータ分析を効率化。</p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- What R Can Do Section -->
-    <section class="r-applications" style="padding: 8rem 2rem; background: linear-gradient(135deg, rgba(57, 255, 20, 0.05) 0%, rgba(0, 128, 255, 0.05) 100%);">
-        <div style="max-width: 1400px; margin: 0 auto;">
-            <h2 class="section-title fade-in-up">Rで何ができるか？具体的な活用例</h2>
-            <p style="text-align: center; font-size: 1.2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto;">
-                Rは単なる統計ソフトウェアではありません。現代のビジネス、研究、意思決定を支える強力なデータサイエンスプラットフォームです。
-            </p>
-            
-            <!-- Business Applications Grid -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; margin-bottom: 6rem;">
-                
-                <!-- Financial Analysis -->
-                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 128, 255, 0.05) 100%);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">💰</div>
-                        <h3 class="feature-title" style="margin: 0;">金融・投資分析</h3>
-                    </div>
-                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
-                        <p style="margin-bottom: 1rem;"><strong>株価予測モデル:</strong> 時系列分析でTOPIX・日経225の動向を予測</p>
-                        <p style="margin-bottom: 1rem;"><strong>ポートフォリオ最適化:</strong> リスク分散投資の最適配分を数学的に計算</p>
-                        <p style="margin-bottom: 1rem;"><strong>信用リスク評価:</strong> 機械学習で貸し倒れ確率を予測</p>
-                        <div style="background: rgba(0, 255, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-cyan);">
-                            <strong>実例:</strong> 某金融機関では、Rによるリスク評価モデルで貸し倒れ率を30%削減
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Marketing Analytics -->
-                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(255, 0, 255, 0.1) 0%, rgba(128, 0, 255, 0.05) 100%);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">📈</div>
-                        <h3 class="feature-title" style="margin: 0;">マーケティング分析</h3>
-                    </div>
-                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
-                        <p style="margin-bottom: 1rem;"><strong>顧客セグメンテーション:</strong> RFM分析でVIP顧客を特定</p>
-                        <p style="margin-bottom: 1rem;"><strong>A/Bテスト:</strong> 統計的検定で広告効果を科学的に評価</p>
-                        <p style="margin-bottom: 1rem;"><strong>推薦システム:</strong> 協調フィルタリングで個人化商品推薦</p>
-                        <div style="background: rgba(255, 0, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-magenta);">
-                            <strong>実例:</strong> ECサイトでRベースの推薦エンジンが売上を25%向上
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Healthcare Analytics -->
-                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 0, 0.05) 100%);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🏥</div>
-                        <h3 class="feature-title" style="margin: 0;">医療・ヘルスケア</h3>
-                    </div>
-                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
-                        <p style="margin-bottom: 1rem;"><strong>疫学調査:</strong> 疾病の感染拡大モデルをシミュレーション</p>
-                        <p style="margin-bottom: 1rem;"><strong>臨床試験分析:</strong> 薬効評価の統計解析で新薬開発を支援</p>
-                        <p style="margin-bottom: 1rem;"><strong>遺伝子解析:</strong> バイオインフォマティクスでゲノム研究</p>
-                        <div style="background: rgba(57, 255, 20, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-lime);">
-                            <strong>実例:</strong> COVID-19の感染予測モデルで政策決定を科学的に支援
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Manufacturing Analytics -->
-                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🏭</div>
-                        <h3 class="feature-title" style="margin: 0;">製造・品質管理</h3>
-                    </div>
-                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
-                        <p style="margin-bottom: 1rem;"><strong>予知保全:</strong> センサーデータから機械の故障を事前予測</p>
-                        <p style="margin-bottom: 1rem;"><strong>品質管理:</strong> 統計的プロセス制御で不良品率を最小化</p>
-                        <p style="margin-bottom: 1rem;"><strong>サプライチェーン最適化:</strong> 在庫管理と需要予測を連携</p>
-                        <div style="background: rgba(255, 102, 0, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--neon-orange);">
-                            <strong>実例:</strong> 自動車メーカーでR予知保全システムがダウンタイム40%削減
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Academic Research -->
-                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(128, 0, 255, 0.1) 0%, rgba(255, 0, 255, 0.05) 100%);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🎓</div>
-                        <h3 class="feature-title" style="margin: 0;">学術研究</h3>
-                    </div>
-                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
-                        <p style="margin-bottom: 1rem;"><strong>社会科学調査:</strong> アンケート分析で社会現象を定量化</p>
-                        <p style="margin-bottom: 1rem;"><strong>心理学実験:</strong> 行動データの統計モデリング</p>
-                        <p style="margin-bottom: 1rem;"><strong>自然科学:</strong> 物理・化学・生物学の実験データ解析</p>
-                        <div style="background: rgba(128, 0, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--plasma-purple);">
-                            <strong>実例:</strong> 論文引用数上位のNature誌でRを用いた分析が急増中
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Digital Marketing -->
-                <div class="feature-card fade-in-up" style="background: linear-gradient(135deg, rgba(0, 128, 255, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">📱</div>
-                        <h3 class="feature-title" style="margin: 0;">デジタルマーケティング</h3>
-                    </div>
-                    <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
-                        <p style="margin-bottom: 1rem;"><strong>Web解析:</strong> Google Analytics データから顧客行動を分析</p>
-                        <p style="margin-bottom: 1rem;"><strong>ソーシャル分析:</strong> SNSの感情分析でブランドイメージを測定</p>
-                        <p style="margin-bottom: 1rem;"><strong>アトリビューション分析:</strong> 各チャネルの広告効果を正確に評価</p>
-                        <div style="background: rgba(0, 128, 255, 0.15); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--electric-blue);">
-                            <strong>実例:</strong> 広告代理店でRダッシュボードがROAS(広告費対効果)を35%改善
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <!-- Why R is Chosen -->
-            <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 4rem; backdrop-filter: blur(20px); text-align: center;">
-                <h3 style="font-family: var(--font-tech); font-size: 2rem; color: var(--neon-cyan); margin-bottom: 2rem;">なぜ世界中の専門家がRを選ぶのか？</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; text-align: left;">
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 2rem; margin-right: 1rem;">🆓</div>
-                            <h4 style="color: var(--neon-lime); margin: 0;">完全無料のオープンソース</h4>
-                        </div>
-                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">高価なライセンス不要。世界中の研究者が開発する15,000以上のパッケージを自由に利用可能</p>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 2rem; margin-right: 1rem;">🌍</div>
-                            <h4 style="color: var(--neon-cyan); margin: 0;">グローバルコミュニティ</h4>
-                        </div>
-                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">500万人以上のユーザー、Stack Overflowでの質問数は常に上位。豊富な学習リソースとサポート</p>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 2rem; margin-right: 1rem;">🎯</div>
-                            <h4 style="color: var(--neon-magenta); margin: 0;">統計・機械学習に特化</h4>
-                        </div>
-                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">統計学者が設計した言語。最新のAI・機械学習手法が最初にR向けに実装される傾向</p>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 2rem; margin-right: 1rem;">📊</div>
-                            <h4 style="color: var(--electric-blue); margin: 0;">美しいデータ可視化</h4>
-                        </div>
-                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">ggplot2による美しいグラフ作成。論文・プレゼン・レポートで使える高品質なビジュアル</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- CTA Section -->
-            <div style="text-align: center; margin-top: 4rem;">
-                <h3 style="font-family: var(--font-tech); font-size: 1.8rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem;">
-                    あなたもRでデータの力を解き放ちませんか？
-                </h3>
-                <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="#chapters" class="cta-btn cta-primary" style="text-decoration: none;">今すぐ学習を始める</a>
-                    <a href="chapter1-tidyverse-overview.html" class="cta-btn cta-secondary" style="text-decoration: none;">第1章から読む</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 統計・機械学習手法選択ガイド -->
-    <section class="method-selection" style="padding: 8rem 2rem; background: linear-gradient(135deg, rgba(128, 0, 255, 0.05) 0%, rgba(0, 255, 255, 0.05) 100%);">
-        <div style="max-width: 1400px; margin: 0 auto;">
-            <h2 class="section-title fade-in-up">📊 統計・機械学習手法選択ナビゲーター</h2>
-            <p style="text-align: center; font-size: 1.2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto;">
-                データの特性に応じた最適な分析手法を素早く見つけられる完全ガイド。どんな状況でも迷わない分析手法検索システム。
-            </p>
-            
-            <!-- メイン手法選択フローチャート -->
-            <div class="method-flow-container" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 3rem; backdrop-filter: blur(20px); margin-bottom: 4rem;">
-                <div style="text-align: center; margin-bottom: 3rem;">
-                    <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 1rem;">🎯 データ特性別手法選択フロー</h3>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;">3ステップで最適な分析手法を特定</p>
-                </div>
-                
-                <!-- シンプルな手法選択フローチャート -->
-                <div style="display: grid; gap: 3rem; margin-bottom: 3rem;">
-                    
-                    <!-- STEP 1: データタイプの判定 -->
-                    <div style="background: var(--glass-bg); border: 2px solid #00ffff; border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px);">
-                        <div style="text-align: center; margin-bottom: 3rem;">
-                            <div style="color: #00ffff; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem;">STEP 1</div>
-                            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem; font-family: var(--font-tech);">🎯 データタイプを特定</h3>
-                            <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">まず、分析対象データの種類を判別します</p>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                            <!-- 数値データ -->
-                            <div style="background: rgba(0,128,255,0.15); border: 2px solid #0080ff; border-radius: 20px; padding: 2rem; text-align: center;">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
-                                <h4 style="color: #0080ff; font-size: 1.3rem; margin-bottom: 1rem;">数値データ</h4>
-                                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 1.5rem;">
-                                    <strong>連続値:</strong> 身長、体重、売上<br>
-                                    <strong>離散値:</strong> 注文数、来客数
-                                </div>
-                                <div style="background: rgba(0,128,255,0.2); padding: 1rem; border-radius: 10px; border-left: 4px solid #0080ff;">
-                                    <strong style="color: #00ffff;">推奨手法:</strong><br>
-                                    回帰分析、相関分析
-                                </div>
-                            </div>
-                            
-                            <!-- カテゴリカルデータ -->
-                            <div style="background: rgba(255,0,255,0.15); border: 2px solid #ff00ff; border-radius: 20px; padding: 2rem; text-align: center;">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">🏷️</div>
-                                <h4 style="color: #ff00ff; font-size: 1.3rem; margin-bottom: 1rem;">カテゴリカルデータ</h4>
-                                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 1.5rem;">
-                                    <strong>二値:</strong> 購入/未購入、合格/不合格<br>
-                                    <strong>多値:</strong> 職業、地域、商品カテゴリ
-                                </div>
-                                <div style="background: rgba(255,0,255,0.2); padding: 1rem; border-radius: 10px; border-left: 4px solid #ff00ff;">
-                                    <strong style="color: #ff00ff;">推奨手法:</strong><br>
-                                    分類分析、判別分析
-                                </div>
-                            </div>
-                            
-                            <!-- 時系列データ -->
-                            <div style="background: rgba(57,255,20,0.15); border: 2px solid #39ff14; border-radius: 20px; padding: 2rem; text-align: center;">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
-                                <h4 style="color: #39ff14; font-size: 1.3rem; margin-bottom: 1rem;">時系列データ</h4>
-                                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 1.5rem;">
-                                    <strong>時間順序:</strong> 株価、気温、売上推移<br>
-                                    <strong>周期性:</strong> 季節変動、曜日効果
-                                </div>
-                                <div style="background: rgba(57,255,20,0.2); padding: 1rem; border-radius: 10px; border-left: 4px solid #39ff14;">
-                                    <strong style="color: #39ff14;">推奨手法:</strong><br>
-                                    時系列予測、トレンド分析
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- STEP 2: データ特性の確認 -->
-                    <div style="background: var(--glass-bg); border: 2px solid #ff6600; border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px);">
-                        <div style="text-align: center; margin-bottom: 3rem;">
-                            <div style="color: #ff6600; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem;">STEP 2</div>
-                            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem; font-family: var(--font-tech);">🔍 データ特性をチェック</h3>
-                            <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">データの品質と分布を確認して適切な前処理を選択</p>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
-                            <!-- 分布の形状 -->
-                            <div style="background: rgba(0,255,255,0.1); border: 1px solid #00ffff; border-radius: 15px; padding: 2rem;">
-                                <h4 style="color: #00ffff; margin-bottom: 1.5rem; display: flex; align-items: center;">
-                                    <span style="font-size: 1.5rem; margin-right: 0.5rem;">📊</span>
-                                    分布の形状
-                                </h4>
-                                <div style="color: rgba(255,255,255,0.9); line-height: 1.8;">
-                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(0,255,255,0.1); border-radius: 8px;">
-                                        <strong>正規分布</strong> → 線形回帰, t検定
-                                    </div>
-                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(255,0,255,0.1); border-radius: 8px;">
-                                        <strong>歪んだ分布</strong> → Box-Cox変換, ロバスト回帰
-                                    </div>
-                                    <div style="padding: 0.8rem; background: rgba(57,255,20,0.1); border-radius: 8px;">
-                                        <strong>多峰性</strong> → 混合モデル, クラスタリング
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- データ品質 -->
-                            <div style="background: rgba(255,0,255,0.1); border: 1px solid #ff00ff; border-radius: 15px; padding: 2rem;">
-                                <h4 style="color: #ff00ff; margin-bottom: 1.5rem; display: flex; align-items: center;">
-                                    <span style="font-size: 1.5rem; margin-right: 0.5rem;">🔧</span>
-                                    データ品質
-                                </h4>
-                                <div style="color: rgba(255,255,255,0.9); line-height: 1.8;">
-                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(128,0,255,0.1); border-radius: 8px;">
-                                        <strong>欠損値あり</strong> → mice, VIM で補完
-                                    </div>
-                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(255,102,0,0.1); border-radius: 8px;">
-                                        <strong>外れ値あり</strong> → 除外 or ロバスト手法
-                                    </div>
-                                    <div style="padding: 0.8rem; background: rgba(0,128,255,0.1); border-radius: 8px;">
-                                        <strong>多重共線性</strong> → Ridge, Lasso 正則化
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- クラス不均衡 -->
-                            <div style="background: rgba(57,255,20,0.1); border: 1px solid #39ff14; border-radius: 15px; padding: 2rem;">
-                                <h4 style="color: #39ff14; margin-bottom: 1.5rem; display: flex; align-items: center;">
-                                    <span style="font-size: 1.5rem; margin-right: 0.5rem;">⚖️</span>
-                                    クラス不均衡
-                                </h4>
-                                <div style="color: rgba(255,255,255,0.9); line-height: 1.8;">
-                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(0,255,255,0.1); border-radius: 8px;">
-                                        <strong>軽度 (1:2-5)</strong> → 重み付き学習
-                                    </div>
-                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: rgba(255,0,255,0.1); border-radius: 8px;">
-                                        <strong>中度 (1:10-50)</strong> → SMOTE, ROSE
-                                    </div>
-                                    <div style="padding: 0.8rem; background: rgba(255,102,0,0.1); border-radius: 8px;">
-                                        <strong>重度 (1:100+)</strong> → 異常検知手法
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- STEP 3: 目的と制約の整理 -->
-                    <div style="background: var(--glass-bg); border: 2px solid #39ff14; border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px);">
-                        <div style="text-align: center; margin-bottom: 3rem;">
-                            <div style="color: #39ff14; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem;">STEP 3</div>
-                            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem; font-family: var(--font-tech);">⚡ 目的と制約を整理</h3>
-                            <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">分析の目的と制約条件に応じて最適な手法を選択</p>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-                            <!-- 解釈性重視 -->
-                            <div style="background: rgba(0,255,255,0.15); border: 2px solid #00ffff; border-radius: 15px; padding: 2rem; text-align: center;">
-                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔍</div>
-                                <h4 style="color: #00ffff; margin-bottom: 1rem;">解釈性重視</h4>
-                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
-                                    「なぜその結果になったのか」<br>
-                                    説明できることが重要
-                                </div>
-                                <div style="background: rgba(0,255,255,0.2); padding: 1rem; border-radius: 10px;">
-                                    <strong>推奨:</strong><br>
-                                    線形回帰, GAM, 決定木
-                                </div>
-                            </div>
-                            
-                            <!-- 予測精度重視 -->
-                            <div style="background: rgba(255,0,255,0.15); border: 2px solid #ff00ff; border-radius: 15px; padding: 2rem; text-align: center;">
-                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
-                                <h4 style="color: #ff00ff; margin-bottom: 1rem;">予測精度重視</h4>
-                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
-                                    とにかく高い予測精度を<br>
-                                    達成することが目標
-                                </div>
-                                <div style="background: rgba(255,0,255,0.2); padding: 1rem; border-radius: 10px;">
-                                    <strong>推奨:</strong><br>
-                                    RandomForest, XGBoost, SVM
-                                </div>
-                            </div>
-                            
-                            <!-- 高速処理重視 -->
-                            <div style="background: rgba(57,255,20,0.15); border: 2px solid #39ff14; border-radius: 15px; padding: 2rem; text-align: center;">
-                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚡</div>
-                                <h4 style="color: #39ff14; margin-bottom: 1rem;">高速処理重視</h4>
-                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
-                                    リアルタイム処理や<br>
-                                    大量データの高速処理
-                                </div>
-                                <div style="background: rgba(57,255,20,0.2); padding: 1rem; border-radius: 10px;">
-                                    <strong>推奨:</strong><br>
-                                    線形モデル, Naive Bayes
-                                </div>
-                            </div>
-                            
-                            <!-- 大規模データ対応 -->
-                            <div style="background: rgba(255,102,0,0.15); border: 2px solid #ff6600; border-radius: 15px; padding: 2rem; text-align: center;">
-                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔄</div>
-                                <h4 style="color: #ff6600; margin-bottom: 1rem;">大規模データ</h4>
-                                <div style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
-                                    メモリに収まらない<br>
-                                    巨大データセット
-                                </div>
-                                <div style="background: rgba(255,102,0,0.2); padding: 1rem; border-radius: 10px;">
-                                    <strong>推奨:</strong><br>
-                                    SGD, Online Learning
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 迷った時のクイックガイド -->
-                    <div style="background: var(--glass-bg); border: 2px solid var(--neon-lime); border-radius: 25px; padding: 3rem; backdrop-filter: blur(20px); text-align: center;">
-                        <h3 style="color: var(--neon-lime); font-size: 1.8rem; margin-bottom: 2rem; font-family: var(--font-tech);">💡 迷った時のクイックガイド</h3>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-                            <div style="background: rgba(0,255,255,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #00ffff;">
-                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎲</div>
-                                <strong style="color: #00ffff;">初心者の場合</strong><br>
-                                <span style="color: rgba(255,255,255,0.8);">まずはランダムフォレスト</span>
-                            </div>
-                            <div style="background: rgba(255,0,255,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #ff00ff;">
-                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
-                                <strong style="color: #ff00ff;">線形関係がありそう</strong><br>
-                                <span style="color: rgba(255,255,255,0.8);">線形回帰から始める</span>
-                            </div>
-                            <div style="background: rgba(57,255,20,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #39ff14;">
-                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔬</div>
-                                <strong style="color: #39ff14;">探索的分析</strong><br>
-                                <span style="color: rgba(255,255,255,0.8);">可視化 + 基本統計</span>
-                            </div>
-                            <div style="background: rgba(255,102,0,0.1); padding: 1.5rem; border-radius: 15px; border: 1px solid #ff6600;">
-                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
-                                <strong style="color: #ff6600;">カテゴリ予測</strong><br>
-                                <span style="color: rgba(255,255,255,0.8);">ロジスティック回帰</span>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                            <h4 style="color: white; margin-bottom: 1rem;">🚀 効率的な分析アプローチ</h4>
-                            <div style="color: rgba(255,255,255,0.9); text-align: left; max-width: 600px; margin: 0 auto; line-height: 1.8;">
-                                <strong>1. 可視化でデータを理解</strong> → ggplot2でパターンを探る<br>
-                                <strong>2. シンプルな手法から開始</strong> → 線形回帰、ロジスティック回帰<br>
-                                <strong>3. 複雑な手法で精度向上</strong> → ランダムフォレスト、XGBoost<br>
-                                <strong>4. クロスバリデーションで評価</strong> → rsampleで性能を測定
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <!-- 詳細手法マトリックス -->
-            <div class="method-matrix" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
-                
-                <!-- 回帰問題 -->
-                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(0,128,255,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 2.5rem; margin-right: 1rem;">📈</div>
-                        <h3 style="color: #0080ff; margin: 0; font-family: var(--font-tech);">回帰問題</h3>
-                    </div>
-                    
-                    <div class="method-list" style="space-y: 1rem;">
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(0,128,255,0.1); border-radius: 10px; border-left: 4px solid #0080ff;">
-                            <div style="color: #00ffff; font-weight: bold; margin-bottom: 0.5rem;">線形関係</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>標準:</strong> lm(), glm()<br>
-                                • <strong>正則化:</strong> ridge, lasso, elastic_net<br>
-                                • <strong>ロバスト:</strong> rlm(), Huber回帰<br>
-                                • <strong>ベイズ:</strong> rstanarm::stan_glm()
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(0,128,255,0.1); border-radius: 10px; border-left: 4px solid #ff00ff;">
-                            <div style="color: #ff00ff; font-weight: bold; margin-bottom: 0.5rem;">非線形関係</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>スプライン:</strong> mgcv::gam(), splines::bs()<br>
-                                • <strong>カーネル:</strong> kernlab::gausspr()<br>
-                                • <strong>木系:</strong> randomForest(), xgboost()<br>
-                                • <strong>ニューラル:</strong> nnet(), torch()
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 分類問題 -->
-                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(255,0,255,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 2.5rem; margin-right: 1rem;">🏷️</div>
-                        <h3 style="color: #ff00ff; margin: 0; font-family: var(--font-tech);">分類問題</h3>
-                    </div>
-                    
-                    <div class="method-list">
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,0,255,0.1); border-radius: 10px; border-left: 4px solid #ff00ff;">
-                            <div style="color: #ff00ff; font-weight: bold; margin-bottom: 0.5rem;">バランス済み</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>線形:</strong> glm(family=binomial), svm(linear)<br>
-                                • <strong>非線形:</strong> randomForest(), svm(rbf)<br>
-                                • <strong>確率的:</strong> mgcv::gam(), rstanarm
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,0,255,0.1); border-radius: 10px; border-left: 4px solid #39ff14;">
-                            <div style="color: #39ff14; font-weight: bold; margin-bottom: 0.5rem;">不均衡データ</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>軽度:</strong> weighted_glm(), cost_sensitive<br>
-                                • <strong>中度:</strong> ROSE::ROSE(), DMwR::SMOTE()<br>
-                                • <strong>重度:</strong> isolationForest(), autoencoder()
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 時系列問題 -->
-                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(57,255,20,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 2.5rem; margin-right: 1rem;">📅</div>
-                        <h3 style="color: #39ff14; margin: 0; font-family: var(--font-tech);">時系列分析</h3>
-                    </div>
-                    
-                    <div class="method-list">
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(57,255,20,0.1); border-radius: 10px; border-left: 4px solid #39ff14;">
-                            <div style="color: #39ff14; font-weight: bold; margin-bottom: 0.5rem;">単変量</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>線形:</strong> arima(), auto.arima()<br>
-                                • <strong>非線形:</strong> forecast::nnetar()<br>
-                                • <strong>状態空間:</strong> dlm::dlm(), KFAS::SSModel()
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(57,255,20,0.1); border-radius: 10px; border-left: 4px solid #00ffff;">
-                            <div style="color: #00ffff; font-weight: bold; margin-bottom: 0.5rem;">多変量・高頻度</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>VAR:</strong> vars::VAR(), tsDyn::lineVar()<br>
-                                • <strong>GARCH:</strong> rugarch::ugarchfit()<br>
-                                • <strong>Prophet:</strong> prophet::prophet()
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- クラスタリング・次元削減 -->
-                <div class="method-category" style="background: var(--glass-bg); border: 1px solid rgba(255,102,0,0.3); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px);">
-                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 2.5rem; margin-right: 1rem;">🔍</div>
-                        <h3 style="color: #ff6600; margin: 0; font-family: var(--font-tech);">クラスタリング・次元削減</h3>
-                    </div>
-                    
-                    <div class="method-list">
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,102,0,0.1); border-radius: 10px; border-left: 4px solid #ff6600;">
-                            <div style="color: #ff6600; font-weight: bold; margin-bottom: 0.5rem;">クラスタリング</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>距離ベース:</strong> kmeans(), hclust()<br>
-                                • <strong>密度ベース:</strong> dbscan(), optics()<br>
-                                • <strong>モデルベース:</strong> mixtools::normalmixEM()
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,102,0,0.1); border-radius: 10px; border-left: 4px solid #8000ff;">
-                            <div style="color: #8000ff; font-weight: bold; margin-bottom: 0.5rem;">次元削減</div>
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.4;">
-                                • <strong>線形:</strong> prcomp(), princomp()<br>
-                                • <strong>非線形:</strong> Rtsne::Rtsne(), umap::umap()<br>
-                                • <strong>特徴選択:</strong> Boruta::Boruta(), glmnet
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <!-- クイック診断ツール -->
-            <div class="quick-diagnosis" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 3rem; backdrop-filter: blur(20px); text-align: center;">
-                <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem;">⚡ クイック診断チェックリスト</h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; text-align: left;">
-                    <div style="padding: 1.5rem; background: rgba(0,255,255,0.1); border-radius: 15px; border-left: 4px solid #00ffff;">
-                        <h4 style="color: #00ffff; margin-bottom: 1rem; display: flex; align-items: center;">
-                            <span style="font-size: 1.5rem; margin-right: 0.5rem;">📊</span>
-                            データ基本情報
-                        </h4>
-                        <ul style="color: rgba(255,255,255,0.9); line-height: 1.8; margin: 0; padding-left: 1.5rem;">
-                            <li>目的変数の型は？（数値/カテゴリ/時系列）</li>
-                            <li>サンプルサイズ vs 変数数の比率は？</li>
-                            <li>欠損データの割合と種類は？</li>
-                            <li>外れ値の存在と影響度は？</li>
-                        </ul>
-                    </div>
-                    
-                    <div style="padding: 1.5rem; background: rgba(255,0,255,0.1); border-radius: 15px; border-left: 4px solid #ff00ff;">
-                        <h4 style="color: #ff00ff; margin-bottom: 1rem; display: flex; align-items: center;">
-                            <span style="font-size: 1.5rem; margin-right: 0.5rem;">📈</span>
-                            分布・関係性
-                        </h4>
-                        <ul style="color: rgba(255,255,255,0.9); line-height: 1.8; margin: 0; padding-left: 1.5rem;">
-                            <li>データの分布形状は？（正規/歪み/多峰性）</li>
-                            <li>変数間の関係は？（線形/非線形）</li>
-                            <li>クラス不均衡の程度は？</li>
-                            <li>多重共線性の有無は？</li>
-                        </ul>
-                    </div>
-                    
-                    <div style="padding: 1.5rem; background: rgba(57,255,20,0.1); border-radius: 15px; border-left: 4px solid #39ff14;">
-                        <h4 style="color: #39ff14; margin-bottom: 1rem; display: flex; align-items: center;">
-                            <span style="font-size: 1.5rem; margin-right: 0.5rem;">🎯</span>
-                            目的・制約
-                        </h4>
-                        <ul style="color: rgba(255,255,255,0.9); line-height: 1.8; margin: 0; padding-left: 1.5rem;">
-                            <li>予測精度 vs 解釈性の優先度は？</li>
-                            <li>計算時間・リソースの制約は？</li>
-                            <li>リアルタイム処理の必要性は？</li>
-                            <li>モデル更新の頻度は？</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                    <h4 style="color: var(--neon-lime); margin-bottom: 1rem; font-size: 1.3rem;">💡 迷った時の黄金ルール</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; text-align: center;">
-                        <div style="color: rgba(255,255,255,0.9);">
-                            <strong style="color: #00ffff;">解釈性重視</strong><br>
-                            <span style="font-size: 0.9rem;">→ 線形回帰, GAM, 決定木</span>
-                        </div>
-                        <div style="color: rgba(255,255,255,0.9);">
-                            <strong style="color: #ff00ff;">予測精度重視</strong><br>
-                            <span style="font-size: 0.9rem;">→ RandomForest, XGBoost</span>
-                        </div>
-                        <div style="color: rgba(255,255,255,0.9);">
-                            <strong style="color: #39ff14;">高速処理重視</strong><br>
-                            <span style="font-size: 0.9rem;">→ 線形モデル, Naive Bayes</span>
-                        </div>
-                        <div style="color: rgba(255,255,255,0.9);">
-                            <strong style="color: #ff6600;">不明な場合</strong><br>
-                            <span style="font-size: 0.9rem;">→ まずランダムフォレスト</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Chapters Section -->
-    <section class="chapters-showcase" id="chapters">
-        <div class="chapters-container">
-            <h2 class="section-title fade-in-up">LEARNING CHAPTERS - 全24章完全ガイド</h2>
-            <p style="text-align: center; font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 4rem;">
-                基礎から実践まで、Tidyverse/Tidymodelsの完全習得を目指す24章構成
-            </p>
-            
-            <!-- 全章グリッド表示 -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
-                
-                <!-- Chapter 1 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter1-tidyverse-overview.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://tidyverse.tidyverse.org/logo.png" alt="Tidyverse" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 01</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">Tidyverse概要とインストール</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">データサイエンス哲学とTidy Dataの原則</p>
-                </div>
-                
-                <!-- Chapter 2 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter2-dplyr-data-manipulation.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://readr.tidyverse.org/logo.png" alt="readr" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 02</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">dplyrによるデータ操作</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">高速データ読み込みとパース技術</p>
-                </div>
-                
-                <!-- Chapter 3 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter3-ggplot2-visualization.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://tidyr.tidyverse.org/logo.png" alt="tidyr" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 03</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">ggplot2による美しい可視化</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">pivot操作でデータ形状を自在に変換</p>
-                </div>
-                
-                <!-- Chapter 4 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter4-tidyr-data-reshaping.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 04</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">tidyrによるデータ再構造化</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">5つの動詞で直感的データ操作</p>
-                </div>
-                
-                <!-- Chapter 5 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter5-stringr-text-processing.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr joins" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 05</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">stringrによるテキスト処理</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">リレーショナルデータの結合技術</p>
-                </div>
-                
-                <!-- Chapter 6 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter6-forcats-purrr-advanced.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://ggplot2.tidyverse.org/logo.png" alt="ggplot2" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 06</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">forcats & purrr 因子とリスト操作</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">Grammar of Graphicsで美しいビジュアル</p>
-                </div>
-                
-                <!-- Chapter 7 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter7-lubridate-datetime.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://purrr.tidyverse.org/logo.png" alt="purrr" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 07</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">lubridate - 日付・時間データの完全マスター</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">map関数族で効率的リスト操作</p>
-                </div>
-                
-                <!-- Chapter 8 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter8-readr-data-import.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">📊</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 08</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">readr - データ読み込みとパースの完全ガイド</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">データパターンと洞察の発見</p>
-                </div>
-                
-                <!-- Chapter 9 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter9-tibble-modern-dataframe.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🔬</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 09</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">tibble - モダンなデータフレーム操作</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">現代的統計手法と仮説検定</p>
-                </div>
-                
-                <!-- Chapter 10 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter10-statistics-modeling.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">📈</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 10</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">統計モデリング基礎</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">線形・非線形モデルの構築</p>
-                </div>
-                
-                <!-- Chapter 11 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter11-machine-learning.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🤖</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 11</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">機械学習とtidymodels</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">効率的なモデル比較と選択</p>
-                </div>
-                
-                <!-- Chapter 12 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter12-time-series.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <img src="https://tidymodels.org/images/tidymodels.png" alt="tidymodels" style="width: 60px; height: 60px; margin-right: 1rem;">
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 12</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">時系列予測の魔法</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">統一MLワークフローの構築</p>
-                </div>
-                
-                <!-- Chapter 13 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter13-advanced-ggplot2.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">⚗️</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 13</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">高度なggplot2とカスタム可視化</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">スケーラブルな特徴量エンジニアリング</p>
-                </div>
-                
-                <!-- Chapter 14 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter14-interactive-visualization.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🎯</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 14</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">インタラクティブ可視化とplotly</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">統一APIで多様なアルゴリズム</p>
-                </div>
-                
-                <!-- Chapter 15 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter15-advanced-data-viz.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🔄</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 15</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">高度なデータ可視化統合</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">workflows パッケージで効率化</p>
-                </div>
-                
-                <!-- Chapter 16 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter16-resampling-rsample.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🔀</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 16</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">リサンプリング - rsample</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">CV・Bootstrap戦略をマスター</p>
-                </div>
-                
-                <!-- Chapter 17 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter17-hyperparameter-tuning-simple.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">⚙️</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 17</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">ハイパーパラメータチューニング - tune</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">自動チューニングで性能最大化</p>
-                </div>
-                
-                <!-- Chapter 18 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter18-model-evaluation-yardstick.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">📏</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 18</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">モデル評価の極意 - yardstick</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">包括的性能評価の極意</p>
-                </div>
-                
-                <!-- Chapter 19 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter19-prediction-interpretation.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🔮</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 19</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">予測と解釈</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">実用的予測とモデル解釈可能性</p>
-                </div>
-                
-                <!-- Chapter 20 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter20-ensemble-learning-enhanced.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🏗️</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 20</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">アンサンブル学習の極意 - stacks</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">複数モデルの組み合わせで精度向上</p>
-                </div>
-                
-                <!-- Chapter 21 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter21-time-series-modeltime.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">📅</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 21</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">時系列分析 - modeltime</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">時系列予測の現代的アプローチ</p>
-                </div>
-                
-                <!-- Chapter 22 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter22-text-analysis-tidytext.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">📝</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 22</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">テキスト分析 - tidytext</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">自然言語処理をTidyに実装</p>
-                </div>
-                
-                <!-- Chapter 23 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter23-deep-learning-torch.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🧠</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 23</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">深層学習 - torch</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">PyTorch統合とニューラルネット</p>
-                </div>
-                
-                <!-- Chapter 24 -->
-                <div class="feature-card fade-in-up" onclick="window.open('chapter24-practical-projects-enhanced.html', '_blank')" style="cursor: pointer; transition: all 0.3s ease;">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem; margin-right: 1rem;">🏆</div>
-                        <div>
-                            <div style="font-size: 0.9rem; color: var(--neon-cyan);">Chapter 24</div>
-                            <h3 style="margin: 0; color: white; font-size: 1.2rem;">実践プロジェクト集</h3>
-                        </div>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.5;">現実課題の解決とMLOps実装</p>
-                </div>
-                
-            </div>
-            
-            <!-- 学習の流れ -->
-            <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 3rem; backdrop-filter: blur(20px); text-align: center; margin-top: 4rem;">
-                <h3 style="font-family: var(--font-tech); font-size: 1.8rem; color: var(--neon-cyan); margin-bottom: 2rem;">💡 効率的な学習の流れ</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: left;">
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 2rem; margin-right: 1rem;">🏁</div>
-                            <h4 style="color: var(--neon-lime); margin: 0;">基礎編（1-7章）</h4>
-                        </div>
-                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">Tidyverse コアパッケージの習得。データ操作・可視化の基本スキルを身につける</p>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 2rem; margin-right: 1rem;">⚡</div>
-                            <h4 style="color: var(--neon-cyan); margin: 0;">統計・ML編（8-20章）</h4>
-                        </div>
-                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">統計分析とTidymodelsによる機械学習パイプライン構築をマスター</p>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 2rem; margin-right: 1rem;">🚀</div>
-                            <h4 style="color: var(--neon-magenta); margin: 0;">応用・実践編（21-24章）</h4>
-                        </div>
-                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">時系列・テキスト・深層学習の特殊領域と実践プロジェクトで完全習得</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-        <!-- admax -->
-    <div style="text-align: center; margin: 2rem 0;">
-        <script src="https://adm.shinobi.jp/s/9436cefd263190fa08b390c2af43f545"></script>
+  </div>
+</header>
+
+<main class="container" style="padding-top:3rem;">
+
+<h1 style="font-size:clamp(1.8rem,4.5vw,2.5rem);font-weight:900;margin:0 0 1rem;">tidyverseで学ぶ人事データ分析</h1>
+
+<div class="tds-lead">
+  <p>残業時間、勤続年数、退職、エンゲージメントスコア。人事の現場で扱うデータをそのまま題材にして、R（tidyverse／tidymodels）でのデータ加工・可視化・モデリングを解説しています。全24章、サンプルデータ付きです。</p>
+  <p>書いているのは現役の人事担当者です。Rの教科書としての完成度では専門家の書いた定番書に及びませんが、<strong>「人事データ特有の扱いにくさ」に踏み込んだ日本語の解説は他にあまりありません</strong>。等級のような順序のある因子、入退社日から勤続年数を出す処理、母数の小さい部署の扱い、個人が特定されうる集計の危うさ。そのあたりを実務の感覚で書いています。</p>
+</div>
+
+<div class="tds-callout">
+  <h2>Rそのものが初めてなら、先に読むべき本があります</h2>
+  <p>文法や環境構築から体系的に学びたい場合は、宋財泫・矢内勇生『<a href="https://www.jaysong.net/RBook/" target="_blank" rel="noopener">私たちのR: ベストプラクティスの探求</a>』（無料公開）か、Hadley Wickhamらの『<a href="https://r4ds.hadley.nz/" target="_blank" rel="noopener">R for Data Science</a>』（邦訳『Rではじめるデータサイエンス』）のほうが確実です。網羅性でも正確さでも、そちらが上です。</p>
+  <p>このサイトが役に立つのは、Rの基本操作はひととおり分かっていて、<strong>手元の人事データで何をどうすればいいかの当たりをつけたいとき</strong>だと思ってください。</p>
+</div>
+
+<div class="ad-container">
+  <!-- AdSense: 広告ユニットを作成し、発行された data-ad-slot を設定してからコメントを解除してください。
+  <ins class="adsbygoogle" style="display:block"
+       data-ad-client="ca-pub-1184134440246706"
+       data-ad-slot="ここに実際の広告ユニットIDを入れる"
+       data-ad-format="auto" data-full-width-responsive="true"></ins>
+  -->
+</div>
+
+<section class="tds-data">
+  <h2>サンプルデータ</h2>
+  <p style="color:var(--text-muted);margin:0 0 1rem;">解説で使う架空の人事データです。従業員1,200名分、6列。実在の企業のデータではなく、乱数から生成した疑似データです。手元にコピーして同じコードを試せます。</p>
+  <div class="tds-table-wrap">
+    <table class="tds-table">
+      <thead><tr><th>列名</th><th>型</th><th>内容</th><th>備考</th></tr></thead>
+      <tbody>
+        <tr><td><code>部署</code></td><td>factor</td><td>営業・開発・製造・人事・経理</td><td>人数に偏りあり（人事は100名）</td></tr>
+        <tr><td><code>等級</code></td><td>ordered factor</td><td>G1〜G5</td><td>順序つき。並べ替えに forcats を使う</td></tr>
+        <tr><td><code>勤続年数</code></td><td>double</td><td>0.3〜32年</td><td>右に裾を引く分布</td></tr>
+        <tr><td><code>月間残業時間</code></td><td>double</td><td>0〜92時間</td><td>部署差が大きい</td></tr>
+        <tr><td><code>エンゲージメント</code></td><td>double</td><td>10〜100のスコア</td><td>残業時間と負の相関を持たせてある</td></tr>
+        <tr><td><code>退職</code></td><td>character</td><td>在籍／退職</td><td>全体の約15%が退職</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin:1rem 0 0;font-size:.9rem;"><a href="hr_sample.csv" download>hr_sample.csv をダウンロード</a>（UTF-8 BOM付き、Excelでも文字化けしません）</p>
+  <pre style="background:#1b2027;color:#e6edf3;border-radius:.7rem;padding:1rem 1.2rem;overflow-x:auto;font-size:.82rem;margin:1.2rem 0 0;font-family:'JetBrains Mono','Fira Code',Consolas,monospace;">library(tidyverse)
+
+hr &lt;- read_csv("hr_sample.csv") |&gt;
+  mutate(
+    部署 = factor(部署, levels = c("営業","開発","製造","人事","経理")),
+    等級 = factor(等級, levels = c("G1","G2","G3","G4","G5"), ordered = TRUE)
+  )</pre>
+</section>
+
+<section class="tds-section">
+  <h2>人事データで最初にやること</h2>
+  <p>以下は、このサンプルデータに対して実際に手を動かした例です。コードと、それを実行して得られる図を並べています。人事データを扱ううえでつまずきやすい点は、図の下に書きました。</p>
+
+  <div class="tds-example">
+    <h3>1. 部署ごとの残業時間を比べる</h3>
+    <p>平均値だけを並べた棒グラフにしないこと。人事データは分布の形にこそ情報があります。</p>
+    <div class="tds-figrow">
+      <img src="images/hr-overtime-by-dept.png" alt="部署別の月間残業時間を箱ひげ図で比較したグラフ。開発と営業が高く、製造・経理が低い" loading="lazy">
+      <pre>hr |&gt;
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(部署, 月間残業時間, fill = 部署)) +
+  <span class="fn">geom_boxplot</span>(alpha = 0.75) +
+  <span class="fn">labs</span>(
+    title = <span class="st">"部署別 月間残業時間の分布"</span>,
+    x = <span class="st">NULL</span>, y = <span class="st">"月間残業時間（時間）"</span>
+  ) +
+  <span class="fn">theme_minimal</span>(base_family = <span class="st">"Noto Sans CJK JP"</span>) +
+  <span class="fn">theme</span>(legend.position = <span class="st">"none"</span>)</pre>
     </div>
-    <!-- admax -->
+    <div class="tds-takeaway">開発と営業の中央値が高いのはひと目で分かりますが、実務で効いてくるのは<strong>ひげの長さ</strong>です。開発は上に70時間近くまで伸びていて、平均は40時間でも一部に長時間労働者が張りついている。36協定の特別条項に関わるのはこの層で、平均値だけ見ていると見落とします。</div>
+  </div>
 
-    <!-- 学習におすすめの書籍 -->
-    <section class="book-recommendations" style="margin: 4rem 0; padding: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px);">
-        <div class="chapters-container">
-            <h3 style="color: var(--neon-cyan); font-family: var(--font-tech); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">
-                📚 学習におすすめの書籍
-            </h3>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+  <div class="tds-example">
+    <h3>2. 残業とエンゲージメントの関係を見る</h3>
+    <p>2変数の関係を確認する場面。散布図に回帰直線を重ねるのが基本形です。</p>
+    <div class="tds-figrow">
+      <img src="images/hr-overtime-engagement.png" alt="月間残業時間とエンゲージメントスコアの散布図。右下がりの回帰直線が引かれている" loading="lazy">
+      <pre>hr |&gt;
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(月間残業時間, エンゲージメント)) +
+  <span class="fn">geom_point</span>(alpha = 0.28, size = 1.4) +
+  <span class="fn">geom_smooth</span>(method = <span class="st">"lm"</span>) +
+  <span class="fn">labs</span>(
+    title = <span class="st">"月間残業時間とエンゲージメントスコアの関係"</span>,
+    x = <span class="st">"月間残業時間（時間）"</span>,
+    y = <span class="st">"エンゲージメントスコア"</span>
+  ) +
+  <span class="fn">theme_minimal</span>(base_family = <span class="st">"Noto Sans CJK JP"</span>)</pre>
+    </div>
+    <div class="tds-takeaway">右下がりの関係が出ますが、<strong>これは「残業を減らせばエンゲージメントが上がる」という意味ではありません</strong>。エンゲージメントが低い人が転職活動を始めて残業を減らしている、という逆向きの因果もありえます。人事の施策検討でこの図を出すと因果として読まれがちなので、「相関がある」以上のことは言わない、と最初に断っておくのが安全です。<code>geom_point()</code> の <code>alpha</code> を下げているのは、1,200点が重なって濃さが分からなくなるのを避けるためです。</div>
+  </div>
 
-                <!-- Book 4 -->
-                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
-                    <div style="font-size: 2.5rem; text-align: center; margin-bottom: 1rem;">📊</div>
-                    <h4 style="color: var(--neon-orange); font-family: var(--font-tech); font-size: 1rem; margin-bottom: 0.75rem; line-height: 1.5;">
-                        Rユーザのためのtidymodels[実践]入門
-                    </h4>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 0.5rem;">〜モダンな統計・機械学習モデリングの世界</p>
-                    <p style="color: rgba(255,255,255,0.45); font-size: 0.8rem; margin-bottom: 1.25rem;">松村 優哉 ほか</p>
-                    <a href="https://amzn.to/4bNU8Us" target="_blank" rel="noopener" style="display: block; text-align: center; padding: 0.6rem 1rem; background: linear-gradient(135deg, #ff660022, #ff660044); border: 1px solid var(--neon-orange); border-radius: 8px; color: var(--neon-orange); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease;">
-                        🛒 Amazonで見る
-                    </a>
-                </div>
+  <div class="tds-example">
+    <h3>3. 勤続年数ごとの退職割合を出す</h3>
+    <p>実数ではなく構成比で見たいとき。<code>position = "fill"</code> を使います。</p>
+    <div class="tds-figrow">
+      <img src="images/hr-turnover-by-tenure.png" alt="勤続年数区分ごとの退職割合を100%積み上げ棒グラフで示したもの。3〜5年が最も高い" loading="lazy">
+      <pre>hr |&gt;
+  <span class="fn">mutate</span>(勤続区分 = <span class="fn">cut</span>(
+    勤続年数,
+    breaks = <span class="fn">c</span>(0, 1, 3, 5, 10, 20, 35),
+    labels = <span class="fn">c</span>(<span class="st">"1年未満"</span>, <span class="st">"1〜3年"</span>, <span class="st">"3〜5年"</span>,
+               <span class="st">"5〜10年"</span>, <span class="st">"10〜20年"</span>, <span class="st">"20年以上"</span>)
+  )) |&gt;
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(勤続区分, fill = 退職)) +
+  <span class="fn">geom_bar</span>(position = <span class="st">"fill"</span>) +
+  <span class="fn">scale_y_continuous</span>(labels = scales::percent) +
+  <span class="fn">labs</span>(title = <span class="st">"勤続年数区分ごとの退職割合"</span>,
+       x = <span class="st">"勤続年数"</span>, y = <span class="st">"構成比"</span>)</pre>
+    </div>
+    <div class="tds-takeaway">構成比のグラフは<strong>母数が見えなくなる</strong>のが最大の欠点です。「20年以上」の退職率が低く見えても、その区分に何人いるのかはこの図から読めません。20人しかいない区分の5%と、400人いる区分の5%はまったく重みが違います。実際に報告資料に載せるときは、<code>geom_text()</code> で各バーに人数を添えるか、実数の棒グラフを併記してください。</div>
+  </div>
 
-                <!-- Book 5 -->
-                <div class="book-card" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
-                    <div style="font-size: 2.5rem; text-align: center; margin-bottom: 1rem;">📈</div>
-                    <h4 style="color: var(--electric-blue); font-family: var(--font-tech); font-size: 1rem; margin-bottom: 0.75rem; line-height: 1.5;">
-                        改訂2版 RユーザのためのRStudio[実践]入門
-                    </h4>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 0.5rem;">〜tidyverseによるモダンな分析フローの世界</p>
-                    <p style="color: rgba(255,255,255,0.45); font-size: 0.8rem; margin-bottom: 1.25rem;">松村 優哉 ほか</p>
-                    <a href="https://amzn.to/4lUp221" target="_blank" rel="noopener" style="display: block; text-align: center; padding: 0.6rem 1rem; background: linear-gradient(135deg, #0080ff22, #0080ff44); border: 1px solid var(--electric-blue); border-radius: 8px; color: var(--electric-blue); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease;">
-                        🛒 Amazonで見る
-                    </a>
-                </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 2rem;">
-                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-style: italic;">
-                    ※ 当サイトはAmazonアソシエイトプログラムに参加しています
-                </p>
-            </div>
-        </div>
-    </section>
-    
-    <style>
-    .book-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-        border-color: var(--neon-cyan);
-    }
+  <div class="tds-example">
+    <h3>4. 部署 × 等級の人員構成を見る</h3>
+    <p>クロス集計をそのまま図にする場合。<code>geom_tile()</code> でヒートマップにします。</p>
+    <div class="tds-figrow">
+      <img src="images/hr-headcount-heatmap.png" alt="部署と等級のクロス集計をヒートマップで表示し、各セルに人数を記載したもの" loading="lazy">
+      <pre>hr |&gt;
+  <span class="fn">count</span>(部署, 等級, name = <span class="st">"人数"</span>) |&gt;
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(等級, 部署, fill = 人数)) +
+  <span class="fn">geom_tile</span>(color = <span class="st">"white"</span>, linewidth = 0.8) +
+  <span class="fn">geom_text</span>(<span class="fn">aes</span>(label = 人数), size = 3.2) +
+  <span class="fn">scale_fill_gradient</span>(low = <span class="st">"#EFF6FF"</span>, high = <span class="st">"#60A5FA"</span>) +
+  <span class="fn">labs</span>(title = <span class="st">"部署 × 等級の人員構成"</span>, y = <span class="st">NULL</span>)</pre>
+    </div>
+    <div class="tds-takeaway">人事データでヒートマップを作るときは<strong>セルの人数が一桁になる箇所に注意</strong>してください。「人事部のG5が2名」まで出してしまうと、社内の誰が見ても個人が特定できます。公開資料や部門長への共有資料では、少人数セルを伏せるか、等級を粗くまとめる処理を挟むのが実務上のマナーです。色だけのヒートマップにせず <code>geom_text()</code> で数値を出しているのは、色の濃淡は人間が正確に読み取れないためです。</div>
+  </div>
 
-    .book-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        transition: left 0.5s ease;
-    }
+  <div class="tds-example">
+    <h3>5. 部署ごとに分けて分布を確認する</h3>
+    <p>1枚に重ねると潰れる場合、ファセットで分割します。</p>
+    <div class="tds-figrow">
+      <img src="images/hr-overtime-facet.png" alt="部署別に月間残業時間のヒストグラムを5面に分割して表示したもの" loading="lazy">
+      <pre>hr |&gt;
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(月間残業時間)) +
+  <span class="fn">geom_histogram</span>(bins = 26) +
+  <span class="fn">facet_wrap</span>(~ 部署, ncol = 3) +
+  <span class="fn">labs</span>(title = <span class="st">"部署別 月間残業時間のヒストグラム"</span>,
+       x = <span class="st">"月間残業時間（時間）"</span>, y = <span class="st">"人数"</span>)</pre>
+    </div>
+    <div class="tds-takeaway">既定ではすべての面で軸が共通になります。これは<strong>意図的にそのままにしておくべき</strong>場面が多いです。<code>scales = "free_y"</code> を付けると各面が見やすくはなりますが、人数の少ない人事部と364名の営業部が同じ高さに見えてしまい、比較の図として成立しなくなります。見やすさより比較可能性を優先してください。</div>
+  </div>
 
-    .book-card:hover::before {
-        left: 100%;
-    }
-    </style>
-    
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <p class="footer-text">TIDYVERSE © 2025 - TRANSCENDING DATA BOUNDARIES</p>
-            <div class="social-links">
-                <a href="#" class="social-link">📊</a>
-                <a href="#" class="social-link">🧬</a>
-                <a href="#" class="social-link">⚡</a>
-                <a href="#" class="social-link">🚀</a>
-            </div>
-        </div>
-    </footer>
-    
-    <script>
-        // Cursor Glow Effect
-        const cursorGlow = document.querySelector('.cursor-glow');
-        document.addEventListener('mousemove', (e) => {
-            cursorGlow.style.left = e.clientX - 10 + 'px';
-            cursorGlow.style.top = e.clientY - 10 + 'px';
-        });
-        
-        // Floating Particles
-        function createParticles() {
-            const particles = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                particles.appendChild(particle);
-            }
-        }
-        
-        // Scroll Navigation
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-        
-        // Scroll Animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            observer.observe(el);
-        });
-        
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            
-        });
-        
-        // Smooth Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Neural Network Background Effect
-        function createNeuralNetwork() {
-            const canvas = document.createElement('canvas');
-            canvas.style.position = 'fixed';
-            canvas.style.top = '0';
-            canvas.style.left = '0';
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-            canvas.style.pointerEvents = 'none';
-            canvas.style.zIndex = '-1';
-            canvas.style.opacity = '0.1';
-            document.body.appendChild(canvas);
-            
-            const ctx = canvas.getContext('2d');
-            let animationId;
-            
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            
-            const nodes = [];
-            const nodeCount = 50;
-            
-            for (let i = 0; i < nodeCount; i++) {
-                nodes.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5
-                });
-            }
-            
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Update nodes
-                nodes.forEach(node => {
-                    node.x += node.vx;
-                    node.y += node.vy;
-                    
-                    if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
-                    if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
-                });
-                
-                // Draw connections
-                ctx.strokeStyle = '#00ffff';
-                ctx.lineWidth = 0.5;
-                
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let j = i + 1; j < nodes.length; j++) {
-                        const dx = nodes[i].x - nodes[j].x;
-                        const dy = nodes[i].y - nodes[j].y;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
-                        
-                        if (distance < 150) {
-                            ctx.beginPath();
-                            ctx.moveTo(nodes[i].x, nodes[i].y);
-                            ctx.lineTo(nodes[j].x, nodes[j].y);
-                            ctx.globalAlpha = 1 - distance / 150;
-                            ctx.stroke();
-                        }
-                    }
-                }
-                
-                // Draw nodes
-                ctx.fillStyle = '#00ffff';
-                ctx.globalAlpha = 0.8;
-                nodes.forEach(node => {
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-                
-                animationId = requestAnimationFrame(animate);
-            }
-            
-            resizeCanvas();
-            animate();
-            
-            window.addEventListener('resize', resizeCanvas);
-        }
-        
-        // Initialize neural network on load
-        setTimeout(createNeuralNetwork, 1000);
-        
-        // Chapter TOC Navigation
-        function initChapterNavigation() {
-            const tocIcons = document.querySelectorAll('.toc-icon');
-            const chapterDetails = document.querySelectorAll('.chapter-detail');
-            
-            tocIcons.forEach(icon => {
-                icon.addEventListener('click', () => {
-                    const chapterNum = icon.getAttribute('data-chapter');
-                    
-                    // Remove active class from all icons and details
-                    tocIcons.forEach(i => i.classList.remove('active'));
-                    chapterDetails.forEach(d => d.classList.remove('active'));
-                    
-                    // Add active class to clicked icon and corresponding detail
-                    icon.classList.add('active');
-                    document.getElementById(`chapter-${chapterNum}`).classList.add('active');
-                });
-            });
-            
-            // Set first chapter as active by default
-            if (tocIcons.length > 0) {
-                tocIcons[0].classList.add('active');
-            }
-        }
-        
-        // Initialize chapter navigation
-        document.addEventListener('DOMContentLoaded', () => {
-            initChapterNavigation();
-        });
-    </script>
+  <div class="tds-example">
+    <h3>6. 時系列で推移を追う</h3>
+    <p>月次の集計値を折れ線で並べる、報告資料でいちばん出番の多い形です。</p>
+    <div class="tds-figrow">
+      <img src="images/hr-overtime-trend.png" alt="2025年度の部署別平均残業時間の月次推移を折れ線グラフで示したもの" loading="lazy">
+      <pre>勤怠 |&gt;
+  <span class="fn">group_by</span>(年月, 部署) |&gt;
+  <span class="fn">summarise</span>(平均残業時間 = <span class="fn">mean</span>(残業時間), .groups = <span class="st">"drop"</span>) |&gt;
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(年月, 平均残業時間, color = 部署)) +
+  <span class="fn">geom_line</span>(linewidth = 0.9) +
+  <span class="fn">geom_point</span>(size = 1.6) +
+  <span class="fn">labs</span>(title = <span class="st">"部署別 平均残業時間の推移（2025年度）"</span>,
+       x = <span class="st">NULL</span>, y = <span class="st">"平均残業時間（時間）"</span>)</pre>
+    </div>
+    <div class="tds-takeaway">人事の月次データは<strong>営業日数の違い</strong>が推移に紛れ込みます。5月や1月は連休で営業日が少なく、残業の総時間も自然に下がる。前年同月と比べるか、営業日数で割った1日あたりに直さないと、施策の効果と暦の効果が区別できません。<a href="chapter7-lubridate-datetime.html">lubridate の章</a>で日付の扱いを詳しく書いています。</div>
+  </div>
+
+  <p style="font-size:.85rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:1rem;">
+    <strong>掲載している図について：</strong>上記のグラフは、ggplot2と同じGrammar of Graphicsを実装したplotnine（Python）で描画したものです。掲載しているRコードを実行して得られる図と内容は一致しますが、既定テーマの細部（フォントの太さ、余白の取り方など）は環境によって多少異なります。
+  </p>
+</section>
+
+<div class="ad-container">
+  <!-- AdSense: 2枠目。実際の広告ユニットIDを設定してから有効化してください。 -->
+</div>
+
+<section class="tds-section" id="chapters">
+  <h2>目次（全24章）</h2>
+  <p>上から順に読む必要はありません。手元のデータでやりたいことが決まっているなら、該当する章から入ってください。</p>
+
+  <h3 class="tds-part">導入</h3>
+  <div class="tds-chapters">
+    <a class="tds-ch" href="beginner-guide.html"><div class="no">GUIDE</div><div class="ti">R・tidyverse 入門ガイド</div><p class="de">Rのインストールから最初のコード実行まで。RStudioとPositronのどちらを選ぶかにも触れています。</p></a>
+    <a class="tds-ch" href="chapter1-tidyverse-overview.html"><div class="no">CHAPTER 01</div><div class="ti">tidyverseの全体像とTidy Data</div><p class="de">パッケージ群の役割分担と、分析しやすいデータの形（Tidy Data）の3条件。人事データがなぜ整っていないことが多いのかも扱います。</p></a>
+  </div>
+
+  <h3 class="tds-part">データを加工する</h3>
+  <div class="tds-chapters">
+    <a class="tds-ch" href="chapter2-dplyr-data-manipulation.html"><div class="no">CHAPTER 02</div><div class="ti">dplyrによるデータ操作</div><p class="de">filter・select・mutate・arrange・summarise の5つの動詞。部署別集計やグループ内順位づけなど、人事集計の基本形。</p></a>
+    <a class="tds-ch" href="chapter4-tidyr-data-reshaping.html"><div class="no">CHAPTER 04</div><div class="ti">tidyrによるデータ再構造化</div><p class="de">pivot_longer / pivot_wider による縦横変換。横持ちで配られる勤怠表や人事システムの出力を分析可能な形に直す。</p></a>
+    <a class="tds-ch" href="chapter5-stringr-text-processing.html"><div class="no">CHAPTER 05</div><div class="ti">stringrによるテキスト処理</div><p class="de">正規表現と文字列操作。表記ゆれのある部署名や氏名の正規化、社員番号のパターン抽出。</p></a>
+    <a class="tds-ch" href="chapter6-forcats-purrr-advanced.html"><div class="no">CHAPTER 06</div><div class="ti">forcatsとpurrr｜因子とリスト操作</div><p class="de">等級や評価区分のような順序つき因子の並べ替えと、map関数族による繰り返し処理。</p></a>
+    <a class="tds-ch" href="chapter7-lubridate-datetime.html"><div class="no">CHAPTER 07</div><div class="ti">lubridateによる日付・時刻の処理</div><p class="de">入社日から勤続年数を出す、年度で区切る、営業日数を数える。人事データで避けて通れない日付計算。</p></a>
+    <a class="tds-ch" href="chapter8-readr-data-import.html"><div class="no">CHAPTER 08</div><div class="ti">readrによるデータ読み込み</div><p class="de">CSV・Excelの読み込みと型指定。Shift_JISのファイルや、先頭に説明行が入った社内帳票の扱い。</p></a>
+    <a class="tds-ch" href="chapter9-tibble-modern-dataframe.html"><div class="no">CHAPTER 09</div><div class="ti">tibbleとモダンなデータフレーム</div><p class="de">data.frameとの違い、リスト列、大きなデータの扱い。</p></a>
+  </div>
+
+  <h3 class="tds-part">可視化する</h3>
+  <div class="tds-chapters">
+    <a class="tds-ch" href="chapter3-ggplot2-visualization.html"><div class="no">CHAPTER 03</div><div class="ti">ggplot2によるデータ可視化</div><p class="de">Grammar of Graphicsの考え方と主要なgeom。上の作例で使った箱ひげ図・散布図・ヒートマップの詳しい解説。</p></a>
+    <a class="tds-ch" href="chapter13-advanced-ggplot2.html"><div class="no">CHAPTER 13</div><div class="ti">ggplot2の応用とカスタマイズ</div><p class="de">テーマの自作、日本語フォントの設定、社内資料向けの体裁調整。</p></a>
+    <a class="tds-ch" href="chapter14-interactive-visualization.html"><div class="no">CHAPTER 14</div><div class="ti">plotlyによるインタラクティブ可視化</div><p class="de">ggplot2の図をそのまま操作可能にする。ツールチップで詳細を出す使い方。</p></a>
+    <a class="tds-ch" href="chapter15-advanced-data-viz.html"><div class="no">CHAPTER 15</div><div class="ti">複数の図を組み合わせる</div><p class="de">patchworkによるレイアウト、注釈の追加、報告資料としての図の構成。</p></a>
+  </div>
+
+  <h3 class="tds-part">統計とモデリング</h3>
+  <div class="tds-chapters">
+    <a class="tds-ch" href="chapter10-statistics-modeling.html"><div class="no">CHAPTER 10</div><div class="ti">統計モデリングの基礎</div><p class="de">線形回帰、係数の読み方、信頼区間の正しい解釈。broomによる結果の整形。</p></a>
+    <a class="tds-ch" href="chapter11-machine-learning.html"><div class="no">CHAPTER 11</div><div class="ti">tidymodelsによる機械学習</div><p class="de">recipes・parsnip・workflowsの役割と、前処理からモデル構築までの一連の流れ。</p></a>
+    <a class="tds-ch" href="chapter16-resampling-rsample.html"><div class="no">CHAPTER 16</div><div class="ti">リサンプリング｜rsample</div><p class="de">交差検証とブートストラップ。退職者が少数派になるデータでの層化抽出。</p></a>
+    <a class="tds-ch" href="chapter17-hyperparameter-tuning-simple.html"><div class="no">CHAPTER 17</div><div class="ti">ハイパーパラメータ調整｜tune</div><p class="de">グリッドサーチとベイズ最適化。探索範囲の決め方。</p></a>
+    <a class="tds-ch" href="chapter18-model-evaluation-yardstick.html"><div class="no">CHAPTER 18</div><div class="ti">モデル評価｜yardstick</div><p class="de">正解率だけで判断しない。不均衡データでのROC-AUC、適合率と再現率の使い分け。</p></a>
+    <a class="tds-ch" href="chapter19-prediction-interpretation.html"><div class="no">CHAPTER 19</div><div class="ti">予測と解釈</div><p class="de">変数重要度とSHAP。予測結果を人事施策の判断材料に落とすときの限界。</p></a>
+    <a class="tds-ch" href="chapter20-ensemble-learning-enhanced.html"><div class="no">CHAPTER 20</div><div class="ti">アンサンブル学習｜stacks</div><p class="de">複数モデルの組み合わせ。精度と説明可能性のトレードオフ。</p></a>
+  </div>
+
+  <h3 class="tds-part">応用</h3>
+  <div class="tds-chapters">
+    <a class="tds-ch" href="chapter12-time-series.html"><div class="no">CHAPTER 12</div><div class="ti">時系列データの予測</div><p class="de">トレンドと季節性の分解。要員計画や残業推移の予測に使う考え方。</p></a>
+    <a class="tds-ch" href="chapter21-time-series-modeltime.html"><div class="no">CHAPTER 21</div><div class="ti">modeltimeによる時系列分析</div><p class="de">tidymodelsの枠組みで時系列モデルを扱う。複数モデルの比較と予測区間。</p></a>
+    <a class="tds-ch" href="chapter22-text-analysis-tidytext.html"><div class="no">CHAPTER 22</div><div class="ti">tidytextによるテキスト分析</div><p class="de">従業員サーベイの自由記述をどう扱うか。形態素解析、頻出語、トピック抽出。</p></a>
+    <a class="tds-ch" href="chapter23-deep-learning-torch.html"><div class="no">CHAPTER 23</div><div class="ti">torchによる深層学習</div><p class="de">RからPyTorchを使う。人事データの規模では過剰になりやすい点も含めて。</p></a>
+    <a class="tds-ch" href="chapter24-practical-projects-enhanced.html"><div class="no">CHAPTER 24</div><div class="ti">実践プロジェクト集</div><p class="de">データ取り込みからレポート出力まで通しで組む。Quartoによる定例レポートの自動化。</p></a>
+  </div>
+</section>
+
+<section class="tds-section">
+  <h2>人事データを扱うときに気をつけていること</h2>
+
+  <h3>個人が特定できる粒度で出さない</h3>
+  <p>分析そのものより神経を使うのがここです。部署 × 等級 × 性別のようにクロスを重ねると、セルの人数はあっという間に一桁になります。「該当者2名」の平均年収は、事実上その2人の年収を公開しているのと変わりません。集計結果を人に見せる前に、最小セルの人数を必ず確認する習慣をつけています。</p>
+
+  <h3>予測モデルの結果を個人の処遇に直結させない</h3>
+  <p>退職予測モデルは技術的には作れますし、このサイトでも作り方を書いています。ただ、出てきた確率を使って特定の個人に何かをする、という使い方には慎重であるべきだと考えています。モデルは過去のパターンを再現するだけで、過去に偏りがあればそれも学習します。使うとしても、個人ではなく「どの属性の層で離職が起きやすいか」を把握して職場環境の改善につなげる、という粒度にとどめるのが現実的です。</p>
+
+  <h3>統計的に有意であることと、実務的に意味があることは別</h3>
+  <p>サンプルサイズが大きくなれば、ごくわずかな差でもp値は小さくなります。「残業時間が1時間増えると退職確率が0.3ポイント上がる（p&lt;0.001）」という結果が出たとして、それが施策を打つに値する大きさなのかは別の判断です。効果量と信頼区間を必ずセットで見るようにしています。</p>
+</section>
+
+<section class="tds-section">
+  <h2>参考にしている資料</h2>
+  <p>このサイトを書くにあたって参照している一次情報と、より体系的な日本語資料です。</p>
+  <ul class="tds-refs">
+    <li><a href="https://www.tidyverse.org/" target="_blank" rel="noopener">tidyverse 公式サイト</a> ── 各パッケージのリファレンスとチートシート。関数の正確な挙動はここが基準です。</li>
+    <li><a href="https://www.tidymodels.org/" target="_blank" rel="noopener">tidymodels 公式サイト</a> ── 機械学習パートの一次情報。</li>
+    <li><a href="https://www.tmwr.org/" target="_blank" rel="noopener">Tidy Modeling with R</a>（Kuhn &amp; Silge）── tidymodelsの決定版。英語ですが日本語版に相当するものがないため、深く知りたい場合はこちらへ。</li>
+    <li><a href="https://www.jaysong.net/RBook/" target="_blank" rel="noopener">私たちのR: ベストプラクティスの探求</a>（宋財泫・矢内勇生）── 日本語でR全般を体系的に学ぶならまずこれ。無料公開されています。</li>
+    <li><a href="https://r4ds.hadley.nz/" target="_blank" rel="noopener">R for Data Science (2nd ed.)</a>（Wickham ほか）── tidyverseの原典。邦訳は『Rではじめるデータサイエンス』。</li>
+    <li><a href="https://uribo.github.io/practical-ds/" target="_blank" rel="noopener">実践的データサイエンス</a>（瓜生真也）── 日本語の実務寄り資料。</li>
+  </ul>
+  <p style="font-size:.88rem;color:var(--text-muted);margin-top:1.5rem;">
+    <strong>最終更新：2026年8月5日</strong>｜掲載しているコードは動作を確認していますが、パッケージのバージョンによって挙動が変わることがあります。サンプルデータは乱数から生成した架空のもので、実在の組織のデータではありません。誤りを見つけた場合は<a href="/contact.html">お問い合わせ</a>からご連絡いただけると助かります。
+  </p>
+</section>
+
+</main>
+
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:4rem;padding:2.5rem 1.25rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">
+      このサイトは、現役の人事担当者がRとtidyverseで人事データを扱うために書いている解説です。
+      掲載しているコードは自由に使ってかまいませんが、実行結果はデータやパッケージのバージョンによって変わります。
+      内容の誤りにお気づきの場合は<a href="/contact.html" style="color:#ff8c00;">お問い合わせ</a>からご連絡ください。
+    </p>
+    <p style="margin:0 0 1.2rem;font-size:.8rem;">
+      パッケージの仕様は更新されます。最新の挙動は
+      <a href="https://www.tidyverse.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidyverse公式</a>・
+      <a href="https://www.tidymodels.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidymodels公式</a>
+      のドキュメントをご確認ください。
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1.2rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/tidy-data-science/" style="color:#8d97a5;text-decoration:none;">目次</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

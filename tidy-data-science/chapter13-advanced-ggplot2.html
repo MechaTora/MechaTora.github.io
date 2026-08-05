@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="データビジュアライゼーションの真の力を解き放つ。ggplot2の高度な機能とカスタマイゼーションを駆使して、美しく洞察に満ちたグラフィックを創造しよう。">
-    <title>高度なggplot2とカスタム可視化 | TIDYVERSE/TIDYMODELS</title>
+    <title>ggplot2の応用とカスタマイズ | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter13-advanced-ggplot2.html">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -181,21 +181,21 @@
     <meta name="keywords" content="ggplot2,R言語,高度な可視化,カスタムテーマ,gganimate,アニメーション,地図,sf,patchwork">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="高度なggplot2とカスタム可視化 | TIDYVERSE/TIDYMODELS">
+    <meta property="og:title" content="ggplot2の応用とカスタマイズ | tidyverseで学ぶ人事データ分析">
     <meta property="og:description" content="データビジュアライゼーションの真の力を解き放つ。ggplot2の高度な機能とカスタマイゼーションを駆使して、美しく洞察に満ちたグラフィックを創造しよう。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter13-advanced-ggplot2.html">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第13章: 高度なggplot2とカスタム可視化 | Tidyverse完全マスター">
+    <meta name="twitter:title" content="第13章: ggplot2の応用とカスタマイズ | tidyverseで学ぶ人事データ分析">
     <meta name="twitter:description" content="ggplot2の高度なカスタマイズ技法。複合レイアウト、カスタムテーマ、アニメーション（gganimate）、地図可視化（sf）など実務レベルの可視化技術を解説。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "第13章: 高度なggplot2とカスタム可視化 | Tidyverse完全マスター",
+      "name": "第13章: ggplot2の応用とカスタマイズ | tidyverseで学ぶ人事データ分析",
       "description": "ggplot2の高度なカスタマイズ技法。複合レイアウト、カスタムテーマ、アニメーション（gganimate）、地図可視化（sf）など実務レベルの可視化技術を解説。",
       "url": "https://mechatora.com/tidy-data-science/chapter13-advanced-ggplot2.html",
       "inLanguage": "ja",
@@ -214,13 +214,27 @@
     </script>
 </head>
 <body>
+<!-- mechatora common topbar -->
+<div style="background:#11151c;border-bottom:1px solid #232a35;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.82rem;">
+  <div style="max-width:1200px;margin:0 auto;padding:.5rem 1.25rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+    <a href="/index.html" style="color:#ff8c00;font-weight:700;text-decoration:none;">メカとら</a>
+    <span style="color:#4a5464;">/</span>
+    <a href="/tidy-data-science/" style="color:#c7d0dc;text-decoration:none;">tidyverseで学ぶ人事データ分析</a>
+    <span style="margin-left:auto;display:flex;gap:1rem;">
+      <a href="/articles.html" style="color:#8d97a5;text-decoration:none;">記事一覧</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+    </span>
+  </div>
+</div>
+
 <nav id="tds-topnav" style="position:sticky;top:0;z-index:2000;background:rgba(10,10,20,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,212,255,0.25);padding:0.85rem 1.5rem;"><div style="max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;"><a href="index.html" style="font-family:'Courier New',monospace;font-weight:700;font-size:1.05rem;letter-spacing:1px;color:#00d4ff;text-decoration:none;text-shadow:0 0 12px rgba(0,212,255,0.5);">TIDYVERSE / TIDYMODELS</a><div style="display:flex;gap:1.25rem;flex-wrap:wrap;"><a href="index.html" style="color:#e6e6e6;text-decoration:none;font-size:0.9rem;letter-spacing:0.5px;">HOME</a><a href="beginner-guide.html" style="color:#e6e6e6;text-decoration:none;font-size:0.9rem;letter-spacing:0.5px;">GUIDE</a></div></div></nav>
 
     <div class="container">
         <header>
             <div class="chapter-icon">🎨</div>
             <div class="chapter-number">CHAPTER 13</div>
-            <h1>高度なggplot2とカスタム可視化</h1>
+            <h1>ggplot2の応用とカスタマイズ</h1>
             <p class="chapter-description">
                 データビジュアライゼーションの真の力を解き放つ。ggplot2の高度な機能とカスタマイゼーションを駆使して、美しく洞察に満ちたグラフィックを創造しよう。
             </p>
@@ -477,7 +491,7 @@
                 <li>プロフェッショナルな可視化の作成</li>
             </ul>
             <p>
-                これらの技術により、データの洞察を美しく、効果的に伝えることができます。
+                これらの技術により、データの洞察を正確に伝えることができます。
             </p>
         </section>
 
@@ -537,7 +551,7 @@
             <span style="font-size: 1.5rem; margin-right: 0.5rem;">←</span>
             <div>
                 <div style="font-size: 0.9rem; color: var(--accent-cyan);">前の章</div>
-                <div style="font-weight: 600;">第12章: 時系列予測の魔法</div>
+                <div style="font-weight: 600;">第12章: 時系列データの予測</div>
             </div>
         </a>
         
@@ -574,5 +588,30 @@
     </style>
 
     </div>
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:4rem;padding:2.5rem 1.25rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">
+      このサイトは、現役の人事担当者がRとtidyverseで人事データを扱うために書いている解説です。
+      掲載しているコードは自由に使ってかまいませんが、実行結果はデータやパッケージのバージョンによって変わります。
+      内容の誤りにお気づきの場合は<a href="/contact.html" style="color:#ff8c00;">お問い合わせ</a>からご連絡ください。
+    </p>
+    <p style="margin:0 0 1.2rem;font-size:.8rem;">
+      パッケージの仕様は更新されます。最新の挙動は
+      <a href="https://www.tidyverse.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidyverse公式</a>・
+      <a href="https://www.tidymodels.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidymodels公式</a>
+      のドキュメントをご確認ください。
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1.2rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/tidy-data-science/" style="color:#8d97a5;text-decoration:none;">目次</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

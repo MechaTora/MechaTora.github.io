@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>テキスト処理の魔法 | TIDYVERSE/TIDYMODELS</title>
+    <title>stringrによるテキスト処理 | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter5-stringr-text-processing.html">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -762,21 +762,21 @@
     <meta name="keywords" content="stringr,R言語,文字列処理,正規表現,テキスト処理,str_detect,str_replace,str_extract">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="テキスト処理の魔法 | TIDYVERSE/TIDYMODELS">
+    <meta property="og:title" content="stringrによるテキスト処理 | tidyverseで学ぶ人事データ分析">
     <meta property="og:description" content="stringrで文字列を自在に操る。正規表現の奥深い世界、パターンマッチングの技術、テキストマイニングの神秘を解き明かし、データに隠された言葉の力を解放しよう。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter5-stringr-text-processing.html">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第5章: stringrによるテキスト処理 | TIDYVERSE/TIDYMODELS">
+    <meta name="twitter:title" content="第5章: stringrによるテキスト処理 | tidyverseで学ぶ人事データ分析">
     <meta name="twitter:description" content="stringrで文字列を自在に操る。正規表現、パターンマッチング、テキストマイニングの技術をマスターし、データの隠れた価値を発見しよう。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "第5章: stringrによるテキスト処理 | TIDYVERSE/TIDYMODELS",
+      "name": "第5章: stringrによるテキスト処理 | tidyverseで学ぶ人事データ分析",
       "description": "stringrで文字列を自在に操る。正規表現、パターンマッチング、テキストマイニングの技術をマスターし、データの隠れた価値を発見しよう。",
       "url": "https://mechatora.com/tidy-data-science/chapter5-stringr-text-processing.html",
       "inLanguage": "ja",
@@ -795,6 +795,20 @@
     </script>
 </head>
 <body>
+<!-- mechatora common topbar -->
+<div style="background:#11151c;border-bottom:1px solid #232a35;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.82rem;">
+  <div style="max-width:1200px;margin:0 auto;padding:.5rem 1.25rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+    <a href="/index.html" style="color:#ff8c00;font-weight:700;text-decoration:none;">メカとら</a>
+    <span style="color:#4a5464;">/</span>
+    <a href="/tidy-data-science/" style="color:#c7d0dc;text-decoration:none;">tidyverseで学ぶ人事データ分析</a>
+    <span style="margin-left:auto;display:flex;gap:1rem;">
+      <a href="/articles.html" style="color:#8d97a5;text-decoration:none;">記事一覧</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+    </span>
+  </div>
+</div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -813,7 +827,7 @@
             <header class="chapter-header fade-in-up">
                 <div class="chapter-icon">🔤</div>
                 <div class="chapter-number">CHAPTER 05</div>
-                <h1 class="chapter-title">テキスト処理の魔法</h1>
+                <h1 class="chapter-title">stringrによるテキスト処理</h1>
                 <p class="chapter-description">
                     stringrで文字列を自在に操る。正規表現の奥深い世界、パターンマッチングの技術、テキストマイニングの神秘を解き明かし、データに隠された言葉の力を解放しよう。
                 </p>
@@ -1045,7 +1059,7 @@
             
             <!-- Regular Expressions -->
             <section class="content-section fade-in-up" id="regex">
-                <h2 class="section-title">正規表現の魔術</h2>
+                <h2 class="section-title">正規表現の基本</h2>
                 <div class="section-content">
                     <p>
                         正規表現は、パターンマッチングの強力な言語です。複雑な文字列パターンを簡潔に表現し、高度なテキスト処理を可能にします。stringrと組み合わせることで、真の威力を発揮します。
@@ -1683,5 +1697,30 @@
             }, index * 200);
         });
     </script>
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:4rem;padding:2.5rem 1.25rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">
+      このサイトは、現役の人事担当者がRとtidyverseで人事データを扱うために書いている解説です。
+      掲載しているコードは自由に使ってかまいませんが、実行結果はデータやパッケージのバージョンによって変わります。
+      内容の誤りにお気づきの場合は<a href="/contact.html" style="color:#ff8c00;">お問い合わせ</a>からご連絡ください。
+    </p>
+    <p style="margin:0 0 1.2rem;font-size:.8rem;">
+      パッケージの仕様は更新されます。最新の挙動は
+      <a href="https://www.tidyverse.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidyverse公式</a>・
+      <a href="https://www.tidymodels.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidymodels公式</a>
+      のドキュメントをご確認ください。
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1.2rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/tidy-data-science/" style="color:#8d97a5;text-decoration:none;">目次</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

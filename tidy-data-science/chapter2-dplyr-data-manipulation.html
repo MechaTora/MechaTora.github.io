@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>データ操作マスタリー | TIDYVERSE/TIDYMODELS</title>
+    <title>dplyrによるデータ操作 | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter2-dplyr-data-manipulation.html">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -15,7 +15,7 @@
     </script>
     
 
-    <meta name="description" content="dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装し、データ分析の生産性を劇的に向上させる。">
+    <meta name="description" content="dplyrによるデータ操作の基本。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装し、データ分析の生産性を劇的に向上させる。">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔧</text></svg>">
@@ -628,22 +628,22 @@
     <meta name="keywords" content="dplyr,R言語,データ操作,filter,select,mutate,summarise,group_by,パイプ演算子">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="データ操作マスタリー | TIDYVERSE/TIDYMODELS">
-    <meta property="og:description" content="dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装し、データ分析の生産性を劇的に向上させる。">
+    <meta property="og:title" content="dplyrによるデータ操作 | tidyverseで学ぶ人事データ分析">
+    <meta property="og:description" content="dplyrによるデータ操作の基本。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装し、データ分析の生産性を劇的に向上させる。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter2-dplyr-data-manipulation.html">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第2章: dplyrによるデータ操作 | TIDYVERSE/TIDYMODELS">
-    <meta name="twitter:description" content="dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装。">
+    <meta name="twitter:title" content="第2章: dplyrによるデータ操作 | tidyverseで学ぶ人事データ分析">
+    <meta name="twitter:description" content="dplyrによるデータ操作の基本。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "第2章: dplyrによるデータ操作 | TIDYVERSE/TIDYMODELS",
-      "description": "dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装。",
+      "name": "第2章: dplyrによるデータ操作 | tidyverseで学ぶ人事データ分析",
+      "description": "dplyrによるデータ操作の基本。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装。",
       "url": "https://mechatora.com/tidy-data-science/chapter2-dplyr-data-manipulation.html",
       "inLanguage": "ja",
       "publisher": {
@@ -661,6 +661,20 @@
     </script>
 </head>
 <body>
+<!-- mechatora common topbar -->
+<div style="background:#11151c;border-bottom:1px solid #232a35;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.82rem;">
+  <div style="max-width:1200px;margin:0 auto;padding:.5rem 1.25rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+    <a href="/index.html" style="color:#ff8c00;font-weight:700;text-decoration:none;">メカとら</a>
+    <span style="color:#4a5464;">/</span>
+    <a href="/tidy-data-science/" style="color:#c7d0dc;text-decoration:none;">tidyverseで学ぶ人事データ分析</a>
+    <span style="margin-left:auto;display:flex;gap:1rem;">
+      <a href="/articles.html" style="color:#8d97a5;text-decoration:none;">記事一覧</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+    </span>
+  </div>
+</div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -681,14 +695,61 @@
             <header class="chapter-header fade-in-up">
                 <img src="https://dplyr.tidyverse.org/logo.png" alt="dplyr" class="chapter-icon">
                 <div class="chapter-number">CHAPTER 02</div>
-                <h1 class="chapter-title">データ操作マスタリー</h1>
+                <h1 class="chapter-title">dplyrによるデータ操作</h1>
                 <p class="chapter-description">
-                    dplyrでデータの魔法を体験。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装し、データ分析の生産性を劇的に向上させる。
+                    dplyrによるデータ操作の基本。filter, select, mutate, summariseを駆使して、複雑なデータ変換をエレガントに実装し、データ分析の生産性を劇的に向上させる。
                 </p>
             </header>
             
             <!-- dplyr Overview -->
-            <section class="content-section fade-in-up">
+            
+<style>
+.hr-demo { background:#141a22; border:1px solid #24303d; border-radius:1rem; padding:1.8rem; margin:2.5rem 0; }
+.hr-demo h3 { color:#7dd3fc; margin:0 0 .5rem; font-size:1.15rem; }
+.hr-demo > p { color:#9fb0c3; font-size:.92rem; line-height:1.85; margin:0 0 1.4rem; }
+.hr-demo .row { display:grid; grid-template-columns:1.05fr .95fr; gap:1.4rem; align-items:start; margin-bottom:1.6rem; }
+.hr-demo img { width:100%; height:auto; border-radius:.6rem; background:#fff; border:1px solid #24303d; }
+.hr-demo pre { background:#0d1117; color:#e6edf3; border:1px solid #24303d; border-radius:.6rem;
+  padding:1rem 1.1rem; overflow-x:auto; font-size:.79rem; line-height:1.75; margin:0;
+  font-family:'JetBrains Mono','Fira Code',Consolas,monospace; white-space:pre; }
+.hr-demo .note { background:#111a16; border-left:3px solid #34d399; border-radius:0 .4rem .4rem 0;
+  padding:.85rem 1rem; color:#b9c9d6; font-size:.87rem; line-height:1.85; }
+.hr-demo .note strong { color:#e2e8f0; }
+.hr-demo .cap { color:#6b7c8f; font-size:.8rem; margin:.6rem 0 0; }
+@media (max-width:820px){ .hr-demo .row { grid-template-columns:1fr; } }
+</style>
+
+<div class="hr-demo">
+  <h3>この章で扱う題材：人事データ</h3>
+  <p>従業員1,200名分の架空の人事データ（<a href="index.html#chapters" style="color:#7dd3fc;">hr_sample.csv</a>）を使います。まずは人事で最も出番の多い「部署別の集計表を作る」から始めます。</p>
+
+  <pre>hr |&gt;
+  group_by(部署) |&gt;
+  summarise(
+    人数      = n(),
+    平均残業  = round(mean(月間残業時間), 1),
+    残業45h超 = sum(月間残業時間 &gt; 45),
+    平均勤続  = round(mean(勤続年数), 1),
+    退職率    = round(mean(退職 == "退職") * 100, 1)
+  ) |&gt;
+  arrange(desc(退職率))</pre>
+
+  <p style="color:#9fb0c3;font-size:.86rem;margin:1rem 0 .4rem;">実行結果：</p>
+  <pre># A tibble: 5 × 6
+  部署   人数 平均残業 残業45h超 平均勤続 退職率
+  &lt;fct&gt; &lt;int&gt;    &lt;dbl&gt;     &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+1 開発    289     39.4        86      6.8   21.8
+2 営業    364     34.2        55      6.3   16.8
+3 経理    107     24.7         5      7.2   14.0
+4 人事    100     27.4         8      6.4    9.0
+5 製造    340     23.3         8      6.5    8.5</pre>
+
+  <div class="note" style="margin-top:1.4rem;"><strong>この表の読み方に一つ落とし穴があります。</strong> 退職率だけを見ると開発部（21.8%）が突出していますが、母数は289名です。一方で人事部は100名しかなく、退職率9.0%は「9名が辞めた」という意味にすぎません。この規模だと、1名の増減で退職率が1ポイント動きます。<strong>率を並べるときは必ず母数を同じ表に載せる</strong>ようにしてください。載せないと、比べてはいけないものが比べられます。</div>
+
+  <div class="note" style="margin-top:1rem;"><strong><code>summarise()</code> のあとに <code>group_by()</code> が残る問題。</strong> dplyr 1.0以降、<code>summarise()</code> はグループを1段階だけ解除します。<code>group_by(部署, 等級)</code> で集計すると結果には部署のグループが残り、次の <code>mutate()</code> が意図せず部署ごとの計算になります。<code>.groups = "drop"</code> を明示するか、<code>ungroup()</code> を挟むのが安全です。人事データは多段グループ化を使う場面が多いので、ここは事故が起きやすい箇所です。</div>
+</div>
+
+<section class="content-section fade-in-up">
                 <h2 class="section-title">dplyrとは？</h2>
                 <div class="section-content">
                     <p>
@@ -1007,7 +1068,7 @@
             
             <!-- Pipe Operator -->
             <section class="content-section fade-in-up" id="pipes">
-                <h2 class="section-title">パイプ演算子の魔法</h2>
+                <h2 class="section-title">パイプ演算子の使い方</h2>
                 <div class="section-content">
                     <p>
                         パイプ演算子 <code>%>%</code> は、dplyrの真価を発揮させる重要な要素です。複数の操作を左から右へ、上から下へと自然な流れで記述できます。
@@ -1493,5 +1554,30 @@ quality_check <- function(df) {
             });
         });
     </script>
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:4rem;padding:2.5rem 1.25rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">
+      このサイトは、現役の人事担当者がRとtidyverseで人事データを扱うために書いている解説です。
+      掲載しているコードは自由に使ってかまいませんが、実行結果はデータやパッケージのバージョンによって変わります。
+      内容の誤りにお気づきの場合は<a href="/contact.html" style="color:#ff8c00;">お問い合わせ</a>からご連絡ください。
+    </p>
+    <p style="margin:0 0 1.2rem;font-size:.8rem;">
+      パッケージの仕様は更新されます。最新の挙動は
+      <a href="https://www.tidyverse.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidyverse公式</a>・
+      <a href="https://www.tidymodels.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidymodels公式</a>
+      のドキュメントをご確認ください。
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1.2rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/tidy-data-science/" style="color:#8d97a5;text-decoration:none;">目次</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美しい可視化アート | TIDYVERSE/TIDYMODELS</title>
+    <title>ggplot2によるデータ可視化 | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter3-ggplot2-visualization.html">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -15,7 +15,7 @@
     </script>
     
 
-    <meta name="description" content="ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsの理念を理解し、データの物語を美しく、効果的に伝えるグラフィックを作成する技術をマスターしよう。">
+    <meta name="description" content="ggplot2でつくるデータ可視化。Grammar of Graphicsの理念を理解し、データの物語を正確に伝えるグラフィックを作成する技術を身につけます。">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
@@ -665,22 +665,22 @@
     <meta name="keywords" content="ggplot2,R言語,データ可視化,グラフ,散布図,棒グラフ,Grammar of Graphics,theme">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="美しい可視化アート | TIDYVERSE/TIDYMODELS">
-    <meta property="og:description" content="ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsの理念を理解し、データの物語を美しく、効果的に伝えるグラフィックを作成する技術をマスターしよう。">
+    <meta property="og:title" content="ggplot2によるデータ可視化 | tidyverseで学ぶ人事データ分析">
+    <meta property="og:description" content="ggplot2でつくるデータ可視化。Grammar of Graphicsの理念を理解し、データの物語を正確に伝えるグラフィックを作成する技術を身につけます。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter3-ggplot2-visualization.html">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第3章: ggplot2による美しい可視化 | TIDYVERSE/TIDYMODELS">
-    <meta name="twitter:description" content="ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsを理解し、エレガントなグラフを作成する技術をマスター。">
+    <meta name="twitter:title" content="第3章: ggplot2による美しい可視化 | tidyverseで学ぶ人事データ分析">
+    <meta name="twitter:description" content="ggplot2でつくるデータ可視化。Grammar of Graphicsを理解し、エレガントなグラフを作成する技術をマスター。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "第3章: ggplot2による美しい可視化 | TIDYVERSE/TIDYMODELS",
-      "description": "ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsを理解し、エレガントなグラフを作成する技術をマスター。",
+      "name": "第3章: ggplot2による美しい可視化 | tidyverseで学ぶ人事データ分析",
+      "description": "ggplot2でつくるデータ可視化。Grammar of Graphicsを理解し、エレガントなグラフを作成する技術をマスター。",
       "url": "https://mechatora.com/tidy-data-science/chapter3-ggplot2-visualization.html",
       "inLanguage": "ja",
       "publisher": {
@@ -698,6 +698,20 @@
     </script>
 </head>
 <body>
+<!-- mechatora common topbar -->
+<div style="background:#11151c;border-bottom:1px solid #232a35;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.82rem;">
+  <div style="max-width:1200px;margin:0 auto;padding:.5rem 1.25rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+    <a href="/index.html" style="color:#ff8c00;font-weight:700;text-decoration:none;">メカとら</a>
+    <span style="color:#4a5464;">/</span>
+    <a href="/tidy-data-science/" style="color:#c7d0dc;text-decoration:none;">tidyverseで学ぶ人事データ分析</a>
+    <span style="margin-left:auto;display:flex;gap:1rem;">
+      <a href="/articles.html" style="color:#8d97a5;text-decoration:none;">記事一覧</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+    </span>
+  </div>
+</div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -715,14 +729,68 @@
             <header class="chapter-header fade-in-up">
                 <div class="chapter-icon">📊</div>
                 <div class="chapter-number">CHAPTER 03</div>
-                <h1 class="chapter-title">美しい可視化アート</h1>
+                <h1 class="chapter-title">ggplot2によるデータ可視化</h1>
                 <p class="chapter-description">
-                    ggplot2で創造する美しいデータビジュアライゼーション。Grammar of Graphicsの理念を理解し、データの物語を美しく、効果的に伝えるグラフィックを作成する技術をマスターしよう。
+                    ggplot2でつくるデータ可視化。Grammar of Graphicsの理念を理解し、データの物語を正確に伝えるグラフィックを作成する技術を身につけます。
                 </p>
             </header>
             
             <!-- ggplot2 Overview -->
-            <section class="content-section fade-in-up">
+            
+<style>
+.hr-demo { background:#141a22; border:1px solid #24303d; border-radius:1rem; padding:1.8rem; margin:2.5rem 0; }
+.hr-demo h3 { color:#7dd3fc; margin:0 0 .5rem; font-size:1.15rem; }
+.hr-demo > p { color:#9fb0c3; font-size:.92rem; line-height:1.85; margin:0 0 1.4rem; }
+.hr-demo .row { display:grid; grid-template-columns:1.05fr .95fr; gap:1.4rem; align-items:start; margin-bottom:1.6rem; }
+.hr-demo img { width:100%; height:auto; border-radius:.6rem; background:#fff; border:1px solid #24303d; }
+.hr-demo pre { background:#0d1117; color:#e6edf3; border:1px solid #24303d; border-radius:.6rem;
+  padding:1rem 1.1rem; overflow-x:auto; font-size:.79rem; line-height:1.75; margin:0;
+  font-family:'JetBrains Mono','Fira Code',Consolas,monospace; white-space:pre; }
+.hr-demo .note { background:#111a16; border-left:3px solid #34d399; border-radius:0 .4rem .4rem 0;
+  padding:.85rem 1rem; color:#b9c9d6; font-size:.87rem; line-height:1.85; }
+.hr-demo .note strong { color:#e2e8f0; }
+.hr-demo .cap { color:#6b7c8f; font-size:.8rem; margin:.6rem 0 0; }
+@media (max-width:820px){ .hr-demo .row { grid-template-columns:1fr; } }
+</style>
+
+<div class="hr-demo">
+  <h3>この章で扱う題材：人事データ</h3>
+  <p>解説には、従業員1,200名分の架空の人事データ（<a href="index.html#chapters" style="color:#7dd3fc;">hr_sample.csv</a>）を使います。部署・等級・勤続年数・月間残業時間・エンゲージメントスコア・在籍状況の6列です。iris や mtcars ではピンとこない、人事データ特有の扱いにくさを一緒に見ていきます。</p>
+
+  <div class="row">
+    <img src="images/hr-overtime-by-dept.png" alt="部署別の月間残業時間を箱ひげ図で比較したグラフ" loading="lazy">
+    <pre>hr |&gt; ggplot(aes(部署, 月間残業時間, fill = 部署)) +
+  geom_boxplot(alpha = 0.75) +
+  labs(title = "部署別 月間残業時間の分布",
+       x = NULL, y = "月間残業時間（時間）") +
+  theme_minimal(base_family = "Noto Sans CJK JP") +
+  theme(legend.position = "none")</pre>
+  </div>
+  <div class="note"><strong>棒グラフにしないこと。</strong> 部署ごとの平均を棒で並べると、開発部の平均40時間という数字しか残りません。箱ひげ図にすると、開発部の上ひげが70時間近くまで伸びていることが見えます。36協定の特別条項に関わるのはこの層で、平均値だけを追っていると存在に気づけません。人事データは中心の代表値より、裾のほうに実務上の論点があります。</div>
+
+  <div class="row" style="margin-top:1.8rem;">
+    <img src="images/hr-headcount-heatmap.png" alt="部署と等級のクロス集計をヒートマップにしたもの" loading="lazy">
+    <pre>hr |&gt; count(部署, 等級, name = "人数") |&gt;
+  ggplot(aes(等級, 部署, fill = 人数)) +
+  geom_tile(color = "white", linewidth = 0.8) +
+  geom_text(aes(label = 人数), size = 3.2) +
+  scale_fill_gradient(low = "#EFF6FF", high = "#60A5FA")</pre>
+  </div>
+  <div class="note"><strong>色だけで終わらせず、数値を書く。</strong> 色の濃淡から正確な量を読み取るのは人間には難しく、凡例と往復させるだけで読み手の負担になります。<code>geom_text()</code> を重ねるのが実務的です。あわせて、<strong>セルの人数が一桁になる箇所には注意</strong>してください。「人事部のG5が2名」まで表示すると、社内の人間には個人が特定できます。公開資料では少人数セルを伏せるか、等級を粗くまとめてください。</div>
+
+  <div class="row" style="margin-top:1.8rem;">
+    <img src="images/hr-overtime-facet.png" alt="部署別に月間残業時間のヒストグラムを分割表示したもの" loading="lazy">
+    <pre>hr |&gt; ggplot(aes(月間残業時間)) +
+  geom_histogram(bins = 26) +
+  facet_wrap(~ 部署, ncol = 3) +
+  labs(x = "月間残業時間（時間）", y = "人数")</pre>
+  </div>
+  <div class="note"><strong>軸は共通のままにしておく。</strong> <code>scales = "free_y"</code> を付けると各面は見やすくなりますが、100名の人事部と364名の営業部が同じ高さで描かれ、比較の図として成立しなくなります。ファセットは「見やすさ」より「比較可能性」を優先する場面です。</div>
+
+  <p class="cap">図はggplot2と同じGrammar of Graphicsを実装したplotnine（Python）で描画しています。掲載コードをRで実行した場合と内容は一致しますが、既定テーマの細部は環境により異なります。</p>
+</div>
+
+<section class="content-section fade-in-up">
                 <h2 class="section-title">ggplot2とは？</h2>
                 <div class="section-content">
                     <p>
@@ -3366,5 +3434,30 @@
             }, 3000);
         }
     </script>
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:4rem;padding:2.5rem 1.25rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">
+      このサイトは、現役の人事担当者がRとtidyverseで人事データを扱うために書いている解説です。
+      掲載しているコードは自由に使ってかまいませんが、実行結果はデータやパッケージのバージョンによって変わります。
+      内容の誤りにお気づきの場合は<a href="/contact.html" style="color:#ff8c00;">お問い合わせ</a>からご連絡ください。
+    </p>
+    <p style="margin:0 0 1.2rem;font-size:.8rem;">
+      パッケージの仕様は更新されます。最新の挙動は
+      <a href="https://www.tidyverse.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidyverse公式</a>・
+      <a href="https://www.tidymodels.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidymodels公式</a>
+      のドキュメントをご確認ください。
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1.2rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/tidy-data-science/" style="color:#8d97a5;text-decoration:none;">目次</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

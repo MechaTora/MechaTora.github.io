@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第6章: forcats & purrr | TIDYVERSE/TIDYMODELS</title>
+    <title>第6章: forcats & purrr | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter6-forcats-purrr-advanced.html">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -802,21 +802,21 @@
     <meta name="keywords" content="forcats,purrr,R言語,因子,factor,map,関数型プログラミング,ネストデータ,リスト操作">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="第6章: forcats & purrr | TIDYVERSE/TIDYMODELS">
+    <meta property="og:title" content="第6章: forcats & purrr | tidyverseで学ぶ人事データ分析">
     <meta property="og:description" content="R言語、Tidyverseによるモダンなデータサイエンスの解説ページ。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter6-forcats-purrr-advanced.html">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第6章: forcats & purrr 因子とリスト操作の魔術 | TIDYVERSE完全マスター">
+    <meta name="twitter:title" content="第6章: forcats & purrr｜因子とリスト操作 | tidyverseで学ぶ人事データ分析">
     <meta name="twitter:description" content="forcatsで因子データを自在に操り、purrrで関数型プログラミングを極める。ネストデータ、並列処理、高度な関数操作を学ぶ究極のガイド。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "第6章: forcats & purrr 因子とリスト操作の魔術 | TIDYVERSE完全マスター",
+      "name": "第6章: forcats & purrr｜因子とリスト操作 | tidyverseで学ぶ人事データ分析",
       "description": "forcatsで因子データを自在に操り、purrrで関数型プログラミングを極める。ネストデータ、並列処理、高度な関数操作を学ぶ究極のガイド。",
       "url": "https://mechatora.com/tidy-data-science/chapter6-forcats-purrr-advanced.html",
       "inLanguage": "ja",
@@ -835,6 +835,20 @@
     </script>
 </head>
 <body>
+<!-- mechatora common topbar -->
+<div style="background:#11151c;border-bottom:1px solid #232a35;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.82rem;">
+  <div style="max-width:1200px;margin:0 auto;padding:.5rem 1.25rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+    <a href="/index.html" style="color:#ff8c00;font-weight:700;text-decoration:none;">メカとら</a>
+    <span style="color:#4a5464;">/</span>
+    <a href="/tidy-data-science/" style="color:#c7d0dc;text-decoration:none;">tidyverseで学ぶ人事データ分析</a>
+    <span style="margin-left:auto;display:flex;gap:1rem;">
+      <a href="/articles.html" style="color:#8d97a5;text-decoration:none;">記事一覧</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+    </span>
+  </div>
+</div>
+
     
     <!-- Navigation -->
     <nav>
@@ -858,7 +872,7 @@
             <div class="chapter-stats">
                 <div class="stat-card">
                     <span class="stat-icon">📊</span>
-                    <div class="stat-title">因子データマスタリー</div>
+                    <div class="stat-title">因子データの扱い</div>
                     <div class="stat-desc">カテゴリカルデータの完全制御</div>
                 </div>
                 <div class="stat-card">
@@ -1034,7 +1048,7 @@
 
             <!-- PURRR SECTION -->
             <section class="content-section fade-in-up" id="purrr">
-                <h2 class="section-title">🚀 PURRR: 関数型プログラミングの極意</h2>
+                <h2 class="section-title">purrr｜関数型プログラミング</h2>
                 <p class="section-description">
                     purrrパッケージは、Rにおける関数型プログラミングのパラダイムを体現する革命的なツールです。
                     ループを書く代わりに、データに関数を「映射（map）」することで、より読みやすく、保守性の高いコードを実現できます。
@@ -1765,5 +1779,30 @@
 
         window.addEventListener('scroll', updateProgress);
     </script>
+<!-- mechatora common footer -->
+<footer style="background:#0d1117;border-top:1px solid #232a35;color:#8d97a5;font-family:system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:.85rem;line-height:1.9;margin-top:4rem;padding:2.5rem 1.25rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <p style="margin:0 0 1rem;">
+      このサイトは、現役の人事担当者がRとtidyverseで人事データを扱うために書いている解説です。
+      掲載しているコードは自由に使ってかまいませんが、実行結果はデータやパッケージのバージョンによって変わります。
+      内容の誤りにお気づきの場合は<a href="/contact.html" style="color:#ff8c00;">お問い合わせ</a>からご連絡ください。
+    </p>
+    <p style="margin:0 0 1.2rem;font-size:.8rem;">
+      パッケージの仕様は更新されます。最新の挙動は
+      <a href="https://www.tidyverse.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidyverse公式</a>・
+      <a href="https://www.tidymodels.org/" target="_blank" rel="noopener" style="color:#c7d0dc;">tidymodels公式</a>
+      のドキュメントをご確認ください。
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;border-top:1px solid #1b212b;padding-top:1.2rem;">
+      <a href="/index.html" style="color:#8d97a5;text-decoration:none;">メカとら トップ</a>
+      <a href="/tidy-data-science/" style="color:#8d97a5;text-decoration:none;">目次</a>
+      <a href="/about.html" style="color:#8d97a5;text-decoration:none;">運営者について</a>
+      <a href="/contact.html" style="color:#8d97a5;text-decoration:none;">お問い合わせ</a>
+      <a href="/privacy-policy.html" style="color:#8d97a5;text-decoration:none;">プライバシーポリシー</a>
+      <a href="/terms.html" style="color:#8d97a5;text-decoration:none;">利用規約</a>
+      <span style="margin-left:auto;opacity:.6;">&copy; 2026 メカとら</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
