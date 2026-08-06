@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>宮城の地震情報｜今日の最新地震・震度・震源｜地震モニター</title>
 <meta name="description" content="宮城県で観測された地震をリアルタイム表示。今日の最新の震度・震源・マグニチュードと、直近の観測回数・最大震度を無料で確認できます。">
-<!-- AdSense審査・SEO対策: 都道府県ページは本文の大半が共通テンプレートで、
-     独自コンテンツが県名の差し替えのみのため noindex にしています。
-     過去の被害地震・想定される地震・自治体の防災リンク等を追加して
-     ページ固有の内容を厚くしたら、下の meta タグを削除してください。 -->  <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://mechatora.com/earthquake-monitor/pref/miyagi.html">
 <meta property="og:title" content="宮城の地震情報｜今日の最新地震・震度・震源">
 <meta property="og:description" content="宮城県で観測された地震をリアルタイム表示。最新の震度・震源を無料で確認。">
@@ -96,6 +92,36 @@ footer a{color:rgba(255,255,255,.8);text-decoration:none;margin:0 8px}
     <h2>ℹ️ 震度の見方</h2>
     <p>ここに表示している震度は、宮城県内の観測点で記録された値のうち最も大きいものです。マグニチュードは地震そのものの規模を示すため、宮城から震源が遠い場合はマグニチュードが大きくても震度は小さくなります。</p>
     <p class="note">気象庁が発表する地震情報を<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPI経由で取得しています。本サービスは参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
+  </div>
+
+<style>
+.hist-table-wrap{overflow-x:auto;margin:14px 0}
+table.hist{border-collapse:collapse;width:100%;font-size:.9em;min-width:640px}
+table.hist th,table.hist td{border:1px solid rgba(255,255,255,.14);padding:8px 10px;text-align:left;vertical-align:top}
+table.hist th{background:rgba(255,255,255,.06);white-space:nowrap;font-weight:700}
+table.hist td:nth-child(1){white-space:nowrap}
+table.hist td:nth-child(3),table.hist td:nth-child(4){white-space:nowrap}
+.hist-src{font-size:.85em;opacity:.75;line-height:1.9;margin-top:12px}
+.hist-src a{text-decoration:underline}
+</style>
+  <div class="card">
+    <h2>過去に宮城県で被害を出した地震</h2>
+    <p>宮城県は、太平洋沖のプレート境界で繰り返し起きる海溝型地震と、内陸の浅い場所で起きる地震の両方に見舞われてきました。近代的な震度観測が始まって以降、県内で震度6弱以上を観測した地震は次のとおりです。</p>
+    <div class="hist-table-wrap">
+      <table class="hist">
+        <thead><tr><th>発生日</th><th>震央地名・地震名</th><th>規模</th><th>宮城県内の最大震度</th><th>被害（全国計）</th></tr></thead>
+        <tbody><tr><td>2022年3月16日</td><td>福島県沖</td><td>M7.4</td><td>6強（登米市・蔵王町）</td><td>死者4人、負傷者248人、住家全壊224棟</td></tr><tr><td>2021年2月13日</td><td>福島県沖</td><td>M7.3</td><td>6強（蔵王町）</td><td>死者3人、負傷者168人、住家全壊144棟</td></tr><tr><td>2011年4月7日</td><td>宮城県沖</td><td>M7.2</td><td>6強（栗原市・仙台市宮城野区）</td><td>死者4人、負傷者296人</td></tr><tr><td>2011年3月11日</td><td>三陸沖（東北地方太平洋沖地震）</td><td>M9.0</td><td><strong>7</strong>（栗原市）</td><td>死者19,418人、行方不明2,592人、負傷者6,222人、住家全壊121,809棟</td></tr><tr><td>2008年6月14日</td><td>岩手県内陸南部（岩手・宮城内陸地震）</td><td>M7.2</td><td>6強（栗原市）、6弱（大崎市）</td><td>死者17人、行方不明6人、負傷者426人、住家全壊30棟</td></tr><tr><td>2005年8月16日</td><td>宮城県沖</td><td>M7.2</td><td>6弱（川崎町）</td><td>負傷者91人、住家全壊1棟</td></tr><tr><td>2003年7月26日</td><td>宮城県北部</td><td>M6.4</td><td>6強（鳴瀬町ほか）</td><td>負傷者647人、住家被害6,413棟</td></tr><tr><td>2003年5月26日</td><td>宮城県沖</td><td>M7.1</td><td>6弱（石巻市ほか）</td><td>負傷者174人、住家全壊2棟</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note">1978年の宮城県沖地震（M7.4）は仙台市などで震度5を観測し、死者28人・負傷者1,325人の被害を出しました。当時の震度階級には「6弱」「6強」の区分がなかったため上の表には含めていませんが、都市型の地震被害として知られる地震です。</p>
+    <p class="note">宮城県沖では、今後もプレート境界の地震が繰り返し発生すると考えられています。長期評価の最新の数値は地震本部のページで確認してください。</p>
+    <p class="hist-src">
+      <strong>出典：</strong>
+      <a href="https://www.jishin.go.jp/regional_seismicity/rs_tohoku/p04_miyagi/" target="_blank" rel="noopener">地震調査研究推進本部「宮城県の地震活動の特徴」</a>、
+      <a href="https://www.jma-net.go.jp/sendai/knowledge/earthquake/higai.html" target="_blank" rel="noopener">仙台管区気象台「宮城県に被害を及ぼした主な地震･津波」</a>、総務省消防庁。<br>
+      被害の数値は当該地震による全国の合計で、宮城県内の内訳ではありません。集計時点によって数値は変わります。
+      掲載内容は参考情報です。防災上の判断は、必ず気象庁・自治体の公式発表をご確認ください。
+    </p>
   </div>
 
   <div class="card">

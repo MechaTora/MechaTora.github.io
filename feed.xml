@@ -1,171 +1,339 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>メカとらのブログ</title>
-    <link>https://blog.mechatora.com/</link>
-    <description>社労士×エンジニアのメカとらが、Web開発・技術・キャリア・データサイエンスについて発信するブログ</description>
+    <title>メカとら</title>
+    <link>https://mechatora.com/</link>
+    <description>現役人事×DX推進者のメカとらが、人事・DX・AI・データサイエンス・個人開発について発信しています。</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 02 Jan 2026 16:12:27 GMT</lastBuildDate>
-    <atom:link href="https://blog.mechatora.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Thu, 06 Aug 2026 02:09:43 GMT</lastBuildDate>
+    <atom:link href="https://mechatora.com/feed.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>日本酒サジェストでリクエストをもらい追加作業🐯</title>
-      <link>https://blog.mechatora.com/articles/2026-01-02-日本酒サジェストでリクエストをもらい追加作業🐯.html</link>
-      <guid>https://blog.mechatora.com/articles/2026-01-02-日本酒サジェストでリクエストをもらい追加作業🐯.html</guid>
-      <description>Xで宣伝してみると・・・</description>
-      <pubDate>Fri, 02 Jan 2026 00:00:00 GMT</pubDate>
+      <title>データサイエンティストはAIに淘汰されるのか？──Notebooks Master×現役人事の正直な結論</title>
+      <link>https://mechatora.com/articles/2026-07-22-will-data-scientists-be-replaced-by-ai.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2026-07-22-will-data-scientists-be-replaced-by-ai.html</guid>
+      <description>データサイエンティストはAIに淘汰されるのか？ Kaggle Notebooks Master×現役人事が、AIの進歩・解釈能力・ドメイン知識の観点から正直に考察。人の価値は「分析」から「関係者の行動変容」へ移るという結論を述べます。</description>
+      <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
     </item>
 
     <item>
-      <title>日本酒サジェスVer2に向けたデータ整理</title>
-      <link>https://blog.mechatora.com/articles/2026-01-01-日本酒サジェスver2に向けたデータ整理.html</link>
-      <guid>https://blog.mechatora.com/articles/2026-01-01-日本酒サジェスver2に向けたデータ整理.html</guid>
-      <description>元旦の挨拶とやっていること</description>
-      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+      <title>Claude FableでサイトをAI診断→全面リニューアルした話｜メカとら大改造ログ</title>
+      <link>https://mechatora.com/articles/2026-07-20-site-renewal-claude-fable.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2026-07-20-site-renewal-claude-fable.html</guid>
+      <description>Claude（Fable）にメカとらのサイト全体をAI診断してもらい、不要サイトの削除・死にリンク修正・ブログ再生・ブランド統一まで一気に全面リニューアルしました。AI伴走でのサイト大改造の記録です。</description>
+      <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>エンジニアのための簿記入門｜ITと会計の融合で市場価値を10倍にする方法</title>
-      <link>https://blog.mechatora.com/articles/2025-12-29-bookkeeping-basics-for-engineers.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-29-bookkeeping-basics-for-engineers.html</guid>
+      <link>https://mechatora.com/articles/2025-12-29-bookkeeping-basics-for-engineers.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-29-bookkeeping-basics-for-engineers.html</guid>
       <description>エンジニアが簿記を学ぶメリットとは？簿記2級取得者が語る、ITスキルと会計知識を掛け合わせてキャリアの幅を広げる戦略を詳しく解説します。</description>
       <pubDate>Mon, 29 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>AI活用でデータベース構築｜ChatGPT/Claude活用術と実践ノウハウ</title>
-      <link>https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-28-ai-powered-database-construction.html</guid>
+      <link>https://mechatora.com/articles/2025-12-28-ai-powered-database-construction.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-28-ai-powered-database-construction.html</guid>
       <description>生成AIを使ったデータベース構築の実践ガイド。ChatGPTとClaudeでデータ収集・整形・検証を自動化し、開発時間を10分の1に短縮した方法を詳しく解説します。</description>
       <pubDate>Sun, 28 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>日本酒データベースサイト開発秘話｜全国の地酒を一元管理する技術</title>
-      <link>https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-27-sake-database-development-story.html</guid>
+      <link>https://mechatora.com/articles/2025-12-27-sake-database-development-story.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-27-sake-database-development-story.html</guid>
       <description>47都道府県の日本酒データを収録したデータベースサイトの開発プロセスを詳しく解説。データ収集、DB設計、検索機能の実装まで、個人開発の全貌を公開します。</description>
       <pubDate>Sat, 27 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>社労士試験の効率的な学習法｜暗記地獄から抜け出す3つの戦略</title>
-      <link>https://blog.mechatora.com/articles/2025-12-26-sharoushi-study-method-escape-memorization.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-26-sharoushi-study-method-escape-memorization.html</guid>
+      <link>https://mechatora.com/articles/2025-12-26-sharoushi-study-method-escape-memorization.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-26-sharoushi-study-method-escape-memorization.html</guid>
       <description>社労士試験の合格率6%の壁を突破するには？暗記だけに頼らない効率的な学習法を、実際に独学で合格した経験から詳しく解説します。年末年始の学習計画にも最適。</description>
       <pubDate>Fri, 26 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>Kaggle Masterが教える、未経験からデータサイエンティストになる最短ルート</title>
-      <link>https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html</guid>
+      <link>https://mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-25-kaggle-master-roadmap.html</guid>
       <description>Kaggle Master到達者が語る、未経験からデータサイエンティストになるための完全ロードマップ。実践的なコンペ戦略、おすすめライブラリ、挫折しない学習法を詳しく解説します。</description>
       <pubDate>Thu, 25 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>人事のプロが語る、採用で評価されるポートフォリオの作り方</title>
-      <link>https://blog.mechatora.com/articles/2025-12-24-hr-perspective-portfolio-guide.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-24-hr-perspective-portfolio-guide.html</guid>
+      <link>https://mechatora.com/articles/2025-12-24-hr-perspective-portfolio-guide.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-24-hr-perspective-portfolio-guide.html</guid>
       <description>現役人事×エンジニアが明かす、書類選考を100%通過するポートフォリオの秘訣。GitHubプロフィール最適化、技術ブログ活用、面接で刺さる実績の見せ方を詳しく解説します。</description>
       <pubDate>Wed, 24 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>30代で人生を180度変えた｜ポジティブマインドで一念発起した3つのターニングポイント</title>
-      <link>https://blog.mechatora.com/articles/2025-12-23-life-transformation-story.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-23-life-transformation-story.html</guid>
-      <description>どん底から這い上がり、社労士合格・Kaggle Master・個人開発を並行達成した人生逆転ストーリー。ポジティブマインドの作り方、モチベーション維持の具体的テクニックを詳しく解説します。</description>
+      <link>https://mechatora.com/articles/2025-12-23-life-transformation-story.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-23-life-transformation-story.html</guid>
+      <description>どん底から這い上がり、社労士合格・データ分析・個人開発を並行して進めた人生の立て直しストーリー。ポジティブマインドの作り方、モチベーション維持の具体的テクニックを詳しく解説します。</description>
       <pubDate>Tue, 23 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>データサイエンスで日本酒を分析してみた｜47都道府県3,500銘柄の傾向と特徴</title>
-      <link>https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-22-sake-data-analysis.html</guid>
-      <description>Kaggle Masterが日本酒データベースをPythonで徹底分析。アルコール度数・精米歩合の分布、都道府県別の特徴、機械学習によるレコメンドシステム構築まで詳しく解説します。</description>
+      <link>https://mechatora.com/articles/2025-12-22-sake-data-analysis.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-22-sake-data-analysis.html</guid>
+      <description>Kaggle Notebooks Master（旧Kernels）の人事パーソンが日本酒データベースをPythonで分析。アルコール度数・精米歩合の分布、都道府県別の特徴、機械学習によるレコメンドシステム構築まで詳しく解説します。</description>
       <pubDate>Mon, 22 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>人事データ分析入門｜Pythonで採用・離職率を可視化する方法</title>
-      <link>https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html</link>
-      <guid>https://blog.mechatora.com/articles/2025-12-21-hr-data-analysis.html</guid>
-      <description>現役人事×Kaggle Masterが教える、人事部門でのデータ活用実践ガイド。採用データ分析、離職予測モデル構築、Excel脱却の具体的手法を詳しく解説します。</description>
+      <link>https://mechatora.com/articles/2025-12-21-hr-data-analysis.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/2025-12-21-hr-data-analysis.html</guid>
+      <description>現役人事×Kaggle Notebooks Masterが教える、人事部門でのデータ活用実践ガイド。採用データ分析、離職予測モデル構築、Excel脱却の具体的手法を詳しく解説します。</description>
       <pubDate>Sun, 21 Dec 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>エンジニアとして学び続ける技術 - 継続的成長の秘訣</title>
-      <link>https://blog.mechatora.com/articles/continuous-learning-engineer.html</link>
-      <guid>https://blog.mechatora.com/articles/continuous-learning-engineer.html</guid>
+      <link>https://mechatora.com/articles/continuous-learning-engineer.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/continuous-learning-engineer.html</guid>
       <description>エンジニアとして継続的に学び続ける方法を実体験から解説。情報収集、技術選定、学習の習慣化、モチベーション維持など、2年間で15個のアプリを作り続けた秘訣を紹介します。</description>
       <pubDate>Wed, 05 Nov 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>Web パフォーマンス最適化の実践 - サイトを爆速にする方法</title>
-      <link>https://blog.mechatora.com/articles/web-performance-optimization.html</link>
-      <guid>https://blog.mechatora.com/articles/web-performance-optimization.html</guid>
+      <link>https://mechatora.com/articles/web-performance-optimization.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/web-performance-optimization.html</guid>
       <description>Webサイトのパフォーマンス最適化を実践的に解説。画像圧縮、遅延読み込み、CSS/JS最適化、Lighthouse改善など、メカとらで実際に行った高速化手法を紹介します。</description>
       <pubDate>Tue, 04 Nov 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>Git/GitHub実践ガイド - 個人開発で使えるワークフロー</title>
-      <link>https://blog.mechatora.com/articles/git-github-workflow.html</link>
-      <guid>https://blog.mechatora.com/articles/git-github-workflow.html</guid>
+      <link>https://mechatora.com/articles/git-github-workflow.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/git-github-workflow.html</guid>
       <description>Git/GitHubの実践的な使い方を解説。基本コマンド、ブランチ戦略、プルリクエスト、コンフリクト解決など、個人開発で実際に使っているワークフローを紹介します。</description>
       <pubDate>Mon, 03 Nov 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>複数スキルの掛け合わせ戦略 - 100万人に1人の人材になる方法</title>
-      <link>https://blog.mechatora.com/articles/multiple-skills-strategy.html</link>
-      <guid>https://blog.mechatora.com/articles/multiple-skills-strategy.html</guid>
+      <link>https://mechatora.com/articles/multiple-skills-strategy.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/multiple-skills-strategy.html</guid>
       <description>複数スキルを掛け合わせて希少価値を高める戦略を実体験から解説。社労士×エンジニア×データ分析の組み合わせで、100万人に1人の人材になる方法と、具体的な学習ロードマップを紹介します。</description>
       <pubDate>Sun, 02 Nov 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>CSS Grid完全ガイド - 現代的なレイアウト実装の決定版</title>
-      <link>https://blog.mechatora.com/articles/css-grid-layout-guide.html</link>
-      <guid>https://blog.mechatora.com/articles/css-grid-layout-guide.html</guid>
+      <link>https://mechatora.com/articles/css-grid-layout-guide.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/css-grid-layout-guide.html</guid>
       <description>CSS Gridを使った現代的なレイアウト実装ガイド。Flexboxとの使い分け、グリッドの基本、レスポンシブ対応、実際のプロジェクト例まで、メカとらで使っている実装をもとに解説します。</description>
       <pubDate>Sat, 01 Nov 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>Tidyverseで始めるデータクレンジング - 汚いデータを綺麗にする方法</title>
-      <link>https://blog.mechatora.com/articles/data-cleaning-tidyverse.html</link>
-      <guid>https://blog.mechatora.com/articles/data-cleaning-tidyverse.html</guid>
+      <link>https://mechatora.com/articles/data-cleaning-tidyverse.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/data-cleaning-tidyverse.html</guid>
       <description>R言語とTidyverseを使ったデータクレンジング（データ前処理）の実践ガイド。欠損値処理、重複削除、型変換、外れ値除去など、人事データの実例で解説します。</description>
       <pubDate>Fri, 31 Oct 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>エンジニアのポートフォリオの作り方 - 実績で語る自己PR</title>
-      <link>https://blog.mechatora.com/articles/portfolio-building-guide.html</link>
-      <guid>https://blog.mechatora.com/articles/portfolio-building-guide.html</guid>
+      <link>https://mechatora.com/articles/portfolio-building-guide.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/portfolio-building-guide.html</guid>
       <description>エンジニアのポートフォリオ作成ガイド。GitHub Pages、実際のプロジェクト、技術スタック、デザインのコツまで、15個のツールを公開してきた経験から、効果的なポートフォリオの作り方を解説します。</description>
       <pubDate>Thu, 30 Oct 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>宝くじ高額当選売場マップの開発 - 地図アプリ実装の実践</title>
-      <link>https://blog.mechatora.com/articles/lottery-map-development.html</link>
-      <guid>https://blog.mechatora.com/articles/lottery-map-development.html</guid>
+      <link>https://mechatora.com/articles/lottery-map-development.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/lottery-map-development.html</guid>
       <description>宝くじ高額当選売場マップの開発秘話。Leaflet.jsでの地図実装、CSVデータ処理、マーカークラスタリング、Firebase Hostingでのデプロイまで、実際の開発プロセスを詳しく解説します。</description>
       <pubDate>Wed, 29 Oct 2025 00:00:00 GMT</pubDate>
     </item>
 
     <item>
       <title>個人開発で押さえるべきWebセキュリティ基礎</title>
-      <link>https://blog.mechatora.com/articles/web-security-basics.html</link>
-      <guid>https://blog.mechatora.com/articles/web-security-basics.html</guid>
+      <link>https://mechatora.com/articles/web-security-basics.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/web-security-basics.html</guid>
       <description>Webセキュリティの基礎を実践的に解説。XSS、CSRF、SQLインジェクション、CORS設定など、個人開発で最低限押さえるべきセキュリティ対策を、実際の脆弱性事例とコード例で紹介します。</description>
       <pubDate>Tue, 28 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>失敗しない技術書の選び方 - 50冊読んで分かったコツ</title>
+      <link>https://mechatora.com/articles/tech-books-selection-guide.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/tech-books-selection-guide.html</guid>
+      <description>技術書の選び方を実体験から解説。初心者向け・中級者向けの見分け方、ハズレ本の特徴、効率的な読み方、おすすめの技術書まで、2年間で50冊以上読んだ経験をもとに紹介します。</description>
+      <pubDate>Mon, 27 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>JavaScriptエラーハンドリングの実践 - 堅牢なコードを書く方法</title>
+      <link>https://mechatora.com/articles/javascript-error-handling.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/javascript-error-handling.html</guid>
+      <description>JavaScriptのエラーハンドリングとデバッグ手法を実践的に解説。try-catch、Promise、async/awaitのエラー処理、Chrome DevToolsの使い方、本番環境でのエラー監視まで、実際の経験をもとに紹介します。</description>
+      <pubDate>Sun, 26 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>ggplot2で始めるデータ可視化 - 美しいグラフを作る実践ガイド</title>
+      <link>https://mechatora.com/articles/ggplot2-data-visualization.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/ggplot2-data-visualization.html</guid>
+      <description>R言語のggplot2を使ったデータ可視化の基礎を実践的に解説。棒グラフ、折れ線グラフ、散布図、ヒートマップなど、実務で使える美しいグラフの作り方を人事データの実例で紹介します。</description>
+      <pubDate>Sat, 25 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>社労士資格を最大限活用する5つの方法 - 独立以外のキャリアパス</title>
+      <link>https://mechatora.com/articles/sharoushi-skill-utilization.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/sharoushi-skill-utilization.html</guid>
+      <description>社労士資格を最大限活用する5つの方法を実体験から解説。独立開業だけでなく、企業内活用、副業、スキル掛け合わせ、IT×人事の融合など、多様なキャリアパスを紹介します。</description>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>API Rate Limitingの実装と対策 - 制限を超えないための実践テクニック</title>
+      <link>https://mechatora.com/articles/api-rate-limiting-practices.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/api-rate-limiting-practices.html</guid>
+      <description>API Rate Limiting（レート制限）の実装方法と対策を実践的に解説。楽天APIや気象庁APIなど、実際のAPI連携で遭遇した制限への対処法、リトライロジック、キャッシュ戦略を紹介します。</description>
+      <pubDate>Thu, 23 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>PWA実装の基礎 - WebアプリをPWA化する手順</title>
+      <link>https://mechatora.com/articles/pwa-implementation-guide.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/pwa-implementation-guide.html</guid>
+      <description>PWA（Progressive Web Apps）の実装方法を実践的に解説。Service Worker、manifest.json、キャッシュ戦略など、実際にメカとらのツールをPWA化した経験をもとに、初心者でも分かる形で説明します。</description>
+      <pubDate>Wed, 22 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>初心者でも分かるGitHub Pagesでの無料サイト公開｜完全ガイド</title>
+      <link>https://mechatora.com/articles/github-pages-guide.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/github-pages-guide.html</guid>
+      <description>GitHub Pagesを使えば完全無料でWebサイトを公開できます。アカウント作成からサイト公開まで、初心者向けに画像付きで詳しく解説。実際の運用経験から、つまずきやすいポイントも紹介します。</description>
+      <pubDate>Wed, 15 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>R言語Tidyverseデータ分析入門｜社労士が実践するHRデータ分析の基礎</title>
+      <link>https://mechatora.com/articles/r-tidyverse-intro.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/r-tidyverse-intro.html</guid>
+      <description>R言語とTidyverseによるデータ分析入門。社労士がHR分析で実践した、dplyr・ggplot2を使ったデータ前処理と可視化の基礎を初心者向けに解説します。</description>
+      <pubDate>Tue, 14 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>CookSuggestアプリ開発秘話｜料理提案ツールの技術と工夫</title>
+      <link>https://mechatora.com/articles/cook-suggest-development.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/cook-suggest-development.html</guid>
+      <description>CookSuggestアプリの開発秘話。食材から料理を提案するWebアプリの設計思想、API連携の実装、ユーザー体験向上のための工夫を詳しく解説します。</description>
+      <pubDate>Sun, 12 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>資格試験カレンダーアプリ開発秘話｜試験日程を一括管理するツールの作り方</title>
+      <link>https://mechatora.com/articles/qualification-calendar-dev.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/qualification-calendar-dev.html</guid>
+      <description>資格試験カレンダーアプリの開発秘話。社労士資格を持つ開発者が、試験日程管理の課題を解決するために作ったWebアプリの技術的な工夫と学びを紹介します。</description>
+      <pubDate>Fri, 10 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>レスポンシブデザイン実装の基本｜メディアクエリとFlexboxで作る</title>
+      <link>https://mechatora.com/articles/responsive-design-basics.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/responsive-design-basics.html</guid>
+      <description>レスポンシブデザイン実装の基本。メディアクエリ、Flexbox、CSS Grid、モバイルファースト設計を実例で解説。初心者でもすぐに使える実践的なコード付き。</description>
+      <pubDate>Thu, 09 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>地震情報モニターの技術解説｜リアルタイムデータ表示の実装</title>
+      <link>https://mechatora.com/articles/earthquake-monitor-tech.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/earthquake-monitor-tech.html</guid>
+      <description>地震情報モニターアプリの技術解説。気象庁APIとの連携、リアルタイムデータ表示、WebSocketによる自動更新の実装方法を詳しく紹介します。</description>
+      <pubDate>Wed, 08 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>GitHub Actionsで自動デプロイ環境を作る｜初心者向けCI/CD入門</title>
+      <link>https://mechatora.com/articles/github-actions-deploy.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/github-actions-deploy.html</guid>
+      <description>GitHub Actionsで自動デプロイ環境を構築する方法。CI/CDの基礎、ワークフローファイルの書き方、GitHub Pagesへの自動デプロイ、エラー対処法を実例で解説します。</description>
+      <pubDate>Tue, 07 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>X投稿文ジェネレーター開発秘話｜ワードから自然な投稿文を生成する仕組み</title>
+      <link>https://mechatora.com/articles/x-post-generator-dev.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/x-post-generator-dev.html</guid>
+      <description>X投稿文ジェネレーター開発秘話。2〜3個のワードから自然な投稿文を生成する仕組み、テンプレートエンジンの実装、ボケ要素の追加ロジックを詳しく解説します。</description>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>働きながら独学で学び続ける時間管理術｜週17時間を確保する方法</title>
+      <link>https://mechatora.com/articles/time-management-selfstudy.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/time-management-selfstudy.html</guid>
+      <description>働きながら独学で学び続ける時間管理術。フルタイム勤務、週17時間の学習時間確保、朝活・通勤時間活用、モチベーション維持の方法を実体験から解説します。</description>
+      <pubDate>Fri, 03 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>社労士×エンジニアという働き方｜スキルを掛け合わせて市場価値を高める</title>
+      <link>https://mechatora.com/articles/hr-to-developer.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/hr-to-developer.html</guid>
+      <description>社労士×エンジニアという働き方。本業を続けながらプログラミングスキルを習得し、両方のスキルを掛け合わせて市場価値を高める方法を実体験から解説します。</description>
+      <pubDate>Wed, 25 Dec 2024 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>独自ドメイン取得完全ガイド｜お名前.comでの取得からDNS設定まで</title>
+      <link>https://mechatora.com/articles/domain-registration.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/domain-registration.html</guid>
+      <description>独自ドメイン取得の完全ガイド。お名前.comやムームードメインでのドメイン取得手順、DNS設定、GitHub Pagesとの連携方法を初心者向けに詳しく解説します。</description>
+      <pubDate>Fri, 20 Dec 2024 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>Claude Code使用レビュー｜1ヶ月使ってわかった実力と活用法</title>
+      <link>https://mechatora.com/articles/claude-code-experience.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/claude-code-experience.html</guid>
+      <description>Claude Codeを1ヶ月使ってみた体験記。コード生成AIの実力、GitHub Copilotとの比較、実際の開発での活用シーン、料金対効果を詳しくレビューします。</description>
+      <pubDate>Sun, 15 Dec 2024 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>完全無料でWebアプリを公開する方法｜サーバー代0円のフル活用術</title>
+      <link>https://mechatora.com/articles/free-webapp-guide.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/free-webapp-guide.html</guid>
+      <description>完全無料でWebアプリを公開する方法。GitHub Pages、Netlify、Vercelなど無料ホスティングサービスの比較と、サーバー代0円で15個のアプリを運用する実践ノウハウを解説します。</description>
+      <pubDate>Thu, 05 Dec 2024 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>30代からのプログラミング独学体験記｜働きながら15個のアプリを作るまで</title>
+      <link>https://mechatora.com/articles/30s-programming.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/30s-programming.html</guid>
+      <description>30代からプログラミングを始めた体験記。社労士として働きながら独学でWeb開発を習得し、15個のアプリを公開するまでの学習法、挫折ポイント、実践的なアドバイスを紹介します。</description>
+      <pubDate>Thu, 28 Nov 2024 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>社労士試験合格体験記｜働きながら9ヶ月で合格した勉強法と時間管理術</title>
+      <link>https://mechatora.com/articles/sharoushi-pass.html</link>
+      <guid isPermaLink="true">https://mechatora.com/articles/sharoushi-pass.html</guid>
+      <description>社会保険労務士試験合格体験記。働きながら9ヶ月で合格した勉強法、使用教材、時間管理術、科目別攻略法を詳しく解説します。</description>
+      <pubDate>Fri, 15 Nov 2024 00:00:00 GMT</pubDate>
     </item>
 
   </channel>

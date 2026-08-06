@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>愛知の地震情報｜今日の最新地震・震度・震源｜地震モニター</title>
 <meta name="description" content="愛知県で観測された地震をリアルタイム表示。今日の最新の震度・震源・マグニチュードと、直近の観測回数・最大震度を無料で確認できます。">
-<!-- AdSense審査・SEO対策: 都道府県ページは本文の大半が共通テンプレートで、
-     独自コンテンツが県名の差し替えのみのため noindex にしています。
-     過去の被害地震・想定される地震・自治体の防災リンク等を追加して
-     ページ固有の内容を厚くしたら、下の meta タグを削除してください。 -->  <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://mechatora.com/earthquake-monitor/pref/aichi.html">
 <meta property="og:title" content="愛知の地震情報｜今日の最新地震・震度・震源">
 <meta property="og:description" content="愛知県で観測された地震をリアルタイム表示。最新の震度・震源を無料で確認。">
@@ -96,6 +92,36 @@ footer a{color:rgba(255,255,255,.8);text-decoration:none;margin:0 8px}
     <h2>ℹ️ 震度の見方</h2>
     <p>ここに表示している震度は、愛知県内の観測点で記録された値のうち最も大きいものです。マグニチュードは地震そのものの規模を示すため、愛知から震源が遠い場合はマグニチュードが大きくても震度は小さくなります。</p>
     <p class="note">気象庁が発表する地震情報を<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPI経由で取得しています。本サービスは参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
+  </div>
+
+<style>
+.hist-table-wrap{overflow-x:auto;margin:14px 0}
+table.hist{border-collapse:collapse;width:100%;font-size:.9em;min-width:640px}
+table.hist th,table.hist td{border:1px solid rgba(255,255,255,.14);padding:8px 10px;text-align:left;vertical-align:top}
+table.hist th{background:rgba(255,255,255,.06);white-space:nowrap;font-weight:700}
+table.hist td:nth-child(1){white-space:nowrap}
+table.hist td:nth-child(3),table.hist td:nth-child(4){white-space:nowrap}
+.hist-src{font-size:.85em;opacity:.75;line-height:1.9;margin-top:12px}
+.hist-src a{text-decoration:underline}
+</style>
+  <div class="card">
+    <h2>過去に愛知県で被害を出した地震</h2>
+    <p>愛知県に被害を及ぼしてきたのは、主に南海トラフ沿いで繰り返し起きる海溝型の巨大地震と、内陸の浅い場所で起きる地震です。近代的な震度観測が始まって以降、県内で震度6弱以上が観測された記録はありませんが、それは安全を意味しません。過去には震度6相当の揺れと甚大な被害を経験しています。</p>
+    <div class="hist-table-wrap">
+      <table class="hist">
+        <thead><tr><th>発生日</th><th>震央地名・地震名</th><th>規模</th><th>愛知県内の最大震度</th><th>被害（全国計）</th></tr></thead>
+        <tbody><tr><td>1946年12月21日</td><td>南海地震</td><td>M8.0</td><td>—</td><td>死者10人、負傷者19人、住家全壊75棟</td></tr><tr><td>1945年1月13日</td><td>三河地震</td><td>M6.8</td><td>—</td><td>幡豆郡・碧海郡に甚大な被害。死者2,306人、負傷者3,866人、住家全壊7,221棟</td></tr><tr><td>1944年12月7日</td><td>東南海地震</td><td>M7.9</td><td>—</td><td>名古屋臨港部などで液状化による被害。死者・行方不明者438人、負傷者1,148人、住家全壊6,411棟</td></tr><tr><td>1891年10月28日</td><td>濃尾地震</td><td>M8.0</td><td>県内の広い範囲で<strong>6</strong>（旧階級）</td><td>三河・尾張で死者2,339人、負傷者4,594人、住家全壊68,899棟</td></tr><tr><td>1854年12月23日</td><td>安政東海地震</td><td>M8.4</td><td>—</td><td>三河・知多・尾張の沿岸に被害。津波による被害</td></tr><tr><td>1707年10月28日</td><td>宝永地震</td><td>M8.6</td><td>—</td><td>渥美郡、吉田（現在の豊橋）で大被害。三河・尾張で死者19人、住家全壊8,573棟</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note">「震度」の記号がない行は、近代的な震度観測が始まる前、または県内の観測記録が残っていない地震です。1945年の三河地震は死者2,306人という県内最悪級の被害を出しましたが、戦時下で報道が統制され、長く知られてきませんでした。震度の記録がないことと、揺れが小さかったことは別の話です。</p>
+    <p class="note">愛知県は全域が「南海トラフ地震防災対策推進地域」に指定されています。県内の主要活断層帯には屏風山・恵那山断層帯及び猿投山断層帯、伊勢湾断層帯があります。</p>
+    <p class="hist-src">
+      <strong>出典：</strong>
+      <a href="https://www.jishin.go.jp/regional_seismicity/rs_chubu/p23_aichi/" target="_blank" rel="noopener">地震調査研究推進本部「愛知県の地震活動の特徴」</a>、
+      <a href="https://www.data.jma.go.jp/nagoya/index.html" target="_blank" rel="noopener">名古屋地方気象台</a>、総務省消防庁。<br>
+      被害の数値は当該地震による全国の合計で、愛知県内の内訳ではありません。集計時点によって数値は変わります。
+      掲載内容は参考情報です。防災上の判断は、必ず気象庁・自治体の公式発表をご確認ください。
+    </p>
   </div>
 
   <div class="card">

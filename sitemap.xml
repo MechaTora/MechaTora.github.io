@@ -422,7 +422,25 @@
         <priority>0.5</priority>
         <changefreq>monthly</changefreq>
     </url>
-    <!-- earthquake-monitor/pref/ 配下の都道府県ページは、独自コンテンツが
+    <url>
+        <loc>https://mechatora.com/earthquake-monitor/pref/miyagi.html</loc>
+        <lastmod>2026-08-05</lastmod>
+        <priority>0.6</priority>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>https://mechatora.com/earthquake-monitor/pref/kumamoto.html</loc>
+        <lastmod>2026-08-05</lastmod>
+        <priority>0.6</priority>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>https://mechatora.com/earthquake-monitor/pref/aichi.html</loc>
+        <lastmod>2026-08-05</lastmod>
+        <priority>0.6</priority>
+        <changefreq>daily</changefreq>
+    </url>
+    <!-- 上記3県は過去の被害地震の解説を追加済み。残る44県は独自コンテンツが
          県名の差し替えのみで重複度が高いため、意図的に登録していません。
          内容を拡充してから追加してください。 -->
 </urlset>

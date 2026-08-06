@@ -88,7 +88,7 @@
 <body>
     <header>
         <div class="header-content">
-            <h1><a href="../index.html">メカとらのブログ</a></h1>
+            <div class="site-logo"><a href="../index.html">メカとらのブログ</a></div>
         <div class="article-date" style="margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-left: 4px solid var(--primary-color); font-size: 0.875rem; color: var(--text-secondary);">
             <span style="margin-right: 1rem;">📅 公開日: 2025年10月28日</span>
             <span>🔄 最終更新: 2025年10月28日</span>
@@ -184,7 +184,7 @@
 const userName = document.getElementById('name-input').value;
 document.getElementById('greeting').innerHTML = `こんにちは、${userName}さん！`;
 
-// ユーザーが「<script>alert('XSS')</script>」と入力すると、
+// ユーザーが「&lt;script&gt;alert('XSS')&lt;/script&gt;」と入力すると、
 // スクリプトが実行されてしまう</code></pre>
 
             <h3>対策1：textContent を使う</h3>
@@ -214,7 +214,7 @@ document.getElementById('display').innerHTML = sanitized;</code></pre>
 
 import DOMPurify from 'dompurify';
 
-const userInput = '<img src=x onerror=alert("XSS")>';
+const userInput = '&lt;img src=x onerror=alert("XSS")&gt;';
 const clean = DOMPurify.sanitize(userInput);
 document.getElementById('content').innerHTML = clean;
 

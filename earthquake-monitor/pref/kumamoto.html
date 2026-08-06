@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>熊本の地震情報｜今日の最新地震・震度・震源｜地震モニター</title>
 <meta name="description" content="熊本県で観測された地震をリアルタイム表示。今日の最新の震度・震源・マグニチュードと、直近の観測回数・最大震度を無料で確認できます。">
-<!-- AdSense審査・SEO対策: 都道府県ページは本文の大半が共通テンプレートで、
-     独自コンテンツが県名の差し替えのみのため noindex にしています。
-     過去の被害地震・想定される地震・自治体の防災リンク等を追加して
-     ページ固有の内容を厚くしたら、下の meta タグを削除してください。 -->  <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://mechatora.com/earthquake-monitor/pref/kumamoto.html">
 <meta property="og:title" content="熊本の地震情報｜今日の最新地震・震度・震源">
 <meta property="og:description" content="熊本県で観測された地震をリアルタイム表示。最新の震度・震源を無料で確認。">
@@ -96,6 +92,36 @@ footer a{color:rgba(255,255,255,.8);text-decoration:none;margin:0 8px}
     <h2>ℹ️ 震度の見方</h2>
     <p>ここに表示している震度は、熊本県内の観測点で記録された値のうち最も大きいものです。マグニチュードは地震そのものの規模を示すため、熊本から震源が遠い場合はマグニチュードが大きくても震度は小さくなります。</p>
     <p class="note">気象庁が発表する地震情報を<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPI経由で取得しています。本サービスは参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
+  </div>
+
+<style>
+.hist-table-wrap{overflow-x:auto;margin:14px 0}
+table.hist{border-collapse:collapse;width:100%;font-size:.9em;min-width:640px}
+table.hist th,table.hist td{border:1px solid rgba(255,255,255,.14);padding:8px 10px;text-align:left;vertical-align:top}
+table.hist th{background:rgba(255,255,255,.06);white-space:nowrap;font-weight:700}
+table.hist td:nth-child(1){white-space:nowrap}
+table.hist td:nth-child(3),table.hist td:nth-child(4){white-space:nowrap}
+.hist-src{font-size:.85em;opacity:.75;line-height:1.9;margin-top:12px}
+.hist-src a{text-decoration:underline}
+</style>
+  <div class="card">
+    <h2>過去に熊本県で被害を出した地震</h2>
+    <p>熊本県の内陸で起きる被害地震は、別府−島原地溝帯に沿った地域と、布田川断層帯・日奈久断層帯の周辺に集中しています。2016年の熊本地震では、一連の活動のなかで震度7を2回観測しました。</p>
+    <div class="hist-table-wrap">
+      <table class="hist">
+        <thead><tr><th>発生日</th><th>震央地名・地震名</th><th>規模</th><th>熊本県内の最大震度</th><th>被害（全国計）</th></tr></thead>
+        <tbody><tr><td>2016年4月16日 1:25</td><td>熊本県熊本地方（熊本地震・本震）</td><td>M7.3</td><td><strong>7</strong>（益城町・西原村）</td><td>一連の地震活動により死者139人（重傷957人・軽傷1,486人ほか、2016年10月27日現在）</td></tr><tr><td>2016年4月16日 3:55</td><td>熊本県阿蘇地方</td><td>M5.8</td><td>6強</td><td>（同上・熊本地震の一連の活動）</td></tr><tr><td>2016年4月16日 1:46</td><td>熊本県熊本地方</td><td>M6.0</td><td>6弱</td><td>（同上）</td></tr><tr><td>2016年4月16日 9:48</td><td>大分県中部</td><td>M5.4</td><td>6弱</td><td>（同上）</td></tr><tr><td>2016年4月15日 0:03</td><td>熊本県熊本地方</td><td>M6.4</td><td>6強（宇城市）</td><td>（同上）</td></tr><tr><td>2016年4月14日 21:26</td><td>熊本県熊本地方（熊本地震・前震）</td><td>M6.5</td><td><strong>7</strong>（益城町）</td><td>（同上）</td></tr><tr><td>2016年4月14日 22:07</td><td>熊本県熊本地方</td><td>M5.7</td><td>6弱</td><td>（同上）</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note">熊本地震の死者数は、災害関連死の認定が進むにつれて増えています。上の数値は総務省消防庁『平成28年版 消防白書』に記載された2016年10月27日時点のもので、最終的な人数はこれより多くなります。最新の集計は熊本県の公表資料をご確認ください。また、1889年には熊本市街地のほぼ直下でM6.3の地震が発生し、死者20人、家屋の全半壊400棟以上の被害が出ています（震度観測以前のため表には含めていません）。</p>
+    <p class="note">県内には布田川断層帯・日奈久断層帯をはじめとする複数の主要活断層帯があります。それぞれの発生確率は地震本部のページで公表されています。</p>
+    <p class="hist-src">
+      <strong>出典：</strong>
+      <a href="https://www.jishin.go.jp/regional_seismicity/rs_kyushu-okinawa/p43_kumamoto/" target="_blank" rel="noopener">地震調査研究推進本部「熊本県の地震活動の特徴」</a>、
+      <a href="https://www.data.jma.go.jp/kumamoto/The-2016-Kumamoto-Earthquake/index.html" target="_blank" rel="noopener">気象庁「熊本地震から10年 特設サイト」</a>、総務省消防庁。<br>
+      被害の数値は当該地震による全国の合計で、熊本県内の内訳ではありません。集計時点によって数値は変わります。
+      掲載内容は参考情報です。防災上の判断は、必ず気象庁・自治体の公式発表をご確認ください。
+    </p>
   </div>
 
   <div class="card">
