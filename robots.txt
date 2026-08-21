@@ -5,7 +5,6 @@ Allow: /
 # システムファイルや非公開にすべきディレクトリのみ除外します
 Disallow: /.git/
 Disallow: /.github/
-Disallow: /google*.html
 
 # サイトマップの場所を明示
 Sitemap: https://mechatora.com/sitemap.xml
