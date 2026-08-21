@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>宮城の地震情報｜今日の最新地震・震度・震源｜地震モニター</title>
-<meta name="description" content="宮城県で観測された地震をリアルタイム表示。今日の最新の震度・震源・マグニチュードと、直近の観測回数・最大震度を無料で確認できます。">
+<meta name="description" content="宮城県の地震情報をリアルタイム表示。今日の最新の震度・震源・マグニチュードに加え、過去1年に震度3以上を観測した地震の履歴、2つの震度観測区域も確認できます。">
+<meta name="robots" content="index, follow">
 <link rel="canonical" href="https://mechatora.com/earthquake-monitor/pref/miyagi.html">
 <meta property="og:title" content="宮城の地震情報｜今日の最新地震・震度・震源">
-<meta property="og:description" content="宮城県で観測された地震をリアルタイム表示。最新の震度・震源を無料で確認。">
+<meta property="og:description" content="宮城県で観測された地震をリアルタイム表示。過去1年の震度3以上の履歴も確認できます。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mechatora.com/earthquake-monitor/pref/miyagi.html">
 <meta property="og:image" content="https://mechatora.com/earthquake-monitor/ogp.png">
@@ -36,9 +37,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Meiryo',sans-serif
 .crumb{max-width:900px;margin:14px auto 0;padding:0 16px;font-size:.82em;color:rgba(255,255,255,.85)}
 .crumb a{color:rgba(255,255,255,.85)}
 .wrap{max-width:900px;margin:0 auto;padding:16px}
-.card{background:#fff;border-radius:15px;padding:20px 24px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);line-height:1.85}
-.card h2{font-size:1.2em;color:#2c3e50;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #eef2f6}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:6px}
+.card{background:#fff;border-radius:15px;padding:22px 26px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);line-height:1.9}
+.card h2{font-size:1.2em;color:#2c3e50;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #eef2f6}
+.card h3{font-size:1.02em;color:#2a5298;margin:18px 0 6px}
+.card p{margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
 .stat{background:#f4f7fa;border-radius:10px;padding:12px 6px;text-align:center}
 .stat span{display:block;font-size:.74em;color:#7f8c8d}
 .stat strong{font-size:1.3em;color:#2a5298}
@@ -49,6 +52,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Meiryo',sans-serif
 .q-t{font-size:.8em;color:#7f8c8d}
 .q-p{font-weight:bold;color:#2c3e50}
 .q-m{font-size:.84em;color:#7f8c8d}
+.zones{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.zone{background:#eef4fb;border:1px solid #d6e4f5;color:#2a5298;border-radius:8px;padding:6px 12px;font-size:.9em}
 .cta{display:inline-block;margin-top:6px;padding:11px 22px;background:#e74c3c;color:#fff;text-decoration:none;border-radius:9px;font-weight:bold}
 .pl-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f0f3f6;font-size:.9em}
 .pl-row:last-child{border-bottom:0}
@@ -57,10 +62,10 @@ body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Meiryo',sans-serif
 .pl-links a{display:inline-block;margin:2px 9px 2px 0;color:#2a5298;text-decoration:none}
 .pl-links a:hover{text-decoration:underline}
 .pl-links strong{display:inline-block;margin:2px 9px 2px 0;color:#e74c3c}
-.note{font-size:.82em;color:#95a5a6;line-height:1.7}
+.note{font-size:.84em;color:#7f8c8d;line-height:1.8}
 footer{background:rgba(0,0,0,.8);color:#fff;padding:20px;text-align:center;margin-top:24px;font-size:.88em}
 footer a{color:rgba(255,255,255,.8);text-decoration:none;margin:0 8px}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.pl-row{flex-direction:column;gap:2px}}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.pl-row{flex-direction:column;gap:2px}.card{padding:18px}}
 </style>
 </head>
 <body>
@@ -74,7 +79,7 @@ footer a{color:rgba(255,255,255,.8);text-decoration:none;margin:0 8px}
   <div class="card">
     <h2>📊 宮城県の観測状況</h2>
     <div class="stats">
-      <div class="stat"><span>観測回数</span><strong id="cnt">-</strong></div>
+      <div class="stat"><span>直近の観測回数</span><strong id="cnt">-</strong></div>
       <div class="stat"><span>最大震度</span><strong id="mx">-</strong></div>
       <div class="stat"><span>直近の地震</span><strong id="last">-</strong></div>
       <div class="stat"><span>震度3以上</span><strong id="c3">-</strong></div>
@@ -89,39 +94,34 @@ footer a{color:rgba(255,255,255,.8);text-decoration:none;margin:0 8px}
   </div>
 
   <div class="card">
-    <h2>ℹ️ 震度の見方</h2>
-    <p>ここに表示している震度は、宮城県内の観測点で記録された値のうち最も大きいものです。マグニチュードは地震そのものの規模を示すため、宮城から震源が遠い場合はマグニチュードが大きくても震度は小さくなります。</p>
-    <p class="note">気象庁が発表する地震情報を<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPI経由で取得しています。本サービスは参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
+    <h2>📈 宮城県の過去1年の地震活動</h2>
+    <p>気象庁が発表した地震情報のうち、宮城県内の観測点で<strong>震度3以上</strong>を記録したものを集計しています。体に明確な揺れを感じる規模の地震が、どの程度の頻度で起きているかの目安になります。</p>
+    <div class="stats">
+      <div class="stat"><span>震度3以上</span><strong id="y3">-</strong></div>
+      <div class="stat"><span>最大震度</span><strong id="ymax">-</strong></div>
+      <div class="stat"><span>震度4以上</span><strong id="y4">-</strong></div>
+      <div class="stat"><span>震度5弱以上</span><strong id="y5">-</strong></div>
+    </div>
+    <h3>主な震源</h3>
+    <div id="yhypo"><p class="note">読み込み中…</p></div>
+    <h3>震度3以上を観測した地震（新しい順）</h3>
+    <div id="ylist"><p class="note">読み込み中…</p></div>
   </div>
 
-<style>
-.hist-table-wrap{overflow-x:auto;margin:14px 0}
-table.hist{border-collapse:collapse;width:100%;font-size:.9em;min-width:640px}
-table.hist th,table.hist td{border:1px solid rgba(255,255,255,.14);padding:8px 10px;text-align:left;vertical-align:top}
-table.hist th{background:rgba(255,255,255,.06);white-space:nowrap;font-weight:700}
-table.hist td:nth-child(1){white-space:nowrap}
-table.hist td:nth-child(3),table.hist td:nth-child(4){white-space:nowrap}
-.hist-src{font-size:.85em;opacity:.75;line-height:1.9;margin-top:12px}
-.hist-src a{text-decoration:underline}
-</style>
   <div class="card">
-    <h2>過去に宮城県で被害を出した地震</h2>
-    <p>宮城県は、太平洋沖のプレート境界で繰り返し起きる海溝型地震と、内陸の浅い場所で起きる地震の両方に見舞われてきました。近代的な震度観測が始まって以降、県内で震度6弱以上を観測した地震は次のとおりです。</p>
-    <div class="hist-table-wrap">
-      <table class="hist">
-        <thead><tr><th>発生日</th><th>震央地名・地震名</th><th>規模</th><th>宮城県内の最大震度</th><th>被害（全国計）</th></tr></thead>
-        <tbody><tr><td>2022年3月16日</td><td>福島県沖</td><td>M7.4</td><td>6強（登米市・蔵王町）</td><td>死者4人、負傷者248人、住家全壊224棟</td></tr><tr><td>2021年2月13日</td><td>福島県沖</td><td>M7.3</td><td>6強（蔵王町）</td><td>死者3人、負傷者168人、住家全壊144棟</td></tr><tr><td>2011年4月7日</td><td>宮城県沖</td><td>M7.2</td><td>6強（栗原市・仙台市宮城野区）</td><td>死者4人、負傷者296人</td></tr><tr><td>2011年3月11日</td><td>三陸沖（東北地方太平洋沖地震）</td><td>M9.0</td><td><strong>7</strong>（栗原市）</td><td>死者19,418人、行方不明2,592人、負傷者6,222人、住家全壊121,809棟</td></tr><tr><td>2008年6月14日</td><td>岩手県内陸南部（岩手・宮城内陸地震）</td><td>M7.2</td><td>6強（栗原市）、6弱（大崎市）</td><td>死者17人、行方不明6人、負傷者426人、住家全壊30棟</td></tr><tr><td>2005年8月16日</td><td>宮城県沖</td><td>M7.2</td><td>6弱（川崎町）</td><td>負傷者91人、住家全壊1棟</td></tr><tr><td>2003年7月26日</td><td>宮城県北部</td><td>M6.4</td><td>6強（鳴瀬町ほか）</td><td>負傷者647人、住家被害6,413棟</td></tr><tr><td>2003年5月26日</td><td>宮城県沖</td><td>M7.1</td><td>6弱（石巻市ほか）</td><td>負傷者174人、住家全壊2棟</td></tr></tbody>
-      </table>
-    </div>
-    <p class="note">1978年の宮城県沖地震（M7.4）は仙台市などで震度5を観測し、死者28人・負傷者1,325人の被害を出しました。当時の震度階級には「6弱」「6強」の区分がなかったため上の表には含めていませんが、都市型の地震被害として知られる地震です。</p>
-    <p class="note">宮城県沖では、今後もプレート境界の地震が繰り返し発生すると考えられています。長期評価の最新の数値は地震本部のページで確認してください。</p>
-    <p class="hist-src">
-      <strong>出典：</strong>
-      <a href="https://www.jishin.go.jp/regional_seismicity/rs_tohoku/p04_miyagi/" target="_blank" rel="noopener">地震調査研究推進本部「宮城県の地震活動の特徴」</a>、
-      <a href="https://www.jma-net.go.jp/sendai/knowledge/earthquake/higai.html" target="_blank" rel="noopener">仙台管区気象台「宮城県に被害を及ぼした主な地震･津波」</a>、総務省消防庁。<br>
-      被害の数値は当該地震による全国の合計で、宮城県内の内訳ではありません。集計時点によって数値は変わります。
-      掲載内容は参考情報です。防災上の判断は、必ず気象庁・自治体の公式発表をご確認ください。
-    </p>
+    <h2>🗺 宮城県の震度観測区域</h2>
+    <p>気象庁は震度を発表する際、宮城県を次の<strong>2つの区域</strong>に分けています。地震情報で「宮城県北部で震度3」のように地名が示されるのは、この区分にもとづくものです。</p>
+    <div class="zones"><span class="zone">北部</span><span class="zone">南部</span></div>
+    <p>宮城は方角にもとづいて2区域に分かれており、「北部」から「南部」まで、それぞれ別の値として震度が発表されます。同じ地震でも、震源に近い区域とそうでない区域では震度が1〜2階級変わることは珍しくありません。</p>
+    <p class="note">同じ宮城でも、震源からの距離や地盤の固さによって区域ごとに震度は変わります。お住まいの区域がどこに該当するかを知っておくと、地震情報を見たときに自分のいる場所の揺れをすばやく判断できます。</p>
+  </div>
+
+  <div class="card">
+    <h2>ℹ️ 震度とマグニチュードの読み方</h2>
+    <p>このページに表示している震度は、宮城県内の観測点が記録した値のうち<strong>最も大きいもの</strong>です。県内でも区域によって揺れの大きさは異なります。</p>
+    <p>一方マグニチュード（M）は、地震そのものが放出したエネルギーの大きさを表す値で、ひとつの地震につきひとつだけ決まります。そのため<strong>宮城から震源が遠い場合、マグニチュードが大きくても震度は小さくなります</strong>。逆に、規模の小さな地震でも震源が近く浅ければ、強い揺れになることがあります。</p>
+    <p>震度5弱以上は、家具が移動したり物が落下したりする段階です。宮城県でこの規模の揺れが観測されたときは、身の安全を確保したうえで、火の始末と避難経路の確保を行ってください。備えについては<a href="/earthquake-monitor/checklist.html">防災備品チェックリスト</a>にまとめています。</p>
+    <p class="note">気象庁が発表する地震情報を<a href="https://www.p2pquake.net/" target="_blank" rel="noopener">P2P地震情報</a>のAPI経由で取得しています。本サービスは参考情報です。避難などの判断は、気象庁および自治体の公式発表に従ってください。</p>
   </div>
 
   <div class="card">
@@ -138,7 +138,7 @@ table.hist td:nth-child(3),table.hist td:nth-child(4){white-space:nowrap}
 </div>
 
 <footer>
-  <div><a href="/index.html">メカとら トップ</a><a href="/earthquake-monitor/">地震モニター</a><a href="/earthquake-monitor/checklist.html">防災チェックリスト</a><a href="/earthquake-monitor/about.html">このサイトについて</a><a href="/about.html">運営者について</a><a href="/earthquake-monitor/contact.html">お問い合わせ</a><a href="/privacy-policy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a></div>
+  <div><a href="/earthquake-monitor/">地震モニター</a><a href="/earthquake-monitor/checklist.html">防災チェックリスト</a><a href="/earthquake-monitor/about.html">このサイトについて</a><a href="/earthquake-monitor/contact.html">お問い合わせ</a></div>
   <p style="margin-top:10px;opacity:.6;font-size:.9em">© 2026 メカとら. All rights reserved.</p>
 </footer>
 
@@ -148,19 +148,25 @@ table.hist td:nth-child(3),table.hist td:nth-child(4){white-space:nowrap}
   var LABEL={10:'1',20:'2',30:'3',40:'4',45:'5弱',46:'5弱以上',50:'5強',55:'6弱',60:'6強',70:'7'};
   var COLOR={10:'#27ae60',20:'#27ae60',30:'#f39c12',40:'#f39c12',45:'#e67e22',46:'#e67e22',50:'#e67e22',55:'#e74c3c',60:'#e74c3c',70:'#c0392b'};
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function row(sc,e){
+    var h=e.hypocenter||{};
+    var m=(h.magnitude>0)?('M'+h.magnitude):'M不明';
+    return '<div class="q"><div class="sc" style="background:'+(COLOR[sc]||'#7f8c8d')+'">'+(LABEL[sc]||'?')+'</div>'
+      +'<div class="q-main"><div class="q-t">'+esc(e.time||'')+'</div>'
+      +'<div class="q-p">'+esc(h.name||'震源不明')+'</div>'
+      +'<div class="q-m">'+m+'／深さ'+(h.depth>=0?h.depth+'km':'不明')+'</div></div></div>';
+  }
+  function maxIn(q){
+    var mine=(q.points||[]).filter(function(p){return p.pref===PREF;});
+    return mine.length?Math.max.apply(null,mine.map(function(p){return p.scale;})):null;
+  }
 
+  // 直近の観測
   fetch('https://api.p2pquake.net/v2/history?codes=551&limit=100')
     .then(function(r){return r.json();})
     .then(function(all){
       var rows=[];
-      all.forEach(function(q){
-        if(!q.earthquake||!q.points)return;
-        var mine=q.points.filter(function(p){return p.pref===PREF;});
-        if(!mine.length)return;
-        var sc=Math.max.apply(null,mine.map(function(p){return p.scale;}));
-        rows.push({sc:sc,q:q});
-      });
-
+      all.forEach(function(q){ if(!q.earthquake)return; var sc=maxIn(q); if(sc!==null) rows.push({sc:sc,q:q}); });
       var cnt=rows.length;
       document.getElementById('cnt').textContent=cnt+'回';
       document.getElementById('c3').textContent=rows.filter(function(r){return r.sc>=30;}).length+'回';
@@ -173,24 +179,47 @@ table.hist td:nth-child(3),table.hist td:nth-child(4){white-space:nowrap}
         document.getElementById('last').textContent='なし';
       }
       var oldest=all.length?(all[all.length-1].earthquake&&all[all.length-1].earthquake.time||'').split(' ')[0]:'';
-      document.getElementById('range').textContent=
-        cnt? '直近の地震情報100件のうち、'+PREF+'で揺れが観測されたのは'+cnt+'回です（'+oldest+' 以降）。'
-           : PREF+'では、直近の地震情報100件の中に揺れの観測記録はありません（'+oldest+' 以降）。';
-
+      document.getElementById('range').textContent = cnt
+        ? '直近の地震情報100件のうち、'+PREF+'で揺れが観測されたのは'+cnt+'回です（'+oldest+' 以降）。'
+        : PREF+'では、直近の地震情報100件の中に揺れの観測記録はありません（'+oldest+' 以降）。';
       var el=document.getElementById('list');
-      if(!cnt){el.innerHTML='<p class="note">'+PREF+'で観測された地震は、直近のデータにはありません。全国の状況は下のリンクから確認できます。</p>';return;}
-      el.innerHTML=rows.slice(0,20).map(function(r){
-        var e=r.q.earthquake,h=e.hypocenter||{};
-        var m=(h.magnitude>0)?('M'+h.magnitude):'M不明';
-        return '<div class="q"><div class="sc" style="background:'+(COLOR[r.sc]||'#7f8c8d')+'">'+(LABEL[r.sc]||'?')+'</div>'
-          +'<div class="q-main"><div class="q-t">'+esc(e.time||'')+'</div>'
-          +'<div class="q-p">'+esc(h.name||'震源不明')+'</div>'
-          +'<div class="q-m">'+m+'／深さ'+(h.depth>=0?h.depth+'km':'不明')+'</div></div></div>';
-      }).join('');
+      el.innerHTML = cnt
+        ? rows.slice(0,20).map(function(r){return row(r.sc,r.q.earthquake);}).join('')
+        : '<p class="note">'+PREF+'で観測された地震は、直近のデータにはありません。</p>';
     })
     .catch(function(){
       document.getElementById('list').innerHTML='<p class="note">データを取得できませんでした。時間をおいて再度お試しください。</p>';
       document.getElementById('range').textContent='';
+    });
+
+  // 過去1年（震度3以上）
+  var d=new Date(Date.now()-365*86400000);
+  var since=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  fetch('https://api.p2pquake.net/v2/jma/quake?limit=100&order=-1&since_date='+since+'&prefectures[]='+encodeURIComponent(PREF+',30'))
+    .then(function(r){return r.json();})
+    .then(function(list){
+      if(!Array.isArray(list)) throw 0;
+      var rows=[];
+      list.forEach(function(q){ if(!q.earthquake)return; var sc=maxIn(q); if(sc!==null&&sc>=30) rows.push({sc:sc,q:q}); });
+      var n=rows.length;
+      document.getElementById('y3').textContent=n+'回';
+      document.getElementById('y4').textContent=rows.filter(function(r){return r.sc>=40;}).length+'回';
+      document.getElementById('y5').textContent=rows.filter(function(r){return r.sc>=45;}).length+'回';
+      document.getElementById('ymax').textContent=n?('震度'+LABEL[Math.max.apply(null,rows.map(function(r){return r.sc;}))]):'なし';
+
+      var cnt={};
+      rows.forEach(function(r){ var nm=(r.q.earthquake.hypocenter||{}).name||'不明'; cnt[nm]=(cnt[nm]||0)+1; });
+      var top=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a];}).slice(0,6);
+      document.getElementById('yhypo').innerHTML = top.length
+        ? '<div class="zones">'+top.map(function(nm){return '<span class="zone">'+esc(nm)+' '+cnt[nm]+'回</span>';}).join('')+'</div>'
+        : '<p class="note">過去1年、'+PREF+'で震度3以上を観測した地震はありませんでした。</p>';
+      document.getElementById('ylist').innerHTML = n
+        ? rows.slice(0,15).map(function(r){return row(r.sc,r.q.earthquake);}).join('')
+        : '<p class="note">該当する地震はありません。揺れの少ない1年でした。</p>';
+    })
+    .catch(function(){
+      document.getElementById('yhypo').innerHTML='<p class="note">長期データを取得できませんでした。</p>';
+      document.getElementById('ylist').innerHTML='';
     });
 })();
 </script>
