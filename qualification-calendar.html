@@ -231,7 +231,7 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
     <p>なお受験手数料は7,500円、出題範囲・出題形式・試験時間・合格基準に変更はありません。過去問による対策はこれまでどおり有効です。</p>
 
     <h3>2027年度の試験制度改訂が控えている</h3>
-    <p>経済産業省とIPAは2027年度に向けた試験制度の改訂を検討中で、現行区分は再編される見込みです。現行制度のまま受験できるのは2026年度が最後になる可能性があります。すでに学習を進めている人にとっては、2026年度中に取り切る意味がそれなりに大きい状況です。</p>
+    <p>IPAは2027年度からの新試験制度への移行を予定しており、2026年8月末には「データマネジメント試験（仮称）」「プロフェッショナルデジタルスキル（マネジメント）試験（仮称）」「プロフェッショナルデジタルスキル（システム）試験（仮称）」といった新区分のシラバス案・サンプル問題の公表が始まりました。現行区分のまま受験できるのは2026年度が最後になる見込みです。すでに学習を進めている人にとっては、2026年度中に取り切る意味がそれなりに大きい状況です。</p>
   </section>
 
   <section class="qc-section">
@@ -265,7 +265,7 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
   <section class="qc-section">
     <h2>データの出典と更新について</h2>
     <div class="qc-disclaimer">
-      <p style="margin-top:0;"><strong>最終更新：2026年8月5日</strong></p>
+      <p style="margin-top:0;"><strong>最終更新：2026年9月1日</strong></p>
       <p>掲載している試験日・申込期間・受験手数料は、下記の各試験実施団体の公表情報をもとに作成しています。合格率は直近数年の実績のおおよその水準であり、年度により変動します。標準学習時間は各種公表資料と合格体験記から編集部が整理した目安です。</p>
       <p>試験制度・日程は変更されることがあります。とくに公示前の日程を「例年目安」として表示しているものは推定値です。実際に出願される際は、必ず各試験の公式サイトで最新情報をご確認ください。当ページの情報にもとづく判断によって生じた損害について、当サイトは責任を負いかねます。</p>
       <p style="margin-bottom:0;">記載内容の誤りにお気づきの場合は<a href="/contact.html">お問い合わせ</a>からご連絡いただけると助かります。</p>
@@ -280,6 +280,8 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
         <li>公認会計士・監査審査会 <a href="https://www.fsa.go.jp/cpaaob/" target="_blank" rel="noopener">fsa.go.jp/cpaaob</a></li>
         <li>商工会議所の検定試験（日商簿記ほか）<a href="https://www.kentei.ne.jp/" target="_blank" rel="noopener">kentei.ne.jp</a></li>
         <li>日本FP協会「FP技能検定 試験日程」<a href="https://www.jafp.or.jp/exam/schedule/" target="_blank" rel="noopener">jafp.or.jp</a></li>
+        <li>日本証券アナリスト協会「CMA第1次試験」<a href="https://www.saa.or.jp/cma_program/cma1/test/index.html" target="_blank" rel="noopener">saa.or.jp</a></li>
+        <li>東京商工会議所「ビジネスマネジャー検定試験」<a href="https://kentei.tokyo-cci.or.jp/bijimane/" target="_blank" rel="noopener">kentei.tokyo-cci.or.jp</a></li>
         <li>中小企業診断協会 <a href="https://www.j-smeca.jp/" target="_blank" rel="noopener">j-smeca.jp</a></li>
         <li>統計質保証推進協会「統計検定」<a href="https://www.toukei-kentei.jp/" target="_blank" rel="noopener">toukei-kentei.jp</a></li>
         <li>日本ディープラーニング協会（G検定・E資格）<a href="https://www.jdla.org/" target="_blank" rel="noopener">jdla.org</a></li>
@@ -346,7 +348,7 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
     business: { label: '経営・ビジネス' }
   };
 
-  // 試験日は各実施団体の公表資料にもとづく（2026年8月5日時点）。
+  // 試験日は各実施団体の公表資料にもとづく（2026年9月1日時点）。
   // fixed:true = 公式に公表済みの確定日程 / pattern = 未公表時に例年パターンから推定する月日
   var QUALS = [
     // ---------- 人事・労務 ----------
@@ -355,17 +357,20 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
       hMin: 800, hMax: 1000, fee: '15,000円', rate: '5〜7%台',
       official: 'https://www.sharosi-siken.or.jp/',
       exams: [{ d: '2026-08-23', label: '第58回', fixed: true }],
-      pattern: ['08-23'],
-      apply: '2026年4月13日〜5月31日（受付終了）',
+      pattern: ['08-22'],
+      apply: '第59回：2027年4月中旬〜5月末頃（例年）',
       note: '選択式80分と択一式210分を1日で通す長丁場。科目ごとに基準点があるため、得意科目だけ伸ばしても合格できない構造になっている。'
     },
     {
       id: 'career-consultant', name: 'キャリアコンサルタント', cat: 'hr', freq: '年3回',
       hMin: 150, hMax: 300, fee: '学科8,900円＋実技29,900円', rate: '学科50%前後／実技60%前後',
       official: 'https://www.career-shiken.org/',
-      exams: [{ d: '2026-11-01', label: '第33回 学科・実技論述', fixed: true }],
-      pattern: ['03-08', '07-05', '11-01'],
-      apply: '第33回：2026年8月頃',
+      exams: [
+        { d: '2026-11-01', label: '第33回 学科・実技論述', fixed: true },
+        { d: '2027-03-07', label: '第34回 学科・実技論述', fixed: true }
+      ],
+      pattern: ['03-07', '07-05', '11-01'],
+      apply: '第33回：2026年8月17日〜8月28日（受付終了）',
       note: '学科と実技（論述＋面接）は別料金・別合否。受験には養成講習の修了などの要件があり、申込みまでの準備期間が長い。'
     },
     {
@@ -403,19 +408,21 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
       official: 'https://www.fsa.go.jp/cpaaob/',
       exams: [
         { d: '2026-08-21', label: '令和8年 論文式（〜23日）', fixed: true },
-        { d: '2026-12-13', label: '令和9年 第Ⅰ回短答式', fixed: false }
+        { d: '2026-12-13', label: '令和9年 第Ⅰ回短答式', fixed: true },
+        { d: '2027-05-23', label: '令和9年 第Ⅱ回短答式', fixed: true },
+        { d: '2027-08-20', label: '令和9年 論文式（〜22日）', fixed: true }
       ],
-      pattern: ['12-13', '05-24'],
-      apply: '第Ⅰ回短答式：2026年8〜9月頃',
-      note: '短答式は年2回あり、合格すると以後2年間は免除される。論文式は8月に3日間かけて実施。'
+      pattern: ['12-13', '05-23'],
+      apply: '第Ⅰ回短答式：2026年8月28日〜9月17日',
+      note: '短答式は年2回あり、合格すると以後2年間は免除される。論文式は8月に3日間かけて実施。出願はオンラインのみで、第Ⅰ回短答式の締切は試験の約3か月前。'
     },
     {
       id: 'tax-accountant', name: '税理士', cat: 'finance', freq: '年1回',
       hMin: 2500, hMax: 3500, fee: '1科目4,000円〜5科目10,000円', rate: '科目ごとに10〜20%台',
       official: 'https://www.nta.go.jp/taxes/zeirishi/zeirishishiken/',
       exams: [{ d: '2026-08-04', label: '第76回（〜6日）', fixed: true }],
-      pattern: ['08-04'],
-      apply: '2026年4月20日〜5月8日（受付終了）',
+      pattern: ['08-03'],
+      apply: '第77回：2027年4月中旬〜5月上旬頃（例年）',
       note: '5科目合格で官報合格。科目合格は生涯有効なので、数年かけて1〜2科目ずつ積み上げる受験生が多い。合格発表は11月27日。'
     },
     {
@@ -424,7 +431,7 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
       official: 'https://www.kentei.ne.jp/bookkeeping',
       exams: [{ d: '2026-11-15', label: '第174回', fixed: true }],
       pattern: ['06-14', '11-15'],
-      apply: '2026年9月頃（商工会議所ごとに異なる）',
+      apply: '試験日の約3か月前から（受付期間・方法は商工会議所ごとに異なる）',
       note: '1級だけはネット試験がなく、6月と11月の統一試験のみ。合格すると税理士試験の受験資格が得られる。'
     },
     {
@@ -464,9 +471,9 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
       hMin: 300, hMax: 500, fee: '科目ごとに設定', rate: '50%前後',
       official: 'https://www.saa.or.jp/',
       exams: [{ d: '2026-09-27', label: '2026年秋 第1次', fixed: true }],
-      pattern: ['04-19', '09-27'],
-      apply: '2026年7〜8月頃',
-      note: '第1次は3科目それぞれ独立に合否が出る。受験するには日本証券アナリスト協会の通信教育講座の受講が前提となる。'
+      pattern: ['04-25', '09-26'],
+      apply: '2026年7月1日〜9月4日（CBT方式）／〜8月3日（PBT方式・受付終了）',
+      note: '2026年秋試験からCBT方式を導入し、全国47都道府県のテストセンターで受けられるようになった。東京の一部会場と海外会場は従来どおりのPBT方式。第1次は3科目それぞれ独立に合否が出る。受験するには協会の通信教育講座の受講が前提。'
     },
 
     // ---------- データサイエンス ----------
@@ -509,8 +516,8 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
       hMin: 200, hMax: 400, fee: '33,000円（一般）', rate: '60〜70%',
       official: 'https://www.jdla.org/certificate/engineer/',
       exams: [{ d: '2026-08-28', label: '2026#2（〜8月30日）', fixed: true }],
-      pattern: ['02-20', '08-28'],
-      apply: '2026年6月1日〜受験日前日',
+      pattern: ['02-19', '08-27'],
+      apply: '2027#1：2026年12月頃〜受験日前日（例年）',
       note: '受験にはJDLA認定プログラムの修了が必要（修了から2年以内）。講座受講の期間まで含めて計画する必要がある。'
     },
 
@@ -642,9 +649,9 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
       id: 'biz-manager', name: 'ビジネスマネジャー検定', cat: 'business', freq: '年2回（IBT／CBT）',
       hMin: 50, hMax: 100, fee: '7,700円', rate: '50%前後',
       official: 'https://kentei.tokyo-cci.or.jp/bijimane/',
-      exams: [{ d: '2026-10-22', label: '2026年度第2回（〜11月9日）', fixed: true }],
+      exams: [{ d: '2026-10-22', label: '第24回（〜11月9日）', fixed: true }],
       pattern: ['06-19', '10-22'],
-      apply: '2026年9月頃',
+      apply: '2026年9月16日10時〜9月29日18時',
       note: '管理職に必要な知識を人・業務・リスクの3方向から整理する検定。実施期間内であれば自宅受験も選べる。'
     },
     {
@@ -659,18 +666,24 @@ table.qc-table th { background: #fafaf8; font-weight: 700; }
       id: 'eiken-1', name: '実用英語技能検定 1級', cat: 'business', freq: '年3回',
       hMin: 300, hMax: 500, fee: '12,500円（本会場）', rate: '10%前後',
       official: 'https://www.eiken.or.jp/eiken/',
-      exams: [{ d: '2026-10-04', label: '2026年度第2回 一次（本会場）', fixed: true }],
+      exams: [
+        { d: '2026-10-04', label: '2026年度第2回 一次（本会場）', fixed: true },
+        { d: '2027-01-24', label: '2026年度第3回 一次（本会場）', fixed: true }
+      ],
       pattern: ['05-31', '10-04', '01-24'],
-      apply: '2026年8月〜9月頃',
-      note: '一次試験の合格は1年間有効で、その間は二次試験から受け直せる。語彙問題の比重が大きい。'
+      apply: '第2回：2026年6月30日〜9月7日（個人・本会場）',
+      note: '一次試験の合格は1年間有効で、その間は二次試験から受け直せる。語彙問題の比重が大きい。二次試験は年齢によりA日程・B日程に振り分けられる。'
     },
     {
       id: 'eiken-p1', name: '実用英語技能検定 準1級', cat: 'business', freq: '年3回',
       hMin: 200, hMax: 400, fee: '10,500円（本会場）', rate: '15〜20%',
       official: 'https://www.eiken.or.jp/eiken/',
-      exams: [{ d: '2026-10-04', label: '2026年度第2回 一次（本会場）', fixed: true }],
+      exams: [
+        { d: '2026-10-04', label: '2026年度第2回 一次（本会場）', fixed: true },
+        { d: '2027-01-24', label: '2026年度第3回 一次（本会場）', fixed: true }
+      ],
       pattern: ['05-31', '10-04', '01-24'],
-      apply: '2026年8月〜9月頃',
+      apply: '第2回：2026年6月30日〜9月7日（個人・本会場）',
       note: '大学入試や就職で評価されることが多い水準。TOEICと違い、ライティングとスピーキングが必須になる。'
     },
     {
