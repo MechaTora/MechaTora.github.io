@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="変数重要度とSHAPによるモデル解釈。予測結果を人事施策の判断材料にするときの限界についても扱います。">
-    <title>第19章: 予測と解釈 | tidyverseで学ぶ人事データ分析</title>
-    <!-- 本文が人事データに書き換わっていない章のため noindex。
-     Googleにも「クロール済み-インデックス未登録」と判定されている。
-     人事データ版に書き換えたページから個別に index, follow へ戻すこと。 -->
-    <meta name="robots" content="noindex, follow">
+    <meta name="description" content="退職リスクのリストを出すと最初に聞かれるのは「なぜこの人が」です。vipとDALEXで変数重要度・PDP/ALE・SHAPを出す手順と、重要度を信じすぎると事故る3つの理由、そして個人単位の根拠をどこまで誰に見せるかの線引きを、実際に退職予測を運用した経験からまとめます。">
+    <title>第19章: 予測の解釈 — 「なぜこの人がリスク高なのか」に答える | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter19-prediction-interpretation">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -260,15 +256,15 @@
     <meta name="keywords" content="tidymodels,R言語,予測,解釈可能性,特徴量重要度,SHAP,XAI,predict,workflows">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="第19章: 予測と解釈 | tidyverseで学ぶ人事データ分析">
-    <meta property="og:description" content="変数重要度とSHAPによるモデル解釈。予測結果を人事施策の判断材料にするときの限界についても扱います。">
+    <meta property="og:title" content="第19章: 予測の解釈 — 「なぜこの人がリスク高なのか」に答える | tidyverseで学ぶ人事データ分析">
+    <meta property="og:description" content="退職リスクのリストを出すと最初に聞かれるのは「なぜこの人が」です。vipとDALEXで変数重要度・PDP/ALE・SHAPを出す手順と、重要度を信じすぎると事故る3つの理由、そして個人単位の根拠をどこまで誰に見せるかの線引きを、実際に退職予測を運用した経験からまとめます。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter19-prediction-interpretation">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第19章: 予測と解釈 | tidyverseで学ぶ人事データ分析">
-    <meta name="twitter:description" content="変数重要度とSHAPによるモデル解釈。予測結果を人事施策の判断材料にするときの限界についても扱います。">
+    <meta name="twitter:title" content="第19章: 予測の解釈 — 「なぜこの人がリスク高なのか」に答える | tidyverseで学ぶ人事データ分析">
+    <meta name="twitter:description" content="退職リスクのリストを出すと最初に聞かれるのは「なぜこの人が」です。vipとDALEXで変数重要度・PDP/ALE・SHAPを出す手順と、重要度を信じすぎると事故る3つの理由、そして個人単位の根拠をどこまで誰に見せるかの線引きを、実際に退職予測を運用した経験からまとめます。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
@@ -314,8 +310,8 @@
 
     <div class="container">
         <header>
-            <h1>🔮 第19章: 予測と解釈</h1>
-            <p class="subtitle">実用的な予測とモデル解釈可能性をマスターする</p>
+            <h1>第19章: 予測の解釈 — 「なぜこの人がリスク高なのか」に答える</h1>
+            <p class="subtitle">説明できないモデルは、精度が高くても使われない</p>
         </header>
 
         <nav>
@@ -325,553 +321,274 @@
         </nav>
 
         <div class="section">
-            <h2>🎯 Chapter 19の学習目標</h2>
-            <ul>
-                <li><strong>新しいデータでの予測</strong>実行と予測区間の計算</li>
-                <li><strong>モデルの解釈可能性</strong>向上手法</li>
-                <li><strong>特徴量重要度</strong>の算出と可視化</li>
-                <li><strong>SHAP値・LIME</strong>による局所的解釈</li>
-                <li><strong>部分依存プロット</strong>による大域的解釈</li>
-            </ul>
+            <h2>リストを出した次に、必ず同じことを聞かれる</h2>
+            <p>
+                退職リスクの上位者リストを人事チームに出したとき、返ってきた最初の質問は精度の話ではありませんでした。
+                <strong>「なぜこの人がリスク高と出たんですか」</strong>です。
+            </p>
+            <p>
+                これに答えられないと、リストは使われません。「モデルがそう言っているので」では、
+                面談を設定する側が動けない。何を話題にすればいいのか分からないからです。
+                予測を業務に載せるうえで、解釈は精度と同じくらい重要でした。
+            </p>
+            <p>
+                この章では、モデル全体で何が効いているかを見る大域的解釈と、
+                個人ごとの根拠を出す局所的解釈の両方を扱います。あわせて、
+                <strong>出せてしまう情報をどこまで誰に見せるか</strong>という運用の線引きも書きます。
+                技術的にできることと、人事としてやっていいことが一致しない場面が出てくるので。
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>変数重要度：モデル全体で何が効いているか</h2>
+            <p>
+                まずは大域的に見ます。LightGBMやランダムフォレストなら変数重要度がそのまま取れますし、
+                tidymodels のワークフローからは <code>vip</code> で引き出せます。
+            </p>
 
             <pre>
-# 基本セットアップ
 library(tidymodels)
-library(tidyverse)
-library(vip)        # Variable Importance Plots
-library(DALEXtra)   # Model Agnostic Explanations
-library(DALEX)      # Descriptive mAchine Learning EXplanations
-
-# データとモデルの準備
-data("ames", package = "modeldata")
-ames_clean <- ames |>
-  select(Sale_Price, Lot_Area, Year_Built, 
-         Neighborhood, House_Style, Overall_Qual) |>
-  mutate(log_price = log10(Sale_Price))
-
-# Train/Test分割
-set.seed(123)
-ames_split <- initial_split(ames_clean, prop = 0.8)
-ames_train <- training(ames_split)
-ames_test <- testing(ames_split)
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>🔍 新しいデータでの予測</h2>
-            
-            <h3>1. 基本的な予測実行</h3>
-            <p>訓練済みモデルを使用して新しいデータで予測を行います。</p>
-
-            <pre>
-# Random Forest モデルの訓練
-rf_recipe <- recipe(log_price ~ ., data = ames_train) |>
-  step_rm(Sale_Price) |>
-  step_dummy(all_nominal_predictors()) |>
-  step_normalize(all_numeric_predictors()) |>
-  step_zv(all_predictors())
-
-rf_spec <- rand_forest(
-  mtry = 4,
-  trees = 500,
-  min_n = 5
-) |>
-  set_engine("ranger", importance = "impurity") |>
-  set_mode("regression")
-
-rf_workflow <- workflow() |>
-  add_recipe(rf_recipe) |>
-  add_model(rf_spec)
-
-# モデル訓練
-rf_fit <- rf_workflow |> fit(ames_train)
-
-# テストデータでの予測
-test_predictions <- rf_fit |>
-  predict(ames_test) |>
-  bind_cols(ames_test |> select(log_price, Sale_Price))
-
-test_predictions |>
-  head(10)
-</pre>
-
-            <h3>2. 予測区間の計算</h3>
-            <p>予測の不確実性を量化して区間推定を行います。</p>
-
-            <pre>
-# 量分位回帰による予測区間
-library(quantreg)
-
-# 分位点予測のためのモデル（複数の分位点）
-quantile_spec <- linear_reg() |>
-  set_engine("quantreg", tau = 0.1)  # 10%分位点
-
-# 異なる分位点での予測
-quantiles <- c(0.1, 0.25, 0.5, 0.75, 0.9)
-
-quantile_predictions <- map_dfr(quantiles, ~ {
-  quantile_model <- linear_reg() |>
-    set_engine("quantreg", tau = .x) |>
-    set_mode("regression")
-  
-  quantile_wf <- workflow() |>
-    add_recipe(rf_recipe) |>
-    add_model(quantile_model)
-  
-  quantile_fit <- quantile_wf |> fit(ames_train)
-  
-  predict(quantile_fit, ames_test) |>
-    mutate(quantile = .x)
-}) |>
-  bind_cols(ames_test |> select(log_price) |> slice(rep(1:n(), 5)))
-
-# 予測区間の可視化
-prediction_intervals <- quantile_predictions |>
-  pivot_wider(names_from = quantile, values_from = .pred, names_prefix = "q") |>
-  mutate(row_id = row_number())
-
-prediction_intervals |>
-  slice_head(n = 50) |>
-  ggplot(aes(x = row_id)) +
-  geom_ribbon(aes(ymin = q0.1, ymax = q0.9), alpha = 0.3, fill = "lightblue") +
-  geom_ribbon(aes(ymin = q0.25, ymax = q0.75), alpha = 0.5, fill = "lightgreen") +
-  geom_line(aes(y = q0.5), color = "blue", size = 1) +
-  geom_point(aes(y = log_price), color = "red", alpha = 0.7) +
-  labs(title = "Prediction Intervals",
-       x = "Observation", y = "Log Price",
-       subtitle = "Blue ribbon: 80% interval, Green: 50% interval") +
-  theme_minimal()
-</pre>
-
-            <h3>3. Bootstrap による予測区間</h3>
-            <pre>
-# Bootstrap による予測区間
-library(rsample)
-
-# Bootstrap サンプルでのモデル訓練
-bootstrap_models <- bootstraps(ames_train, times = 100) |>
-  mutate(
-    models = map(splits, ~ {
-      boot_data <- analysis(.x)
-      rf_workflow |> fit(boot_data)
-    })
-  )
-
-# 新しいデータ点での予測（例：最初のテストサンプル）
-new_observation <- ames_test |> slice(1)
-
-bootstrap_predictions <- bootstrap_models |>
-  mutate(
-    predictions = map_dbl(models, ~ {
-      predict(.x, new_observation)$.pred
-    })
-  )
-
-# 予測区間の計算
-prediction_summary <- bootstrap_predictions |>
-  summarise(
-    median_pred = median(predictions),
-    lower_95 = quantile(predictions, 0.025),
-    upper_95 = quantile(predictions, 0.975),
-    lower_50 = quantile(predictions, 0.25),
-    upper_50 = quantile(predictions, 0.75)
-  )
-
-prediction_summary
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>📊 特徴量重要度分析</h2>
-            
-            <h3>1. モデル固有の重要度</h3>
-            <p>Random Forestの内蔵重要度指標を活用します。</p>
-
-            <pre>
-# vipパッケージによる重要度可視化
 library(vip)
 
-# 基本的な特徴量重要度
-importance_plot <- rf_fit |>
-  extract_fit_parsnip() |>
-  vip(num_features = 15, geom = "col") +
-  theme_minimal() +
-  labs(title = "Feature Importance (Random Forest)")
+# ワークフローから重要度を取り出す
+final_fit |&gt;
+  extract_fit_parsnip() |&gt;
+  vip(num_features = 10)
 
-importance_plot
-
-# 数値での重要度取得
-importance_values <- rf_fit |>
-  extract_fit_parsnip() |>
-  vi() |>
+# 数値で欲しい場合
+final_fit |&gt;
+  extract_fit_parsnip() |&gt;
+  vi() |&gt;
   arrange(desc(Importance))
-
-importance_values
 </pre>
 
-            <h3>2. Permutation Importance</h3>
-            <p>モデルに依存しない重要度測定手法です。</p>
+            <p>
+                実際の退職予測で出た上位はこうでした。
+            </p>
 
             <pre>
-# Permutation importanceの計算
-library(DALEX)
-
-# DALEX explainerの作成
-explainer <- explain(
-  model = rf_fit,
-  data = ames_train |> select(-log_price, -Sale_Price),
-  y = ames_train$log_price,
-  label = "Random Forest",
-  verbose = FALSE
-)
-
-# Permutation importanceの計算
-perm_importance <- model_parts(explainer, type = "difference")
-
-# 結果の可視化
-plot(perm_importance) + 
-  ggtitle("Permutation Feature Importance") +
-  theme_minimal()
-
-# 数値結果
-perm_importance$result |>
-  filter(permutation == 0) |>  # baseline
-  arrange(desc(dropout_loss)) |>
-  head(10)
+1. supervisor_diff1     上司スコアの前年差分        28%
+2. job_fit_diff1        職務適性スコアの前年差分    22%
+3. satisfaction_diff2   満足度の2年前差分          18%
+4. spi_type             適性検査のタイプ分類        14%
+5. eval_raw_scaled      評価粗点の標準化値          11%
 </pre>
 
-            <h3>3. SHAP値による重要度</h3>
-            <pre>
-# SHAP値の計算（サンプルデータで）
-library(shapr)
-
-# 少数サンプルでのSHAP値計算
-sample_data <- ames_test |> 
-  select(-log_price, -Sale_Price) |>
-  slice_head(n = 10)
-
-# SHAP値計算の準備
-shap_explainer <- explain(
-  model = rf_fit,
-  data = ames_train |> select(-log_price, -Sale_Price),
-  y = ames_train$log_price,
-  verbose = FALSE
-)
-
-# SHAP値計算
-shap_values <- predict_parts(
-  shap_explainer, 
-  new_observation = sample_data[1, ],
-  type = "shap"
-)
-
-# SHAP値の可視化
-plot(shap_values) + 
-  ggtitle("SHAP Values for Single Prediction") +
-  theme_minimal()
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>🌍 大域的解釈：部分依存プロット</h2>
-            
-            <h3>1. 単変数部分依存プロット</h3>
-            <p>個々の特徴量がモデル予測に与える平均的な影響を可視化します。</p>
-
-            <pre>
-# 部分依存プロットの作成
-pdp_year_built <- model_profile(
-  explainer,
-  variables = "Year_Built",
-  N = 100  # サンプル数
-)
-
-# 可視化
-plot(pdp_year_built) +
-  ggtitle("Partial Dependence: Year_Built") +
-  theme_minimal()
-
-# 複数変数の部分依存プロット
-pdp_multi <- model_profile(
-  explainer,
-  variables = c("Year_Built", "Lot_Area", "Overall_Qual"),
-  N = 50
-)
-
-plot(pdp_multi) +
-  ggtitle("Partial Dependence: Multiple Variables") +
-  theme_minimal()
-</pre>
-
-            <h3>2. 2次元部分依存プロット</h3>
-            <pre>
-# 2変数間の相互作用
-pdp_2d <- model_profile(
-  explainer,
-  variables = c("Year_Built", "Overall_Qual"),
-  type = "partial",
-  variable_splits = list(
-    Year_Built = seq(1900, 2010, by = 20),
-    Overall_Qual = 1:10
-  )
-)
-
-# ヒートマップでの可視化
-library(plotly)
-
-# データ整形
-pdp_data <- pdp_2d$result |>
-  select(`_vname_`, `_x_`, `_yhat_`) |>
-  pivot_wider(names_from = `_vname_`, values_from = `_x_`) |>
-  filter(!is.na(Year_Built), !is.na(Overall_Qual))
-
-# ヒートマップ作成
-ggplot(pdp_data, aes(x = Year_Built, y = Overall_Qual, fill = `_yhat_`)) +
-  geom_tile() +
-  scale_fill_viridis_c(name = "Predicted\nLog Price") +
-  labs(title = "2D Partial Dependence Plot",
-       x = "Year Built", y = "Overall Quality") +
-  theme_minimal()
-</pre>
-
-            <h3>3. 累積局所効果プロット（ALE）</h3>
-            <pre>
-# ALE plotの作成
-ale_plot <- model_profile(
-  explainer,
-  variables = "Year_Built",
-  type = "accumulated"
-)
-
-plot(ale_plot) +
-  ggtitle("Accumulated Local Effects: Year_Built") +
-  theme_minimal()
-
-# 複数変数のALE
-ale_multi <- model_profile(
-  explainer,
-  variables = c("Year_Built", "Lot_Area"),
-  type = "accumulated"
-)
-
-plot(ale_multi) +
-  ggtitle("ALE Plots: Multiple Variables") +
-  theme_minimal()
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>🎯 局所的解釈：LIME</h2>
-            
-            <h3>1. LIME による個別予測の説明</h3>
-            <p>Local Interpretable Model-agnostic Explanations による局所的解釈です。</p>
-
-            <pre>
-# LIMEによる局所的説明
-library(lime)
-
-# LIME explainerの作成
-lime_explainer <- lime(
-  x = ames_train |> select(-log_price, -Sale_Price),
-  model = rf_fit,
-  bin_continuous = TRUE,
-  n_bins = 4
-)
-
-# 個別サンプルの説明
-explanation <- explain(
-  x = ames_test |> slice(1:3) |> select(-log_price, -Sale_Price),
-  explainer = lime_explainer,
-  n_features = 10,
-  n_permutations = 1000
-)
-
-# 結果の可視化
-plot_features(explanation) +
-  labs(title = "LIME Explanations for Individual Predictions") +
-  theme_minimal()
-
-# 説明の詳細
-explanation |>
-  select(case, feature, feature_weight, feature_desc) |>
-  arrange(case, desc(abs(feature_weight)))
-</pre>
-
-            <h3>2. テキスト形式での解釈</h3>
-            <pre>
-# より詳細な LIME 説明
-detailed_explanation <- explain(
-  x = ames_test |> slice(1) |> select(-log_price, -Sale_Price),
-  explainer = lime_explainer,
-  n_features = 5,
-  feature_select = "highest_weights"
-)
-
-# テキスト形式の説明生成
-explanation_text <- detailed_explanation |>
-  mutate(
-    contribution = ifelse(feature_weight > 0, 
-                         paste("増加要因:", feature_desc), 
-                         paste("減少要因:", feature_desc)),
-    impact = paste0("(影響度: ", round(abs(feature_weight), 3), ")")
-  ) |>
-  select(contribution, impact) |>
-  unite("explanation", contribution:impact, sep = " ")
-
-cat("予測値:", round(detailed_explanation$prediction[1], 3), "\n")
-cat("実際値:", round(ames_test$log_price[1], 3), "\n\n")
-cat("主要な説明要因:\n")
-cat(paste(explanation_text$explanation, collapse = "\n"))
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>🔧 解釈可能性のベストプラクティス</h2>
-            
-            <h3>1. 包括的解釈レポート</h3>
-            <pre>
-# 包括的解釈関数
-comprehensive_interpretation <- function(model, train_data, test_data, target_col) {
-  
-  # 基本情報
-  model_info <- list(
-    model_type = class(model)[1],
-    n_features = ncol(train_data) - 1,
-    n_train = nrow(train_data),
-    n_test = nrow(test_data)
-  )
-  
-  # 全体的重要度
-  global_importance <- model |>
-    extract_fit_parsnip() |>
-    vi() |>
-    arrange(desc(Importance))
-  
-  # 予測性能
-  predictions <- predict(model, test_data) |>
-    bind_cols(test_data |> select(all_of(target_col)))
-  
-  performance <- predictions |>
-    metrics(truth = all_of(target_col), estimate = .pred)
-  
-  # 特徴量統計
-  feature_stats <- train_data |>
-    select(-all_of(target_col)) |>
-    summarise(across(everything(), list(
-      mean = ~ mean(.x, na.rm = TRUE),
-      median = ~ median(.x, na.rm = TRUE),
-      sd = ~ sd(.x, na.rm = TRUE)
-    )))
-  
-  list(
-    model_info = model_info,
-    performance = performance,
-    importance = global_importance,
-    feature_stats = feature_stats,
-    predictions = predictions
-  )
-}
-
-# 実行
-interpretation_report <- comprehensive_interpretation(
-  rf_fit, 
-  ames_train, 
-  ames_test, 
-  "log_price"
-)
-
-# レポート表示
-interpretation_report$model_info
-interpretation_report$performance
-interpretation_report$importance |> head(10)
-</pre>
-
-            <h3>2. 対話的解釈ダッシュボード</h3>
-            <pre>
-# Shiny アプリケーション用のコード例
-library(shiny)
-library(plotly)
-
-# UI定義（簡略版）
-ui <- fluidPage(
-  titlePanel("Model Interpretation Dashboard"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("interpretation_type", "解釈手法:",
-                  choices = c("Feature Importance", "Partial Dependence", 
-                             "SHAP Values", "LIME")),
-      selectInput("feature", "特徴量選択:",
-                  choices = names(ames_train)),
-      numericInput("sample_id", "サンプルID:", value = 1, min = 1, max = 100)
-    ),
-    
-    mainPanel(
-      plotlyOutput("interpretation_plot"),
-      verbatimTextOutput("interpretation_text")
-    )
-  )
-)
-
-# Server定義（簡略版）
-server <- function(input, output, session) {
-  
-  output$interpretation_plot <- renderPlotly({
-    # 選択された解釈手法に応じてプロット生成
-    if(input$interpretation_type == "Feature Importance") {
-      p <- rf_fit |>
-        extract_fit_parsnip() |>
-        vip(num_features = 10) +
-        theme_minimal()
-      ggplotly(p)
-    }
-    # 他の解釈手法も同様に実装
-  })
-  
-  output$interpretation_text <- renderText({
-    paste("選択された解釈手法:", input$interpretation_type)
-  })
-}
-
-# アプリケーション実行（コメントアウト）
-# shinyApp(ui = ui, server = server)
-</pre>
+            <p>
+                上位3つがすべて<strong>差分</strong>である点が結果として重要でした。
+                エンゲージメントサーベイの絶対値ではなく、同じ人の前年からの変化が効いていた。
+                回答スタイルの個人差が絶対値に乗ってしまうので、差分を取ることでそれが落ちたのだと考えています。
+            </p>
+            <p>
+                そして「上司スコアの急落がいちばん退職と連動している」という結果は、経営層への説明で
+                かなり腹落ちしてもらえました。理由は精度ではなく、<strong>打ち手が想像できる変数だったから</strong>だと思います。
+                「勤続年数が効いています」では誰も動けませんが、「上司との関係が急に悪化した人が危ない」なら、
+                次に何をするかの議論が始まります。
+            </p>
 
             <div class="tip-box">
-                <p><strong>解釈可能性のガイドライン：</strong></p>
-                <ul>
-                    <li><strong>複数手法の組み合わせ</strong>: 大域的・局所的解釈の併用</li>
-                    <li><strong>ステークホルダー考慮</strong>: 対象ユーザーに応じた説明</li>
-                    <li><strong>継続的検証</strong>: 時間経過による解釈の変化確認</li>
-                    <li><strong>バイアス検出</strong>: 不公平な判断基準の特定</li>
-                </ul>
+                <h4>説明しやすい変数が上位に来ると運用が進む</h4>
+                <p>
+                    モデルを作る側は精度で選びたくなりますが、使う側は「介入できるか」で見ています。
+                    同程度の精度なら、操作可能な変数が上位に来るモデルのほうが実際には価値が高い。
+                    変数選択の段階でこれを意識しておくと、あとの説明がずいぶん楽になります。
+                </p>
             </div>
         </div>
 
         <div class="section">
-            <h2>🎯 まとめと次のステップ</h2>
-            
-            <h3>Chapter 19で学んだこと</h3>
-            <ul>
-                <li>新しいデータでの予測実行と予測区間の計算</li>
-                <li>特徴量重要度の多角的な分析手法</li>
-                <li>部分依存プロットによる大域的解釈</li>
-                <li>LIME・SHAPによる局所的解釈</li>
-                <li>包括的な解釈レポートの作成</li>
-            </ul>
+            <h2>変数重要度は、そのまま信じると事故る</h2>
+            <p>
+                便利な指標ですが、扱いには注意が要ります。実際に踏んだものを3つ挙げます。
+            </p>
 
-            <h3>実用化のポイント</h3>
+            <h3>算出方法で順位が変わる</h3>
+            <p>
+                LightGBMの重要度には gain（分岐による損失の減少量）と split（分岐に使われた回数）があり、
+                どちらを見るかで順位が入れ替わります。カテゴリ数の多い変数は split が大きく出やすい。
+                報告するときは、どの方法で出した数字かを明記してください。
+            </p>
+
+            <h3>相関の強い変数どうしで重要度が割れる</h3>
+            <p>
+                これが差分変数で顕著でした。上司スコアの差分と職務適性スコアの差分は連動しやすく、
+                木が片方を選ぶともう片方の重要度が下がります。
+                本当は同じくらい効いているのに、片方だけが目立つ。
+                <strong>重要度が低い＝関係がない、ではありません。</strong>
+            </p>
+
+            <h3>重要度は因果ではない</h3>
+            <p>
+                いちばん誤解されるところです。「上司スコアの低下が退職を引き起こす」とは言えません。
+                辞めると決めた人が上司への評価を下げている、という逆向きの流れも十分あり得ます。
+                施策の根拠として使うときは、この点を先に断ったうえで話したほうが安全です。
+            </p>
+
+            <p>
+                モデルに依存しない見方として、Permutation Importance も併せて確認します。
+                値をシャッフルしたときに性能がどれだけ落ちるかで測るので、算出方法の癖が入りにくい。
+            </p>
+
+            <pre>
+library(DALEXtra)
+
+explainer &lt;- explain_tidymodels(
+  final_fit,
+  data  = train_x,
+  y     = as.numeric(train_y == "退職"),
+  label = "turnover_model"
+)
+
+# Permutation Importance
+model_parts(explainer, loss_function = loss_one_minus_auc) |&gt; plot()
+</pre>
+        </div>
+
+        <div class="section">
+            <h2>「どのくらい下がると危ないのか」に答える</h2>
+            <p>
+                重要度は「何が効くか」までしか教えてくれません。
+                現場から次に来るのは「<strong>どのくらい</strong>下がったら声をかけるべきか」という質問です。
+                ここは部分依存プロット（PDP）や累積局所効果（ALE）の出番になります。
+            </p>
+
+            <pre>
+# 上司スコアの差分と退職確率の関係
+model_profile(explainer, variables = "supervisor_diff1") |&gt; plot()
+
+# 相関の強い変数が多いときは ALE のほうが素直に読める
+model_profile(explainer, variables = "supervisor_diff1", type = "accumulated") |&gt; plot()
+</pre>
+
+            <p>
+                曲線が急に立ち上がる位置が見えると、閾値の議論が具体的になります。
+                「1段階下がった程度なら様子見、2段階なら面談」といった運用ルールに落とせる形です。
+                第18章で書いた確率の閾値とは別に、<strong>変数側にも実務的な線引きが要る</strong>ということでした。
+            </p>
+            <p>
+                なお、変数どうしの相関が強い場合、PDPは実際には起こらない組み合わせを平均に含めてしまいます。
+                差分変数を大量に入れているモデルではALEを優先したほうが読み違えが減ります。
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>個人ごとの根拠を出す</h2>
+            <p>
+                「なぜこの人が」に直接答えるなら局所的解釈です。
+                SHAPやBreak Downを使えば、1人の予測確率に対して各変数がどれだけ寄与したかを分解できます。
+            </p>
+
+            <pre>
+target &lt;- test_x |&gt; slice(1)
+
+# Break Down：予測をどう積み上げたか
+predict_parts(explainer, new_observation = target) |&gt; plot()
+
+# SHAP：順序依存を減らした寄与度
+predict_parts(explainer, new_observation = target, type = "shap", B = 25) |&gt; plot()
+</pre>
+
+            <p>
+                出力はこういう形になります。
+            </p>
+
+            <pre>
+予測確率 0.73（ベースライン 0.08）
+
+  supervisor_diff1  = -2   → +0.31
+  job_fit_diff1     = -1   → +0.18
+  eval_raw_scaled   = -0.8 → +0.09
+  tenure_years      =  6   → +0.05
+  grade             = G3   → +0.02
+</pre>
+
+            <p>
+                これで「上司スコアが2段階下がったことが最も効いています」と説明できます。
+                技術的には解決です。問題はこの先でした。
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>出せることと、見せていいことは違う</h2>
+            <p>
+                SHAPまで出すと、特定の個人について「この人が辞めそうな理由」を数値で語れてしまいます。
+                これは想像以上に強い情報です。扱いを間違えると、モデルの精度とは関係のないところで運用が壊れます。
+            </p>
+
             <div class="warning-box">
-                <ul>
-                    <li><strong>解釈の限界を理解</strong>: 相関と因果の区別</li>
-                    <li><strong>計算コストの考慮</strong>: 実時間制約との バランス</li>
-                    <li><strong>説明の品質担保</strong>: 解釈結果の妥当性検証</li>
-                    <li><strong>継続的監視</strong>: モデルドリフトの検出</li>
-                </ul>
+                <h4>マネージャーにスコアを直接見せない</h4>
+                <p>
+                    「あなたのメンバーのAさんは退職確率73%です」という伝え方は避けました。
+                    本人が知らないところで付いた数字が、上司との関係に影響します。
+                    面談の場に無意識のバイアスが持ち込まれ、結果として本当に退職を早めることもあり得ます。
+                </p>
+                <p>
+                    実際に採ったのは、<strong>スコアは人事が保持し、アクションの形に変換して渡す</strong>設計です。
+                    マネージャーに伝えるのは「このメンバーと近いうちに1on1の機会を作ってください」まで。
+                    数字も、その根拠となった変数も渡しません。この一段階を挟むかどうかで、
+                    現場の受け入れられ方がまったく違いました。
+                </p>
             </div>
 
-            <h3>次の章への準備</h3>
-            <p>次の第20章では、複数のモデルを組み合わせる<strong>アンサンブル学習</strong>を学習します。stacksパッケージを使用して、予測精度をさらに向上させる手法を習得しましょう。</p>
+            <p>
+                解釈手法の使い分けとしては、こう整理しています。
+            </p>
+
+            <ul>
+                <li><strong>変数重要度・PDP</strong>：全体傾向なので、経営層や人事施策の議論に出してよい</li>
+                <li><strong>SHAP・Break Down</strong>：個人が特定される。分析者と人事の限られた範囲に留める</li>
+                <li><strong>個人の予測確率</strong>：本人にも上司にも見せない。優先順位付けの内部指標として使う</li>
+            </ul>
+
+            <p>
+                サーベイの案内文で「個人が特定される形では利用しません」と伝えているなら、
+                この線引きは約束の一部です。第22章で自由記述について書いたことと、考え方は同じです。
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>説明できないなら、精度を捨てる判断もある</h2>
+            <p>
+                LightGBMは精度が出ますが、なぜその予測になったのかを説明するのに一手間かかります。
+                ロジスティック回帰なら係数がそのまま「この変数が1増えるとオッズが何倍」という形で読めるので、
+                説明責任の面では圧倒的に楽です。
+            </p>
+            <p>
+                実務では、まずロジスティック回帰で動くものを作り、精度が足りないと判断してから
+                LightGBMに移るのが現実的だと思っています。最初から複雑なモデルを組むと、
+                説明を求められたときに手が止まります。
+            </p>
+            <p>
+                人事の意思決定に使う以上、<strong>説明できないモデルは、精度が高くても使われない</strong>。
+                これは第18章の評価指標の話と同じ結論に行き着きます。
+                数字を良くすることと、業務に載ることは別の問題です。
+            </p>
+
+            <div class="tip-box">
+                <h4>モデルを作る側の全過程について</h4>
+                <p>
+                    どの変数が効いてどれが効かなかったか、なぜ差分変数に切り替えたのか、
+                    ロジスティック回帰からLightGBMに移した判断基準まで含めた記録は、noteにまとめています。
+                </p>
+                <p>
+                    <a href="https://note.com/crt03/n/n96e95016c2f4" target="_blank" rel="noopener">
+                    【実務公開】退職予測モデルを作ったら最初に「罠」に落ちた話｜ES差分×LightGBMで精度92%に至るまで</a>（有料記事）
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>この章のまとめ</h2>
+            <ul>
+                <li><strong>リストの次に来るのは「なぜこの人が」</strong>：答えられないモデルは使われない</li>
+                <li><strong>変数重要度は算出方法を明記する</strong>：gainとsplitで順位が変わる</li>
+                <li><strong>相関の強い変数どうしで重要度は割れる</strong>：低い＝効いていない、ではない</li>
+                <li><strong>重要度は因果ではない</strong>：逆向きの因果も十分あり得る</li>
+                <li><strong>「どのくらいで危ないか」はPDP/ALEで見る</strong>：相関が強いならALE優先</li>
+                <li><strong>SHAPは個人が特定される</strong>：出せることと見せていいことは別</li>
+                <li><strong>スコアはアクションに変換して渡す</strong>：マネージャーに数字を直接見せない</li>
+                <li><strong>説明できないモデルは使われない</strong>：まずロジスティック回帰から</li>
+            </ul>
         </div>
 
         <nav style="margin-top: 40px;">
@@ -880,11 +597,6 @@ server <- function(input, output, session) {
             <a href="chapter20-ensemble-learning-enhanced.html" class="nav-btn">➡️ 次の章</a>
         </nav>
 
-        <div class="navigation">
-            <a href="chapter23-deep-learning-torch.html" class="nav-button">← 前の章</a>
-            <a href="index.html" class="nav-button">目次へ戻る</a>
-            <a href="chapter1-tidyverse-overview.html" class="nav-button">次の章 →</a>
-        </div>
 
         <!-- admax -->
     <div style="text-align: center; margin: 2rem 0;">
