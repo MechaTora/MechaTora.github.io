@@ -1068,22 +1068,22 @@
                             <div class="code-title">scatter_plot_example.R</div>
                         </div>
                         <div class="code-content">
-                            <span class="code-line"><span class="code-comment"># mtcarsデータで馬力と燃費の関係を調べる</span></span>
+                            <span class="code-line"><span class="code-comment"># mtcarsデータで残業時間とエンゲージメントの関係を調べる</span></span>
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># 基本的な散布図</span></span>
-                            <span class="code-line"><span class="code-variable">p1</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
+                            <span class="code-line"><span class="code-variable">p1</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score)) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, color = <span class="code-string">"#00ffff"</span>) +</span>
-                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"馬力と燃費の関係"</span>, </span>
-                            <span class="code-line">       x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"残業時間とエンゲージメントの関係"</span>, </span>
+                            <span class="code-line">       x = <span class="code-string">"月間残業時間 (時間)"</span>, y = <span class="code-string">"エンゲージメント (点)"</span>) +</span>
                             <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
                             <span class="code-line"></span>
-                            <span class="code-line"><span class="code-comment"># 気筒数で色分けした散布図</span></span>
-                            <span class="code-line"><span class="code-variable">p2</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg, color = factor(cyl))) +</span>
+                            <span class="code-line"><span class="code-comment"># 等級で色分けした散布図</span></span>
+                            <span class="code-line"><span class="code-variable">p2</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score, color = factor(grade))) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">4</span>, alpha = <span class="code-string">0.8</span>) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"#ff1493"</span>, <span class="code-string">"#00ffff"</span>, <span class="code-string">"#39ff14"</span>)) +</span>
-                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"気筒数別馬力と燃費"</span>,</span>
-                            <span class="code-line">       x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span>, color = <span class="code-string">"気筒数"</span>) +</span>
+                            <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"等級別の残業時間とエンゲージメント"</span>,</span>
+                            <span class="code-line">       x = <span class="code-string">"月間残業時間 (時間)"</span>, y = <span class="code-string">"エンゲージメント (点)"</span>, color = <span class="code-string">"等級"</span>) +</span>
                             <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-function">print</span>(p2)</span>
@@ -1110,7 +1110,7 @@
                                     <line x1="80" y1="50" x2="80" y2="350"/>
                                 </g>
                                 <!-- Title -->
-                                <text x="315" y="30" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">気筒数別馬力と燃費</text>
+                                <text x="315" y="30" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">等級別の残業時間とエンゲージメント</text>
                                 <!-- Data points (4-cylinder cars) -->
                                 <circle cx="150" cy="120" r="6" fill="#ff1493" opacity="0.8"/>
                                 <circle cx="180" cy="100" r="6" fill="#ff1493" opacity="0.8"/>
@@ -1127,8 +1127,8 @@
                                 <circle cx="480" cy="280" r="6" fill="#39ff14" opacity="0.8"/>
                                 <circle cx="510" cy="310" r="6" fill="#39ff14" opacity="0.8"/>
                                 <!-- Axis labels -->
-                                <text x="315" y="385" text-anchor="middle" fill="#ccc" font-size="14">馬力 (hp)</text>
-                                <text x="25" y="200" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 25 200)">燃費 (mpg)</text>
+                                <text x="315" y="385" text-anchor="middle" fill="#ccc" font-size="14">月間残業時間 (時間)</text>
+                                <text x="25" y="200" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 25 200)">エンゲージメント (点)</text>
                                 <!-- Legend -->
                                 <g>
                                     <circle cx="450" cy="80" r="4" fill="#ff1493"/>
@@ -1169,7 +1169,7 @@
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">reshape2</span>)  <span class="code-comment"># データ形状変換（wide→long）</span></span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># mtcarsの相関行列を計算（-1〜1の値、1に近いほど正の相関）</span></span>
-                            <span class="code-line"><span class="code-variable">corr_matrix</span> <span class="code-keyword">&lt;-</span> <span class="code-function">cor</span>(mtcars[, <span class="code-function">c</span>(<span class="code-string">"mpg"</span>, <span class="code-string">"hp"</span>, <span class="code-string">"wt"</span>, <span class="code-string">"qsec"</span>, <span class="code-string">"drat"</span>)])</span>
+                            <span class="code-line"><span class="code-variable">corr_matrix</span> <span class="code-keyword">&lt;-</span> <span class="code-function">cor</span>(hr[, <span class="code-function">c</span>(<span class="code-string">"engagement_score"</span>, <span class="code-string">"overtime_hours"</span>, <span class="code-string">"tenure_years"</span>, <span class="code-string">"grade"</span>, <span class="code-string">"status"</span>)])</span>
                             <span class="code-line"><span class="code-variable">corr_melted</span> <span class="code-keyword">&lt;-</span> <span class="code-function">melt</span>(corr_matrix)</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># ヒートマップの作成</span></span>
@@ -1197,7 +1197,7 @@
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"変数間相関ヒートマップ"</span>,</span>
-                            <span class="code-line">    subtitle = <span class="code-string">"mtcarsデータセット主要変数"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"人事データ主要変数"</span>,</span>
                             <span class="code-line">    x = <span class="code-string">""</span>, y = <span class="code-string">""</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">coord_fixed</span>()</span>
@@ -1349,29 +1349,29 @@
                         </div>
                         <div class="code-content">
                             <span class="code-line"><span class="code-comment"># 複雑な美学マッピングの例</span></span>
-                            <span class="code-line"><span class="code-variable">complex_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, </span>
-                            <span class="code-line">  <span class="code-function">aes</span>(x = wt,                     <span class="code-comment"># x軸: 重量</span></span>
-                            <span class="code-line">      y = mpg,                   <span class="code-comment"># y軸: 燃費</span></span>
-                            <span class="code-line">      color = hp,                <span class="code-comment"># 色: 馬力（連続値）</span></span>
-                            <span class="code-line">      size = qsec,               <span class="code-comment"># サイズ: 加速性能</span></span>
-                            <span class="code-line">      shape = factor(cyl)        <span class="code-comment"># 形: 気筒数</span></span>
+                            <span class="code-line"><span class="code-variable">complex_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, </span>
+                            <span class="code-line">  <span class="code-function">aes</span>(x = tenure_years,                     <span class="code-comment"># x軸: 勤続年数</span></span>
+                            <span class="code-line">      y = engagement_score,                   <span class="code-comment"># y軸: エンゲージメント</span></span>
+                            <span class="code-line">      color = overtime_hours,                <span class="code-comment"># 色: 月間残業時間（連続値）</span></span>
+                            <span class="code-line">      size = grade,               <span class="code-comment"># サイズ: 勤続年数</span></span>
+                            <span class="code-line">      shape = factor(grade)        <span class="code-comment"># 形: 等級</span></span>
                             <span class="code-line">  )</span>
                             <span class="code-line">) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(alpha = <span class="code-string">0.8</span>) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_gradient</span>(</span>
                             <span class="code-line">    low = <span class="code-string">"blue"</span>, high = <span class="code-string">"red"</span>,</span>
-                            <span class="code-line">    name = <span class="code-string">"馬力"</span></span>
+                            <span class="code-line">    name = <span class="code-string">"月間残業時間"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">scale_size_continuous</span>(</span>
                             <span class="code-line">    range = <span class="code-function">c</span>(<span class="code-string">2</span>, <span class="code-string">8</span>),</span>
                             <span class="code-line">    name = <span class="code-string">"1/4マイル時間"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
-                            <span class="code-line">    title = <span class="code-string">"自動車の性能総合分析"</span>,</span>
-                            <span class="code-line">    subtitle = <span class="code-string">"重量、燃費、馬力、加速性能、気筒数の関係"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"重量 (1000 lbs)"</span>,</span>
-                            <span class="code-line">    y = <span class="code-string">"燃費 (mpg)"</span>,</span>
-                            <span class="code-line">    shape = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">    title = <span class="code-string">"従業員データの総合分析"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"勤続年数、エンゲージメント、残業時間、等級の関係"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"勤続年数 (年)"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"エンゲージメント (点)"</span>,</span>
+                            <span class="code-line">    shape = <span class="code-string">"等級"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
                             <span class="code-line">  <span class="code-function">theme</span>(</span>
@@ -1401,8 +1401,8 @@
                                     <line x1="100" y1="70" x2="100" y2="430"/>
                                 </g>
                                 <!-- Title -->
-                                <text x="350" y="30" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold">自動車の性能総合分析</text>
-                                <text x="350" y="50" text-anchor="middle" fill="#aaa" font-size="14">重量、燃費、馬力、加速性能、気筒数の関係</text>
+                                <text x="350" y="30" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold">従業員データの総合分析</text>
+                                <text x="350" y="50" text-anchor="middle" fill="#aaa" font-size="14">勤続年数、エンゲージメント、残業時間、等級の関係</text>
                                 
                                 <!-- Data points with different shapes, sizes, and colors representing 5 dimensions -->
                                 <!-- 4-cylinder cars (triangles) -->
@@ -1428,13 +1428,13 @@
                                 <rect x="460" y="360" width="14" height="14" fill="#C0392B" opacity="0.8"/>
                                 
                                 <!-- Axis labels -->
-                                <text x="350" y="460" text-anchor="middle" fill="#ccc" font-size="14">重量 (1000 lbs)</text>
-                                <text x="40" y="250" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 40 250)">燃費 (mpg)</text>
+                                <text x="350" y="460" text-anchor="middle" fill="#ccc" font-size="14">勤続年数 (年)</text>
+                                <text x="40" y="250" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 40 250)">エンゲージメント (点)</text>
                                 
                                 <!-- Legends -->
                                 <!-- Shape legend -->
                                 <g>
-                                    <text x="50" y="100" fill="#fff" font-size="12" font-weight="bold">気筒数:</text>
+                                    <text x="50" y="100" fill="#fff" font-size="12" font-weight="bold">等級:</text>
                                     <polygon points="55,115 50,125 60,125" fill="#ccc"/>
                                     <text x="70" y="123" fill="#ccc" font-size="10">4気筒</text>
                                     <circle cx="55" cy="140" r="4" fill="#ccc"/>
@@ -1445,7 +1445,7 @@
                                 
                                 <!-- Color legend -->
                                 <g>
-                                    <text x="50" y="200" fill="#fff" font-size="12" font-weight="bold">馬力:</text>
+                                    <text x="50" y="200" fill="#fff" font-size="12" font-weight="bold">月間残業時間:</text>
                                     <rect x="50" y="210" width="15" height="8" fill="url(#horsepower-gradient)"/>
                                     <text x="50" y="230" fill="#ccc" font-size="10">低</text>
                                     <text x="75" y="230" fill="#ccc" font-size="10">高</text>
@@ -1453,7 +1453,7 @@
                                 
                                 <!-- Size legend -->
                                 <g>
-                                    <text x="550" y="100" fill="#fff" font-size="12" font-weight="bold">加速性能:</text>
+                                    <text x="550" y="100" fill="#fff" font-size="12" font-weight="bold">勤続年数:</text>
                                     <circle cx="570" cy="115" r="3" fill="#ccc"/>
                                     <text x="580" y="118" fill="#ccc" font-size="10">速い</text>
                                     <circle cx="570" cy="135" r="6" fill="#ccc"/>
@@ -1492,9 +1492,9 @@
                     </p>
                     
                     <ul style="color: var(--neon-cyan); margin: 1rem 0;">
-                        <li><strong>重量と燃費</strong>: 負の相関関係（重い車ほど燃費が悪い）</li>
-                        <li><strong>気筒数の影響</strong>: 8気筒車は重く、燃費が悪い傾向</li>
-                        <li><strong>馬力と色</strong>: 赤い点（高馬力）ほど燃費が悪い</li>
+                        <li><strong>勤続年数とエンゲージメント</strong>: 負の相関関係（重い車ほどエンゲージメントが悪い）</li>
+                        <li><strong>等級の影響</strong>: 8気筒車は重く、エンゲージメントが悪い傾向</li>
+                        <li><strong>月間残業時間と色</strong>: 赤い点（高月間残業時間）ほどエンゲージメントが悪い</li>
                         <li><strong>サイズと加速</strong>: 大きい点ほど加速が遅い</li>
                     </ul>
                 </div>
@@ -1655,20 +1655,20 @@
                         </div>
                         <div class="code-content">
                             <span class="code-line"><span class="code-comment"># 相関分析用データ（mtcarsを拡張）</span></span>
-                            <span class="code-line"><span class="code-variable">car_data</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%>%</span></span>
+                            <span class="code-line"><span class="code-variable">car_data</span> <span class="code-keyword">&lt;-</span> hr <span class="code-keyword">%>%</span></span>
                             <span class="code-line">  <span class="code-function">rownames_to_column</span>(<span class="code-string">"model"</span>) <span class="code-keyword">%>%</span></span>
                             <span class="code-line">  <span class="code-function">as_tibble</span>() <span class="code-keyword">%>%</span></span>
                             <span class="code-line">  <span class="code-function">mutate</span>(</span>
-                            <span class="code-line">    transmission = <span class="code-function">ifelse</span>(am == <span class="code-string">1</span>, <span class="code-string">"マニュアル"</span>, <span class="code-string">"オートマ"</span>),</span>
+                            <span class="code-line">    status_label = <span class="code-function">ifelse</span>(status == <span class="code-string">1</span>, <span class="code-string">"退職"</span>, <span class="code-string">"在籍"</span>),</span>
                             <span class="code-line">    efficiency_class = <span class="code-function">case_when</span>(</span>
-                            <span class="code-line">      mpg >= <span class="code-string">25</span> ~ <span class="code-string">"高効率"</span>,</span>
-                            <span class="code-line">      mpg >= <span class="code-string">20</span> ~ <span class="code-string">"中効率"</span>,</span>
+                            <span class="code-line">      engagement_score >= <span class="code-string">25</span> ~ <span class="code-string">"高効率"</span>,</span>
+                            <span class="code-line">      engagement_score >= <span class="code-string">20</span> ~ <span class="code-string">"中効率"</span>,</span>
                             <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"低効率"</span></span>
                             <span class="code-line">    )</span>
                             <span class="code-line">  )</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># 高度な散布図の作成</span></span>
-                            <span class="code-line"><span class="code-variable">correlation_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(car_data, <span class="code-function">aes</span>(x = wt, y = mpg)) +</span>
+                            <span class="code-line"><span class="code-variable">correlation_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(car_data, <span class="code-function">aes</span>(x = tenure_years, y = engagement_score)) +</span>
                             <span class="code-line">  <span class="code-comment"># 背景の密度等高線</span></span>
                             <span class="code-line">  <span class="code-function">stat_density_2d</span>(alpha = <span class="code-string">0.3</span>, color = <span class="code-string">"gray70"</span>) +</span>
                             <span class="code-line">  <span class="code-comment"># 回帰線と信頼区間</span></span>
@@ -1680,28 +1680,28 @@
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-comment"># データポイント</span></span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(</span>
-                            <span class="code-line">    aes(color = transmission, size = hp, shape = efficiency_class),</span>
+                            <span class="code-line">    aes(color = status_label, size = overtime_hours, shape = efficiency_class),</span>
                             <span class="code-line">    alpha = <span class="code-string">0.8</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-comment"># ラベル付け（outlierのみ）</span></span>
                             <span class="code-line">  <span class="code-function">geom_text</span>(</span>
-                            <span class="code-line">    data = car_data <span class="code-keyword">%>%</span> <span class="code-function">filter</span>(mpg > <span class="code-string">30</span> | wt > <span class="code-string">5</span>),</span>
+                            <span class="code-line">    data = car_data <span class="code-keyword">%>%</span> <span class="code-function">filter</span>(engagement_score > <span class="code-string">30</span> | tenure_years > <span class="code-string">5</span>),</span>
                             <span class="code-line">    aes(label = model),</span>
                             <span class="code-line">    nudge_y = <span class="code-string">1</span>,</span>
                             <span class="code-line">    size = <span class="code-string">3</span>,</span>
                             <span class="code-line">    color = <span class="code-string">"white"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
-                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"マニュアル"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"オートマ"</span> = <span class="code-string">"#39ff14"</span>)</span>
+                            <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"退職"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"在籍"</span> = <span class="code-string">"#39ff14"</span>)</span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">scale_size_continuous</span>(range = <span class="code-function">c</span>(<span class="code-string">3</span>, <span class="code-string">8</span>)) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
-                            <span class="code-line">    title = <span class="code-string">"自動車の重量と燃費の関係"</span>,</span>
-                            <span class="code-line">    subtitle = <span class="code-string">"変速機タイプ、馬力、効率クラス別分析"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"重量 (1000 lbs)"</span>,</span>
-                            <span class="code-line">    y = <span class="code-string">"燃費 (mpg)"</span>,</span>
+                            <span class="code-line">    title = <span class="code-string">"勤続年数とエンゲージメントの関係"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"在籍状況、残業時間、等級別の分析"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"勤続年数 (年)"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"エンゲージメント (点)"</span>,</span>
                             <span class="code-line">    color = <span class="code-string">"変速機"</span>,</span>
-                            <span class="code-line">    size = <span class="code-string">"馬力"</span>,</span>
+                            <span class="code-line">    size = <span class="code-string">"月間残業時間"</span>,</span>
                             <span class="code-line">    shape = <span class="code-string">"効率クラス"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
@@ -1936,22 +1936,22 @@
                             <div class="code-title">facet_wrap_example.R</div>
                         </div>
                         <div class="code-content">
-                            <span class="code-line"><span class="code-comment"># 気筒数別の燃費と馬力の関係</span></span>
+                            <span class="code-line"><span class="code-comment"># 等級別のエンゲージメントと月間残業時間の関係</span></span>
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
                             <span class="code-line"></span>
-                            <span class="code-line"><span class="code-variable">facet_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
-                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(am)), size = <span class="code-string">3</span>, alpha = <span class="code-string">0.7</span>) +</span>
+                            <span class="code-line"><span class="code-variable">facet_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(status)), size = <span class="code-string">3</span>, alpha = <span class="code-string">0.7</span>) +</span>
                             <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, color = <span class="code-string">"#39ff14"</span>, size = <span class="code-string">1.2</span>) +</span>
-                            <span class="code-line">  <span class="code-function">facet_wrap</span>(~cyl, scales = <span class="code-string">"free"</span>, ncol = <span class="code-string">3</span>) +</span>
+                            <span class="code-line">  <span class="code-function">facet_wrap</span>(~grade, scales = <span class="code-string">"free"</span>, ncol = <span class="code-string">3</span>) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
                             <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"0"</span> = <span class="code-string">"#ff1493"</span>, <span class="code-string">"1"</span> = <span class="code-string">"#00ffff"</span>),</span>
                             <span class="code-line">    labels = <span class="code-function">c</span>(<span class="code-string">"AT"</span>, <span class="code-string">"MT"</span>)</span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
-                            <span class="code-line">    title = <span class="code-string">"気筒数別：馬力と燃費の関係"</span>,</span>
-                            <span class="code-line">    subtitle = <span class="code-string">"トランスミッション別に色分け"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span>,</span>
-                            <span class="code-line">    color = <span class="code-string">"トランスミッション"</span></span>
+                            <span class="code-line">    title = <span class="code-string">"等級別：残業時間とエンゲージメントの関係"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"在籍状況別に色分け"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"月間残業時間 (時間)"</span>, y = <span class="code-string">"エンゲージメント (点)"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"在籍状況"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
                             <span class="code-line">  <span class="code-function">theme</span>(</span>
@@ -1969,8 +1969,8 @@
                         <div class="plot-container">
                             <svg width="800" height="400" viewBox="0 0 800 400" style="background: #1a1a1a; border-radius: 8px; border: 1px solid var(--glass-border);">
                                 <!-- Title -->
-                                <text x="400" y="25" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">気筒数別：馬力と燃費の関係</text>
-                                <text x="400" y="45" text-anchor="middle" fill="#aaa" font-size="12">トランスミッション別に色分け</text>
+                                <text x="400" y="25" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">等級別：残業時間とエンゲージメントの関係</text>
+                                <text x="400" y="45" text-anchor="middle" fill="#aaa" font-size="12">在籍状況別に色分け</text>
                                 
                                 <!-- Facet panel 1: 4cyl -->
                                 <g>
@@ -1997,8 +1997,8 @@
                                     <!-- Regression line -->
                                     <line x1="80" y1="135" x2="200" y2="120" stroke="#39ff14" stroke-width="2"/>
                                     
-                                    <text x="160" y="340" text-anchor="middle" fill="#ccc" font-size="10">馬力</text>
-                                    <text x="40" y="220" text-anchor="middle" fill="#ccc" font-size="10" transform="rotate(-90 40 220)">燃費</text>
+                                    <text x="160" y="340" text-anchor="middle" fill="#ccc" font-size="10">月間残業時間</text>
+                                    <text x="40" y="220" text-anchor="middle" fill="#ccc" font-size="10" transform="rotate(-90 40 220)">エンゲージメント</text>
                                 </g>
                                 
                                 <!-- Facet panel 2: 6cyl -->
@@ -2026,7 +2026,7 @@
                                     <!-- Regression line -->
                                     <line x1="310" y1="165" x2="430" y2="195" stroke="#39ff14" stroke-width="2"/>
                                     
-                                    <text x="400" y="340" text-anchor="middle" fill="#ccc" font-size="10">馬力</text>
+                                    <text x="400" y="340" text-anchor="middle" fill="#ccc" font-size="10">月間残業時間</text>
                                 </g>
                                 
                                 <!-- Facet panel 3: 8cyl -->
@@ -2054,7 +2054,7 @@
                                     <!-- Regression line -->
                                     <line x1="570" y1="245" x2="710" y2="275" stroke="#39ff14" stroke-width="2"/>
                                     
-                                    <text x="640" y="340" text-anchor="middle" fill="#ccc" font-size="10">馬力</text>
+                                    <text x="640" y="340" text-anchor="middle" fill="#ccc" font-size="10">月間残業時間</text>
                                 </g>
                                 
                                 <!-- Legend -->
@@ -2079,19 +2079,19 @@
                             <div class="code-title">facet_grid_example.R</div>
                         </div>
                         <div class="code-content">
-                            <span class="code-line"><span class="code-comment"># 気筒数×トランスミッションでのクロス分析</span></span>
-                            <span class="code-line"><span class="code-variable">grid_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
-                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(gear)), size = <span class="code-string">3</span>, alpha = <span class="code-string">0.8</span>) +</span>
+                            <span class="code-line"><span class="code-comment"># 等級×在籍状況でのクロス分析</span></span>
+                            <span class="code-line"><span class="code-variable">grid_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(grade)), size = <span class="code-string">3</span>, alpha = <span class="code-string">0.8</span>) +</span>
                             <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"loess"</span>, se = <span class="code-string">TRUE</span>, alpha = <span class="code-string">0.2</span>) +</span>
-                            <span class="code-line">  <span class="code-function">facet_grid</span>(am ~ cyl, </span>
-                            <span class="code-line">              labeller = <span class="code-function">labeller</span>(am = <span class="code-function">c</span>(<span class="code-string">"0"</span> = <span class="code-string">"オートマ"</span>, <span class="code-string">"1"</span> = <span class="code-string">"マニュアル"</span>))) +</span>
+                            <span class="code-line">  <span class="code-function">facet_grid</span>(status ~ grade, </span>
+                            <span class="code-line">              labeller = <span class="code-function">labeller</span>(status = <span class="code-function">c</span>(<span class="code-string">"0"</span> = <span class="code-string">"在籍"</span>, <span class="code-string">"1"</span> = <span class="code-string">"退職"</span>))) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_manual</span>(</span>
                             <span class="code-line">    values = <span class="code-function">c</span>(<span class="code-string">"3"</span> = <span class="code-string">"#ff1493"</span>, <span class="code-string">"4"</span> = <span class="code-string">"#00ffff"</span>, <span class="code-string">"5"</span> = <span class="code-string">"#39ff14"</span>),</span>
                             <span class="code-line">    name = <span class="code-string">"ギア数"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
-                            <span class="code-line">    title = <span class="code-string">"トランスミッション×気筒数別：性能分析"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">    title = <span class="code-string">"在籍状況×等級別の分析"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"月間残業時間 (時間)"</span>, y = <span class="code-string">"エンゲージメント (点)"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
                             <span class="code-line">  <span class="code-function">theme</span>(</span>
@@ -2126,11 +2126,11 @@
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">viridis</span>)</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># 連続値のカラーグラデーション</span></span>
-                            <span class="code-line"><span class="code-variable">continuous_color</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = wt, y = mpg, color = hp)) +</span>
+                            <span class="code-line"><span class="code-variable">continuous_color</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = tenure_years, y = engagement_score, color = overtime_hours)) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">4</span>, alpha = <span class="code-string">0.8</span>) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_viridis_c</span>(</span>
                             <span class="code-line">    option = <span class="code-string">"plasma"</span>,</span>
-                            <span class="code-line">    name = <span class="code-string">"馬力\n(hp)"</span>,</span>
+                            <span class="code-line">    name = <span class="code-string">"月間残業時間\n(overtime_hours)"</span>,</span>
                             <span class="code-line">    guide = <span class="code-function">guide_colorbar</span>(</span>
                             <span class="code-line">      barwidth = <span class="code-string">1</span>,</span>
                             <span class="code-line">      barheight = <span class="code-string">10</span>,</span>
@@ -2139,18 +2139,18 @@
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"連続カラースケール：Viridis Plasma"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"重量 (1000 lbs)"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">    x = <span class="code-string">"勤続年数 (年)"</span>, y = <span class="code-string">"エンゲージメント (点)"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
                             <span class="code-line">  <span class="code-function">theme</span>(legend.position = <span class="code-string">"right"</span>)</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># カテゴリカルデータの色分け</span></span>
-                            <span class="code-line"><span class="code-variable">discrete_color</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = wt, y = mpg, color = factor(cyl))) +</span>
+                            <span class="code-line"><span class="code-variable">discrete_color</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = tenure_years, y = engagement_score, color = factor(grade))) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">4</span>) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_brewer</span>(</span>
                             <span class="code-line">    type = <span class="code-string">"qual"</span>,</span>
                             <span class="code-line">    palette = <span class="code-string">"Set1"</span>,</span>
-                            <span class="code-line">    name = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">    name = <span class="code-string">"等級"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"カテゴリカルカラー：ColorBrewer Set1"</span>)</span>
                         </div>
@@ -2168,22 +2168,22 @@
                         </div>
                         <div class="code-content">
                             <span class="code-line"><span class="code-comment"># 軸の変換とカスタマイズ</span></span>
-                            <span class="code-line"><span class="code-variable">log_scale_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
-                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(cyl)), size = <span class="code-string">3</span>) +</span>
+                            <span class="code-line"><span class="code-variable">log_scale_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score)) +</span>
+                            <span class="code-line">  <span class="code-function">geom_point</span>(aes(color = factor(grade)), size = <span class="code-string">3</span>) +</span>
                             <span class="code-line">  <span class="code-function">scale_x_log10</span>(</span>
                             <span class="code-line">    breaks = <span class="code-function">c</span>(<span class="code-string">50</span>, <span class="code-string">100</span>, <span class="code-string">200</span>, <span class="code-string">400</span>),</span>
                             <span class="code-line">    labels = <span class="code-function">c</span>(<span class="code-string">"50hp"</span>, <span class="code-string">"100hp"</span>, <span class="code-string">"200hp"</span>, <span class="code-string">"400hp"</span>)</span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">scale_y_continuous</span>(</span>
                             <span class="code-line">    breaks = <span class="code-function">seq</span>(<span class="code-string">10</span>, <span class="code-string">35</span>, <span class="code-string">5</span>),</span>
-                            <span class="code-line">    labels = <span class="code-function">function</span>(x) <span class="code-function">paste0</span>(x, <span class="code-string">" mpg"</span>),</span>
+                            <span class="code-line">    labels = <span class="code-function">function</span>(x) <span class="code-function">paste0</span>(x, <span class="code-string">" engagement_score"</span>),</span>
                             <span class="code-line">    limits = <span class="code-function">c</span>(<span class="code-string">10</span>, <span class="code-string">35</span>)</span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"対数スケールを使用した軸変換"</span>,</span>
                             <span class="code-line">    subtitle = <span class="code-string">"X軸：対数スケール、Y軸：線形スケール"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"馬力 (対数スケール)"</span>, y = <span class="code-string">"燃費"</span>,</span>
-                            <span class="code-line">    color = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">    x = <span class="code-string">"残業時間 (対数スケール)"</span>, y = <span class="code-string">"エンゲージメント"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"等級"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
                         </div>
@@ -2234,12 +2234,12 @@
                             <span class="code-line">  )</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># 軸の入れ替え</span></span>
-                            <span class="code-line"><span class="code-variable">flipped_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = reorder(rownames(mtcars), mpg), y = mpg)) +</span>
+                            <span class="code-line"><span class="code-variable">flipped_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = reorder(department, engagement_score), y = engagement_score)) +</span>
                             <span class="code-line">  <span class="code-function">geom_col</span>(fill = <span class="code-string">"#00ffff"</span>, alpha = <span class="code-string">0.8</span>) +</span>
                             <span class="code-line">  <span class="code-function">coord_flip</span>() +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"軸入れ替えによる水平棒グラフ"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"車種"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">    x = <span class="code-string">"部署"</span>, y = <span class="code-string">"エンゲージメント (点)"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
                             <span class="code-line">  <span class="code-function">theme</span>(axis.text.y = <span class="code-function">element_text</span>(size = <span class="code-string">8</span>))</span>
@@ -2272,7 +2272,7 @@
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># 線形回帰、LOESS、GAMモデルの比較</span></span>
-                            <span class="code-line"><span class="code-variable">regression_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg)) +</span>
+                            <span class="code-line"><span class="code-variable">regression_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score)) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(alpha = <span class="code-string">0.7</span>, size = <span class="code-string">3</span>, color = <span class="code-string">"white"</span>) +</span>
                             <span class="code-line">  <span class="code-comment"># 線形回帰</span></span>
                             <span class="code-line">  <span class="code-function">stat_smooth</span>(method = <span class="code-string">"lm"</span>, color = <span class="code-string">"#ff1493"</span>, </span>
@@ -2286,7 +2286,7 @@
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"回帰モデルの比較分析"</span>,</span>
                             <span class="code-line">    subtitle = <span class="code-string">"線形(LM), LOESS, GAMの異なるアプローチ"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"馬力 (hp)"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">    x = <span class="code-string">"月間残業時間 (時間)"</span>, y = <span class="code-string">"エンゲージメント (点)"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_dark</span>() +</span>
                             <span class="code-line">  <span class="code-function">theme</span>(</span>
@@ -2345,8 +2345,8 @@
                                 <path d="M 120 118 Q 180 138, 260 180 Q 340 220, 420 260 Q 460 275, 500 298" stroke="#39ff14" stroke-width="2" fill="none" stroke-dasharray="2,2"/>
                                 
                                 <!-- Axis labels -->
-                                <text x="315" y="385" text-anchor="middle" fill="#ccc" font-size="14">馬力 (hp)</text>
-                                <text x="25" y="210" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 25 210)">燃費 (mpg)</text>
+                                <text x="315" y="385" text-anchor="middle" fill="#ccc" font-size="14">月間残業時間 (時間)</text>
+                                <text x="25" y="210" text-anchor="middle" fill="#ccc" font-size="14" transform="rotate(-90 25 210)">エンゲージメント (点)</text>
                                 
                                 <!-- Legend -->
                                 <g>
@@ -2373,7 +2373,7 @@
                         </div>
                         <div class="code-content">
                             <span class="code-line"><span class="code-comment"># カスタム統計要約の作成</span></span>
-                            <span class="code-line"><span class="code-variable">summary_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = factor(cyl), y = mpg)) +</span>
+                            <span class="code-line"><span class="code-variable">summary_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = factor(grade), y = engagement_score)) +</span>
                             <span class="code-line">  <span class="code-comment"># 生データポイント</span></span>
                             <span class="code-line">  <span class="code-function">geom_jitter</span>(alpha = <span class="code-string">0.6</span>, width = <span class="code-string">0.2</span>, color = <span class="code-string">"white"</span>) +</span>
                             <span class="code-line">  <span class="code-comment"># 平均値と標準誤差</span></span>
@@ -2398,7 +2398,7 @@
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"カスタム統計要約の比較"</span>,</span>
                             <span class="code-line">    subtitle = <span class="code-string">"平均±SD (ピンク) vs 中央値±IQR (シアン)"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"気筒数"</span>, y = <span class="code-string">"燃費 (mpg)"</span></span>
+                            <span class="code-line">    x = <span class="code-string">"等級"</span>, y = <span class="code-string">"エンゲージメント (点)"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_dark</span>()</span>
                         </div>
@@ -2738,14 +2738,14 @@
                             <span class="code-line">}</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># テーマの使用例</span></span>
-                            <span class="code-line"><span class="code-variable">example_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = hp, y = mpg, color = factor(cyl))) +</span>
+                            <span class="code-line"><span class="code-variable">example_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score, color = factor(grade))) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, alpha = <span class="code-string">0.8</span>) +</span>
                             <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>) +</span>
                             <span class="code-line">  <span class="code-function">scale_color_manual</span>(values = <span class="code-function">c</span>(<span class="code-string">"#ff7b7b"</span>, <span class="code-string">"#7bc7ff"</span>, <span class="code-string">"#7bff7b"</span>)) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
                             <span class="code-line">    title = <span class="code-string">"カスタムテーマの適用例"</span>,</span>
                             <span class="code-line">    subtitle = <span class="code-string">"企業ブランド vs データサイエンス"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"馬力"</span>, y = <span class="code-string">"燃費"</span>, color = <span class="code-string">"気筒数"</span></span>
+                            <span class="code-line">    x = <span class="code-string">"月間残業時間"</span>, y = <span class="code-string">"エンゲージメント"</span>, color = <span class="code-string">"等級"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_data_science</span>()  <span class="code-comment"># または theme_corporate()</span></span>
                             <span class="code-line">      ),</span>
@@ -2786,16 +2786,16 @@
                             <span class="code-line">}</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># テーマ適用例</span></span>
-                            <span class="code-line"><span class="code-variable">corporate_example</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(mpg, <span class="code-function">aes</span>(x = displ, y = hwy, color = class)) +</span>
+                            <span class="code-line"><span class="code-variable">corporate_example</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(engagement_score, <span class="code-function">aes</span>(x = displ, y = hwy, color = class)) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, alpha = <span class="code-string">0.7</span>) +</span>
                             <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, color = <span class="code-string">"#e74c3c"</span>) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
-                            <span class="code-line">    title = <span class="code-string">"エンジン排気量と燃費の関係"</span>,</span>
-                            <span class="code-line">    subtitle = <span class="code-string">"車種クラス別の分析結果"</span>,</span>
-                            <span class="code-line">    x = <span class="code-string">"エンジン排気量 (L)"</span>,</span>
-                            <span class="code-line">    y = <span class="code-string">"高速道路燃費 (mpg)"</span>,</span>
-                            <span class="code-line">    color = <span class="code-string">"車種クラス"</span>,</span>
-                            <span class="code-line">    caption = <span class="code-string">"データソース: EPA燃費データベース"</span></span>
+                            <span class="code-line">    title = <span class="code-string">"月間残業時間とエンゲージメントの関係"</span>,</span>
+                            <span class="code-line">    subtitle = <span class="code-string">"部署別の分析結果"</span>,</span>
+                            <span class="code-line">    x = <span class="code-string">"エンジン残業時間 (L)"</span>,</span>
+                            <span class="code-line">    y = <span class="code-string">"高速道路エンゲージメント (点)"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"部署クラス"</span>,</span>
+                            <span class="code-line">    caption = <span class="code-string">"データソース: EPAエンゲージメントデータベース"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_corporate</span>() +</span>
                             <span class="code-line">  <span class="code-function">guides</span>(color = <span class="code-function">guide_legend</span>(title.position = <span class="code-string">"top"</span>))</span>
@@ -2830,21 +2830,21 @@
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># データの前処理と可視化を組み合わせ</span></span>
-                            <span class="code-line"><span class="code-variable">advanced_analysis</span> <span class="code-keyword">&lt;-</span> mtcars <span class="code-keyword">%&gt;%</span></span>
+                            <span class="code-line"><span class="code-variable">advanced_analysis</span> <span class="code-keyword">&lt;-</span> hr <span class="code-keyword">%&gt;%</span></span>
                             <span class="code-line">  <span class="code-function">mutate</span>(</span>
                             <span class="code-line">    efficiency = <span class="code-function">case_when</span>(</span>
-                            <span class="code-line">      mpg >= <span class="code-string">25</span> ~ <span class="code-string">"High"</span>,</span>
-                            <span class="code-line">      mpg >= <span class="code-string">20</span> ~ <span class="code-string">"Medium"</span>,</span>
+                            <span class="code-line">      engagement_score >= <span class="code-string">25</span> ~ <span class="code-string">"High"</span>,</span>
+                            <span class="code-line">      engagement_score >= <span class="code-string">20</span> ~ <span class="code-string">"Medium"</span>,</span>
                             <span class="code-line">      <span class="code-string">TRUE</span> ~ <span class="code-string">"Low"</span></span>
                             <span class="code-line">    ),</span>
-                            <span class="code-line">    transmission = <span class="code-function">ifelse</span>(am == <span class="code-string">1</span>, <span class="code-string">"Manual"</span>, <span class="code-string">"Automatic"</span>)</span>
+                            <span class="code-line">    status_label = <span class="code-function">ifelse</span>(status == <span class="code-string">1</span>, <span class="code-string">"Left"</span>, <span class="code-string">"Active"</span>)</span>
                             <span class="code-line">  ) <span class="code-keyword">%&gt;%</span></span>
-                            <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = wt, y = hp)) +</span>
-                            <span class="code-line">    <span class="code-function">geom_point</span>(aes(color = efficiency, shape = transmission), </span>
+                            <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = tenure_years, y = overtime_hours)) +</span>
+                            <span class="code-line">    <span class="code-function">geom_point</span>(aes(color = efficiency, shape = status_label), </span>
                             <span class="code-line">               size = <span class="code-string">3</span>, alpha = <span class="code-string">0.8</span>) +</span>
                             <span class="code-line">    <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, </span>
                             <span class="code-line">                color = <span class="code-string">"darkgray"</span>, linetype = <span class="code-string">"dashed"</span>) +</span>
-                            <span class="code-line">    <span class="code-function">facet_wrap</span>(~factor(cyl), ncol = <span class="code-string">3</span>, </span>
+                            <span class="code-line">    <span class="code-function">facet_wrap</span>(~factor(grade), ncol = <span class="code-string">3</span>, </span>
                             <span class="code-line">               labeller = <span class="code-function">labeller</span>(.default = <span class="code-string">"気筒"</span>)) +</span>
                             <span class="code-line">    <span class="code-function">scale_color_manual</span>(</span>
                             <span class="code-line">      values = <span class="code-function">c</span>(<span class="code-string">"High"</span> = <span class="code-string">"#00ff41"</span>, </span>
@@ -2852,10 +2852,10 @@
                             <span class="code-line">               <span class="code-string">"Low"</span> = <span class="code-string">"#ff0040"</span>)</span>
                             <span class="code-line">    ) +</span>
                             <span class="code-line">    <span class="code-function">labs</span>(</span>
-                            <span class="code-line">      title = <span class="code-string">"自動車性能の多次元分析"</span>,</span>
-                            <span class="code-line">      subtitle = <span class="code-string">"重量、馬力、燃費効率、変速機タイプ、気筒数の関係"</span>,</span>
-                            <span class="code-line">      x = <span class="code-string">"重量 (1000 lbs)"</span>, y = <span class="code-string">"馬力 (hp)"</span>,</span>
-                            <span class="code-line">      color = <span class="code-string">"燃費効率"</span>, shape = <span class="code-string">"変速機"</span></span>
+                            <span class="code-line">      title = <span class="code-string">"従業員データの多次元分析"</span>,</span>
+                            <span class="code-line">      subtitle = <span class="code-string">"勤続年数、残業時間、エンゲージメント、在籍状況、等級の関係"</span>,</span>
+                            <span class="code-line">      x = <span class="code-string">"勤続年数 (年)"</span>, y = <span class="code-string">"月間残業時間 (時間)"</span>,</span>
+                            <span class="code-line">      color = <span class="code-string">"エンゲージメント"</span>, shape = <span class="code-string">"変速機"</span></span>
                             <span class="code-line">    ) +</span>
                             <span class="code-line">    <span class="code-function">theme_dark</span>() +</span>
                             <span class="code-line">    <span class="code-function">theme</span>(</span>
@@ -2888,15 +2888,15 @@
                                 <span class="code-title">scatter_plot_example.R</span>
                             </div>
                             <div class="code-content">
-<span class="code-line"><span class="code-comment"># mtcarsデータセットを使用した散布図</span></span>
+<span class="code-line"><span class="code-comment"># 人事データを使用した散布図</span></span>
 <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
 <span class="code-line"></span>
 <span class="code-line"><span class="code-comment"># 基本的な散布図</span></span>
-<span class="code-line">p1 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">mtcars</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">wt</span>, <span class="code-identifier">y</span> = <span class="code-identifier">mpg</span>)) +</span>
+<span class="code-line">p1 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">hr</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">tenure_years</span>, <span class="code-identifier">y</span> = <span class="code-identifier">engagement_score</span>)) +</span>
 <span class="code-line">  <span class="code-function">geom_point</span>(<span class="code-identifier">size</span> = <span class="code-number">3</span>, <span class="code-identifier">alpha</span> = <span class="code-number">0.7</span>) +</span>
-<span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"車重と燃費の関係"</span>,</span>
-<span class="code-line">       <span class="code-identifier">x</span> = <span class="code-string">"車重 (1000 lbs)"</span>,</span>
-<span class="code-line">       <span class="code-identifier">y</span> = <span class="code-string">"燃費 (mpg)"</span>) +</span>
+<span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"勤続年数とエンゲージメントの関係"</span>,</span>
+<span class="code-line">       <span class="code-identifier">x</span> = <span class="code-string">"勤続年数 (年)"</span>,</span>
+<span class="code-line">       <span class="code-identifier">y</span> = <span class="code-string">"エンゲージメント (点)"</span>) +</span>
 <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
 <span class="code-line"></span>
 <span class="code-line"><span class="code-comment"># 回帰直線を追加</span></span>
@@ -2947,11 +2947,11 @@
                                 <path d="M 80 65 L 420 235 L 420 245 L 80 75 Z" fill="#dc2626" opacity="0.2"/>
                                 
                                 <!-- 軸ラベル -->
-                                <text x="250" y="280" text-anchor="middle" font-size="12" fill="#333">車重 (1000 lbs)</text>
-                                <text x="25" y="140" text-anchor="middle" transform="rotate(-90 25 140)" font-size="12" fill="#333">燃費 (mpg)</text>
+                                <text x="250" y="280" text-anchor="middle" font-size="12" fill="#333">勤続年数 (年)</text>
+                                <text x="25" y="140" text-anchor="middle" transform="rotate(-90 25 140)" font-size="12" fill="#333">エンゲージメント (点)</text>
                                 
                                 <!-- タイトル -->
-                                <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">車重と燃費の関係</text>
+                                <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">勤続年数とエンゲージメントの関係</text>
                                 
                                 <!-- 軸目盛り -->
                                 <text x="100" y="265" text-anchor="middle" font-size="10" fill="#666">2</text>
@@ -2976,11 +2976,11 @@
                                 <span class="code-title">bar_chart_example.R</span>
                             </div>
                             <div class="code-content">
-<span class="code-line"><span class="code-comment"># diamondsデータセットを使用した棒グラフ</span></span>
+<span class="code-line"><span class="code-comment"># 人事データを使用した棒グラフ</span></span>
 <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
 <span class="code-line"></span>
 <span class="code-line"><span class="code-comment"># データ集計</span></span>
-<span class="code-line">diamond_summary <span class="code-operator"><-</span> <span class="code-identifier">diamonds</span> <span class="code-operator">%>%</span></span>
+<span class="code-line">diamond_summary <span class="code-operator"><-</span> <span class="code-identifier">hr</span> <span class="code-operator">%>%</span></span>
 <span class="code-line">  <span class="code-function">group_by</span>(<span class="code-identifier">cut</span>) <span class="code-operator">%>%</span></span>
 <span class="code-line">  <span class="code-function">summarise</span>(<span class="code-identifier">count</span> = <span class="code-function">n</span>(), <span class="code-identifier">.groups</span> = <span class="code-string">'drop'</span>)</span>
 <span class="code-line"></span>
@@ -2988,8 +2988,8 @@
 <span class="code-line">p3 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">diamond_summary</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">cut</span>, <span class="code-identifier">y</span> = <span class="code-identifier">count</span>, <span class="code-identifier">fill</span> = <span class="code-identifier">cut</span>)) +</span>
 <span class="code-line">  <span class="code-function">geom_col</span>() +</span>
 <span class="code-line">  <span class="code-function">scale_fill_viridis_d</span>() +</span>
-<span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"ダイヤモンドのカット別個数"</span>,</span>
-<span class="code-line">       <span class="code-identifier">x</span> = <span class="code-string">"カット品質"</span>,</span>
+<span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"部署別の人数"</span>,</span>
+<span class="code-line">       <span class="code-identifier">x</span> = <span class="code-string">"部署"</span>,</span>
 <span class="code-line">       <span class="code-identifier">y</span> = <span class="code-string">"個数"</span>) +</span>
 <span class="code-line">  <span class="code-function">theme_minimal</span>() +</span>
 <span class="code-line">  <span class="code-function">theme</span>(<span class="code-identifier">legend.position</span> = <span class="code-string">"none"</span>)</span>
@@ -3017,11 +3017,11 @@
                                 <rect x="360" y="40" width="50" height="210" fill="#ff6b35" opacity="0.8"/>
                                 
                                 <!-- 軸ラベル -->
-                                <text x="250" y="280" text-anchor="middle" font-size="12" fill="#333">カット品質</text>
+                                <text x="250" y="280" text-anchor="middle" font-size="12" fill="#333">部署</text>
                                 <text x="25" y="140" text-anchor="middle" transform="rotate(-90 25 140)" font-size="12" fill="#333">個数</text>
                                 
                                 <!-- タイトル -->
-                                <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">ダイヤモンドのカット別個数</text>
+                                <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">部署別の人数</text>
                                 
                                 <!-- X軸ラベル -->
                                 <text x="105" y="265" text-anchor="middle" font-size="10" fill="#666">Fair</text>
@@ -3264,7 +3264,7 @@
                             <span class="code-line"><span class="code-function">library</span>(ggplot2)</span>
                             <span class="code-line"></span>
                             <span class="code-line"># 相関行列のヒートマップ</span>
-                            <span class="code-line">correlation_data <- mtcars <span class="code-operator">%>%</span></span>
+                            <span class="code-line">correlation_data <- hr <span class="code-operator">%>%</span></span>
                             <span class="code-line">  <span class="code-function">select_if</span>(is.numeric) <span class="code-operator">%>%</span></span>
                             <span class="code-line">  <span class="code-function">cor</span>() <span class="code-operator">%>%</span></span>
                             <span class="code-line">  <span class="code-function">as.data.frame</span>() <span class="code-operator">%>%</span></span>
