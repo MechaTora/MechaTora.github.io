@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="tidytextによるテキスト分析。従業員サーベイの自由記述を題材に、形態素解析・頻出語・トピック抽出を解説します。">
-    <title>第22章: テキスト分析とtidytext | tidyverseで学ぶ人事データ分析</title>
+    <meta name="description" content="エンゲージメントサーベイの自由記述をRで分析した記録。gibasaによる日本語の形態素解析、英語の感情辞書が使えない理由、頻出語ではなくスコアで層別して差分を見る方法。可視化はできたのに使えなかった原因と、読む対象を絞る道具として使い直すまでをまとめます。">
+    <title>第22章: 自由記述の分析 — サーベイのコメントを読む | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter22-text-analysis-tidytext">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -578,15 +578,15 @@
     <meta name="keywords" content="tidytext,R言語,テキスト分析,自然言語処理,感情分析,TF-IDF,トークン化,テキストマイニング">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="第22章: テキスト分析とtidytext | tidyverseで学ぶ人事データ分析">
-    <meta property="og:description" content="tidytextによるテキスト分析。従業員サーベイの自由記述を題材に、形態素解析・頻出語・トピック抽出を解説します。">
+    <meta property="og:title" content="第22章: 自由記述の分析 — サーベイのコメントを読む | tidyverseで学ぶ人事データ分析">
+    <meta property="og:description" content="エンゲージメントサーベイの自由記述をRで分析した記録。gibasaによる日本語の形態素解析、英語の感情辞書が使えない理由、頻出語ではなくスコアで層別して差分を見る方法。可視化はできたのに使えなかった原因と、読む対象を絞る道具として使い直すまでをまとめます。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter22-text-analysis-tidytext">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第22章: テキスト分析とtidytext | tidyverseで学ぶ人事データ分析">
-    <meta name="twitter:description" content="tidytextによるテキスト分析。従業員サーベイの自由記述を題材に、形態素解析・頻出語・トピック抽出を解説します。">
+    <meta name="twitter:title" content="第22章: 自由記述の分析 — サーベイのコメントを読む | tidyverseで学ぶ人事データ分析">
+    <meta name="twitter:description" content="エンゲージメントサーベイの自由記述をRで分析した記録。gibasaによる日本語の形態素解析、英語の感情辞書が使えない理由、頻出語ではなくスコアで層別して差分を見る方法。可視化はできたのに使えなかった原因と、読む対象を絞る道具として使い直すまでをまとめます。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
@@ -632,12 +632,12 @@
 
     <div class="container">
         <header>
-            <h1>第22章: テキスト分析とtidytext</h1>
-            <p class="subtitle">Tidyverseエコシステムによる高度な自然言語処理</p>
+            <h1>第22章: 自由記述の分析 — サーベイのコメントを読む</h1>
+            <p class="subtitle">日本語テキストを数える手順と、数えても使えなかった話</p>
             <div class="chapter-meta">
-                <span>📝 テキストマイニング</span>
-                <span>🔍 感情分析</span>
-                <span>🤖 機械学習分類</span>
+                <span>📝 日本語形態素解析</span>
+                <span>📊 エンゲージメントサーベイ</span>
+                <span>⚠️ 個人特定の回避</span>
             </div>
             <div class="progress-indicator">
                 <div class="progress-dot completed"></div>
@@ -693,1523 +693,409 @@
             <a href="chapter23-deep-learning-torch.html" class="nav-button">第23章</a>
         </nav>
 
-        <!-- TIDYTEXT INTRODUCTION -->
-        <section class="section" id="tidytext-intro">
-            <h2>📝 tidytextの革新的テキスト分析</h2>
-                <p>
-                    tidytextは、テキスト分析にtidy dataの原則を適用した革新的なパッケージです。「1行1トークン」の整然データ形式により、dplyr、ggplot2との完全な統合を実現し、美しいテキスト分析ワークフローを提供します。
-                </p>
-
-                <!-- テキスト分析パイプライン概要図 -->
-                <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-cyan); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
-                    <h4 style="color: var(--accent-cyan); text-align: center; margin-bottom: 1.5rem;">🔄 Tidytextテキスト分析パイプライン</h4>
-                    <svg viewBox="0 0 1200 500" style="width: 100%; height: auto;">
-                        <defs>
-                            <linearGradient id="pipelineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:1"/>
-                                <stop offset="50%" style="stop-color:#9d4edd;stop-opacity:1"/>
-                                <stop offset="100%" style="stop-color:#00ff88;stop-opacity:1"/>
-                            </linearGradient>
-                            <filter id="glowEffect">
-                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                <feMerge> 
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        
-                        <!-- ステップ1: 生テキストデータ -->
-                        <rect x="50" y="50" width="180" height="100" rx="15" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="2" filter="url(#glowEffect)"/>
-                        <text x="140" y="80" text-anchor="middle" fill="white" font-size="14" font-weight="bold">📄 生テキスト</text>
-                        <text x="140" y="100" text-anchor="middle" fill="white" font-size="11">"Hello world!"</text>
-                        <text x="140" y="115" text-anchor="middle" fill="white" font-size="11">"Text analysis"</text>
-                        <text x="140" y="130" text-anchor="middle" fill="white" font-size="11">"Data science"</text>
-                        
-                        <!-- 矢印1 -->
-                        <polygon points="250,100 290,85 290,115" fill="#00d4ff" stroke="#00d4ff" stroke-width="2"/>
-                        <text x="270" y="140" text-anchor="middle" fill="white" font-size="10">unnest_tokens()</text>
-                        
-                        <!-- ステップ2: トークンデータ -->
-                        <rect x="310" y="50" width="180" height="100" rx="15" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="2" filter="url(#glowEffect)"/>
-                        <text x="400" y="75" text-anchor="middle" fill="white" font-size="14" font-weight="bold">🔤 トークンデータ</text>
-                        <text x="400" y="95" text-anchor="middle" fill="white" font-size="10">1行1トークン形式</text>
-                        <rect x="320" y="105" width="160" height="35" fill="rgba(0, 0, 0, 0.5)" stroke="#9d4edd" stroke-width="1" rx="5"/>
-                        <text x="330" y="118" fill="#9d4edd" font-size="9">word: "hello", "world", "text"</text>
-                        <text x="330" y="130" fill="#9d4edd" font-size="9">"analysis", "data", "science"</text>
-                        
-                        <!-- 矢印2 -->
-                        <polygon points="510,100 550,85 550,115" fill="#00d4ff" stroke="#00d4ff" stroke-width="2"/>
-                        <text x="530" y="140" text-anchor="middle" fill="white" font-size="10">dplyr操作</text>
-                        
-                        <!-- ステップ3: 分析・変換 -->
-                        <rect x="570" y="50" width="180" height="100" rx="15" fill="rgba(0, 255, 136, 0.2)" stroke="#00ff88" stroke-width="2" filter="url(#glowEffect)"/>
-                        <text x="660" y="75" text-anchor="middle" fill="white" font-size="14" font-weight="bold">📊 分析処理</text>
-                        <text x="660" y="95" text-anchor="middle" fill="white" font-size="10">頻度・感情・TF-IDF</text>
-                        <rect x="580" y="105" width="160" height="35" fill="rgba(0, 0, 0, 0.5)" stroke="#00ff88" stroke-width="1" rx="5"/>
-                        <text x="590" y="118" fill="#00ff88" font-size="9">count(), tf_idf()</text>
-                        <text x="590" y="130" fill="#00ff88" font-size="9">inner_join(sentiments)</text>
-                        
-                        <!-- 矢印3 -->
-                        <polygon points="770,100 810,85 810,115" fill="#00d4ff" stroke="#00d4ff" stroke-width="2"/>
-                        <text x="790" y="140" text-anchor="middle" fill="white" font-size="10">ggplot2</text>
-                        
-                        <!-- ステップ4: 可視化 -->
-                        <rect x="830" y="50" width="180" height="100" rx="15" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="2" filter="url(#glowEffect)"/>
-                        <text x="920" y="75" text-anchor="middle" fill="white" font-size="14" font-weight="bold">📈 可視化</text>
-                        <text x="920" y="95" text-anchor="middle" fill="white" font-size="10">美しいグラフ</text>
-                        <rect x="840" y="105" width="160" height="35" fill="rgba(0, 0, 0, 0.5)" stroke="#00d4ff" stroke-width="1" rx="5"/>
-                        <text x="850" y="118" fill="#00d4ff" font-size="9">geom_col(), geom_point()</text>
-                        <text x="850" y="130" fill="#00d4ff" font-size="9">wordcloud, network plot</text>
-                        
-                        <!-- 主要機能マップ -->
-                        <text x="600" y="200" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🛠️ Tidytext主要機能マップ</text>
-                        
-                        <!-- 機能ボックス1: トークン化 -->
-                        <rect x="50" y="230" width="200" height="80" rx="10" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="1"/>
-                        <text x="150" y="250" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🔤 トークン化機能</text>
-                        <text x="60" y="270" fill="#ff8c42" font-size="10">• unnest_tokens() - 語・文・n-gram</text>
-                        <text x="60" y="285" fill="#ff8c42" font-size="10">• token="words" | "sentences"</text>
-                        <text x="60" y="300" fill="#ff8c42" font-size="10">• n-gram分析対応</text>
-                        
-                        <!-- 機能ボックス2: 感情分析 -->
-                        <rect x="280" y="230" width="200" height="80" rx="10" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="1"/>
-                        <text x="380" y="250" text-anchor="middle" fill="white" font-size="12" font-weight="bold">😊 感情分析</text>
-                        <text x="290" y="270" fill="#9d4edd" font-size="10">• get_sentiments() - 辞書取得</text>
-                        <text x="290" y="285" fill="#9d4edd" font-size="10">• AFINN, Bing, NRC辞書</text>
-                        <text x="290" y="300" fill="#9d4edd" font-size="10">• inner_join()で感情付与</text>
-                        
-                        <!-- 機能ボックス3: TF-IDF -->
-                        <rect x="510" y="230" width="200" height="80" rx="10" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="1"/>
-                        <text x="610" y="250" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📈 重要度分析</text>
-                        <text x="520" y="270" fill="#00ff88" font-size="10">• bind_tf_idf() - TF-IDF計算</text>
-                        <text x="520" y="285" fill="#00ff88" font-size="10">• 文書間での重要語抽出</text>
-                        <text x="520" y="300" fill="#00ff88" font-size="10">• 特徴語発見</text>
-                        
-                        <!-- 機能ボックス4: ネットワーク -->
-                        <rect x="740" y="230" width="200" height="80" rx="10" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="1"/>
-                        <text x="840" y="250" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🌐 関係性分析</text>
-                        <text x="750" y="270" fill="#00d4ff" font-size="10">• pairwise_count() - 共起分析</text>
-                        <text x="750" y="285" fill="#00d4ff" font-size="10">• widyr packageと連携</text>
-                        <text x="750" y="300" fill="#00d4ff" font-size="10">• ネットワーク可視化</text>
-                        
-                        <!-- データフロー矢印 -->
-                        <path d="M 150,310 Q 150,340 265,340 Q 380,340 380,310" stroke="#00ff88" stroke-width="2" fill="none" stroke-dasharray="3,3">
-                            <animate attributeName="stroke-dashoffset" values="0;6" dur="1.5s" repeatCount="indefinite"/>
-                        </path>
-                        <path d="M 380,310 Q 380,340 495,340 Q 610,340 610,310" stroke="#00ff88" stroke-width="2" fill="none" stroke-dasharray="3,3">
-                            <animate attributeName="stroke-dashoffset" values="0;6" dur="1.5s" repeatCount="indefinite"/>
-                        </path>
-                        <path d="M 610,310 Q 610,340 725,340 Q 840,340 840,310" stroke="#00ff88" stroke-width="2" fill="none" stroke-dasharray="3,3">
-                            <animate attributeName="stroke-dashoffset" values="0;6" dur="1.5s" repeatCount="indefinite"/>
-                        </path>
-                        
-                        <!-- データ統計情報 -->
-                        <rect x="50" y="370" width="1100" height="80" rx="10" fill="rgba(0, 0, 0, 0.3)" stroke="#00ff41" stroke-width="1"/>
-                        <text x="600" y="395" text-anchor="middle" fill="#00ff41" font-size="14" font-weight="bold">📊 テキスト分析パフォーマンス指標</text>
-                        
-                        <text x="150" y="415" text-anchor="middle" fill="white" font-size="11">💾 メモリ効率</text>
-                        <text x="150" y="430" text-anchor="middle" fill="#00ff88" font-size="10">Tidy形式で90%削減</text>
-                        
-                        <text x="350" y="415" text-anchor="middle" fill="white" font-size="11">⚡ 処理速度</text>
-                        <text x="350" y="430" text-anchor="middle" fill="#00d4ff" font-size="10">dplyr最適化で高速</text>
-                        
-                        <text x="550" y="415" text-anchor="middle" fill="white" font-size="11">🔧 柔軟性</text>
-                        <text x="550" y="430" text-anchor="middle" fill="#9d4edd" font-size="10">Tidyverse完全統合</text>
-                        
-                        <text x="750" y="415" text-anchor="middle" fill="white" font-size="11">📈 スケーラビリティ</text>
-                        <text x="750" y="430" text-anchor="middle" fill="#ff8c42" font-size="10">大規模テキスト対応</text>
-                        
-                        <text x="950" y="415" text-anchor="middle" fill="white" font-size="11">🎨 可視化</text>
-                        <text x="950" y="430" text-anchor="middle" fill="#ffff41" font-size="10">ggplot2でリッチ表現</text>
-                    </svg>
-                </div>
-                
-                <!-- Text Analysis Theory Visualization -->
-                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-electric);">
-                    <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🧠 テキスト分析の理論的基盤</h4>
-                    <svg width="100%" height="600" viewBox="0 0 1200 600" style="max-width: 100%; height: auto;">
-                        <!-- Background -->
-                        <rect width="1200" height="600" fill="#0a0a0f"/>
-                        
-                        <!-- Raw Text Layer -->
-                        <g transform="translate(50, 50)">
-                            <rect x="0" y="0" width="1100" height="100" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" rx="10"/>
-                            <text x="550" y="30" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">📄 Raw Text (非構造化データ)</text>
-                            <text x="100" y="60" fill="#ffffff" font-size="12">"It was the best of times, it was the worst of times, it was the age of wisdom..."</text>
-                            <text x="100" y="80" fill="#ffffff" font-size="12">"Pride and Prejudice is a novel by Jane Austen, first published in 1813..."</text>
-                        </g>
-                        
-                        <!-- Tokenization Process -->
-                        <g transform="translate(50, 180)">
-                            <rect x="0" y="0" width="1100" height="80" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="2" rx="10"/>
-                            <text x="550" y="30" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">🔤 Tokenization (トークン化)</text>
-                            <text x="100" y="55" fill="#ffffff" font-size="12">unnest_tokens() → ["it", "was", "the", "best", "of", "times", "pride", "prejudice", "novel", "jane", "austen"]</text>
-                        </g>
-                        
-                        <!-- Preprocessing Layer -->
-                        <g transform="translate(50, 290)">
-                            <rect x="0" y="0" width="1100" height="80" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="2" rx="10"/>
-                            <text x="550" y="30" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">🧹 Preprocessing (前処理)</text>
-                            <text x="100" y="55" fill="#ffffff" font-size="12">Stop Words Removal → ["best", "times", "pride", "prejudice", "novel", "jane", "austen"]</text>
-                        </g>
-                        
-                        <!-- Feature Engineering -->
-                        <g transform="translate(50, 400)">
-                            <rect x="0" y="0" width="540" height="80" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="2" rx="10"/>
-                            <text x="270" y="30" text-anchor="middle" fill="#ff8c42" font-size="16" font-weight="bold">📊 Feature Engineering</text>
-                            <text x="50" y="55" fill="#ffffff" font-size="10">TF-IDF, N-grams, Word Embeddings</text>
-                            
-                            <rect x="560" y="0" width="540" height="80" fill="rgba(255, 255, 0, 0.1)" stroke="#ffff00" stroke-width="2" rx="10"/>
-                            <text x="830" y="30" text-anchor="middle" fill="#ffff00" font-size="16" font-weight="bold">💭 Sentiment Analysis</text>
-                            <text x="610" y="55" fill="#ffffff" font-size="10">Dictionary-based, Machine Learning</text>
-                        </g>
-                        
-                        <!-- Analysis Results -->
-                        <g transform="translate(50, 510)">
-                            <rect x="0" y="0" width="360" height="60" fill="rgba(0, 255, 170, 0.1)" stroke="#00ffaa" stroke-width="2" rx="10"/>
-                            <text x="180" y="25" text-anchor="middle" fill="#00ffaa" font-size="14" font-weight="bold">📈 Classification</text>
-                            <text x="180" y="45" text-anchor="middle" fill="#ffffff" font-size="10">Author, Genre, Topic</text>
-                            
-                            <rect x="370" y="0" width="360" height="60" fill="rgba(255, 100, 100, 0.1)" stroke="#ff6464" stroke-width="2" rx="10"/>
-                            <text x="550" y="25" text-anchor="middle" fill="#ff6464" font-size="14" font-weight="bold">🎯 Clustering</text>
-                            <text x="550" y="45" text-anchor="middle" fill="#ffffff" font-size="10">Document Similarity</text>
-                            
-                            <rect x="740" y="0" width="360" height="60" fill="rgba(100, 255, 255, 0.1)" stroke="#64ffff" stroke-width="2" rx="10"/>
-                            <text x="920" y="25" text-anchor="middle" fill="#64ffff" font-size="14" font-weight="bold">🔍 Topic Modeling</text>
-                            <text x="920" y="45" text-anchor="middle" fill="#ffffff" font-size="10">Latent Themes</text>
-                        </g>
-                        
-                        <!-- Flow Arrows -->
-                        <path d="M 600 150 L 600 180" stroke="#ffffff" stroke-width="2" marker-end="url(#textArrow)"/>
-                        <path d="M 600 260 L 600 290" stroke="#ffffff" stroke-width="2" marker-end="url(#textArrow)"/>
-                        <path d="M 600 370 L 600 400" stroke="#ffffff" stroke-width="2" marker-end="url(#textArrow)"/>
-                        <path d="M 600 480 L 600 510" stroke="#ffffff" stroke-width="2" marker-end="url(#textArrow)"/>
-                        
-                        <!-- Information Theory Box -->
-                        <g transform="translate(900, 150)">
-                            <rect x="0" y="0" width="250" height="120" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="8"/>
-                            <text x="125" y="20" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">📚 Information Theory</text>
-                            <text x="10" y="40" fill="#ffffff" font-size="10">• Entropy: H(X) = -Σp(x)log₂p(x)</text>
-                            <text x="10" y="55" fill="#ffffff" font-size="10">• TF-IDF: tf(t,d) × log(N/df(t))</text>
-                            <text x="10" y="70" fill="#ffffff" font-size="10">• Mutual Information</text>
-                            <text x="10" y="85" fill="#ffffff" font-size="10">• Cross-Entropy Loss</text>
-                            <text x="10" y="100" fill="#ffffff" font-size="10">• Perplexity Measure</text>
-                        </g>
-                        
-                        <defs>
-                            <marker id="textArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                                <polygon points="0 0, 8 3, 0 6" fill="#ffffff"/>
-                            </marker>
-                        </defs>
-                    </svg>
-                    
-                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-                        <div style="background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00ff88;">
-                            <h5 style="color: #00ff88; margin-bottom: 0.5rem;">📄 非構造化→構造化</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">自然言語テキストを数値的に表現可能な構造化データに変換</p>
-                        </div>
-                        <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00d4ff;">
-                            <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">🔤 Token化の重要性</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">文書を最小意味単位に分割し、統計的分析を可能にする基盤</p>
-                        </div>
-                        <div style="background: rgba(157, 78, 221, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #9d4edd;">
-                            <h5 style="color: #9d4edd; margin-bottom: 0.5rem;">🧹 ノイズ除去</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">分析に無関係な要素を除去し、シグナル対ノイズ比を向上</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Core Packages -->
-                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📦 tidytextコアパッケージ</h3>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                        </div>
-                        <div class="code-title">tidytext_setup.R</div>
-                    </div>
-                    <div class="code-content">
-                        <span class="code-line"><span class="code-comment"># tidytextエコシステムの読み込み</span></span>
-                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidymodels</span>)</span>
-                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidytext</span>)</span>
-                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">textrecipes</span>)</span>
-                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">textdata</span>)</span>
-                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">tidyverse</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># サンプルデータの準備</span></span>
-                        <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">janeaustenr</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># Jane Austenの作品からテキストデータを作成</span></span>
-                        <span class="code-line"><span class="code-variable">book_words</span> <span class="code-keyword">&lt;-</span> <span class="code-function">austen_books</span>() <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">group_by</span>(book) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">mutate</span>(linenumber = <span class="code-function">row_number</span>(),</span>
-                        <span class="code-line">         chapter = <span class="code-function">cumsum</span>(<span class="code-function">str_detect</span>(text, <span class="code-pattern">regex</span>(<span class="code-string">"^chapter [\\\\divxlc]"</span>,</span>
-                        <span class="code-line">                                                 ignore_case = <span class="code-string">TRUE</span>)))) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">ungroup</span>()</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-function">glimpse</span>(book_words)</span>
-                    </div>
-                </div>
-
-                <div class="function-grid">
-                    <div class="function-card">
-                        <h3 class="function-title">📊 tidytext</h3>
-                        <p class="function-description">
-                            テキスト分析の中核パッケージ。1行1トークンの原則でテキストを整然データ化。unnest_tokens()によるトークン化が核となる機能。
-                        </p>
-                        <div class="function-syntax">
-                            unnest_tokens(), get_sentiments(), bind_tf_idf()
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🔧 textrecipes</h3>
-                        <p class="function-description">
-                            tidymodelsとの連携パッケージ。テキスト前処理をレシピ形式で記述。TF-IDF、n-gram、ストップワード除去を統合ワークフローで実行。
-                        </p>
-                        <div class="function-syntax">
-                            step_tokenize(), step_stopwords(), step_tfidf()
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">📚 textdata</h3>
-                        <p class="function-description">
-                            感情分析辞書とテキストデータセット。AFINN、Bing、NRC辞書による多様な感情分析。初回使用時に自動ダウンロード。
-                        </p>
-                        <div class="function-syntax">
-                            get_sentiments("afinn"), get_sentiments("bing")
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🎯 stringr</h3>
-                        <p class="function-description">
-                            テキスト操作の基盤パッケージ。正規表現による柔軟な文字列処理。テキスト前処理の前段階で使用される重要なツール。
-                        </p>
-                        <div class="function-syntax">
-                            str_detect(), str_replace(), str_extract()
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ml-workflow">
-                    <div class="workflow-title">🔄 テキスト分析ワークフロー</div>
-                    <div class="workflow-steps">
-                        <div class="workflow-step">
-                            <div class="step-number">1</div>
-                            <strong>データ準備</strong><br>
-                            <small>テキスト読み込み・整理</small>
-                        </div>
-                        <div class="workflow-step">
-                            <div class="step-number">2</div>
-                            <strong>トークン化</strong><br>
-                            <small>単語・n-gram分割</small>
-                        </div>
-                        <div class="workflow-step">
-                            <div class="step-number">3</div>
-                            <strong>前処理</strong><br>
-                            <small>ストップワード・正規化</small>
-                        </div>
-                        <div class="workflow-step">
-                            <div class="step-number">4</div>
-                            <strong>探索分析</strong><br>
-                            <small>頻度・感情・TF-IDF</small>
-                        </div>
-                        <div class="workflow-step">
-                            <div class="step-number">5</div>
-                            <strong>機械学習</strong><br>
-                            <small>分類・クラスタリング</small>
-                        </div>
-                        <div class="workflow-step">
-                            <div class="step-number">6</div>
-                            <strong>可視化</strong><br>
-                            <small>結果の美しい表現</small>
-                        </div>
-                    </div>
-                </div>
-        </section>
-
-        <!-- TEXT TOKENIZATION AND PREPROCESSING -->
-        <section class="section" id="text-tokenization">
-            <h2>🔤 テキストのトークン化と前処理</h2>
-                <p>
-                    テキスト分析の第一歩は、自然言語テキストを分析可能な形式に変換することです。tidytextの核となるunnest_tokens()関数により、美しい「1行1トークン」形式でテキストを整然データ化します。
-                </p>
-                
-                <!-- Basic Tokenization -->
-                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📝 基本的なトークン化</h3>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                        </div>
-                        <div class="code-title">tokenization.R</div>
-                    </div>
-                    <div class="code-content">
-                        <span class="code-line"><span class="code-comment"># 単語レベルのトークン化</span></span>
-                        <span class="code-line"><span class="code-variable">tidy_books</span> <span class="code-keyword">&lt;-</span> book_words <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">unnest_tokens</span>(word, text)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># ストップワードの除去</span></span>
-                        <span class="code-line"><span class="code-function">data</span>(<span class="code-string">"stop_words"</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-variable">tidy_books</span> <span class="code-keyword">&lt;-</span> tidy_books <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">anti_join</span>(stop_words)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 最頻出語の確認</span></span>
-                        <span class="code-line"><span class="code-variable">word_counts</span> <span class="code-keyword">&lt;-</span> tidy_books <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">count</span>(word, sort = <span class="code-string">TRUE</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-function">print</span>(<span class="code-function">head</span>(word_counts, <span class="code-string">15</span>))</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 美しい頻度可視化</span></span>
-                        <span class="code-line">word_counts <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">slice_head</span>(n = <span class="code-string">15</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">mutate</span>(word = <span class="code-function">reorder</span>(word, n)) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = word, y = n, fill = word)) +</span>
-                        <span class="code-line">  <span class="code-function">geom_col</span>(show.legend = <span class="code-string">FALSE</span>) +</span>
-                        <span class="code-line">  <span class="code-function">coord_flip</span>() +</span>
-                        <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"Jane Austen作品の最頻出語"</span>,</span>
-                        <span class="code-line">       x = <span class="code-string">"単語"</span>, y = <span class="code-string">"頻度"</span>) +</span>
-                        <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
-                    </div>
-                </div>
-
-                <!-- TF-IDF Theory Visualization -->
-                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-orange);">
-                    <h4 style="color: var(--accent-orange); text-align: center; margin-bottom: 1.5rem;">📊 TF-IDF: 単語重要度の数学的理論</h4>
-                    <svg width="100%" height="500" viewBox="0 0 1200 500" style="max-width: 100%; height: auto;">
-                        <!-- Background -->
-                        <rect width="1200" height="500" fill="#0a0a0f"/>
-                        
-                        <!-- Document Collection Visualization -->
-                        <g transform="translate(50, 30)">
-                            <text x="0" y="0" fill="#ff8c42" font-size="14" font-weight="bold">📚 Document Collection (コーパス)</text>
-                            
-                            <!-- Document 1 -->
-                            <rect x="0" y="20" width="200" height="60" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
-                            <text x="100" y="35" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="bold">Document 1</text>
-                            <text x="10" y="50" fill="#ffffff" font-size="8">"data science machine learning"</text>
-                            <text x="10" y="65" fill="#ffffff" font-size="8">"artificial intelligence AI"</text>
-                            
-                            <!-- Document 2 -->
-                            <rect x="220" y="20" width="200" height="60" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
-                            <text x="320" y="35" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="bold">Document 2</text>
-                            <text x="230" y="50" fill="#ffffff" font-size="8">"machine learning algorithms"</text>
-                            <text x="230" y="65" fill="#ffffff" font-size="8">"deep learning neural networks"</text>
-                            
-                            <!-- Document 3 -->
-                            <rect x="440" y="20" width="200" height="60" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
-                            <text x="540" y="35" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="bold">Document 3</text>
-                            <text x="450" y="50" fill="#ffffff" font-size="8">"natural language processing"</text>
-                            <text x="450" y="65" fill="#ffffff" font-size="8">"text mining sentiment analysis"</text>
-                        </g>
-                        
-                        <!-- TF (Term Frequency) Calculation -->
-                        <g transform="translate(50, 130)">
-                            <rect x="0" y="0" width="350" height="140" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="2" rx="10"/>
-                            <text x="175" y="25" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="bold">📈 TF (Term Frequency)</text>
-                            <text x="175" y="45" text-anchor="middle" fill="#ffffff" font-size="12">TF(t,d) = count(t,d) / |d|</text>
-                            
-                            <!-- Example calculation -->
-                            <text x="20" y="70" fill="#ffffff" font-size="10">例: "learning" in Document 1</text>
-                            <text x="20" y="85" fill="#ffffff" font-size="10">TF = 1回出現 / 6総単語数 = 0.167</text>
-                            
-                            <!-- Visual bar -->
-                            <rect x="20" y="100" width="100" height="15" fill="#1a1a1a" stroke="#00d4ff"/>
-                            <rect x="20" y="100" width="30" height="15" fill="#00d4ff"/>
-                            <text x="25" y="112" fill="#000" font-size="8">16.7%</text>
-                            
-                            <!-- Log normalization option -->
-                            <text x="20" y="130" fill="#aaaaaa" font-size="9">オプション: log(1 + TF) で正規化</text>
-                        </g>
-                        
-                        <!-- IDF (Inverse Document Frequency) Calculation -->
-                        <g transform="translate(420, 130)">
-                            <rect x="0" y="0" width="350" height="140" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="2" rx="10"/>
-                            <text x="175" y="25" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">📉 IDF (Inverse Document Freq)</text>
-                            <text x="175" y="45" text-anchor="middle" fill="#ffffff" font-size="12">IDF(t) = log(N / DF(t))</text>
-                            
-                            <!-- Example calculation -->
-                            <text x="20" y="70" fill="#ffffff" font-size="10">例: "learning"の文書頻度</text>
-                            <text x="20" y="85" fill="#ffffff" font-size="10">IDF = log(3文書 / 2出現文書) = 0.176</text>
-                            
-                            <!-- Visual representation -->
-                            <circle cx="70" cy="105" r="15" fill="rgba(157, 78, 221, 0.3)" stroke="#9d4edd"/>
-                            <circle cx="120" cy="105" r="15" fill="rgba(157, 78, 221, 0.6)" stroke="#9d4edd"/>
-                            <circle cx="170" cy="105" r="15" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd"/>
-                            <text x="70" y="110" text-anchor="middle" fill="#ffffff" font-size="8">D1</text>
-                            <text x="120" y="110" text-anchor="middle" fill="#ffffff" font-size="8">D2</text>
-                            <text x="170" y="110" text-anchor="middle" fill="#ffffff" font-size="8">D3</text>
-                            
-                            <text x="20" y="130" fill="#aaaaaa" font-size="9">希少語ほど高いIDF値を持つ</text>
-                        </g>
-                        
-                        <!-- TF-IDF Final Calculation -->
-                        <g transform="translate(50, 300)">
-                            <rect x="0" y="0" width="720" height="120" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" rx="10"/>
-                            <text x="360" y="25" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🎯 TF-IDF Final Score</text>
-                            <text x="360" y="50" text-anchor="middle" fill="#ffffff" font-size="14">TF-IDF(t,d) = TF(t,d) × IDF(t)</text>
-                            
-                            <!-- Example final calculation -->
-                            <text x="50" y="80" fill="#ffffff" font-size="12">"learning" in Document 1: 0.167 × 0.176 = 0.029</text>
-                            
-                            <!-- Interpretation -->
-                            <text x="50" y="100" fill="#ffffff" font-size="10">💡 解釈: 文書内で頻出かつコーパス全体では希少な単語が高スコア</text>
-                        </g>
-                        
-                        <!-- Mathematical Properties -->
-                        <g transform="translate(800, 130)">
-                            <rect x="0" y="0" width="350" height="290" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="8"/>
-                            <text x="175" y="25" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">📐 数学的性質</text>
-                            
-                            <!-- Properties list -->
-                            <text x="20" y="50" fill="#ffffff" font-size="11" font-weight="bold">1. 頻度の対数変換</text>
-                            <text x="30" y="65" fill="#ffffff" font-size="9">log(1+tf) で頻度の影響を平滑化</text>
-                            
-                            <text x="20" y="85" fill="#ffffff" font-size="11" font-weight="bold">2. 逆文書頻度</text>
-                            <text x="30" y="100" fill="#ffffff" font-size="9">希少語により高い重みを付与</text>
-                            
-                            <text x="20" y="120" fill="#ffffff" font-size="11" font-weight="bold">3. 正規化</text>
-                            <text x="30" y="135" fill="#ffffff" font-size="9">L2正規化で文書長の影響を除去</text>
-                            
-                            <text x="20" y="155" fill="#ffffff" font-size="11" font-weight="bold">4. スパース行列</text>
-                            <text x="30" y="170" fill="#ffffff" font-size="9">多くの要素が0となる高次元表現</text>
-                            
-                            <!-- Formula variants -->
-                            <text x="20" y="200" fill="#ffff00" font-size="10" font-weight="bold">主要な変種:</text>
-                            <text x="30" y="215" fill="#ffffff" font-size="9">• tf(t,d) = 1 + log(f(t,d))</text>
-                            <text x="30" y="230" fill="#ffffff" font-size="9">• idf(t) = log(N/df(t)) + 1</text>
-                            <text x="30" y="245" fill="#ffffff" font-size="9">• 平滑化: log((N+1)/(df(t)+1)) + 1</text>
-                            
-                            <!-- Applications -->
-                            <text x="20" y="270" fill="#00ffaa" font-size="10" font-weight="bold">応用分野:</text>
-                            <text x="30" y="285" fill="#ffffff" font-size="9">情報検索、文書分類、推薦システム</text>
-                        </g>
-                        
-                        <!-- Arrows showing process flow -->
-                        <path d="M 650 90 Q 700 110 750 90" stroke="#ff8c42" stroke-width="2" marker-end="url(#tfidfArrow)"/>
-                        <path d="M 225 270 Q 275 290 325 270" stroke="#00d4ff" stroke-width="2" marker-end="url(#tfidfArrow)"/>
-                        <path d="M 595 270 Q 645 290 695 270" stroke="#9d4edd" stroke-width="2" marker-end="url(#tfidfArrow)"/>
-                        
-                        <defs>
-                            <marker id="tfidfArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                                <polygon points="0 0, 8 3, 0 6" fill="#ffffff"/>
-                            </marker>
-                        </defs>
-                    </svg>
-                    
-                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
-                        <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00d4ff;">
-                            <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">📈 Term Frequency (TF)</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">文書内での単語の相対的な出現頻度。文書の長さで正規化される</p>
-                        </div>
-                        <div style="background: rgba(157, 78, 221, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #9d4edd;">
-                            <h5 style="color: #9d4edd; margin-bottom: 0.5rem;">📉 Inverse Document Frequency (IDF)</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">コーパス全体での単語の希少性を示す。希少語ほど高い値</p>
-                        </div>
-                        <div style="background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00ff88;">
-                            <h5 style="color: #00ff88; margin-bottom: 0.5rem;">🎯 TF-IDF統合</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">文書内で重要かつ、コーパス内で特徴的な単語を高く評価</p>
-                        </div>
-                        <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ffffff;">
-                            <h5 style="color: #ffffff; margin-bottom: 0.5rem;">🧮 計算の実践</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">tidytextのbind_tf_idf()で自動計算。手動計算も可能</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Advanced Tokenization -->
-                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🔬 高度なトークン化技術</h3>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                        </div>
-                        <div class="code-title">advanced_tokenization.R</div>
-                    </div>
-                    <div class="code-content">
-                        <span class="code-line"><span class="code-comment"># n-gramトークン化（バイグラム）</span></span>
-                        <span class="code-line"><span class="code-variable">austen_bigrams</span> <span class="code-keyword">&lt;-</span> book_words <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">unnest_tokens</span>(bigram, text, token = <span class="code-string">"ngrams"</span>, n = <span class="code-string">2</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">filter</span>(!<span class="code-function">is.na</span>(bigram))</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># バイグラムの分離と清浄化</span></span>
-                        <span class="code-line"><span class="code-variable">bigrams_separated</span> <span class="code-keyword">&lt;-</span> austen_bigrams <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">separate</span>(bigram, <span class="code-function">c</span>(<span class="code-string">"word1"</span>, <span class="code-string">"word2"</span>), sep = <span class="code-string">" "</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-variable">bigrams_filtered</span> <span class="code-keyword">&lt;-</span> bigrams_separated <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">filter</span>(!word1 <span class="code-keyword">%in%</span> stop_words$word) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">filter</span>(!word2 <span class="code-keyword">%in%</span> stop_words$word)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 最頻出バイグラム</span></span>
-                        <span class="code-line"><span class="code-variable">bigram_counts</span> <span class="code-keyword">&lt;-</span> bigrams_filtered <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">count</span>(word1, word2, sort = <span class="code-string">TRUE</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-function">print</span>(<span class="code-function">head</span>(bigram_counts, <span class="code-string">10</span>))</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 文レベルのトークン化</span></span>
-                        <span class="code-line"><span class="code-variable">austen_sentences</span> <span class="code-keyword">&lt;-</span> book_words <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">unnest_tokens</span>(sentence, text, token = <span class="code-string">"sentences"</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 段落レベルのトークン化</span></span>
-                        <span class="code-line"><span class="code-variable">austen_paragraphs</span> <span class="code-keyword">&lt;-</span> book_words <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">unnest_tokens</span>(paragraph, text, token = <span class="code-string">"paragraphs"</span>)</span>
-                    </div>
-                </div>
-
-                <div class="function-grid">
-                    <div class="function-card">
-                        <h3 class="function-title">🔤 単語トークン化</h3>
-                        <p class="function-description">
-                            最も基本的なトークン化。空白や句読点で分割し、1行1単語の整然データを生成。ストップワード除去で分析に有用な単語のみ抽出。
-                        </p>
-                        <div class="function-syntax">
-                            unnest_tokens(word, text), anti_join(stop_words)
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🔗 n-gramトークン化</h3>
-                        <p class="function-description">
-                            連続するn個の単語を組として扱う。文脈情報を保持し、単語間の関係を分析可能。バイグラム、トライグラムが頻用される。
-                        </p>
-                        <div class="function-syntax">
-                            unnest_tokens(bigram, text, token = "ngrams", n = 2)
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">📄 文・段落トークン化</h3>
-                        <p class="function-description">
-                            より大きな文書単位でのトークン化。文や段落レベルでの分析や感情分析に活用。文書構造を考慮した分析を実現。
-                        </p>
-                        <div class="function-syntax">
-                            unnest_tokens(sentence, text, token = "sentences")
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🧹 テキスト清浄化</h3>
-                        <p class="function-description">
-                            不要な要素の除去と正規化。空白の除去、大文字小文字統一、特殊文字処理など。分析精度向上のための重要な前処理。
-                        </p>
-                        <div class="function-syntax">
-                            str_remove_all(), str_to_lower(), filter()
-                        </div>
-                    </div>
-                </div>
-        </section>
-
-        <!-- SENTIMENT ANALYSIS -->
-        <section class="section" id="sentiment-analysis">
-            <h2>😊 感情分析と辞書ベース手法</h2>
-                <p>
-                    感情分析は、テキストから感情的な情報を抽出する重要な技術です。tidytextは複数の感情辞書を提供し、美しいワークフローで感情の定量化と可視化を実現します。
-                </p>
-
-                <!-- 感情分析辞書比較と実装フロー -->
-                <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-purple); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
-                    <h4 style="color: var(--accent-purple); text-align: center; margin-bottom: 1.5rem;">🧠 感情分析辞書体系とアルゴリズム</h4>
-                    <svg viewBox="0 0 1200 650" style="width: 100%; height: auto;">
-                        <defs>
-                            <linearGradient id="sentimentFlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#ff4757;stop-opacity:1"/>
-                                <stop offset="50%" style="stop-color:#fffa65;stop-opacity:1"/>
-                                <stop offset="100%" style="stop-color:#7bed9f;stop-opacity:1"/>
-                            </linearGradient>
-                            <filter id="sentimentGlow">
-                                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                                <feMerge> 
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        
-                        <!-- 感情分析辞書比較 -->
-                        <text x="600" y="25" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">📚 感情分析辞書特性比較</text>
-                        
-                        <!-- AFINN辞書 -->
-                        <rect x="50" y="50" width="280" height="140" rx="12" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="2" filter="url(#sentimentGlow)"/>
-                        <text x="190" y="75" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="bold">📊 AFINN辞書</text>
-                        <text x="70" y="95" fill="white" font-size="11">• 数値スコア (-5 ～ +5)</text>
-                        <text x="70" y="110" fill="white" font-size="11">• 2,477語の感情語彙</text>
-                        <text x="70" y="125" fill="white" font-size="11">• 連続値による細かい感情測定</text>
-                        <text x="70" y="140" fill="white" font-size="11">• SNS・レビュー分析に最適</text>
-                        <rect x="70" y="150" width="240" height="25" fill="rgba(0, 0, 0, 0.5)" stroke="#00d4ff" stroke-width="1" rx="5"/>
-                        <text x="75" y="165" fill="#7bed9f" font-size="9">"fantastic": +4  "good": +3  "bad": -3  "terrible": -5</text>
-                        
-                        <!-- Bing辞書 -->
-                        <rect x="350" y="50" width="280" height="140" rx="12" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="2" filter="url(#sentimentGlow)"/>
-                        <text x="490" y="75" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">🎯 Bing辞書</text>
-                        <text x="370" y="95" fill="white" font-size="11">• バイナリ分類 (positive/negative)</text>
-                        <text x="370" y="110" fill="white" font-size="11">• 6,786語の語彙セット</text>
-                        <text x="370" y="125" fill="white" font-size="11">• シンプルで高速な処理</text>
-                        <text x="370" y="140" fill="white" font-size="11">• 基本的な極性判定に適用</text>
-                        <rect x="370" y="150" width="240" height="25" fill="rgba(0, 0, 0, 0.5)" stroke="#ff8c42" stroke-width="1" rx="5"/>
-                        <text x="375" y="165" fill="#7bed9f" font-size="9">"happy": positive  "sad": negative  "excellent": positive</text>
-                        
-                        <!-- NRC辞書 -->
-                        <rect x="650" y="50" width="280" height="140" rx="12" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" filter="url(#sentimentGlow)"/>
-                        <text x="790" y="75" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="bold">🌈 NRC辞書</text>
-                        <text x="670" y="95" fill="white" font-size="11">• 10種類の感情カテゴリ</text>
-                        <text x="670" y="110" fill="white" font-size="11">• 14,182語の多言語対応</text>
-                        <text x="670" y="125" fill="white" font-size="11">• 詳細な心理学的分析</text>
-                        <text x="670" y="140" fill="white" font-size="11">• 文学・創作テキスト分析</text>
-                        <rect x="670" y="150" width="240" height="25" fill="rgba(0, 0, 0, 0.5)" stroke="#00ff88" stroke-width="1" rx="5"/>
-                        <text x="675" y="165" fill="#7bed9f" font-size="9">anger, fear, joy, trust, surprise, anticipation...</text>
-                        
-                        <!-- 感情分析処理フロー -->
-                        <text x="600" y="230" text-anchor="middle" fill="#9d4edd" font-size="15" font-weight="bold">🔄 感情分析処理パイプライン</text>
-                        
-                        <!-- ステップ1: テキスト入力 -->
-                        <rect x="80" y="250" width="180" height="70" rx="10" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="2"/>
-                        <text x="170" y="270" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📝 テキスト入力</text>
-                        <text x="170" y="290" text-anchor="middle" fill="white" font-size="10">"I am very happy today."</text>
-                        <text x="170" y="305" text-anchor="middle" fill="white" font-size="10">"This is terrible news."</text>
-                        
-                        <!-- 矢印1 -->
-                        <polygon points="280,285 320,270 320,300" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
-                        <text x="300" y="315" text-anchor="middle" fill="white" font-size="9">unnest_tokens()</text>
-                        
-                        <!-- ステップ2: トークン化 -->
-                        <rect x="340" y="250" width="180" height="70" rx="10" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="2"/>
-                        <text x="430" y="270" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🔤 トークン分割</text>
-                        <text x="430" y="290" text-anchor="middle" fill="white" font-size="10">["happy", "terrible", ...]</text>
-                        <text x="430" y="305" text-anchor="middle" fill="white" font-size="10">1行1トークン形式</text>
-                        
-                        <!-- 矢印2 -->
-                        <polygon points="540,285 580,270 580,300" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
-                        <text x="560" y="315" text-anchor="middle" fill="white" font-size="9">inner_join()</text>
-                        
-                        <!-- ステップ3: 辞書照合 -->
-                        <rect x="600" y="250" width="180" height="70" rx="10" fill="rgba(0, 255, 136, 0.2)" stroke="#00ff88" stroke-width="2"/>
-                        <text x="690" y="270" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📚 辞書照合</text>
-                        <text x="690" y="290" text-anchor="middle" fill="white" font-size="10">"happy": +3</text>
-                        <text x="690" y="305" text-anchor="middle" fill="white" font-size="10">"terrible": -4</text>
-                        
-                        <!-- 矢印3 -->
-                        <polygon points="800,285 840,270 840,300" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
-                        <text x="820" y="315" text-anchor="middle" fill="white" font-size="9">summarise()</text>
-                        
-                        <!-- ステップ4: 結果集計 -->
-                        <rect x="860" y="250" width="180" height="70" rx="10" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="2"/>
-                        <text x="950" y="270" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📊 感情スコア</text>
-                        <text x="950" y="290" text-anchor="middle" fill="white" font-size="10">文書1: +3</text>
-                        <text x="950" y="305" text-anchor="middle" fill="white" font-size="10">文書2: -4</text>
-                        
-                        <!-- 実装コード例 -->
-                        <text x="600" y="370" text-anchor="middle" fill="#9d4edd" font-size="15" font-weight="bold">💻 実装パターン比較</text>
-                        
-                        <!-- AFINN実装 -->
-                        <rect x="50" y="390" width="320" height="80" rx="8" fill="rgba(0, 0, 0, 0.3)" stroke="#00d4ff" stroke-width="1"/>
-                        <text x="210" y="408" text-anchor="middle" fill="#00d4ff" font-size="11" font-weight="bold">📊 AFINN実装</text>
-                        <text x="60" y="425" fill="#a5d6ff" font-size="9">text %&gt;%</text>
-                        <text x="60" y="438" fill="#a5d6ff" font-size="9">  unnest_tokens(word, text) %&gt;%</text>
-                        <text x="60" y="451" fill="#a5d6ff" font-size="9">  inner_join(get_sentiments("afinn")) %&gt;%</text>
-                        <text x="60" y="464" fill="#a5d6ff" font-size="9">  summarise(sentiment = sum(value))</text>
-                        
-                        <!-- Bing実装 -->
-                        <rect x="390" y="390" width="320" height="80" rx="8" fill="rgba(0, 0, 0, 0.3)" stroke="#ff8c42" stroke-width="1"/>
-                        <text x="550" y="408" text-anchor="middle" fill="#ff8c42" font-size="11" font-weight="bold">🎯 Bing実装</text>
-                        <text x="400" y="425" fill="#a5d6ff" font-size="9">text %&gt;%</text>
-                        <text x="400" y="438" fill="#a5d6ff" font-size="9">  unnest_tokens(word, text) %&gt;%</text>
-                        <text x="400" y="451" fill="#a5d6ff" font-size="9">  inner_join(get_sentiments("bing")) %&gt;%</text>
-                        <text x="400" y="464" fill="#a5d6ff" font-size="9">  count(sentiment)</text>
-                        
-                        <!-- NRC実装 -->
-                        <rect x="730" y="390" width="320" height="80" rx="8" fill="rgba(0, 0, 0, 0.3)" stroke="#00ff88" stroke-width="1"/>
-                        <text x="890" y="408" text-anchor="middle" fill="#00ff88" font-size="11" font-weight="bold">🌈 NRC実装</text>
-                        <text x="740" y="425" fill="#a5d6ff" font-size="9">text %&gt;%</text>
-                        <text x="740" y="438" fill="#a5d6ff" font-size="9">  unnest_tokens(word, text) %&gt;%</text>
-                        <text x="740" y="451" fill="#a5d6ff" font-size="9">  inner_join(get_sentiments("nrc")) %&gt;%</text>
-                        <text x="740" y="464" fill="#a5d6ff" font-size="9">  count(sentiment)</text>
-                        
-                        <!-- パフォーマンス比較表 -->
-                        <text x="600" y="520" text-anchor="middle" fill="#9d4edd" font-size="15" font-weight="bold">⚡ 辞書パフォーマンス比較</text>
-                        
-                        <!-- 比較項目ヘッダー -->
-                        <rect x="50" y="540" width="1100" height="80" rx="10" fill="rgba(0, 0, 0, 0.2)" stroke="#9d4edd" stroke-width="1"/>
-                        
-                        <!-- AFINN列 -->
-                        <rect x="80" y="550" width="180" height="60" rx="5" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="1"/>
-                        <text x="170" y="568" text-anchor="middle" fill="white" font-size="11" font-weight="bold">📊 AFINN</text>
-                        <text x="90" y="583" fill="#00d4ff" font-size="10">語彙数: 2,477語</text>
-                        <text x="90" y="596" fill="#00d4ff" font-size="10">精度: ★★★★☆ 速度: ★★★★★</text>
-                        
-                        <!-- Bing列 -->
-                        <rect x="280" y="550" width="180" height="60" rx="5" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="1"/>
-                        <text x="370" y="568" text-anchor="middle" fill="white" font-size="11" font-weight="bold">🎯 Bing</text>
-                        <text x="290" y="583" fill="#ff8c42" font-size="10">語彙数: 6,786語</text>
-                        <text x="290" y="596" fill="#ff8c42" font-size="10">精度: ★★★☆☆ 速度: ★★★★★</text>
-                        
-                        <!-- NRC列 -->
-                        <rect x="480" y="550" width="180" height="60" rx="5" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="1"/>
-                        <text x="570" y="568" text-anchor="middle" fill="white" font-size="11" font-weight="bold">🌈 NRC</text>
-                        <text x="490" y="583" fill="#00ff88" font-size="10">語彙数: 14,182語</text>
-                        <text x="490" y="596" fill="#00ff88" font-size="10">精度: ★★★★★ 速度: ★★★☆☆</text>
-                        
-                        <!-- 適用場面 -->
-                        <rect x="680" y="550" width="180" height="60" rx="5" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="1"/>
-                        <text x="770" y="568" text-anchor="middle" fill="white" font-size="11" font-weight="bold">🎯 適用場面</text>
-                        <text x="690" y="583" fill="#9d4edd" font-size="9">AFINN: SNS・レビュー分析</text>
-                        <text x="690" y="596" fill="#9d4edd" font-size="9">Bing: 基本極性  NRC: 文学研究</text>
-                        
-                        <!-- 注意事項 -->
-                        <rect x="880" y="550" width="180" height="60" rx="5" fill="rgba(255, 255, 65, 0.1)" stroke="#ffff41" stroke-width="1"/>
-                        <text x="970" y="568" text-anchor="middle" fill="white" font-size="11" font-weight="bold">⚠️ 制限事項</text>
-                        <text x="890" y="583" fill="#ffff41" font-size="9">• 文脈考慮なし</text>
-                        <text x="890" y="596" fill="#ffff41" font-size="9">• 否定語・反語への対応限界</text>
-                    </svg>
-                </div>
-                
-                <!-- Sentiment Analysis Theory Visualization -->
-                <div style="background: var(--bg-tertiary); border-radius: 15px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--accent-purple);">
-                    <h4 style="color: var(--accent-purple); text-align: center; margin-bottom: 1.5rem;">💭 感情分析の理論と手法体系</h4>
-                    <svg width="100%" height="550" viewBox="0 0 1200 550" style="max-width: 100%; height: auto;">
-                        <!-- Background -->
-                        <rect width="1200" height="550" fill="#0a0a0f"/>
-                        
-                        <!-- Sentiment Analysis Approaches -->
-                        <g transform="translate(50, 30)">
-                            <text x="550" y="0" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">💭 感情分析アプローチ分類</text>
-                            
-                            <!-- Dictionary-based Approach -->
-                            <rect x="0" y="30" width="360" height="200" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="2" rx="10"/>
-                            <text x="180" y="55" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">📚 辞書ベース手法</text>
-                            
-                            <!-- AFINN -->
-                            <rect x="20" y="80" width="100" height="40" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1" rx="5"/>
-                            <text x="70" y="95" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="bold">AFINN</text>
-                            <text x="70" y="110" text-anchor="middle" fill="#ffffff" font-size="8">-5 ~ +5</text>
-                            
-                            <!-- Bing -->
-                            <rect x="130" y="80" width="100" height="40" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1" rx="5"/>
-                            <text x="180" y="95" text-anchor="middle" fill="#ff8c42" font-size="10" font-weight="bold">Bing</text>
-                            <text x="180" y="110" text-anchor="middle" fill="#ffffff" font-size="8">pos/neg</text>
-                            
-                            <!-- NRC -->
-                            <rect x="240" y="80" width="100" height="40" fill="rgba(0, 255, 136, 0.2)" stroke="#00ff88" stroke-width="1" rx="5"/>
-                            <text x="290" y="95" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">NRC</text>
-                            <text x="290" y="110" text-anchor="middle" fill="#ffffff" font-size="8">10 emotions</text>
-                            
-                            <!-- Dictionary characteristics -->
-                            <text x="20" y="150" fill="#ffffff" font-size="10" font-weight="bold">特徴:</text>
-                            <text x="30" y="165" fill="#ffffff" font-size="9">• 事前定義された単語-感情マッピング</text>
-                            <text x="30" y="180" fill="#ffffff" font-size="9">• 高速・軽量な処理</text>
-                            <text x="30" y="195" fill="#ffffff" font-size="9">• ドメイン依存性あり</text>
-                            <text x="30" y="210" fill="#ffffff" font-size="9">• 文脈の考慮が限定的</text>
-                        </g>
-                        
-                        <!-- Machine Learning Approach -->
-                        <g transform="translate(430, 60)">
-                            <rect x="0" y="0" width="360" height="170" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="2" rx="10"/>
-                            <text x="180" y="25" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">🤖 機械学習手法</text>
-                            
-                            <!-- Supervised Learning -->
-                            <rect x="20" y="40" width="150" height="40" fill="rgba(0, 255, 170, 0.2)" stroke="#00ffaa" stroke-width="1" rx="5"/>
-                            <text x="95" y="55" text-anchor="middle" fill="#00ffaa" font-size="10" font-weight="bold">教師あり学習</text>
-                            <text x="95" y="70" text-anchor="middle" fill="#ffffff" font-size="8">SVM, RF, NN</text>
-                            
-                            <!-- Unsupervised Learning -->
-                            <rect x="190" y="40" width="150" height="40" fill="rgba(255, 255, 0, 0.2)" stroke="#ffff00" stroke-width="1" rx="5"/>
-                            <text x="265" y="55" text-anchor="middle" fill="#ffff00" font-size="10" font-weight="bold">教師なし学習</text>
-                            <text x="265" y="70" text-anchor="middle" fill="#ffffff" font-size="8">Clustering</text>
-                            
-                            <!-- ML characteristics -->
-                            <text x="20" y="100" fill="#ffffff" font-size="10" font-weight="bold">特徴:</text>
-                            <text x="30" y="115" fill="#ffffff" font-size="9">• 訓練データから学習</text>
-                            <text x="30" y="130" fill="#ffffff" font-size="9">• 文脈とパターンを考慮</text>
-                            <text x="30" y="145" fill="#ffffff" font-size="9">• ドメイン適応可能</text>
-                            <text x="30" y="160" fill="#ffffff" font-size="9">• 大量のラベル付きデータが必要</text>
-                        </g>
-                        
-                        <!-- Hybrid Approach -->
-                        <g transform="translate(820, 60)">
-                            <rect x="0" y="0" width="330" height="170" fill="rgba(100, 255, 255, 0.1)" stroke="#64ffff" stroke-width="2" rx="10"/>
-                            <text x="165" y="25" text-anchor="middle" fill="#64ffff" font-size="14" font-weight="bold">🌊 ハイブリッド手法</text>
-                            
-                            <!-- Feature combination -->
-                            <rect x="20" y="40" width="130" height="40" fill="rgba(255, 100, 255, 0.2)" stroke="#ff64ff" stroke-width="1" rx="5"/>
-                            <text x="85" y="55" text-anchor="middle" fill="#ff64ff" font-size="10" font-weight="bold">特徴量統合</text>
-                            <text x="85" y="70" text-anchor="middle" fill="#ffffff" font-size="8">Dict + ML</text>
-                            
-                            <!-- Ensemble methods -->
-                            <rect x="170" y="40" width="140" height="40" fill="rgba(255, 200, 100, 0.2)" stroke="#ffc864" stroke-width="1" rx="5"/>
-                            <text x="240" y="55" text-anchor="middle" fill="#ffc864" font-size="10" font-weight="bold">アンサンブル</text>
-                            <text x="240" y="70" text-anchor="middle" fill="#ffffff" font-size="8">多手法統合</text>
-                            
-                            <!-- Hybrid characteristics -->
-                            <text x="20" y="100" fill="#ffffff" font-size="10" font-weight="bold">特徴:</text>
-                            <text x="30" y="115" fill="#ffffff" font-size="9">• 複数手法の長所を活用</text>
-                            <text x="30" y="130" fill="#ffffff" font-size="9">• 高い精度と堅牢性</text>
-                            <text x="30" y="145" fill="#ffffff" font-size="9">• 計算コストの増加</text>
-                            <text x="30" y="160" fill="#ffffff" font-size="9">• 複雑なパイプライン</text>
-                        </g>
-                        
-                        <!-- Sentiment Dimensions -->
-                        <g transform="translate(50, 270)">
-                            <rect x="0" y="0" width="1100" height="140" fill="rgba(255, 255, 255, 0.05)" stroke="#ffffff" stroke-width="1" rx="10"/>
-                            <text x="550" y="25" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">📊 感情の次元とモデル</text>
-                            
-                            <!-- Valence -->
-                            <g transform="translate(50, 50)">
-                                <text x="0" y="0" fill="#00d4ff" font-size="12" font-weight="bold">感情価 (Valence)</text>
-                                <line x1="0" y1="20" x2="200" y2="20" stroke="#00d4ff" stroke-width="3"/>
-                                <text x="0" y="35" fill="#ff4444" font-size="10">Negative</text>
-                                <text x="90" y="35" fill="#aaaaaa" font-size="10">Neutral</text>
-                                <text x="170" y="35" fill="#00ff88" font-size="10">Positive</text>
-                                <circle cx="50" cy="20" r="4" fill="#ff4444"/>
-                                <circle cx="100" cy="20" r="4" fill="#aaaaaa"/>
-                                <circle cx="150" cy="20" r="4" fill="#00ff88"/>
-                            </g>
-                            
-                            <!-- Arousal -->
-                            <g transform="translate(300, 50)">
-                                <text x="0" y="0" fill="#ff8c42" font-size="12" font-weight="bold">覚醒度 (Arousal)</text>
-                                <line x1="0" y1="20" x2="200" y2="20" stroke="#ff8c42" stroke-width="3"/>
-                                <text x="0" y="35" fill="#666666" font-size="10">Calm</text>
-                                <text x="80" y="35" fill="#aaaaaa" font-size="10">Moderate</text>
-                                <text x="160" y="35" fill="#ff8c42" font-size="10">Excited</text>
-                                <circle cx="30" cy="20" r="4" fill="#666666"/>
-                                <circle cx="100" cy="20" r="4" fill="#aaaaaa"/>
-                                <circle cx="170" cy="20" r="4" fill="#ff8c42"/>
-                            </g>
-                            
-                            <!-- Emotion Categories -->
-                            <g transform="translate(550, 40)">
-                                <text x="0" y="0" fill="#9d4edd" font-size="12" font-weight="bold">基本感情カテゴリ</text>
-                                <circle cx="30" cy="25" r="12" fill="rgba(255, 100, 100, 0.3)" stroke="#ff6464"/>
-                                <text x="30" y="30" text-anchor="middle" fill="#ffffff" font-size="8">怒</text>
-                                
-                                <circle cx="70" cy="25" r="12" fill="rgba(100, 255, 100, 0.3)" stroke="#64ff64"/>
-                                <text x="70" y="30" text-anchor="middle" fill="#ffffff" font-size="8">喜</text>
-                                
-                                <circle cx="110" cy="25" r="12" fill="rgba(100, 100, 255, 0.3)" stroke="#6464ff"/>
-                                <text x="110" y="30" text-anchor="middle" fill="#ffffff" font-size="8">悲</text>
-                                
-                                <circle cx="150" cy="25" r="12" fill="rgba(255, 255, 100, 0.3)" stroke="#ffff64"/>
-                                <text x="150" y="30" text-anchor="middle" fill="#ffffff" font-size="8">恐</text>
-                                
-                                <circle cx="190" cy="25" r="12" fill="rgba(255, 100, 255, 0.3)" stroke="#ff64ff"/>
-                                <text x="190" y="30" text-anchor="middle" fill="#ffffff" font-size="8">驚</text>
-                                
-                                <circle cx="230" cy="25" r="12" fill="rgba(100, 255, 255, 0.3)" stroke="#64ffff"/>
-                                <text x="230" y="30" text-anchor="middle" fill="#ffffff" font-size="8">嫌</text>
-                            </g>
-                            
-                            <!-- Complex emotions -->
-                            <g transform="translate(850, 50)">
-                                <text x="0" y="0" fill="#00ffaa" font-size="12" font-weight="bold">複合感情</text>
-                                <text x="0" y="20" fill="#ffffff" font-size="9">• 期待 (anticipation)</text>
-                                <text x="0" y="35" fill="#ffffff" font-size="9">• 信頼 (trust)</text>
-                                <text x="0" y="50" fill="#ffffff" font-size="9">• 嫌悪 (disgust)</text>
-                                <text x="120" y="20" fill="#ffffff" font-size="9">• 混合感情</text>
-                                <text x="120" y="35" fill="#ffffff" font-size="9">• 感情強度</text>
-                                <text x="120" y="50" fill="#ffffff" font-size="9">• 時間変化</text>
-                            </g>
-                        </g>
-                        
-                        <!-- Computational Challenges -->
-                        <g transform="translate(50, 440)">
-                            <rect x="0" y="0" width="1100" height="80" fill="rgba(255, 140, 66, 0.1)" stroke="#ff8c42" stroke-width="1" rx="8"/>
-                            <text x="550" y="25" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">🔧 計算上の課題と解決策</text>
-                            
-                            <g transform="translate(50, 35)">
-                                <text x="0" y="0" fill="#ffffff" font-size="10" font-weight="bold">主要課題:</text>
-                                <text x="10" y="15" fill="#ffffff" font-size="9">• 皮肉・反語の検出</text>
-                                <text x="10" y="30" fill="#ffffff" font-size="9">• 文脈依存性</text>
-                                
-                                <text x="200" y="0" fill="#ffffff" font-size="10" font-weight="bold">ドメイン適応:</text>
-                                <text x="210" y="15" fill="#ffffff" font-size="9">• 専門用語辞書</text>
-                                <text x="210" y="30" fill="#ffffff" font-size="9">• Transfer Learning</text>
-                                
-                                <text x="400" y="0" fill="#ffffff" font-size="10" font-weight="bold">多言語対応:</text>
-                                <text x="410" y="15" fill="#ffffff" font-size="9">• 言語間変換</text>
-                                <text x="410" y="30" fill="#ffffff" font-size="9">• Cultural Adaptation</text>
-                                
-                                <text x="600" y="0" fill="#ffffff" font-size="10" font-weight="bold">評価指標:</text>
-                                <text x="610" y="15" fill="#ffffff" font-size="9">• Precision/Recall</text>
-                                <text x="610" y="30" fill="#ffffff" font-size="9">• F1-Score, AUC</text>
-                                
-                                <text x="800" y="0" fill="#ffffff" font-size="10" font-weight="bold">リアルタイム処理:</text>
-                                <text x="810" y="15" fill="#ffffff" font-size="9">• ストリーミング分析</text>
-                                <text x="810" y="30" fill="#ffffff" font-size="9">• 分散処理</text>
-                            </g>
-                        </g>
-                        
-                        <!-- Connecting arrows -->
-                        <path d="M 360 130 Q 380 140 400 130" stroke="#9d4edd" stroke-width="2" marker-end="url(#sentimentArrow)"/>
-                        <path d="M 790 145 Q 810 155 830 145" stroke="#ff8c42" stroke-width="2" marker-end="url(#sentimentArrow)"/>
-                        
-                        <defs>
-                            <marker id="sentimentArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                                <polygon points="0 0, 8 3, 0 6" fill="#ffffff"/>
-                            </marker>
-                        </defs>
-                    </svg>
-                    
-                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-                        <div style="background: rgba(157, 78, 221, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #9d4edd;">
-                            <h5 style="color: #9d4edd; margin-bottom: 0.5rem;">📚 辞書ベース利点</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">高速処理、実装簡易、解釈可能性、少ないリソース要求</p>
-                        </div>
-                        <div style="background: rgba(255, 140, 66, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ff8c42;">
-                            <h5 style="color: #ff8c42; margin-bottom: 0.5rem;">🤖 機械学習利点</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">文脈考慮、パターン学習、ドメイン適応、高精度可能</p>
-                        </div>
-                        <div style="background: rgba(100, 255, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #64ffff;">
-                            <h5 style="color: #64ffff; margin-bottom: 0.5rem;">🌊 ハイブリッド利点</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">両手法の長所統合、堅牢性向上、複雑な感情表現対応</p>
-                        </div>
-                        <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ffffff;">
-                            <h5 style="color: #ffffff; margin-bottom: 0.5rem;">📊 実践的選択</h5>
-                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin: 0;">データ量、計算資源、精度要求、解釈必要性を総合評価</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Dictionary-based Sentiment -->
-                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📚 辞書ベース感情分析</h3>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                        </div>
-                        <div class="code-title">sentiment_analysis.R</div>
-                    </div>
-                    <div class="code-content">
-                        <span class="code-line"><span class="code-comment"># 3つの感情辞書の取得</span></span>
-                        <span class="code-line"><span class="code-variable">afinn</span> <span class="code-keyword">&lt;-</span> <span class="code-function">get_sentiments</span>(<span class="code-string">"afinn"</span>)</span>
-                        <span class="code-line"><span class="code-variable">bing</span> <span class="code-keyword">&lt;-</span> <span class="code-function">get_sentiments</span>(<span class="code-string">"bing"</span>)</span>
-                        <span class="code-line"><span class="code-variable">nrc</span> <span class="code-keyword">&lt;-</span> <span class="code-function">get_sentiments</span>(<span class="code-string">"nrc"</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># Jane Austenの感情分析（AFINN辞書）</span></span>
-                        <span class="code-line"><span class="code-variable">austen_sentiment</span> <span class="code-keyword">&lt;-</span> tidy_books <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">inner_join</span>(afinn, by = <span class="code-string">"word"</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">group_by</span>(book) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">summarise</span>(sentiment_score = <span class="code-function">sum</span>(value),</span>
-                        <span class="code-line">            sentiment_words = <span class="code-function">n</span>(),</span>
-                        <span class="code-line">            avg_sentiment = sentiment_score / sentiment_words,</span>
-                        <span class="code-line">            .groups = <span class="code-string">"drop"</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-function">print</span>(austen_sentiment)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 作品別感情スコアの可視化</span></span>
-                        <span class="code-line">austen_sentiment <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">mutate</span>(book = <span class="code-function">fct_reorder</span>(book, avg_sentiment)) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = book, y = avg_sentiment, fill = book)) +</span>
-                        <span class="code-line">  <span class="code-function">geom_col</span>(show.legend = <span class="code-string">FALSE</span>) +</span>
-                        <span class="code-line">  <span class="code-function">coord_flip</span>() +</span>
-                        <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"Jane Austen作品の平均感情スコア"</span>,</span>
-                        <span class="code-line">       x = <span class="code-string">"作品"</span>, y = <span class="code-string">"平均感情スコア"</span>) +</span>
-                        <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
-                    </div>
-                </div>
-
-                <!-- Multi-dimensional Sentiment -->
-                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🌈 多次元感情分析</h3>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                        </div>
-                        <div class="code-title">multidimensional_sentiment.R</div>
-                    </div>
-                    <div class="code-content">
-                        <span class="code-line"><span class="code-comment"># NRC辞書による多次元感情分析</span></span>
-                        <span class="code-line"><span class="code-variable">austen_emotions</span> <span class="code-keyword">&lt;-</span> tidy_books <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">inner_join</span>(nrc, by = <span class="code-string">"word"</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">count</span>(book, sentiment) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">pivot_wider</span>(names_from = sentiment, values_from = n, values_fill = <span class="code-string">0</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># レーダーチャート用データの準備</span></span>
-                        <span class="code-line"><span class="code-variable">emotion_radar</span> <span class="code-keyword">&lt;-</span> tidy_books <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">inner_join</span>(nrc, by = <span class="code-string">"word"</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">filter</span>(!sentiment <span class="code-keyword">%in%</span> <span class="code-function">c</span>(<span class="code-string">"positive"</span>, <span class="code-string">"negative"</span>)) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">count</span>(sentiment) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">mutate</span>(percentage = n / <span class="code-function">sum</span>(n) * <span class="code-string">100</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 感情プロファイルの可視化</span></span>
-                        <span class="code-line">emotion_radar <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = <span class="code-function">reorder</span>(sentiment, percentage), y = percentage, fill = sentiment)) +</span>
-                        <span class="code-line">  <span class="code-function">geom_col</span>(show.legend = <span class="code-string">FALSE</span>) +</span>
-                        <span class="code-line">  <span class="code-function">coord_flip</span>() +</span>
-                        <span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"Jane Austen作品の感情プロファイル"</span>,</span>
-                        <span class="code-line">       x = <span class="code-string">"感情"</span>, y = <span class="code-string">"割合(%)"</span>) +</span>
-                        <span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
-                    </div>
-                </div>
-
-                <div class="output-container">
-                    <div class="output-header">
-                        Jane Austen Sentiment Analysis Results
-                    </div>
-                    <div class="output-content">
-# A tibble: 6 × 4
-  book                sentiment_score sentiment_words avg_sentiment
-  &lt;fct&gt;                         &lt;int&gt;           &lt;int&gt;         &lt;dbl&gt;
-1 Sense & Sensibility            2164            4541         0.477
-2 Pride & Prejudice              1841            4298         0.428
-3 Mansfield Park                 1618            4157         0.389
-4 Emma                           2107            4756         0.443
-5 Northanger Abbey               1122            2459         0.456
-6 Persuasion                     1016            2317         0.439
-
-# 📊 Emma が最も感情的豊かさを示している
-                    </div>
-                </div>
-
-                <div class="function-grid">
-                    <div class="function-card">
-                        <h3 class="function-title">📊 AFINN辞書</h3>
-                        <p class="function-description">
-                            -5から+5の数値スコアで感情を定量化。シンプルで直感的な感情分析が可能。総合的な感情傾向の把握に最適。
-                        </p>
-                        <div class="function-syntax">
-                            get_sentiments("afinn"), sum(value)
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🎯 Bing辞書</h3>
-                        <p class="function-description">
-                            positive/negativeのバイナリ分類。シンプルな極性判定に最適。頻度ベースの感情分析で直感的な結果を提供。
-                        </p>
-                        <div class="function-syntax">
-                            get_sentiments("bing"), count(sentiment)
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🌈 NRC辞書</h3>
-                        <p class="function-description">
-                            10種類の感情カテゴリ（怒り、恐れ、期待など）。多次元感情分析により、感情の細やかなニュアンスを捕捉。
-                        </p>
-                        <div class="function-syntax">
-                            get_sentiments("nrc"), filter(sentiment == "joy")
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">📈 時系列感情分析</h3>
-                        <p class="function-description">
-                            章や段落単位での感情変化の追跡。ストーリーの感情的起伏を可視化し、物語構造の分析を支援。
-                        </p>
-                        <div class="function-syntax">
-                            group_by(chapter), summarise(sentiment_score)
-                        </div>
-                    </div>
-                </div>
-        </section>
-
-        <!-- MACHINE LEARNING TEXT CLASSIFICATION -->
-        <section class="section" id="text-classification">
-            <h2>🤖 機械学習によるテキスト分類</h2>
-                <p>
-                    textrecipesパッケージにより、テキスト前処理を tidymodels ワークフローに統合できます。TF-IDF変換からハイパーパラメータチューニングまで、美しい一貫したワークフローでテキスト分類を実現します。
-                </p>
-                
-                <!-- Text Classification Workflow -->
-                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">📋 textrecipesによる前処理パイプライン</h3>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                        </div>
-                        <div class="code-title">text_classification.R</div>
-                    </div>
-                    <div class="code-content">
-                        <span class="code-line"><span class="code-comment"># テキスト分類のためのサンプルデータ作成</span></span>
-                        <span class="code-line"><span class="code-variable">book_classification</span> <span class="code-keyword">&lt;-</span> book_words <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">filter</span>(<span class="code-function">str_length</span>(text) &gt; <span class="code-string">50</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">select</span>(book, text) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">slice_sample</span>(n = <span class="code-string">2000</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">mutate</span>(book = <span class="code-function">factor</span>(book))</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># データ分割</span></span>
-                        <span class="code-line"><span class="code-function">set.seed</span>(<span class="code-string">123</span>)</span>
-                        <span class="code-line"><span class="code-variable">book_split</span> <span class="code-keyword">&lt;-</span> <span class="code-function">initial_split</span>(book_classification, prop = <span class="code-string">0.8</span>, strata = book)</span>
-                        <span class="code-line"><span class="code-variable">book_train</span> <span class="code-keyword">&lt;-</span> <span class="code-function">training</span>(book_split)</span>
-                        <span class="code-line"><span class="code-variable">book_test</span> <span class="code-keyword">&lt;-</span> <span class="code-function">testing</span>(book_split)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># テキスト前処理レシピ</span></span>
-                        <span class="code-line"><span class="code-variable">text_recipe</span> <span class="code-keyword">&lt;-</span> <span class="code-function">recipe</span>(book ~ text, data = book_train) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">step_tokenize</span>(text) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">step_stopwords</span>(text) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">step_tokenfilter</span>(text, max_tokens = <span class="code-string">1000</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">step_tfidf</span>(text) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">step_normalize</span>(<span class="code-function">all_numeric_predictors</span>())</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 前処理の確認</span></span>
-                        <span class="code-line">text_recipe <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">prep</span>() <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">bake</span>(new_data = <span class="code-string">NULL</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">glimpse</span>()</span>
-                    </div>
-                </div>
-
-                <!-- Model Training and Evaluation -->
-                <h3 style="color: var(--accent-cyan); margin: 2rem 0 1rem 0;">🎯 複数モデルの訓練と評価</h3>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                        </div>
-                        <div class="code-title">text_models.R</div>
-                    </div>
-                    <div class="code-content">
-                        <span class="code-line"><span class="code-comment"># 複数の分類モデルを定義</span></span>
-                        <span class="code-line"><span class="code-variable">rf_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">rand_forest</span>(trees = <span class="code-string">500</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"ranger"</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"classification"</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-variable">svm_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">svm_linear</span>() <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"LiblineaR"</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"classification"</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-variable">nb_spec</span> <span class="code-keyword">&lt;-</span> <span class="code-function">naive_Bayes</span>() <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">set_engine</span>(<span class="code-string">"naivebayes"</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">set_mode</span>(<span class="code-string">"classification"</span>)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># ワークフローセットによる効率的な比較</span></span>
-                        <span class="code-line"><span class="code-variable">text_workflows</span> <span class="code-keyword">&lt;-</span> <span class="code-function">workflow_set</span>(</span>
-                        <span class="code-line">  preproc = <span class="code-function">list</span>(text = text_recipe),</span>
-                        <span class="code-line">  models = <span class="code-function">list</span>(rf = rf_spec, svm = svm_spec, nb = nb_spec)</span>
-                        <span class="code-line">)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># クロスバリデーション</span></span>
-                        <span class="code-line"><span class="code-variable">book_folds</span> <span class="code-keyword">&lt;-</span> <span class="code-function">vfold_cv</span>(book_train, v = <span class="code-string">5</span>, strata = book)</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 並列処理で全モデルを評価</span></span>
-                        <span class="code-line"><span class="code-variable">text_results</span> <span class="code-keyword">&lt;-</span> text_workflows <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">workflow_map</span>(</span>
-                        <span class="code-line">    resamples = book_folds,</span>
-                        <span class="code-line">    metrics = <span class="code-function">metric_set</span>(accuracy, roc_auc, f_meas),</span>
-                        <span class="code-line">    verbose = <span class="code-string">TRUE</span></span>
-                        <span class="code-line">  )</span>
-                        <span class="code-line"></span>
-                        <span class="code-line"><span class="code-comment"># 結果の比較</span></span>
-                        <span class="code-line">text_results <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">rank_results</span>() <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">filter</span>(.metric == <span class="code-string">"accuracy"</span>) <span class="code-keyword">%&gt;%</span></span>
-                        <span class="code-line">  <span class="code-function">select</span>(model, .config, mean, rank)</span>
-                    </div>
-                </div>
-
-                <div class="output-container">
-                    <div class="output-header">
-                        Text Classification Model Comparison
-                    </div>
-                    <div class="output-content">
-# A tibble: 3 × 4
-  model  .config               mean  rank
-  &lt;chr&gt;  &lt;chr&gt;                &lt;dbl&gt; &lt;int&gt;
-1 svm    Preprocessor1_Model1 0.834     1
-2 rf     Preprocessor1_Model1 0.798     2
-3 nb     Preprocessor1_Model1 0.756     3
-
-# 🏆 SVM が最高の分類精度を達成！
-                    </div>
-                </div>
-
-                <div class="function-grid">
-                    <div class="function-card">
-                        <h3 class="function-title">📝 step_tokenize()</h3>
-                        <p class="function-description">
-                            textrecipesの基本関数。テキストを単語に分割し、tidymodelsワークフローに統合。複数のトークン化方式をサポート。
-                        </p>
-                        <div class="function-syntax">
-                            step_tokenize(text, token = "words")
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🧹 step_stopwords()</h3>
-                        <p class="function-description">
-                            ストップワードの自動除去。多言語対応で、カスタム辞書の追加も可能。テキスト分析の精度向上に重要な前処理。
-                        </p>
-                        <div class="function-syntax">
-                            step_stopwords(text, language = "en", custom_stopwords)
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">🔢 step_tfidf()</h3>
-                        <p class="function-description">
-                            TF-IDF変換による単語重要度の計算。文書内頻度と逆文書頻度を統合し、特徴的な単語を強調した数値化を実現。
-                        </p>
-                        <div class="function-syntax">
-                            step_tfidf(text, norm = "l2", sublinear_tf = TRUE)
-                        </div>
-                    </div>
-                    <div class="function-card">
-                        <h3 class="function-title">⚡ workflow_set()</h3>
-                        <p class="function-description">
-                            複数の前処理・モデル組み合わせを効率的に比較。ワークフローセットにより、大規模な実験を統一的に管理・実行可能。
-                        </p>
-                        <div class="function-syntax">
-                            workflow_set(preproc, models), workflow_map()
-                        </div>
-                    </div>
-                </div>
-        </section>
-
-        <!-- 高度なテキスト分析技術の可視化 -->
-        <section class="section" style="margin: 3rem 0;">
-            <h2>🌐 高度なテキスト分析技術</h2>
-            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
-                tidytextの真の力は、基本的な感情分析を超えた高度な分析技術にあります。ネットワーク分析、n-gram分析、ワードクラウドなど、複雑なテキスト構造の可視化と分析を実現します。
+        <!-- 導入 -->
+        <section class="section" id="intro">
+            <h2>自由記述は、たいてい期待したほど書かれていない</h2>
+            <p>
+                エンゲージメントサーベイの自由記述を分析したことがあります。結論から書くと、集計も可視化もできたのに、最後まで使えるものになりませんでした。
+                原因は手法ではなく、その手前にありました。
+            </p>
+            <p>
+                ひとつは、記述そのものが雑だったこと。設問に対して一行だけ、あるいは「特になし」。読める分量が書かれている回答は、思っていたより少ない。
+                もうひとつは、頻出語を並べて図にしたところで「それで、何をすればいいのか」に答えられなかったことです。
+                会議に出したときの空気で分かりました。きれいな図は出せる。でも次の一手に繋がらない。
+            </p>
+            <p>
+                この章では、その失敗をなぞる形で日本語テキスト分析の手順を書きます。
+                tidytextの標準的な解説は英語の小説を題材にすることが多いのですが、社内アンケートの日本語はまったく別物です。
+                途中で何度もつまずくので、つまずく場所を先に示しておきます。
             </p>
 
-            <!-- テキスト分析技術統合図 -->
-            <div style="background: var(--bg-tertiary); border: 2px solid var(--accent-electric); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
-                <h4 style="color: var(--accent-electric); text-align: center; margin-bottom: 1.5rem;">🛠️ 高度テキスト分析技術エコシステム</h4>
-                <svg viewBox="0 0 1200 800" style="width: 100%; height: auto;">
-                    <defs>
-                        <linearGradient id="networkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ff8c42;stop-opacity:1"/>
-                            <stop offset="33%" style="stop-color:#9d4edd;stop-opacity:1"/>
-                            <stop offset="66%" style="stop-color:#00ff88;stop-opacity:1"/>
-                            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
-                        </linearGradient>
-                        <filter id="networkGlow">
-                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                            <feMerge> 
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                        <radialGradient id="nodeGrad">
-                            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1"/>
-                            <stop offset="100%" style="stop-color:#00ff88;stop-opacity:0.8"/>
-                        </radialGradient>
-                    </defs>
-                    
-                    <!-- メインタイトル -->
-                    <text x="600" y="30" text-anchor="middle" fill="#00ff88" font-size="18" font-weight="bold">🌐 テキスト分析高度技術マップ</text>
-                    
-                    <!-- 1. ネットワーク分析セクション -->
-                    <rect x="50" y="60" width="350" height="200" rx="15" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="2" filter="url(#networkGlow)"/>
-                    <text x="225" y="85" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🕸️ ネットワーク分析</text>
-                    
-                    <!-- サンプルネットワーク図 -->
-                    <g transform="translate(70, 100)">
-                        <!-- ノード -->
-                        <circle cx="50" cy="50" r="12" fill="url(#nodeGrad)" stroke="#00ff88" stroke-width="2"/>
-                        <text x="50" y="55" text-anchor="middle" fill="black" font-size="8" font-weight="bold">love</text>
-                        
-                        <circle cx="150" cy="30" r="10" fill="url(#nodeGrad)" stroke="#00ff88" stroke-width="2"/>
-                        <text x="150" y="35" text-anchor="middle" fill="black" font-size="8">happy</text>
-                        
-                        <circle cx="150" cy="80" r="10" fill="url(#nodeGrad)" stroke="#00ff88" stroke-width="2"/>
-                        <text x="150" y="85" text-anchor="middle" fill="black" font-size="8">joy</text>
-                        
-                        <circle cx="250" cy="50" r="8" fill="url(#nodeGrad)" stroke="#00ff88" stroke-width="2"/>
-                        <text x="250" y="55" text-anchor="middle" fill="black" font-size="7">peace</text>
-                        
-                        <circle cx="120" cy="120" r="10" fill="url(#nodeGrad)" stroke="#ff8c42" stroke-width="2"/>
-                        <text x="120" y="125" text-anchor="middle" fill="black" font-size="8">life</text>
-                        
-                        <!-- エッジ -->
-                        <line x1="62" y1="50" x2="138" y2="36" stroke="#00ff88" stroke-width="2" opacity="0.7"/>
-                        <line x1="62" y1="60" x2="138" y2="74" stroke="#00ff88" stroke-width="3" opacity="0.8"/>
-                        <line x1="150" y1="40" x2="242" y2="50" stroke="#00ff88" stroke-width="1" opacity="0.6"/>
-                        <line x1="150" y1="88" x2="242" y2="58" stroke="#00ff88" stroke-width="2" opacity="0.7"/>
-                        <line x1="62" y1="62" x2="108" y2="114" stroke="#ff8c42" stroke-width="2" opacity="0.7"/>
-                    </g>
-                    
-                    <!-- ネットワーク分析コード例 -->
-                    <rect x="70" y="190" width="310" height="50" rx="8" fill="rgba(0, 0, 0, 0.5)" stroke="#00ff88" stroke-width="1"/>
-                    <text x="80" y="208" fill="#a5d6ff" font-size="10">library(widyr)</text>
-                    <text x="80" y="220" fill="#a5d6ff" font-size="10">words %&gt;% pairwise_count(word, document) %&gt;%</text>
-                    <text x="80" y="232" fill="#a5d6ff" font-size="10">  filter(n &gt;= 10) %&gt;% graph_from_data_frame()</text>
-                    
-                    <!-- 2. n-gram分析セクション -->
-                    <rect x="420" y="60" width="350" height="200" rx="15" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="2" filter="url(#networkGlow)"/>
-                    <text x="595" y="85" text-anchor="middle" fill="#9d4edd" font-size="16" font-weight="bold">🔗 N-gram分析</text>
-                    
-                    <!-- n-gram可視化 -->
-                    <g transform="translate(440, 100)">
-                        <!-- ユニグラム -->
-                        <rect x="0" y="0" width="80" height="30" rx="5" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="1"/>
-                        <text x="40" y="10" text-anchor="middle" fill="white" font-size="9" font-weight="bold">1-gram</text>
-                        <text x="40" y="22" text-anchor="middle" fill="#00d4ff" font-size="8">"love", "peace"</text>
-                        
-                        <!-- バイグラム -->
-                        <rect x="100" y="0" width="80" height="30" rx="5" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="1"/>
-                        <text x="140" y="10" text-anchor="middle" fill="white" font-size="9" font-weight="bold">2-gram</text>
-                        <text x="140" y="22" text-anchor="middle" fill="#9d4edd" font-size="8">"data science"</text>
-                        
-                        <!-- トライグラム -->
-                        <rect x="200" y="0" width="80" height="30" rx="5" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="1"/>
-                        <text x="240" y="10" text-anchor="middle" fill="white" font-size="9" font-weight="bold">3-gram</text>
-                        <text x="240" y="22" text-anchor="middle" fill="#ff8c42" font-size="8">"natural language processing"</text>
-                        
-                        <!-- n-gramフロー -->
-                        <rect x="10" y="50" width="270" height="80" rx="8" fill="rgba(0, 0, 0, 0.3)" stroke="#9d4edd" stroke-width="1"/>
-                        <text x="145" y="70" text-anchor="middle" fill="white" font-size="11" font-weight="bold">N-gram抽出プロセス</text>
-                        
-                        <text x="20" y="90" fill="#ffffff" font-size="9">原文: "I love data science very much"</text>
-                        <text x="20" y="105" fill="#00d4ff" font-size="9">2-gram: "I love", "love data", "data science", "science very", "very much"</text>
-                        <text x="20" y="120" fill="#9d4edd" font-size="9">3-gram: "I love data", "love data science", "data science very", "science very much"</text>
-                    </g>
-                    
-                    <!-- n-gramコード例 -->
-                    <rect x="440" y="190" width="310" height="50" rx="8" fill="rgba(0, 0, 0, 0.5)" stroke="#9d4edd" stroke-width="1"/>
-                    <text x="450" y="208" fill="#a5d6ff" font-size="10">unnest_tokens(bigram, text, token = "ngrams", n = 2) %&gt;%</text>
-                    <text x="450" y="220" fill="#a5d6ff" font-size="10">separate(bigram, c("word1", "word2"), sep = " ") %&gt;%</text>
-                    <text x="450" y="232" fill="#a5d6ff" font-size="10">count(word1, word2, sort = TRUE)</text>
-                    
-                    <!-- 3. ワードクラウドセクション -->
-                    <rect x="800" y="60" width="350" height="200" rx="15" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="2" filter="url(#networkGlow)"/>
-                    <text x="975" y="85" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">☁️ ワードクラウド</text>
-                    
-                    <!-- ワードクラウド模擬表示 -->
-                    <g transform="translate(820, 100)">
-                        <!-- 大きな単語 -->
-                        <text x="150" y="50" text-anchor="middle" fill="#00ff88" font-size="20" font-weight="bold">data</text>
-                        <text x="100" y="80" text-anchor="middle" fill="#ff8c42" font-size="16" font-weight="bold">analysis</text>
-                        <text x="200" y="80" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">science</text>
-                        
-                        <!-- 中程度の単語 -->
-                        <text x="50" y="110" text-anchor="middle" fill="#00d4ff" font-size="12">R</text>
-                        <text x="250" y="110" text-anchor="middle" fill="#ffff41" font-size="12">text</text>
-                        <text x="120" y="120" text-anchor="middle" fill="#ff4757" font-size="11">machine</text>
-                        <text x="180" y="120" text-anchor="middle" fill="#7bed9f" font-size="11">learning</text>
-                        
-                        <!-- 小さな単語 -->
-                        <text x="80" y="40" text-anchor="middle" fill="#ffffff" font-size="9">model</text>
-                        <text x="220" y="40" text-anchor="middle" fill="#ffffff" font-size="9">tidyverse</text>
-                        <text x="30" y="70" text-anchor="middle" fill="#ffffff" font-size="8">algorithm</text>
-                        <text x="270" y="70" text-anchor="middle" fill="#ffffff" font-size="8">visualization</text>
-                        <text x="60" y="140" text-anchor="middle" fill="#ffffff" font-size="8">mining</text>
-                        <text x="240" y="140" text-anchor="middle" fill="#ffffff" font-size="8">sentiment</text>
-                    </g>
-                    
-                    <!-- ワードクラウドコード例 -->
-                    <rect x="820" y="190" width="310" height="50" rx="8" fill="rgba(0, 0, 0, 0.5)" stroke="#00d4ff" stroke-width="1"/>
-                    <text x="830" y="208" fill="#a5d6ff" font-size="10">library(wordcloud)</text>
-                    <text x="830" y="220" fill="#a5d6ff" font-size="10">words %&gt;% count(word) %&gt;%</text>
-                    <text x="830" y="232" fill="#a5d6ff" font-size="10">  with(wordcloud(word, n, max.words = 100))</text>
-                    
-                    <!-- 統合分析フロー -->
-                    <text x="600" y="310" text-anchor="middle" fill="#00ff88" font-size="16" font-weight="bold">🔄 統合テキスト分析ワークフロー</text>
-                    
-                    <!-- ステップ1: データ入力 -->
-                    <rect x="50" y="330" width="160" height="80" rx="10" fill="rgba(255, 140, 66, 0.2)" stroke="#ff8c42" stroke-width="2"/>
-                    <text x="130" y="355" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📚 テキストデータ</text>
-                    <text x="130" y="375" text-anchor="middle" fill="white" font-size="10">• 文書コレクション</text>
-                    <text x="130" y="390" text-anchor="middle" fill="white" font-size="10">• メタデータ付き</text>
-                    <text x="130" y="405" text-anchor="middle" fill="white" font-size="10">• 前処理済み</text>
-                    
-                    <!-- 矢印1 -->
-                    <polygon points="230,370 270,355 270,385" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
-                    
-                    <!-- ステップ2: トークン化・前処理 -->
-                    <rect x="290" y="330" width="160" height="80" rx="10" fill="rgba(157, 78, 221, 0.2)" stroke="#9d4edd" stroke-width="2"/>
-                    <text x="370" y="355" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🔤 前処理</text>
-                    <text x="370" y="375" text-anchor="middle" fill="white" font-size="10">• unnest_tokens()</text>
-                    <text x="370" y="390" text-anchor="middle" fill="white" font-size="10">• ストップワード除去</text>
-                    <text x="370" y="405" text-anchor="middle" fill="white" font-size="10">• 正規化・標準化</text>
-                    
-                    <!-- 矢印2 -->
-                    <polygon points="470,370 510,355 510,385" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
-                    
-                    <!-- ステップ3: 分析選択 -->
-                    <rect x="530" y="330" width="160" height="80" rx="10" fill="rgba(0, 255, 136, 0.2)" stroke="#00ff88" stroke-width="2"/>
-                    <text x="610" y="355" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🎯 分析選択</text>
-                    <text x="610" y="375" text-anchor="middle" fill="white" font-size="10">• 感情分析</text>
-                    <text x="610" y="390" text-anchor="middle" fill="white" font-size="10">• TF-IDF重要度</text>
-                    <text x="610" y="405" text-anchor="middle" fill="white" font-size="10">• n-gram抽出</text>
-                    
-                    <!-- 矢印3 -->
-                    <polygon points="710,370 750,355 750,385" fill="#9d4edd" stroke="#9d4edd" stroke-width="2"/>
-                    
-                    <!-- ステップ4: 可視化・解釈 -->
-                    <rect x="770" y="330" width="160" height="80" rx="10" fill="rgba(0, 212, 255, 0.2)" stroke="#00d4ff" stroke-width="2"/>
-                    <text x="850" y="355" text-anchor="middle" fill="white" font-size="12" font-weight="bold">📊 可視化</text>
-                    <text x="850" y="375" text-anchor="middle" fill="white" font-size="10">• ネットワーク図</text>
-                    <text x="850" y="390" text-anchor="middle" fill="white" font-size="10">• ワードクラウド</text>
-                    <text x="850" y="405" text-anchor="middle" fill="white" font-size="10">• 統計グラフ</text>
-                    
-                    <!-- 分岐フロー -->
-                    <text x="600" y="450" text-anchor="middle" fill="#9d4edd" font-size="14" font-weight="bold">🔀 分析手法の選択指針</text>
-                    
-                    <!-- 選択指針ボックス -->
-                    <rect x="100" y="470" width="200" height="100" rx="10" fill="rgba(0, 255, 136, 0.1)" stroke="#00ff88" stroke-width="1"/>
-                    <text x="200" y="490" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🕸️ ネットワーク分析</text>
-                    <text x="110" y="510" fill="#00ff88" font-size="10">適用場面:</text>
-                    <text x="110" y="525" fill="white" font-size="9">• 単語間の関係性分析</text>
-                    <text x="110" y="540" fill="white" font-size="9">• 概念の共起パターン</text>
-                    <text x="110" y="555" fill="white" font-size="9">• コミュニティ検出</text>
-                    
-                    <rect x="320" y="470" width="200" height="100" rx="10" fill="rgba(157, 78, 221, 0.1)" stroke="#9d4edd" stroke-width="1"/>
-                    <text x="420" y="490" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🔗 N-gram分析</text>
-                    <text x="330" y="510" fill="#9d4edd" font-size="10">適用場面:</text>
-                    <text x="330" y="525" fill="white" font-size="9">• 文脈情報の保持</text>
-                    <text x="330" y="540" fill="white" font-size="9">• フレーズ抽出</text>
-                    <text x="330" y="555" fill="white" font-size="9">• 言語パターン発見</text>
-                    
-                    <rect x="540" y="470" width="200" height="100" rx="10" fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" stroke-width="1"/>
-                    <text x="640" y="490" text-anchor="middle" fill="white" font-size="12" font-weight="bold">☁️ ワードクラウド</text>
-                    <text x="550" y="510" fill="#00d4ff" font-size="10">適用場面:</text>
-                    <text x="550" y="525" fill="white" font-size="9">• 概要把握・探索</text>
-                    <text x="550" y="540" fill="white" font-size="9">• プレゼンテーション</text>
-                    <text x="550" y="555" fill="white" font-size="9">• 直感的理解促進</text>
-                    
-                    <!-- パフォーマンス比較 -->
-                    <rect x="760" y="470" width="200" height="100" rx="10" fill="rgba(255, 255, 65, 0.1)" stroke="#ffff41" stroke-width="1"/>
-                    <text x="860" y="490" text-anchor="middle" fill="white" font-size="12" font-weight="bold">⚡ パフォーマンス</text>
-                    <text x="770" y="510" fill="#ffff41" font-size="10">計算複雑度:</text>
-                    <text x="770" y="525" fill="white" font-size="9">• ネットワーク: O(n²)</text>
-                    <text x="770" y="540" fill="white" font-size="9">• N-gram: O(n)</text>
-                    <text x="770" y="555" fill="white" font-size="9">• ワードクラウド: O(n log n)</text>
-                    
-                    <!-- 実践的なヒント -->
-                    <text x="600" y="610" text-anchor="middle" fill="#ff8c42" font-size="14" font-weight="bold">💡 実践的な実装ヒント</text>
-                    
-                    <rect x="50" y="630" width="1100" height="120" rx="10" fill="rgba(0, 0, 0, 0.2)" stroke="#ff8c42" stroke-width="1"/>
-                    
-                    <text x="100" y="655" fill="white" font-size="11" font-weight="bold">🎯 効果的な分析戦略</text>
-                    <text x="70" y="675" fill="#ff8c42" font-size="10">1. 探索段階：ワードクラウドで全体把握 → 感情分析で傾向確認</text>
-                    <text x="70" y="690" fill="#ff8c42" font-size="10">2. 詳細分析：n-gram分析で文脈抽出 → TF-IDF で重要語特定</text>
-                    <text x="70" y="705" fill="#ff8c42" font-size="10">3. 関係性分析：ネットワーク分析で概念間の関係発見 → クラスタリング</text>
-                    <text x="70" y="720" fill="#ff8c42" font-size="10">4. 可視化最適化：対象読者に応じて表現方法を選択（学術 vs プレゼンテーション）</text>
-                    <text x="70" y="735" fill="#ff8c42" font-size="10">5. 統合レポート：複数手法の結果を統合して包括的洞察を提供</text>
-                </svg>
+            <div class="tip-box">
+                <h4>この章で扱う範囲</h4>
+                <p>
+                    R（tidyverse）と <code>gibasa</code>、<code>tidytext</code> を使って、日本語の自由記述を数えられる形にするところまで。
+                    そのうえで「数えた結果が使えないとき、何を変えるか」を書きます。感情分析ライブラリの紹介で終わらせません。
+                </p>
             </div>
         </section>
 
-        <div class="key-points">
-            <h4>第22章の重要ポイント</h4>
-            <ul>
-                <li><strong>Tidy原則の適用</strong>：1行1トークンの美しいデータ構造</li>
-                <li><strong>感情分析辞書</strong>：AFINN、Bing、NRCによる多次元評価</li>
-                <li><strong>textrecipes統合</strong>：tidymodelsでの一貫したテキスト前処理</li>
-                <li><strong>n-gram分析</strong>：文脈情報を保持した高度な分析</li>
-                <li><strong>機械学習統合</strong>：TF-IDFからモデル評価まで統合ワークフロー</li>
-                <li><strong>美しい可視化</strong>：ggplot2による直感的な結果表現</li>
-            </ul>
-        </div>
+        <!-- 前処理の前に量を測る -->
+        <section class="section" id="measure-first">
+            <h2>分析する前に、分析できる量があるかを数える</h2>
+            <p>
+                最初にやるべきは形態素解析ではありません。<strong>どれだけの人が、どれだけの分量を書いたか</strong>を数えることです。
+                サーベイの回答率が高くても、自由記述の記入率はまったく別の数字になります。ここを見ないまま分析に入ると、
+                「全社の声」のつもりで一部の饒舌な人の意見を見ることになります。
+            </p>
 
-        <div class="tip-box">
-            <h4>実践的アドバイス</h4>
-            <p>tidytextの真の価値は、テキスト分析を整然データの原則に基づいて実行できることです。従来の複雑で非直感的なテキスト処理とは異なり、dplyr、ggplot2との完全な統合により、探索から機械学習まで一貫した美しいワークフローを実現できます。textrecipesとの連携により、テキスト分析もtidymodelsの恩恵を受けられ、再現性と拡張性の高い分析が可能になります。</p>
-        </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">01_measure_volume.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="code-comment"># 想定するデータ: id, department, tenure_years, score_overall, comment</span></span>
+<span class="code-line"><span class="code-function">library</span>(tidyverse)</span>
+<span class="code-line"></span>
+<span class="code-line">survey &lt;- <span class="code-function">read_csv</span>(<span class="code-string">"engagement_survey.csv"</span>)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># 「書かれていない」にはいくつか種類がある</span></span>
+<span class="code-line">blank_words &lt;- <span class="code-function">c</span>(<span class="code-string">"特になし"</span>, <span class="code-string">"なし"</span>, <span class="code-string">"特に無し"</span>, <span class="code-string">"とくになし"</span>, <span class="code-string">"ー"</span>, <span class="code-string">"―"</span>, <span class="code-string">"・"</span>)</span>
+<span class="code-line"></span>
+<span class="code-line">survey_flagged &lt;- survey |&gt;</span>
+<span class="code-line">  <span class="code-function">mutate</span>(</span>
+<span class="code-line">    comment  = <span class="code-function">str_squish</span>(<span class="code-function">replace_na</span>(comment, <span class="code-string">""</span>)),</span>
+<span class="code-line">    n_char   = <span class="code-function">str_length</span>(comment),</span>
+<span class="code-line">    is_blank = n_char == 0 | comment %in% blank_words</span>
+<span class="code-line">  )</span>
+<span class="code-line"></span>
+<span class="code-line">survey_flagged |&gt;</span>
+<span class="code-line">  <span class="code-function">summarise</span>(</span>
+<span class="code-line">    回答数     = <span class="code-function">n</span>(),</span>
+<span class="code-line">    記入あり   = <span class="code-function">sum</span>(!is_blank),</span>
+<span class="code-line">    記入率     = <span class="code-function">mean</span>(!is_blank),</span>
+<span class="code-line">    文字数中央値 = <span class="code-function">median</span>(n_char[!is_blank]),</span>
+<span class="code-line">    文字数p90  = <span class="code-function">quantile</span>(n_char[!is_blank], 0.9)</span>
+<span class="code-line">  )</span>
+                </div>
+            </div>
+
+            <p>
+                中央値と90パーセンタイルを両方見るのが要点です。平均だけだと、長文を書いた数人に引っ張られて実態より豊かに見えます。
+                中央値が20〜30字なら、それは「文章」ではなく「一言」です。一言の集合から意味を取り出す手法と、
+                段落の集合から取り出す手法は別なので、ここで方針が決まります。
+            </p>
+
+            <div class="output-container">
+                <div class="output-header">出力例（形式のイメージ）</div>
+                <div class="output-content">
+# A tibble: 1 × 5
+  回答数 記入あり 記入率 文字数中央値 文字数p90
+   &lt;int&gt;    &lt;int&gt;  &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;
+1    ...      ...    ...          ...       ...
+                </div>
+            </div>
+
+            <p>
+                部署別・在籍年数別に記入率を出すと、それ自体が示唆になることがあります。
+                書かない層が偏っているなら、そのあとどんな分析をしても、その層の声は最後まで入ってきません。
+                テキスト分析の結果を読むときに、この偏りを覚えておく必要があります。
+            </p>
+        </section>
+
+        <!-- 日本語の壁 -->
+        <section class="section" id="japanese-tokenize">
+            <h2>英語の道具では日本語は切れない</h2>
+            <p>
+                tidytextの解説でよく出てくる <code>unnest_tokens()</code> は、空白で区切って単語にします。英語ならそれで足ります。
+                日本語には空白がないので、そのまま通すと一文がまるごと1トークンになります。形態素解析が要ります。
+            </p>
+            <p>
+                同じ理由で、<strong>AFINN・Bing・NRCといった感情分析辞書も日本語には使えません</strong>。あれは英単語の一覧です。
+                日本語の自由記述に対して感情スコアを出したいなら、日本語の極性辞書を別途用意するか、そもそも感情分析という枠を疑う必要があります。
+                このあたりを飛ばして「感情分析ができます」と書いてある解説は、日本語データを触っていないと思ったほうが安全です。
+            </p>
+
+            <p>
+                RでMeCabを使う方法はいくつかありますが、いま新規に組むなら <code>gibasa</code> が扱いやすいです。
+                CRANから入り、v0.5.0以降はパッケージ内にMeCabのソースを同梱しているため、MeCab本体を別途インストールしなくてもビルドできます。
+                返ってくるのが「1行1トークン」の整然データなので、そのまま dplyr と tidytext に繋がります。
+            </p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">02_tokenize_ja.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="code-function">install.packages</span>(<span class="code-string">"gibasa"</span>)</span>
+<span class="code-line"><span class="code-function">library</span>(gibasa)</span>
+<span class="code-line"><span class="code-function">library</span>(tidytext)</span>
+<span class="code-line"></span>
+<span class="code-line">tokens &lt;- survey_flagged |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(!is_blank) |&gt;</span>
+<span class="code-line">  <span class="code-function">select</span>(id, department, score_overall, comment) |&gt;</span>
+<span class="code-line">  <span class="code-function">tokenize</span>(text_field = <span class="code-string">"comment"</span>, docid_field = <span class="code-string">"id"</span>) |&gt;</span>
+<span class="code-line">  <span class="code-function">prettify</span>(col_select = <span class="code-function">c</span>(<span class="code-string">"POS1"</span>, <span class="code-string">"POS2"</span>, <span class="code-string">"Original"</span>))</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># 品詞で絞る。名詞・形容詞・動詞だけ残すのが出発点</span></span>
+<span class="code-line"><span class="code-comment"># Original は原形。活用があるので表層形のままだと「思っ」「思い」が別語になる</span></span>
+<span class="code-line">words &lt;- tokens |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(POS1 %in% <span class="code-function">c</span>(<span class="code-string">"名詞"</span>, <span class="code-string">"形容詞"</span>, <span class="code-string">"動詞"</span>)) |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(!POS2 %in% <span class="code-function">c</span>(<span class="code-string">"数"</span>, <span class="code-string">"non-independent"</span>, <span class="code-string">"非自立"</span>)) |&gt;</span>
+<span class="code-line">  <span class="code-function">mutate</span>(word = <span class="code-function">coalesce</span>(Original, token))</span>
+                </div>
+            </div>
+
+            <p>
+                <code>prettify()</code> が展開する列名は使う辞書によって変わります。IPA辞書とUniDicでは品詞体系そのものが違うので、
+                最初に <code>tokens |&gt; count(POS1, POS2, sort = TRUE)</code> で何が返っているかを見てから絞り込んでください。
+                ここを確認せずに品詞名を決め打ちすると、フィルタが空振りして全部残る、あるいは全部消えます。
+            </p>
+        </section>
+
+        <!-- 社内用語 -->
+        <section class="section" id="user-dictionary">
+            <h2>社内用語が、単語として切れない</h2>
+            <p>
+                ここが実務で最初に効いてきます。一般の辞書には、あなたの会社の部署名も、社内システムの名前も、
+                社内でだけ通じる略語も入っていません。結果として不自然な位置で切られ、意味のない断片が頻出語の上位に並びます。
+            </p>
+            <p>
+                対処はユーザー辞書の追加です。手間はかかりますが、追加すべき語はそれほど多くありません。
+                部署名、システム名、制度名、頻出する略語。この4種類を洗い出すだけで、出力の見え方がかなり変わります。
+                洗い出しは総務や情シスに聞くより、切られた結果を眺めて拾うほうが早いことが多いです。
+            </p>
+
+            <div class="tip-box">
+                <h4>辞書に入れる前に確認すること</h4>
+                <p>
+                    自分で辞書を編む前に、まず既存の辞書を替えるだけで解決しないかを見てください。
+                    新語に強い辞書に差し替えると、追加が必要な語がかなり減ります。それでも残るのが本当の社内語です。
+                </p>
+            </div>
+        </section>
+
+        <!-- 頻出語の限界 -->
+        <section class="section" id="frequency-limit">
+            <h2>頻出語を数えると「仕事」「会社」「業務」が並ぶ</h2>
+            <p>
+                切れるようになったら数えます。ここまでは順調に進みます。そして、上位に並ぶのは
+                「仕事」「会社」「業務」「人」「思う」といった語です。当たり前で、何の情報もありません。
+            </p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">03_frequency.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line">stopwords_ja &lt;- <span class="code-function">c</span>(<span class="code-string">"こと"</span>, <span class="code-string">"もの"</span>, <span class="code-string">"ため"</span>, <span class="code-string">"よう"</span>, <span class="code-string">"する"</span>, <span class="code-string">"ある"</span>, <span class="code-string">"いる"</span>, <span class="code-string">"なる"</span>, <span class="code-string">"思う"</span>)</span>
+<span class="code-line"></span>
+<span class="code-line">freq &lt;- words |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(!word %in% stopwords_ja, <span class="code-function">str_length</span>(word) &gt; 1) |&gt;</span>
+<span class="code-line">  <span class="code-function">count</span>(word, sort = TRUE)</span>
+<span class="code-line"></span>
+<span class="code-line">freq |&gt; <span class="code-function">slice_head</span>(n = 20)</span>
+                </div>
+            </div>
+
+            <p>
+                ストップワードを足していけば少しはマシになります。でも、いくら足しても
+                「その職場を説明する語」は出てきません。全員が同じような言葉を使うからです。
+                頻度は、共通点を見つける道具であって、違いを見つける道具ではない。ここが構造的な限界です。
+            </p>
+            <p>
+                違いを見たいなら TF-IDF に切り替えます。「この設問でだけよく出る語」「この部署でだけよく出る語」を出す考え方です。
+            </p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">04_tfidf_by_group.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="code-comment"># department を「文書」とみなして、部署ごとの特徴語を出す</span></span>
+<span class="code-line">tfidf &lt;- words |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(!word %in% stopwords_ja, <span class="code-function">str_length</span>(word) &gt; 1) |&gt;</span>
+<span class="code-line">  <span class="code-function">count</span>(department, word) |&gt;</span>
+<span class="code-line">  <span class="code-function">bind_tf_idf</span>(word, department, n) |&gt;</span>
+<span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(tf_idf))</span>
+<span class="code-line"></span>
+<span class="code-line">tfidf |&gt;</span>
+<span class="code-line">  <span class="code-function">group_by</span>(department) |&gt;</span>
+<span class="code-line">  <span class="code-function">slice_max</span>(tf_idf, n = 8) |&gt;</span>
+<span class="code-line">  <span class="code-function">ungroup</span>()</span>
+                </div>
+            </div>
+
+            <p>
+                注意点がひとつ。TF-IDFは珍しい語を高く評価するので、<strong>一人しか使っていない語が上位に来ます</strong>。
+                部署の人数が少ないほどこれが起きます。そのまま部署別の一覧にすると、実質的に個人の発言を晒すことになりかねません。
+                最低出現人数のしきい値を入れてから見てください。
+            </p>
+        </section>
+
+        <!-- 核心: 使えない理由 -->
+        <section class="section" id="why-unusable">
+            <h2>可視化はできた。それでも使えなかった</h2>
+            <p>
+                ここまでで、頻出語のランキングも、部署別の特徴語も、ワードクラウドも出せます。図としては成立します。
+                私が止まったのはこの先でした。<strong>その図を見て、次に何をするかが決まらない。</strong>
+            </p>
+            <p>
+                理由を後から整理すると、こうなります。
+            </p>
+
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="workflow-title">語には方向がない</div>
+                    <p>
+                        「評価」という語が多く出たとして、評価制度に不満なのか、評価されて嬉しいのか、区別がつきません。
+                        単語を数えた時点で、肯定と否定が同じ袋に入ります。
+                    </p>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="workflow-title">誰の声かが消える</div>
+                    <p>
+                        全体で集計すると、辞めそうな人の一言も、満足している人の一言も、同じ1カウントになります。
+                        人事が知りたいのは「誰が何に困っているか」なのに、そこが平されます。
+                    </p>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="workflow-title">施策の単位と粒度が合わない</div>
+                    <p>
+                        打てる手は「制度を変える」「マネージャーに介入する」「配置を見直す」といった単位です。
+                        単語の頻度は、その単位に翻訳できません。ここが一番大きい。
+                    </p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>ワードクラウドについて</h4>
+                <p>
+                    見栄えがするので報告資料に入れたくなりますが、面積が頻度に対応しているだけで、順位も差も正確には読めません。
+                    人に見せる図としては、上位語の棒グラフのほうが誠実です。ワードクラウドを出すなら、
+                    それは分析結果ではなく雰囲気の共有だと割り切ったほうがいいと思います。
+                </p>
+            </div>
+        </section>
+
+        <!-- 使える形にする -->
+        <section class="section" id="make-it-usable">
+            <h2>数える対象を変える</h2>
+            <p>
+                手法を高度にしても解決しませんでした。変えたのは、何を数えるかのほうです。
+            </p>
+
+            <h3>スコアで割ってから比べる</h3>
+            <p>
+                全体で数えるのをやめて、エンゲージメントスコアの高い層と低い層に分け、両者で出現の偏る語を見る。
+                「両方でよく出る語」は捨てて、「片方にだけ寄っている語」だけを見ます。
+                これだけで、当たり前の語が自動的に落ちます。
+            </p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">05_contrast_by_score.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line">contrast &lt;- words |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(!word %in% stopwords_ja, <span class="code-function">str_length</span>(word) &gt; 1) |&gt;</span>
+<span class="code-line">  <span class="code-function">mutate</span>(group = <span class="code-function">if_else</span>(score_overall &gt;= 4, <span class="code-string">"高スコア"</span>, <span class="code-string">"低スコア"</span>)) |&gt;</span>
+<span class="code-line">  <span class="code-function">count</span>(group, word) |&gt;</span>
+<span class="code-line">  <span class="code-function">pivot_wider</span>(names_from = group, values_from = n, values_fill = 0) |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(高スコア + 低スコア &gt;= 10) |&gt;   <span class="code-comment"># 少なすぎる語は落とす</span></span>
+<span class="code-line">  <span class="code-function">mutate</span>(</span>
+<span class="code-line">    <span class="code-comment"># +1 はゼロ割り回避。単純だが、まずはこれで傾向が見える</span></span>
+<span class="code-line">    log_ratio = <span class="code-function">log2</span>((低スコア + 1) / (高スコア + 1))</span>
+<span class="code-line">  ) |&gt;</span>
+<span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(log_ratio))</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># 低スコア層に偏る語 / 高スコア層に偏る語</span></span>
+<span class="code-line">contrast |&gt; <span class="code-function">slice_head</span>(n = 15)</span>
+<span class="code-line">contrast |&gt; <span class="code-function">slice_tail</span>(n = 15)</span>
+                </div>
+            </div>
+
+            <p>
+                出現数の少ない語で比率が暴れるので、頻度のしきい値は必ず入れてください。
+                より丁寧にやるなら、頻度で重みづけした対数オッズを使う方法があります（<code>tidylo</code> パッケージなど）。
+                ただ、最初の当たりを付けるだけならこの単純な比で十分でした。
+            </p>
+
+            <h3>語を「読む対象を絞る道具」として使う</h3>
+            <p>
+                いちばん効いたのは、実はこれです。テキスト分析を結論を出す道具として使うのをやめました。
+                代わりに、<strong>全部は読めない量の自由記述から、読むべき数十件を選ぶための道具</strong>として使いました。
+            </p>
+            <p>
+                低スコア層に偏っていた語を含むコメントだけを抽出して、原文を人間が読む。
+                そうすると、単語の集計では絶対に出てこなかった具体的な状況が書かれています。
+                数十件なら読めます。読んだ内容は、そのまま施策の議論に持っていける形をしています。
+            </p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">06_pick_to_read.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="code-comment"># 低スコア層に強く偏っていた上位語</span></span>
+<span class="code-line">signal_words &lt;- contrast |&gt; <span class="code-function">slice_head</span>(n = 10) |&gt; <span class="code-function">pull</span>(word)</span>
+<span class="code-line"></span>
+<span class="code-line">to_read &lt;- survey_flagged |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(!is_blank, score_overall &lt; 4) |&gt;</span>
+<span class="code-line">  <span class="code-function">filter</span>(<span class="code-function">str_detect</span>(comment, <span class="code-function">str_c</span>(signal_words, collapse = <span class="code-string">"|"</span>))) |&gt;</span>
+<span class="code-line">  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(n_char)) |&gt;</span>
+<span class="code-line">  <span class="code-function">select</span>(department, tenure_years, score_overall, comment)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># ここから先は人間が読む。集計では出てこない話が書いてある</span></span>
+<span class="code-line">to_read |&gt; <span class="code-function">slice_head</span>(n = 40)</span>
+                </div>
+            </div>
+
+            <p>
+                テキストマイニングの解説としては地味な着地です。けれど、実務で報告に耐えたのはこの形でした。
+                「機械が要約した結果」ではなく「機械が選んだ40件を人が読んだ結果」のほうが、聞く側も判断しやすい。
+            </p>
+        </section>
+
+        <!-- 倫理 -->
+        <section class="section" id="ethics">
+            <h2>個人が特定される粒度で出さない</h2>
+            <p>
+                人事データ全般に言えることですが、自由記述はとくに危険です。書いた本人の言い回しがそのまま残るので、
+                部署と組み合わせただけで誰の発言か分かってしまうことがあります。
+                匿名で回収したはずのサーベイが、分析の過程で実質的に記名になる。これが起きると、次回から誰も書かなくなります。
+            </p>
+
+            <div class="key-points">
+                <h4>集計と共有のときに守っていること</h4>
+                <ul>
+                    <li><strong>人数のしきい値を決めておく</strong>：一定人数を下回る部署は、部署別の内訳を出さない。上位カテゴリにまとめる</li>
+                    <li><strong>原文をそのまま資料に貼らない</strong>：引用したい場合も、文体と固有名詞を落として要旨だけにする</li>
+                    <li><strong>特徴語の一覧にも人数条件をかける</strong>：TF-IDFは珍しい語を持ち上げるので、そのまま出すと一人の発言が見出しになる</li>
+                    <li><strong>誰が見られるかを先に決める</strong>：ローデータにアクセスできる範囲を最小にする。図と表だけを共有する</li>
+                </ul>
+            </div>
+
+            <p>
+                サーベイの案内文で「個人が特定される形では利用しません」と伝えているなら、それは分析側の制約でもあります。
+                技術的にできることと、やっていいことは別だという当たり前の話ですが、コードを書いていると忘れがちです。
+            </p>
+        </section>
+
+        <!-- まとめ -->
+        <section class="section" id="summary">
+            <h2>この章のまとめ</h2>
+
+            <div class="key-points">
+                <h4>手順</h4>
+                <ul>
+                    <li><strong>分量を先に測る</strong>：記入率と文字数の中央値。ここで分析方針が決まる</li>
+                    <li><strong>日本語は形態素解析が必須</strong>：<code>gibasa</code> でトークン化し、品詞と原形で絞る。英語の感情辞書は使えない</li>
+                    <li><strong>社内用語をユーザー辞書に入れる</strong>：部署名・システム名・制度名・略語の4種類から</li>
+                    <li><strong>頻度ではなく差分を見る</strong>：全体集計では当たり前の語しか出ない。スコアや設問で層別して比べる</li>
+                    <li><strong>結論ではなく絞り込みに使う</strong>：機械が選んだ数十件を人が読む。この形がいちばん実務で通った</li>
+                    <li><strong>人数のしきい値を必ず入れる</strong>：自由記述は個人が特定されやすい</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h4>次の章へ</h4>
+                <p>
+                    テキストを特徴量として予測モデルに入れる話は、モデルの評価とセットで考える必要があります。
+                    とくに退職予測のような不均衡データでは、精度の見方を間違えると「何も予測していないモデル」が高精度に見えます。
+                    そのあたりは第18章で扱います。
+                </p>
+            </div>
+        </section>
 
         <nav class="chapter-nav">
             <a href="chapter21-time-series-modeltime.html" class="nav-button">← 第21章</a>
