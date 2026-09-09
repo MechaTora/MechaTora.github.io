@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="yardstickによるモデル評価。正解率だけで判断しない理由、不均衡データでのROC-AUC、適合率と再現率の使い分けを解説します。">
-    <title>モデル評価 - yardstick | tidyverseで学ぶ人事データ分析</title>
-    <!-- 本文が人事データに書き換わっていない章のため noindex。
-     Googleにも「クロール済み-インデックス未登録」と判定されている。
-     人事データ版に書き換えたページから個別に index, follow へ戻すこと。 -->
-    <meta name="robots" content="noindex, follow">
+    <meta name="description" content="退職率8%の職場では全員「在職」と予測するだけでAccuracy 92%が出ます。yardstickで混合行列・Recall・AUCを正しく読む手順と、閾値を統計ではなく対応可能な人員から逆算する方法、SMOTEより先に閾値を疑う理由を、実際に退職予測モデルを組んだ経験からまとめます。">
+    <title>第18章: 退職予測の評価 — Accuracy 92%が意味しないこと | tidyverseで学ぶ人事データ分析</title>
     <link rel="canonical" href="https://mechatora.com/tidy-data-science/chapter18-model-evaluation-yardstick">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NJKWS2RJ8"></script>
@@ -488,15 +484,15 @@
     <meta name="keywords" content="yardstick,R言語,モデル評価,AUC,ROC曲線,RMSE,F1スコア,Accuracy,tidymodels">
     <!-- OGP -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="モデル評価 - yardstick | tidyverseで学ぶ人事データ分析">
-    <meta property="og:description" content="yardstickによるモデル評価。正解率だけで判断しない理由、不均衡データでのROC-AUC、適合率と再現率の使い分けを解説します。">
+    <meta property="og:title" content="第18章: 退職予測の評価 — Accuracy 92%が意味しないこと | tidyverseで学ぶ人事データ分析">
+    <meta property="og:description" content="退職率8%の職場では全員「在職」と予測するだけでAccuracy 92%が出ます。yardstickで混合行列・Recall・AUCを正しく読む手順と、閾値を統計ではなく対応可能な人員から逆算する方法、SMOTEより先に閾値を疑う理由を、実際に退職予測モデルを組んだ経験からまとめます。">
     <meta property="og:url" content="https://mechatora.com/tidy-data-science/chapter18-model-evaluation-yardstick">
     <meta property="og:site_name" content="Tidyverse/Tidymodels 完全ガイド | メカとら">
     <meta property="og:locale" content="ja_JP">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第18章: モデル評価 - yardstick | tidyverseで学ぶ人事データ分析">
-    <meta name="twitter:description" content="yardstickによるモデル評価。正解率だけで判断しない理由、不均衡データでのROC-AUC、適合率と再現率の使い分けを解説します。">
+    <meta name="twitter:title" content="第18章: 退職予測の評価 — Accuracy 92%が意味しないこと | tidyverseで学ぶ人事データ分析">
+    <meta name="twitter:description" content="退職率8%の職場では全員「在職」と予測するだけでAccuracy 92%が出ます。yardstickで混合行列・Recall・AUCを正しく読む手順と、閾値を統計ではなく対応可能な人員から逆算する方法、SMOTEより先に閾値を疑う理由を、実際に退職予測モデルを組んだ経験からまとめます。">
     <!-- JSON-LD -->
     <script type="application/ld+json">
     {
@@ -542,12 +538,12 @@
 
     <div class="container">
         <header>
-            <h1>モデル評価 - yardstick</h1>
+            <h1>第18章: 退職予測の評価 — Accuracy 92%が意味しないこと</h1>
             <div class="subtitle">第18章: 包括的なモデル性能評価をマスターする</div>
             <div class="chapter-meta">
-                <span>🔍 Comprehensive Evaluation</span>
-                <span>📊 Metrics & Visualization</span>
-                <span>🎯 ROC/PR Curves</span>
+                <span>⚠️ クラス不均衡</span>
+                <span>🎯 Recallと閾値設計</span>
+                <span>📊 退職予測</span>
             </div>
             <p class="chapter-description">
                 yardstickパッケージでモデル性能を多角的に評価。回帰・分類問題の主要指標からカスタムメトリックまで、実用的な評価手法を完全身につける。
@@ -569,860 +565,333 @@
             <a href="chapter20-ensemble-learning-enhanced.html" class="nav-button">Ch20: アンサンブル学習</a>
         </nav>
 
-        <div class="section">
-            <h2>🎯 Chapter 18の学習目標</h2>
+        <!-- 導入 -->
+        <section class="section" id="intro">
+            <h2>Accuracy 92% に、一度きちんと騙された</h2>
             <p>
-                本章では、yardstickパッケージを使用した包括的なモデル評価手法を学習し、実用的な評価システムを構築します。
+                退職予測モデルを組んで、最初にロジスティック回帰を走らせたときの精度が92%でした。
+                いいモデルができたと思いました。冷静に考えると、その会社の年間退職率は約8%です。
+                つまり<strong>全員に「辞めない」と答えるだけで、自動的に92%になる</strong>。モデルは何も学習していないのと同じでした。
             </p>
 
-            <div class="evaluation-workflow">
-                <div class="workflow-title">🔄 モデル評価ワークフロー</div>
-                <div class="workflow-steps">
-                    <div class="workflow-step">
-                        <div class="step-number">1️⃣</div>
-                        <div>データ準備</div>
-                    </div>
-                    <div class="workflow-step">
-                        <div class="step-number">2️⃣</div>
-                        <div>基本指標計算</div>
-                    </div>
-                    <div class="workflow-step">
-                        <div class="step-number">3️⃣</div>
-                        <div>混同行列作成</div>
-                    </div>
-                    <div class="workflow-step">
-                        <div class="step-number">4️⃣</div>
-                        <div>ROC/PR曲線</div>
-                    </div>
-                    <div class="workflow-step">
-                        <div class="step-number">5️⃣</div>
-                        <div>閾値最適化</div>
-                    </div>
-                    <div class="workflow-step">
-                        <div class="step-number">6️⃣</div>
-                        <div>レポート作成</div>
-                    </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">00_the_trap.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="code-comment"># 全員「在職」と予測するだけのモデル</span></span>
+<span class="code-line">pred_naive &lt;- <span class="code-function">rep</span>(<span class="code-string">"在職"</span>, <span class="code-function">nrow</span>(test_data))</span>
+<span class="code-line"><span class="code-function">mean</span>(pred_naive == test_data$turnover)</span>
+<span class="code-line"><span class="code-comment">#&gt; 0.92   退職率8%の職場なら、これだけで92%になる</span></span>
                 </div>
             </div>
 
-            <ul>
-                <li><strong>yardstickパッケージ</strong>による包括的なモデル評価</li>
-                <li><strong>回帰問題</strong>の評価指標（RMSE、MAE、R²）の理解と実装</li>
-                <li><strong>分類問題</strong>の評価指標（Accuracy、Precision、Recall、F1、AUC）</li>
-                <li><strong>多クラス分類</strong>の特殊な評価手法</li>
-                <li><strong>ROC曲線・PR曲線</strong>の作成と解釈</li>
-                <li><strong>カスタム評価指標</strong>の作成</li>
-            </ul>
-        </div>
-
-        <!-- KEY FUNCTIONS -->
-        <div class="section">
-            <h2>⚙️ 主要な評価関数</h2>
             <p>
-                yardstickパッケージの主要関数を理解し、効果的なモデル評価を実現しましょう。
+                この章はyardstickの関数カタログではありません。<strong>不均衡なデータで、何を見て、どこで判断を止めるか</strong>を書きます。
+                退職予測は人事データで最も事故が起きやすい題材なので、それを例に進めます。
             </p>
-            
-            <div class="function-grid">
-                <div class="function-card">
-                    <div class="function-title">metrics()</div>
-                    <div class="function-description">
-                        モデルの基本的な評価指標を一括計算。回帰、分類問題で適切な指標を自動選択。
-                    </div>
-                    <div class="function-syntax">metrics(truth, estimate, ...)</div>
-                </div>
-                
-                <div class="function-card">
-                    <div class="function-title">conf_mat()</div>
-                    <div class="function-description">
-                        混同行列（Confusion Matrix）を作成。分類モデルの詳細な性能分析の基礎。
-                    </div>
-                    <div class="function-syntax">conf_mat(truth, estimate)</div>
-                </div>
-                
-                <div class="function-card">
-                    <div class="function-title">roc_curve()</div>
-                    <div class="function-description">
-                        ROC曲線を作成し、モデルの判別能力を評価。二値分類の標準的な評価手法。
-                    </div>
-                    <div class="function-syntax">roc_curve(truth, prob_col)</div>
-                </div>
-                
-                <div class="function-card">
-                    <div class="function-title">pr_curve()</div>
-                    <div class="function-description">
-                        Precision-Recall曲線を作成。不均衡データセットで特に有用な評価指標。
-                    </div>
-                    <div class="function-syntax">pr_curve(truth, prob_col)</div>
-                </div>
-                
-                <div class="function-card">
-                    <div class="function-title">metric_set()</div>
-                    <div class="function-description">
-                        カスタムメトリックセットを作成。特定の用途に合わせた評価指標をグループ化。
-                    </div>
-                    <div class="function-syntax">metric_set(rmse, mae, rsq)</div>
-                </div>
-                
-                <div class="function-card">
-                    <div class="function-title">autoplot()</div>
-                    <div class="function-description">
-                        評価結果の自動可視化。混同行列、ROC曲線などを簡単にグラフ化。
-                    </div>
-                    <div class="function-syntax">autoplot(conf_matrix)</div>
+        </section>
+
+        <!-- 混合行列 -->
+        <section class="section" id="conf-mat">
+            <h2>混合行列を見ると、一瞬で分かる</h2>
+            <p>
+                Accuracyだけ眺めていると見えないものが、混合行列を出すと即座に見えます。私の場合はこうでした。
+            </p>
+
+            <div class="output-container">
+                <div class="output-header">最初のモデルの混合行列</div>
+                <div class="output-content">
+              予測：在職   予測：退職
+実際：在職        920            0
+実際：退職         80            0    ← 退職者を全員見逃している
                 </div>
             </div>
-        </div>
 
-        <div class="section">
-            <h2>🔍 yardstickパッケージとは</h2>
-            <p>yardstickは、機械学習モデルの性能評価のための統一されたAPIを提供するTidymodelsの中核パッケージです。</p>
+            <p>
+                退職者80人を、ひとりも捕まえていませんでした。Accuracyは92%です。
+                この2つの数字が同居できてしまうのが、クラス不均衡のある分類問題です。
+            </p>
 
-            <h3>主な機能</h3>
-            <ul>
-                <li>豊富な<strong>評価指標</strong>の提供</li>
-                <li><strong>分類・回帰</strong>両対応</li>
-                <li><strong>多クラス・二値分類</strong>の自動対応</li>
-                <li><strong>可視化</strong>との緊密な連携</li>
-                <li><strong>カスタム指標</strong>の作成支援</li>
-            </ul>
+            <h3>yardstickでの最初の落とし穴：どちらが「陽性」か</h3>
+            <p>
+                yardstickは<strong>因子の第1水準を陽性（イベント）として扱います</strong>。
+                退職を「1」、在職を「0」としたまま <code>factor()</code> に通すと、水準はアルファベット順で <code>0, 1</code> になり、
+                在職のほうが陽性として計算されます。RecallもPrecisionも、意図と逆の数字が返ります。
+            </p>
+            <p>
+                水準の順番を明示するか、<code>event_level = "second"</code> を渡してください。ここを間違えたまま
+                「Recallが高いモデルができた」と報告すると、後で全部やり直しになります。
+            </p>
 
-            <pre>
-# 基本セットアップ
-library(tidymodels)
-library(tidyverse)
-library(yardstick)
-
-# サンプルデータの準備
-data("ames", package = "modeldata")
-data("two_class_dat", package = "modeldata")
-data("hpc_data", package = "modeldata")
-
-# 回帰用データ
-ames_sample <- ames |> 
-  select(Sale_Price, Lot_Area, Year_Built, Overall_Qual) |>
-  mutate(log_price = log10(Sale_Price)) |>
-  slice_sample(n = 1000)
-
-# 予測結果のシミュレーション
-set.seed(123)
-ames_predictions <- ames_sample |>
-  mutate(
-    .pred = log_price + rnorm(n(), 0, 0.1),
-    residuals = log_price - .pred
-  )
-
-# 分類用データの準備
-classification_sample <- two_class_dat |>
-  rename(truth = Class, estimate = predicted) |>
-  mutate(
-    .pred_Class1 = 1 - .pred_Class2,
-    .pred_Class2 = .pred_Class2
-  )
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>📈 回帰問題の評価指標</h2>
-            
-            <h3>1. 基本的な評価指標</h3>
-            <p>回帰問題における代表的な評価指標を理解します。</p>
-
-            <pre>
-# 主要な回帰指標の計算
-regression_metrics <- ames_predictions |>
-  metrics(truth = log_price, estimate = .pred)
-
-regression_metrics
-
-# 個別指標の計算
-rmse_value <- ames_predictions |> rmse(truth = log_price, estimate = .pred)
-mae_value <- ames_predictions |> mae(truth = log_price, estimate = .pred)
-rsq_value <- ames_predictions |> rsq(truth = log_price, estimate = .pred)
-mape_value <- ames_predictions |> mape(truth = log_price, estimate = .pred)
-
-# 結果のまとめ
-tibble(
-  Metric = c("RMSE", "MAE", "R²", "MAPE"),
-  Value = c(rmse_value$.estimate, mae_value$.estimate, 
-            rsq_value$.estimate, mape_value$.estimate)
-)
-</pre>
-
-            <h3>2. カスタム評価指標セット</h3>
-            <p>特定の用途に応じた評価指標セットを作成できます。</p>
-
-            <pre>
-# カスタム指標セットの作成
-custom_regression_metrics <- metric_set(
-  rmse, mae, rsq, mape, 
-  ccc,  # 一致相関係数
-  rpiq, # 四分位範囲に対する予測性能比
-  huber_loss  # Huber損失
-)
-
-# カスタム指標での評価
-custom_results <- ames_predictions |>
-  custom_regression_metrics(truth = log_price, estimate = .pred)
-
-custom_results
-</pre>
-
-            <h3>3. グループ別評価</h3>
-            <pre>
-# 建築年代別の評価
-ames_grouped <- ames_predictions |>
-  mutate(
-    era = case_when(
-      Year_Built < 1950 ~ "Pre-1950",
-      Year_Built < 1980 ~ "1950-1979",
-      Year_Built < 2000 ~ "1980-1999",
-      TRUE ~ "2000+"
-    )
-  )
-
-# グループ別評価
-grouped_metrics <- ames_grouped |>
-  group_by(era) |>
-  metrics(truth = log_price, estimate = .pred) |>
-  ungroup()
-
-# 可視化
-grouped_metrics |>
-  filter(.metric == "rmse") |>
-  ggplot(aes(x = era, y = .estimate)) +
-  geom_col(fill = "lightblue") +
-  geom_text(aes(label = round(.estimate, 3)), vjust = -0.3) +
-  labs(title = "RMSE by Construction Era",
-       x = "Era", y = "RMSE") +
-  theme_minimal()
-</pre>
-
-            <h3>4. 残差分析</h3>
-            <pre>
-# 残差の詳細分析
-residual_analysis <- ames_predictions |>
-  mutate(
-    abs_residuals = abs(residuals),
-    squared_residuals = residuals^2,
-    standardized_residuals = residuals / sd(residuals)
-  )
-
-# 残差プロット
-p1 <- residual_analysis |>
-  ggplot(aes(x = .pred, y = residuals)) +
-  geom_point(alpha = 0.6) +
-  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
-  geom_smooth(se = FALSE) +
-  labs(title = "Residuals vs Fitted", x = "Fitted", y = "Residuals")
-
-p2 <- residual_analysis |>
-  ggplot(aes(sample = standardized_residuals)) +
-  stat_qq() + stat_qq_line() +
-  labs(title = "Q-Q Plot of Standardized Residuals")
-
-library(patchwork)
-p1 + p2
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>🎯 二値分類問題の評価</h2>
-            
-            <h3>1. 基本的な分類指標</h3>
-            <p>二値分類における主要な評価指標を学習します。</p>
-
-            <pre>
-# 基本的な分類指標
-binary_metrics <- classification_sample |>
-  metrics(truth = truth, estimate = estimate, .pred_Class1)
-
-binary_metrics
-
-# 混同行列（Confusion Matrix）
-conf_matrix <- classification_sample |>
-  conf_mat(truth = truth, estimate = estimate)
-
-conf_matrix
-
-# 混同行列の可視化
-autoplot(conf_matrix, type = "heatmap") +
-  scale_fill_gradient(low = "white", high = "lightblue") +
-  theme_minimal()
-</pre>
-
-            <h3>2. 精度・再現率・F1スコア</h3>
-            <pre>
-# 詳細な分類指標
-detailed_metrics <- classification_sample |>
-  summarise(
-    accuracy = accuracy_vec(truth, estimate),
-    precision = precision_vec(truth, estimate),
-    recall = recall_vec(truth, estimate),
-    f1_score = f_meas_vec(truth, estimate),
-    specificity = specificity_vec(truth, estimate),
-    sensitivity = sensitivity_vec(truth, estimate)
-  )
-
-detailed_metrics
-
-# 指標の解釈
-interpretation <- tribble(
-  ~Metric, ~Formula, ~Interpretation,
-  "Accuracy", "(TP + TN) / (TP + TN + FP + FN)", "全体的な正解率",
-  "Precision", "TP / (TP + FP)", "陽性予測の正確さ",
-  "Recall (Sensitivity)", "TP / (TP + FN)", "実際の陽性の検出率",
-  "Specificity", "TN / (TN + FP)", "実際の陰性の検出率",
-  "F1 Score", "2 * (Precision * Recall) / (Precision + Recall)", "精度と再現率の調和平均"
-)
-
-interpretation
-</pre>
-
-            <h3>3. ROC曲線とAUC</h3>
-            <pre>
-# ROC曲線の作成
-roc_curve_data <- classification_sample |>
-  roc_curve(truth = truth, .pred_Class1)
-
-# ROC曲線の可視化
-roc_plot <- roc_curve_data |>
-  ggplot(aes(x = 1 - specificity, y = sensitivity)) +
-  geom_line(size = 1.2, color = "blue") +
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  coord_equal() +
-  labs(title = "ROC Curve",
-       x = "False Positive Rate (1 - Specificity)",
-       y = "True Positive Rate (Sensitivity)") +
-  theme_minimal()
-
-roc_plot
-
-# AUC値の計算
-auc_value <- classification_sample |>
-  roc_auc(truth = truth, .pred_Class1)
-
-auc_value
-</pre>
-
-            <h3>4. PR曲線（Precision-Recall曲線）</h3>
-            <pre>
-# PR曲線の作成
-pr_curve_data <- classification_sample |>
-  pr_curve(truth = truth, .pred_Class1)
-
-# PR曲線の可視化
-pr_plot <- pr_curve_data |>
-  ggplot(aes(x = recall, y = precision)) +
-  geom_line(size = 1.2, color = "green") +
-  labs(title = "Precision-Recall Curve",
-       x = "Recall", y = "Precision") +
-  theme_minimal()
-
-pr_plot
-
-# PR-AUC値の計算
-pr_auc_value <- classification_sample |>
-  pr_auc(truth = truth, .pred_Class1)
-
-pr_auc_value
-
-# ROCとPRの比較
-library(patchwork)
-(roc_plot + labs(subtitle = paste("AUC =", round(auc_value$.estimate, 3)))) +
-(pr_plot + labs(subtitle = paste("PR-AUC =", round(pr_auc_value$.estimate, 3))))
-</pre>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">01_yardstick_setup.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="code-function">library</span>(tidymodels)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># 退職を第1水準に置く。ここを間違えると全指標が逆になる</span></span>
+<span class="code-line">preds &lt;- <span class="code-function">tibble</span>(</span>
+<span class="code-line">  truth   = <span class="code-function">factor</span>(test_data$turnover, levels = <span class="code-function">c</span>(<span class="code-string">"退職"</span>, <span class="code-string">"在職"</span>)),</span>
+<span class="code-line">  .pred_退職 = pred_probs</span>
+<span class="code-line">) |&gt;</span>
+<span class="code-line">  <span class="code-function">mutate</span>(</span>
+<span class="code-line">    .pred_class = <span class="code-function">factor</span>(<span class="code-function">if_else</span>(.pred_退職 &gt;= 0.5, <span class="code-string">"退職"</span>, <span class="code-string">"在職"</span>),</span>
+<span class="code-line">                         levels = <span class="code-function">c</span>(<span class="code-string">"退職"</span>, <span class="code-string">"在職"</span>))</span>
+<span class="code-line">  )</span>
+<span class="code-line"></span>
+<span class="code-line">preds |&gt; <span class="code-function">conf_mat</span>(truth, .pred_class)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># クラス指標はまとめて出す</span></span>
+<span class="code-line">class_metrics &lt;- <span class="code-function">metric_set</span>(accuracy, sensitivity, specificity, precision, f_meas)</span>
+<span class="code-line">preds |&gt; <span class="code-function">class_metrics</span>(truth = truth, estimate = .pred_class)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment"># 確率ベースの指標は別枠</span></span>
+<span class="code-line">preds |&gt; <span class="code-function">roc_auc</span>(truth, .pred_退職)</span>
+<span class="code-line">preds |&gt; <span class="code-function">pr_auc</span>(truth, .pred_退職)</span>
+                </div>
+            </div>
 
             <div class="tip-box">
-                <p><strong>ROC vs PR曲線の使い分け：</strong></p>
-                <ul>
-                    <li><strong>ROC曲線</strong>: バランスの取れたデータセットに適している</li>
-                    <li><strong>PR曲線</strong>: 不均衡データセット（陽性サンプルが少ない）に適している</li>
-                    <li>両方を併用することで、モデルの性能を多角的に評価可能</li>
-                </ul>
+                <h4>不均衡データではPR曲線も見る</h4>
+                <p>
+                    ROC曲線は陰性クラスが圧倒的に多いと楽観的に見えます。退職率8%のようなデータでは、
+                    <code>pr_curve()</code> / <code>pr_auc()</code> を併せて確認してください。
+                    <code>autoplot()</code> にそのまま渡せます。
+                </p>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
-            <h2>🎨 多クラス分類の評価</h2>
-            
-            <h3>1. 多クラス分類指標</h3>
-            <p>3つ以上のクラスがある分類問題の評価方法を学習します。</p>
-
-            <pre>
-# 多クラス分類データの準備
-multiclass_sample <- hpc_data |>
-  select(obs, pred, VF:L) |>
-  slice_sample(n = 500)
-
-# 基本的な多クラス指標
-multiclass_metrics <- multiclass_sample |>
-  metrics(truth = obs, estimate = pred, VF:L)
-
-multiclass_metrics
-
-# クラス別詳細評価
-class_metrics <- multiclass_sample |>
-  summarise(
-    accuracy = accuracy_vec(obs, pred),
-    kappa = kap_vec(obs, pred),
-    mcc = mcc_vec(obs, pred)  # Matthews correlation coefficient
-  )
-
-class_metrics
-</pre>
-
-            <h3>2. マクロ・マイクロ平均</h3>
-            <pre>
-# マクロ平均とマイクロ平均の計算
-macro_micro_comparison <- tribble(
-  ~averaging, ~precision, ~recall, ~f1,
-  "macro", 
-  precision_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "macro"),
-  recall_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "macro"),
-  f_meas_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "macro"),
-  "micro",
-  precision_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "micro"),
-  recall_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "micro"),
-  f_meas_vec(multiclass_sample$obs, multiclass_sample$pred, estimator = "micro")
-)
-
-macro_micro_comparison
-</pre>
-
-            <h3>3. クラス別詳細分析</h3>
-            <pre>
-# クラス別の混同行列
-multiclass_conf <- multiclass_sample |>
-  conf_mat(truth = obs, estimate = pred)
-
-multiclass_conf
-
-# 混同行列の可視化
-autoplot(multiclass_conf, type = "heatmap") +
-  scale_fill_gradient(low = "white", high = "darkblue") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-# クラス別の精度・再現率
-class_by_class_metrics <- multiclass_sample |>
-  group_by(obs) |>
-  summarise(
-    count = n(),
-    correct = sum(obs == pred),
-    accuracy = correct / count
-  ) |>
-  arrange(desc(accuracy))
-
-class_by_class_metrics
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>📊 閾値の最適化</h2>
-            
-            <h3>1. 最適閾値の探索</h3>
-            <p>分類問題において、予測確率を二値に変換する最適な閾値を見つけます。</p>
-
-            <pre>
-# 異なる閾値でのメトリクス計算
-threshold_analysis <- tibble(
-  threshold = seq(0.1, 0.9, by = 0.05)
-) |>
-  mutate(
-    metrics = map(threshold, ~ {
-      classification_sample |>
-        mutate(
-          pred_class = if_else(.pred_Class1 >= .x, "Class1", "Class2"),
-          pred_class = factor(pred_class, levels = levels(truth))
-        ) |>
-        summarise(
-          accuracy = accuracy_vec(truth, pred_class),
-          precision = precision_vec(truth, pred_class),
-          recall = recall_vec(truth, pred_class),
-          f1 = f_meas_vec(truth, pred_class)
-        )
-    })
-  ) |>
-  unnest(metrics)
-
-# 最適閾値の可視化
-threshold_plot <- threshold_analysis |>
-  pivot_longer(accuracy:f1, names_to = "metric", values_to = "value") |>
-  ggplot(aes(x = threshold, y = value, color = metric)) +
-  geom_line(size = 1) +
-  geom_point() +
-  labs(title = "Metrics vs Threshold",
-       x = "Threshold", y = "Metric Value",
-       color = "Metric") +
-  theme_minimal()
-
-threshold_plot
-
-# 最適閾値の特定
-optimal_thresholds <- threshold_analysis |>
-  summarise(
-    best_accuracy = threshold[which.max(accuracy)],
-    best_f1 = threshold[which.max(f1)],
-    best_precision = threshold[which.max(precision)],
-    best_recall = threshold[which.max(recall)]
-  )
-
-optimal_thresholds
-</pre>
-
-            <h3>2. Youden's J統計量</h3>
-            <pre>
-# Youden's J統計量による最適閾値
-# J = Sensitivity + Specificity - 1
-youden_analysis <- tibble(
-  threshold = seq(0.01, 0.99, by = 0.01)
-) |>
-  mutate(
-    j_stat = map_dbl(threshold, ~ {
-      pred_class <- if_else(classification_sample$.pred_Class1 >= .x, 
-                           "Class1", "Class2")
-      pred_class <- factor(pred_class, levels = levels(classification_sample$truth))
-      
-      sens <- sensitivity_vec(classification_sample$truth, pred_class)
-      spec <- specificity_vec(classification_sample$truth, pred_class)
-      
-      sens + spec - 1
-    })
-  )
-
-# 最適閾値の特定
-optimal_youden <- youden_analysis |>
-  slice_max(j_stat, n = 1)
-
-# Youden統計量の可視化
-youden_plot <- youden_analysis |>
-  ggplot(aes(x = threshold, y = j_stat)) +
-  geom_line(size = 1, color = "blue") +
-  geom_vline(xintercept = optimal_youden$threshold, 
-             color = "red", linetype = "dashed") +
-  geom_text(x = optimal_youden$threshold + 0.1, 
-            y = optimal_youden$j_stat, 
-            label = paste("Optimal =", round(optimal_youden$threshold, 3))) +
-  labs(title = "Youden's J Statistic vs Threshold",
-       x = "Threshold", y = "J Statistic") +
-  theme_minimal()
-
-youden_plot
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>🛠️ カスタム評価指標の作成</h2>
-            
-            <h3>1. 基本的なカスタム指標</h3>
-            <p>ビジネス要件に応じた独自の評価指標を作成できます。</p>
-
-            <pre>
-# カスタム指標の例：加重精度
-weighted_accuracy <- function(data, truth, estimate, class_weights = NULL, ...) {
-  # デフォルトの重み（全て1）
-  if (is.null(class_weights)) {
-    class_weights <- rep(1, length(levels(data[[truth]])))
-    names(class_weights) <- levels(data[[truth]])
-  }
-  
-  # 混同行列の作成
-  cm <- table(data[[truth]], data[[estimate]])
-  
-  # 各クラスの正解数に重みを適用
-  weighted_correct <- sum(diag(cm) * class_weights[rownames(cm)])
-  total_weighted <- sum(cm * outer(class_weights[rownames(cm)], 
-                                  class_weights[colnames(cm)]))
-  
-  # 結果を返す
-  tibble(
-    .metric = "weighted_accuracy",
-    .estimator = "multiclass",
-    .estimate = weighted_correct / sum(cm)
-  )
-}
-
-# カスタム指標の使用例
-custom_weights <- c("Class1" = 2, "Class2" = 1)  # Class1を重視
-
-weighted_result <- weighted_accuracy(
-  classification_sample, 
-  "truth", 
-  "estimate", 
-  class_weights = custom_weights
-)
-
-weighted_result
-</pre>
-
-            <h3>2. ビジネス指標の実装</h3>
-            <pre>
-# コスト考慮評価指標
-cost_sensitive_metric <- function(data, truth, estimate, 
-                                 fn_cost = 1, fp_cost = 1, ...) {
-  cm <- conf_mat_vec(data[[truth]], data[[estimate]])
-  
-  # 混同行列から各要素を抽出
-  tp <- cm[1, 1]  # True Positive
-  tn <- cm[2, 2]  # True Negative  
-  fp <- cm[2, 1]  # False Positive
-  fn <- cm[1, 2]  # False Negative
-  
-  # 総コストの計算
-  total_cost <- fn * fn_cost + fp * fp_cost
-  total_cases <- sum(cm)
-  
-  # コスト per case
-  cost_per_case <- total_cost / total_cases
-  
-  tibble(
-    .metric = "cost_per_case",
-    .estimator = "binary",
-    .estimate = cost_per_case
-  )
-}
-
-# 使用例：偽陰性のコストが偽陽性の5倍の場合
-cost_result <- cost_sensitive_metric(
-  classification_sample,
-  "truth",
-  "estimate", 
-  fn_cost = 5,
-  fp_cost = 1
-)
-
-cost_result
-</pre>
-        </div>
-
-        <div class="section">
-            <h2>📋 包括的なモデル評価レポート</h2>
-            
-            <h3>1. 自動レポート生成</h3>
-            <pre>
-# 包括的評価関数
-comprehensive_evaluation <- function(data, truth_col, pred_col, pred_prob_col) {
-  
-  # 基本統計
-  basic_stats <- data |>
-    summarise(
-      n_samples = n(),
-      n_classes = n_distinct(!!sym(truth_col)),
-      class_balance = list(table(!!sym(truth_col)))
-    )
-  
-  # 基本メトリクス
-  basic_metrics <- data |>
-    metrics(truth = !!sym(truth_col), 
-            estimate = !!sym(pred_col),
-            !!sym(pred_prob_col))
-  
-  # 混同行列
-  conf_matrix <- data |>
-    conf_mat(truth = !!sym(truth_col), estimate = !!sym(pred_col))
-  
-  # ROC & PR曲線データ
-  roc_data <- data |>
-    roc_curve(truth = !!sym(truth_col), !!sym(pred_prob_col))
-  
-  pr_data <- data |>
-    pr_curve(truth = !!sym(truth_col), !!sym(pred_prob_col))
-  
-  # 結果をリストで返す
-  list(
-    basic_stats = basic_stats,
-    metrics = basic_metrics,
-    confusion_matrix = conf_matrix,
-    roc_curve = roc_data,
-    pr_curve = pr_data
-  )
-}
-
-# 使用例
-evaluation_report <- comprehensive_evaluation(
-  classification_sample,
-  "truth",
-  "estimate", 
-  ".pred_Class1"
-)
-
-# レポートの表示
-evaluation_report$basic_stats
-evaluation_report$metrics
-</pre>
-
-            <h3>2. 可視化付きレポート</h3>
-            <pre>
-# 可視化関数
-create_evaluation_plots <- function(eval_report) {
-  # ROC曲線
-  roc_plot <- eval_report$roc_curve |>
-    ggplot(aes(x = 1 - specificity, y = sensitivity)) +
-    geom_line(size = 1.2, color = "blue") +
-    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-    coord_equal() +
-    labs(title = "ROC Curve", x = "FPR", y = "TPR") +
-    theme_minimal()
-  
-  # PR曲線
-  pr_plot <- eval_report$pr_curve |>
-    ggplot(aes(x = recall, y = precision)) +
-    geom_line(size = 1.2, color = "green") +
-    labs(title = "Precision-Recall Curve") +
-    theme_minimal()
-  
-  # 混同行列
-  conf_plot <- autoplot(eval_report$confusion_matrix, type = "heatmap") +
-    scale_fill_gradient(low = "white", high = "lightblue") +
-    labs(title = "Confusion Matrix") +
-    theme_minimal()
-  
-  # メトリクス棒グラフ
-  metrics_plot <- eval_report$metrics |>
-    filter(.metric %in% c("accuracy", "precision", "recall", "f_meas")) |>
-    ggplot(aes(x = .metric, y = .estimate)) +
-    geom_col(fill = "lightcoral") +
-    geom_text(aes(label = round(.estimate, 3)), vjust = -0.3) +
-    ylim(0, 1) +
-    labs(title = "Key Metrics", x = "Metric", y = "Value") +
-    theme_minimal()
-  
-  # 4つのプロットを組み合わせ
-  library(patchwork)
-  (roc_plot + pr_plot) / (conf_plot + metrics_plot)
-}
-
-# 可視化実行
-evaluation_plots <- create_evaluation_plots(evaluation_report)
-evaluation_plots
-</pre>
-        </div>
-
-        <!-- EVALUATION STRATEGIES -->
-        <div class="section">
-            <h2>🎯 評価戦略の選択指針</h2>
+        <!-- Recall主軸 -->
+        <section class="section" id="which-metric">
+            <h2>何を主軸に置くか — 見逃しのコストで決まる</h2>
             <p>
-                異なる問題タイプやデータの性質に応じた最適な評価戦略を選択しましょう。
+                指標選びに一般解はありません。<strong>どちらの間違いが高くつくか</strong>で決まります。
+                退職予測でいちばん避けたいのは見逃しです。辞める人を「大丈夫」と判断してしまうと、打つ手がなくなります。
+                逆に「リスクあり」と出した人が辞めなかった場合のコストは、面談を1回多くやることです。
             </p>
-            
+            <p>
+                コストが非対称なので、主軸は Recall（退職者のうち何割を事前に捉えられたか）になります。
+                Accuracyは、この場面では見なくていい数字です。報告資料から外しました。
+            </p>
+
             <div class="function-grid">
                 <div class="function-card">
-                    <div class="function-title">📊 回帰問題</div>
-                    <div class="function-description">
-                        <strong>主要指標:</strong> RMSE, MAE, R²<br>
-                        <strong>選択指針:</strong> RMSE（解釈しやすい）、MAE（外れ値に頑健）<br>
-                        <strong>注意点:</strong> スケールや分布を考慮
-                    </div>
+                    <div class="function-title">Recall（再現率）</div>
+                    <div class="function-syntax">sensitivity()</div>
+                    <div class="function-description">辞めた人のうち、事前に拾えた割合。退職予測の主軸</div>
                 </div>
-                
                 <div class="function-card">
-                    <div class="function-title">⚖️ バランス分類</div>
-                    <div class="function-description">
-                        <strong>主要指標:</strong> Accuracy, F1-score<br>
-                        <strong>適用ケース:</strong> 各クラスのサンプル数が同程度<br>
-                        <strong>可視化:</strong> ROC曲線が効果的
-                    </div>
+                    <div class="function-title">Precision（適合率）</div>
+                    <div class="function-syntax">precision()</div>
+                    <div class="function-description">アラートを出した人のうち、実際に辞めた割合。運用負荷に直結</div>
                 </div>
-                
                 <div class="function-card">
-                    <div class="function-title">⚠️ 不均衡分類</div>
-                    <div class="function-description">
-                        <strong>主要指標:</strong> Precision, Recall, PR-AUC<br>
-                        <strong>適用ケース:</strong> 陣性サンプルが少ない場合<br>
-                        <strong>可視化:</strong> PR曲線を優先
-                    </div>
+                    <div class="function-title">AUC-ROC</div>
+                    <div class="function-syntax">roc_auc()</div>
+                    <div class="function-description">閾値に依存しない順位付け性能。モデル同士の比較に使う</div>
                 </div>
-                
                 <div class="function-card">
-                    <div class="function-title">🏢 ビジネス指標</div>
-                    <div class="function-description">
-                        <strong>主要指標:</strong> カスタムメトリック<br>
-                        <strong>適用ケース:</strong> コスト考慮、ROI重視<br>
-                        <strong>特徴:</strong> ビジネス要件を直接反映
-                    </div>
+                    <div class="function-title">Accuracy</div>
+                    <div class="function-syntax">accuracy()</div>
+                    <div class="function-description">不均衡データでは意味を持たない。この題材では使わない</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
-            <h2>🎆 章のまとめ</h2>
+        <!-- 閾値 -->
+        <section class="section" id="threshold">
+            <h2>閾値は、統計ではなく人員から逆算する</h2>
             <p>
-                本章では、yardstickパッケージを使用した包括的なモデル評価技術をマスターしました。実用的な機械学習プロジェクトでの評価技術を習得しました。
+                モデルが出すのは0〜1の確率です。どこで線を引くかは分析者が決めます。
+                デフォルトの0.5を下げればRecallは上がりますが、上げすぎると全員が「リスクあり」になります。
+                Recall 100%のモデルは作れます。使えないだけです。
             </p>
-            
-            <h3>📚 学習した主要ポイント</h3>
-            <div class="function-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-                <div class="function-card">
-                    <div class="function-title">基本評価</div>
-                    <div class="function-description">
-                        • yardstickパッケージの統一API<br>
-                        • 回帰・分類指標の理解<br>
-                        • metrics()関数で一括評価
-                    </div>
+            <p>
+                ここで効いたのは、統計的な最適化ではありませんでした。
+                <strong>「何人までなら対応できるか」を先に人事チームと決めて、そこから閾値を逆算する</strong>やり方です。
+                月に20人まで面談を積めるなら、アラートが20人に収まる閾値を選ぶ。それだけです。
+            </p>
+            <p>
+                なので閾値を振るときは、RecallとPrecisionだけでなく<strong>アラート件数を必ず列に入れます</strong>。
+                この列がないと会話が始まりません。
+            </p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">02_threshold_sweep.R</div>
                 </div>
-                
-                <div class="function-card">
-                    <div class="function-title">高度な可視化</div>
-                    <div class="function-description">
-                        • ROC曲線とPR曲線の作成<br>
-                        • 混同行列のヒートマップ<br>
-                        • autoplot()で簡単可視化
-                    </div>
-                </div>
-                
-                <div class="function-card">
-                    <div class="function-title">実用的テクニック</div>
-                    <div class="function-description">
-                        • 闾値最適化手法<br>
-                        • カスタムメトリック作成<br>
-                        • 自動レポート生成
-                    </div>
+                <div class="code-content">
+<span class="code-line">sweep &lt;- <span class="code-function">map_dfr</span>(<span class="code-function">seq</span>(0.05, 0.60, by = 0.05), <span class="code-keyword">function</span>(t) {</span>
+<span class="code-line">  p &lt;- preds |&gt;</span>
+<span class="code-line">    <span class="code-function">mutate</span>(.pred_class = <span class="code-function">factor</span>(<span class="code-function">if_else</span>(.pred_退職 &gt;= t, <span class="code-string">"退職"</span>, <span class="code-string">"在職"</span>),</span>
+<span class="code-line">                                levels = <span class="code-function">c</span>(<span class="code-string">"退職"</span>, <span class="code-string">"在職"</span>)))</span>
+<span class="code-line">  <span class="code-function">tibble</span>(</span>
+<span class="code-line">    threshold  = t,</span>
+<span class="code-line">    アラート数 = <span class="code-function">sum</span>(p$.pred_class == <span class="code-string">"退職"</span>),   <span class="code-comment"># ← この列が交渉の材料になる</span></span>
+<span class="code-line">    recall     = <span class="code-function">sensitivity_vec</span>(p$truth, p$.pred_class),</span>
+<span class="code-line">    precision  = <span class="code-function">precision_vec</span>(p$truth, p$.pred_class)</span>
+<span class="code-line">  )</span>
+<span class="code-line">})</span>
+<span class="code-line"></span>
+<span class="code-line">sweep |&gt;</span>
+<span class="code-line">  <span class="code-function">pivot_longer</span>(<span class="code-function">c</span>(recall, precision), names_to = <span class="code-string">"metric"</span>) |&gt;</span>
+<span class="code-line">  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(threshold, value, colour = metric)) +</span>
+<span class="code-line">  <span class="code-function">geom_line</span>(linewidth = 1.1) +</span>
+<span class="code-line">  <span class="code-function">labs</span>(title = <span class="code-string">"閾値とRecall・Precisionの関係"</span>, y = <span class="code-string">NULL</span>) +</span>
+<span class="code-line">  <span class="code-function">theme_minimal</span>()</span>
                 </div>
             </div>
-            
-            <p style="margin-top: 30px; font-size: 1.1rem; color: var(--accent-neon); text-align: center;">
-                🚀 <strong>これであなたもモデル評価のエキスパートです！</strong>
+
+            <p>
+                <code>probably</code> パッケージの <code>threshold_perf()</code> を使えば、この掃引を1行で書けます。
+                ただ自分で書いたほうがアラート件数のような独自の列を足しやすいので、最初は手で組むのをおすすめします。
             </p>
-        </div>
 
-        <!-- LEGACY SECTION - keeping for reference -->
-        <div class="section" style="display:none;">
-            <h2>🎯 まとめと次のステップ</h2>
-            
-            <h3>Chapter 18で学んだこと</h3>
-            <ul>
-                <li>yardstickパッケージによる包括的なモデル評価</li>
-                <li>回帰・分類問題それぞれの重要な評価指標</li>
-                <li>多クラス分類の特殊な評価手法</li>
-                <li>ROC・PR曲線による性能の可視化</li>
-                <li>最適閾値の決定方法</li>
-                <li>カスタム評価指標の作成</li>
-                <li>包括的な評価レポートの自動生成</li>
-            </ul>
-
-            <h3>評価指標選択のガイドライン</h3>
             <div class="tip-box">
+                <h4>閾値は分析者が一人で決めない</h4>
+                <p>
+                    ここは技術的な判断ではなく運用の判断です。「Youden's J で最適」と言って持っていっても、
+                    現場が回らなければ使われません。掃引した表を持って行き、対応可能な人数を先に聞く。
+                    そこから閾値が決まります。順番が逆になると、たいてい形骸化します。
+                </p>
+            </div>
+        </section>
+
+        <!-- 不均衡への対処 -->
+        <section class="section" id="imbalance">
+            <h2>SMOTEより先に、閾値を疑う</h2>
+            <p>
+                クラス不均衡への対処というと、SMOTEなどのオーバーサンプリングや、学習時の重み調整が挙がります。
+                どちらも有効ですが、私は最初の一手として閾値の見直しを選びました。理由は精度ではなく、説明のしやすさです。
+            </p>
+            <p>
+                「少数クラスの合成データを生成して学習データを水増ししました」と人事チームに説明するのと、
+                「70%以上をリスクありと呼んでいたのを、55%以上に変えました」と説明するのでは、後者のほうが伝わります。
+                データを触らずに運用側のつまみだけで調整できる、という点も扱いやすい。
+            </p>
+            <p>
+                それでも足りない場合に、学習側で重みをかけます。tidymodelsなら
+                <code>step_downsample()</code> / <code>step_upsample()</code>（themis）をレシピに入れるか、
+                LightGBMなら <code>scale_pos_weight</code> を設定します。
+            </p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <div class="code-title">03_class_weight.R</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="code-comment"># 陰性/陽性の比をそのまま重みにする（LightGBMの場合）</span></span>
+<span class="code-line">w &lt;- <span class="code-function">sum</span>(train$turnover == <span class="code-string">"在職"</span>) / <span class="code-function">sum</span>(train$turnover == <span class="code-string">"退職"</span>)</span>
+<span class="code-line"></span>
+<span class="code-line">params &lt;- <span class="code-function">list</span>(</span>
+<span class="code-line">  objective        = <span class="code-string">"binary"</span>,</span>
+<span class="code-line">  metric           = <span class="code-string">"auc"</span>,</span>
+<span class="code-line">  learning_rate    = 0.05,</span>
+<span class="code-line">  num_leaves       = 15,   <span class="code-comment"># 小さいデータで大きくすると過学習する</span></span>
+<span class="code-line">  min_data_in_leaf = 20,   <span class="code-comment"># ここを増やすほうが効く</span></span>
+<span class="code-line">  scale_pos_weight = w</span>
+<span class="code-line">)</span>
+                </div>
+            </div>
+
+            <p>
+                実際に一度過学習させました。データ量が小さいのに <code>num_leaves</code> を大きくしすぎたのが原因です。
+                葉あたりの最小データ数を増やして正則化をかけたら落ち着きました。
+                人事データは行数が数千のオーダーになりがちなので、木を深くする方向のチューニングは効きにくいと思っておいたほうがいいです。
+            </p>
+        </section>
+
+        <!-- 最終評価 -->
+        <section class="section" id="final">
+            <h2>最終的な数字を、どう読むか</h2>
+            <p>
+                変数を入れ替え、閾値を調整したあとの数字がこうなりました。
+            </p>
+
+            <div class="output-container">
+                <div class="output-header">最終モデルの評価</div>
+                <div class="output-content">
+AUC-ROC    0.92 〜 0.93     順位付けの性能
+Recall     約 0.78          退職者の約8割を事前に捕捉
+Precision  約 0.61          アラートの約6割が実際に退職
+                </div>
+            </div>
+
+            <p>
+                冒頭のAccuracy 92%と、このAUC 0.92は数字として近いのに、意味がまったく違います。
+                前者は何も予測していない状態で、後者は退職者の8割を事前に拾えている状態です。
+                報告するときは、この違いを先に説明したほうがいい。数字だけ出すと同じに見えます。
+            </p>
+            <p>
+                Precision 0.61 は「4割は空振り」ということでもあります。これを低いと見るかは運用次第です。
+                面談を1回多くやるだけのコストなら、見逃しを減らすほうを取る。そういう判断ができるように、
+                Precisionは<strong>アラート件数と一緒に</strong>提示します。
+            </p>
+        </section>
+
+        <!-- その先 -->
+        <section class="section" id="beyond">
+            <h2>評価指標が決まっても、そこは出発点</h2>
+            <p>
+                指標を整えて、閾値を決めて、リストが出ました。この時点でぶつかったのが「で、この人をどうするのか」です。
+                第22章でサーベイの自由記述について書いたことと、構造はまったく同じでした。
+                出力はできる。次の一手に繋がらない。
+            </p>
+            <p>
+                いくつか分かったことがあります。退職を申し出てきた時点では、たいてい転職先が決まっていて手遅れです。
+                意味があるのは、まだ迷っている段階で声がかかることでした。スコアが教えてくれるのは
+                「誰が辞めるか」ではなく<strong>「いつ声をかけるか」</strong>です。
+            </p>
+            <p>
+                もうひとつ、スコアの届け方も設計が要りました。マネージャーに「Aさんは退職確率73%です」と伝えるのは、
+                本人との関係に影響します。スコアは人事が持ったまま、「このメンバーと近いうちに1on1の機会を作ってください」
+                という形に変換して渡す。この一段階を挟むかどうかで、運用の受け入れられ方が変わりました。
+            </p>
+
+            <div class="tip-box">
+                <h4>モデルを作る側の全過程について</h4>
+                <p>
+                    この章は評価指標に絞って書きました。実際にどの変数が効いてどれが効かなかったか——
+                    残業時間が効かなかった理由、評価の絶対値ではなく差分を使う話、
+                    エンゲージメントサーベイの回答スタイルバイアスをどう除去したか、
+                    ロジスティック回帰からLightGBMに移した判断基準まで含めた全過程は、
+                    <a href="https://note.com/crt03" target="_blank" rel="noopener">note</a> に別途まとめています。
+                </p>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="section" id="summary">
+            <h2>この章のまとめ</h2>
+
+            <div class="key-points">
+                <h4>不均衡データを評価するときの順番</h4>
                 <ul>
-                    <li><strong>回帰問題</strong>: RMSE（解釈しやすい）、MAE（外れ値に頑健）</li>
-                    <li><strong>バランス分類</strong>: Accuracy、F1-score</li>
-                    <li><strong>不均衡分類</strong>: Precision、Recall、PR-AUC</li>
-                    <li><strong>コスト考慮</strong>: カスタム指標（ビジネス要件反映）</li>
+                    <li><strong>Accuracyを最初に捨てる</strong>：退職率8%なら全員在職予測で92%出る。指標として機能しない</li>
+                    <li><strong>混合行列を先に見る</strong>：見逃しがゼロ件か全件かは、ここでしか分からない</li>
+                    <li><strong>陽性クラスの水準を確認する</strong>：yardstickは第1水準を陽性に取る。逆だと全指標が反転する</li>
+                    <li><strong>主軸はコストの非対称性で決める</strong>：退職予測では見逃しが高くつくのでRecall</li>
+                    <li><strong>閾値は人員から逆算する</strong>：掃引表にアラート件数を入れ、対応可能人数から選ぶ</li>
+                    <li><strong>SMOTEより先に閾値</strong>：説明しやすさで運用の定着が変わる</li>
+                    <li><strong>小さいデータで木を深くしない</strong>：葉あたりの最小データ数を増やすほうが効く</li>
                 </ul>
             </div>
 
-            <div class="warning-box">
-                <p><strong>評価の注意点：</strong></p>
-                <ul>
-                    <li>単一指標だけでなく複数の観点から評価する</li>
-                    <li>データの性質（不均衡、外れ値等）を考慮する</li>
-                    <li>ビジネス目標と技術的指標を整合させる</li>
-                    <li>交差検証での安定性も確認する</li>
-                </ul>
+            <div class="tip-box">
+                <h4>次の章へ</h4>
+                <p>
+                    リストが出たあとに必ず聞かれるのが「なぜこの人がリスク高と出たのか」です。
+                    予測の根拠を説明できないモデルは、人事の現場では使われません。
+                    変数重要度とSHAPをどう扱うかは第19章で書きます。
+                </p>
             </div>
-
-            <h3>次の章への準備</h3>
-            <p>次の第19章では、評価済みモデルを使った<strong>予測と解釈</strong>を学習します。実際の予測タスクでの活用方法と、モデルの解釈可能性について深く理解しましょう。</p>
-        </div>
+        </section>
 
         <!-- Bottom Navigation -->
         <nav class="chapter-nav" style="margin-top: 40px;">
