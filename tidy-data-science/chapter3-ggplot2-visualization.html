@@ -1068,7 +1068,7 @@
                             <div class="code-title">scatter_plot_example.R</div>
                         </div>
                         <div class="code-content">
-                            <span class="code-line"><span class="code-comment"># mtcarsデータで残業時間とエンゲージメントの関係を調べる</span></span>
+                            <span class="code-line"><span class="code-comment"># 人事データで残業時間とエンゲージメントの関係を調べる</span></span>
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># 基本的な散布図</span></span>
@@ -1132,11 +1132,11 @@
                                 <!-- Legend -->
                                 <g>
                                     <circle cx="450" cy="80" r="4" fill="#ff1493"/>
-                                    <text x="460" y="85" fill="#ccc" font-size="12">4気筒</text>
+                                    <text x="460" y="85" fill="#ccc" font-size="12">G3</text>
                                     <circle cx="450" cy="100" r="4" fill="#00ffff"/>
-                                    <text x="460" y="105" fill="#ccc" font-size="12">6気筒</text>
+                                    <text x="460" y="105" fill="#ccc" font-size="12">G4</text>
                                     <circle cx="450" cy="120" r="4" fill="#39ff14"/>
-                                    <text x="460" y="125" fill="#ccc" font-size="12">8気筒</text>
+                                    <text x="460" y="125" fill="#ccc" font-size="12">G5</text>
                                 </g>
                                 <!-- Tick labels -->
                                 <text x="150" y="365" text-anchor="middle" fill="#aaa" font-size="10">100</text>
@@ -1168,7 +1168,7 @@
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">ggplot2</span>)   <span class="code-comment"># グラフ作成</span></span>
                             <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">reshape2</span>)  <span class="code-comment"># データ形状変換（wide→long）</span></span>
                             <span class="code-line"></span>
-                            <span class="code-line"><span class="code-comment"># mtcarsの相関行列を計算（-1〜1の値、1に近いほど正の相関）</span></span>
+                            <span class="code-line"><span class="code-comment"># 人事データの相関行列を計算（-1〜1の値、1に近いほど正の相関）</span></span>
                             <span class="code-line"><span class="code-variable">corr_matrix</span> <span class="code-keyword">&lt;-</span> <span class="code-function">cor</span>(hr[, <span class="code-function">c</span>(<span class="code-string">"engagement_score"</span>, <span class="code-string">"overtime_hours"</span>, <span class="code-string">"tenure_years"</span>, <span class="code-string">"grade"</span>, <span class="code-string">"status"</span>)])</span>
                             <span class="code-line"><span class="code-variable">corr_melted</span> <span class="code-keyword">&lt;-</span> <span class="code-function">melt</span>(corr_matrix)</span>
                             <span class="code-line"></span>
@@ -1436,11 +1436,11 @@
                                 <g>
                                     <text x="50" y="100" fill="#fff" font-size="12" font-weight="bold">等級:</text>
                                     <polygon points="55,115 50,125 60,125" fill="#ccc"/>
-                                    <text x="70" y="123" fill="#ccc" font-size="10">4気筒</text>
+                                    <text x="70" y="123" fill="#ccc" font-size="10">G3</text>
                                     <circle cx="55" cy="140" r="4" fill="#ccc"/>
-                                    <text x="70" y="143" fill="#ccc" font-size="10">6気筒</text>
+                                    <text x="70" y="143" fill="#ccc" font-size="10">G4</text>
                                     <rect x="51" y="151" width="8" height="8" fill="#ccc"/>
-                                    <text x="70" y="158" fill="#ccc" font-size="10">8気筒</text>
+                                    <text x="70" y="158" fill="#ccc" font-size="10">G5</text>
                                 </g>
                                 
                                 <!-- Color legend -->
@@ -1492,10 +1492,10 @@
                     </p>
                     
                     <ul style="color: var(--neon-cyan); margin: 1rem 0;">
-                        <li><strong>勤続年数とエンゲージメント</strong>: 負の相関関係（重い車ほどエンゲージメントが悪い）</li>
-                        <li><strong>等級の影響</strong>: 8気筒車は重く、エンゲージメントが悪い傾向</li>
+                        <li><strong>勤続年数とエンゲージメント</strong>: 負の相関関係（勤続が長いほどエンゲージメントが下がる）</li>
+                        <li><strong>等級の影響</strong>: 上位等級ほど勤続が長く、エンゲージメントが下がりやすい</li>
                         <li><strong>月間残業時間と色</strong>: 赤い点（高月間残業時間）ほどエンゲージメントが悪い</li>
-                        <li><strong>サイズと加速</strong>: 大きい点ほど加速が遅い</li>
+                        <li><strong>サイズと残業</strong>: 点が大きいほど残業時間が長い</li>
                     </ul>
                 </div>
             </section>
@@ -1654,8 +1654,8 @@
                             <div class="code-title">correlation_analysis.R</div>
                         </div>
                         <div class="code-content">
-                            <span class="code-line"><span class="code-comment"># 相関分析用データ（mtcarsを拡張）</span></span>
-                            <span class="code-line"><span class="code-variable">car_data</span> <span class="code-keyword">&lt;-</span> hr <span class="code-keyword">%>%</span></span>
+                            <span class="code-line"><span class="code-comment"># 相関分析用データ（hr を拡張）</span></span>
+                            <span class="code-line"><span class="code-variable">hr_ext</span> <span class="code-keyword">&lt;-</span> hr <span class="code-keyword">%>%</span></span>
                             <span class="code-line">  <span class="code-function">rownames_to_column</span>(<span class="code-string">"model"</span>) <span class="code-keyword">%>%</span></span>
                             <span class="code-line">  <span class="code-function">as_tibble</span>() <span class="code-keyword">%>%</span></span>
                             <span class="code-line">  <span class="code-function">mutate</span>(</span>
@@ -1668,7 +1668,7 @@
                             <span class="code-line">  )</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># 高度な散布図の作成</span></span>
-                            <span class="code-line"><span class="code-variable">correlation_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(car_data, <span class="code-function">aes</span>(x = tenure_years, y = engagement_score)) +</span>
+                            <span class="code-line"><span class="code-variable">correlation_plot</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(hr_ext, <span class="code-function">aes</span>(x = tenure_years, y = engagement_score)) +</span>
                             <span class="code-line">  <span class="code-comment"># 背景の密度等高線</span></span>
                             <span class="code-line">  <span class="code-function">stat_density_2d</span>(alpha = <span class="code-string">0.3</span>, color = <span class="code-string">"gray70"</span>) +</span>
                             <span class="code-line">  <span class="code-comment"># 回帰線と信頼区間</span></span>
@@ -1685,7 +1685,7 @@
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-comment"># ラベル付け（outlierのみ）</span></span>
                             <span class="code-line">  <span class="code-function">geom_text</span>(</span>
-                            <span class="code-line">    data = car_data <span class="code-keyword">%>%</span> <span class="code-function">filter</span>(engagement_score > <span class="code-string">30</span> | tenure_years > <span class="code-string">5</span>),</span>
+                            <span class="code-line">    data = hr_ext <span class="code-keyword">%>%</span> <span class="code-function">filter</span>(engagement_score > <span class="code-string">30</span> | tenure_years > <span class="code-string">5</span>),</span>
                             <span class="code-line">    aes(label = model),</span>
                             <span class="code-line">    nudge_y = <span class="code-string">1</span>,</span>
                             <span class="code-line">    size = <span class="code-string">3</span>,</span>
@@ -1700,7 +1700,7 @@
                             <span class="code-line">    subtitle = <span class="code-string">"在籍状況、残業時間、等級別の分析"</span>,</span>
                             <span class="code-line">    x = <span class="code-string">"勤続年数 (年)"</span>,</span>
                             <span class="code-line">    y = <span class="code-string">"エンゲージメント (点)"</span>,</span>
-                            <span class="code-line">    color = <span class="code-string">"変速機"</span>,</span>
+                            <span class="code-line">    color = <span class="code-string">"在籍状況"</span>,</span>
                             <span class="code-line">    size = <span class="code-string">"月間残業時間"</span>,</span>
                             <span class="code-line">    shape = <span class="code-string">"効率クラス"</span></span>
                             <span class="code-line">  ) +</span>
@@ -2060,9 +2060,9 @@
                                 <!-- Legend -->
                                 <g>
                                     <circle cx="600" cy="360" r="3" fill="#ff1493"/>
-                                    <text x="610" y="364" fill="#ccc" font-size="10">AT</text>
+                                    <text x="610" y="364" fill="#ccc" font-size="10">在籍</text>
                                     <circle cx="650" cy="360" r="3" fill="#00ffff"/>
-                                    <text x="660" y="364" fill="#ccc" font-size="10">MT</text>
+                                    <text x="660" y="364" fill="#ccc" font-size="10">退職</text>
                                 </g>
                             </svg>
                         </div>
@@ -2786,7 +2786,7 @@
                             <span class="code-line">}</span>
                             <span class="code-line"></span>
                             <span class="code-line"><span class="code-comment"># テーマ適用例</span></span>
-                            <span class="code-line"><span class="code-variable">corporate_example</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(engagement_score, <span class="code-function">aes</span>(x = displ, y = hwy, color = class)) +</span>
+                            <span class="code-line"><span class="code-variable">corporate_example</span> <span class="code-keyword">&lt;-</span> <span class="code-function">ggplot</span>(engagement_score, <span class="code-function">aes</span>(x = overtime_hours, y = engagement_score, color = department)) +</span>
                             <span class="code-line">  <span class="code-function">geom_point</span>(size = <span class="code-string">3</span>, alpha = <span class="code-string">0.7</span>) +</span>
                             <span class="code-line">  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, color = <span class="code-string">"#e74c3c"</span>) +</span>
                             <span class="code-line">  <span class="code-function">labs</span>(</span>
@@ -2794,8 +2794,8 @@
                             <span class="code-line">    subtitle = <span class="code-string">"部署別の分析結果"</span>,</span>
                             <span class="code-line">    x = <span class="code-string">"エンジン残業時間 (L)"</span>,</span>
                             <span class="code-line">    y = <span class="code-string">"高速道路エンゲージメント (点)"</span>,</span>
-                            <span class="code-line">    color = <span class="code-string">"部署クラス"</span>,</span>
-                            <span class="code-line">    caption = <span class="code-string">"データソース: EPAエンゲージメントデータベース"</span></span>
+                            <span class="code-line">    color = <span class="code-string">"部署"</span>,</span>
+                            <span class="code-line">    caption = <span class="code-string">"データソース: hr_sample.csv（架空の人事データ）"</span></span>
                             <span class="code-line">  ) +</span>
                             <span class="code-line">  <span class="code-function">theme_corporate</span>() +</span>
                             <span class="code-line">  <span class="code-function">guides</span>(color = <span class="code-function">guide_legend</span>(title.position = <span class="code-string">"top"</span>))</span>
@@ -2845,7 +2845,7 @@
                             <span class="code-line">    <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, se = <span class="code-string">FALSE</span>, </span>
                             <span class="code-line">                color = <span class="code-string">"darkgray"</span>, linetype = <span class="code-string">"dashed"</span>) +</span>
                             <span class="code-line">    <span class="code-function">facet_wrap</span>(~factor(grade), ncol = <span class="code-string">3</span>, </span>
-                            <span class="code-line">               labeller = <span class="code-function">labeller</span>(.default = <span class="code-string">"気筒"</span>)) +</span>
+                            <span class="code-line">               labeller = <span class="code-function">labeller</span>(.default = <span class="code-string">"等級"</span>)) +</span>
                             <span class="code-line">    <span class="code-function">scale_color_manual</span>(</span>
                             <span class="code-line">      values = <span class="code-function">c</span>(<span class="code-string">"High"</span> = <span class="code-string">"#00ff41"</span>, </span>
                             <span class="code-line">               <span class="code-string">"Medium"</span> = <span class="code-string">"#ffaa00"</span>, </span>
@@ -2855,7 +2855,7 @@
                             <span class="code-line">      title = <span class="code-string">"従業員データの多次元分析"</span>,</span>
                             <span class="code-line">      subtitle = <span class="code-string">"勤続年数、残業時間、エンゲージメント、在籍状況、等級の関係"</span>,</span>
                             <span class="code-line">      x = <span class="code-string">"勤続年数 (年)"</span>, y = <span class="code-string">"月間残業時間 (時間)"</span>,</span>
-                            <span class="code-line">      color = <span class="code-string">"エンゲージメント"</span>, shape = <span class="code-string">"変速機"</span></span>
+                            <span class="code-line">      color = <span class="code-string">"エンゲージメント"</span>, shape = <span class="code-string">"在籍状況"</span></span>
                             <span class="code-line">    ) +</span>
                             <span class="code-line">    <span class="code-function">theme_dark</span>() +</span>
                             <span class="code-line">    <span class="code-function">theme</span>(</span>
@@ -2980,12 +2980,12 @@
 <span class="code-line"><span class="code-keyword">library</span>(<span class="code-string">dplyr</span>)</span>
 <span class="code-line"></span>
 <span class="code-line"><span class="code-comment"># データ集計</span></span>
-<span class="code-line">diamond_summary <span class="code-operator"><-</span> <span class="code-identifier">hr</span> <span class="code-operator">%>%</span></span>
-<span class="code-line">  <span class="code-function">group_by</span>(<span class="code-identifier">cut</span>) <span class="code-operator">%>%</span></span>
+<span class="code-line">dept_summary <span class="code-operator"><-</span> <span class="code-identifier">hr</span> <span class="code-operator">%>%</span></span>
+<span class="code-line">  <span class="code-function">group_by</span>(<span class="code-identifier">department</span>) <span class="code-operator">%>%</span></span>
 <span class="code-line">  <span class="code-function">summarise</span>(<span class="code-identifier">count</span> = <span class="code-function">n</span>(), <span class="code-identifier">.groups</span> = <span class="code-string">'drop'</span>)</span>
 <span class="code-line"></span>
 <span class="code-line"><span class="code-comment"># カラフルな棒グラフ</span></span>
-<span class="code-line">p3 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">diamond_summary</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">cut</span>, <span class="code-identifier">y</span> = <span class="code-identifier">count</span>, <span class="code-identifier">fill</span> = <span class="code-identifier">cut</span>)) +</span>
+<span class="code-line">p3 <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(<span class="code-identifier">dept_summary</span>, <span class="code-function">aes</span>(<span class="code-identifier">x</span> = <span class="code-identifier">department</span>, <span class="code-identifier">y</span> = <span class="code-identifier">count</span>, <span class="code-identifier">fill</span> = <span class="code-identifier">department</span>)) +</span>
 <span class="code-line">  <span class="code-function">geom_col</span>() +</span>
 <span class="code-line">  <span class="code-function">scale_fill_viridis_d</span>() +</span>
 <span class="code-line">  <span class="code-function">labs</span>(<span class="code-identifier">title</span> = <span class="code-string">"部署別の人数"</span>,</span>
@@ -3024,11 +3024,11 @@
                                 <text x="250" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">部署別の人数</text>
                                 
                                 <!-- X軸ラベル -->
-                                <text x="105" y="265" text-anchor="middle" font-size="10" fill="#666">Fair</text>
-                                <text x="175" y="265" text-anchor="middle" font-size="10" fill="#666">Good</text>
-                                <text x="245" y="265" text-anchor="middle" font-size="10" fill="#666">Very Good</text>
-                                <text x="315" y="265" text-anchor="middle" font-size="10" fill="#666">Premium</text>
-                                <text x="385" y="265" text-anchor="middle" font-size="10" fill="#666">Ideal</text>
+                                <text x="105" y="265" text-anchor="middle" font-size="10" fill="#666">営業</text>
+                                <text x="175" y="265" text-anchor="middle" font-size="10" fill="#666">人事</text>
+                                <text x="245" y="265" text-anchor="middle" font-size="10" fill="#666">開発</text>
+                                <text x="315" y="265" text-anchor="middle" font-size="10" fill="#666">企画</text>
+                                <text x="385" y="265" text-anchor="middle" font-size="10" fill="#666">管理</text>
                                 
                                 <!-- Y軸目盛り -->
                                 <text x="45" y="255" text-anchor="end" font-size="10" fill="#666">0</text>
