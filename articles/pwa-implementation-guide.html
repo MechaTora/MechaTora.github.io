@@ -120,14 +120,12 @@
                 <h1>PWA実装の基礎 - WebアプリをPWA化する手順</h1>
                 <div class="article-meta">
                     <span class="article-category">技術・開発</span>
-                    <time datetime="2025-10-22">2025年10月22日</time>
-                    <span class="reading-time">📖 約10分</span>
-                </div>
+                    <time datetime="2025-10-22">2025年10月22日</time>                </div>
             </div>
 
             <div class="lead">
                 <p>PWA（Progressive Web Apps）は、Webアプリをネイティブアプリのように動作させる技術です。オフライン対応、ホーム画面への追加、プッシュ通知など、ユーザー体験を大幅に向上させることができます。</p>
-                <p>この記事では、実際にメカとらのツール群をPWA化した経験をもとに、PWAの基礎から実装手順まで、初心者でも分かる形で解説します。Service Workerの基本、manifest.jsonの設定、キャッシュ戦略の選び方など、実践的な内容をお届けします。</p>
+                <p>自分のツールをPWA化したのは、電車の中で地震モニターを開いたら通信が切れていた、という個人的な理由からでした。manifest.jsonを置くだけでは足りず、Service Workerとキャッシュ戦略で何度かやり直しています。その手順と、選び方の基準を書きます。</p>
             </div>
             <p style="padding: 1.25rem 1.5rem; background: rgba(255,140,0,0.09); border-radius: 8px; margin: 1.5rem 0;">🐯 <strong>メカとら視点</strong>：自作ツールをスマホで「アプリのように」使いたくて、いくつかを PWA 化しました。個人開発で実際にやってみて分かった、「最低限これだけ押さえればOK」という現実的な手順を、独学者目線でまとめます。</p>
 
