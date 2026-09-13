@@ -199,6 +199,12 @@
 pip install pandas numpy matplotlib seaborn scikit-learn openpyxl
 </code></pre>
 <h3>サンプルデータの準備</h3>
+<p style="background:#fff8e1;border-left:4px solid #f0b429;padding:1rem 1.2rem;margin:1rem 0;border-radius:0 8px 8px 0;">
+<strong>この記事で使うデータについて。</strong>
+以下のコードは、実在の人事データではなく <code>numpy</code> で生成した架空のデータを使っています。
+手順とコードの動かし方を追うためのもので、出てくる数値そのものに実務上の意味はありません。
+実データに差し替えて動かすことを前提に読んでください。
+</p>
 <pre><code class="language-python">import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -254,8 +260,9 @@ plt.show()
 </code></pre>
 <p><strong>洞察</strong>:</p>
 <ul>
-<li>3月、9月に応募が増える（転職シーズン）</li>
-<li>12月は減少（年末で動きが鈍い）</li>
+<li>実データでは3月・9月に山ができることが多い（転職シーズン）</li>
+<li>12月は動きが鈍りやすい</li>
+<li>※ このサンプルは一様乱数で生成しているため、季節の山は出ません。読み方の例として挙げています</li>
 </ul>
 <h3>選考通過率の分析</h3>
 <pre><code class="language-python"># 各段階の通過率
@@ -315,8 +322,8 @@ print(education_stats)
 </code></pre>
 <p><strong>洞察</strong>:</p>
 <ul>
-<li>大学院卒の内定率が高い（専門性評価）</li>
-<li>高卒も一定の内定率（実務経験重視）</li>
+<li>学歴ごとの内定率を並べて、差があるかを見る</li>
+<li>※ このサンプルは学歴と合否を独立に生成しているため、差は出ません。実データで差が見えたときに、それが学歴によるものか他の要因かを切り分ける必要があります</li>
 </ul>
 <h2>分析2: 離職データの可視化</h2>
 <h3>離職データの作成</h3>
@@ -478,7 +485,7 @@ print(feature_importance)
 df_employee['離職確率'] = model.predict_proba(X)[:, 1]
 
 # リスク上位10名
-high_risk = df_employee.nsmallest(10, '離職確率')[['社員ID', '部署', '残業時間', '評価', '離職確率']]
+high_risk = df_employee.nlargest(10, '離職確率')[['社員ID', '部署', '残業時間', '評価', '離職確率']]
 
 print('離職リスクが高い社員（トップ10）:')
 print(high_risk)
