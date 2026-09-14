@@ -139,16 +139,15 @@
                 <li><strong>踏み台にする</strong>：他の攻撃のための中継点として利用</li>
             </ul>
 
-            <h3>実際に受けた攻撃</h3>
-            <p>メカとらで運用中に検知した攻撃の例：</p>
+            <h3>実際に届くリクエスト</h3>
+            <p>私のサイトはGitHub Pagesの静的配信なので、サーバーのアクセスログを自分で見ることはできません。ただ、入力欄を置いたツールの側では、明らかに人間が打っていないリクエストが混ざります。</p>
             <ul>
-                <li><strong>SQLインジェクション試行</strong>：URLに<code>' OR '1'='1</code>を含むアクセス（1日10件程度）</li>
-                <li><strong>XSS試行</strong>：<code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>を含むリクエスト</li>
-                <li><strong>ディレクトリトラバーサル</strong>：<code>../../../etc/passwd</code>へのアクセス</li>
-                <li><strong>DDoS攻撃</strong>：特定IPから1秒に100リクエスト</li>
+                <li>検索欄に <code>' OR '1'='1</code> がそのまま貼られる</li>
+                <li>入力欄に <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> が入ってくる</li>
+                <li>存在しないパス（<code>/wp-admin/</code> や <code>/.env</code>）へのアクセスが並ぶ</li>
             </ul>
 
-            <p>幸い、適切な対策により被害はありませんでしたが、対策なしでは危険でした。</p>
+            <p>どれも自動スキャンで、狙い撃ちされているわけではありません。ただ、対策が抜けていれば通ってしまうのは同じです。件数を正確に数えられる環境ではないので、ここでは「来る」という事実だけ書いておきます。</p>
 
             <h2>OWASP Top 10 - 最も危険な脆弱性</h2>
         <div style="margin: 1.5rem 0; text-align: center;">
@@ -337,7 +336,7 @@ db.query(query, [userId], (err, results) => {
 // 「1 OR 1=1」も単なる文字列として検索されるため安全</code></pre>
 
             <h3>ORMの活用</h3>
-            <p>Sequelize、Prismaなどのスーパーマを使うと、自動的にエスケープされます：</p>
+            <p>Sequelize、PrismaなどのORM（O/Rマッパー）を使うと、自動的にエスケープされます：</p>
             <pre><code>// Sequelize を使った安全な実装
 const user = await User.findOne({
   where: { id: userId }
@@ -373,7 +372,7 @@ app.use((req, res, next) => {
 });
 
 // 特定ドメインのみ許可（安全）
-const allowedOrigins = ['https://mechatora.com', 'https://mechatora.com'];
+const allowedOrigins = ['https://mechatora.com', 'https://sharonabi.mechatora.com'];
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -472,22 +471,21 @@ npm audit fix --force</code></pre>
 
             <h3>実装した対策</h3>
             <ol>
-                <li><strong>全ページHTTPS化</strong>：GitHub Pagesの標準機能</li>
-                <li><strong>XSS対策</strong>：全てのユーザー入力を<code>textContent</code>で表示</li>
-                <li><strong>CSP設定</strong>：インラインスクリプトを禁止</li>
-                <li><strong>レート制限</strong>：Cloudflareの無料プランで実装</li>
-                <li><strong>依存パッケージ更新</strong>：月1回<code>npm audit</code>実行</li>
+                <li><strong>全ページHTTPS化</strong>：GitHub Pagesの標準機能なので、設定は不要でした</li>
+                <li><strong>XSS対策</strong>：ユーザー入力を画面に出す箇所は<code>textContent</code>に統一</li>
+                <li><strong>APIキーの扱い</strong>：フロントに直書きせず、サーバー側の関数経由で叩く</li>
+                <li><strong>依存パッケージ更新</strong>：月1回<code>npm audit</code>を実行</li>
             </ol>
 
-            <h3>セキュリティインシデントゼロの維持</h3>
-            <p>2年間の運用で、以下の攻撃を防ぎました：</p>
+            <h3>やっていないこと</h3>
+            <p>正直に書くと、ここは手が回っていません。</p>
             <ul>
-                <li>SQLインジェクション試行：約200回</li>
-                <li>XSS試行：約50回</li>
-                <li>DDoS攻撃：2回</li>
+                <li><strong>CSP</strong>：広告とアナリティクスがインラインスクリプトを使うため、厳しめのポリシーをかけると自分で壊してしまう。まだ詰め切れていません</li>
+                <li><strong>レート制限</strong>：静的配信の部分には仕組みがなく、CDN任せです</li>
+                <li><strong>攻撃件数の記録</strong>：GitHub Pagesではアクセスログが見られないので、数えようがありません</li>
             </ul>
 
-            <p>全て自動的にブロックされ、サービス停止ゼロを達成しています。</p>
+            <p>「全部やった」と書いてある記事より、どこまでやってどこが空いているかを書いたほうが参考になると思うので、そのまま残しておきます。</p>
 
             <h2>まとめ</h2>
 
